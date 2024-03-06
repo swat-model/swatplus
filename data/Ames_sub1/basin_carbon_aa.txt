@@ -1,0 +1,3 @@
+ demo                      SWAT+ Dec 7 2023        MODULAR Rev 2023.60.5.7                                
+  jday   mon   day    yr    unit  gis_id     name             sed_c           surq_c         surq_doc         surq_dic           latq_c         latq_doc         latq_dic           perc_c         perc_doc         perc_dic            npp_c            rsd_c          grain_c         stover_c            rsp_c           emit_c
+                                                            kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha          kg C/ha

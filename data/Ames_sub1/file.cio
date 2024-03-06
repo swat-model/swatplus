@@ -1,0 +1,31 @@
+file.cio: AMES
+simulation        time.sim          print.prt         null              object.cnt        null              
+basin             codes.bsn         parameters.bsn    
+climate           weather-sta.cli   weather-wgn.cli   null              pcp.cli           tmp.cli           null              null              null              null              
+connect           hru.con           null              null              null              null              null              null              null              null              null              null              null              null       
+channel           null       null       null        null         null        null        null        null              
+reservoir         null       null       null        null         null        null        null        null    
+routing_unit      null       null       null        null              
+hru               hru-data.hru      null              
+exco              null              null              null              null              null              null              
+recall            null              
+dr                null              null              null              null              null              null              
+aquifer           nbull             null       
+herd              null              null              null              
+water_rights      null              null              null              
+link              null              null              
+hydrology         hydrology.hyd     topography.hyd    null         
+structural        tiledrain.str     septic.str        filterstrip.str   grassedww.str     bmpuser.str       
+hru_parm_db       plants.plt        fertilizer.frt    tillage.til       pesticide.pes     null              null              null              urban.urb         septic.sep        snow.sno          
+ops               harv.ops          graze.ops         irr.ops           chem_app.ops      fire.ops          sweep.ops         
+lum               landuse.lum       management.sch    cntable.lum       cons_practice.lum  ovn_table.lum     
+chg               null     null              null              null              null              null              null              null              null              
+init              plant.ini         soil_plant.ini    null     null              null              null              null              null              null              null              null              null              
+soils             soils.sol         nutrients.sol              null              
+decision_table    null              null              null              null              
+regions           ls_unit.ele       null              null              null              null              null              null              null              aqu_catunit.ele   null              null              null              null              null              null              null              null              
+pcp_path          null              
+tmp_path          null              
+slr_path          null              
+hmd_path          null              
+wnd_path          null              

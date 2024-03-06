@@ -1,0 +1,4 @@
+ demo                      SWAT+ Mar 05 2024        MODULAR Rev 2024.61.0.0                               
+       year     plant_no   plant_name       harv_area(ha)    yld(t)         yld(t/ha)      
+        2020           1 corn               11.52741       13.99831       1.214350    
+        2020           2 soyb              0.0000000E+00  0.0000000E+00  0.0000000E+00
