@@ -19,6 +19,7 @@
      &          "             Revision @SWAT_VERSION@  ",/,             &
      &          "      Soil & Water Assessment Tool    ",/,             &
      &          "@CMAKE_Fortran_COMPILER_ID@ (@CMAKE_Fortran_COMPILER_VERSION@), @ISO@, @CMAKE_HOST_SYSTEM_NAME@",/,             &
+     &          "@SWAT_VERSION@",/,             &
      &          "    Program reading . . . executing",/)
       
       open (888,file="erosion.txt",recl = 1500)
