@@ -132,6 +132,6 @@
 1234  format(/,"  Date of Sim", 2x,i2,"/",i2,"/",i4, " Time",2x,i2,":",i2,":",i2)
             
       write (107,1001)     
- 1001 format (/," Execution successfully completed ")
+ 1001 format (/," Execution successfully completed. ")
 
       end
