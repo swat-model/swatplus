@@ -134,5 +134,4 @@
       write (107,1001)     
  1001 format (/," Execution successfully completed ")
 
-	  stop      
       end
