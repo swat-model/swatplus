@@ -1,11 +1,14 @@
 ###############################################################
 # SWAT+ cmake, req min v3.20 (ifx, etc. support)
 ###############################################################
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}" OR
+   "${CMAKE_SOURCE_DIR}/src" STREQUAL "${CMAKE_BINARY_DIR}")
+   message(FATAL_ERROR "'in-source' builds not permitted, e.g. use 'cmake -B build' instead.")
+endif()
+
 cmake_minimum_required(VERSION 3.20)
 
-project(swatplus
-        VERSION 0.2
-        LANGUAGES Fortran)
+project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
 include(CTest)
 
@@ -17,7 +20,7 @@ execute_process(
 )
 
 if(TAG STREQUAL "")
-   message(FATAL_ERROR "No tag info found")
+   message(FATAL_ERROR "No tag info found.") #should not happen
 endif()
 
 
@@ -46,6 +49,12 @@ if (UNIX)
         if(NOT APPLE)
             link_libraries("-static")
         endif()
+    endif()
+elseif(WIN32)
+    if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
+        set(fdialect        "/free /Qdiag-disable:all /Qdiag-disable:remarks")
+        set(fdebug          "/traceback /warn:all")
+        set(frelease        "/O3")
     endif()
 endif()
 

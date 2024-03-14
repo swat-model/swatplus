@@ -23,15 +23,13 @@ Get the repo from GitHub by cloning it. Use a tagged version (preferred).
 
 ```bash
 $ git clone https://github.com/swat-model/swatplus
-
 ```
+
 Or, download the sources directly from the artifacts, unzip.
 
 ```bash
 $ wget https://github.com/swat-model/swatplus/archive/refs/tags/v60.7.4.zip
-
 ```
-
 
 ## Directory Structure
 
@@ -62,7 +60,6 @@ swatplus
 ├── CMakeLists.txt
 ├── Readme.md
 └── ...
-
 ```
 
 ## Configure/Generate the Build files
@@ -95,13 +92,11 @@ If you want to use Intel Fortran to build SWAT+, configure as below. It defaults
 
 The Intel `ifort` Fortran Compiler will be deprecated in 2024 and is being replaced with the LLVM-based version, `ifx`. Therefore, the use of `ifx` is preferred.
 
-
 ```bash
 $ cmake -B build -D CMAKE_Fortran_COMPILER=ifort
   <or better>
 $ cmake -B build -D CMAKE_Fortran_COMPILER=ifx
 ```
-
 
 If you want to create a `Debug` version of SWAT+ that includes symbols for debugging, configure as below. Use the `Release` flag for building a release version instead.
 
@@ -122,6 +117,7 @@ or using the Windows terminal:
 ```
 
 ## Build the SWAT+ Executable
+
 To build the SWAT+ executable, use the `cmake --build` command in the `swatplus` directory. It will process the previously generated files in `build` and place all intermediate resources (*.o, *.mod files) into the build directory.
 
 ```bash
@@ -143,6 +139,7 @@ Call the build target `clean` to remove all generated object files (`.o`) and mo
 ```
 
 ## Scenario Testing
+
 Running tests may reveal potential regressions of code changes against existing and assumed correct output. Here, we test the entire swatplus model against known scenario outputs and compare the results. Results should not differ significantly. Each SWAT+ unit test consists of one scenario run. The repository's `test` directory contains the Python test scripts and the `data` folder the reference scenarios.
 
 Tests are run using the `ctest` command, which is part if the `cmake` installation. Alternatively, you can use the command `make test` within the `build` directory.
@@ -154,8 +151,8 @@ $ ctest
 
 `ctest` provides a test summary as output. Somewhere in `build/Testing`, there is also the detailed standard output of `ctest` for each test. Also, you can run all tests, a selected subset of test, or just an individual one. `ctest` is quite powerful and flexible.
 
-
 ## Installing SWAT+
+
 Finally, you can install `swatplus.exe` by using the `--install` cmake option. Specify the installation directory that will receive a copy of the  swatplus executable, generated in `build`. The `--prefix` option takes as an argument the base of the binary dir. Not using `--prefix` will copy swatplus.exe into the system default binary directory. You don't have to use this step if you want to mange moving the swat executable yourself.
 
 ```bash
