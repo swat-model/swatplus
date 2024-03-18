@@ -20,7 +20,9 @@ execute_process(
 )
 
 if(TAG STREQUAL "")
-   message(FATAL_ERROR "No tag info found.") #should not happen
+  # message(FATAL_ERROR "No tag info found.")
+  # this happens when git it not installed or not in the path
+  set(TAG "unknown")
 endif()
 
 
@@ -53,6 +55,10 @@ if (UNIX)
 elseif(WIN32)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
         set(fdialect        "/free /Qdiag-disable:all /Qdiag-disable:remarks")
+        set(fdebug          "/traceback /warn:all")
+        set(frelease        "/O3")
+    elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
+        set(fdialect        "/free /Qdiag-disable:all")
         set(fdebug          "/traceback /warn:all")
         set(frelease        "/O3")
     endif()
@@ -88,6 +94,7 @@ endif()
 file(GLOB sources src/*.f90)
 add_executable(${SWATPLUS_EXE} ${sources})
 
+# set_target_properties(${PROJECT} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}\\Data")
 
 #############################################################################
 # Install
