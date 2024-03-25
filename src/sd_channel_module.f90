@@ -114,6 +114,9 @@
         real :: bankfull_flo
         real :: fps
         real :: fpn
+        real :: n_conc = 0.         !mg/kg      |nitrogen concentration in channel bank
+        real :: p_conc = 0.         !mg/kg      |phosphorus concentration in channel bank
+        real :: p_bio = 0.          !frac       |fraction of p in bank that is bioavailable
         real :: hc_kh = 0.
         real :: hc_hgt = 0.     !m          |headcut height
         real :: hc_ini = 0.

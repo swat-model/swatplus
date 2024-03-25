@@ -86,6 +86,9 @@
         sd_ch(i)%carbon = sd_chd(idb)%carbon
         sd_ch(i)%ch_bd = sd_chd(idb)%ch_bd
         sd_ch(i)%chss = sd_chd(idb)%chss
+        sd_ch(i)%n_conc = sd_chd(idb)%n_conc
+        sd_ch(i)%p_conc = sd_chd(idb)%p_conc
+        sd_ch(i)%p_bio = sd_chd(idb)%p_bio
         sd_ch(i)%bankfull_flo = sd_chd(idb)%bankfull_flo
         if (sd_ch(i)%bankfull_flo <= 1.e-6) sd_ch(i)%bankfull_flo = 0.
         sd_ch(i)%fps = sd_chd(idb)%fps

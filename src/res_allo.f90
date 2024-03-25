@@ -16,6 +16,8 @@
       
       mres = sp_ob%res
       allocate (res(0:mres))
+      allocate (res_prm(0:mres))
+      allocate (res_hyd(0:mres))
       allocate (res_om_init(0:mres))
       allocate (res_ob(0:mres))
       allocate (res_in_d(mres))

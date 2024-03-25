@@ -15,10 +15,7 @@
       integer :: ii                   !none          |counter 
       integer :: jres                 !none          |reservoir number
       integer :: idat                 !              |
-      integer :: ihyd                 !none          |counter
-      integer :: ised                 !none          |counter
       integer :: irel                 !              |
-      integer :: inut                 !none          |counter
       integer :: iob                  !none          |counter
       integer :: ictbl
       integer :: icon                  !! nbs
@@ -45,14 +42,13 @@
         !! set water body pointer to res
         wbody => res(jres)
         wbody_wb => res_wat_d(jres)
+        wbody_prm => res_prm(jres)
       
         !! add incoming flow to reservoir
         res(jres) = res(jres) + ht1
 
         !! perform reservoir water/sediment balance
         idat = res_ob(jres)%props
-        ihyd = res_dat(idat)%hyd
-        ised = res_dat(idat)%sed
         if(res_ob(jres)%rel_tbl == "d") then
           !! determine reservoir outflow
           irel = res_dat(idat)%release
@@ -67,17 +63,17 @@
           weir_hgt = res_ob(jres)%weir_hgt
           call conditions (jres, irel)
           call res_hydro (jres, irel, pvol_m3, evol_m3)
-          call res_sediment (ised)
+          call res_sediment
 	    else
 	      ictbl = res_dat(idat)%release                              !! Osvaldo
           call res_rel_conds (ictbl, res(jres)%flo, ht1%flo, 0.)
         endif 
         
         !! calculate water balance for day
-        res_wat_d(jres)%evap = 10. * res_hyd(ihyd)%evrsv * wst(iwst)%weat%pet * res_wat_d(jres)%area_ha
+        res_wat_d(jres)%evap = 10. * res_hyd(jres)%evrsv * wst(iwst)%weat%pet * res_wat_d(jres)%area_ha
         res_wat_d(jres)%precip = 10. * wst(iwst)%weat%precip * res_wat_d(jres)%area_ha
         if(bsn_cc%gwflow == 0) then !if gwflow active, seepage calculated in gwflow_simulate (rtb gwflow)
-          res_wat_d(jres)%seep = 240. * res_hyd(ihyd)%k * res_wat_d(jres)%area_ha
+          res_wat_d(jres)%seep = 240. * res_hyd(jres)%k * res_wat_d(jres)%area_ha
         endif
 
         !! add precip to reservoir storage
@@ -128,8 +124,7 @@
         res(jres)%cla = max (0., res(jres)%cla - ht2%cla)
           
         !! perform reservoir nutrient balance
-        inut = res_dat(idat)%nut
-        call res_nutrient (inut, iob)
+        call res_nutrient (iob)
 
         !! perform reservoir pesticide transformations
         if (cs_db%num_pests > 0) then

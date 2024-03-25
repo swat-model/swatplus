@@ -63,7 +63,7 @@
         soil1(ihru)%mp(ly)%lab = soil1(ihru)%mp(ly)%lab * wt1   !! mg/kg => kg/ha
 
         !! set active mineral P pool based on dynamic PSP MJW
-	    if (bsn_cc%sol_P_model == 0) then 
+	    if (bsn_cc%sol_P_model == 1) then 
 	      !! Allow Dynamic PSP Ratio
           !! convert to concentration
           solp = soil1(ihru)%mp(ly)%lab / wt1
@@ -71,8 +71,6 @@
 	      if (soil(ihru)%phys(ly)%clay > 0.) then
             bsn_prm%psp = -0.045 * log(soil(ihru)%phys(ly)%clay) + (0.001 * solp) 
             bsn_prm%psp = bsn_prm%psp - (0.035 * soil1(ihru)%tot(ly)%c) + 0.43 
-          else
-            bsn_prm%psp = 0.4
           endif   		
           !! Limit PSP range
           if (bsn_prm%psp < .05) then
@@ -84,7 +82,7 @@
         soil1(ihru)%mp(ly)%act = soil1(ihru)%mp(ly)%lab * (1. - bsn_prm%psp) / bsn_prm%psp
 
         !! Set Stable pool based on dynamic coefficient
-	    if (bsn_cc%sol_P_model == 0) then  !! From White et al 2009 
+	    if (bsn_cc%sol_P_model == 1) then  !! From White et al 2009 
             !! convert to concentration for ssp calculation
 	        actp = soil1(ihru)%mp(ly)%act / wt1
 		    solp = soil1(ihru)%mp(ly)%lab / wt1
@@ -119,14 +117,14 @@
         !initialize active humus pool
         soil1(ihru)%hact(ly)%m = frac_hum_active * soil1(ihru)%tot(ly)%m
         soil1(ihru)%hact(ly)%c = frac_hum_active * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%hact(ly)%n = soil1(ihru)%hact(ly)%c / 10.   !solt_db(isolt)%hum_c_n        !assume 10:1 C:N ratio
-        soil1(ihru)%hact(ly)%p = soil1(ihru)%hact(ly)%c / 80.   !solt_db(isolt)%hum_c_p        !assume 80:1 C:P ratio
+        soil1(ihru)%hact(ly)%n = soil1(ihru)%hact(ly)%c / solt_db(isolt)%hum_c_n
+        soil1(ihru)%hact(ly)%p = soil1(ihru)%hact(ly)%c / solt_db(isolt)%hum_c_p
             
         !initialize stable humus pool
         soil1(ihru)%hsta(ly)%m = (1. - frac_hum_active) * soil1(ihru)%tot(ly)%m
         soil1(ihru)%hsta(ly)%c = (1. - frac_hum_active) * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%hsta(ly)%n = soil1(ihru)%hsta(ly)%c / 10.   !solt_db(isolt)%hum_c_n        !assume 10:1 C:N ratio
-        soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / 80.   !solt_db(isolt)%hum_c_p        !assume 80:1 C:P ratio
+        soil1(ihru)%hsta(ly)%n = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_n
+        soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         
         !set root and incorporated residue pool to zero
         soil1(ihru)%rsd(ly) = orgz

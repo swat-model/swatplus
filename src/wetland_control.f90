@@ -24,11 +24,9 @@
       integer :: j                    !none          |counter
       real :: x1                      !              |
       real :: wet_h                   !              |
-      real :: wet_h1                  !              |  
-      integer :: ihyd                 !none          |counter
+      real :: wet_h1                  !              | 
       integer :: ised                 !none          |counter
       integer :: irel                 !              |
-      integer :: inut                 !none          |counter
       integer :: icon                 !none          |counter: identifies parameter list in cs_res (rtb cs)
       integer :: ires = 0
       integer :: j1
@@ -41,12 +39,19 @@
       real :: volseep, volex, swst(20)
       j = ihru
       ires = hru(j)%dbs%surf_stor
-      ihyd = wet_dat(ires)%hyd
       ised = wet_dat(ires)%sed
       irel = wet_dat(ires)%release
-      wsa1 = hru(j)%area_ha * 10. 
+      wsa1 = hru(j)%area_ha * 10.
+      
       !! zero outgoing flow 
-      ht2 = resz 
+      ht2 = resz
+      
+      
+      !! set water body pointer to res
+      wbody => wet(j)
+      wbody_wb => wet_wat_d(j)
+      wbody_prm => wet_prm(j)
+      
 
       !! initialize variables for wetland daily simulation
       hru(j)%water_seep = 0.
@@ -61,24 +66,17 @@
       !! add irrigation water to the paddy/wetland storage 
       wet(j)%flo =  wet(j)%flo + irrig(j)%applied * wsa1 !m3
       
-      !! done in et_act to maintain balance -- subtract evaporation  - mm*ha*10.=m3
-      !wet_wat_d(j)%evap = pet_day * wet_hyd(ihyd)%evrsv * wsa1 !m3
-      !wet_wat_d(j)%evap = min(wet_wat_d(j)%evap, wet(j)%flo)
-      !wet(j)%flo = wet(j)%flo - wet_wat_d(j)%evap 
-      !hru(j)%water_evap = wet_wat_d(j)%evap / wsa1 !mm
-      !wet(j)%dep = wet(j)%dep - hru(j)%water_evap !mm
-      
       wet_wat_d(j)%area_ha = 0.
       if (wet(j)%flo > 0.) then  !paddy is assumed flat
         !! update wetland surface area - solve quadratic to find new depth
-        x1 = wet_hyd(ihyd)%bcoef ** 2 + 4. * wet_hyd(ihyd)%ccoef * (1. - wet(j)%flo / (wet_ob(j)%pvol + 1.e-9))
+        x1 = wet_hyd(j)%bcoef ** 2 + 4. * wet_hyd(j)%ccoef * (1. - wet(j)%flo / (wet_ob(j)%pvol + 1.e-9))
         if (x1 < 1.e-6) then
           wet_h = 0.
         else
-          wet_h1 = (-wet_hyd(ihyd)%bcoef - sqrt(x1)) / (2. * wet_hyd(ihyd)%ccoef + 1.e-9)
-          wet_h = wet_h1 + wet_hyd(ihyd)%bcoef
+          wet_h1 = (-wet_hyd(j)%bcoef - sqrt(x1)) / (2. * wet_hyd(j)%ccoef + 1.e-9)
+          wet_h = wet_h1 + wet_hyd(j)%bcoef
         end if
-        wet_fr = (1. + wet_hyd(ihyd)%acoef * wet_h)
+        wet_fr = (1. + wet_hyd(j)%acoef * wet_h)
         wet_fr = min(wet_fr,1.)
         wet_fr = max(wet_fr,0.01)
         
@@ -153,8 +151,6 @@
       !if (hru(j)%wet_fp == "n") then
         !! calc release from decision table
         d_tbl => dtbl_res(irel)
-        wbody => wet(j)
-        wbody_wb => wet_wat_d(j)
         pvol_m3 = wet_ob(j)%pvol
         evol_m3 = wet_ob(j)%evol
         !if (wet_ob(j)%area_ha > 1.e-6) then
@@ -194,7 +190,7 @@
       wet_ob(j)%depth = wet(j)%flo / wsa1 / 1000. !m                       
        
       !! compute sediment deposition
-      call res_sediment (ised)
+      call res_sediment
       
       !!! subtract sediment leaving from reservoir
       !wet(j)%sed = wet(j)%sed - ht2%sed
@@ -202,8 +198,7 @@
       !wet(j)%cla = wet(j)%cla - ht2%cla
       
       !! perform reservoir nutrient balance
-      inut = wet_dat(ires)%nut
-      call res_nutrient (inut, j)
+      call res_nutrient (j)
       
       !! perform salt ion constituent balance
       call wet_salt(icmd,j)

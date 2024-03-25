@@ -353,8 +353,13 @@
 	      call cbn_zhang2
 	    end if
 
-        call nut_nitvol  
-        call nut_pminrl
+        call nut_nitvol
+
+	    if (bsn_cc%sol_P_model == 1) then  
+          call nut_pminrl2
+        else
+          call nut_pminrl
+        end if
         
         !! compute biozone processes in septic HRUs
         !! if 1) current is septic hru and 2) soil temperature is above zero

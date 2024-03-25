@@ -1,4 +1,4 @@
-      subroutine res_sediment (ised)
+      subroutine res_sediment
 
       use reservoir_data_module
       use reservoir_module
@@ -10,7 +10,6 @@
       
       implicit none
 
-      integer, intent (in) :: ised          !none          |res sediment data pointer
       real :: trapres                       !              |
       real :: velofl                        !              |  
       real :: sed_ppm, sil_ppm, cla_ppm 
@@ -26,7 +25,7 @@
 	    if (wbody_wb%area_ha > 1.e-6) then
           velofl = (ht2%flo / wbody_wb%area_ha) / 10000.  ! m3/d / ha * 10000. = m/d
           if (velofl > 1.e-6) then
-	        trapres = res_sed(ised)%velsetlr / velofl
+	        trapres = wbody_prm%sed%velsetlr / velofl
           else
             trapres = 1.
           end if
@@ -53,14 +52,14 @@
 	    endif
         
         !! compute change in sediment concentration due to settling 
-        if (sed_ppm > res_sed(ised)%nsed) then
-          sed_ppm = (sed_ppm - res_sed(ised)%nsed) * res_sed(ised)%sed_stlr + res_sed(ised)%nsed
+        if (sed_ppm > wbody_prm%sed%nsed) then
+          sed_ppm = (sed_ppm - wbody_prm%sed%nsed) * wbody_prm%sed%sed_stlr + wbody_prm%sed%nsed
           wbody%sed = sed_ppm * wbody%flo / 1000000.      ! ppm -> t
           
-          sil_ppm = (sil_ppm - res_sed(ised)%nsed) * res_sed(ised)%sed_stlr + res_sed(ised)%nsed
+          sil_ppm = (sil_ppm - wbody_prm%sed%nsed) * wbody_prm%sed%sed_stlr + wbody_prm%sed%nsed
           wbody%sil = sil_ppm * wbody%flo / 1000000.      ! ppm -> t
           
-          cla_ppm = (cla_ppm - res_sed(ised)%nsed) * res_sed(ised)%sed_stlr + res_sed(ised)%nsed
+          cla_ppm = (cla_ppm - wbody_prm%sed%nsed) * wbody_prm%sed%sed_stlr + wbody_prm%sed%nsed
           wbody%cla = cla_ppm * wbody%flo / 1000000.      ! ppm -> t
 
           !! assume all sand aggregates and gravel settles

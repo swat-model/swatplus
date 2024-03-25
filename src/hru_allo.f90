@@ -5,6 +5,7 @@
       use organic_mineral_mass_module
       use constituent_mass_module
       use reservoir_module
+      use reservoir_data_module
       use carbon_module
       use plant_module
       use soil_module
@@ -46,6 +47,8 @@
         allocate (irrig(0:imax))
         
         allocate (wet(0:imax))
+        allocate (wet_prm(0:imax))
+        allocate (wet_hyd(0:imax))
         allocate (wet_om_init(0:imax))
         allocate (wet_ob(imax))
         allocate (wet_in_d(imax))

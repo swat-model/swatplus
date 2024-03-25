@@ -526,6 +526,11 @@
         !! reset sed to tons
         ht2%sed = sedout
         
+        !! add nutrients from bank erosion - t *ppm (1/1,000,000) * 1000. kg/t
+        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc * 1000.
+        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc * 1000.
+        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio * 1000.
+        
         !! route constituents
         call ch_rtpest
         !! call mike winchell's new routine for pesticide routing

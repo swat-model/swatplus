@@ -97,53 +97,64 @@
             ! if object is not an hru, need ht1, don't need %hin_sur and %hin_lat
             ! don't have to check if it's in an ru - only hru's can be routed over
             if (ob(icmd)%typ == "hru" .or. ob(icmd)%typ == "ru" .or. ob(icmd)%typ == "hru_lte") then
-              ! recieving hru, needs %hin_sur and %hin_lat and %hin_til to route separately in hru_control
-              if (ob(icmd)%htyp_in(in) == "tot") then
-                ! if total hyd coming in from hru or ru -> add both surface and lateral flows
-                ! add to surface runon
-                ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(3)
-                if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                  obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(3)
-                end if
-                ! add to lateral soil runon
-                ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(4)
-                if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                  obcs(icmd)%hin_lat(1) = obcs(icmd)%hin_lat(1) + frac_in * obcs(iob)%hd(4)
-                end if
+                
+              !! if incoming object is not an hru or ru, send total hyd to surface runoff
+              if (ob(icmd)%obtyp_in(in) == "hru" .or. ob(icmd)%obtyp_in(in) == "ru" .or.          &
+                                                       ob(icmd)%obtyp_in(in) == "hru_lte") then
+                ! recieving hru, needs %hin_sur and %hin_lat and %hin_til to route separately in hru_control
+                if (ob(icmd)%htyp_in(in) == "tot") then
+                  ! if total hyd coming in from hru or ru -> add both surface and lateral flows
+                  ! add to surface runon
+                  ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(3)
+                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                    obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(3)
+                  end if
+                  ! add to lateral soil runon
+                  ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(4)
+                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                    obcs(icmd)%hin_lat(1) = obcs(icmd)%hin_lat(1) + frac_in * obcs(iob)%hd(4)
+                  end if
+                else
+                  ! if hyd in is not a total hyd from an hru or ru -> add the specified hyd typ 
+                  select case (ob(icmd)%htyp_in(in))
+                  case ("tot")   ! total flow
+                    ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(ihyd)
+                    !add constituents
+                    if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                      obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(ihyd)
+                    end if
+                  case ("sur")   ! surface runoff
+                    ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(ihyd)
+                    !add constituents
+                    if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                      obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(ihyd)
+                    end if
+                  case ("lat")   ! lateral soil flow
+                    ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(ihyd)
+                    !add constituents
+                    if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                      obcs(icmd)%hin_lat(1) = obcs(icmd)%hin_lat(1) + frac_in * obcs(iob)%hd(ihyd)
+                    end if
+                  case ("til")   ! tile flow
+                    ob(icmd)%hin_til = ob(icmd)%hin_til + frac_in * ob(iob)%hd(ihyd)
+                    !add constituents
+                    if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                      obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(ihyd)
+                    end if
+                  case ("aqu")   ! aquifer inflow
+                    ob(icmd)%hin_aqu = ob(icmd)%hin_aqu + frac_in * ob(iob)%hd(ihyd)
+                    !add constituents
+                    if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                      obcs(icmd)%hin_aqu(1) = obcs(icmd)%hin_aqu(1) + frac_in * obcs(iob)%hd(ihyd)
+                    end if
+                  end select
+                end if  
               else
-                ! if hyd in is not a total hyd from an hru or ru -> add the specified hyd typ 
-                select case (ob(icmd)%htyp_in(in))
-                case ("tot")   ! total flow
-                  ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(ihyd)
-                  !add constituents
-                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                    obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(ihyd)
-                  end if
-                case ("sur")   ! surface runoff
-                  ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(ihyd)
-                  !add constituents
-                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                    obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(ihyd)
-                  end if
-                case ("lat")   ! lateral soil flow
-                  ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(ihyd)
-                  !add constituents
-                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                    obcs(icmd)%hin_lat(1) = obcs(icmd)%hin_lat(1) + frac_in * obcs(iob)%hd(ihyd)
-                  end if
-                case ("til")   ! tile flow
-                  ob(icmd)%hin_til = ob(icmd)%hin_til + frac_in * ob(iob)%hd(ihyd)
-                  !add constituents
-                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                    obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(ihyd)
-                  end if
-                case ("aqu")   ! aquifer inflow
-                  ob(icmd)%hin_aqu = ob(icmd)%hin_aqu + frac_in * ob(iob)%hd(ihyd)
-                  !add constituents
-                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                    obcs(icmd)%hin_aqu(1) = obcs(icmd)%hin_aqu(1) + frac_in * obcs(iob)%hd(ihyd)
-                  end if
-                end select
+                ! add total inflow to surface runon if channel or recall
+                ob(icmd)%hin_sur = ob(icmd)%hin_sur + frac_in * ob(iob)%hd(1)
+                if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                  obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(1)
+                end if
               end if
               
             else
@@ -399,9 +410,11 @@
         
       end do
 
+      !! write object output for entire simulation
+      call obj_output
+      
       !! print all output files
       if (time%yrs > pco%nyskip) then
-        call obj_output
       
         !! print water allocation output
         do iwro =1, db_mx%wallo_db
@@ -454,7 +467,7 @@
             do nly = 1, soil(ihru)%nly
               soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
             end do
-            write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name, iob, (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
+            write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name, (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
           end if
                                                         
         select case (pco%carbout)

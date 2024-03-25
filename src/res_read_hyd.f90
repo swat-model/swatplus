@@ -19,7 +19,7 @@
 
       inquire (file=in_res%hyd_res, exist=i_exist)
       if (.not. i_exist .or. in_res%hyd_res == "null") then
-        allocate (res_hyd(0:0))
+        allocate (res_hyddb(0:0))
       else   
       do
        open (105,file=in_res%hyd_res)
@@ -35,7 +35,7 @@
         
       db_mx%res_hyd = imax
       
-      allocate (res_hyd(0:imax))
+      allocate (res_hyddb(0:imax))
       rewind (105)
       read (105,*,iostat=eof) titldum
       if (eof < 0) exit
@@ -46,18 +46,18 @@
          
          !read (105,*,iostat=eof) titldum
          !backspace (105)
-         read (105,*,iostat=eof) res_hyd(ires)
+         read (105,*,iostat=eof) res_hyddb(ires)
          if (eof < 0) exit
 
-        if (res_hyd(ires)%pvol + res_hyd(ires)%evol > 0.) then
-          if(res_hyd(ires)%pvol <= 0) res_hyd(ires)%pvol = 0.9 * res_hyd(ires)%evol
+        if (res_hyddb(ires)%pvol + res_hyddb(ires)%evol > 0.) then
+          if(res_hyddb(ires)%pvol <= 0) res_hyddb(ires)%pvol = 0.9 * res_hyddb(ires)%evol
         else
-          if (res_hyd(ires)%pvol <= 0) res_hyd(ires)%pvol = 60000.0
+          if (res_hyddb(ires)%pvol <= 0) res_hyddb(ires)%pvol = 60000.0
         end if
-        if (res_hyd(ires)%evol <= 0.0) res_hyd(ires)%evol = 1.11 *res_hyd(ires)%pvol
-        if (res_hyd(ires)%psa <= 0.0) res_hyd(ires)%psa = 0.08 * res_hyd(ires)%pvol
-        if (res_hyd(ires)%esa <= 0.0) res_hyd(ires)%esa = 1.5 * res_hyd(ires)%psa
-        if (res_hyd(ires)%evrsv <= 0.) res_hyd(ires)%evrsv = 0.6
+        if (res_hyddb(ires)%evol <= 0.0) res_hyddb(ires)%evol = 1.11 * res_hyddb(ires)%pvol
+        if (res_hyddb(ires)%psa <= 0.0) res_hyddb(ires)%psa = 0.08 * res_hyddb(ires)%pvol
+        if (res_hyddb(ires)%esa <= 0.0) res_hyddb(ires)%esa = 1.5 * res_hyddb(ires)%psa
+        if (res_hyddb(ires)%evrsv <= 0.) res_hyddb(ires)%evrsv = 0.6
 
        end do
        close (105)

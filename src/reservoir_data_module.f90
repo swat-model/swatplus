@@ -77,6 +77,7 @@
         real :: br2 = 0.          !none          |vol-surface area coefficient for reservoirs (model estimates if zero)
       end type reservoir_hyd_data
       type (reservoir_hyd_data), dimension(:), allocatable :: res_hyd
+      type (reservoir_hyd_data), dimension(:), allocatable :: res_hyddb
       
       type wetland_hyd_data
         character(len=25) :: name = "default"
@@ -92,6 +93,7 @@
         real :: frac = .5         !none          |fraction of hru that drains into impoundment
       end type wetland_hyd_data
       type (wetland_hyd_data), dimension(:), allocatable :: wet_hyd
+      type (wetland_hyd_data), dimension(:), allocatable :: wet_hyddb
       
       type reservoir_sed_data
         character(len=25) :: name
@@ -121,9 +123,16 @@
       end type reservoir_nut_data
       type (reservoir_nut_data), dimension(:), allocatable :: res_nut
           
-      type reservoir_weir_outflow   !updated by Jaehak 2022
+      type water_body_data_parameters
+        type (reservoir_sed_data) :: sed
+        type (reservoir_nut_data) :: nut
+      end type water_body_data_parameters
+      type (water_body_data_parameters), dimension(:), allocatable, target :: res_prm
+      type (water_body_data_parameters), dimension(:), allocatable, target :: wet_prm
+      type (water_body_data_parameters), pointer :: wbody_prm       !! used for reservoir and wetlands
+      
+      type reservoir_weir_outflow
         character(len=25) :: name
-																								  
         real :: c = 1.84              !none          |weir discharge linear coefficient 
         real :: k = 2.6               !none          |weir discharge exponential coefficient
         real :: w = 2.5               !m             |width
