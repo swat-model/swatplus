@@ -100,7 +100,4 @@
       endif !check if tile drainage is active
       
       return
-      end subroutine gwflow_tile
-      
-           
-      
+      end subroutine gwflow_tile      

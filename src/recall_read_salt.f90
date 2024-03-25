@@ -245,6 +245,5 @@
       enddo
       endif
       
-
       return
       end subroutine recall_read_salt

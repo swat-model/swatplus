@@ -199,10 +199,6 @@
         endif !check if cell is active
       
       enddo !go to next cell 
-      
-      
+          
       return
-      end subroutine gwflow_gwsw
-      
-           
-      
+      end subroutine gwflow_gwsw      

@@ -158,4 +158,4 @@
         !master duration curve from annual curves (median)
    
       return
-      end  subroutine flow_dur_curve
+      end subroutine flow_dur_curve

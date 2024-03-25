@@ -223,10 +223,6 @@
         enddo !go to next canal connected to the channel  
           
       endif !check if canal-cell exchange is active
-      
-      
+          
       return
-      end subroutine gwflow_canl
-      
-           
-      
+      end subroutine gwflow_canl      

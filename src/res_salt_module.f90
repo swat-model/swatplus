@@ -114,5 +114,4 @@
       end type res_salt_header
       type (res_salt_header) :: ressalt_hdr
 
-      
       end module res_salt_module

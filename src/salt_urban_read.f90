@@ -63,8 +63,6 @@
       endif
       
       close (5054)
-
-      
+  
       return
-      end subroutine salt_urban_read
-      
+      end subroutine salt_urban_read  

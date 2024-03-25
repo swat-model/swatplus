@@ -1,5 +1,4 @@
       subroutine cs_balance !rtb cs
-
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates total constituent mass in system and writes out data to perform
@@ -20,8 +19,8 @@
       use gwflow_module, only : gw_solute_flag,gwsol_ss,ncell,ncell,gw_state,gwsol_state
 
       implicit none
-
-      integer :: i,m,ob_ctr,num_days,sol_index, jj
+      
+      integer :: i,m,ob_ctr,num_days,sol_index,jj
       real :: cssum1,cssum2,cssum3,hru_area_m2,sol_thick,soil_volume,soil_mass, &
               aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
       real :: cs_basin(87)

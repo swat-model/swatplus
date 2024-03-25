@@ -197,5 +197,4 @@
       endif !if reservoir-cell connection is active in the simulation
       
       return
-      end subroutine gwflow_resv
-            
+      end subroutine gwflow_resv         

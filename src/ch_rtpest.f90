@@ -272,7 +272,8 @@
         ch_benthic(jrch)%pest(ipest) = sedpstmass
 
         !! calculate outflow and storage in water column
-        rto_out = ht2%flo / (ht2%flo + ch_stor(jrch)%flo)
+        rto_out = ht2%flo / (1.e-6 + ht2%flo + ch_stor(jrch)%flo)
+        rto_out = Min (1., rto_out)
         hcs2%pest(ipest) = rto_out * chpstmass
         ch_water(jrch)%pest(ipest) = (1. - rto_out) * chpstmass
         

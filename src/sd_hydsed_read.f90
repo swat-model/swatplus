@@ -15,21 +15,17 @@
       integer :: imax                 !none         |determine max number for array (imax) and total number in file
       logical :: i_exist              !none         |check to determine if file exists
       integer :: idb                  !             |
-         
+      integer :: ts_sed               !none         |time step for channel sediment routing
+      
       eof = 0
       imax = 0
       maxint = 10
       
-      allocate (timeint(10))    !***jga
-      if (bsn_cc%i_fpwet == 0) then
-        allocate (hyd_rad(10))
-        allocate (trav_time(10))
-        allocate (flo_dep(10))
-      else
-        allocate (hyd_rad(10))
-        allocate (trav_time(10))
-        allocate (flo_dep(10))
-      end if
+      ts_sed = Max (10, time%step)
+      allocate (timeint(ts_sed))
+      allocate (hyd_rad(ts_sed))
+      allocate (trav_time(ts_sed))
+      allocate (flo_dep(ts_sed))
       
       inquire (file=in_cha%hyd_sed, exist=i_exist)
       if (.not. i_exist .or. in_cha%hyd_sed == "null") then

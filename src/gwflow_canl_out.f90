@@ -108,10 +108,6 @@
         enddo !go to next canal cells
       
       endif !check if canal-cell exchange is active
-      
-      
+       
       return
-      end subroutine gwflow_canl_out
-      
-           
-      
+      end subroutine gwflow_canl_out      

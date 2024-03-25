@@ -55,7 +55,7 @@
       rk4_s =  Theta(ch_nut(jnut)%rk4,thrk4,wtmp) * ben_area    !ch_hyd(jhyd)%l *ch_hyd(jhyd)%w * rt_delt
 
       !! ht3 = concentration of incoming nutrients
-      rchdep = ch_rcurv(jrch)%in2%dep
+      !rchdep = ch_rcurv(jrch)%in2%dep
       if (ht3%flo > 0. .and. rchdep > 0.) then
         disoxin = ht3%dox - rk4_s / (ht3%flo * 1000.)   !m3*1000 l/m3 = liters
         disoxin = max (0., disoxin)

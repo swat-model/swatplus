@@ -309,8 +309,7 @@
                                         (ru_hru_csb_a(iru)%cs(ics)%sorb,ics=1,cs_db%num_cs)
         endif
       endif
-
-      
+    
       return
       
 100   format (4i6,2i8,500e15.4)      

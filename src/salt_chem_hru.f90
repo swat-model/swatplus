@@ -854,9 +854,3 @@
 
       return 
       end ! end subroutine cation exchange 
-      
-      
-
-
-
-

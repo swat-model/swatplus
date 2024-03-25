@@ -24,7 +24,7 @@
       use basin_module
       use maximum_data_module
       use gwflow_module
-      
+      use soil_module
       implicit none
 
       real, dimension(time%step) :: hyd_flo     !flow hydrograph
@@ -38,6 +38,7 @@
       integer :: ihtyp                !              |
       integer :: iaq                  !none          |counter
       integer :: j                    !none          |counter
+      integer :: nly, ly
       integer :: ihyd                 !              |
       integer :: idr                  !              |
       integer :: iwro                 !              |
@@ -339,7 +340,8 @@
               if (bsn_cc%i_fpwet == 0) then
                 call sd_channel_control
               else
-                call sd_channel_control3
+                call sd_channel_control3    !use for Osvaldo
+                !call sd_channel_control2   !use for Adrian/Dennis subdaily
               end if
             else
                 !! artificial channel - length=0 - no transformations
@@ -446,6 +448,15 @@
             end do
           end if
           
+          !! carbon output for testing  ***jga
+          if ((time%yrc == 2007 .AND. time%day == 213) .OR. (time%yrc == 2010 .AND. time%day == 319)            &
+                                                        .OR.(time%yrc == 2011 .AND. time%day == 324)) then 
+            do nly = 1, soil(ihru)%nly
+              soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
+            end do
+            write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name, iob, (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
+          end if
+                                                        
         select case (pco%carbout)
         !! write carbon in soil, plant, and residue at end of the day
           case ("d")

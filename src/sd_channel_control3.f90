@@ -94,6 +94,7 @@
       real :: salt_conc(8)            !kg            |salt concentration in channel water
       real :: cs_conc(8)              !kg            |constituent concentration in channel water
       real :: bf_flow                 !m3/s          |bankfull flow rate * adjustment factor
+      
       ich = isdch
       isd_db = sd_dat(ich)%hyd
       iwst = ob(icmd)%wst
@@ -177,6 +178,13 @@
       ch_in_d(ich) = ht1                        !set inflow om hydrograph
       ch_in_d(ich)%flo = ht1%flo / 86400.       !flow for om output - m3/s
       
+      !set constituents (rtb salt) to incoming loads
+      if (cs_db%num_tot > 0) then
+        hcs1 = obcs(icmd)%hin(1)
+      end if
+      !! zero outgoing flow and sediment - ht2
+      ht2 = hz
+
       !call Muskingum and variable storage coefficient flood routing method
       call ch_rtmusk
               

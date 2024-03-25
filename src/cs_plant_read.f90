@@ -1,16 +1,17 @@
       subroutine cs_plant_read !rtb cs
+    
       use constituent_mass_module
       use input_file_module
       use maximum_data_module
       use cs_data_module
+      
+      implicit none
  
-      implicit none 
-
       character (len=80) :: titldum
       character (len=80) :: header
       character (len=12) :: plant_name
-      logical :: i_exist              !none       |check to determine if file exists
       integer :: iplant
+      logical :: i_exist              !none       |check to determine if file exists
 
 
       !read plant boron tolerance data

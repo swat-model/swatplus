@@ -1,5 +1,5 @@
       subroutine salt_fert_read !rtb salt
-
+       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine reads salt ion fertilizer loading (kg/ha) for various fertilizer types
   
@@ -7,9 +7,9 @@
       use input_file_module
       use maximum_data_module
       use salt_module
- 
+      
       implicit none
-       
+ 
       character (len=80) :: titldum
       character (len=80) :: header
       character (len=30) :: fert_name

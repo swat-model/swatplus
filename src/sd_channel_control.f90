@@ -94,6 +94,7 @@
       real :: salt_conc(8)            !kg            |salt concentration in channel water
       real :: cs_conc(8)              !kg            |constituent concentration in channel water
       real :: bf_flow                 !m3/s          |bankfull flow rate * adjustment factor
+      
       ich = isdch
       isd_db = sd_dat(ich)%hyd
       iwst = ob(icmd)%wst
@@ -449,7 +450,9 @@
         arc_len = 0.33 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
         hyd_radius = rcurv%xsec_area / rcurv%wet_perim
         prot_len = 0.71 * (rchdep ** 1.1666) / sd_ch(ich)%chn
-        ebank_t = ebank_m * sd_ch(ich)%chd * (arc_len + prot_len) * sd_ch(ich)%ch_bd
+        sd_ch(ich)%cov = 0.2
+        ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%cov * sd_ch(ich)%chl * 1000. * sd_ch(ich)%ch_bd
+        ebank_t = 0.8 * ebank_t     !assume 80% wash load and 20% bed deposition
         ebank_t = max (0., ebank_t)
         
           !! no downcutting below equilibrium slope
@@ -459,7 +462,7 @@
           shear_btm = 9800. * rcurv%dep * sd_ch(ich)%chs   !! Pa = N/m^2 * m * m/m
             !! if bottom shear > d50 -> downcut - widen to maintain width depth ratio
             if (shear_btm > shear_btm_cr) then
-              ebtm_m = sd_ch(ich)%cherod * sd_ch(ich)%cov *  (shear_btm - shear_btm_cr)    !! cm = hr * cm/hr/Pa * Pa
+              ebtm_m = sd_ch(ich)%cherod * (shear_btm - shear_btm_cr)    !! cm = hr * cm/hr/Pa * Pa
               !! calc mass of sediment eroded -> t = cm * m/100cm * width (m) * length (km) * 1000 m/km * bd (t/m3)
               ebtm_t = 10. * ebtm_m * sd_ch(ich)%chw * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
             end if

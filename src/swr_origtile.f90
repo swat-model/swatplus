@@ -15,7 +15,8 @@
 
       !! compute tile flow using the original tile equations
 
-      if (soil(j)%sw > soil(j)%sumfc .and. wt_shall > 1.e-6) then
+      !if (soil(j)%sw > soil(j)%sumfc .and. wt_shall > 1.e-6) then
+      if (soil(j)%sw > soil(j)%sumfc ) then
         sw_excess = (tile_above_btm / wt_shall) * (soil(j)%sw - soil(j)%sumfc)
         !! (wt_above_btm - tile_above_btm) / wt_above_btm * (sw - fc)
         sw_excess = (wt_shall - tile_above_btm) / wt_shall * (soil(j)%sw - soil(j)%sumfc)

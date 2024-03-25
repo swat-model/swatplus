@@ -28,17 +28,12 @@
       character(len=100) :: folderPath
       character(len=100) :: command
       logical :: folderExists
-      
-      ! Specify the path for the new folder
-      folderPath ="SWIFT"
-     ! Check if the folder exists
-      ! inquire(directory=folderPath, exist=folderExists)
-      ! Create the folder if it doesn't exist
-      !if (.not. folderExists) then
-          command = 'mkdir ' // trim(folderPath)
-          call SYSTEM(command)
-      !endif
-      
+         
+      folderPath = "SWIFT"
+      ! Use system-specific command to create a folder
+      command = 'mkdir ' // trim(folderPath)
+      call SYSTEM(command)
+    
       !! write new file.cio
       open (107,file="SWIFT/file_cio.swf",recl = 1500)
       write (107, *) "SWIFT file.cio"

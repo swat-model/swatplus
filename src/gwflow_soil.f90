@@ -123,9 +123,5 @@
         
       endif !check if gw-->soil transfer is active
       
-
       return
-      end subroutine gwflow_soil
-      
-           
-      
+      end subroutine gwflow_soil     

@@ -1,5 +1,5 @@
       module salt_module
-
+    
       implicit none
 
       !soil -------------------------------------------------------------------------------------------------------------------------------
@@ -290,7 +290,5 @@
          character(len=15) :: dssl =       "dssl_total"
       end type output_salt_hdr_hru      
       type (output_salt_hdr_hru) :: salt_hdr_hru
-      
-      
+            
       end module
-      

@@ -158,6 +158,4 @@
       !store pumping (m3) for the HRU
       hru_pump(hru_id) = sum_pump
       
-      
-      end subroutine gwflow_ppag
-      
+      end subroutine gwflow_ppag     

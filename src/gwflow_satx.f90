@@ -88,10 +88,6 @@
         enddo !go to next connected cell
         
       endif !check if saturation excess flow is being simulated
-              
-              
+                            
       return
-      end subroutine gwflow_satx
-      
-           
-      
+      end subroutine gwflow_satx      

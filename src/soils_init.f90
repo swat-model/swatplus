@@ -163,7 +163,7 @@
    
         !! allocate soil1 arrays - carbon/nutrients
         nly = soil(ihru)%nly
-        allocate (cs_soil(ihru)%ly(nly))
+        !allocate (cs_soil(ihru)%ly(nly))
         allocate (soil1(ihru)%sw(nly))
         allocate (soil1(ihru)%cbn(nly))
         allocate (soil1(ihru)%sed(nly))

@@ -1,5 +1,5 @@
       subroutine salt_balance
-
+      
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates total salt in system and writes out data to perform
 !!    a system-wide salt mass balance.
@@ -20,11 +20,11 @@
 
       implicit none
       
-      integer :: i,m,ob_ctr,num_days, jj
+      integer :: i,m,ob_ctr,num_days,jj
       real :: saltsum,hru_area_m2,sol_thick,soil_volume,soil_mass, &
-              aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
+              aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha,soil_thick
       real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
-      real :: salt_basin(28), soil_thick
+      real :: salt_basin(28)
 
       
       !basin-wide salt mass balance -------------------------------------------------------------------------------------------------------
@@ -475,8 +475,7 @@
           enddo
         endif
       endif
-      
-      
+          
 7000  format(i8,i8,i8,35e16.8)
 7001  format(20e16.8)
 

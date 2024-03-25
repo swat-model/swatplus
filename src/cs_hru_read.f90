@@ -1,12 +1,12 @@
       !the purpose of this subroutine is to read constituent concentration data for soils and plants in HRUs
       subroutine cs_hru_read !rtb cs
-
+    
       use constituent_mass_module
       use input_file_module
       use maximum_data_module
- 
+      
       implicit none
-    
+ 
       character (len=80) :: titldum
       character (len=80) :: header
       integer :: ics

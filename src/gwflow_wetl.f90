@@ -122,8 +122,6 @@
         endif
         
       endif !check if groundwater-wetland exchange is active
-      
-      
+          
       return
-      end subroutine gwflow_wetl
-      
+      end subroutine gwflow_wetl    

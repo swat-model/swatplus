@@ -97,9 +97,5 @@
         mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)	!g/day
         
       endif !if constituents are active
-      
-      
-      end subroutine gwflow_chem
-      
-           
-      
+         
+      end subroutine gwflow_chem     

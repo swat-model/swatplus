@@ -208,9 +208,9 @@
       !m3 for water; g for solutes
       do i=1,ncell 
         if(gw_state(i)%stat == 1) then  
-          gw_ss(i)%totl = gw_ss(i)%rech + gw_ss(i)%gwet + gw_ss(i)%gwsw + gw_ss(i)%swgw + &
-													gw_ss(i)%satx + gw_ss(i)%ppag + gw_ss(i)%ppex + gw_ss(i)%tile + &
-                          gw_ss(i)%resv + gw_ss(i)%wetl + gw_ss(i)%canl + gw_ss(i)%fpln  
+          gw_ss(i)%totl = gw_ss(i)%rech + gw_ss(i)%gwet + gw_ss(i)%gwsw + gw_ss(i)%swgw +   &
+                            gw_ss(i)%satx + gw_ss(i)%ppag + gw_ss(i)%ppex + gw_ss(i)%tile + &
+                            gw_ss(i)%resv + gw_ss(i)%wetl + gw_ss(i)%canl + gw_ss(i)%fpln  
         endif
       enddo     
       if (gw_solute_flag == 1) then
@@ -2322,6 +2322,5 @@
 120   format(f12.3)
 121   format(e12.3) 
       
-
       return
       end subroutine gwflow_simulate

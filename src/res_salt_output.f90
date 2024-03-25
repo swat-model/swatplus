@@ -217,8 +217,7 @@
       endif
 
       return
-      
-      
+         
 100   format (4i6,2i8,500e15.7)      
 
       end subroutine res_salt_output

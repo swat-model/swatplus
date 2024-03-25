@@ -2328,7 +2328,4 @@
 123   format(a10,1000(i12))   
 130   format(10000(f12.3))
 
-      end subroutine gwflow_read
-      
-           
-      
+      end subroutine gwflow_read      

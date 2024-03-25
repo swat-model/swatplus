@@ -555,7 +555,5 @@
       integer :: out_solbal_aa = 7300
       !solute observation cell concentrations
       integer :: out_gwobs_sol = 1305
-      
-      
-      end module gwflow_module
-      
+       
+      end module gwflow_module  

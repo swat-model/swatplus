@@ -63,8 +63,6 @@
          
        close(105)
       endif
-      
-      
+       
       return
-      end subroutine res_read_salt_cs
-      
+      end subroutine res_read_salt_cs     

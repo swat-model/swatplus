@@ -64,7 +64,5 @@
        close(105)
       endif
       
-      
       return
-      end subroutine wet_read_salt_cs
-      
+      end subroutine wet_read_salt_cs     

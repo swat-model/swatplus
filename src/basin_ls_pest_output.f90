@@ -102,6 +102,6 @@
       end do    !pesticide loop
       return
       
-100   format (4i6,2a,2x,2a,14e12.4)      
+100   format (4i6,2a,2x,2a,16e12.4)      
 
       end subroutine basin_ls_pest_output

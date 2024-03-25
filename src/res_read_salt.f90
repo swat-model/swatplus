@@ -72,6 +72,5 @@
       endif
       close(105)
       
-      
       return
       end subroutine res_read_salt

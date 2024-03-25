@@ -55,5 +55,4 @@
       endif
 
       return
-      end subroutine salt_uptake_read
-      
+      end subroutine salt_uptake_read      

@@ -64,7 +64,4 @@
  103  format(30(a10))   
  107  format(i5,i5,i6,i5,i4,i5,i5,i10,i4,i6,i5,i5,i8,a12,i13,a11,f6.2)
  
-      end subroutine gwflow_chan_read
-      
-           
-      
+      end subroutine gwflow_chan_read      

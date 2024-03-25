@@ -77,7 +77,7 @@
               if (dmd_m3 > 1.e-6) then
                 call wallo_withdraw (iwallo, idmd, isrc, dmd_m3)
               end if
-            end  if
+            end if
           end do
         
           !! compute total withdrawal for demand object from all sources

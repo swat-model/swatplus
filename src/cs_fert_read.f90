@@ -1,5 +1,5 @@
       subroutine cs_fert_read !rtb cs
-
+       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine reads constituent fertilizer loading (kg/ha) for various fertilizer types
     

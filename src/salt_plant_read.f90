@@ -1,12 +1,12 @@
       subroutine salt_plant_read !rtb salt
-
+    
       use constituent_mass_module
       use input_file_module
       use maximum_data_module
       use salt_data_module
- 
+      
       implicit none
-    
+ 
       character (len=80) :: titldum
       character (len=80) :: header
       character (len=12) :: plant_name
@@ -46,7 +46,6 @@
         close(107)
 
       endif
-
-      
+ 
       return
       end subroutine salt_plant_read

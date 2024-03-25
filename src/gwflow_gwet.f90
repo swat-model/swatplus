@@ -116,7 +116,5 @@
       
       endif !check for LSU-cell connection
       
-      
       return
-      end subroutine gwflow_gwet
-      
+      end subroutine gwflow_gwet 

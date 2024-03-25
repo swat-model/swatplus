@@ -80,4 +80,4 @@
       pl_mass(j)%root(ipl) = plt_mass_z
 
       return
-      end  subroutine mgt_harvtuber
+      end subroutine mgt_harvtuber

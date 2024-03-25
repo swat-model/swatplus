@@ -72,4 +72,4 @@
       end do   
 
       return
-      end  subroutine mgt_harvgrain
+      end subroutine mgt_harvgrain

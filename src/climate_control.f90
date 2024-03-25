@@ -205,7 +205,17 @@
       if (ppet_mce > ppet_ndays) ppet_mce = 1
       do iwst = 1, db_mx%wst
         !! calculate climatic moisture index - cumulative p/pet
-        if (wst(iwst)%weat%pet > 0.5) then
+        !! Use Hargreaves Potential ET Method 
+        ramm = wst(iwst)%weat%solradmx * 37.59 / 30. 
+        if (wst(iwst)%weat%tmax > wst(iwst)%weat%tmin) then
+          xl = 2.501 - 2.361e-3 * wst(iwst)%weat%tave
+          wst(iwst)%weat%pet = .0023 * (ramm / xl) * (wst(iwst)%weat%tave      &
+                + 17.8) * (wst(iwst)%weat%tmax - wst(iwst)%weat%tmin) ** 0.5
+          wst(iwst)%weat%pet = Max(0., wst(iwst)%weat%pet)
+        else
+          wst(iwst)%weat%pet = 0.
+        endif
+        if (wst(iwst)%weat%pet > 0.1) then
           wst(iwst)%weat%ppet = wst(iwst)%weat%ppet + wst(iwst)%weat%precip / wst(iwst)%weat%pet
         end if
         !! subtract the 30 day previous and add the current day precip/pet

@@ -102,6 +102,7 @@
         !! allocate water uptake by layer
         do ipl = 1, pcom(j)%npl
           allocate (pcom(j)%plcur(ipl)%uptake(soil(j)%nly))
+          pcom(j)%plcur(ipl)%uptake = 0.
         end do
 
         pcom(j)%rsd_covfac = 0.

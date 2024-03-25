@@ -967,7 +967,6 @@
          endif
        endif
      endif
-     
-     
+        
       return
       end subroutine header_salt

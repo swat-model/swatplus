@@ -82,5 +82,4 @@
       endif
       
       return
-      end subroutine salt_fert !rtb salt
-      
+      end subroutine salt_fert !rtb salt   

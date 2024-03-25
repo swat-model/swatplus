@@ -198,8 +198,6 @@
       endif
       
       endif !check for LSU-cell connection
-      
-      
+       
       return
-      end subroutine gwflow_rech
-      
+      end subroutine gwflow_rech      

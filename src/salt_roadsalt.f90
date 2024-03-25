@@ -78,6 +78,5 @@
        
       endif
       
-      
       return
       end subroutine salt_roadsalt

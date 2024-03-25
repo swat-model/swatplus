@@ -72,7 +72,5 @@
       endif
       close(105)
       
-      
       return
-      end subroutine res_read_saltdb
-      
+      end subroutine res_read_saltdb  

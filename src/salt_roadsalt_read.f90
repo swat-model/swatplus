@@ -131,7 +131,6 @@
       
       endif
       endif
-      
-            
+           
       return
       end subroutine salt_roadsalt_read

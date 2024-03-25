@@ -257,7 +257,12 @@
         evap = bsn_prm%evrch * wst(iwst)%weat%pet * topw / 1000.
         if (evap < 0.) evap = 0.
         if (ht2%flo > evap) then
-          rto = evap / outflo
+          if (outflo > 1.e-6) then
+            rto = evap / outflo
+            rto = Min (1., rto)
+          else
+            rto = 0.
+          end if
           ht2 = (1. - rto) * ht2
           ob(icmd)%hyd_flo(1,:) = (1. - rto) * ob(icmd)%hyd_flo(1,:)
         else

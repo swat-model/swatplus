@@ -1,5 +1,5 @@
       subroutine cs_lch !rtb cs
-
+      
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine simulates the loss of constituent mass via surface runoff, 
 !!    lateral flow, tile flow, and percolation out of the profile
@@ -27,11 +27,11 @@
       use constituent_mass_module
       use soil_module
       use basin_module
-      use gwflow_module, only : gwflow_percsol,gw_solute_flag,hru_soil,gw_soil_flag
-
-      implicit none
+      use gwflow_module, only : gwflow_percsol,gw_solute_flag,hru_soil
       
-      integer :: j,jj
+      implicit none
+
+      integer :: j,jj,gw_soil_flag
       integer :: ics
       integer :: sol_index
       real :: cocs,cosurfcs,perccslyr(3),ssfcslyr,vcs

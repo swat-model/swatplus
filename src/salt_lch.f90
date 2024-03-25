@@ -1,5 +1,5 @@
       subroutine salt_lch
-
+      
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine simulates the loss of salt via surface runoff, 
 !!    lateral flow, tile flow, and percolation out of the profile
@@ -48,22 +48,20 @@
       use constituent_mass_module
       use soil_module
       use basin_module
-      use gwflow_module, only : gwflow_percsol,gw_solute_flag,hru_soil,gw_soil_flag
+      use gwflow_module, only : gwflow_percsol,gw_solute_flag,hru_soil
       
       implicit none
       
       integer :: j,jj
-      integer :: isalt 
-      integer :: sol_index,sro
+      integer :: isalt
+      integer :: sol_index,gw_soil_flag
       real :: cosalt,cosurfsalt,percsaltlyr(8),ssfsaltlyr,vsalt
       real :: hru_area_m2,water_volume,salt_mass_kg
-      real :: ro_mass,wet_ro_mass,ww,vv
-
+      real :: ro_mass,wet_ro_mass,sro,vv,ww
 
       j = 0
       j = ihru
-
-      
+     
       !rtb gwflow: add salt ion mass transferred to soil profile from the aquifer; store for salt balance
       if (gw_soil_flag == 1 .and. gw_solute_flag == 1) then
         do jj = 1, soil(j)%nly
@@ -179,6 +177,5 @@
         enddo
       enddo
 
-      
       return
       end

@@ -10,15 +10,15 @@
       integer :: date_time(8)           !              |
       character*10 b(3)                 !              |
     
-      prog = " SWAT+ Mar 13 2024        MODULAR Rev 2024.61.1-1-g92b4413"
+      prog = " SWAT+ Mar 13 2024        MODULAR Rev 2024.61.0"
 
       write (*,1000)
       open (9003,file='simulation.out')
       write (9003,1000)
  1000 format(1x,"                  SWAT+               ",/,             &
-     &          "             Revision 61.1-1-g92b4413  ",/,             &
+     &          "             Revision 61.0            ",/,             &
      &          "      Soil & Water Assessment Tool    ",/,             &
-     &          "GNU (11.4.0), 2024-03-13 11:13:27, Linux",/,             &
+     &          "               PC Version             ",/,             &
      &          "    Program reading . . . executing",/)
       
       open (888,file="erosion.txt",recl = 1500)
@@ -131,6 +131,7 @@
 1234  format(/,"  Date of Sim", 2x,i2,"/",i2,"/",i4, " Time",2x,i2,":",i2,":",i2)
             
       write (107,1001)     
- 1001 format (/," Execution successfully completed. ")
+ 1001 format (/," Execution successfully completed ")
 
+	  stop      
       end

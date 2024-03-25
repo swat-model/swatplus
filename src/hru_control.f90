@@ -134,7 +134,8 @@
       !! zero pesticide balance variables
       if (cs_db%num_pests > 0) then
         do ipest = 1, cs_db%num_pests
-          hpestb_d(j)%pest(ipest) = pestbz
+          !! zero all variables except pest in soil and in/on plant
+          hpestb_d(j)%pest(ipest) = hpestb_d(j)%pest(ipest) * 0.
         end do
       end if
         

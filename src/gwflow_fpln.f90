@@ -205,9 +205,5 @@
       
       endif
       
-      
       return
-      end subroutine gwflow_fpln
-      
-           
-      
+      end subroutine gwflow_fpln  
