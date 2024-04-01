@@ -74,6 +74,8 @@ __The following documents are emphasizing various development aspects:__
 
 ## Documentation and References
 
+[Previous SWAT+ versions on Bitbucket](https://bitbucket.org/blacklandgrasslandmodels/modular_swatplus/src/master)
+
 [SWAT+ Documentation](https://swatplus.gitbook.io/docs)
 
 [SWAT at TAMU](https://swat.tamu.edu)
