@@ -1,26 +1,26 @@
 # SWAT+
 
-The Soil and Water Assessment Tool Plus [SWAT+](https://swatplus.gitbook.io/docs) is a public domain model jointly developed by the USDA Agricultural Research Service ([USDA-ARS](http://ars.usda.gov)) and Texas A&M AgriLife Research, part of The Texas A&M University System. Model contributions have been made by Colorado State University. SWAT+ is a small watershed to river basin-scale model to simulate the quality and quantity of surface and ground water and predict the environmental impact of land use, land management practices, and climate change. SWAT is widely used in assessing soil erosion prevention and control, non-point source pollution control and regional management in watersheds.
+The **Soil and Water Assessment Tool Plus** [SWAT+](https://swatplus.gitbook.io/docs) is a public domain model jointly developed by the USDA Agricultural Research Service ([USDA-ARS](http://ars.usda.gov)) and Texas A&M AgriLife Research, part of The Texas A&M University System. Model contributions have been made by Colorado State University. SWAT+ is a small watershed to river basin-scale model to simulate the quality and quantity of surface and ground water and predict the environmental impact of land use, land management practices, and climate change. SWAT is widely used in assessing soil erosion prevention and control, non-point source pollution control and regional management in watersheds.
+
+This repository contains the latest SWAT+ source code and some test data to create and test the executable for various compiler and platforms. 
 
 ## Repository
 
-Get the SWAT+ sources by either cloning the repository using `git` or downloading the zipped sources.
-
-Get the repository from GitHub by cloning it. Use a tagged version (preferred).
+Get the SWAT+ sources by either cloning the repository using `git`.  
 
 ```bash
-$ git clone https://github.com/swat-model/swatplus
+$ git clone https://github.com/odav/swatplus.git
 ```
 
-Or, download the sources directly from the artifacts, unzip.
+Or, download the sources directly from the artifacts, unzip. Use a tagged version (preferred).
 
 ```bash
-$ wget https://github.com/swat-model/swatplus/archive/refs/tags/v60.7.4.zip
+$ wget https://github.com/odav/swatplus/archive/refs/tags/61.3.zip
 ```
 
 ## Directory Structure
 
-The directory structure is shown below. The `build` directory gets created and populated during the generation of the `cmake` files and the build.
+The directory structure is shown below. The `build` directory gets created and populated during the generation of the `cmake` files and the `cmake` build. 
 
 ```
 swatplus
@@ -42,17 +42,19 @@ swatplus
 ├── src                       ---> contains all swatplus Fortran source files
 │   └── *.f90
 ├── test                      ---> contains all unit tests sources
-│   ├── ...
-│   └── check.py
+│   ├── check.py
+│   └── ...
 ├── doc                       ---> contains all hosted documentation
 ├── CMakeLists.txt            ---> cmake project file
-├── Readme.md                 ---> this file
+├── README.md                 ---> this file
 └── ...
 ```
 
 ## Developing SWAT+
 
-This GitHub repository is setup to build, test, and deploy SWAT+ using CMake. CMake is a cross-platform build tool, it can be used at the command line but it is also supported through various IDEs, etc. More information can be found at [http://cmake.org](http://cmake.org). In addition to CMake, the following tools are also needed:
+This GitHub repository is setup to build, test, and deploy SWAT+ using the CMake tool. CMake is a cross-platform build tool that can be used at the command line but it is also supported through various IDEs, etc. More information can be found at [http://cmake.org](http://cmake.org). 
+
+In addition to CMake, the following tools are also needed:
 
 - `git` tool for version control
 - `make` tool (for building)
@@ -61,16 +63,16 @@ This GitHub repository is setup to build, test, and deploy SWAT+ using CMake. CM
 
 Use the operating system's preferred way of adding those tools to your installation. There is certainly more than one way of getting and installing them.
 
-__The following documents are emphasizing various development aspects:__
+__The following documents are emphasizing various development aspects.__
 
-* [Configuring, Building, Testing and Installing using CMake](doc/Building.md)
+* [Configuring, Building, Testing, and Installing SWAT+ using cmake](doc/Building.md)
 - [Scenario Testing](doc/Testing.md)
 
 - [Tagging and Versioning](doc/Tagging.md)
 
 - [Developing in Visual Studio](doc/VS.md)
 
-- [Fortran Coding Conventions](doc/coding_conventions.md)
+- [FORTRAN Coding Conventions](doc/coding_conventions.md)
 
 ## Documentation and References
 
