@@ -6,7 +6,7 @@ This repository contains the latest SWAT+ source code and some test data to crea
 
 ## Repository
 
-Get the SWAT+ sources by either cloning the repository using `git`.  
+Get the SWAT+ sources by cloning the repository using `git`.  
 
 ```bash
 $ git clone https://github.com/odav/swatplus.git
@@ -63,7 +63,7 @@ In addition to CMake, the following tools are also needed:
 
 Use the operating system's preferred way of adding those tools to your installation. There is certainly more than one way of getting and installing them.
 
-__The following documents are emphasizing various development aspects.__
+__The following sections are emphasizing various development aspects.__
 
 * [Configuring, Building, Testing, and Installing SWAT+ using cmake](doc/Building.md)
 - [Scenario Testing](doc/Testing.md)
