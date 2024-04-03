@@ -12,6 +12,8 @@ project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
 include(CTest)
 
+find_package(Git REQUIRED)
+
 execute_process(
   COMMAND git describe --tags
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
