@@ -15,7 +15,7 @@ include(CTest)
 find_package(Git REQUIRED)
 
 execute_process(
-  COMMAND git describe --tags
+  COMMAND ${GIT_EXECUTABLE} describe --tags
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   OUTPUT_VARIABLE TAG
   OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -105,7 +105,7 @@ install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION .)
 
 #############################################################################
 # Testing
-find_package(Python REQUIRED)
+find_package(Python3 REQUIRED)
 
 set(check_py "${PROJECT_SOURCE_DIR}/test/check.py")
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
@@ -117,7 +117,7 @@ set(rerr "0.05")
 set(aerr "1e-8")
 
 # add_test(Ithaca_sub6 python3 ${check_py} ${exe_path} ${ref_dir}/Ithaca_sub6 ${test_dir} ${aerr} ${rerr})
-add_test(Ames_sub1   python3 ${check_py} ${exe_path} ${ref_dir}/Ames_sub1   ${test_dir} ${aerr} ${rerr})
+add_test(Ames_sub1   ${Python3_EXECUTABLE}  ${check_py} ${exe_path} ${ref_dir}/Ames_sub1   ${test_dir} ${aerr} ${rerr})
 
 
 #############################################################################
