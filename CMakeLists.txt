@@ -28,7 +28,7 @@ endif()
 
 # SWAT Version number
 SET(SWAT_VERSION ${TAG})
-set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}.exe")
+set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}")
 
 # Enable this to 'TRUE' to see the fortran command on compile
 # set(CMAKE_VERBOSE_MAKEFILE FALSE)
