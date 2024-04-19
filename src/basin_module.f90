@@ -174,15 +174,15 @@
         integer :: aa_numint                          !! number of print intervals for ave annual output
         integer, dimension(:), allocatable :: aa_yrs  !! end years for ave annual output
       ! SPECIAL OUTPUTS
-        character(len=1) :: csvout   = "    n"         !!  code to print .csv files n=no print; y=print;
-        character(len=1) :: carbout  = "    n"         !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
-        character(len=1) :: cdfout   = "    n"         !!  code to print netcdf (cdf) files n=no print; y=print;
+        character(len=1) :: csvout   = "n"            !!  code to print .csv files n=no print; y=print;
+        character(len=1) :: carbout  = "n"            !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
+        character(len=1) :: cdfout   = "n"            !!  code to print netcdf (cdf) files n=no print; y=print;
       ! OTHER OUTPUTS
         !!   nbs   character(len=1) :: snutc  = "    n"         !!  not used - soils nutrients carbon output (default ave annual-d,m,y,a input)
-        character(len=1) :: crop_yld  = "    a"      !!  crop yields - a=average annual; y=yearly; b=both annual and yearly; n=no print
-        character(len=1) :: mgtout = "    n"         !!  management output file (mgt.out) (default ave annual-d,m,y,a input)
-        character(len=1) :: hydcon = "    n"         !!  hydrograph connect output file (hydcon.out)
-        character(len=1) :: fdcout = "    n"         !!  flow duration curve output n=no print; avann=print; NOT ACTIVE
+        character(len=1) :: crop_yld  = "a"      !!  crop yields - a=average annual; y=yearly; b=both annual and yearly; n=no print
+        character(len=1) :: mgtout = "n"         !!  management output file (mgt.out) (default ave annual-d,m,y,a input)
+        character(len=1) :: hydcon = "n"         !!  hydrograph connect output file (hydcon.out)
+        character(len=1) :: fdcout = "n"         !!  flow duration curve output n=no print; avann=print; NOT ACTIVE
       ! BASIN
         type(print_interval) :: wb_bsn          !!  water balance BASIN output
         type(print_interval) :: nb_bsn          !!  nutrient balance BASIN output
@@ -303,6 +303,14 @@
       end type mgt_header_unit1
       type(mgt_header_unit1) :: mgt_hdr_unt1
   
+      type basin_yld_header                              
+          character (len=10) :: year =       "     year "                                                     
+          character (len=16) :: plant_no =   "     plant_no   "
+          character (len=16) :: plant_name = "     plant_name "
+          character (len=16) :: area_ha =    " harv_area(ha)  "  
+      end type basin_yld_header
+      type (basin_yld_header) :: bsn_yld_hdr
+
    !   type snutc_header      
     !      character (len=12) :: day        =  "        jday"
     !      character (len=12) :: mo         =  "         mon"
@@ -395,15 +403,5 @@
     !      character (len=16) :: soil_water_p  = "   soil_water_p "  
     !  end type snutc_old_header
     !  type(snutc_old_header) :: snutc_old_hdr
-      
-      type basin_yld_header                              
-          character (len=10) :: year =       "      year "                                                     
-          character (len=16) :: plant_no =   "     plant_no"
-          character (len=16) :: plant_name = "plant_name "
-          character (len=16) :: area_ha =    " harv_area(ha)   "  
-          character (len=16) :: yield_t =    "  yld(t)         "
-          character (len=16) :: yield_tha =  " yld(t/ha)      "
-      end type basin_yld_header
-      type (basin_yld_header) :: bsn_yld_hdr
       
       end module basin_module

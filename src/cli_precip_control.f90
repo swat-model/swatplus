@@ -114,7 +114,9 @@
         end if
 
         !! sum to get ave annual precip for SWIFT input
+        print *, wst(iwst)%precip_aa, wst(iwst)%weat%precip
         wst(iwst)%precip_aa = wst(iwst)%precip_aa + wst(iwst)%weat%precip
+        print *, wst(iwst)%pet_aa + wst(iwst)%weat%pet
         wst(iwst)%pet_aa = wst(iwst)%pet_aa + wst(iwst)%weat%pet
         
       end do
