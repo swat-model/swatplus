@@ -89,12 +89,12 @@
             do ist = 1, time%step
               wst(iwst)%weat%ts_next(ist) = pcp(ipg)%tss(ist,cur_day,time%yrs)
               if (wst(iwst)%weat%ts_next(ist) <= -97.) then
-				!! simulate missing data
-				call cli_pgen(iwgn)
-				call cli_pgenhr
-				exit
-			  end if
-			  wst(iwst)%weat%precip_next = wst(iwst)%weat%precip_next + wst(iwst)%weat%ts_next(ist)
+                !! simulate missing data
+                call cli_pgen(iwgn)
+                call cli_pgenhr
+                exit
+              end if
+              wst(iwst)%weat%precip_next = wst(iwst)%weat%precip_next + wst(iwst)%weat%ts_next(ist)
             end do
             wst(iwst)%weat%precip_next = sum (pcp(ipg)%tss(:,cur_day,time%yrs))
           else
@@ -109,14 +109,15 @@
             if (wst(iwst)%weat%precip_next <= -97.) then
               call cli_pgen(iwgn)
               pcp(ipg)%days_gen = pcp(ipg)%days_gen + 1
-			end if
+            end if
           end if
         end if
 
         !! sum to get ave annual precip for SWIFT input
         print *, wst(iwst)%precip_aa, wst(iwst)%weat%precip
         wst(iwst)%precip_aa = wst(iwst)%precip_aa + wst(iwst)%weat%precip
-        print *, wst(iwst)%pet_aa + wst(iwst)%weat%pet
+        print *, iwst
+        print *, wst(iwst)%pet_aa, wst(iwst)%weat%pet
         wst(iwst)%pet_aa = wst(iwst)%pet_aa + wst(iwst)%weat%pet
         
       end do

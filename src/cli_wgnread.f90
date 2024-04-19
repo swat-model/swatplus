@@ -10,14 +10,14 @@
       character (len=80) :: titldum   !           |title of file
       character (len=80) :: header    !           |header of file
       integer :: iwgn                 !           | 
-      integer :: mwnd_dir             !           | 
-      integer :: iwndir               !none       |counter
-      integer :: imo                  !none       |counter 
+      !! integer :: mwnd_dir             !           | 
+      !! integer :: iwndir               !none       |counter
+      !! integer :: imo                  !none       |counter 
       integer :: eof                  !           |end of file
       integer :: imax                 !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists  
       integer :: mo                   !none       !counter
-      integer :: idir                 !none       !counter
+      !! integer :: idir                 !none       !counter
 
       
       eof = 0
@@ -38,11 +38,11 @@
         allocate (wgn_pms(0:1))
         allocate (frad(0:1,1))
         allocate (rnd2(0:1))
-         allocate (rnd3(0:1))
-         allocate (rnd8(0:1))
-         allocate (rnd9(0:1))
-         allocate (rndseed(10,0:1))
-         allocate (idg(9))
+        allocate (rnd3(0:1))
+        allocate (rnd8(0:1))
+        allocate (rnd9(0:1))
+        allocate (rndseed(10,0:1))
+        allocate (idg(9))
         call gcycl
       else 
       do

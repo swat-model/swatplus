@@ -57,7 +57,7 @@
         real :: flo_satex = 0.         !! m3           |volume of water from saturation excess (high water table; from gwflow module)
         real :: flo_satexsw = 0.       !! m3           |volume of water from saturation excess (saturated profile)
         real :: flo_tile = 0.          !! m3           |volume of water from tile flow
-      end type
+      end type hyd_sep
       
       type (hyd_output), dimension(:),allocatable :: hd
       type (hyd_output), dimension(:), allocatable :: rec_d
@@ -84,8 +84,8 @@
       !rtb hydrograph separation
       type (hyd_sep) :: hdsep1,hdsep2
       type (hyd_sep), dimension(:),allocatable :: ch_stor_hdsep
+
       real, dimension(:,:),allocatable :: hyd_sep_array
-      
       character(len=16), dimension(:), allocatable :: om_init_name
       
       type (hyd_output), dimension(:),allocatable, target :: aqu
@@ -96,7 +96,6 @@
       type (hyd_output), dimension(:),allocatable :: wet_seep_day !Jaehak 2022 wetland seepage volume
       type (hyd_output) :: resz
       type (hyd_output), pointer :: wbody       !! used for reservoir and wetlands
-      
       type (hyd_output), dimension(:),allocatable :: om_init_water
       type (hyd_output), dimension(:),allocatable :: ch_om_water_init
       type (hyd_output), dimension(:),allocatable :: fp_om_water_init
@@ -108,7 +107,6 @@
       type (hyd_output), dimension(:),allocatable :: ch_stor_y
       type (hyd_output), dimension(:),allocatable :: ch_stor_a
       type (hyd_output) :: chaz
-      
       type (hyd_output), dimension(:), allocatable, save :: res_in_d
       type (hyd_output), dimension(:), allocatable, save :: res_in_m
       type (hyd_output), dimension(:), allocatable, save :: res_in_y
@@ -127,7 +125,6 @@
       type (hyd_output) :: bres_out_y
       type (hyd_output) :: bres_out_a
       type (hyd_output) :: resmz
-            
       type (hyd_output), dimension(:), allocatable, save :: wet_in_d
       type (hyd_output), dimension(:), allocatable, save :: wet_in_m
       type (hyd_output), dimension(:), allocatable, save :: wet_in_y
@@ -144,7 +141,6 @@
       type (hyd_output) :: bwet_out_m
       type (hyd_output) :: bwet_out_y
       type (hyd_output) :: bwet_out_a
-      
       type (hyd_output), dimension(:), allocatable, save :: ch_in_d
       type (hyd_output), dimension(:), allocatable, save :: ch_in_m
       type (hyd_output), dimension(:), allocatable, save :: ch_in_y
@@ -556,7 +552,7 @@
       end type hyd_in_header
       type (hyd_in_header) :: hyd_in_hdr
       
-    type hyd_out_header        
+      type hyd_out_header        
         character (len=15) :: flo_out  =    "        flo_out"        !! m^3/s        |water out      
         character (len=15) :: sed_out  =    "        sed_out"        !! metric tons  |sediment out
         character (len=15) :: orgn_out =    "       orgn_out"        !! kg N         |organic N out
@@ -636,7 +632,8 @@
         character (len=15) :: temp_out =   "       temp_out"        !! deg c        |temperature        
       end type sed_hyd_header
       type (sed_hyd_header) :: sd_hyd_hdr
-     type sd_hyd_header_units
+
+      type sd_hyd_header_units
         character (len=15) :: flo_in    =  "          m^3/s"        !! avg daily m^3/s        |volume of water
         character (len=15) :: flo_out   =  "          m^3/s"        !! avg daily m^3/s        |volume of water
         character (len=15) :: sed_in    =  "           tons"        !! metric tons  |sediment
@@ -679,7 +676,7 @@
       type (sol_header) :: sol_hdr
       
       type plant_header        
-        character (len=15) :: name =  "     name        "       !!none         |plant name 
+        character (len=17) :: name =  "     name        "       !!none         |plant name 
         character (len=15) :: growing =  "growing"              !!none         |plant growing             
         character (len=15) :: dormant =  "dormant"              !!none         |plant dormant
         character (len=15) :: lai =  "lai"                      !!none         |leaf area index 
@@ -971,40 +968,40 @@
         character (len=12) :: ha          =   "     ha     "                                             
         character (len=12) :: nbyr        =   "   nbyr     "
         character (len=12) :: prec        =   "   precip   "
-		character (len=16) :: meas        =   "     name      "
-		character (len=12) :: srr         =   "    srr     "
-		character (len=12) :: lfr         =   "    lfr     "
-		character (len=12) :: pcr         =   "    pcr     "
-		character (len=12) :: etr         =   "    etr     "
-		character (len=12) :: tfr         =   "    tfr     "
-		character (len=12) :: sed         =   "    sed     "
-		character (len=12) :: orgn        =   "   orgn     "
-		character (len=12) :: orgp        =   "   orgp     "
-		character (len=12) :: no3         =   "    no3     "
-		character (len=12) :: solp        =   "   solp     "
-		character (len=16) :: aa          =   "   name     "
-		character (len=12) :: srr_aa      =   "    srr     "
-		character (len=12) :: lfr_aa      =   "    lfr     "
-		character (len=12) :: pcr_aa      =   "    pcr     "
-		character (len=12) :: etr_aa      =   "    etr     "
-		character (len=12) :: tfr_aa      =   "    tfr     "
-		character (len=12) :: sed_aa      =   "    sed     "
-		character (len=12) :: orgn_aa     =   "   orgn     "
-		character (len=12) :: orgp_aa     =   "   orgp     "
-		character (len=12) :: no3_aa      =   "    no3     "
-		character (len=12) :: solp_aa     =   "   solp     "
-		character (len=12) :: cn_prm_aa   =   "     cn     "
-		character (len=12) :: esco        =   "   esco     "
-		character (len=12) :: lat_len     =   "lat_len     "
-		character (len=12) :: petco       =   "  petco     "
-		character (len=12) :: slope       =   "  slope     "
-		character (len=12) :: tconc       =   "  tconc     "
-		character (len=12) :: etco        =   "   etco     "
-		character (len=12) :: perco       =   "  perco     "
-		character (len=12) :: revapc      =   "  revapc    "
-		character (len=12) :: cn3_swf     =   " cn3_swf    "	
+        character (len=15) :: meas        =   "     name      "
+        character (len=12) :: srr         =   "    srr     "
+        character (len=12) :: lfr         =   "    lfr     "
+        character (len=12) :: pcr         =   "    pcr     "
+        character (len=12) :: etr         =   "    etr     "
+        character (len=12) :: tfr         =   "    tfr     "
+        character (len=12) :: sed         =   "    sed     "
+        character (len=12) :: orgn        =   "   orgn     "
+        character (len=12) :: orgp        =   "   orgp     "
+        character (len=12) :: no3         =   "    no3     "
+        character (len=12) :: solp        =   "   solp     "
+        character (len=16) :: aa          =   "   name     "
+        character (len=12) :: srr_aa      =   "    srr     "
+        character (len=12) :: lfr_aa      =   "    lfr     "
+        character (len=12) :: pcr_aa      =   "    pcr     "
+        character (len=12) :: etr_aa      =   "    etr     "
+        character (len=12) :: tfr_aa      =   "    tfr     "
+        character (len=12) :: sed_aa      =   "    sed     "
+        character (len=12) :: orgn_aa     =   "   orgn     "
+        character (len=12) :: orgp_aa     =   "   orgp     "
+        character (len=12) :: no3_aa      =   "    no3     "
+        character (len=12) :: solp_aa     =   "   solp     "
+        character (len=12) :: cn_prm_aa   =   "     cn     "
+        character (len=12) :: esco        =   "   esco     "
+        character (len=12) :: lat_len     =   "lat_len     "
+        character (len=12) :: petco       =   "  petco     "
+        character (len=12) :: slope       =   "  slope     "
+        character (len=12) :: tconc       =   "  tconc     "
+        character (len=12) :: etco        =   "   etco     "
+        character (len=12) :: perco       =   "  perco     "
+        character (len=12) :: revapc      =   "  revapc    "
+        character (len=12) :: cn3_swf     =   " cn3_swf    "
       end type calibration_header    
-      type (calibration_header) :: calb_hdr	 
+      type (calibration_header) :: calb_hdr 
 	  
       type calibration2_header         
         character (len=16) :: name     =   "       name "
@@ -1040,7 +1037,7 @@
         character (len=12) :: uslep    =   "      uslep "
         character (len=12) :: uslels   =   "     uslels "
       end type calibration2_header    
-      type (calibration2_header) :: calb2_hdr	
+      type (calibration2_header) :: calb2_hdr
       
       type calibration3_header         
         character (len=16) :: name     =   "       name "
@@ -1075,7 +1072,7 @@
       end type output_checker_header    
       type (output_checker_header) :: chk_hdr
       
-  type output_checker_unit         
+      type output_checker_unit         
         character (len=16) :: sname =    "sname           "
         character (len=16) :: hydgrp =   "hydgrp          "       
         character (len=12) :: zmx    =   "       (mm) "
