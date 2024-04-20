@@ -173,9 +173,6 @@
         if (tav > 0.) wgn_pms(iwgn)%phutot = wgn_pms(iwgn)%phutot + tav * mdays
 
         !! calculate values for pr_w if missing or bad
-        print *, iwgn, mon, mdays
-        print *, wgn(iwgn)%pr_ww(mon),wgn(iwgn)%pr_wd(mon) 
-        print *, wgn(iwgn)%pcpd(mon), wgn(iwgn)%pcpd(mon), mdays
         if (wgn(iwgn)%pr_ww(mon) <= wgn(iwgn)%pr_wd(mon).or.                    &
                                       wgn(iwgn)%pr_wd(mon) <= 0.) then
           if (wgn(iwgn)%pcpd(mon) < .1) wgn(iwgn)%pcpd(mon) = 0.1

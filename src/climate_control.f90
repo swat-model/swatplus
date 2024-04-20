@@ -234,7 +234,6 @@
         if (wst(iwst)%tlag_mne > w_temp%airlag_d) wst(iwst)%tlag_mne = 1
         wst(iwst)%airlag_temp = wst(iwst)%tlag(wst(iwst)%tlag_mne)
       end do
-      print *, wst(iwst)%weat%pet
             
 !! Calculate maximum half-hour rainfall fraction
       do iwst = 1, db_mx%wst
