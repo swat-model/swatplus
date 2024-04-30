@@ -55,7 +55,6 @@ cluster.patch
 readme*
 CMakeFiles/
 CMakeCache.txt
-.vscode/*
 .vs/*
 .history/*
 Resources/R*
