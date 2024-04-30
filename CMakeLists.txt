@@ -12,8 +12,10 @@ project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
 include(CTest)
 
+find_package(Git REQUIRED)
+
 execute_process(
-  COMMAND git describe --tags
+  COMMAND ${GIT_EXECUTABLE} describe --tags
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   OUTPUT_VARIABLE TAG
   OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -28,7 +30,7 @@ endif()
 
 # SWAT Version number
 SET(SWAT_VERSION ${TAG})
-set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}.exe")
+set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}")
 
 # Enable this to 'TRUE' to see the fortran command on compile
 # set(CMAKE_VERBOSE_MAKEFILE FALSE)
@@ -45,7 +47,7 @@ if (UNIX)
         set(frelease        "-O3")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect "-fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -finit-real=nan -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdialect "-fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -finit-real=zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
         set(fdebug   "")
         set(frelease "-O")
         if(NOT APPLE)
@@ -103,7 +105,7 @@ install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION .)
 
 #############################################################################
 # Testing
-find_package(Python REQUIRED)
+find_package(Python3 REQUIRED)
 
 set(check_py "${PROJECT_SOURCE_DIR}/test/check.py")
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
@@ -115,7 +117,7 @@ set(rerr "0.05")
 set(aerr "1e-8")
 
 # add_test(Ithaca_sub6 python3 ${check_py} ${exe_path} ${ref_dir}/Ithaca_sub6 ${test_dir} ${aerr} ${rerr})
-add_test(Ames_sub1   python3 ${check_py} ${exe_path} ${ref_dir}/Ames_sub1   ${test_dir} ${aerr} ${rerr})
+add_test(Ames_sub1   ${Python3_EXECUTABLE}  ${check_py} ${exe_path} ${ref_dir}/Ames_sub1   ${test_dir} ${aerr} ${rerr})
 
 
 #############################################################################
