@@ -87,7 +87,7 @@
         real :: rhum
         real :: dewpt
         real :: windsp
-        real :: pet
+        real :: pet = 0.0
         real :: wndir
         real :: phubase0                                    !! deg C        |cumulative base 0 heat units
         real :: ppet                                        !! mm/mm        |climatic moisture index - cumulative p/pet
