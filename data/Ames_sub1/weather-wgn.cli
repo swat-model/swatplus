@@ -1,5 +1,6 @@
 weather-wgn.cli file for Ithaca
 wgn_001      41.2  -96.63   347.5      10
+tmp_max_ave tmp_min_ave tmp_max_sd tmp_min_sd pcp_ave pcp_sd pcp_skew wet_dry wet_wet pcp_days  pcp_hhr slr_ave dew_ave wnd_ave
     0.44   -9.78    7.65    5.31   14.20    3.60   -0.64    0.10    0.21    3.48    2.00    7.88   -9.76    4.43
     4.16   -7.74    7.45    5.76   24.10    6.90    0.82    0.12    0.24    3.95    5.30   10.94   -6.77    4.52
    10.57   -2.52    7.88    5.83   67.80   11.70    1.06    0.17    0.38    6.67   11.20   14.54   -3.09    5.36
