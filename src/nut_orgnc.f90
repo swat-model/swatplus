@@ -42,12 +42,12 @@
       conc = xx * er / wt1
       sedorgn(j) = .001 * conc * sedyld(j) / hru(j)%area_ha
 
-	  !! update soil nitrogen pools only for HRU calculations
+         !! update soil nitrogen pools only for HRU calculations
       if (xx > 1.e-6) then
         xx1 = (1. - sedorgn(j) / xx)
-		soil1(j)%tot(1)%n = soil1(j)%tot(1)%n * xx1
-		rsd1(j)%tot(1)%n = rsd1(j)%tot(1)%n * xx1
-		rsd1(j)%man%n = rsd1(j)%man%n * xx1
+              soil1(j)%tot(1)%n = soil1(j)%tot(1)%n * xx1
+              rsd1(j)%tot(1)%n = rsd1(j)%tot(1)%n * xx1
+              rsd1(j)%man%n = rsd1(j)%man%n * xx1
       end if
 
       return

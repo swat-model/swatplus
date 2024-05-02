@@ -39,12 +39,12 @@
         real :: satex = 0.            !mm H2O        |saturation excess flow developed from high water table !rtb gwflow
         real :: satex_chan = 0.       !mm H2O        |saturation excess flow reaching main channel !rtb gwflow
         real :: delsw = 0.            !mm H2O        |change in soil water volume !rtb gwflow
-        real :: lagsurf = 0.		  !mm H2O        |surface runoff in transit to channel
-        real :: laglatq = 0.          !mm H2O	     |lateral flow in transit to channel
-        real :: lagsatex = 0.         !mm H2O	     |saturation excess flow in transit to channel
-        real :: wet_evap = 0.         !mm H2O	     |evaporation from wetland surface
-        real :: wet_out = 0.          !mm H2O	     |outflow (spill) from wetland
-        real :: wet_stor = 0.         !mm H2O	     |volume stored in wetland at end of time period
+        real :: lagsurf = 0.          !mm H2O        |surface runoff in transit to channel
+        real :: laglatq = 0.          !mm H2O       |lateral flow in transit to channel
+        real :: lagsatex = 0.         !mm H2O       |saturation excess flow in transit to channel
+        real :: wet_evap = 0.         !mm H2O       |evaporation from wetland surface
+        real :: wet_out = 0.          !mm H2O       |outflow (spill) from wetland
+        real :: wet_stor = 0.         !mm H2O       |volume stored in wetland at end of time period
       end type output_waterbal
        
       type (output_waterbal), pointer :: h
@@ -413,12 +413,12 @@
          character(len=17) :: org_lab_p     =    "     org_lab_p   "
          character(len=17) :: rsd_nitorg_n  =    "     rsd_nitorg_n"      
          character(len=17) :: rsd_laborg_p  =    "     rsd_laborg_p"        
-         character(len=17) :: no3atmo =    "    no3atmo       " 
-         character(len=17) :: nh4atmo =    "    nh4atmo       "
-         character(len=17) :: nuptake =    "    nuptake       " 
-         character(len=17) :: puptake =    "    puptake       "		 
-         character(len=17) :: gwsoiln =    "    gwsoiln       "
-         character(len=17) :: gwsoilp =    "    gwsoilp       "
+         character(len=17) :: no3atmo =    "    no3atmo      " 
+         character(len=17) :: nh4atmo =    "    nh4atmo      "
+         character(len=17) :: nuptake =    "    nuptake      " 
+         character(len=17) :: puptake =    "    puptake      "
+         character(len=17) :: gwsoiln =    "    gwsoiln      "
+         character(len=17) :: gwsoilp =    "    gwsoilp      "
       end type output_nutbal_header         
       type (output_nutbal_header) :: nb_hdr
       
@@ -459,7 +459,7 @@
         character (len=6) :: yrc        =  "    yr"
         character (len=8) :: isd        =  "   unit "
         character (len=8) :: id         =  " gis_id "        
-        character (len=16) :: name      =  " name               "        
+        character (len=16) :: name      =  " name      "        
         character (len=12) :: sedyld    =  "      sedyld"
         character (len=12)  :: sedorgn  =  "     sedorgn"
         character (len=12)  :: sedorgp  =  "     sedorgp"
@@ -482,7 +482,7 @@
         character (len=6) :: yrc        =  "      "
         character (len=8) :: isd        =  "        "
         character (len=8) :: id         =  "        "        
-        character (len=16) :: name      =   "                    "      
+        character (len=16) :: name      =   "                "      
         character (len=12)  :: sedyld    =  "         tha"
         character (len=12)  :: sedorgn   =  "        kgha"
         character (len=12)  :: sedorgp   =  "        kgha"
@@ -910,7 +910,7 @@
 
 
       type output_losses_header1
-        character (len=5) :: day        =  "  jday"
+        character (len=6) :: day        =  "  jday"
         character (len=6) :: mo         =  "   mon"
         character (len=6) :: day_mo     =  "   day"
         character (len=6) :: yrc        =  "    yr"
@@ -950,7 +950,7 @@
       type (output_losses_header1) :: ls_hdr1
       
        type output_losses_header_units1
-        character (len=5) :: day        =  "      "
+        character (len=6) :: day        =  "      "
         character (len=6) :: mo         =  "      "
         character (len=6) :: day_mo     =  "      "
         character (len=6) :: yrc        =  "      "
@@ -996,7 +996,7 @@
         character (len=6) :: yrc        =  "    yr"
         character (len=8) :: isd        =  "   unit "
         character (len=8) :: id         =  " gis_id "        
-        character (len=16) :: name      =  " name              "        
+        character (len=16) :: name      =  " name           "        
         character (len=13) :: lai       =  "          lai"
         character (len=12) :: bioms     =  "       bioms"
         character (len=12) :: yield     =  "       yield"
@@ -1032,18 +1032,18 @@
         character (len=6) :: yrc        =  "      "
         character (len=8) :: isd        =  "        "
         character (len=8) :: id         =  "        "        
-        character (len=16) :: name      =  "                   " 
+        character (len=16) :: name      =  "                " 
         character (len=13) :: lai       =  "    m**2/m**2"
         character (len=12) :: bioms     =  "        kgha"
         character (len=12) :: yield     =  "        kgha"
         character (len=12) :: residue   =  "        kgha"
         character (len=12) :: sol_tmp   =  "        degc"
-        character (len=12) :: strsw     =  "         ----"
-        character (len=12) :: strsa     =  "         ----"
-        character (len=12) :: strstmp   =  "         ----"
-        character (len=12) :: strsn     =  "         ----"
-        character (len=12) :: strsp     =  "         ----"
-        character (len=12) :: strss     =  "         ----"
+        character (len=12) :: strsw     =  "        ----"
+        character (len=12) :: strsa     =  "        ----"
+        character (len=12) :: strstmp   =  "        ----"
+        character (len=12) :: strsn     =  "        ----"
+        character (len=12) :: strsp     =  "        ----"
+        character (len=12) :: strss     =  "        ----"
         character (len=12) :: nplnt     =  "        kgha"
         character (len=12) :: percn     =  "        kgha"
         character (len=12) :: pplnt     =  "        kgha"

@@ -52,7 +52,7 @@
         character (len=8) :: id =           "  gis_id"         
         character (len=16) :: name =        "  name          "
         character (len=16) :: pest =        "  pesticide     "       
-        character (len=15) :: on_plant =    "  on_plant_kg/ha"       
+        character (len=15) :: on_plant =    " on_plant_kg/ha"       
         character (len=15) :: soil =        "    soil_kg/ha "
         character (len=15) :: sed =         "    sed_kg/ha  "        
         character (len=15) :: surq =        "   surq_kg/ha  "      
@@ -67,7 +67,7 @@
         character (len=15) :: metab_s =     " metab_s_kg/ha "
         character (len=15) :: metab_f =     " metab_f_kg/ha "
         character (len=15) :: uptake =      "  uptake_kg/ha "
-        character (len=15) :: in_plant =    " in_plant_kg/ha "
+        character (len=15) :: in_plant =    "in_plant_kg/ha "
       end type output_pestbal_header      
       type (output_pestbal_header) :: pestb_hdr
       

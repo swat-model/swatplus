@@ -295,9 +295,9 @@
       type (channel_surface_elements_hydrographs), dimension(:), allocatable :: ch_sur_hd
       
       !objects needed for operators
-      type (organic_mineral_mass) :: o_m1, o_m2, o_m3
-      type (mineral_phosphorus) :: pmin_m1, pmin_m2, pmin_m3
-      type (mineral_nitrogen) :: nmin_m1, nmin_m2, nmin_m3
+      ! type (organic_mineral_mass) :: o_m1, o_m2, o_m3
+      ! type (mineral_phosphorus) :: pmin_m1, pmin_m2, pmin_m3
+      ! type (mineral_nitrogen) :: nmin_m1, nmin_m2, nmin_m3
 
       !we may also need operators for organic and mineral operations
       

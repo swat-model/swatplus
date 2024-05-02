@@ -28,7 +28,7 @@
       type topography
            character(len=40) :: name
            real :: elev = 0.         !!               |m             |elevation of HRU
-           real :: slope = 0.        !!	hru_slp(:)    |m/m           |average slope steepness in HRU
+           real :: slope = 0.        !!  hru_slp(:)    |m/m           |average slope steepness in HRU
            real :: slope_len = 0.    !! slsubbsn(:)   |m             |average slope length for erosion
            real :: dr_den = 0.       !!               |km/km2        |drainage density
            real :: lat_len = 0.      !! slsoil(:)     |m             |slope length for lateral subsurface flow
@@ -354,10 +354,10 @@
       real, dimension (:), allocatable :: canstor,ovrlnd
 
 !    Drainmod tile equations  08/2006 
-	  real, dimension (:), allocatable :: cumei,cumeira
-	  real, dimension (:), allocatable :: cumrt, cumrai
+      real, dimension (:), allocatable :: cumei,cumeira 
+      real, dimension (:), allocatable :: cumrt, cumrai
       real, dimension (:), allocatable :: sstmaxd
-	  real, dimension (:), allocatable :: stmaxd
+      real, dimension (:), allocatable :: stmaxd
 !    Drainmod tile equations  08/2006
       real, dimension (:), allocatable :: surqsolp
       real, dimension (:), allocatable :: cklsp
@@ -372,9 +372,11 @@
       real, dimension (:), allocatable :: sedminpa,sedminps,sedorgn
       real, dimension (:), allocatable :: sedorgp,sedyld,sepbtm
       real, dimension (:), allocatable :: surfq,surqno3
-      real, dimension (:,:), allocatable :: surqsalt,latqsalt,tilesalt,percsalt,gwupsalt,urbqsalt,irswsalt,irgwsalt,wetqsalt,   &
-                wtspsalt !rtb salt
-      real, dimension (:,:), allocatable :: surqcs,latqcs,tilecs,perccs,gwupcs,urbqcs,sedmcs,irswcs,irgwcs,wetqcs,wtspcs !rtb cs
+      real, dimension (:,:), allocatable :: surqsalt,latqsalt,tilesalt,percsalt, &
+                  gwupsalt,urbqsalt,irswsalt,irgwsalt,wetqsalt,   &
+                  wtspsalt !rtb salt
+      real, dimension (:,:), allocatable :: surqcs,latqcs,tilecs,perccs,gwupcs,  &
+                  urbqcs,sedmcs,irswcs,irgwcs,wetqcs,wtspcs !rtb cs
       real, dimension (:), allocatable :: phubase
       real, dimension (:), allocatable :: dormhr
       real, dimension (:,:), allocatable :: wrt
@@ -399,13 +401,13 @@
 ! Modifications to Pesticide and Water routing routines by Balaji Narasimhan
 !Additional buffer and filter strip variables Mike White
 
-	real, dimension (:), allocatable :: ubnrunoff,ubntss
-	real, dimension (:,:), allocatable :: ovrlnd_dt,hhsurfq	
-	real, dimension (:,:,:), allocatable :: hhsurf_bs
+      real, dimension (:), allocatable :: ubnrunoff,ubntss
+      real, dimension (:,:), allocatable :: ovrlnd_dt,hhsurfq
+      real, dimension (:,:,:), allocatable :: hhsurf_bs
 
 !! subdaily erosion modeling by Jaehak Jeong
-	real, dimension(:,:), allocatable:: hhsedy
-	real, dimension(:), allocatable:: init_abstrc
+      real, dimension(:,:), allocatable:: hhsedy
+      real, dimension(:), allocatable:: init_abstrc
 
       integer, dimension(:), allocatable :: tillage_switch
       real, dimension(:), allocatable :: tillage_depth

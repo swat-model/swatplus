@@ -6,7 +6,7 @@
         real :: inflow = 0.             ! kg        !salt entering the reservoir via streamflow
         real :: outflow = 0.            ! kg        !salt leaving the reservoir via streamflow
         real :: seep = 0.               ! kg        !salt leaving the reservoir via seepage to aquifer
-        real :: fert = 0.								! kg        !salt added to reservoir (wetland) via fertilizer
+        real :: fert = 0.                ! kg        !salt added to reservoir (wetland) via fertilizer
         real :: irrig = 0.              ! kg        !salt removed from the reservoir via irrigation diversion
         real :: div = 0.                ! kg        !salt mass removed or added via diversion
         real :: mass = 0.               ! kg        !salt in reservoir water at end of day
@@ -24,7 +24,7 @@
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_m
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_y
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_a
-			
+      
       !arrays for wetland mass balance output
       type (res_salt_output), dimension(:), allocatable, save :: wetsalt_d
       type (res_salt_output), dimension(:), allocatable, save :: wetsalt_m

@@ -29,12 +29,12 @@
       type (erosion_output), dimension(:), allocatable  :: ero_output   !dimensioned by hru
       
       type erosion_output_header
-        character (len=6) :: hru          =  "        hru"
-        character (len=6) :: neve         =  "     events"
-        character (len=6) :: sedyld       =  "     sedyld"
-        character (len=6) :: precip       =  "     precip"
-        character (len=8) :: peak         =  "  peak_rate"
-        character (len=8) :: k            =  "   k_factor"        
+        character (len=6) :: hru          =  "   hru"
+        character (len=6) :: neve         =  "events"
+        character (len=6) :: sedyld       =  "sedyld"
+        character (len=6) :: precip       =  "precip"
+        character (len=9) :: peak         =  "peak_rate"
+        character (len=8) :: k            =  "k_factor"        
         character (len=16) :: s           =  "      slope"        
         character (len=12) :: l           =  "     length"
         character (len=12)  :: ls         =  "  ls_factor"
@@ -50,12 +50,12 @@
       type (erosion_output_header) :: ero_hdr
       
        type erosion_header_units
-        character (len=6) :: hru          =  "           "
-        character (len=6) :: neve         =  "           "
-        character (len=6) :: sedyld       =  "       t/ha"
-        character (len=6) :: precip       =  "         mm"
-        character (len=8) :: peak         =  "       m3/s"
-        character (len=8) :: k            =  "           "        
+        character (len=6) :: hru          =  "      "
+        character (len=6) :: neve         =  "      "
+        character (len=6) :: sedyld       =  "  t/ha"
+        character (len=6) :: precip       =  "    mm"
+        character (len=8) :: peak         =  "    m3/s"
+        character (len=8) :: k            =  "        "        
         character (len=16) :: s           =  "        m/m"        
         character (len=12) :: l           =  "          m"
         character (len=12)  :: ls         =  "           "

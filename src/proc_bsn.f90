@@ -12,7 +12,7 @@
      write (9001,*) "DIAGNOSTICS.OUT FILE" 
 !!!  open drainage areas output file
      open (9004,file="area_calc.out", recl=8000)
-        		
+                      
       call basin_read_cc
       call basin_read_objs
       call time_read
@@ -28,6 +28,6 @@
       call basin_print_codes_read
       call co2_read
    
-	  return
+         return
       
       end subroutine proc_bsn

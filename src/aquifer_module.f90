@@ -109,7 +109,7 @@
           character (len=6) :: yrc      =      "    yr"
           character (len=8) :: isd      =      "   unit "                                            
           character (len=8) :: id       =      " gis_id "           
-          character (len=16) :: name    =      " name              "          
+          character (len=16) :: name    =      " name           "          
           character(len=16) :: flo      =      "            flo"        ! (mm)
           character(len=16) :: dep_wt   =      "         dep_wt"        ! (m)
           character(len=15) :: stor     =      "           stor"        ! (mm)
@@ -137,7 +137,7 @@
           character (len=6) :: yrc      =  "      "
           character (len=8) :: isd      =  "        "                                            
           character (len=8) :: id       =  "        "           
-          character (len=16) :: name    =  "                   "          
+          character (len=16) :: name    =  "                "          
           character(len=16) :: flo      =  "              mm"         ! (mm)
           character (len=16) :: depwt   =  "              m "         ! (m)
           character(len=15) :: stor     =  "             mm"          ! (mm)

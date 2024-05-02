@@ -60,7 +60,7 @@
           else
             c = .8
           end if
-	    end if
+        end if
       else
         !! new method using residue and biomass cover
         rsd_sumfac = 0.

@@ -36,7 +36,7 @@
         character (len=15) :: man_c     =  "          kg/ha"        
         character (len=15) :: hum_c     =  "          kg/ha"
         character (len=15) :: phum_c    =  "          kg/ha"       
-        character (len=12) :: mb_c      =  "          kg/ha"
+        character (len=15) :: mb_c      =  "          kg/ha"
       end type organic_carbon_units      
       type (organic_carbon_units) :: orgc_units
       

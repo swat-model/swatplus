@@ -66,13 +66,13 @@
         if (ch_sed(ich)%cov2 <= 0.0) ch_sed(ich)%cov2 = 0.0
         if (ch_sed(ich)%cov1 >= 1.0) ch_sed(ich)%cov1 = 1.0
         if (ch_sed(ich)%cov2 >= 1.0) ch_sed(ich)%cov2 = 1.0
-	else 
+        else 
         if (ch_sed(ich)%cov1 <= 0.0) ch_sed(ich)%cov1 = 1.0
         if (ch_sed(ich)%cov2 <= 0.0) ch_sed(ich)%cov2 = 1.0
         if (ch_sed(ich)%cov1 >= 25.) ch_sed(ich)%cov1 = 25.
         if (ch_sed(ich)%cov2 >= 25.) ch_sed(ich)%cov2 = 25.
-	end if
-	  
+        end if
+          
 
 !!    Bank material is assumed to be silt type partcile if not given.
       if (ch_sed(ich)%bnk_d50 <= 1.e-6) ch_sed(ich)%bnk_d50 = 50. !! Units are in Micrometer
@@ -83,31 +83,31 @@
       if (ch_sed(ich)%bed_d50 > 10000) ch_sed(ich)%bed_d50 = 10000. 
 
 !!    Bulk density of channel bank sediment 
-	if (ch_sed(ich)%bnk_bd <= 1.e-6) ch_sed(ich)%bnk_bd = 1.40 !! Silty loam bank
+        if (ch_sed(ich)%bnk_bd <= 1.e-6) ch_sed(ich)%bnk_bd = 1.40 !! Silty loam bank
 
 !!    Bulk density of channel bed sediment
-	if (ch_sed(ich)%bed_bd <= 1.e-6) ch_sed(ich)%bed_bd = 1.50  !! Sandy loam bed
+        if (ch_sed(ich)%bed_bd <= 1.e-6) ch_sed(ich)%bed_bd = 1.50  !! Sandy loam bed
 
 !!  An estimate of channel bank erodibility coefficient from jet test if it is not available
 !!  Units of kd is (cm^3/N/s)
 !!  Base on Hanson and Simon, 2001
       if (ch_sed(ich)%bnk_kd <= 1.e-6) then
-	  if (ch_sed(ich)%tc_bnk <= 1.e-6) then
-	    ch_sed(ich)%bnk_kd = 0.2
-	  else 
+          if (ch_sed(ich)%tc_bnk <= 1.e-6) then
+            ch_sed(ich)%bnk_kd = 0.2
+          else 
           ch_sed(ich)%bnk_kd = 0.2 / sqrt(ch_sed(ich)%tc_bnk)
-	  end if
-	end if
+          end if
+        end if
 
 !!  An estimate of channel bed erodibility coefficient from jet test if it is not available
 !!  Units of kd is (cm^3/N/s)
 !!  Base on Hanson and Simon, 2001
       if (ch_sed(ich)%bed_kd <= 1.e-6) then
-	  if (ch_sed(ich)%tc_bed <= 1.e-6) then
-	    ch_sed(ich)%bed_kd = 0.2
-	  else 
+          if (ch_sed(ich)%tc_bed <= 1.e-6) then
+            ch_sed(ich)%bed_kd = 0.2
+          else 
           ch_sed(ich)%bed_kd = 0.2 / sqrt(ch_sed(ich)%tc_bed)
-	  end if
+          end if
       end if
 
       sumerod = 0.

@@ -18,7 +18,7 @@
       
       !grid type ------------------------------------------------------------------------------------------------------
       character*15 :: grid_type                               !"structured" or "unstructured" (usg)
-      integer :: grid_nrow						                        !number of rows in structured grid
+      integer :: grid_nrow                                    !number of rows in structured grid
       integer :: grid_ncol                                    !number of columns in structured grid
       integer, dimension (:,:), allocatable :: cell_id_usg    !usg cell number, for cell in structured grid (array)
       integer, dimension (:), allocatable :: cell_id_list     !usg cell number, for cell in structured grid (list)
@@ -28,48 +28,48 @@
       
       !groundwater state variables for each cell ----------------------------------------------------------------------
       type groundwater_state
-        real :: elev = 0.			      !m            |ground surface elevation
+        real :: elev = 0.            !m            |ground surface elevation
         real :: thck = 0.           !m            |aquifer thickness
-        real :: botm = 0.			      !m            |bottom (bedrock) elevation
+        real :: botm = 0.            !m            |bottom (bedrock) elevation
         real :: xcrd = 0.           !m            |x coordinate of cell centroid
         real :: ycrd = 0.           !m            |y coordinate of cell centroid
         real :: area = 0.           !m2           |surface area
-        real :: init = 0.			      !m            |initial groundwater head (beginning of simulation)
-        real :: head = 0.			      !m            |current simulated groundwater head
-        real :: hydc = 0.			      !m/day        |aquifer hydraulic conductivity
-        real :: spyd = 0.			      !m3/m3        |aquifer specific yield
+        real :: init = 0.            !m            |initial groundwater head (beginning of simulation)
+        real :: head = 0.            !m            |current simulated groundwater head
+        real :: hydc = 0.            !m/day        |aquifer hydraulic conductivity
+        real :: spyd = 0.            !m3/m3        |aquifer specific yield
         real :: exdp = 0.           !m            |groundwater ET extinction depth
-        integer :: stat = 0 			  !             |status (0=inactive; 1=active; 2=boundary)
+        integer :: stat = 0         !             |status (0=inactive; 1=active; 2=boundary)
         integer :: ncon = 0         !             |number of connected cells
         integer :: tile = 0         !             |tile drainage flag (0=no tile; 1=tile is present)
-        real :: hnew = 0.			      !m            |new groundwater head (at end of day)
-        real :: hold = 0.			      !m            |old groundwater head (at beginning of day)
-        real :: stor = 0.			      !m3           |currently available groundwater storage
-        real :: vbef = 0.			      !m3           |groundwater volume at beginning of day
-        real :: vaft = 0.			      !m3           |groundwater volume at end of day
-        real :: hdmo = 0.			      !m            |monthly average groundwater head
-        real :: hdyr = 0.			      !m            |annual average groundwater head
+        real :: hnew = 0.            !m            |new groundwater head (at end of day)
+        real :: hold = 0.            !m            |old groundwater head (at beginning of day)
+        real :: stor = 0.            !m3           |currently available groundwater storage
+        real :: vbef = 0.            !m3           |groundwater volume at beginning of day
+        real :: vaft = 0.            !m3           |groundwater volume at end of day
+        real :: hdmo = 0.            !m            |monthly average groundwater head
+        real :: hdyr = 0.            !m            |annual average groundwater head
       end type groundwater_state
       type (groundwater_state), dimension (:), allocatable :: gw_state
       
       
       !variables for HRU (and LSU) linkage to grid cells --------------------------------------------------------------
       !variables for linking HRUs to grid cells
-      integer :: hru_cells_link					                             !        |
-      integer, dimension (:), allocatable :: hru_num_cells					 !        |
-      integer, dimension (:), allocatable :: cell_num_hrus					 !        |
-      integer, dimension (:,:), allocatable :: hru_cells					   !        |
-      integer, dimension (:,:), allocatable :: cell_hrus					   !        |
-      real, dimension (:,:), allocatable :: hru_cells_fract					 !        |
-      real, dimension (:,:), allocatable :: cells_fract					     !        |
-      real, dimension (:,:), allocatable :: cell_hrus_fract					 !        |
+      integer :: hru_cells_link                                       !        |
+      integer, dimension (:), allocatable :: hru_num_cells           !        |
+      integer, dimension (:), allocatable :: cell_num_hrus           !        |
+      integer, dimension (:,:), allocatable :: hru_cells             !        |
+      integer, dimension (:,:), allocatable :: cell_hrus             !        |
+      real, dimension (:,:), allocatable :: hru_cells_fract           !        |
+      real, dimension (:,:), allocatable :: cells_fract               !        |
+      real, dimension (:,:), allocatable :: cell_hrus_fract           !        |
       !variables for linking LSUs (landscape units) to grid cells
-      integer :: lsu_cells_link					                             !        |
-      integer :: in_lsu_cell					                               !        |
-      integer, dimension (:), allocatable :: lsu_num_cells					 !        |
-      integer, dimension (:,:), allocatable :: lsu_cells					   !        |
-      real, dimension (:,:), allocatable :: lsu_cells_fract					 !        |
-      integer, dimension (:), allocatable :: lsus_connected					 !        |
+      integer :: lsu_cells_link                                       !        |
+      integer :: in_lsu_cell                                         !        |
+      integer, dimension (:), allocatable :: lsu_num_cells           !        |
+      integer, dimension (:,:), allocatable :: lsu_cells             !        |
+      real, dimension (:,:), allocatable :: lsu_cells_fract           !        |
+      integer, dimension (:), allocatable :: lsus_connected           !        |
       
       
       !variables for groundwater sources and sinks --------------------------------------------------------------------
@@ -187,7 +187,7 @@
       
       !latl: variables for groundwater lateral flow -----------------------------------------------
       type cell_connections
-			  integer, allocatable :: cell_id(:)                  !           |cells connected to the cell
+        integer, allocatable :: cell_id(:)                  !           |cells connected to the cell
         real, allocatable :: latl(:)                        !m3         |groundwater flow to/from connected cell
         real, allocatable :: sat(:)                         !m          |saturated thickness of connected cell
       endtype cell_connections
@@ -304,7 +304,7 @@
         integer :: daye
       end type cell_canal_out_info
       type (cell_canal_out_info), dimension (:), allocatable :: gw_canl_out_info
-      integer :: gw_canal_ncells_out										 !     |number of cells connected to canals that receive outside water
+      integer :: gw_canal_ncells_out                     !     |number of cells connected to canals that receive outside water
       real, allocatable :: canal_out_info(:,:)           !     |characteristics for canals that receive outside water
       real, allocatable :: canal_out_conc(:)             !     |solute concentration in canals that receive outside water
       
@@ -367,7 +367,7 @@
       integer :: num_ts_transport                             !    |number of transport time steps per day
       real ::    gw_long_disp                                 !m   |aquifer longitudinal dispersivity
       integer :: gwsol_salt                                   !    |flag for simulating salt ion groundwater transport (so4,ca,mg,na,k,cl,co3,hco3)
-      integer :: gwsol_cons																		!    |flag for simulating constituent groundwater transport (seo4,seo3,boron)
+      integer :: gwsol_cons                                    !    |flag for simulating constituent groundwater transport (seo4,seo3,boron)
       
       !main attributes of solutes
       character (len=16) :: gwsol_nm(100)
@@ -376,10 +376,10 @@
       
       !solute cell state variables
       type solute_state
-        real :: mass = 0.			      !g            |solute mass in groundwater
+        real :: mass = 0.            !g            |solute mass in groundwater
         real :: init = 0.           !g/m3         |solute concentration in groundwater at beginning of simulation
         real :: conc = 0.           !g/m3         |solute concentration in groundwater      
-        real :: cnew = 0.           !g/m3				  |new concentrations at end of time step
+        real :: cnew = 0.           !g/m3          |new concentrations at end of time step
         real :: mbef = 0.           !g            |solute mass at beginning of time step
         real :: maft = 0.           !g            |solute mass at end of time step
         real :: cnmo = 0.           !g/m3         |monthly average concentration
@@ -474,7 +474,7 @@
                                           sol_grid_soil_tt,sol_grid_resv_tt,sol_grid_wetl_tt,sol_grid_canl_tt, &
                                           sol_grid_fpln_tt
       
-			!solute concentrations at observation cells
+      !solute concentrations at observation cells
       real, dimension (:,:), allocatable :: gw_obs_solute          !         |                                 
                                           
       

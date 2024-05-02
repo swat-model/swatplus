@@ -533,7 +533,7 @@
       type (output_rucsb_header) :: rucsb_hdr
       
      type constituents_header_in          
-        character (len=11) :: day      = "       jday "
+        character (len=11) :: day      = "      jday "
         character (len=12) :: mo       = "         mon"
         character (len=12) :: day_mo   = "         day"
         character (len=12) :: yrc      = "          yr"
@@ -551,7 +551,7 @@
       type (constituents_header_in) :: csin_hyd_hdr
           
       type constituents_header_out          
-        character (len=11) :: day      = "       jday "
+        character (len=11) :: day      = "      jday "
         character (len=12) :: mo       = "         mon"
         character (len=12) :: day_mo   = "         day"
         character (len=12) :: yrc      = "          yr"

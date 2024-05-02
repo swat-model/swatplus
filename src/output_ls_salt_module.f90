@@ -41,12 +41,12 @@
         character (len=8) :: id =           "  gis_id"         
         character (len=16) :: name =        "  name          "
         character (len=16) :: salt =        "  salt_ion      "
-        character (len=12) :: plant =       "  plant_kg/h "       
-        character (len=12) :: soil =        "    soil_kg/h"       
-        character (len=12) :: surq =        "   surq_kg/h "      
-        character (len=12) :: latq =        "   latq_kg/h " 
-        character (len=12) :: tileq =       "  tileq_kg/h "
-        character (len=12) :: perc =        "   perc_kg/h "  
+        character (len=13) :: plant =       "  plant_kg/h "       
+        character (len=13) :: soil =        "    soil_kg/h"       
+        character (len=13) :: surq =        "   surq_kg/h "      
+        character (len=13) :: latq =        "   latq_kg/h " 
+        character (len=13) :: tileq =       "  tileq_kg/h "
+        character (len=13) :: perc =        "   perc_kg/h "  
         character (len=16) :: irrig =       "   irrig_kg/h"
       end type output_saltbal_header      
       type (output_saltbal_header) :: saltb_hdr

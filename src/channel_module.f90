@@ -143,7 +143,7 @@
           real :: cbod_out = 0.                ! (kg)       |carbonaceous biochemical oxygen demand of material transported out of reach
           real :: dis_in = 0.                  ! (kg)       |amount of dissolved oxygen transported into reach
           real :: dis_out = 0.                 ! (kg)       |amount of dissolved oxygen transported out of reach
-          real :: solpst_in = 0.               ! (mg pst)   |soluble pesticide transported with water into reach	
+          real :: solpst_in = 0.               ! (mg pst)   |soluble pesticide transported with water into reach  
           real :: solpst_out = 0.              ! (mg pst)   |soluble pesticide transported with water out of reach
           real :: sorbpst_in = 0.              ! (mg pst)   |pesticide sorbed to sediment transported with water into reach
           real :: sorbpst_out = 0.             ! (mg pst)   |pesticide sorbed to sediment transported with water out of reach
@@ -204,44 +204,44 @@
           character (len=5) :: yrc =          "   yr"
           character (len=9) :: isd =          "    unit "
           character (len=8) :: id =           " gis_id "           
-          character (len=16) :: name =        " name              "           
-          character(len=16) :: flo_in =       "      flo_in    "        ! (ha-m)
+          character (len=16) :: name =        " name          "           
+          character(len=16) :: flo_in =       "      flo_in   "        ! (ha-m)
           character(len=15) :: flo_out =      "    flo_out    "         ! (ha-m)
-          character(len=15) :: evap =         "        evap     "       ! (ha-m)
+          character(len=15) :: evap =         "        evap   "       ! (ha-m)
           character(len=15) :: tloss =        "     tloss     "         ! (ha-m)
-          character(len=15) :: sed_in =       "      sed_in    "        ! (tons)
-          character(len=15) :: sed_out=       "     sed_out    "        ! (tons)
-          character(len=15) :: sed_conc =     "    sed_conc    "        ! (mg/L)
+          character(len=15) :: sed_in =       "      sed_in   "        ! (tons)
+          character(len=15) :: sed_out=       "     sed_out   "        ! (tons)
+          character(len=15) :: sed_conc =     "    sed_conc   "        ! (mg/L)
           character(len=15) :: orgn_in =      "    orgn_in   "          ! (kg N)
-          character(len=15) :: orgn_out =     "    orgn_out    "        ! (kg N)
-          character(len=15) :: orgp_in =      "      orgp_in      "     ! (kg P)
-          character(len=15) :: orgp_out =     "      orgp_out  "        ! (kg P)
-          character(len=15) :: no3_in =       "       no3_in   "        ! (kg N)
-          character(len=15) :: no3_out =      "      no3_out   "        ! (kg N)
-          character(len=15) :: nh4_in =       "        nh4_in  "        ! (kg)
-          character(len=15) :: nh4_out=       "       nh4_out  "        ! (kg)
-          character(len=15) :: no2_in =       "        no2_in  "        ! (kg)
-          character(len=15) :: no2_out =      "       no2_out  "        ! (kg)
-          character(len=15) :: solp_in =      "      solp_in   "        ! (kg P)
-          character(len=15) :: solp_out =     "     solp_out   "        ! (kg P)
-          character(len=15) :: chla_in =      "       chla_in  "        ! (kg)
-          character(len=15) :: chla_out =     "      chla_out  "        ! (kg)
-          character(len=15) :: cbod_in =      "       cbod_in  "        ! (kg)
-          character(len=15) :: cbod_out =     "      cbod_out  "        ! (kg)
-          character(len=15) :: dis_in =       "        dis_in  "        ! (kg)
-          character(len=15) :: dis_out =      "       dis_out  "        ! (kg)
-          character(len=15) :: solpst_in =    "   solpst_in    "        ! (mg pst)
-          character(len=15) :: solpst_out =   "   solpst_out   "        ! (mg pst)
-          character(len=15) :: sorbpst_in =   "  sorbpst_in    "        ! (mg pst)
-          character(len=15) :: sorbpst_out=   "  sorbpst_out   "        ! (mg pst)
-          character(len=15) :: react =        "     react      "        ! (mg pst)
-          character(len=15) :: volat =        "        volat   "        ! (mg)
-          character(len=15) :: setlpst =      "   setlpst      "        ! (mg pst)
-          character(len=15) :: resuspst =     "     resuspst   "        ! (mg)
-          character(len=15) :: difus =        "     difus      "        ! (mg pst)              
-          character(len=15) :: reactb =       "    reactb      "        ! pst/sed (mg)
-          character(len=15) :: bury =         "     bury       "        ! pst bury (mg)
-          character(len=15) :: sedpest =      "      sedpest   "        ! pst in rivbed sed mg
+          character(len=15) :: orgn_out =     "    orgn_out   "        ! (kg N)
+          character(len=15) :: orgp_in =      "      orgp_in  "     ! (kg P)
+          character(len=15) :: orgp_out =     "      orgp_out "        ! (kg P)
+          character(len=15) :: no3_in =       "       no3_in  "        ! (kg N)
+          character(len=15) :: no3_out =      "      no3_out  "        ! (kg N)
+          character(len=15) :: nh4_in =       "        nh4_in "        ! (kg)
+          character(len=15) :: nh4_out=       "       nh4_out "        ! (kg)
+          character(len=15) :: no2_in =       "        no2_in "        ! (kg)
+          character(len=15) :: no2_out =      "       no2_out "        ! (kg)
+          character(len=15) :: solp_in =      "      solp_in  "        ! (kg P)
+          character(len=15) :: solp_out =     "     solp_out  "        ! (kg P)
+          character(len=15) :: chla_in =      "       chla_in "        ! (kg)
+          character(len=15) :: chla_out =     "      chla_out "        ! (kg)
+          character(len=15) :: cbod_in =      "       cbod_in "        ! (kg)
+          character(len=15) :: cbod_out =     "      cbod_out "        ! (kg)
+          character(len=15) :: dis_in =       "        dis_in "        ! (kg)
+          character(len=15) :: dis_out =      "       dis_out "        ! (kg)
+          character(len=15) :: solpst_in =    "   solpst_in   "        ! (mg pst)
+          character(len=15) :: solpst_out =   "   solpst_out  "        ! (mg pst)
+          character(len=15) :: sorbpst_in =   "  sorbpst_in   "        ! (mg pst)
+          character(len=15) :: sorbpst_out=   "  sorbpst_out  "        ! (mg pst)
+          character(len=15) :: react =        "     react     "        ! (mg pst)
+          character(len=15) :: volat =        "        volat  "        ! (mg)
+          character(len=15) :: setlpst =      "   setlpst     "        ! (mg pst)
+          character(len=15) :: resuspst =     "     resuspst  "        ! (mg)
+          character(len=15) :: difus =        "     difus     "        ! (mg pst)              
+          character(len=15) :: reactb =       "    reactb     "        ! pst/sed (mg)
+          character(len=15) :: bury =         "     bury      "        ! pst bury (mg)
+          character(len=15) :: sedpest =      "      sedpest  "        ! pst in rivbed sed mg
           character(len=15) :: bacp =         "           bacp"        ! persistent bact out
           character(len=15) :: baclp =        "          baclp"        ! lpersistent bact out
           character(len=15) :: met1 =         "           met1"        ! cmetal #1  
@@ -312,28 +312,28 @@
           character(len=15) :: reactb      =   "        mg"           ! pst/sed (mg)
           character(len=15) :: bury        =   "       mg"           ! pst bury (mg)
           character(len=15) :: sedpest     =   "           mg"           ! pst in rivbed sed mg
-          character(len=15) :: bacp        =   "            ----"        ! persistent bact out
-          character(len=15) :: baclp       =   "            ----"        ! lpersistent bact out
-          character(len=15) :: met1        =   "            ----"        ! cmetal #1  
-          character(len=15) :: met2        =   "            ----"        ! cmetal #2
-          character(len=15) :: met3        =   "            ----"        ! cmetal #3
-          character(len=15) :: sand_in     =   "            ----"        ! sand in 
-          character(len=15) :: sand_out    =   "            ----"        ! sand out
-          character(len=15) :: silt_in     =   "            ----"        ! silt_in
-          character(len=15) :: silt_out    =   "            ----"        ! silt_out
-          character(len=15) :: clay_in     =   "            ----"        ! clay_in
-          character(len=15) :: clay_out    =   "            ----"        ! clay_out
-          character(len=15) :: smag_in     =   "            ----"        ! sm ag in  
-          character(len=15) :: smag_out    =   "            ----"        ! sm ag out
-          character(len=15) :: lag_in      =   "            ----"        ! lg ag in
-          character(len=15) :: lag_out     =   "            ----"        ! lg ag out
-          character(len=15) :: grvl_in     =   "            ----"        ! gravel in
-          character(len=15) :: grvl_out    =   "            ----"        ! gravel out
-          character(len=15) :: bnk_ero     =   "            ----"        ! bank erosion
-          character(len=15) :: ch_deg      =   "            ----"        ! channel degradation
-          character(len=15) :: ch_dep      =   "            ----"        ! channel deposition
-          character(len=15) :: fp_dep      =   "            ----"        ! flood deposition         
-          character(len=15) :: tot_ssed    =   "            ----"        ! total suspended sediments       
+          character(len=15) :: bacp        =   "           ----"        ! persistent bact out
+          character(len=15) :: baclp       =   "           ----"        ! lpersistent bact out
+          character(len=15) :: met1        =   "           ----"        ! cmetal #1  
+          character(len=15) :: met2        =   "           ----"        ! cmetal #2
+          character(len=15) :: met3        =   "           ----"        ! cmetal #3
+          character(len=15) :: sand_in     =   "           ----"        ! sand in 
+          character(len=15) :: sand_out    =   "           ----"        ! sand out
+          character(len=15) :: silt_in     =   "           ----"        ! silt_in
+          character(len=15) :: silt_out    =   "           ----"        ! silt_out
+          character(len=15) :: clay_in     =   "           ----"        ! clay_in
+          character(len=15) :: clay_out    =   "           ----"        ! clay_out
+          character(len=15) :: smag_in     =   "           ----"        ! sm ag in  
+          character(len=15) :: smag_out    =   "           ----"        ! sm ag out
+          character(len=15) :: lag_in      =   "           ----"        ! lg ag in
+          character(len=15) :: lag_out     =   "           ----"        ! lg ag out
+          character(len=15) :: grvl_in     =   "           ----"        ! gravel in
+          character(len=15) :: grvl_out    =   "           ----"        ! gravel out
+          character(len=15) :: bnk_ero     =   "           ----"        ! bank erosion
+          character(len=15) :: ch_deg      =   "           ----"        ! channel degradation
+          character(len=15) :: ch_dep      =   "           ----"        ! channel deposition
+          character(len=15) :: fp_dep      =   "           ----"        ! flood deposition         
+          character(len=15) :: tot_ssed    =   "           ----"        ! total suspended sediments       
       end type ch_header_units
       type (ch_header_units) :: ch_hdr_units
       

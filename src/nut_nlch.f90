@@ -71,7 +71,7 @@
 
         !! add nitrate leached from layer above
         soil1(j)%mn(jj)%no3 = soil1(j)%mn(jj)%no3 + percnlyr
-	    if (soil1(j)%mn(jj)%no3 < 1.e-6) soil1(j)%mn(jj)%no3 = 0.0
+           if (soil1(j)%mn(jj)%no3 < 1.e-6) soil1(j)%mn(jj)%no3 = 0.0
 
         !! determine concentration of nitrate in mobile water
         if (jj == 1) then

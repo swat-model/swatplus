@@ -25,7 +25,7 @@
         real :: fert = 0.            !! |kg/ha       |salt ion mass added to soil via fertilizer 
         real :: amnd = 0.            !! |kg/ha       |salt ion mass added to soil via salt amendments
         real :: uptk = 0.            !! |kg/ha       |salt ion mass taken up by crop roots
-        real :: conc = 0.						 !! |mg/L        |salt ion concentration in soil water (averaged over all soil layers)
+        real :: conc = 0.            !! |mg/L        |salt ion concentration in soil water (averaged over all soil layers)
       end type salt_balance
       
       type object_salt_balance

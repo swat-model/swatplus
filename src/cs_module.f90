@@ -24,7 +24,7 @@
         real :: uptk = 0.            !! |kg/ha       |mass taken up by crop roots
         real :: rctn = 0.            !! |kg/ha       |mass transferred by chemical reaction
         real :: sorb = 0.            !! |kg/ha       |mass transferred by sorption
-        real :: conc = 0.						 !! |mg/L        |concentration in soil water (averaged over all soil layers)
+        real :: conc = 0.            !! |mg/L        |concentration in soil water (averaged over all soil layers)
         real :: srbd = 0.            !! |kg/ha       |mass sorbed to soil
         
         !boron terms to add...

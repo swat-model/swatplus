@@ -17,7 +17,7 @@
 
       inquire (file=in_chg%wb_parms_sft, exist=i_exist)
       if (.not. i_exist .or. in_chg%wb_parms_sft == "null") then
-        allocate (ls_prms(0:0))	   	   
+        allocate (ls_prms(0:0))
       else   
        do 
          open (107,file = in_chg%wb_parms_sft)
@@ -38,7 +38,7 @@
          if (eof < 0) exit 
        end do
 
-      end if	   
+      end if
 
       close(107)
       return

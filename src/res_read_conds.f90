@@ -54,5 +54,5 @@
         end do
       end do
     
-	  return      
+         return      
       end subroutine res_read_conds
