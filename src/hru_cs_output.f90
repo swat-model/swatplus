@@ -12,7 +12,7 @@
       integer :: j                       !             |HRU number
       real :: const                      !             |constant used for rate, days, etc
       integer :: iob                     !             |
-      integer :: ics                     !						 |constituent ion counter
+      integer :: ics                     !             |constituent ion counter
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs constituent mass loadings and concentrations from HRUs
@@ -69,7 +69,7 @@
                          (hcsb_d(j)%cs(ics)%srbd,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
           write (6022,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
-																		     (hcsb_d(j)%cs(ics)%soil,ics=1,cs_db%num_cs), & 
+                                         (hcsb_d(j)%cs(ics)%soil,ics=1,cs_db%num_cs), & 
                                          (hcsb_d(j)%cs(ics)%surq,ics=1,cs_db%num_cs), &
                                          (hcsb_d(j)%cs(ics)%sedm,ics=1,cs_db%num_cs), &
                                          (hcsb_d(j)%cs(ics)%latq,ics=1,cs_db%num_cs), &

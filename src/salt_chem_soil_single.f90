@@ -90,29 +90,29 @@
 
       if(K_ADJ1.gt.0.) then
         salt_K1 = Ksp11/K_ADJ1
-	else
+      else
         salt_K1 = 0.
-	endif
+      endif
       if(K_ADJ2.gt.0.) then
         salt_K2 = Ksp21/K_ADJ2
-	else
+      else
         salt_K2 = 0.
-	endif
+      endif
       if(K_ADJ3.gt.0.) then
         salt_K3 = Ksp31/K_ADJ3
-	else
+      else
         salt_K3 = 0.
-	endif
+      endif
       if(K_ADJ4.gt.0.) then
         salt_K4 = Ksp41/K_ADJ4
-	else
+      else
         salt_K4 = 0.
-	endif
+      endif
       if(K_ADJ5.gt.0.) then
         salt_K5 = Ksp51/K_ADJ5
-	else
+      else
         salt_K5 = 0.
-	endif
+      endif
           
       errorTotal = 1
 

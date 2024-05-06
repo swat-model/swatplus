@@ -347,19 +347,19 @@
 
 !!        compute channel peak rate using SCS triangular unit hydrograph
           chflow_m3 = 1000. * chflow * hlt_db(ihlt_db)%dakm2
-	      runoff_m3 = 1000. * runoff * hlt_db(ihlt_db)%dakm2
-	      bf_m3 = 1000. * (flowlat + hlt(isd)%gwflow)*hlt_db(ihlt_db)%dakm2
+          runoff_m3 = 1000. * runoff * hlt_db(ihlt_db)%dakm2
+          bf_m3 = 1000. * (flowlat + hlt(isd)%gwflow)*hlt_db(ihlt_db)%dakm2
           peakr = 2. * runoff_m3 / (1.5 * hlt_db(ihlt_db)%tc)
-	      peakrbf = bf_m3 / 86400.
+          peakrbf = bf_m3 / 86400.
           peakr = (peakr + peakrbf)     !* prf     
           
 !!        compute sediment yield with MUSLE
           sedin = (runoff * peakr * 1000. * hlt_db(ihlt_db)%dakm2) ** .56 * hlt(isd)%uslefac
           
-	    !! add subsurf sediment - t=ppm*mm*km2/1000.
-	    qssubconc = 500.
-	    qssub = qssubconc * (flowlat + hlt(isd)%gwflow) * hlt_db(ihlt_db)%dakm2 / 1000.
-	    sedin = sedin + qssub
+        !! add subsurf sediment - t=ppm*mm*km2/1000.
+        qssubconc = 500.
+        qssub = qssubconc * (flowlat + hlt(isd)%gwflow) * hlt_db(ihlt_db)%dakm2 / 1000.
+        sedin = sedin + qssub
 
           cnv = hlt_db(ihlt_db)%dakm2 * 1000.
           

@@ -87,10 +87,10 @@
         obcs(icmd)%hd(3)%path(ipath) = 0
       end do
       do isalt = 1, cs_db%num_salts !rtb salt
-			  obcs(icmd)%hd(3)%salt(isalt) = (surqsalt(j,isalt)+urbqsalt(j,isalt)+wetqsalt(j,isalt)) * cnv_kg !kg of each salt ion
+        obcs(icmd)%hd(3)%salt(isalt) = (surqsalt(j,isalt)+urbqsalt(j,isalt)+wetqsalt(j,isalt)) * cnv_kg !kg of each salt ion
       enddo
       do ics = 1, cs_db%num_cs !rtb cs
-			  obcs(icmd)%hd(3)%cs(ics) = (surqcs(j,ics)+sedmcs(j,ics)+urbqcs(j,ics)+wetqcs(j,ics)) * cnv_kg !kg of each constituent (surface runoff + attached)
+        obcs(icmd)%hd(3)%cs(ics) = (surqcs(j,ics)+sedmcs(j,ics)+urbqcs(j,ics)+wetqcs(j,ics)) * cnv_kg !kg of each constituent (surface runoff + attached)
       enddo
       
       !recharge hydrograph (2)

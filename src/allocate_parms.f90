@@ -77,10 +77,10 @@
       allocate (cn2(mhru))
       allocate (cnday(mhru))
 !    Drainmod tile equations  01/2006 
-	  allocate (cumei(mhru))
-	  allocate (cumeira(mhru))
-	  allocate (cumrt(mhru))
-	  allocate (cumrai(mhru))
+     allocate (cumei(mhru))
+      allocate (cumeira(mhru))
+      allocate (cumrt(mhru))
+      allocate (cumrai(mhru))
 !    Drainmod tile equations  01/2006
       allocate (dormhr(mhru))
       allocate (doxq(mhru))
@@ -108,7 +108,7 @@
       allocate (satexn(mhru)) !rtb gwflow
       
 !    Drainmod tile equations  01/2006 
-	  allocate (sstmaxd(mhru))	  
+      allocate (sstmaxd(mhru))      
 !    Drainmod tile equations  01/2006 
       allocate (sedminpa(mhru))
       allocate (sedminps(mhru))
@@ -128,7 +128,7 @@
       allocate (soln_con(mhru))
       allocate (solp_con(mhru))
 !!    Drainmod tile equations  01/2006 
-	  allocate (stmaxd(mhru))
+      allocate (stmaxd(mhru))
       allocate (itill(mhru))
       allocate (surfq(mhru))
       allocate (surqno3(mhru))
@@ -172,12 +172,12 @@
       allocate (surf_bs(55,mhru)) !rtb salt/cs (changed to 55)
 
 !! sj aug 09 end
-	  allocate (hhsurf_bs(2,mhru,time%step))
+      allocate (hhsurf_bs(2,mhru,time%step))
       allocate (ubnrunoff(time%step),ubntss(time%step))
 
 !! Arrays for subdaily erosion modeling by Jaehak Jeong
-	  allocate (hhsedy(mhru,time%step),ovrlnd_dt(mhru,time%step))  
-	  allocate (init_abstrc(mhru),hhsurfq(mhru,time%step))
+      allocate (hhsedy(mhru,time%step),ovrlnd_dt(mhru,time%step))  
+      allocate (init_abstrc(mhru),hhsurfq(mhru,time%step))
 
        !Tillage factor on SOM decomposition
        allocate(tillage_switch(mhru))
@@ -192,7 +192,7 @@
        
       !! By Zhang for C/N cycling
       !! ============================
-      	  
+            
       call zero0
       call zero1
       call zero2

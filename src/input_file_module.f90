@@ -20,7 +20,7 @@
         character(len=25) :: parms_bas = "parameters.bsn"
       end type input_basin
       type (input_basin) :: in_basin
-      	  	  
+
 !! climate
       type input_cli
         character(len=25) :: weat_sta = "weather-sta.cli"
@@ -95,7 +95,7 @@
         character(len=25) :: hru_ez   = "hru-lte.hru"
       end type input_hru
       type (input_hru) :: in_hru
-	  
+
 !! exco (recall constant)
       type input_exco
         character(len=25) :: exco = "exco.exc"
@@ -106,7 +106,7 @@
         character(len=25) :: salt = "exco_salt.exc"
       end type input_exco
       type (input_exco) :: in_exco
-	  
+
 !! recall (daily, monthly and annual)
       type input_rec 
        character(len=25) :: recall_rec = "recall.rec"

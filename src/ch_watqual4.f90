@@ -77,8 +77,8 @@
 
         !! O2 impact calculations
         !! calculate nitrification rate correction factor for low oxygen QUAL2E equation III-21
-	    if (ht3%dox < 0.001) ht3%dox = 0.001
-	    if (ht3%dox > 30.) ht3%dox = 30.
+        if (ht3%dox < 0.001) ht3%dox = 0.001
+        if (ht3%dox > 30.) ht3%dox = 30.
         cordo = 1.0 - Exp(-0.6 * ht3%dox)
         !! end O2 impact calculations
        
@@ -95,7 +95,7 @@
           lambda = ch_nut(jnut)%lambda0
         endif
 
-	    if (lambda > ch_nut(jnut)%lambda0) lambda = ch_nut(jnut)%lambda0
+        if (lambda > ch_nut(jnut)%lambda0) lambda = ch_nut(jnut)%lambda0
         !! calculate algal growth limitation factors for nitrogen
         !! and phosphorus QUAL2E equations III-13 & III-14
         fnn = cinn / (cinn + ch_nut(jnut)%k_n)

@@ -20,7 +20,7 @@
       real :: thick                      !m      |canal bed thickness
       real :: length                     !m      |length of canal in the cell
       real :: stage                      !m      |stage of canal in the cell
-      real :: bed_K											 !m/day  |hydraulic conductivity of canal bed in the cell
+      real :: bed_K                      !m/day  |hydraulic conductivity of canal bed in the cell
       real :: flow_area                  !m2     |groundwater flow area of water exchange, in cell
       real :: canal_bed                  !m      |canal bed elevation in the cell
       real :: head_diff                  !m      |head difference between canal stage and groundwater head

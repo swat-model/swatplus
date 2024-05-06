@@ -13,8 +13,8 @@
       integer :: hru_dum,aqu_dum
       logical :: i_exist              !none          |check to determine if file exists
 
-      integer :: num_rct							!              |number of reaction parameters
-      integer :: num_groups           !						   |number of reaction groups
+      integer :: num_rct              !              |number of reaction parameters
+      integer :: num_groups           !              |number of reaction groups
       real    :: shale_fractions(500) !              |fraction of shale that covers an area's object
       
       

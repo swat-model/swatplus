@@ -100,7 +100,7 @@
                                              * (1. - urbdb(ulu)%fimp)
 
           !! The sediment loading from urban imprevious area is assumed 
-	      !! to be all sitly particles
+          !! to be all sitly particles
           silyld(j) = (.001 * sus_sol) * urbdb(ulu)%fimp                &
                                   + silyld(j) * (1. - urbdb(ulu)%fimp)
           sanyld(j) = sanyld(j) * (1. - urbdb(ulu)%fimp)
@@ -153,7 +153,7 @@
                                    sedyld(j) * (1. - urbdb(ulu)%fimp)
 
           !! The sediment loading from urban imprevious area is assumed 
-	      !! to be all sitly particles
+          !! to be all sitly particles
           silyld(j) = (.001 * sus_sol * hru(j)%area_ha) *                         &
                      urbdb(ulu)%fimp + silyld(j) * (1. - urbdb(ulu)%fimp)
           sanyld(j) = sanyld(j) * (1. - urbdb(ulu)%fimp)

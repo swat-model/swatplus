@@ -98,23 +98,23 @@
          surf_bs(2,j) = surf_bs(2,j) - sedyld(j)
 
       else !subdaily time steps, Jaehak Jeong 2011
-      	sedprev = hhsurf_bs(2,j,time%step)
+            sedprev = hhsurf_bs(2,j,time%step)
 
-	    do k=1,time%step
-	      !! Left-over (previous timestep) + inflow (current  timestep)
+        do k=1,time%step
+            !! Left-over (previous timestep) + inflow (current  timestep)
           hhsurf_bs(2,j,k) = Max(0., sedprev + hhsedy(j,k))
-	
-	      !! new estimation of sediment reaching the main channel
+      
+            !! new estimation of sediment reaching the main channel
           hhsedy(j,k) = hhsurf_bs(2,j,k) * brt(j)! tons
           hhsurf_bs(2,j,k) = hhsurf_bs(2,j,k) - hhsedy(j,k)
-	  
-	      !! lagged at the end of time step  
-	      sedprev = hhsurf_bs(2,j,k)
+        
+            !! lagged at the end of time step  
+            sedprev = hhsurf_bs(2,j,k)
           surf_bs(2,j) = Max(1.e-9, surf_bs(2,j) + sedyld(j))
-	    end do
+          end do
 
-	    !! daily total sediment yield from the HRU
-	    sedyld(j) = sum(hhsedy(j,:))
+          !! daily total sediment yield from the HRU
+          sedyld(j) = sum(hhsedy(j,:))
       endif
       
       surf_bs(13,j) = Max(1.e-6, surf_bs(13,j) + sanyld(j))
@@ -159,7 +159,7 @@
         surf_bs(41,j) = surf_bs(41,j) + wetqsalt(j,6) !cl
         surf_bs(42,j) = surf_bs(42,j) + wetqsalt(j,7) !co3
         surf_bs(43,j) = surf_bs(43,j) + wetqsalt(j,8) !hco3
-			endif
+      endif
       
       !rtb cs
       if(cs_db%num_cs > 0) then
@@ -179,7 +179,7 @@
         surf_bs(53,j) = surf_bs(53,j) + wetqcs(j,1) !seo4
         surf_bs(54,j) = surf_bs(54,j) + wetqcs(j,2) !seo3
         surf_bs(55,j) = surf_bs(55,j) + wetqcs(j,3) !born
-			endif
+                  endif
       
  !!     sedyld(j) = surf_bs(2,j) * brt(j)  <--line of code in x 2. fixes sedyld low prob
 
@@ -225,7 +225,7 @@
         wetqsalt(j,6) = surf_bs(41,j) * brt(j) !cl
         wetqsalt(j,7) = surf_bs(42,j) * brt(j) !co3
         wetqsalt(j,8) = surf_bs(43,j) * brt(j) !hco3
-			endif
+      endif
       
       !rtb cs
       if(cs_db%num_cs > 0) then
@@ -245,7 +245,7 @@
         wetqcs(j,1) = surf_bs(53,j) * brt(j) !seo4
         wetqcs(j,2) = surf_bs(54,j) * brt(j) !seo3
         wetqcs(j,3) = surf_bs(55,j) * brt(j) !boron
-			endif
+      endif
       
       surf_bs(2,j) = surf_bs(2,j) - sedyld(j)
       surf_bs(13,j) = surf_bs(13,j) - sanyld(j)
@@ -290,7 +290,7 @@
         surf_bs(41,j) = surf_bs(41,j) - wetqsalt(j,6) !cl
         surf_bs(42,j) = surf_bs(42,j) - wetqsalt(j,7) !co3
         surf_bs(43,j) = surf_bs(43,j) - wetqsalt(j,8) !hco3
-			endif
+      endif
       
       !rtb cs
       if(cs_db%num_cs > 0) then
@@ -310,7 +310,7 @@
         surf_bs(53,j) = surf_bs(53,j) - wetqcs(j,1) !seo4
         surf_bs(54,j) = surf_bs(54,j) - wetqcs(j,2) !seo3
         surf_bs(55,j) = surf_bs(55,j) - wetqcs(j,3) !boron
-			endif
+      endif
       
       return
       end subroutine stor_surfstor

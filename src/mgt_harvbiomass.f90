@@ -49,7 +49,7 @@
       hrc_d(j)%plant_c = hrc_d(j)%plant_c + pl_yield%c
       hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_yield%c
       
-	  !! adjust foliar and internal pesticide for plant removal
+      !! adjust foliar and internal pesticide for plant removal
       do k = 1, cs_db%num_pests
         !! calculate amount of pesticide removed with yield and clippings
         yld_rto = (hi_tot * pl_mass(j)%ab_gr(ipl)%m) / pl_mass(j)%tot(ipl)%m
@@ -79,7 +79,7 @@
       harv_left = clip * pl_yield
       rsd1(j)%tot(1) = harv_left + rsd1(j)%tot(1)
 
-	  !! calculation for dead roots allocations, resetting phenology, updating other pools
+      !! calculation for dead roots allocations, resetting phenology, updating other pools
       !! reset leaf area index and fraction of growing season
       if (pl_mass(j)%tot(ipl)%m > 0.001) then
         !! assume the lai biomass relationship - 0.5 lai decline for biomass removal

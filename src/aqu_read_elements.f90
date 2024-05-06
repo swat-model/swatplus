@@ -73,7 +73,7 @@
          
       db_mx%aqu_out = mreg
       end do 
-      end if	  
+      end if      
 
     !! setting up regions for aquifer soft cal and/or output by type
     inquire (file=in_regs%def_aqu_reg, exist=i_exist)
@@ -117,7 +117,7 @@
       db_mx%aqu_reg = mreg
       
       end do 
-      end if	  
+      end if      
 
       !! if no regions are input, don"t need elements
       if (mreg > 0) then

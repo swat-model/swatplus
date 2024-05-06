@@ -132,10 +132,10 @@
         isep = iseptic(j)
         if (sep(isep)%opt /= 0 .and. time%yrc >= sep(isep)%yr .and. k >=       &
                                                           i_sep(j)) then
-	   if (soil(j)%phys(k)%tmp < 10.) then
-	       soil(j)%phys(k)%tmp = 10. - (10. - soil(j)%phys(k)%tmp) * 0.1
-	   end if     
-	  endif
+           if (soil(j)%phys(k)%tmp < 10.) then
+               soil(j)%phys(k)%tmp = 10. - (10. - soil(j)%phys(k)%tmp) * 0.1
+           end if     
+        endif
 
       end do
 

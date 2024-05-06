@@ -169,5 +169,5 @@
         end if
         end do  
 
-	  return
+      return
       end subroutine calsoft_hyd_bfr_latq

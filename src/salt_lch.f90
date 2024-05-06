@@ -90,7 +90,7 @@
           
           !! add salt leached from layer above
           cs_soil(j)%ly(jj)%salt(isalt) = cs_soil(j)%ly(jj)%salt(isalt) + percsaltlyr(isalt)
-	    if (cs_soil(j)%ly(jj)%salt(isalt) < 1.e-6) then
+          if (cs_soil(j)%ly(jj)%salt(isalt) < 1.e-6) then
             cs_soil(j)%ly(jj)%salt(isalt) = 0.0
           endif
 
@@ -165,7 +165,7 @@
           hru_area_m2 = hru(j)%area_ha * 10000. !ha --> m2
           water_volume = (soil(j)%phys(jj)%st/1000.) * hru_area_m2
           if(cs_soil(j)%ly(jj)%salt(isalt).lt.0) then
-			  cs_soil(j)%ly(jj)%salt(isalt) = 0.
+                    cs_soil(j)%ly(jj)%salt(isalt) = 0.
           endif
           salt_mass_kg = cs_soil(j)%ly(jj)%salt(isalt) * hru(j)%area_ha !kg
           !calculate concentration in mg/L
@@ -173,7 +173,7 @@
             cs_soil(j)%ly(jj)%saltc(isalt) = (salt_mass_kg * 1000.) / water_volume !g/m3 = mg/L
           else
             cs_soil(j)%ly(jj)%saltc(isalt) = 0.
-			endif
+                  endif
         enddo
       enddo
 

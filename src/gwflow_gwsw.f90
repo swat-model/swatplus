@@ -11,7 +11,7 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
+      integer, intent (in) :: chan_id    !       |channel number
       integer :: k                       !       |counter
       integer :: s                       !       |solute counter
       integer :: cell_id                 !       |cell in connection with the channel
@@ -22,7 +22,7 @@
       real :: chan_depth                 !m      |channel depth
       real :: chan_width                 !m      |channel width
       real :: chan_length                !m      |length of channel, in cell
-      real :: bed_elev									 !m      |elevation of channel bed, in cell
+      real :: bed_elev                   !m      |elevation of channel bed, in cell
       real :: bed_K                      !m/day  |hydraulic conductivity of channel bed, in cell
       real :: bed_thick                  !m      |thickness of channel bed, in cell
       real :: chan_stage                 !m      |elevation of water in channel, in cell

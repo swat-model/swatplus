@@ -142,7 +142,7 @@
      !! all pesticide outputs
         read (107,*,iostat=eof) name, pco%pest
         if (eof < 0) exit  
-		 !! salt outputs !rtb salt
+        !! salt outputs !rtb salt
         read (107,*,iostat=eof) name, pco%salt_basin
         if (eof < 0) exit
         read (107,*,iostat=eof) name, pco%salt_hru

@@ -11,8 +11,8 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
-      integer :: c											 !       |counter for canals connected to the channel
+      integer, intent (in) :: chan_id    !       |channel number
+      integer :: c                       !       |counter for canals connected to the channel
       integer :: k                       !       |counter for cells connected to a canal
       integer :: s                       !       |counter of groundwater solutes
       integer :: canal_id                !       |canal in connection with the channel
@@ -29,7 +29,7 @@
       real :: thick                      !m      |canal bed thickness
       real :: length                     !m      |length of canal in the cell
       real :: stage                      !m      |stage of canal in the cell
-      real :: bed_K											 !m/day  |hydraulic conductivity of canal bed in the cell
+      real :: bed_K                       !m/day  |hydraulic conductivity of canal bed in the cell
       real :: flow_area                  !m2     |groundwater flow area of water exchange, in cell
       real :: canal_bed                  !m      |canal bed elevation in the cell
       real :: head_diff                  !m      |head difference between canal stage and groundwater head

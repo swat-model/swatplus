@@ -51,7 +51,7 @@
       latno3 = 0.
       orgn_con = 0.
       orgp_con = 0.
-	  phubase = 0.
+      phubase = 0.
       pltnfr = 0.
       pltpfr = 0.
 !! drainmod tile equations   06/2006

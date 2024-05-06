@@ -10,15 +10,15 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel id
+      integer, intent (in) :: chan_id    !       |channel id
       integer :: k                       !       |counter
       integer :: s                       !       |solute counter
       integer :: cell_id                 !       |cell in connection with the channel
       integer :: isalt                   !       |salt ion counter
       integer :: ics                     !       |constituent counter
       integer :: sol_index
-      real :: satx_depth                 !m			 |height of water table above ground surface
-      real :: satx_volume								 !m3     |volume of groundwater above ground surface
+      real :: satx_depth                 !m      |height of water table above ground surface
+      real :: satx_volume                !m3     |volume of groundwater above ground surface
       real :: solmass(100)               !g      |solute mass transferred
       
 

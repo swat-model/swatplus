@@ -98,7 +98,7 @@
             end do
             wst(iwst)%weat%precip_next = sum (pcp(ipg)%tss(:,cur_day,time%yrs))
           else
-		  !! daily precip
+            !! daily precip
             if (out_bounds == "y") then 
               wst(iwst)%weat%precip_next = -98.
             else

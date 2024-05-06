@@ -87,9 +87,9 @@
       integer :: canal_out(5000)      !          |flag (0,1) indicating if canal receives water from outside the model domain
       integer :: day_beg              !          |beginning day (of year)  of active canals
       integer :: day_end              !          |ending day (of year) of active canals
-      integer :: canal							  !          |id of canal that intersects grid cells
-      real :: thick                   !m				 |thickness of canal bed sediments
-      real :: depth										!m         |depth of canal water
+      integer :: canal                !          |id of canal that intersects grid cells
+      real :: thick                   !m         |thickness of canal bed sediments
+      real :: depth                   !m         |depth of canal water
       real :: width                   !m         |width of canal
       real :: length                  !m         |length of canal in cell
       real :: stage                   !m         |stage of canal
@@ -318,7 +318,7 @@
         gw_state(i)%xcrd = 0.
         gw_state(i)%ycrd = 0.
         gw_state(i)%area = 0.
-        gw_state(i)%init = 0.	
+        gw_state(i)%init = 0.
         gw_state(i)%head = 0.
         gw_state(i)%hydc = 0.
         gw_state(i)%spyd = 0.
@@ -527,7 +527,7 @@
         gw_state(i)%xcrd = 0.
         gw_state(i)%ycrd = 0.
         gw_state(i)%area = 0.
-        gw_state(i)%init = 0.	
+        gw_state(i)%init = 0.
         gw_state(i)%head = 0.
         gw_state(i)%hydc = 0.
         gw_state(i)%spyd = 0.
@@ -631,7 +631,7 @@
       read(in_gw,*) gw_cell_obs_ss
       if(grid_type == "structured") then
         gw_cell_obs_ss = cell_id_list(gw_cell_obs_ss)
-			endif
+      endif
       open(out_gwobs_ss,file='gwflow_cell_ss')
       write(out_gwobs_ss,*) 'Daily sources and sinks for cell'
       write(out_gwobs_ss,*) 'cell:',gw_cell_obs_ss
@@ -776,7 +776,7 @@
       !determine the number of cells that are linked to each channel
       allocate(gw_chan_info(sp_ob%chandeg))
       do i=1,sp_ob%gwflow
-			  channel = gw_chan_chan(i) !channel connected to cell
+        channel = gw_chan_chan(i) !channel connected to cell
         gw_chan_info(channel)%ncon = gw_chan_info(channel)%ncon + 1
       enddo
       !allocate arrays holding the cell information
@@ -790,7 +790,7 @@
       enddo
       !populate the array holding the cell numbers for each channel
       do i=1,sp_ob%gwflow
-			  channel = gw_chan_chan(i) !channel connected to cell
+        channel = gw_chan_chan(i) !channel connected to cell
         gw_chan_info(channel)%ncon = gw_chan_info(channel)%ncon + 1
         gw_chan_info(channel)%cells(gw_chan_info(channel)%ncon) = gw_chan_cell(i)
         gw_chan_info(channel)%leng(gw_chan_info(channel)%ncon) = gw_chan_len(i)
@@ -1005,7 +1005,7 @@
         !flux output file
         open(out_gw_tile,file='gwflow_flux_tile')
         write(out_gw_tile,*) 'Annual tile flows (m3/day)'
-			else
+        else
         write(out_gw,*) '          gwflow.tiles not found; tile drainage not simulated'
       endif
       endif !end tile drainage
@@ -1015,7 +1015,7 @@
       inquire(file='gwflow.rescells',exist=i_exist)
       if(i_exist) then
         write(out_gw,*) '          groundwater-reservoir exchange (gwflow.rescells found)'
-		    open(in_res_cell,file='gwflow.rescells')
+        open(in_res_cell,file='gwflow.rescells')
         read(in_res_cell,*) header
         read(in_res_cell,*) header
         !read in reservoir bed conductivity (m/day) and thickness (m)
@@ -1030,7 +1030,7 @@
           read(in_res_cell,*) res_cell,res_id,res_stage
           if(res_id > 0) then
             gw_resv_info(res_id)%ncon = gw_resv_info(res_id)%ncon + 1
-					endif
+          endif
         enddo
         !allocate arrays and re-read information
         do i=1,sp_ob%res
@@ -1058,12 +1058,12 @@
             gw_resv_info(res_id)%elev(gw_resv_info(res_id)%ncon) = gw_state(res_cell)%elev
             gw_resv_info(res_id)%hydc(gw_resv_info(res_id)%ncon) = res_K
             gw_resv_info(res_id)%thck(gw_resv_info(res_id)%ncon) = res_thick
-					endif
+          endif
         enddo
         !flux output file
         open(out_gw_res,file='gwflow_flux_resv')
         write(out_gw_res,*) 'Annual groundwater-reservoir exchange (m3/day)' 
-			else
+      else
         write(out_gw,*) '          gwflow.rescells not found (groundwater-res exchange not simulated)'
       endif
       endif !end reservoir exchange
@@ -1107,7 +1107,7 @@
             gw_fp_area(i) = gw_state(gw_fp_cellid(i))%area
           endif
           !track the number of cells for each channel
-			    channel = gw_fp_chanid(i) !channel connected to cell
+          channel = gw_fp_chanid(i) !channel connected to cell
           gw_fpln_info(channel)%ncon = gw_fpln_info(channel)%ncon + 1
         enddo
         !allocate arrays holding the cell information
@@ -1120,7 +1120,7 @@
         enddo
         !populate the array holding the cell numbers for each channel
         do i=1,gw_fp_ncells
-			    channel = gw_fp_chanid(i) !channel connected to cell
+          channel = gw_fp_chanid(i) !channel connected to cell
           gw_fpln_info(channel)%ncon = gw_fpln_info(channel)%ncon + 1
           gw_fpln_info(channel)%cells(gw_fpln_info(channel)%ncon) = gw_fp_cellid(i)
           gw_fpln_info(channel)%hydc(gw_fpln_info(channel)%ncon) = gw_fp_K(i)
@@ -1134,7 +1134,7 @@
         !flux output file
         open(out_gw_fp,file='gwflow_flux_floodplain')
         write(out_gw_fp,*) 'Annual floodplain seepage (m3/day)'  
-			else
+      else
         write(out_gw,*) '          gwflow.floodplain not found (groundwater-fp exchange not simulated)'
       endif
       endif !end floodplain exchange
@@ -1165,7 +1165,7 @@
             canal_out_info(i,5) = day_end
           else
             gw_chan_canl_info(channel)%ncanal = gw_chan_canl_info(channel)%ncanal + 1
-					endif
+          endif
         enddo
         !allocate arrays for canal attributes
         do i=1,sp_ob%chandeg
@@ -1192,7 +1192,7 @@
             gw_chan_canl_info(channel)%thck(gw_chan_canl_info(channel)%ncanal) = thick
             gw_chan_canl_info(channel)%dayb(gw_chan_canl_info(channel)%ncanal) = day_beg
             gw_chan_canl_info(channel)%daye(gw_chan_canl_info(channel)%ncanal) = day_end
-					endif
+          endif
         enddo
         !read in the canal bed K values for each zone
         read(in_canal_cell,*) header
@@ -1235,7 +1235,7 @@
           read(in_canal_cell,*) cell_num,canal,length,stage,K_zone
           if(canal_out(canal) == 0) then
             gw_canl_info(canal)%ncon = gw_canl_info(canal)%ncon + 1
-					endif
+          endif
         enddo
         !allocate arrays holding cell attributes
         do i=1,gw_ncanal
@@ -1266,7 +1266,7 @@
           read(in_canal_cell,*) cell_num,canal,length,stage,K_zone
           if(grid_type == "structured") then
             cell_num = cell_id_list(cell_num)
-					endif
+          endif
           if(cell_num > 0) then
             if(canal_out(canal) == 1) then !canal water from outside the model domain
               gw_canal_ncells_out = gw_canal_ncells_out + 1
@@ -1291,7 +1291,7 @@
         !flux output file
         open(out_gw_canal,file='gwflow_flux_canl')
         write(out_gw_canal,*) 'Annual canal seepage (m3/day)' 
-			else
+      else
         write(out_gw,*) '          gwflow.canals not found (canal seepage not simulated)'
       endif
       endif !end canal seepage
@@ -1497,7 +1497,7 @@
         !allocate all mass arrays for sources and sinks
         allocate(gwsol_ss(ncell))
         do i=1,ncell
-				  allocate(gwsol_ss(i)%solute(gw_nsolute))
+          allocate(gwsol_ss(i)%solute(gw_nsolute))
         enddo
         !allocate all mass arrays for sums of sources and sinks
         allocate(gwsol_ss_sum(ncell))
@@ -1570,7 +1570,7 @@
         write(out_gwobs_sol,*)
         allocate(gw_obs_solute(gw_num_obs_wells,gw_nsolute))
         gw_obs_solute = 0.
-			else
+      else
         gw_solute_flag = 0 !turn off transport option
       endif
       endif !end solute transport
@@ -1632,7 +1632,7 @@
       !then the national model approach will be used.
       inquire(file='gwflow.huc12cell',exist=i_exist)
       if (nat_model == 1) then
-		    !read in the HUC12 subwatersheds
+        !read in the HUC12 subwatersheds
         open(5100,file='out.key')
         allocate(huc12(sp_ob%outlet))
         read(5100,*)
@@ -1660,7 +1660,7 @@
             backspace(5101)
           enddo
 15      enddo
-			endif
+      endif
       
       !HRU-cell connection
       write(out_gw,*) '          HRU-cell connections (gwflow.hrucell)'
@@ -1841,7 +1841,7 @@
         write(out_gwbal,*) 'ppex:         mm   groundwater pumping specified by user'
         write(out_gwbal,*) 'tile:         mm   groundwater removed via tile drains'
         write(out_gwbal,*) 'resv:         mm   groundwater exchanged with reservoirs'
-        write(out_gwbal,*) 'wetl:         mm   groundwater outflow to wetlands'	
+        write(out_gwbal,*) 'wetl:         mm   groundwater outflow to wetlands'  
         write(out_gwbal,*) 'canl:         mm   canal seepage to groundwater'
         write(out_gwbal,*) 'fpln:         mm   floodplain exchange'
         write(out_gwbal,*) 'error:        --   water balance error for aquifer'
@@ -2177,7 +2177,7 @@
           if(gw_state(i)%stat.gt.0) then
             if(gw_state(i)%head > gw_state(i)%botm) then
               gw_cell_volume = gw_state(i)%area * (gw_state(i)%head-gw_state(i)%botm) * gw_state(i)%spyd !m3 of groundwater
-						else
+            else
               gw_cell_volume = 0.
             endif
             do s=1,gw_nsolute !loop through solutes

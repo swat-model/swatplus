@@ -34,7 +34,7 @@
  
       inquire (file=in_chg%ch_sed_budget_sft, exist=i_exist)
       if (.not. i_exist .or. in_chg%ch_sed_budget_sft == "null") then
-           allocate (chcal(0:0))	      
+           allocate (chcal(0:0))
       else 
       do
         open (107,file=in_chg%ch_sed_budget_sft)

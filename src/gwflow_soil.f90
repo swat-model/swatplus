@@ -11,7 +11,7 @@
       
       implicit none
 
-      integer, intent (in) :: hru_id		 !       |hru number
+      integer, intent (in) :: hru_id     !       |hru number
       integer :: k                       !       |counter
       integer :: s                       !       |solute counter
       integer :: jj                      !       |soil layer counter
@@ -19,7 +19,7 @@
       real :: Q                          !m3     |volume transferred from cell
       real :: hru_Q                      !m3     |total volume transferred to soil profile
       real :: hru_soilz                  !m      |thickness of HRU soil profile
-      real :: vadose_z    							 !m			 |thickness of cell vadose zone
+      real :: vadose_z                   !m       |thickness of cell vadose zone
       real :: poly_area                  !m2     |area of cell within the HRU
       real :: solmass(100)               !g      |solute mass transferred from cell
       real :: hru_mass(100)              !g      |total solute mass transferred to soil profile
@@ -55,7 +55,7 @@
             !if water table is within the soil profile --> calculate groundwater volume (Q) to transfer
             Q = 0.
             if(vadose_z < hru_soilz) then !water table is within the soil profile
-					    poly_area = gw_state(cell_id)%area * cells_fract(hru_id,k) !area of cell within HRU
+              poly_area = gw_state(cell_id)%area * cells_fract(hru_id,k) !area of cell within HRU
               Q = (hru_soilz - vadose_z) * poly_area * gw_state(cell_id)%spyd !m3 of groundwater to transfer to the soil profile 
               !store for water balance calculations (in gwflow_simulate)
               gw_ss(cell_id)%soil = gw_ss(cell_id)%soil + (Q*(-1)) !negative = leaving the aquifer

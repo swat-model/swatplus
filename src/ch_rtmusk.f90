@@ -147,7 +147,7 @@
           !! Muskingum flood routing method
           outflo = sd_ch(jrch)%msk%c1 * inflo + sd_ch(jrch)%msk%c2 * sd_ch(jrch)%in1_vol +     &
                                                 sd_ch(jrch)%msk%c3 * sd_ch(jrch)%out1_vol
-	      outflo = Min (outflo, tot_stor(jrch)%flo)
+          outflo = Min (outflo, tot_stor(jrch)%flo)
           outflo = Max (outflo, 0.)
                
           !! save inflow/outflow volumes for next time step (and day) for Muskingum

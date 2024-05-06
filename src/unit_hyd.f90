@@ -74,7 +74,7 @@
       sumq = 0.
       uh = 0.
       tb = .5 + .6 * tc + bsn_prm%tb_adj    !baseflow time, hr
-      if (tb > 48.) tb = 48.			    !maximum 48hrs
+      if (tb > 48.) tb = 48.                !maximum 48hrs
       tp = .375 * tb                        ! time to peak flow
 
       !! sum 20 points on the unit hydrograph to get sum for the time%step
@@ -123,6 +123,6 @@
           uh(i,istep) = uh(i, istep) / sumq
         end do
       end do
-	  
+        
       return
       end subroutine unit_hyd

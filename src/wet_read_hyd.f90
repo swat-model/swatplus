@@ -69,7 +69,7 @@
         inquire(file='gwflow.wetland',exist=i_exist)
         if(i_exist) then
           write(out_gw,*) '          found gwflow.wetland; use wetland specified bed thickness'
-		      open(in_wet_cell,file='gwflow.wetland')
+          open(in_wet_cell,file='gwflow.wetland')
           read(in_wet_cell,*) header
           read(in_wet_cell,*) header
           read(in_wet_cell,*) header

@@ -73,8 +73,8 @@
               ob(i)%trans = hz
               ob(i)%hin_tot = hz
               ob(i)%hout_tot = hz
-									  
               ob(i)%hd_aa(:) = hz
+
               if (cs_db%num_tot > 0) then
                 
                 !set flag for allocating obcs

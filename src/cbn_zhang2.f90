@@ -284,7 +284,7 @@
          tillage_factor(j) = 1.6
       else
          tillage_factor(j) = 1.0
-      end if	
+      end if        
 
       !!calculate c/n dynamics for each soil layer
       !!===========================================
@@ -333,11 +333,11 @@
                 till_eff = 1.6
               else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
                 till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
-              end if		         
+              end if                         
             end if
           else
             till_eff = 1.0
-          end if	
+          end if        
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
           org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
@@ -630,16 +630,16 @@
         !     update
               if (rnmn > 0.) then
                   soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
-	          min_n = soil1(j)%mn(k)%no3 + rnmn
-	            if (min_n < 0.) then
-	              rnmn = -soil1(j)%mn(k)%no3
-	              soil1(j)%mn(k)%no3 = 1.e-10
-	            else
-	              soil1(j)%mn(k)%no3 = min_n
+                  min_n = soil1(j)%mn(k)%no3 + rnmn
+                    if (min_n < 0.) then
+                      rnmn = -soil1(j)%mn(k)%no3
+                      soil1(j)%mn(k)%no3 = 1.e-10
+                    else
+                      soil1(j)%mn(k)%no3 = min_n
                 end if   
               end if
               
-	          ! calculate p flows
+                  ! calculate p flows
               ! compute humus mineralization on active organic p
               hmp_rate = 1.4 * (hsnta + hpnta) / (soil1(j)%hs(k)%n + soil1(j)%hp(k)%n + 1.e-6)
               
@@ -647,9 +647,9 @@
               hmp = hmp_rate * soil1(j)%hp(k)%p
               hmp = min(hmp, soil1(j)%hp(k)%p)
               soil1(j)%hp(k)%p = soil1(j)%hp(k)%p - hmp
-              soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + hmp	          
-	
-	          !! compute residue decomp and mineralization of 
+              soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + hmp                  
+        
+                  !! compute residue decomp and mineralization of 
               !! fresh organic n and p (upper two layers only)  
                 decr = (lscta + lmcta) / (soil1(j)%str(k)%c + soil1(j)%meta(k)%c + 1.e-6)
                 decr = min(1., decr)
@@ -657,12 +657,12 @@
 
                 soil1(j)%tot(k)%p = soil1(j)%tot(k)%p - rmp
                 soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * rmp
-                soil1(j)%hp(k)%p = soil1(j)%hp(k)%p + .2 * rmp	          
+                soil1(j)%hp(k)%p = soil1(j)%hp(k)%p + .2 * rmp                  
 
               !!!=================================
               !!determine the final rate of the decomposition of each carbon pool and 
               !!allocation of c and nutrients to different som pools, as well as co2 emissions from different pools
-	          lscta = min(soil1(j)%str(k)%c, lscta)              
+                  lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
@@ -775,7 +775,7 @@
               !!epic procedures (not used): calculating n supply - n demand 
                   !!df1 is the supply of n during structural litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into structural litter (0 as no other pools transformed into structural litter)  
-	              df1 = lsnta 
+                      df1 = lsnta 
                  
                   !!df2 is the supply of n during metabolic litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into metabolic litter (0 as no other pools transformed into structural litter)  

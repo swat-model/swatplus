@@ -28,10 +28,10 @@
       real :: cell_rech_volume        !m3         |volume of recharge to the cell
       real :: rech_solmass(100)       !g          |summation of solute mass in recharge from multiple HRUs
       real :: cell_rech_solmass(100)  !g          |solute mass in recharge to the cell
-      real :: hru_total								!m3         |summation of recharge from multiple HRUs
+      real :: hru_total               !m3         |summation of recharge from multiple HRUs
       real :: hru_cell_total          !m3         |summation of recharge for multiple cells
       real :: huc12_cell_total        !m3         |summation of recharge from a huc12 catchment
-      real :: sub_recharge						!m3					|summation of recharge for subbasin
+      real :: sub_recharge            !m3         |summation of recharge for subbasin
       real :: sub_solmass(100)        !g          |total solute mass in recharge, for the subbasin
       
       
@@ -59,7 +59,7 @@
           rech_volume = 0.
           if (gw_solute_flag == 1) then
             rech_solmass = 0.
-					endif
+          endif
           do j=1,lsu_out(k)%num_tot
             hru_id = lsu_out(k)%num(j)
             ob_num = sp_ob1%hru + hru_id - 1
@@ -69,7 +69,7 @@
               do s=1,gw_nsolute !loop through the solutes
                 rech_solmass(s) = rech_solmass(s) + (gw_rechsol(hru_id,s)*ob(ob_num)%area_ha*1000.) !g
               enddo
-						endif
+            endif
           enddo
           !map recharge from LSU to grid cells connected to the LSU
           do i=1,lsu_num_cells(k)
@@ -87,7 +87,7 @@
           enddo
         enddo !go to next LSU
         
-			else !proceed with HRU-cell connection
+      else !proceed with HRU-cell connection
       
       !map recharge from the HRUs to the grid cells
       if (nat_model == 1) then !national model application
@@ -153,7 +153,7 @@
               do s=1,gw_nsolute !loop through the solutes
                 cell_rech_solmass(s) = sub_solmass(s) / cell_count
               enddo
-						endif
+            endif
             !third: assign the average cell recharge to each cell
             do k=1,huc12_ncell(n)
               cell_id = huc12_cells(n,k)

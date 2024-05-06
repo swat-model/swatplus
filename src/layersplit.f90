@@ -11,9 +11,9 @@
       integer :: nly1              !             |
       integer :: lyn               !none         |counter
       integer :: ly                !none         |counter
-	  real, intent(in):: dep_new   !             |
+      real, intent(in):: dep_new   !             |
       
-	  nly = soil(ihru)%nly
+      nly = soil(ihru)%nly
 
       allocate (layer1(nly))
       allocate (phys1(nly))
@@ -52,5 +52,5 @@
       
       deallocate (layer1)
       deallocate (phys1)
-	  return
+          return
       end        

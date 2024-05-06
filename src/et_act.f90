@@ -82,9 +82,9 @@
       j = ihru
       pet = pet_day
 !!    added statements for test of real statement above
-	esd = 500.  !soil(j)%zmx
-	etco = 0.80
-	effnup = 0.05
+      esd = 500.  !soil(j)%zmx
+      etco = 0.80
+      effnup = 0.05
       ires= hru(j)%dbs%surf_stor !Jaehak 2022
 
 

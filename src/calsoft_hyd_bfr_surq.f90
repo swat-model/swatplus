@@ -174,5 +174,5 @@
         end if
         end do      ! icn
 
-	  return
+      return
       end subroutine calsoft_hyd_bfr_surq

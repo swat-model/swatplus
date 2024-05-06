@@ -962,7 +962,7 @@
         character (len=11) :: min   =     "       min "
       end type output_flow_duration_header    
       type (output_flow_duration_header) :: fdc_hdr
-	  
+
       type calibration_header          
         character (len=16) :: name        =   "     name      "        
         character (len=12) :: ha          =   "     ha     "                                             
@@ -1002,7 +1002,7 @@
         character (len=12) :: cn3_swf     =   " cn3_swf    "
       end type calibration_header    
       type (calibration_header) :: calb_hdr 
-	  
+
       type calibration2_header         
         character (len=16) :: name     =   "       name "
         character (len=12) :: dakm2    =   "     da_km2 "                                            

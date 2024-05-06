@@ -9,12 +9,12 @@
         real :: surq = 0.            !! |kg/ha       |mass lost in surface runoff in HRU
         real :: sedm = 0.            !! |kg/ha       |mass lost in sediment runoff in HRU
         real :: latq = 0.            !! |kg/ha       |mass in lateral flow in HRU
-        real :: urbq = 0.            !! |kg/ha			 |mass in urban runoff
-        real :: wetq = 0.            !! |kg/ha			 |mass in wetland outflow
+        real :: urbq = 0.            !! |kg/ha       |mass in urban runoff
+        real :: wetq = 0.            !! |kg/ha       |mass in wetland outflow
         real :: tile = 0.            !! |kg/ha       |mass in tile flow in HRU
         real :: perc = 0.            !! |kg/ha       |mass leached past bottom of soil
         real :: gwup = 0.            !! |kg/ha       |mass from groundwater (to soil profile)
-        real :: wtsp = 0.            !! |kg/ha			 |mass in wetland seepage (to soil profile)
+        real :: wtsp = 0.            !! |kg/ha       |mass in wetland seepage (to soil profile)
         real :: irsw = 0.            !! |kg/ha       |mass applied on soil via surface water irrigation
         real :: irgw = 0.            !! |kg/ha       |mass applied on soil via groundwater irrigation
         real :: irwo = 0.            !! |kg/ha       |mass applied on soil via irrigation from without (wo) the watershed

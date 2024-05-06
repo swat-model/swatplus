@@ -80,7 +80,7 @@
             allocate(wetsalt_a(ii)%salt(cs_db%num_salts))  
             allocate(wet_water(ii)%salt(cs_db%num_salts))
             allocate(wet_water(ii)%saltc(cs_db%num_salts))
-					enddo
+          enddo
         endif
         
         !rtb cs - allocate wetland arrays
@@ -96,7 +96,7 @@
             allocate (wetcs_a(ii)%cs(cs_db%num_cs))  
             allocate (wet_water(ii)%cs(cs_db%num_cs))
             allocate (wet_water(ii)%csc(cs_db%num_cs))
-					enddo
+          enddo
         endif
         
       endif

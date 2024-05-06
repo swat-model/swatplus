@@ -63,15 +63,15 @@
         soil1(ihru)%mp(ly)%lab = soil1(ihru)%mp(ly)%lab * wt1   !! mg/kg => kg/ha
 
         !! set active mineral P pool based on dynamic PSP MJW
-	    if (bsn_cc%sol_P_model == 1) then 
-	      !! Allow Dynamic PSP Ratio
+            if (bsn_cc%sol_P_model == 1) then 
+              !! Allow Dynamic PSP Ratio
           !! convert to concentration
           solp = soil1(ihru)%mp(ly)%lab / wt1
-	      !! PSP = -0.045*log (% clay) + 0.001*(Solution P, mg kg-1) - 0.035*(% Organic C) + 0.43
-	      if (soil(ihru)%phys(ly)%clay > 0.) then
+              !! PSP = -0.045*log (% clay) + 0.001*(Solution P, mg kg-1) - 0.035*(% Organic C) + 0.43
+              if (soil(ihru)%phys(ly)%clay > 0.) then
             bsn_prm%psp = -0.045 * log(soil(ihru)%phys(ly)%clay) + (0.001 * solp) 
             bsn_prm%psp = bsn_prm%psp - (0.035 * soil1(ihru)%tot(ly)%c) + 0.43 
-          endif   		
+          endif                   
           !! Limit PSP range
           if (bsn_prm%psp < .05) then
             bsn_prm%psp = 0.05
@@ -82,25 +82,25 @@
         soil1(ihru)%mp(ly)%act = soil1(ihru)%mp(ly)%lab * (1. - bsn_prm%psp) / bsn_prm%psp
 
         !! Set Stable pool based on dynamic coefficient
-	    if (bsn_cc%sol_P_model == 1) then  !! From White et al 2009 
+            if (bsn_cc%sol_P_model == 1) then  !! From White et al 2009 
             !! convert to concentration for ssp calculation
-	        actp = soil1(ihru)%mp(ly)%act / wt1
-		    solp = soil1(ihru)%mp(ly)%lab / wt1
+                actp = soil1(ihru)%mp(ly)%act / wt1
+                    solp = soil1(ihru)%mp(ly)%lab / wt1
             !! estimate Total Mineral P in this soil based on data from sharpley 2004
-		    ssp = 25.044 * (actp + solp)** (-0.3833)
-		    !!limit SSP Range
-		    if (ssp > 7.) ssp = 7.
-		    if (ssp < 1.) ssp = 1.	      	  
-		    soil1(ihru)%mp(ly)%sta = ssp * (soil1(ihru)%mp(ly)%act + soil1(ihru)%mp(ly)%lab)
+                    ssp = 25.044 * (actp + solp)** (-0.3833)
+                    !!limit SSP Range
+                    if (ssp > 7.) ssp = 7.
+                    if (ssp < 1.) ssp = 1.                        
+                    soil1(ihru)%mp(ly)%sta = ssp * (soil1(ihru)%mp(ly)%act + soil1(ihru)%mp(ly)%lab)
          else
-	      !! the original code
-		  soil1(ihru)%mp(ly)%sta = 4. * soil1(ihru)%mp(ly)%act
-	   end if
+              !! the original code
+                  soil1(ihru)%mp(ly)%sta = 4. * soil1(ihru)%mp(ly)%act
+           end if
       end do
 
       
       !! set initial organic pools - originally by Zhang
-	  do ly = 1, nly
+          do ly = 1, nly
 
         !initialize total soil organic pool - no litter
         !kg/ha = mm * t/m3 * m/1,000 mm * 1,000 kg/t * 10,000 m2/ha
@@ -177,7 +177,7 @@
         !soil1(ihru)%water(ly)%n = 
         !soil1(ihru)%water(ly)%p = 
 
-	  end do	
+        end do        
 
       return
       end subroutine soil_nutcarb_init

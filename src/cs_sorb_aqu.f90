@@ -20,7 +20,7 @@
           gw_volume,aqu_volume,aqu_bd,aqu_mass
       real :: sorbed_seo4,sorbed_seo3,sorbed_born
       real :: mass_seo4_before,mass_seo4_after,&        
-          mass_seo3_before,mass_seo3_after,&				
+          mass_seo3_before,mass_seo3_after,&
           mass_born_before,mass_born_after
       
       

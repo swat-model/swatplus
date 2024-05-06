@@ -18,7 +18,7 @@
       
       implicit none
 
-      integer, intent (in) :: hru_id		    !       |hru that has an irrigation water demand
+      integer, intent (in) :: hru_id        !       |hru that has an irrigation water demand
       real, intent (in) :: hru_demand       !m3     |volume of irrigation water demand
       real, intent (inout) :: extracted     !m3     |volume of groundwater extracted from aquifer for irrigation
       real, intent (inout) :: dmd_unmet     !m3     |volume of irrigation demand not met by aquifer
@@ -31,8 +31,8 @@
       integer :: sol_index
       real :: cell_demand                   !m3     |volume of irrigation water demand per gwflow cell
       real :: gwvol_avail                   !m3     |groundwater storage in the gwflow cell
-      real :: gwvol_removed									!m3     |groundwater removed from the gwflow cell for irrigation demand
-      real :: gwvol_unmet										!m3     |groundwater not available to meet irrigation demand
+      real :: gwvol_removed                 !m3     |groundwater removed from the gwflow cell for irrigation demand
+      real :: gwvol_unmet                   !m3     |groundwater not available to meet irrigation demand
       real :: gw_mass                       !kg     |mass of solute in groundwater of the gwflow cell
       real :: irr_mass(100)                 !kg     |mass of solute removed from aquifer for irrigation
       real :: mass_diff                     !kg     |difference between irrigation mass and actual groundwater mass
@@ -58,7 +58,7 @@
           !check for available groundwater in the cell
           if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then !if water table is above bedrock
             gwvol_avail = ((gw_state(cell_id)%head-gw_state(cell_id)%botm) * gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
-				  else
+          else
             gwvol_avail = 0.
           endif
           
@@ -153,7 +153,7 @@
           
         enddo !go to next gwflow cell
         
-			endif
+      endif
 
       !store pumping (m3) for the HRU
       hru_pump(hru_id) = sum_pump

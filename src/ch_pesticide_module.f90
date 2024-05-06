@@ -46,7 +46,7 @@
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
           character (len=8) :: id =         " gis_id "           
-          character (len=16) :: name =      " name              "  
+          character (len=16) :: name =      " name           "  
           character (len=16) :: pest =      " pesticide"
           character(len=13) :: tot_in =     "tot_in_kg "            ! (kg)
           character(len=13) :: sol_out =    "sol_out_kg "           ! (kg)

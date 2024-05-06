@@ -14,7 +14,7 @@
       character (len=80) :: titldum   !           |title of file
       character (len=80) :: header    !           |header of file
       character (len=4) :: salt_ion   !           |
-      character (len=15) :: station_name	!       |
+      character (len=15) :: station_name      !       |
       integer :: eof                  !           |end of file
       integer :: iadep                !           |counter
       integer :: imo                  !           |counter
@@ -68,7 +68,7 @@
               read(5051,*) salt_ion,(rdapp_salt(iadep)%salt(isalt)%roadmo(imo),imo=1,atmodep_cont%num)
             enddo 
           end if
-					
+                              
           !yearly values
           if (atmodep_cont%timestep == "yr") then
             read(5051,*) station_name !station name
@@ -81,7 +81,7 @@
             do isalt=1,cs_db%num_salts
               allocate(rdapp_salt(iadep)%salt(isalt)%roadday(366,atmodep_cont%num))
               rdapp_salt(iadep)%salt(isalt)%roadday = 0.
-						enddo
+                                    enddo
             year_index = atmodep_cont%yr_init
             yr_weat = 1 !weather year index
             do iyr=1,atmodep_cont%num

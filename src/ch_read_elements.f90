@@ -71,7 +71,7 @@
          
       db_mx%cha_reg = mreg
       end do 
-      end if	  
+      end if
         
     !! setting up regions for channel soft cal and/or output by order
     inquire (file=in_regs%def_cha_reg, exist=i_exist)
@@ -115,7 +115,7 @@
          
       db_mx%cha_reg = mreg
       end do 
-      end if	  
+      end if
 
       !! if no regions are input, don"t need elements
       if (mreg > 0) then

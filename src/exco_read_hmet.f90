@@ -77,10 +77,10 @@
         iexco = ob(iob)%props
         if (exco_db(iexco)%hmet_file == "null") then
           obcs(iob)%hd(1)%hmet = 0.
-		else
+        else
           iexco_hmet = exco_hmet_num(iexco)
           obcs(iob)%hd(1)%hmet = exco_hmet(iexco_hmet)%hmet
-		end if
+        end if
       end do
       
       return

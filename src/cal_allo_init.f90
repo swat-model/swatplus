@@ -101,5 +101,5 @@
         aqu_d = aqu_om_init
       end if
 
-	  return
+      return
       end subroutine cal_allo_init

@@ -105,7 +105,7 @@
 
       !!calculate the slope of the saturation vapor pressure curve
       dlt = 4098. * ea / (w%tave + 237.3)**2
-	
+
 !! DETERMINE POTENTIAL ET
 
       select case (bsn_cc%pet)
@@ -127,7 +127,7 @@
 
           !! cloud cover factor equation 2.2.19
             if (w%solradmx < 1.e-4) then
-		    rto = 0.
+              rto = 0.
             else
               rto = 0.9 * (w%solrad / w%solradmx) + 0.1
             end if

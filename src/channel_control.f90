@@ -93,29 +93,29 @@
 
       ch(jrch)%vel_chan = 0.
       ch(jrch)%dep_chan = 0.
-	  sedrch = 0.
-	  rch_san = 0.
-	  rch_sil = 0.
-	  rch_cla = 0.
-	  rch_sag = 0.
-	  rch_lag = 0.
-	  rch_gra = 0.
+      sedrch = 0.
+      rch_san = 0.
+      rch_sil = 0.
+      rch_cla = 0.
+      rch_sag = 0.
+      rch_lag = 0.
+      rch_gra = 0.
       wtrin = 0.
       chlin = 0.
-         algin = 0.
-         orgnin = 0.
-         ammoin = 0.
-         nitritin = 0.
-         nitratin = 0.
-         orgpin = 0.
-         dispin = 0.
-         cbodin = 0.
-         disoxin = 0.
-         cinn = 0.
+      algin = 0.
+      orgnin = 0.
+      ammoin = 0.
+      nitritin = 0.
+      nitratin = 0.
+      orgpin = 0.
+      dispin = 0.
+      cbodin = 0.
+      disoxin = 0.
+      cinn = 0.
 !! route water through reach
-        rtwtr_d=0.
-        rttlc_d=0.
-        rtevp_d =0.
+      rtwtr_d=0.
+      rttlc_d=0.
+      rtevp_d =0.
 
 !! route water through reach
       if (time%step == 0) then
@@ -186,16 +186,16 @@
 
 !!    Channel Deposition (Only new deposits during the current time step)
       if (ch(jrch)%depch >= ch(jrch)%depprch) then
-	    ch_d(jrch)%ch_dep = ch(jrch)%depch - ch(jrch)%depprch
-	  else
-	    ch_d(jrch)%ch_dep = 0.
-	  end if
+        ch_d(jrch)%ch_dep = ch(jrch)%depch - ch(jrch)%depprch
+      else
+        ch_d(jrch)%ch_dep = 0.
+      end if
 !!    Floodplain Deposition (Only new deposits during the current time step)
       if (ch(jrch)%depfp >= ch(jrch)%depprfp) then
-	    ch_d(jrch)%fp_dep = ch(jrch)%depfp - ch(jrch)%depprfp
-	  else
-	    ch_d(jrch)%fp_dep = 0.
-	  end if
+        ch_d(jrch)%fp_dep = ch(jrch)%depfp - ch(jrch)%depprfp
+      else
+        ch_d(jrch)%fp_dep = 0.
+      end if
 !!    Total suspended sediments (only silt and clay)
       if (ch_sed(jsed)%eqn == 0) then
         ch_d(jrch)%tot_ssed = sedrch

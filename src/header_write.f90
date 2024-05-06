@@ -21,10 +21,10 @@
       !! hru-out.cal - hru soft calibration output including soft and predicted budgets and 
       !! calibration parameter adjustments
       if (cal_soft == "y") then
-	    open (4999,file="hru-out.cal", recl = 800)
+        open (4999,file="hru-out.cal", recl = 800)
         write (4999,*) bsn%name, prog
-	    write (4999,*) calb_hdr
-	    write (9000,*) "HRU_SOFT_CALIB_OUT        hru-out.cal"
+        write (4999,*) calb_hdr
+        write (9000,*) "HRU_SOFT_CALIB_OUT        hru-out.cal"
       end if
       
 !!!!!! hru-new.cal - hru soft calibration output file.  The same format as calibration.upd and
@@ -32,27 +32,27 @@
       if (cal_codes%hyd_hru /= "n") then
         open (5000,file="hru-new.cal", recl = 800)
       !  write (5000,*) " calibration.upd_developed_from_soft_data_calibration"
-	  !  write (9000,*) "HRU SOFT OUT CALIB  hru-new.cal"
+      !  write (9000,*) "HRU SOFT OUT CALIB  hru-new.cal"
       !  write (5000,*) calb3_hdr
       end if
       if (cal_codes%hyd_hru /= "n" .or. cal_codes%plt == "y") then
         open (5001,file="hydrology-cal.hyd", recl = 800)
       !  write (5000,*) " calibration.upd_developed_from_soft_data_calibration"
-	  !  write (9000,*) "HRU SOFT OUT CALIB  hru-new.cal"
+      !  write (9000,*) "HRU SOFT OUT CALIB  hru-new.cal"
       !  write (5000,*) calb3_hdr
       end if
       
 !!!!!! hru-lte-out.cal - hru lte soft calibration output including soft and predicted budgets and 
 !!!!!! calibration parameter adjustments
       !open (5003,file="hru-lte-out.cal", recl = 800)
-	  !write (9000,*) "LTE SOFT OUT CALIB  hru-lte-out.cal"
-	  !write (5003,*) calb_hdr
-	  
+      !write (9000,*) "LTE SOFT OUT CALIB  hru-lte-out.cal"
+      !write (5003,*) calb_hdr
+      
 !!!!!! hru-lte-new.cal - hru lte soft calibration output file.  The same format as hru-lte.hru and
 !!!!!! can be used as input (hru-lte.hru) in subsequent simulations 
       !open (5002,file="hru-lte-new.cal", recl = 800)
-	  !write (9000,*) "LTE SOFT CAL INPUT  hru-lte-new.cal"
-	  !write (5002,*) calb2_hdr
+      !write (9000,*) "LTE SOFT CAL INPUT  hru-lte-new.cal"
+      !write (5002,*) calb2_hdr
       
 !! BASIN AQUIFER OUTPUT
         if (pco%aqu_bsn%d == "y") then

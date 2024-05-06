@@ -10,9 +10,9 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
+      integer, intent (in) :: chan_id    !       |channel number
       integer :: k                       !       |counter for cells connected to the channel
-      integer :: cell_id                 !			 |id of cell connected to the channel
+      integer :: cell_id                 !       |id of cell connected to the channel
       integer :: s                       !       |counter of groundwater solutes
       integer :: isalt                   !       |salt ion counter
       integer :: ics                     !       |constituent counter

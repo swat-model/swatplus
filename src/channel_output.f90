@@ -20,7 +20,7 @@
       ! if (pco%chan%t == "y".and.time%step > 0) then
       !     do ii = 1, time%step 
       !        write (4400,"(4i6,10(1x,e15.4))") jrch, time%yrc,time%day, ii,wst(iwst)%weat%ts(ii),ob(icmd)%ts(1,ii)%flo/Real(time%dtm)/60., ob(icmd)%ts(1,ii)%sed
-	  !     end do
+      !     end do
       !  end if 
       !end if
 !!!!! daily print

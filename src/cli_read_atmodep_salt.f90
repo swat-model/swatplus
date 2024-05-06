@@ -15,7 +15,7 @@
       character (len=80) :: titldum   !           |title of file
       character (len=80) :: header    !           |header of file
       character (len=4) :: salt_ion   !           |
-      character (len=15) :: station_name	!       |
+      character (len=15) :: station_name      !       |
       integer :: eof                  !           |end of file
       integer :: iadep                !           |counter
       integer :: imo                  !           |counter
@@ -77,7 +77,7 @@
               read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%drymo(imo),imo=1,atmodep_cont%num)
             enddo 
           end if
-					
+                              
           !yearly values
           if (atmodep_cont%timestep == "yr") then
             read(5050,*) station_name !station name

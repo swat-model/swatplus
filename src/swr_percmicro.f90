@@ -92,10 +92,10 @@
       sepday = Max(0., sepday)
       
       !! limit maximum seepage from biozone layer below potential perc amount
-	  if(ly1 == i_sep(j).and.sep(isep)%opt ==1) then
-	    sepday = min(sepday,sol_k_sep *24.)
-	    bz_perc(j) = sepday
-	  end if
+      if(ly1 == i_sep(j).and.sep(isep)%opt ==1) then
+        sepday = min(sepday,sol_k_sep *24.)
+        bz_perc(j) = sepday
+      end if
       
       !! switched to linear relationship for dep_imp and seepage
       if (ly1 == soil(j)%nly) then

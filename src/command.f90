@@ -533,7 +533,7 @@
             call res_pesticide_output (j)
             if (cs_db%num_salts > 0) then !rtb salt
               call res_salt_output (j)
-						endif
+            endif
             if (cs_db%num_cs > 0) then !rtb cs
               call res_cs_output (j)
             endif

@@ -11,7 +11,7 @@
       
       implicit none
 
-      integer, intent (in) :: hru_id	!               |id of the HRU, in which the wetland resides
+      integer, intent (in) :: hru_id  !               |id of the HRU, in which the wetland resides
       integer :: ires                 !               |wetland id
       integer :: s                    !               |solute counter
       integer :: icell                !               |counter for cells connected to the HRU
@@ -66,13 +66,13 @@
               if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then !if water table is above bedrock
                 gwvol_avail = ((gw_state(cell_id)%head - gw_state(cell_id)%botm) * &
                                 gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
-				      else
+              else
                 gwvol_avail = 0.
               endif
               !if storage is less than wetland inflow, remove all groundwater
               if(gw_inflow > gwvol_avail) then
                 gw_inflow = gwvol_avail
-							endif
+              endif
               !include in groundwater source-sink array (will be removed in gwflow_simulate)
               gw_ss(cell_id)%wetl = gw_ss(cell_id)%wetl + (gw_inflow*(-1)) !m3 negative = leaving the aquifer
               gw_ss_sum(cell_id)%wetl = gw_ss_sum(cell_id)%wetl + (gw_inflow*(-1))
@@ -103,7 +103,7 @@
                 !salts
                 !constituents
               endif
-						else !wetland seepage to soil layers (add for all connected cells)
+            else !wetland seepage to soil layers (add for all connected cells)
               wet_seep = wet_seep + (wet_area * wet_k * ((wet_stage-wt)/wet_thick(ires))) !m3/day  
             endif
             

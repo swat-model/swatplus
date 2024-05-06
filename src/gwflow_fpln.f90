@@ -11,7 +11,7 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
+      integer, intent (in) :: chan_id    !       |channel number
       integer :: k                       !       |counter
       integer :: s                       !       |solute counter
       integer :: cell_id                 !       |cell in connection with the channel
@@ -22,12 +22,12 @@
       real :: chan_depth                 !m      |channel depth
       real :: chan_width                 !m      |channel width
       real :: chan_length                !m      |length of channel, in cell
-      real :: bed_elev									 !m      |elevation of channel bed, in cell
+      real :: bed_elev                   !m      |elevation of channel bed, in cell
       real :: bed_K                      !m/day  |hydraulic conductivity of channel bed, in cell
       real :: bed_thick                  !m      |thickness of channel bed, in cell
       real :: chan_stage                 !m      |elevation of water in channel, in cell
       real :: flow_area                  !m2     |groundwater flow area of water exchange, in cell
-      real :: riv_flow_area							 !m2		 |groundwater flow area of water exchange for channel
+      real :: riv_flow_area              !m2       |groundwater flow area of water exchange for channel
       real :: gw_head                    !m      |current groundwater head in cell
       real :: Q                          !m3/day |water exchange flow rate in floodplain, calculated by Darcy's Law
       real :: chan_volume                !m3     |water volume in channel before groundwater exchange occurs
@@ -62,7 +62,7 @@
             !derived values
             chan_stage = bed_elev + chan_depth !stage of water in channel (m)
             
-						!adjust flow area, if necessary (if floodplain cell is also a river cell; exchange already calculated for main channel)
+                  !adjust flow area, if necessary (if floodplain cell is also a river cell; exchange already calculated for main channel)
             if(gw_fpln_info(chan_id)%mtch(k) > 0) then
               chan_cell = gw_fpln_info(chan_id)%mtch(k)
               riv_flow_area = sd_ch(chan_id)%chw * gw_chan_len(chan_cell) !width * length = river cell exchange flow area

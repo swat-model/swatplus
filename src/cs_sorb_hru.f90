@@ -15,7 +15,7 @@
       real :: cseo4,cseo3,cborn,ccseo4,ccseo3,ccborn,&        
           hru_area_m2,water_volume,&        
           mass_seo4_sol,mass_seo3_sol,mass_born_sol,&        
-          mass_seo4_sorb,mass_seo3_sorb,mass_born_sorb,&				
+          mass_seo4_sorb,mass_seo3_sorb,mass_born_sorb,&
           sol_thick,volume,&        
           ratio,mass_total,val_num,val_den,val, &        
           cseo4_new,ccseo4_new,&        

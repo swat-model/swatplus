@@ -17,27 +17,27 @@
       implicit none
       
       !counters and general information
-      integer  i										  !           |counter
-      integer  j										  !           |counter
-      integer  k										  !           |counter
-      integer  n										  !           |counter
-      integer  s										  !           |solute counter
+      integer  i                      !           |counter
+      integer  j                      !           |counter
+      integer  k                      !           |counter
+      integer  n                      !           |counter
+      integer  s                      !           |solute counter
       integer  dum                    !           |dummy variable
       integer  num_ts                 !           |number of flow time steps during the daily time step
-      integer :: cell_id						  !           |id of gwflow cell
-      real :: sum                     !						|general summation
+      integer :: cell_id              !           |id of gwflow cell
+      real :: sum                     !           |general summation
       !lateral flow calculations
-      real :: area1                   !m2					|spatial area of first connected cell
-      real :: area2										!m2         |spatial area of second connected cell
+      real :: area1                   !m2         |spatial area of first connected cell
+      real :: area2                    !m2        |spatial area of second connected cell
       real :: area                    !m2         |smaller of the two areas
       real :: conn_length             !m          |length of connection between two adjacent cells
       real :: dist_x                  !m          |x distance between centroids of adjacent cells
       real :: dist_y                  !m          |y distance between centroids of adjacent cells
       real :: grad_distance           !m          |distance between centroids of two connected cells
       real :: Q_cell                  !m3         |groundater flow between two cells
-      real :: face_K									!m/day      |hydraulic conductivity at cell interface
-      real :: sat_thick1              !m					|saturated thickness of connected cell
-      real :: sat_thick2							!m					|saturated thickness of cell
+      real :: face_K                  !m/day      |hydraulic conductivity at cell interface
+      real :: sat_thick1              !m          |saturated thickness of connected cell
+      real :: sat_thick2              !m          |saturated thickness of cell
       real :: face_sat                !m          |saturated thickness at cell interface
       !storage calculations
       real :: stor_change             !m3         |daily change in groundwater storage for a cell
@@ -51,22 +51,22 @@
       !water balance analysis       
       real :: mass_error              !           |mass error in groundwater balance and solute mass balance
       !tile drainage outflow
-      real :: sum_tile(50)						!m3         |summation of flow from tile cell groups
+      real :: sum_tile(50)            !m3         |summation of flow from tile cell groups
       real :: sum_mass(50,100)        !g          |total solute mass in tile cell groups
       real :: c_tile(50,100)          !g/m3       |average concentration of solute mass in tile cell groups
-			!grid totals of fluxes for day (m3, mm)
-			real     vbef_grid,vaft_grid,rech_grid,gwet_grid,gwsw_grid,swgw_grid,satx_grid,soil_grid,latl_grid, &
+      !grid totals of fluxes for day (m3, mm)
+      real     vbef_grid,vaft_grid,rech_grid,gwet_grid,gwsw_grid,swgw_grid,satx_grid,soil_grid,latl_grid, &
                bndr_grid,ppag_grid,ppdf_grid,ppex_grid,tile_grid,resv_grid,wetl_grid,canl_grid,fpln_grid      
       !groundwater solutes
       integer  t                      !           |counter for solute transport time steps
-      real :: gw_trans_time_step			!days       |length of solute transport time steps
+      real :: gw_trans_time_step      !days       |length of solute transport time steps
       real :: time_fraction           !           |fraction of flow time step     
       real :: gw_volume_old           !m3         |cell groundwater volume from previous flow time step
       real :: gw_volume_new           !m3         |cell groundwater volume from current flow time step
       real :: gw_volume_inter         !m3         |interpolated cell groundwater volume for the current transport time step
       real :: mass_adv(100)           !g          |solute mass advected into/out of cell
       real :: mass_dsp(100)           !g          |solute mass dispersed into/out of cell
-      real :: m_change(100)           !g					|change in cell's solute mass, for one transport time step
+      real :: m_change(100)           !g          |change in cell's solute mass, for one transport time step
       real :: del_no_sorp             !g          |change in cell's solute mass, without sorption
       real :: mass_sorb(100)          !g          |solute mass sorbed
       !total grid values for solute mass (kg)
@@ -98,7 +98,7 @@
         if(gw_state(i)%stat.gt.0) then
           if(gw_state(i)%head > gw_state(i)%botm) then
             gw_state(i)%stor = ((gw_state(i)%head - gw_state(i)%botm) * gw_state(i)%area) * gw_state(i)%spyd
-					else
+          else
             gw_state(i)%stor = 0.
           endif
         endif
@@ -168,7 +168,7 @@
                 do s=1,gw_nsolute !loop through the solutes
                   c_tile(i,s) = sum_mass(i,s) / sum_tile(i) !g/m3
                 enddo
-						  else
+              else
                 do s=1,gw_nsolute !loop through the solutes
                   c_tile(i,s) = 0. !g/m3
                 enddo
@@ -185,7 +185,7 @@
                                      (sum_tile(i),i=1,gw_tile_num_group)
           endif
         endif 
-			endif
+      endif
       
       !groundwater exchange with reservoirs -----------------------------------
       !gwflow_resv called in res_control
@@ -264,7 +264,7 @@
       do i=1,ncell
         gw_state(i)%hnew = 0.
         gw_state(i)%hold = 0.
-			enddo
+      enddo
       if (gw_solute_flag == 1) then
         do i=1,ncell
           do s=1,gw_nsolute
@@ -291,9 +291,9 @@
                 !calculate groundwater flow between the cells, using Darcy's Law
                 if(gw_state(cell_id)%stat == 0) then
                   Q_cell = 0.
-								elseif(gw_state(cell_id)%stat == 2 .and. bc_type == 2) then !boundary cell
+                elseif(gw_state(cell_id)%stat == 2 .and. bc_type == 2) then !boundary cell
                   Q_cell = 0.
-								else
+                else
                   !length of connection between the two cells
                   area1 = gw_state(cell_id)%area !area of connected cell
                   area2 = gw_state(i)%area !area of current cell
@@ -304,13 +304,13 @@
                   !saturated thickness of connected cell
                   if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then
                     sat_thick1 = gw_state(cell_id)%head - gw_state(cell_id)%botm
-								  else
+                  else
                     sat_thick1 = 0.
-								  endif
+                  endif
                   !saturated thickness of current cell
                   if(gw_state(i)%head > gw_state(i)%botm) then
                     sat_thick2 = gw_state(i)%head - gw_state(i)%botm
-								  else
+                  else
                     sat_thick2 = 0.
                   endif
                   !saturated thickness at the interface (m)
@@ -357,7 +357,7 @@
         do i=1,ncell
           gw_state(i)%hold = gw_state(i)%head
           gw_state(i)%head = gw_state(i)%hnew
-				enddo
+        enddo
         
         !simulate fate and transport of solutes - calculate new concentrations
         if (gw_solute_flag == 1) then
@@ -368,17 +368,17 @@
                 !calculate old and new groundwater volume in the cell (m3)
                 if(gw_state(i)%hold > gw_state(i)%botm) then
                   gw_volume_old = gw_state(i)%area * (gw_state(i)%hold - gw_state(i)%botm) * gw_state(i)%spyd
-								else
+                else
                   gw_volume_old = 0.
-								endif
+                endif
                 if(gw_state(i)%head > gw_state(i)%botm) then
                   gw_volume_new = gw_state(i)%area * (gw_state(i)%head - gw_state(i)%botm) * gw_state(i)%spyd
-								else
+                else
                   gw_volume_new = 0.
                 endif
                   
                 !calculate groundwater volume for the current transport time step (via interpolation)
-								time_fraction = real(t)/real(num_ts_transport)
+                time_fraction = real(t)/real(num_ts_transport)
                 gw_volume_inter = gw_volume_old + ((gw_volume_new-gw_volume_old)*time_fraction)
                   
                 !advection transport
@@ -390,11 +390,11 @@
                     do s=1,gw_nsolute
                       mass_adv(s) = mass_adv(s) + (Q_cell * gwsol_state(cell_id)%solute(s)%conc) !g
                     enddo
-									else !mass leaving cell
-									  do s=1,gw_nsolute
+                  else !mass leaving cell
+                    do s=1,gw_nsolute
                       mass_adv(s) = mass_adv(s) + (Q_cell * gwsol_state(i)%solute(s)%conc) !g
                     enddo
-									endif
+                  endif
                 enddo !go to next connected cell
                 
                 !dispersion transport
@@ -442,7 +442,7 @@
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_state(i)%solute(s)%cnew = gwsol_state(i)%solute(s)%mass / gw_volume_inter
                   enddo
-								else
+                else
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_state(i)%solute(s)%cnew = 0.
                     gwsol_state(i)%solute(s)%mass = 0.
@@ -469,14 +469,14 @@
                 enddo
               endif
 
-						enddo !go to next cell
+            enddo !go to next cell
             
             !store new concentration values into regular array
             do i=1,ncell
               do s=1,gw_nsolute !loop through the solutes
                 gwsol_state(i)%solute(s)%conc = gwsol_state(i)%solute(s)%cnew
               enddo
-						enddo
+            enddo
 
           enddo !go to next transport time step
         endif !check if solute transport is being simulated 
@@ -498,7 +498,7 @@
             gwsol_state(i)%solute(s)%cnmo = gwsol_state(i)%solute(s)%cnmo + gwsol_state(i)%solute(s)%conc
             gwsol_state(i)%solute(s)%cnyr = gwsol_state(i)%solute(s)%cnyr + gwsol_state(i)%solute(s)%conc
           enddo  
-				enddo
+        enddo
       endif
       
       !print out new head values and solute concentration values, if requested
@@ -574,7 +574,7 @@
       if (gw_solute_flag == 1) then
         write(out_gwobs_sol,119) time%yrc,time%day,(gw_obs_solute(k,1),k=1,gw_num_obs_wells), &
                                                    (gw_obs_solute(k,2),k=1,gw_num_obs_wells)
-																									 !need to continue if there are more solutes...
+                                                   !need to continue if there are more solutes...
       endif
       
       !if the end of the month has been reached, then store flow rates for specified channels
@@ -733,7 +733,7 @@
         write(out_gwbal,102) time%yrc,time%day,gw_time_step,vbef_grid,vaft_grid,rech_grid,gwet_grid,gwsw_grid,swgw_grid, &
                                                             satx_grid,soil_grid,latl_grid,bndr_grid,ppag_grid,ppex_grid, &
                                                             tile_grid,resv_grid,wetl_grid,canl_grid,fpln_grid, &
-														 mass_error,frac_sat,depth_wt_avg,ppdf_grid
+                             mass_error,frac_sat,depth_wt_avg,ppdf_grid
       endif
       
       !add daily water balance volumes to yearly values
@@ -817,7 +817,7 @@
               sol_grid_canl = sol_grid_canl + (gwsol_ss(i)%solute(s)%canl / 1000.)
               sol_grid_fpln = sol_grid_fpln + (gwsol_ss(i)%solute(s)%fpln / 1000.)
             endif
-					enddo
+          enddo
           sol_grid_sorb = sol_grid_sorb * (-1) !leaving groundwater (sorbing to aquifer material)
           !calculate mass error
           if(sol_grid_maft > 0) then
@@ -900,7 +900,7 @@
           write(out_head_mo,121) (gw_state(i)%hdmo,i=1,ncell)  
         endif
         write(out_head_mo,*)
-				!zero out for next month
+        !zero out for next month
         do i=1,ncell
           gw_state(i)%hdmo = 0.
         enddo
@@ -911,7 +911,7 @@
             !calculate average concentration
             do i=1,ncell
               gwsol_state(i)%solute(s)%cnmo = gwsol_state(i)%solute(s)%cnmo / time%day_mo  
-						enddo
+            enddo
             !write out
             write(out_conc_mo,*) gwsol_nm(s) !solute name
             if(grid_type == "structured") then
@@ -932,7 +932,7 @@
             !zero out for next month
             do i=1,ncell
               gwsol_state(i)%solute(s)%cnmo = 0.
-						enddo
+            enddo
           enddo !next solute
           write(out_conc_mo,*)
         endif
@@ -980,7 +980,7 @@
             !calculate average concentration
             do i=1,ncell
               gwsol_state(i)%solute(s)%cnyr = gwsol_state(i)%solute(s)%cnyr / time%day
-						enddo
+            enddo
             !write out
             write(out_conc_yr,*) gwsol_nm(s) !solute name
             if(grid_type == "structured") then
@@ -1001,7 +1001,7 @@
             !zero out for next year
             do i=1,ncell
               gwsol_state(i)%solute(s)%cnyr = 0.
-						enddo
+            enddo
           enddo !next solute
           write(out_conc_yr,*)
         endif !check for solutes   
@@ -1405,7 +1405,7 @@
             write(out_gw_res,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_res,121) (gw_ss_sum(i)%resv,i=1,ncell)	  	
+          write(out_gw_res,121) (gw_ss_sum(i)%resv,i=1,ncell)      
         endif
         write(out_gw_res,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1432,7 +1432,7 @@
         endif
         !groundwater-wetland exchange
         if (gw_wet_flag == 1) then
-        write(out_gw_wet,*) 'Groundwater outflow to wetlands for:',time%yrc	
+        write(out_gw_wet,*) 'Groundwater outflow to wetlands for:',time%yrc  
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -1446,7 +1446,7 @@
             write(out_gw_wet,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_wet,121) (gw_ss_sum(i)%wetl,i=1,ncell)	 	
+          write(out_gw_wet,121) (gw_ss_sum(i)%wetl,i=1,ncell)     
         endif
         write(out_gw_wet,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1472,8 +1472,8 @@
         endif
         endif
         !groundwater-canal exchange
-        if (gw_canal_flag == 1) then	
-        write(out_gw_canal,*) 'Groundwater-Canal Exchange Volumes for:',time%yrc	
+        if (gw_canal_flag == 1) then  
+        write(out_gw_canal,*) 'Groundwater-Canal Exchange Volumes for:',time%yrc  
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -1487,7 +1487,7 @@
             write(out_gw_canal,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_canal,121) (gw_ss_sum(i)%canl,i=1,ncell)	 	
+          write(out_gw_canal,121) (gw_ss_sum(i)%canl,i=1,ncell)     
         endif
         write(out_gw_canal,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1514,7 +1514,7 @@
         endif
         !floodplain exchange
         if (gw_fp_flag == 1) then
-        write(out_gw_fp,*) 'Floodplain Exchange Volumes for:',time%yrc	
+        write(out_gw_fp,*) 'Floodplain Exchange Volumes for:',time%yrc  
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -1528,7 +1528,7 @@
             write(out_gw_fp,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_fp,121) (gw_ss_sum(i)%fpln,i=1,ncell)		
+          write(out_gw_fp,121) (gw_ss_sum(i)%fpln,i=1,ncell)    
         endif
         write(out_gw_fp,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1636,7 +1636,7 @@
             gwsol_ss_sum(i)%solute(s)%disp = 0.
             gwsol_ss_sum(i)%solute(s)%rctn = 0.
             gwsol_ss_sum(i)%solute(s)%sorb = 0.
-					enddo
+          enddo
         enddo
         !yearly water balance
         if(gwflag_yr.eq.1) then
@@ -1698,7 +1698,7 @@
             sol_grid_gwsw_yr = 0.
             sol_grid_swgw_yr = 0.
             sol_grid_satx_yr = 0.
-						sol_grid_soil_yr = 0.
+            sol_grid_soil_yr = 0.
             sol_grid_advn_yr = 0.
             sol_grid_disp_yr = 0.
             sol_grid_rctn_yr = 0.
@@ -1820,11 +1820,11 @@
               head_mae = error_sum / val_count
               sat_div = (sum_sat/val_count) / head_mae
               num_gw_meas = val_count
-					  else
+            else
               head_mae = 0.
               sat_div = 0.
               num_gw_meas = 0
-					  endif
+            endif
             !write out results
             write(out_gwobs_usgs,*) 'MAE (m), SAT/MAE, #Meas'
             write(out_gwobs_usgs,*) head_mae,sat_div,num_gw_meas
@@ -1873,11 +1873,11 @@
               head_mae_calb = error_sum / val_count
               sat_div_calb = (sum_sat/val_count) / head_mae_calb
               num_gw_meas_calb = val_count
-					  else
+            else
               head_mae_calb = 0.
               sat_div_calb = 0.
               num_gw_meas_calb = 0
-					  endif
+            endif
             !testing period
             val_count = 0
             error_sum = 0.
@@ -1913,11 +1913,11 @@
               head_mae_test = error_sum / val_count
               sat_div_test = (sum_sat/val_count) / head_mae_test
               num_gw_meas_test = val_count
-					  else
+            else
               head_mae_test = 0.
               sat_div_test = 0.
               num_gw_meas_test = 0
-					  endif
+            endif
             !write out results
             write(out_gwobs_usgs,*) 'MAE_calib,MAE_test,SAT/MAE_calib,SAT_MAE_test,#calib,#test'
             write(out_gwobs_usgs,115) head_mae_calb,head_mae_test,sat_div_calb,sat_div_test,num_gw_meas_calb,num_gw_meas_test
@@ -1990,7 +1990,7 @@
                   stream_nse(i,1) = 1 - (sum_resi_nse / sum_diff_nse)
                   stream_nse1(i,1) = 1 - (sum_resi_nse1 / sum_diff_nse1)
                   stream_nnse(i,1) = 1 / (2 - stream_nse(i,1))
-								endif
+                endif
                 !calculate PBIAS
                 sum_num = 0.
                 sum_den = 0.
@@ -2073,7 +2073,7 @@
                   stream_nse(i,1) = 1 - (sum_resi_nse / sum_diff_nse)
                   stream_nse1(i,1) = 1 - (sum_resi_nse1 / sum_diff_nse1)
                   stream_nnse(i,1) = 1 / (2 - stream_nse(i,1))
-								endif
+                endif
               endif
               !calculate PBIAS
               sum_num = 0.
@@ -2144,7 +2144,7 @@
                   stream_nse(i,2) = 1 - (sum_resi_nse / sum_diff_nse)
                   stream_nse1(i,2) = 1 - (sum_resi_nse1 / sum_diff_nse1)
                   stream_nnse(i,2) = 1 / (2 - stream_nse(i,1))
-								endif
+                endif
                 !calculate PBIAS
                 sum_num = 0.
                 sum_den = 0.
@@ -2270,7 +2270,7 @@
             gwsol_ss(i)%solute(s)%rctn = 0.
             gwsol_ss(i)%solute(s)%sorb = 0.
             gwsol_ss(i)%solute(s)%totl = 0.
-					enddo
+          enddo
           do s=3,gw_nsolute !for salt and cs: do not zero out for recharge, reactions, or sorption (needed in salt_balance and cs_balance)
             !gwsol_ss(i)%solute(s)%rech = 0.
             gwsol_ss(i)%solute(s)%gwsw = 0.
@@ -2295,7 +2295,7 @@
         mass_dsp = 0.
         mass_rct = 0.
         mass_sorb = 0.
-			endif
+      endif
        
       
       

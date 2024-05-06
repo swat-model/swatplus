@@ -25,14 +25,14 @@
       character*10 :: obj_type              !object type of source object
       character*10 :: obj_type_dem          !object type of demand object          
       integer :: obj_num                    !object number of source object
-      integer :: isrc												!irrigation source counter
-      integer :: nsource						        !number of irrigation sources for the object
+      integer :: isrc                       !irrigation source counter
+      integer :: nsource                    !number of irrigation sources for the object
       integer :: ires                       !reservoir ID
       integer :: iaq                        !aquifer ID
       integer :: ichan                      !channel ID
       integer :: obnum                      !object number
       integer :: ics                        !cs ion counter
-      real :: vol_total											!total volume (m3) withdrawn from source objects
+      real :: vol_total                     !total volume (m3) withdrawn from source objects
       real :: vol_fraction                  !fraction of total volume from each source object
       real :: obj_vol                       !volume (m3) withdrawn from each source object
       real :: mass_diff,ion_mass,res_mass,mass_initial,irrig_mass,gw_volume
@@ -40,7 +40,7 @@
       
       !determine number of water sources
       nsource = wallo(iwallo)%dmd(idmd)%dmd_src_obs
-	    
+
       !demand object type
       obj_type_dem = wallo(iwallo)%dmd(idmd)%rcv_ob
       
@@ -68,7 +68,7 @@
             if(ion_mass.gt.res_mass) then
               mass_diff = ion_mass - res_mass
             endif  
-						ion_mass = ion_mass - mass_diff
+            ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove cs mass from the reservoir
             res_water(ires)%cs(ics) = res_water(ires)%cs(ics) - ion_mass
@@ -79,7 +79,7 @@
             if(obj_type_dem == "cha") then
               ch_water(dem_id)%cs(ics) = ch_water(dem_id)%cs(ics) + ion_mass !kg
               chcs_d(dem_id)%cs(ics)%div = chcs_d(dem_id)%cs(ics)%div + ion_mass !kg - include in channel cs balance
-						elseif(obj_type_dem == "res") then
+            elseif(obj_type_dem == "res") then
               res_water(dem_id)%cs(ics) = res_water(dem_id)%cs(ics) + ion_mass !kg
               rescs_d(dem_id)%cs(ics)%div = rescs_d(dem_id)%cs(ics)%div + ion_mass !kg - include in reservoir cs balance
             endif
@@ -97,7 +97,7 @@
             if(ion_mass.gt.cs_aqu(iaq)%cs(ics)) then
               mass_diff = ion_mass - cs_aqu(iaq)%cs(ics)
             endif  
-						ion_mass = ion_mass - mass_diff
+            ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove cs mass from the aquifer
             cs_aqu(iaq)%cs(ics) = cs_aqu(iaq)%cs(ics) - ion_mass !kg
@@ -107,7 +107,7 @@
             if(obj_type_dem == "cha") then
               ch_water(dem_id)%cs(ics) = ch_water(dem_id)%cs(ics) + ion_mass !kg
               chcs_d(dem_id)%cs(ics)%div = chcs_d(dem_id)%cs(ics)%div + ion_mass !kg - include in channel cs balance
-						elseif(obj_type_dem == "res") then
+            elseif(obj_type_dem == "res") then
               res_water(dem_id)%cs(ics) = res_water(dem_id)%cs(ics) + ion_mass !kg
               rescs_d(dem_id)%cs(ics)%div = rescs_d(dem_id)%cs(ics)%div + ion_mass !kg - include in reservoir cs balance
             endif
@@ -134,7 +134,7 @@
               if(ion_mass.gt.ch_water(ichan)%cs(ics)) then
                 mass_diff = ion_mass - ch_water(ichan)%cs(ics) 
               endif  
-							ion_mass = ion_mass - mass_diff
+              ion_mass = ion_mass - mass_diff
               if(ion_mass.lt.0) ion_mass = 0.
               !remove cs mass from channel
               ch_water(ichan)%cs(ics) = ch_water(ichan)%cs(ics) - ion_mass !kg
@@ -144,11 +144,11 @@
               if(obj_type_dem == "cha") then
                 ch_water(dem_id)%cs(ics) = ch_water(dem_id)%cs(ics) + ion_mass !kg
                 chcs_d(dem_id)%cs(ics)%div = chcs_d(dem_id)%cs(ics)%div + ion_mass !kg - include in channel cs balance
-						  elseif(obj_type_dem == "res") then
+              elseif(obj_type_dem == "res") then
                 res_water(dem_id)%cs(ics) = res_water(dem_id)%cs(ics) + ion_mass !kg
                 rescs_d(dem_id)%cs(ics)%div = rescs_d(dem_id)%cs(ics)%div + ion_mass !kg - include in reservoir cs balance
               endif
-						endif
+            endif
           enddo
           
         endif

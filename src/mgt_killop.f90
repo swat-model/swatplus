@@ -26,8 +26,8 @@
       call pl_rootfr
       
       !! allocate dead roots, N, P to soil layers
-	  do ly = 1, soil(j)%nly
-	      soil1(j)%rsd(ly) = soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl) + soil1(j)%rsd(ly)
+      do ly = 1, soil(j)%nly
+          soil1(j)%rsd(ly) = soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl) + soil1(j)%rsd(ly)
       end do
       
       !! add above ground mass to residue pool
@@ -51,7 +51,7 @@
         cs_pl(j)%pl_on(ipl)%pest(k) = 0.
       end do
 
-	  !! reset plant variables
+      !! reset plant variables
       pcom(j)%plg(ipl) = plgz
       pcom(j)%plm(ipl) = plmz
       pcom(j)%plstr(ipl) = plstrz
