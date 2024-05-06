@@ -142,7 +142,7 @@
             chsalt_a(ich)%salt(isalt)%irr = 0.
             chsalt_a(ich)%salt(isalt)%water = 0.
             chsalt_a(ich)%salt(isalt)%conc = 0.
-					enddo
+          enddo
           ch_water(ich)%salt = 0.
           ch_water(ich)%saltc = 0.
         end do
@@ -173,7 +173,7 @@
             chcs_a(ich)%cs(ics)%irr = 0.
             chcs_a(ich)%cs(ics)%water = 0.
             chcs_a(ich)%cs(ics)%conc = 0.
-					enddo
+          enddo
           ch_water(ich)%cs = 0.
           ch_water(ich)%csc = 0.
         end do

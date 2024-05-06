@@ -20,36 +20,36 @@
       else
 
         !! compute new sediment concentration in reservoir
-	    if (ht1%sed < 1.e-6) ht1%sed = 0.0      
+        if (ht1%sed < 1.e-6) ht1%sed = 0.0      
         !! velsetl = 1.35 for clay particle m/d
-	    if (wbody_wb%area_ha > 1.e-6) then
+        if (wbody_wb%area_ha > 1.e-6) then
           velofl = (ht2%flo / wbody_wb%area_ha) / 10000.  ! m3/d / ha * 10000. = m/d
           if (velofl > 1.e-6) then
-	        trapres = wbody_prm%sed%velsetlr / velofl
+            trapres = wbody_prm%sed%velsetlr / velofl
           else
             trapres = 1.
           end if
-	      if (trapres > 1.) trapres = 1.
-	    else
-	      trapres = 1.
+          if (trapres > 1.) trapres = 1.
+        else
+          trapres = 1.
         end if
         wbody%sed = wbody%sed - (ht1%sed * trapres)
         wbody%sil = wbody%sil - (ht1%sil * trapres)
         wbody%cla = wbody%cla - (ht1%cla * trapres)
 
         !! compute concentrations
-	    if (wbody%flo > 0.) then
+        if (wbody%flo > 0.) then
           sed_ppm = 1000000. * wbody%sed / wbody%flo
           sed_ppm = Max(1.e-6, sed_ppm)
           sil_ppm = 1000000. * wbody%sil / wbody%flo
           sil_ppm = Max(1.e-6, sil_ppm)
           cla_ppm = 1000000. * wbody%cla / wbody%flo
           cla_ppm = Max(1.e-6, cla_ppm)
-	    else
+        else
           sed_ppm = 1.e-6
           sil_ppm = 1.e-6
           cla_ppm = 1.e-6
-	    endif
+        endif
         
         !! compute change in sediment concentration due to settling 
         if (sed_ppm > wbody_prm%sed%nsed) then

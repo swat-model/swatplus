@@ -29,7 +29,7 @@
 
        inquire (file=in_chg%plant_parms_sft, exist=i_exist)
        if (.not. i_exist .or. in_chg%plant_parms_sft == "null") then
-        allocate (pl_prms(0:0))	   	   
+        allocate (pl_prms(0:0))        
        else   
       do
         open (107,file=in_chg%plant_parms_sft)
@@ -109,10 +109,10 @@
       exit
          
       end do 
-      end if	  
+      end if   
         
       db_mx%plcal_reg = mreg
-	  
+   
        close(107)
        return
        end subroutine pl_read_parms_cal

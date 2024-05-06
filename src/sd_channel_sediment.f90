@@ -25,7 +25,7 @@
       real :: erode_bank_cut          !cm            |widening caused by downcutting (both sides)
       real :: deg_btm                 !tons          |bottom erosion
       real :: deg_bank                !tons          |bank erosion
-      real :: sedout                  !mg		     |sediment out of waterway channel
+      real :: sedout                  !mg            |sediment out of waterway channel
       real :: washld                  !tons          |wash load  
       real :: bedld                   !tons          |bed load
       real :: dep                     !tons          |deposition
@@ -187,7 +187,7 @@
       chsd_d(ich)%hc_m = hc
       
       !! compute sediment leaving the channel - washload only - bottom deg is bedload
-	  sedout = ht1%sed - dep + hc_sed + erode_bank     !  + ebtm_t
+      sedout = ht1%sed - dep + hc_sed + erode_bank     !  + ebtm_t
       ht2%sed = sedout
       
 

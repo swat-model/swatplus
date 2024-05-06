@@ -102,7 +102,7 @@
               if(cs_db%num_salts > 0) then
                 jj = idmd !to avoid a compiler warning
                 call salt_irrig(iwallo,jj,j)
-			  endif
+              endif
               !rtb cs: irrigation constituent mass accounting
               if(cs_db%num_cs > 0) then
                 jj = idmd !to avoid a compiler warning

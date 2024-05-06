@@ -63,7 +63,7 @@
           endif
           if(rm_layer > 0) then
             rm_fract(jj) = rm_layer / rm 
-					endif
+          endif
         enddo !go to next soil layer
          
         !determine the salt ion mass uptake in each layer

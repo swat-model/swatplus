@@ -52,7 +52,7 @@
             !add both to soil profile  
             cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + (hsaltb_d(j)%salt(isalt)%rain + & 
                 hsaltb_d(j)%salt(isalt)%dryd)
-					enddo
+          enddo
         end if 
         
         !yearly values
@@ -65,7 +65,7 @@
             !add both to soil profile  
             cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + (hsaltb_d(j)%salt(isalt)%rain +   &
                hsaltb_d(j)%salt(isalt)%dryd)
-					enddo  
+          enddo  
         endif
         
       end if
@@ -80,9 +80,9 @@
           !add both to soil profile  
           cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + (hsaltb_d(j)%salt(isalt)%rain +  &
              hsaltb_d(j)%salt(isalt)%dryd)
-				enddo
+        enddo
       endif
-		
+    
       endif
        
       return

@@ -69,6 +69,6 @@
       
 100   format(2a16,11f12.4,i12)
        
-	  return
+      return
       
       end subroutine proc_hru

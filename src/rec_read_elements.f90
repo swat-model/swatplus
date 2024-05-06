@@ -69,7 +69,7 @@
          
       db_mx%rec_out = mreg
       end do 
-      end if	  
+      end if    
         
     !! setting up regions for recall soft cal and/or output by type
     inquire (file=in_regs%def_psc_reg, exist=i_exist)
@@ -113,7 +113,7 @@
          
       db_mx%rec_reg = mreg
       end do 
-      end if	  
+      end if    
       
       !! if no regions are input, don"t need elements
       if (mreg > 0) then

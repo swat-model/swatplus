@@ -64,8 +64,8 @@
           call conditions (jres, irel)
           call res_hydro (jres, irel, pvol_m3, evol_m3)
           call res_sediment
-	    else
-	      ictbl = res_dat(idat)%release                              !! Osvaldo
+        else
+          ictbl = res_dat(idat)%release                              !! Osvaldo
           call res_rel_conds (ictbl, res(jres)%flo, ht1%flo, 0.)
         endif 
         

@@ -105,7 +105,7 @@
               volseep = 0
             endif
           end do
-			
+            
           ! move excess water upward to calculate daily seepage rate Jaehak 2022
           volex = 0
           do j1 = soil(j)%nly, 1, -1
@@ -115,11 +115,11 @@
               swst(j1) = swst(j1) - volex                         !update soil water
             endif
           end do
-			
+            
           !update seepage volume
           wet_wat_d(j)%seep = max(0., wet_wat_d(j)%seep - volex * wsa1) !m3
-		endif				
-				
+        endif                
+                
         wet(j)%flo = wet(j)%flo - wet_wat_d(j)%seep
         wet_wat_d(j)%area_ha = hru(j)%area_ha 
         hru(j)%water_seep = wet_wat_d(j)%seep / wsa1   !mm=m3/(10*ha)

@@ -19,9 +19,9 @@
       integer :: init_om
       integer :: ihyd                   !none       |counter 
       integer :: init                   !           |
-      integer :: iweir                  !              |
+      integer :: iweir                  !           |
       integer :: icon                   !           |
-      integer :: isalt									!						|salt ion counter
+      integer :: isalt                  !           |salt ion counter
       real :: x1                        !           |
       real :: wet_h                     !           |
       real :: wet_h1                    !           | 

@@ -64,11 +64,11 @@
       !! compute soluble P leaching
       do ly = 1, soil(j)%nly
         vap = 0.
-	   if (ly /= i_sep(j)) then
+        if (ly /= i_sep(j)) then
          vap = -soil(j)%ly(ly)%prk / (.01 * soil(j)%phys(ly)%st + .1 * bsn_prm%pperco *  soil(j)%phys(ly)%bd)
          plch = .001 * soil1(j)%mp(ly)%lab * (1. - Exp(vap))
          plch = Min(plch, soil1(j)%mp(ly)%lab)
-	     soil1(j)%mp(ly)%lab = soil1(j)%mp(ly)%lab - plch
+          soil1(j)%mp(ly)%lab = soil1(j)%mp(ly)%lab - plch
          if (ly == soil(j)%nly) then
            !! leach p from bottom layer
            hls_d(j)%lchlabp = plch
@@ -84,7 +84,7 @@
            soil1(j)%mp(ly)%lab = soil1(j)%mp(ly)%lab - plch
            hls_d(j)%tilelabp = plch
          endif
-	   endif
+        endif
      !rtb gwflow: store phosphorus leaching concentration for gwflow module
      if(bsn_cc%gwflow == 1 .and. gw_solute_flag == 1) then
        gwflow_percsol(j,2) = hls_d(j)%lchlabp  

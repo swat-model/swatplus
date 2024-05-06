@@ -28,6 +28,6 @@
          end if
       end do
     
-	  return
+      return
       
       end subroutine proc_cond

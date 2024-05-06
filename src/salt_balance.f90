@@ -471,7 +471,7 @@
           do i=1,ncell
             do m=1,cs_db%num_salts
               gwsol_ss(i)%solute(2+m)%rech = 0.
-					  enddo
+            enddo
           enddo
         endif
       endif

@@ -110,7 +110,7 @@
                 res_water(ires)%saltc(isalt) = res_salt_data(icon)%c_init(isalt) !concentration (g/m3)
                 res_water(ires)%salt(isalt) = res_water(ires)%saltc(isalt) * res(ires)%flo / 1000. !g/m3 * m3 / 1000. = kg
               enddo
-						else
+            else
               do isalt = 1, cs_db%num_salts
                 res_water(ires)%saltc(isalt) = 0. !concentration (g/m3)
                 res_water(ires)%salt(isalt) = 0. !kg

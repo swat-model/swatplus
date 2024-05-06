@@ -10,7 +10,7 @@
       
       integer, intent (in) :: iru        !             |
       integer :: iob                     !             |
-      integer :: ics                     !						 |constituent counter
+      integer :: ics                     !             |constituent counter
       integer :: ihyd                    !             |hydrograph counter
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
@@ -64,7 +64,7 @@
                          (ru_hru_csb_d(iru)%cs(ics)%sorb,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
           write (6071,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
-																		   (rucsb_d(iru)%hd(1)%cs(ics),ics=1,cs_db%num_cs), & !total out
+                                       (rucsb_d(iru)%hd(1)%cs(ics),ics=1,cs_db%num_cs), & !total out
                                        (rucsb_d(iru)%hd(2)%cs(ics),ics=1,cs_db%num_cs), & !percolation
                                        (rucsb_d(iru)%hd(3)%cs(ics),ics=1,cs_db%num_cs), & !surface runoff
                                        (rucsb_d(iru)%hd(4)%cs(ics),ics=1,cs_db%num_cs), & !soil lateral flow

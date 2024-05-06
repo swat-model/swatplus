@@ -23,8 +23,8 @@
       integer, intent (inout) :: idmd       !water demand object number
       integer, intent (inout) :: ihru       !HRU that receives irrigation water
       character*10 :: irrig_type  
-      integer :: isrc												!irrigation source counter
-      integer :: irrig_nsource						  !number of irrigation sources for the object
+      integer :: isrc                        !irrigation source counter
+      integer :: irrig_nsource              !number of irrigation sources for the object
       integer :: irrig_ob                   !object number of irrigation source
       integer :: ires                       !reservoir ID
       integer :: iaq                        !aquifer ID
@@ -34,7 +34,7 @@
       integer :: isalt                      !salt ion counter
       integer :: wetland                    !wetland flag
       real :: irrig_total                   !irrigation removed from source (m3)
-      real :: irrig_fraction							  !fraction of irrigation water
+      real :: irrig_fraction                !fraction of irrigation water
       real :: irrig_volume                  !volume (m3) of irrigation water
       real :: mass_diff,ion_mass,res_mass,mass_initial,irrig_mass,gw_volume,salt_conc
       
@@ -66,7 +66,7 @@
             if(ion_mass.gt.res_mass) then
               mass_diff = ion_mass - res_mass
             endif  
-					  ion_mass = ion_mass - mass_diff
+            ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove salt mass from the reservoir
             res_water(ires)%salt(isalt) = res_water(ires)%salt(isalt) - ion_mass
@@ -94,7 +94,7 @@
             if(ion_mass.gt.cs_aqu(iaq)%salt(isalt)) then
               mass_diff = ion_mass - cs_aqu(iaq)%salt(isalt)
             endif  
-					  ion_mass = ion_mass - mass_diff
+            ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove salt from aquifer
             cs_aqu(iaq)%salt(isalt) = cs_aqu(iaq)%salt(isalt) - ion_mass !kg
@@ -131,7 +131,7 @@
               if(ion_mass.gt.ch_water(ichan)%salt(isalt)) then
                 mass_diff = ion_mass - ch_water(ichan)%salt(isalt) 
               endif  
-						  ion_mass = ion_mass - mass_diff
+              ion_mass = ion_mass - mass_diff
               if(ion_mass.lt.0) ion_mass = 0.
               ch_water(ichan)%salt(isalt) = ch_water(ichan)%salt(isalt) - ion_mass !kg - remove from storage
               chsalt_d(ichan)%salt(isalt)%irr = chsalt_d(ichan)%salt(isalt)%irr + ion_mass !kg - include in channel salt balance
@@ -144,7 +144,7 @@
                 cs_soil(ihru)%ly(1)%salt(isalt) = cs_soil(ihru)%ly(1)%salt(isalt) + (ion_mass/hru(ihru)%area_ha) !kg/ha - add to soil layer
                 hsaltb_d(ihru)%salt(isalt)%irsw = hsaltb_d(ihru)%salt(isalt)%irsw + (ion_mass/hru(ihru)%area_ha) !kg/ha - include in soil salt balance 
               endif
-					  endif
+            endif
           enddo
         
         !canal diversion sources  

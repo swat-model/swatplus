@@ -58,7 +58,7 @@
       !! zero seed mass
       pl_mass(j)%seed(ipl) = plt_mass_z
       
-	  !! adjust foliar and internal pesticide for grain removal
+      !! adjust foliar and internal pesticide for grain removal
       do k = 1, cs_db%num_pests
         !! calculate amount of pesticide removed with yield
         yld_rto = pl_yield%m / pl_mass(j)%tot(ipl)%m

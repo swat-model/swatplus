@@ -40,7 +40,7 @@
       real :: erode_bank_cut          !cm            |widening caused by downcutting (both sides)
       real :: ebtm_t                  !tons          |bottom erosion
       real :: ebank_t                 !tons          |bank erosion
-      real :: sedout                  !mg		     |sediment out of waterway channel
+      real :: sedout                  !mg            |sediment out of waterway channel
       real :: washld                  !tons          |wash load  
       real :: bedld                   !tons          |bed load
       real :: dep                     !tons          |deposition

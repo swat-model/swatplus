@@ -21,13 +21,13 @@
       integer :: iwst              !none          |weather station number
       integer :: ics               !constituent counter 
       real    :: k_react           !1/day - first-order rate constant, affected by temperature
-      real    :: v_settle          !m/day	- settling rate
+      real    :: v_settle          !m/day - settling rate
       real    :: cs_mass_beg,cs_conc_beg,cs_mass_end,cs_conc_end
       real    :: cs_inflow,cs_outflow,cs_seep,cs_settle,cs_rctn,cs_prod
       real    :: seo4_convert      !kg            |mass of seo4 converted to seo3
       real    :: theta             !temperature factor for chemical reactions  
       real    :: mass_avail        !track available constituent mass in the wetland (kg)
-      real    :: seep_mass				 !constituent mass lost via seepage (and added to soil profile) (kg/ha)
+      real    :: seep_mass         !constituent mass lost via seepage (and added to soil profile) (kg/ha)
       
 
       !mass balance output (by HRU for wetlands): prepare by setting to 0
@@ -54,7 +54,7 @@
           if(wet(ihru)%flo > 0.) then
             cs_conc_beg = (cs_mass_beg * 1000.) / wet(ihru)%flo !g/m3
           else
-            cs_conc_beg =	0.
+            cs_conc_beg =  0.
           endif
           mass_avail = cs_mass_beg
           
@@ -79,11 +79,11 @@
           !constituent mass settling to bottom of wetland
           if(ics == 1) then
             v_settle = res_cs_data(icon)%v_seo4
-				  elseif(ics == 2) then
+          elseif(ics == 2) then
             v_settle = res_cs_data(icon)%v_seo3
-				  elseif(ics == 3) then
+          elseif(ics == 3) then
             v_settle = res_cs_data(icon)%v_born
-				  endif
+          endif
           cs_settle = (cs_conc_beg/1000.) * v_settle * (wet_wat_d(ihru)%area_ha*10000.) !kg
           if(cs_settle > mass_avail) then
             cs_settle = mass_avail !take remaining
@@ -95,7 +95,7 @@
           iwst = ob(ihru)%wst
           if(ics == 1) then !seo4
             k_react =  theta(res_cs_data(icon)%k_seo4, res_cs_data(icon)%theta_seo4, wst(iwst)%weat%tave)  
-				  elseif(ics == 2) then !seo3
+          elseif(ics == 2) then !seo3
             k_react =  theta(res_cs_data(icon)%k_seo3, res_cs_data(icon)%theta_seo3, wst(iwst)%weat%tave)  
           elseif(ics == 3) then !boron
             k_react =  theta(res_cs_data(icon)%k_born, res_cs_data(icon)%theta_born, wst(iwst)%weat%tave)  
@@ -120,7 +120,7 @@
           cs_mass_end = cs_mass_beg + (cs_inflow - cs_outflow - cs_seep - cs_settle - cs_rctn + cs_prod) !kg
           if(wet(ihru)%flo > 0.) then
             cs_conc_end = (cs_mass_end * 1000.) / wet(ihru)%flo !g/m3
-				  else
+          else
             cs_conc_end = 0.
           endif
           

@@ -40,7 +40,7 @@
       real :: erode_bank_cut          !cm            |widening caused by downcutting (both sides)
       real :: ebtm_t                  !tons          |bottom erosion
       real :: ebank_t                 !tons          |bank erosion
-      real :: sedout                  !mg		     |sediment out of waterway channel
+      real :: sedout                  !mg         |sediment out of waterway channel
       real :: washld                  !tons          |wash load  
       real :: bedld                   !tons          |bed load
       real :: dep                     !tons          |deposition
@@ -221,7 +221,7 @@
             if(bsn_cc%gwflow.eq.1) then
               flood_freq(ich) = 1 !flag to indicate the water is in the floodplain
               call gwflow_fpln(ich)
-						endif
+            endif
             
             sd_ch(ich)%overbank = "ob"
             rcharea = sd_ch_vel(ich)%area
@@ -483,7 +483,7 @@
       end if
       
       !! compute sediment leaving the channel - washload only
-	  sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
+    sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
       
       !! set values for outflow hydrograph
       !! calculate flow velocity and travel time  ht2 = ht1   !***jga 

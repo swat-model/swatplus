@@ -15,7 +15,7 @@
       integer :: irec
       
       !local variables
-      integer :: isalt				!            |salt ion counter
+      integer :: isalt        !            |salt ion counter
       integer :: ichan        !            |id of source channel
       real :: salt_conc       !g/m3        |concentration of salt ion in source channel
       real :: div_mass        !kg          |mass of salt ion in diversion water
@@ -43,7 +43,7 @@
                 else
                   !source: add mass
                   obcs(icmd)%hd(1)%salt(isalt) = rec_salt(irec)%hd_salt(time%day,time%yrs)%salt(isalt)
-								endif
+                endif
               enddo
               if(rec_salt(irec)%pts_type.eq.1) then
                 do isalt=1,cs_db%num_salts
@@ -81,7 +81,7 @@
               enddo
               if(rec_salt(irec)%pts_type.eq.1) then
                 do isalt=1,cs_db%num_salts
-								  recsaltb_d(irec)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
+                  recsaltb_d(irec)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
                 enddo
               else
                 do isalt=1,cs_db%num_salts

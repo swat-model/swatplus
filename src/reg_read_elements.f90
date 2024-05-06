@@ -110,7 +110,7 @@
       end do    ! i = 1, mreg
 
       end do 
-      end if	  
+      end if
 
       !!read data for each element in all landscape cataloging units
       inquire (file=in_regs%ele_reg, exist=i_exist)

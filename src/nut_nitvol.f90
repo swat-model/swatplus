@@ -64,7 +64,7 @@
           rvol = 1. - Exp(-akv)
 
           !! calculate nitrification (NH3 => NO3)
-	    !! apply septic algorithm only to active septic systems
+          !! apply septic algorithm only to active septic systems
           if(k/=i_sep(j).or.sep(isep)%opt /= 1) then  ! J.Jeong for septic, biozone layer
              if (rvol + rnit > 1.e-6) then
                rvol = rnv * rvol / (rvol + rnit)

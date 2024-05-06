@@ -9,15 +9,15 @@
 !!    name        |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    new water table depth  equations   01/2009
-!!	  c			  |none		     |a factor used to convert airvol to wtd
+!!      c              |none             |a factor used to convert airvol to wtd
 !!    dg          |mm            |soil layer thickness in HRU
 !!    new water table depth  equations   01/2009
 !!    latq(:)     |mm H2O        |total lateral flow in soil profile for the 
 !!                               |day in HRU
 !!    lyrtile     |mm H2O        |drainage tile flow in soil layer for day
 !!    new water table depth  equations   01/2009
-!!	  ne_p		  |mm/hr         |effective porosity in HRU for all soil profile layers 
-!!	  ne_w		  |mm/hr         |effective porosity in HRU for soil layers above wtd 
+!!      ne_p          |mm/hr         |effective porosity in HRU for all soil profile layers 
+!!      ne_w          |mm/hr         |effective porosity in HRU for soil layers above wtd 
 !!    new water table depth  equations   01/2009
 !!    qtile       |mm H2O        |drainage tile flow in soil profile for the day
 !!    sepday      |mm H2O        |micropore percolation from soil layer
@@ -29,8 +29,8 @@
 !!    new water table depth  equations   01/2009
 !!    wt_shall    |mm H2O        |shallow water table height above bottom of soil profile
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!	  w2          |mm            |
-!!	  y1          |mm 		     |dummy variable for wat
+!!      w2          |mm            |
+!!      y1          |mm              |dummy variable for wat
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
       use hru_module, only : hru, ihru, i_sep, inflpcp, isep, latlyr, latq, lyrtile, qstemm, sepbtm, sepcrktot, sepday,   &
@@ -77,9 +77,9 @@
 
       !! calculate crack flow 
       if (bsn_cc%crk == 1) then 
-	    call swr_percmacro
-	    sepday = sepday - sepcrktot
-	  endif
+        call swr_percmacro
+        sepday = sepday - sepcrktot
+      endif
 
       !back to 4 mm slug for soil routing- keeps moisture above fc
       slug = 1000.  !4.  !1000.   !this should be an input in parameters.bsn
@@ -92,11 +92,11 @@
         !! add water moving into soil layer from overlying layer
         soil(j)%phys(j1)%st = soil(j)%phys(j1)%st + sepday
         
- 	  !! septic tank inflow to biozone layer  J.Jeong
-	  ! STE added to the biozone layer if soil temp is above zero. 
-	  if (j1 == i_sep(j) .and. soil(j)%phys(j1)%tmp > 0. .and.          &
+       !! septic tank inflow to biozone layer  J.Jeong
+      ! STE added to the biozone layer if soil temp is above zero. 
+      if (j1 == i_sep(j) .and. soil(j)%phys(j1)%tmp > 0. .and.          &
             sep(isep)%opt  /= 0) then
-		soil(j)%phys(j1)%st = soil(j)%phys(j1)%st + qstemm(j)  ! in mm
+        soil(j)%phys(j1)%st = soil(j)%phys(j1)%st + qstemm(j)  ! in mm
         end if
 
        !! determine gravity drained water in layer
@@ -124,7 +124,7 @@
         qtile = qtile + lyrtile
         soil(j)%ly(j1)%flat = latlyr + lyrtile
         soil(j)%ly(j1)%prk = soil(j)%ly(j1)%prk + sepday
-	    if (latq(j) < 1.e-6) latq(j) = 0.
+        if (latq(j) < 1.e-6) latq(j) = 0.
         if (qtile < 1.e-6) qtile = 0.
         if (soil(j)%ly(j1)%flat < 1.e-6) soil(j)%ly(j1)%flat = 0.
       end do
@@ -157,8 +157,8 @@
             xx = (soil(j)%sw - soil(j)%sumfc) / (yy - soil(j)%sumfc)
             if (xx > 1.) xx = 1.
             wt_shall = xx * soil(j)%zmx
-		    wat = soil(j)%zmx - wt_shall
-			if(wat > soil(j)%zmx) wat = soil(j)%zmx
+            wat = soil(j)%zmx - wt_shall
+            if(wat > soil(j)%zmx) wat = soil(j)%zmx
           end if
         else
           !compute water table depth using Daniel"s modifications
@@ -167,12 +167,12 @@
               sw_del = soil(j)%swpwt - soil(j)%sw
               wt_del = sw_del * soil(j)%ly(j1)%vwt
               soil(j)%wat_tbl = soil(j)%wat_tbl + wt_del
-	          if(soil(j)%wat_tbl > soil(j)%zmx)  soil(j)%wat_tbl = soil(j)%zmx
-	          wt_shall = soil(j)%zmx - soil(j)%wat_tbl
-	          soil(j)%swpwt = soil(j)%sw
-	          exit
-	        end if
-	      end do
+              if(soil(j)%wat_tbl > soil(j)%zmx)  soil(j)%wat_tbl = soil(j)%zmx
+              wt_shall = soil(j)%zmx - soil(j)%wat_tbl
+              soil(j)%swpwt = soil(j)%sw
+              exit
+            end if
+          end do
         end if
         !! drainmod wt_shall equations   10/23/2006
         
@@ -187,7 +187,7 @@
               call swr_drains           !! compute tile flow using drainmod tile equations 
             else                        
               call swr_origtile(d)      !! compute tile flow using existing tile equations 
-	          if(qtile < 0.) qtile = 0.
+              if(qtile < 0.) qtile = 0.
             end if 
           end if
         end if

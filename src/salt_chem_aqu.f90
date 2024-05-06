@@ -68,10 +68,10 @@
       do m=1,cs_db%num_salts
         if(cs_aqu(iaq)%salt(m).lt.0) then
           cs_aqu(iaq)%salt(m) = 0.
-		endif
+        endif
         if(cs_aqu(iaq)%saltc(m).lt.0) then
           cs_aqu(iaq)%saltc(m) = 0.
-		endif
+        endif
         mass_before = mass_before + cs_aqu(iaq)%salt(m) !kg of salt
         if(gw_volume.gt.0) then
           cs_aqu(iaq)%saltc(m) = (cs_aqu(iaq)%salt(m) * 1000.) / gw_volume !g/m3 = mg/L

@@ -15,7 +15,7 @@
       integer :: irec
       
       !local variables
-      integer :: ics					!            |constituent counter
+      integer :: ics          !            |constituent counter
       integer :: ichan        !            |id of source channel
       real :: cs_conc         !g/m3        |concentration of constituent in source channel
       real :: div_mass        !kg          |mass of constituent in diversion water
@@ -43,7 +43,7 @@
                 else
                   !source: add mass
                   obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(time%day,time%yrs)%cs(ics)
-								endif
+                endif
               enddo
               if(rec_cs(irec)%pts_type.eq.1) then
                 reccsb_d(irec)%cs = obcs(icmd)%hd(1)%cs
@@ -64,15 +64,13 @@
                 recoutcsb_d(irec)%cs = rec_cs(irec)%hd_cs(time%mo,time%yrs)%cs
               endif
             else
-              obcs(icmd)%hd(1) = hin_csz
-            endif
           case (3)    !annual
             if (time%yrc >= rec_cs(irec)%start_yr .or. time%yrc <= rec_cs(irec)%end_yr) then
               do ics=1,cs_db%num_cs
                 obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(1,time%yrs)%cs(ics)
               enddo
               if(rec_cs(irec)%pts_type.eq.1) then
-								reccsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
+                reccsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
               else
                 recoutcsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
               endif

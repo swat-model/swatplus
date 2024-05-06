@@ -286,5 +286,5 @@
         ob(icmd)%hyd_flo(day_cur,1) = ob(icmd)%hd(1)%flo
       end if
       
-	return
+    return
     end subroutine ru_control

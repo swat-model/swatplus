@@ -10,7 +10,7 @@
         real :: diss = 0.            !! |kg/ha       |salt ion mass transferred from sorbed phase to dissolved phase
         real :: surq = 0.            !! |kg/ha       |salt ion mass lost in surface runoff in HRU
         real :: latq = 0.            !! |kg/ha       |salt ion mass in lateral flow in HRU
-        real :: urbq = 0.            !! |kg/ha			 |salt ion mass in urban runoff
+        real :: urbq = 0.            !! |kg/ha       |salt ion mass in urban runoff
         real :: wetq = 0.            !! |kg/ha       |salt ion mass in wetland runoff
         real :: tile = 0.            !! |kg/ha       |salt ion mass in tile flow in HRU
         real :: perc = 0.            !! |kg/ha       |salt ion mass leached past bottom of soil

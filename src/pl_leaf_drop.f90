@@ -49,7 +49,7 @@
       real :: LSF                       !frac          |fraction of the litter that is structural
       real :: LMNF                      !kg kg-1       |fraction of metabolic litter that is N
       real :: LSLF                      !kg kg-1       |fraction of structural litter that is lignin 
-      real :: LSNF                      !kg kg-1       |fraction of structural litter that is N	
+      real :: LSNF                      !kg kg-1       |fraction of structural litter that is N 
       
       orgc_f = 0.
       BLG1 = 0.
@@ -89,13 +89,13 @@
           CLG=BLG3*pcom(j)%plcur(ipl)%phuacc/ (pcom(j)%plcur(ipl)%phuacc +    &
                 EXP(BLG1-BLG2*pcom(j)%plcur(ipl)%phuacc))
 
-          sf = 0.05	
-          sol_min_n = (soil1(j)%mn(1)%no3 + soil1(j)%mn(1)%nh4)  	    
+          sf = 0.05 
+          sol_min_n = (soil1(j)%mn(1)%no3 + soil1(j)%mn(1)%nh4)       
           resnew_ne = resnew_n + sf * sol_min_n
 
           RLN = (resnew * CLG/(resnew_n+1.E-5))
           RLR = MIN(.8, resnew * CLG/1000/(resnew/1000+1.E-5))
-        	    
+             
           LMF = 0.85 - 0.018 * RLN
           if (LMF <0.01) then
             LMF = 0.01
@@ -103,17 +103,17 @@
             if (LMF >0.7) then
               LMF = 0.7
             end if
-          end if      	  
+          end if         
 
           LSF =  1 - LMF  
-        	  
+           
           rsd1(j)%meta%m = rsd1(j)%meta%m + LMF * resnew
           rsd1(j)%str%m = rsd1(j)%str%m + LSF * resnew
 
           LSLF = CLG          
-	          
+           
           rsd1(j)%tot_str%c = rsd1(j)%tot_str%c + 0.42*LSF * resnew  
-	          
+           
           rsd1(j)%tot_lignin%c = rsd1(j)%tot_lignin%c + RLR * 0.42 * LSF * resnew
           rsd1(j)%tot_lignin%c = rsd1(j)%tot_str%c - rsd1(j)%tot_lignin%c
 
@@ -124,7 +124,7 @@
           else
             rsd1(j)%tot_str%n = rsd1(j)%tot_str%n + resnew_ne
             rsd1(j)%tot_meta%n = rsd1(j)%tot_meta%n + 1.E-25
-          end if	
+          end if 
 
           rsd1(j)%tot_meta%c = rsd1(j)%tot_meta%c + 0.42 * LMF * resnew
 

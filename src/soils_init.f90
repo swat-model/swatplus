@@ -134,7 +134,7 @@
         if (sep(isep)%opt /= 0) then 
           dep_new1 = 0.
           dep_new2 = 0.
-	      if (sep(isep)%z + sep(isep)%thk > soil(ihru)%phys(nly)%d) then
+          if (sep(isep)%z + sep(isep)%thk > soil(ihru)%phys(nly)%d) then
             i_sep(ihru) = nly + 1
             dep_new1 = sep(isep)%z - sep(isep)%thk
             dep_new2 = 0.

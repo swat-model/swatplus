@@ -22,7 +22,7 @@
       real    :: salt_mass_beg,salt_conc_beg,salt_mass_end,salt_conc_end
       real    :: salt_inflow,salt_outflow,salt_seep
       real    :: mass_avail        !track available salt ion mass in the wetland (kg)
-      real    :: seep_mass				 !salt ion mass lost via seepage (and added to soil profile) (kg/ha)
+      real    :: seep_mass         !salt ion mass lost via seepage (and added to soil profile) (kg/ha)
       
       !mass balance output (by HRU for wetlands): prepare by setting to 0
       do isalt=1,cs_db%num_salts
@@ -40,7 +40,7 @@
         salt_mass_beg = wet_water(ihru)%salt(isalt) !kg
         if(wet(ihru)%flo > 0.) then
           salt_conc_beg = (salt_mass_beg * 1000.) / wet(ihru)%flo !g/m3
-				else
+        else
           salt_conc_beg = 0.
         endif
         mass_avail = salt_mass_beg
@@ -67,7 +67,7 @@
         salt_mass_end = salt_mass_beg + (salt_inflow - salt_outflow - salt_seep) !kg
         if(wet(ihru)%flo > 0.) then
           salt_conc_end = (salt_mass_end * 1000.) / wet(ihru)%flo !g/m3
-				else
+        else
           salt_conc_end = 0.
         endif
           

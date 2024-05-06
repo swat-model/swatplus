@@ -47,7 +47,7 @@
       !! kg/ha = t / ha * 1000. kg/t
       sedorgn(j) = 1000. * frac * sedyld(j) / hru(j)%area_ha
 
-	  !! update soil nitrogen pools only for HRU calculations
+      !! update soil nitrogen pools only for HRU calculations
       if (orgn_kgha > 1.e-6) then
        soil1(j)%hact(1)%n = soil1(j)%hact(1)%n - sedorgn(j) * (soil1(j)%hact(1)%n / orgn_kgha)
        soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n - sedorgn(j) * (soil1(j)%hsta(1)%n / orgn_kgha)

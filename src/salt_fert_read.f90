@@ -29,7 +29,7 @@
         !allocate fertilizer array
         allocate (fert_salt(db_mx%fertparm))
         
-				!set flag
+        !set flag
         fert_salt_flag = 1
         
         !read in the salt ion fertilizer rates (kg/ha) for each fertilizer type

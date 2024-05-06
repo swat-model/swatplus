@@ -46,7 +46,7 @@
       soil1(j)%hact(1)%n = soil1(j)%hact(1)%n * fr_burn
       soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n* fr_burn
 
-      !!insert new biomss by zhang	  
+      !!insert new biomss by zhang
       !!=================================
       if (bsn_cc%cswat == 2) then
           rsd1(j)%tot_meta%m = rsd1(j)%tot_meta%m * fr_burn

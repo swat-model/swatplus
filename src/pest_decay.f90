@@ -69,7 +69,7 @@
           hpestb_d(j)%pest(k)%decay_s = pst_decay_s
 
           !! calculate degradation on plant foliage
-	      !! adjust foliar pesticide for wash off
+          !! adjust foliar pesticide for wash off
           do ipl = 1, pcom(j)%npl
             pest_init = cs_pl(j)%pl_on(ipl)%pest(k)
             if (pest_init > 1.e-12) then
