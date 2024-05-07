@@ -70,6 +70,7 @@
       real :: sut           !none          |soil water factor
       real :: nactfr        !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
+      real :: min_totc = 1.e-3  !          | Miniumum totc 
 
       j = ihru
       nactfr = .02
@@ -135,7 +136,7 @@
           rsd1(j)%tot(ipl)%m = rsd1(j)%tot(ipl)%m - rdc
           if (rsd1(j)%tot(ipl)%m < 0.) rsd1(j)%tot(ipl)%m = 0.
           rsd1(j)%tot(ipl)%c = (1. - decr) * rsd1(j)%tot(ipl)%c
-          if (rsd1(j)%tot(ipl)%c < 0.) rsd1(j)%tot(ipl)%c = 0.
+          if (rsd1(j)%tot(ipl)%c < min_totc) rsd1(j)%tot(ipl)%c = 0.
           soil1(j)%hact(1)%c = soil1(j)%hact(1)%c + decr * rsd1(j)%tot(ipl)%c
           
           !! mineralization of residue n and p
