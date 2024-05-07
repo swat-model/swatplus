@@ -101,7 +101,7 @@
       end type fertilize_future
       
       type plant_community
-       character(len=35) :: name
+       character(len=40) :: name
        integer :: npl                   !! number of plants in community
        character(len=4), dimension(:), allocatable :: pl       !! N/A              |plant name
        integer :: pcomdb                !! current plant community database number

@@ -17,7 +17,8 @@
       
       
       !grid type ------------------------------------------------------------------------------------------------------
-      character*15 :: grid_type                               !"structured" or "unstructured" (usg)
+      !character*15 :: grid_type                               !"structured" or "unstructured" (usg)
+      character(len=15) :: grid_type                               !"structured" or "unstructured" (usg)
       integer :: grid_nrow                                    !number of rows in structured grid
       integer :: grid_ncol                                    !number of columns in structured grid
       integer, dimension (:,:), allocatable :: cell_id_usg    !usg cell number, for cell in structured grid (array)

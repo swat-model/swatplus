@@ -635,7 +635,7 @@
       open(out_gwobs_ss,file='gwflow_cell_ss')
       write(out_gwobs_ss,*) 'Daily sources and sinks for cell'
       write(out_gwobs_ss,*) 'cell:',gw_cell_obs_ss
-      gwflow_hdr = [character(len=17) :: "year","day","head","vol_bef","vol_aft","rech","gwet","gwsw","swgw","satex","gwsoil", &
+      gwflow_hdr = [character(len=13) :: "year","day","head","vol_bef","vol_aft","rech","gwet","gwsw","swgw","satex","gwsoil", &
                     "lateral","pump_ag","pump_ex","tile","res","wet","canal","fplain"]
 
       write(out_gwobs_ss,119) (gwflow_hdr(j),j=1,19)
@@ -1850,7 +1850,7 @@
         write(out_gwbal,*) 'ppdf:         mm   groundwater demand not satisfied for irrigation'
       
         write(out_gwbal,*)
-        gwflow_hdr_day = [character(len=17) :: "year","day","ts","vol_bef","vol_aft","rech","gwet","gwsw",    &
+        gwflow_hdr_day = [character(len=13) :: "year","day","ts","vol_bef","vol_aft","rech","gwet","gwsw",    &
            "swgw","satex","gwsoil","lateral","bound","pump_ag","pump_ex","tile","res","wet","canal","fplain", &
            "error","satfr","wtdepth","pump_def"]
         write(out_gwbal,119) (gwflow_hdr_day(j),j=1,24)
@@ -1884,7 +1884,7 @@
         write(out_gwbal_yr,*) 'fpln:      mm   floodplain exchange'
         write(out_gwbal_yr,*) 'ppdf:      mm   groundwater demand not satisfied for irrigation'
         write(out_gwbal_yr,*)
-        gwflow_hdr_yr = [character(len=17) :: "  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil",  &
+        gwflow_hdr_yr = [character(len=13) :: "  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil",  &
            "lateral","bound","pump_ag","pump_ex","tile","res","wet","canal","fplain","pump_def"]
         write(out_gwbal_yr,120) (gwflow_hdr_yr(j),j=1,18)
       endif
@@ -1917,7 +1917,7 @@
         write(out_gwbal_aa,*) 'fpln:      mm   floodplain exchange'
         write(out_gwbal_aa,*) 'ppdf:      mm   groundwater demand not satisfied for irrigation'
         write(out_gwbal_aa,*)
-        gwflow_hdr_aa = [character(len=17) :: "  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil",  &
+        gwflow_hdr_aa = [character(len=13) :: "  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil",  &
            "lateral","bound","pump_ag","pump_ex","tile","res","wet","canal","fplain","pump_def"]
         write(out_gwbal_aa,120) (gwflow_hdr_aa(j),j=1,18)
       endif
@@ -1946,7 +1946,7 @@
       write(out_huc12wb,*) 'fplain:        mm   floodplain exchange'
       write(out_huc12wb,*) 'pump_def:      mm   groundwater demand not satisfied for irrigation'
       write(out_huc12wb,*)
-      gwflow_hdr_huc12 = [character(len=17) :: "  HUC12","rech","gwet","gwsw","swgw","satex","gwsoil",  &
+      gwflow_hdr_huc12 = [character(len=13) :: "  HUC12","rech","gwet","gwsw","swgw","satex","gwsoil",  &
          "lateral","pump_ag","pump_ex","tile","res","wet","canal","fplain","pump_def"]
       write(out_huc12wb,122) (gwflow_hdr_huc12(j),j=1,16)
       allocate(gw_huc12_wb(15,sp_ob%outlet))
@@ -2027,7 +2027,7 @@
             write(out_solbal_dy+n,*) 'fpln:      kg   solute mass in floodplain exchange'
             write(out_solbal_dy+n,*) 'error:     --   mass balance error for aquifer'
             write(out_solbal_dy+n,*)
-            sol_hdr_day = [character(len=21) :: "  year","   day","ts","massbef","massaft","rech","gwsw",  &
+            sol_hdr_day = [character(len=13) :: "  year","   day","ts","massbef","massaft","rech","gwsw",  &
                "swgw","satex",  "gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","res","wet","canal", &
                "fplain","error"]
             write(out_solbal_dy+n,119) (sol_hdr_day(j),j=1,22)
@@ -2061,7 +2061,7 @@
             write(out_solbal_yr+n,*) 'canl:     kg   solute mass loaded to groundwater from canal seepage'
             write(out_solbal_yr+n,*) 'fpln:     kg   solute mass in floodplain exchange'
             write(out_solbal_yr+n,*)
-            sol_hdr_yr = [character(len=17) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil",  &
+            sol_hdr_yr = [character(len=13) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil",  &
                  "adv","dsp","rct","pump_ag","pump_ex","tile","res","wet","canal","fplain"]
             write(out_solbal_yr+n,120) (sol_hdr_yr(j),j=1,17)
             !zero out yearly arrays
@@ -2112,7 +2112,7 @@
             write(out_solbal_aa+n,*) 'canl:      kg   solute mass loaded to groundwater from canal seepage'
             write(out_solbal_aa+n,*) 'fpln:      kg   solute mass in floodplain exchange'
             write(out_solbal_aa+n,*)
-            sol_hdr_aa = [character(len=17) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil", &
+            sol_hdr_aa = [character(len=13) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil", &
                "adv","dsp","rct","pump_ag","pump_ex","tile","res","wet","canal","fplain"]
             write(out_solbal_aa+n,120) (sol_hdr_aa(j),j=1,17)
             !zero out yearly arrays

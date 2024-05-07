@@ -64,6 +64,8 @@
                 recoutcsb_d(irec)%cs = rec_cs(irec)%hd_cs(time%mo,time%yrs)%cs
               endif
             else
+              obcs(icmd)%hd(1) = hin_csz
+            endif
           case (3)    !annual
             if (time%yrc >= rec_cs(irec)%start_yr .or. time%yrc <= rec_cs(irec)%end_yr) then
               do ics=1,cs_db%num_cs

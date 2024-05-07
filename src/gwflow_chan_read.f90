@@ -9,8 +9,9 @@
       use hydrograph_module
       
       implicit none
-
-      character(len=8) :: col_head_con(17)
+      !! the following was changed to compile on gfortran
+      ! character(len=8) :: col_head_con(17)
+      character(len=13) :: col_head_con(17) 
       integer  i,j,k,in_chan,in_con,cell_ID,channel,chan_zone,dum1,dum2,chan_cell
       real     bed_elev,chan_length,dum3
 
@@ -50,7 +51,11 @@
       !write out gwflow.con input file (connection file)
       write(out_gw,*) 'writing gwflow.con file...'
       write(1281,*) 'gwflow.con: channel-cell spatial connections'
-      col_head_con = [character(len=17) :: "NUMB","NAME","GISID","AREA","LAT","LONG","ELEV","CELL","WST","CONST","OVER",  &
+      !write out gwflow.con input file (connection file)
+      !! the following was changed to compile on gfortran
+      !! col_head_con = [character(len=17) :: "NUMB","NAME","GISID","AREA","LAT","LONG","ELEV","CELL","WST","CONST","OVER",  &
+      !!      "RULE","SRC_TOT ","OBTYPE_OUT1 ","OBTYPNO_OUT1 ","HTYPE_OUT1 ","FRAC_OUT1 "]
+      col_head_con = [character(len=13) :: "NUMB","NAME","GISID","AREA","LAT","LONG","ELEV","CELL","WST","CONST","OVER",  &
             "RULE","SRC_TOT ","OBTYPE_OUT1 ","OBTYPNO_OUT1 ","HTYPE_OUT1 ","FRAC_OUT1 "]
       write(1281,103) (col_head_con(j),j=1,17)
       dum1 = 1

@@ -153,7 +153,7 @@
         character (len=15) :: src3_num =  "               "        
         character (len=15) :: dmd3 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s3out =      "m^3            "        !! ha-m    |withdrawal from source 3       
-        character (len=10) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
+        character (len=10) :: s3un =      "m^3       "        !! ha-m    |unmet from source 3   
 
         end type wallo_header_units
       type (wallo_header_units) :: wallo_hdr_units 
