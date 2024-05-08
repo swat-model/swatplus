@@ -1,0 +1,2127 @@
+-- Verbose Makefile   FALSE
+-- Compiler           /usr/bin/f95 (GNU 11.4.0)
+-- FFLAGS             -fcheck=all -Wall -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans
+--  RELEASE           -O
+--  DEBUG             -g 
+-- PROJECT_DIR        /home/fgeter/csu-scripts/sp_test7/swatplus
+-- BINARY_DIR         /home/fgeter/csu-scripts/sp_test7/swatplus/build
+-- Install Prefix     /usr/local
+-- Executable         swatplus-61.3-24-g00babb2, rev/tag: 61.3-24-g00babb2
+-- Test Data Dir      /home/fgeter/csu-scripts/sp_test7/swatplus/data
+--  Abs Error         1e-8
+--  Rel Error         0.05
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_pesticide_module.f90:118:39:
+
+  118 |       function respest_ave (res1, const) result (res2)
+      |                                       1
+Warning: Unused dummy argument ‘const’ at (1) [-Wunused-dummy-argument]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aunif.f90:37:13:
+
+   37 |       unif = x1 * 4.656612875d-10
+      |             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ran.f90:1:6:
+
+    1 |       function ran(idum)
+      |      1
+Warning: ‘ran’ declared at (1) is also the name of an intrinsic.  It can only be called via an explicit interface or if declared EXTERNAL. [-Wintrinsic-shadow]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ran.f90:17:35:
+
+   17 |           am=nearest(1.0,-1.0) / im
+      |                                   1
+Warning: Change of value in conversion from ‘INTEGER(4)’ to ‘REAL(4)’ at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ran1.f90:28:15:
+
+   28 |       rqq(j) = (dble(ix1) + (dble(ix2) * rm2)) * rm1
+      |               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ran1.f90:37:15:
+
+   37 |       rqq(j) = (dble(ix1) + (dble(ix2) * rm2)) * rm1
+      |               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/search.f90:46:3:
+
+   46 | 100  format (1x,2a)
+      |   1
+Warning: Label 100 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cbn_zhang2.f90:412:25:
+
+  412 |              min_n_ppm = 1000. * sol_min_n / (sol_mass / 1000)
+      |                         1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cbn_zhang2.f90:536:28:
+
+  536 |                   lslncat = org_tran%lslnctp
+      |                            1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cbn_zhang2.f90:540:26:
+
+  540 |                   lmnta = org_tran%lmntp * reduc
+      |                          1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cbn_zhang2.f90:543:26:
+
+  543 |                   lmnta = org_tran%lmntp
+      |                          1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cbn_zhang2.f90:633:26:
+
+  633 |                   min_n = soil1(j)%mn(k)%no3 + rnmn
+      |                          1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cbn_zhang2.f90:111:18:
+
+  111 |        real :: cdg               !                     |soil temperature control on biological processes
+      |                  1
+Warning: Unused variable ‘cdg’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cond_real.f90:1:55:
+
+    1 |       subroutine cond_real (ic, var_cur, var_tbl, idtbl)
+      |                                                       1
+Warning: Unused dummy argument ‘idtbl’ at (1) [-Wunused-dummy-argument]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ero_ysed.f90:36:10:
+
+   36 |       use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
+      |          1
+Warning: Unused module variable ‘clayld’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ero_ysed.f90:36:10:
+
+   36 |       use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
+      |          1
+Warning: Unused module variable ‘lagyld’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ero_ysed.f90:36:10:
+
+   36 |       use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
+      |          1
+Warning: Unused module variable ‘sagyld’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ero_ysed.f90:36:10:
+
+   36 |       use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
+      |          1
+Warning: Unused module variable ‘sanyld’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ero_ysed.f90:36:10:
+
+   36 |       use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
+      |          1
+Warning: Unused module variable ‘silyld’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gcycl.f90:85:16:
+
+   85 |            ii = 100 * bsn_prm%igen * rn
+      |                1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gcycl.f90:102:14:
+
+  102 |           k = j * rn + 1
+      |              1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_urb_bmp.f90:22:14:
+
+   22 |          xx = 100. / qdr(j)
+      |              1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_urbanhr.f90:102:25:
+
+  102 |               twash(j) = urbdb(ulu)%thalf * dirt / (urbdb(ulu)%dirtmx - dirt)
+      |                         1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_urbanhr.f90:108:24:
+
+  108 |               sus_sol = Max(0., (dirto - dirt) * urbdb(ulu)%curbden)
+      |                        1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_urbanhr.f90:111:21:
+
+  111 |               tno3 = urbdb(ulu)%tno3conc * sus_sol / 1.e6
+      |                     1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/lsreg_output.f90:331:3:
+
+  331 | 103   format (4i6,i8,4x,a,5x,f12.3)
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/pl_root_gro.f90:19:22:
+
+   19 |       real :: rdmax_yr
+      |                      1
+Warning: Unused variable ‘rdmax_yr’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/pl_root_gro.f90:16:18:
+
+   16 |       real :: rto1                  !none               |ratio of current years + 1 of growth:years to maturity of perennial
+      |                  1
+Warning: Unused variable ‘rto1’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/pl_root_gro.f90:17:18:
+
+   17 |       real :: rto2                  !none               |ratio of 1 year:years to maturity of perennial
+      |                  1
+Warning: Unused variable ‘rto2’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:308:4:
+
+  308 | 1000  format(3i5,50es15.4)
+      |    1
+Warning: Label 1000 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:171:32:
+
+  171 |       soil1(j)%mn(bz_lyr)%no3 = soil1(j)%mn(bz_lyr)%no3 + xx *            &
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:174:32:
+
+  174 |       soil1(j)%mn(bz_lyr)%nh4 = soil1(j)%mn(bz_lyr)%nh4 + xx *            &
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:176:32:
+
+  176 |       soil1(j)%hsta(bz_lyr)%n = soil1(j)%hsta(bz_lyr)%n + xx *                &
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:178:31:
+
+  178 |       soil1(j)%tot(bz_lyr)%n = soil1(j)%tot(bz_lyr)%n +                 &
+      |                               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:180:32:
+
+  180 |       soil1(j)%hsta(bz_lyr)%p = soil1(j)%hsta(bz_lyr)%p + xx *                &
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:182:31:
+
+  182 |       soil1(j)%tot(bz_lyr)%p = soil1(j)%tot(bz_lyr)%p + xx *              &
+      |                               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:185:32:
+
+  185 |       soil1(j)%mp(bz_lyr)%lab = soil1(j)%mp(bz_lyr)%lab + xx*             &
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:187:17:
+
+  187 |       bio_bod(j)=bio_bod(j)+xx*sepdb(sep(isep)%typ)%bodconcs   ! J.Jeong 4/03/09
+      |                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:224:16:
+
+  224 |       plqm(j) = plqm(j) + rplqm
+      |                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:236:18:
+
+  236 |        fcoli(j) = fcoli(j) * xx + sepdb(sep(isep)%typ)%fcolis * (1.- xx)      ! J.Jeong 3/09/09
+      |                  1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:246:20:
+
+  246 |        bio_bod(j) = bode * (soil(j)%phys(bz_lyr)%st * 10)/1000. !kg/ha
+      |                    1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:251:18:
+
+  251 |        fcoli(j) = fcoli(j) - rfcoli
+      |                  1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:256:33:
+
+  256 |        soil1(j)%mn(bz_lyr)%nh4 = soil1(j)%mn(bz_lyr)%nh4 - rnit       !J.Jeong 3/09/09
+      |                                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:257:33:
+
+  257 |        soil1(j)%mn(bz_lyr)%no3 = soil1(j)%mn(bz_lyr)%no3 + rnit       !J.Jeong 3/09/09
+      |                                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:262:33:
+
+  262 |        soil1(j)%mn(bz_lyr)%nh4 = soil1(j)%mn(bz_lyr)%nh4 - nperc
+      |                                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:263:35:
+
+  263 |        soil1(j)%mn(bz_lyr+1)%nh4 = soil1(j)%mn(bz_lyr+1)%nh4 + nperc
+      |                                   1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:268:33:
+
+  268 |        soil1(j)%mn(bz_lyr)%no3 = soil1(j)%mn(bz_lyr)%no3 - rdenit              !J.Jeong 3/09/09
+      |                                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:286:32:
+
+  286 |       soil1(j)%mp(bz_lyr)%act = soil1(j)%mp(bz_lyr)%act +          &
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:288:32:
+
+  288 |       soil1(j)%mp(bz_lyr)%lab = solp_end
+      |                                1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:292:33:
+
+  292 |        soil1(j)%mp(bz_lyr)%lab = soil1(j)%mp(bz_lyr)%lab - percp !kg/ha
+      |                                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:293:34:
+
+  293 |       soil1(j)%mp(bz_lyr+1)%lab = soil1(j)%mp(bz_lyr+1)%lab + percp !kg/ha
+      |                                  1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sep_biozone.f90:300:17:
+
+  300 |       rbiom(j) = ctmp*sep(isep)%bod_conv*(qin*                          &
+      |                 1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/unit_hyd.f90:81:14:
+
+   81 |       t_inc = tb / 20.
+      |              1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/unit_hyd.f90:61:20:
+
+   61 |       integer :: itb            !           |
+      |                    1
+Warning: Unused variable ‘itb’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/unit_hyd.f90:58:16:
+
+   58 |       real :: xi                !           |
+      |                1
+Warning: Unused variable ‘xi’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_fert.f90:24:20:
+
+   24 |       integer :: ics                      !               |constituent counter
+      |                    1
+Warning: Unused variable ‘ics’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_cs.f90:14:32:
+
+   14 |       character (len=80) :: file      !           |filename
+      |                                1
+Warning: Unused variable ‘file’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_cs.f90:16:34:
+
+   16 |       character (len=80) :: header    !           |header of file
+      |                                  1
+Warning: Unused variable ‘header’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_cs.f90:21:25:
+
+   21 |       integer :: imo_atmo             !           |
+      |                         1
+Warning: Unused variable ‘imo_atmo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_cs.f90:23:26:
+
+   23 |       integer :: iyrc_atmo            !           |
+      |                          1
+Warning: Unused variable ‘iyrc_atmo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_cs.f90:15:35:
+
+   15 |       character (len=80) :: titldum   !           |title of file
+      |                                   1
+Warning: Unused variable ‘titldum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_fert_wet.f90:24:20:
+
+   24 |       integer :: ics                      !               |constituent counter
+      |                    1
+Warning: Unused variable ‘ics’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_fert_read.f90:15:37:
+
+   15 |       character (len=30) :: fert_name
+      |                                     1
+Warning: Unused variable ‘fert_name’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_fert_read.f90:17:26:
+
+   17 |       integer :: eof, imax
+      |                          1
+Warning: Unused variable ‘imax’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_salt.f90:14:32:
+
+   14 |       character (len=80) :: file      !           |filename
+      |                                1
+Warning: Unused variable ‘file’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_salt.f90:16:34:
+
+   16 |       character (len=80) :: header    !           |header of file
+      |                                  1
+Warning: Unused variable ‘header’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_salt.f90:23:25:
+
+   23 |       integer :: imo_atmo             !           |
+      |                         1
+Warning: Unused variable ‘imo_atmo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_salt.f90:25:26:
+
+   25 |       integer :: iyrc_atmo            !           |
+      |                          1
+Warning: Unused variable ‘iyrc_atmo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_read_atmodep_salt.f90:15:35:
+
+   15 |       character (len=80) :: titldum   !           |title of file
+      |                                   1
+Warning: Unused variable ‘titldum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_sed.f90:6:10:
+
+    6 |       use hru_module, only : hru, sedorgn, sedyld, ihru, enratio, sedmcs
+      |          1
+Warning: Unused module variable ‘sedorgn’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:130:30:
+
+  130 |       real :: conc_rg,conc_old,k_rg,cseo4,cseo3, &
+      |                              1
+Warning: Unused variable ‘conc_old’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:131:34:
+
+  131 |               no3inhib,hru_area_m2,no3_mass_kg,no3_conc, &
+      |                                  1
+Warning: Unused variable ‘hru_area_m2’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:123:39:
+
+  123 |       subroutine se_reactions_soil(j,jj,conc_rg,k_rg,k_slope)
+      |                                       1
+Warning: Unused dummy argument ‘jj’ at (1) [-Wunused-dummy-argument]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:131:55:
+
+  131 |               no3inhib,hru_area_m2,no3_mass_kg,no3_conc, &
+      |                                                       1
+Warning: Unused variable ‘no3_conc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:131:46:
+
+  131 |               no3inhib,hru_area_m2,no3_mass_kg,no3_conc, &
+      |                                              1
+Warning: Unused variable ‘no3_mass_kg’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:16:25:
+
+   16 |       real :: cseo4,cseo3
+      |                         1
+Warning: Unused variable ‘cseo3’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:16:19:
+
+   16 |       real :: cseo4,cseo3
+      |                   1
+Warning: Unused variable ‘cseo4’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:15:27:
+
+   15 |       integer :: j,jj,n,dum
+      |                           1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rctn_hru.f90:18:48:
+
+   18 |               hru_area_m2,water_volume,gw_volume, &
+      |                                                1
+Warning: Unused variable ‘gw_volume’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/pl_waterup.f90:62:19:
+
+   62 |       real :: reduc          !none      |fraction of water uptake by plants achieved
+      |                   1
+Warning: Unused variable ‘reduc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/pl_waterup.f90:73:22:
+
+   73 |               soil_TDS,soil_TDS_sat,soil_ECe,a_val,b_val,depth
+      |                      1
+Warning: Unused variable ‘soil_tds’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_fert_read.f90:15:37:
+
+   15 |       character (len=30) :: fert_name
+      |                                     1
+Warning: Unused variable ‘fert_name’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_fert_read.f90:17:26:
+
+   17 |       integer :: eof, imax
+      |                          1
+Warning: Unused variable ‘imax’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:72:18:
+
+   72 |       I_Prep_in = IonStr
+      |                  1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:162:26:
+
+  162 |       soil_salt_conc(1) = Sul_Conc(salt_c4)*(96.06*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:163:26:
+
+  163 |       soil_salt_conc(2) = Cal_Conc(c11)*(40.078*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:164:26:
+
+  164 |       soil_salt_conc(3) = Mg_Conc(salt_c3)*(24.305*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:165:26:
+
+  165 |       soil_salt_conc(4) = Sod_Conc(c5)*(23.0*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:166:26:
+
+  166 |       soil_salt_conc(5) = Pot_Conc(1)*(39.0*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:167:26:
+
+  167 |       soil_salt_conc(6) = Cl_Conc(c5)*(35.45*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:168:26:
+
+  168 |       soil_salt_conc(7) = Car_Conc(c22)*(60.01*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:169:26:
+
+  169 |       soil_salt_conc(8) = BiCar_Conc(1)*(61.01*1000.0)
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:18:26:
+
+   18 |       integer j,jj,m,n,dum,iter_count,hru_num,lay_num
+      |                          1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:7:10:
+
+    7 |       use hru_module, only : hru,ihru
+      |          1
+Warning: Unused module variable ‘hru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:7:10:
+
+    7 |       use hru_module, only : hru,ihru
+      |          1
+Warning: Unused module variable ‘ihru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:18:20:
+
+   18 |       integer j,jj,m,n,dum,iter_count,hru_num,lay_num
+      |                    1
+Warning: Unused variable ‘m’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:18:22:
+
+   18 |       integer j,jj,m,n,dum,iter_count,hru_num,lay_num
+      |                      1
+Warning: Unused variable ‘n’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:23:40:
+
+   23 |       real    I_Prep_in,I_diff,SkipedIEX
+      |                                        1
+Warning: Unused variable ‘skipediex’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:20:33:
+
+   20 |       real    sol_water,sol_thick,waterC,sol_bd,&
+      |                                 1
+Warning: Unused variable ‘sol_thick’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_soil_single.f90:20:23:
+
+   20 |       real    sol_water,sol_thick,waterC,sol_bd,&
+      |                       1
+Warning: Unused variable ‘sol_water’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_fert.f90:25:22:
+
+   25 |       integer :: isalt                    !               |salt ion counter
+      |                      1
+Warning: Unused variable ‘isalt’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_fert_wet.f90:24:22:
+
+   24 |       integer :: isalt                    !               |salt ion counter
+      |                      1
+Warning: Unused variable ‘isalt’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_irr_read.f90:11:22:
+
+   11 |       integer :: isalt
+      |                      1
+Warning: Unused variable ‘isalt’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_plant_read.f90:13:22:
+
+   13 |       integer :: isalt,iplant
+      |                      1
+Warning: Unused variable ‘isalt’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_lch.f90:60:33:
+
+   60 |       real :: ro_mass,wet_ro_mass,sro,vv,ww
+      |                                 1
+Warning: Unused variable ‘wet_ro_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:342:3:
+
+  342 | 101   format(i8,i8,i8,i8,50(e13.4))
+      |   1
+Warning: Label 101 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:151:20:
+
+  151 |         I_Prep_in = IonStr
+      |                    1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:781:15:
+
+  781 |       Con_Ca = upion2/40  ! mmol/liter water
+      |               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:782:15:
+
+  782 |       Con_Mg = upion3/24  ! mmol/liter water
+      |               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:783:15:
+
+  783 |       Con_Na = upion4/23  ! mmol/liter water
+      |               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:784:15:
+
+  784 |       Con_K  = upion5/39  ! mmol/liter water
+      |               1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:274:37:
+
+  274 |         cs_soil(j)%ly(jj)%saltc(1) = upion1
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:275:37:
+
+  275 |         cs_soil(j)%ly(jj)%saltc(2) = upion2
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:276:37:
+
+  276 |         cs_soil(j)%ly(jj)%saltc(3) = upion3
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:277:37:
+
+  277 |         cs_soil(j)%ly(jj)%saltc(4) = upion4
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:278:37:
+
+  278 |         cs_soil(j)%ly(jj)%saltc(5) = upion5
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:279:37:
+
+  279 |         cs_soil(j)%ly(jj)%saltc(6) = upion6
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:280:37:
+
+  280 |         cs_soil(j)%ly(jj)%saltc(7) = upion7
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:281:37:
+
+  281 |         cs_soil(j)%ly(jj)%saltc(8) = upion8
+      |                                     1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:303:26:
+
+  303 |         Sol_CaCO3_p(c5) = (Sol_CaCO3(c5)*100.0)&
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:305:26:
+
+  305 |         Sol_MgCO3_p(c5) = (Sol_MgCO3(c5)*100.0)&
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:307:26:
+
+  307 |         Sol_CaSO4_p(c5) = (Sol_CaSO4(c5)*100.0)&
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:309:26:
+
+  309 |         Sol_MgSO4_p(c5) = (Sol_MgSO4(c5)*100.0)&
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_hru.f90:311:26:
+
+  311 |         Sol_NaCl_p(c5)  = (Sol_NaCl(c5)*100.0)&
+      |                          1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:27:68:
+
+   27 |       integer :: year_index,yr_weat,year_days,iday,day_flag(366),dum
+      |                                                                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:13:32:
+
+   13 |       character (len=80) :: file      !           |filename
+      |                                1
+Warning: Unused variable ‘file’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:15:34:
+
+   15 |       character (len=80) :: header    !           |header of file
+      |                                  1
+Warning: Unused variable ‘header’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:22:25:
+
+   22 |       integer :: imo_atmo             !           |
+      |                         1
+Warning: Unused variable ‘imo_atmo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:26:23:
+
+   26 |       integer :: imonth               !           |month counter
+      |                       1
+Warning: Unused variable ‘imonth’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:24:26:
+
+   24 |       integer :: iyrc_atmo            !           |
+      |                          1
+Warning: Unused variable ‘iyrc_atmo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt_read.f90:14:35:
+
+   14 |       character (len=80) :: titldum   !           |title of file
+      |                                   1
+Warning: Unused variable ‘titldum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_pesticide_module.f90:122:37:
+
+  122 |       function chpest_ave (ch1, const) result (ch2)
+      |                                     1
+Warning: Unused dummy argument ‘const’ at (1) [-Wunused-dummy-argument]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu2d_init.f90:57:20:
+
+   57 |             next1 = next(next1)
+      |                    1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu2d_init.f90:68:18:
+
+   68 |           next1 = next(next1)
+      |                  1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu_read_init_cs.f90:18:18:
+
+   18 |       integer :: i                      !none         |counter
+      |                  1
+Warning: Unused variable ‘i’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu_read_init_cs.f90:23:36:
+
+   23 |       integer :: init, iaq, iob, idb, ini, ipest, ipath, isalt, init_aqu, ics, iaqdb
+      |                                    1
+Warning: Unused variable ‘idb’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu_read_init_cs.f90:23:41:
+
+   23 |       integer :: init, iaq, iob, idb, ini, ipest, ipath, isalt, init_aqu, ics, iaqdb
+      |                                         1
+Warning: Unused variable ‘ini’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu_read_init_cs.f90:23:21:
+
+   23 |       integer :: init, iaq, iob, idb, ini, ipest, ipath, isalt, init_aqu, ics, iaqdb
+      |                     1
+Warning: Unused variable ‘init’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/aqu_read_init_cs.f90:23:72:
+
+   23 |       integer :: init, iaq, iob, idb, ini, ipest, ipath, isalt, init_aqu, ics, iaqdb
+      |                                                                        1
+Warning: Unused variable ‘init_aqu’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cal_parm_select.f90:1:95:
+
+    1 |       subroutine cal_parm_select (ielem, ly, chg_parm, chg_typ, chg_val, absmin, absmax, num_db)
+      |                                                                                               1
+Warning: Unused dummy argument ‘num_db’ at (1) [-Wunused-dummy-argument]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/calsoft_control.f90:162:5:
+
+  162 |   500 format (a16,f12.3,i12,f12.3,2(1x,a16,10f12.3),10f12.3)
+      |     1
+Warning: Label 500 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_pathogen_output.f90:104:3:
+
+  104 | 104   format (4i6,2i8,2x,a,27f18.3)
+      |   1
+Warning: Label 104 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_pathogen_output.f90:103:3:
+
+  103 | 103   format (2i6,i8,4x,a,5x,f12.3)
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_pathogen_output.f90:102:3:
+
+  102 | 102   format (4i6,2i8,2x,a,20f12.3)
+      |   1
+Warning: Label 102 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_pathogen_output.f90:101:3:
+
+  101 | 101   format (4i6,2i8,2x,a,20f12.3)
+      |   1
+Warning: Label 101 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:66:17:
+
+   66 |       real :: dep
+      |                 1
+Warning: Unused variable ‘dep’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:54:16:
+
+   54 |       real :: ev                !m^3           |evaporation during time step
+      |                1
+Warning: Unused variable ‘ev’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:67:21:
+
+   67 |       real :: evol_m3, pvol_m3
+      |                     1
+Warning: Unused variable ‘evol_m3’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:35:21:
+
+   35 |       integer :: ihyd
+      |                     1
+Warning: Unused variable ‘ihyd’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:36:21:
+
+   36 |       integer :: irel
+      |                     1
+Warning: Unused variable ‘irel’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:67:30:
+
+   67 |       real :: evol_m3, pvol_m3
+      |                              1
+Warning: Unused variable ‘pvol_m3’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:59:22:
+
+   59 |       real :: rto_emer
+      |                      1
+Warning: Unused variable ‘rto_emer’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:58:19:
+
+   58 |       real :: rto_w
+      |                   1
+Warning: Unused variable ‘rto_w’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:52:16:
+
+   52 |       real :: tl                !m^3           |transmission losses during time step
+      |                1
+Warning: Unused variable ‘tl’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:50:19:
+
+   50 |       real :: ttime             !hr            |travel time through the reach
+      |                   1
+Warning: Unused variable ‘ttime’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_rtmusk.f90:64:20:
+
+   64 |       real :: vol_ch
+      |                    1
+Warning: Unused variable ‘vol_ch’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_pgenhr.f90:102:11:
+
+  102 |       pt = time%dtm
+      |           1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_pgenhr.f90:112:13:
+
+  112 |         pt = pt + time%dtm
+      |             1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cli_pgenhr.f90:123:13:
+
+  123 |         pt = pt + time%dtm
+      |             1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/climate_control.f90:45:21:
+
+   45 |       integer :: idap             !julain date   |day currently being simulated
+      |                     1
+Warning: Unused variable ‘idap’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/climate_control.f90:57:26:
+
+   57 |       integer :: ifirstpet = -1   !none          |potential ET data search code
+      |                          1
+Warning: Unused variable ‘ifirstpet’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/climate_control.f90:50:21:
+
+   50 |       integer :: ipet             !              |
+      |                     1
+Warning: Unused variable ‘ipet’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/climate_control.f90:44:20:
+
+   44 |       integer :: iyp              !none          |year currently being simulated
+      |                    1
+Warning: Unused variable ‘iyp’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/climate_control.f90:46:21:
+
+   46 |       real :: petmeas             !mm H2O        |potential ET value read in for day
+      |                     1
+Warning: Unused variable ‘petmeas’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_hru_init.f90:9:10:
+
+    9 |       use hydrograph_module, only : sp_ob, icmd
+      |          1
+Warning: Unused module variable ‘icmd’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_hru_init.f90:22:20:
+
+   22 |       integer :: ipl
+      |                    1
+Warning: Unused variable ‘ipl’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_hru_init.f90:23:17:
+
+   23 |       real :: wt1                !              |
+      |                 1
+Warning: Unused variable ‘wt1’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/command.f90:617:3:
+
+  617 | 103   format(4i6,2i8,2x,a,35f12.3)
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_rain.f90:15:10:
+
+   15 |       use hru_module, only : hru, ihru, timest
+      |          1
+Warning: Unused module variable ‘timest’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_uptake.f90:37:20:
+
+   37 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_uptake.f90:14:10:
+
+   14 |       use hru_module, only : ep_day, ihru
+      |          1
+Warning: Unused module variable ‘ep_day’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_uptake.f90:34:27:
+
+   34 |       real    :: irrig_mass         !kg          |total constituent mass in irrigation water
+      |                           1
+Warning: Unused variable ‘irrig_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_uptake.f90:35:34:
+
+   35 |       real    :: uptake_mass_total  !kg          |total uptake mass in soil layer
+      |                                  1
+Warning: Unused variable ‘uptake_mass_total’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_uptake_read.f90:16:32:
+
+   16 |       character (len=80) :: file      !           |filename
+      |                                1
+Warning: Unused variable ‘file’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_uptake_read.f90:19:36:
+
+   19 |       character (len=30) :: plnt_typ  !           |header of file
+      |                                    1
+Warning: Unused variable ‘plnt_typ’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/flow_dur_curve.f90:117:25:
+
+  117 |                 iyr_ch = (time%nbyr + 1.1) / 2
+      |                         1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_canl.f90:25:20:
+
+   25 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_chan_read.f90:15:81:
+
+   15 |       integer  i,j,k,in_chan,in_con,cell_ID,channel,chan_zone,dum1,dum2,chan_cell
+      |                                                                                 1
+Warning: Unused variable ‘chan_cell’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_chan_read.f90:15:16:
+
+   15 |       integer  i,j,k,in_chan,in_con,cell_ID,channel,chan_zone,dum1,dum2,chan_cell
+      |                1
+Warning: Unused variable ‘i’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_chan_read.f90:15:28:
+
+   15 |       integer  i,j,k,in_chan,in_con,cell_ID,channel,chan_zone,dum1,dum2,chan_cell
+      |                            1
+Warning: Unused variable ‘in_chan’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_chan_read.f90:15:35:
+
+   15 |       integer  i,j,k,in_chan,in_con,cell_ID,channel,chan_zone,dum1,dum2,chan_cell
+      |                                   1
+Warning: Unused variable ‘in_con’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_chem.f90:14:18:
+
+   14 |       integer :: s                          !       |solute counter
+      |                  1
+Warning: Unused variable ‘s’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_canl_out.f90:9:10:
+
+    9 |       use hydrograph_module, only : ch_stor
+      |          1
+Warning: Unused module variable ‘ch_stor’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_fpln.f90:27:23:
+
+   27 |       real :: bed_thick                  !m      |thickness of channel bed, in cell
+      |                       1
+Warning: Unused variable ‘bed_thick’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_fpln.f90:24:25:
+
+   24 |       real :: chan_length                !m      |length of channel, in cell
+      |                         1
+Warning: Unused variable ‘chan_length’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_fpln.f90:23:24:
+
+   23 |       real :: chan_width                 !m      |channel width
+      |                        1
+Warning: Unused variable ‘chan_width’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_fpln.f90:31:21:
+
+   31 |       real :: gw_head                    !m      |current groundwater head in cell
+      |                     1
+Warning: Unused variable ‘gw_head’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_gwet.f90:17:18:
+
+   17 |       integer :: s                          !       |solute counter
+      |                  1
+Warning: Unused variable ‘s’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_rech.f90:23:20:
+
+   23 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_ppag.f90:10:10:
+
+   10 |       use hru_module, only : hru,irrn,irrp
+      |          1
+Warning: Unused module variable ‘irrn’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_ppag.f90:10:10:
+
+   10 |       use hru_module, only : hru,irrn,irrp
+      |          1
+Warning: Unused module variable ‘irrp’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:2322:3:
+
+ 2322 | 103   format(10000(i8))
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:2320:3:
+
+ 2320 | 102   format(i4)
+      |   1
+Warning: Label 102 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:2315:3:
+
+ 2315 | 100   format(i6,i6,10(f10.2))
+      |   1
+Warning: Label 100 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:842:22:
+
+  842 |             channel = cell_channel(i) !channel connected to cell
+      |                      1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:854:22:
+
+  854 |             channel = cell_channel(i) !channel connected to cell
+      |                      1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:988:22:
+
+  988 |             channel = cell_channel(i) !channel connected to cell
+      |                      1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:1000:22:
+
+ 1000 |             channel = cell_channel(i) !channel connected to cell
+      |                      1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:1280:59:
+
+ 1280 |               gw_canl_out_info(gw_canal_ncells_out)%dayb = canal_out_info(canal,4)
+      |                                                           1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:1281:59:
+
+ 1281 |               gw_canl_out_info(gw_canal_ncells_out)%daye = canal_out_info(canal,5)
+      |                                                           1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:98:21:
+
+   98 |       integer :: cell                 !          |
+      |                     1
+Warning: Unused variable ‘cell’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:37:39:
+
+   37 |       character(len=13) :: cs_names(20),name
+      |                                       1
+Warning: Unused variable ‘cs_names’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:15:10:
+
+   15 |       use hru_module, only : hru
+      |          1
+Warning: Unused module variable ‘hru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:48:26:
+
+   48 |       integer :: sol_index            !          |index to keep track of number of solutes
+      |                          1
+Warning: Unused variable ‘sol_index’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_read.f90:16:10:
+
+   16 |       use reservoir_data_module, only : wet_dat
+      |          1
+Warning: Unused module variable ‘wet_dat’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:2310:3:
+
+ 2310 | 109   format(i8,i8,1000(e12.3))
+      |   1
+Warning: Label 109 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:2309:3:
+
+ 2309 | 108   format(i8,2x,50(e12.4))
+      |   1
+Warning: Label 108 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:2308:3:
+
+ 2308 | 106   format(i8,i8,i8,50(f12.3))
+      |   1
+Warning: Label 106 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:2306:3:
+
+ 2306 | 104   format(10000(f12.2))
+      |   1
+Warning: Label 104 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:2305:3:
+
+ 2305 | 103   format(i8,i8,i8,i8,i8,i8,i8,50(f15.3))
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:14:10:
+
+   14 |       use maximum_data_module, only : db_mx
+      |          1
+Warning: Unused module variable ‘db_mx’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:25:18:
+
+   25 |       integer  dum                    !           |dummy variable
+      |                  1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:15:10:
+
+   15 |       use calibration_data_module, only : lsu_out
+      |          1
+Warning: Unused module variable ‘lsu_out’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_simulate.f90:13:10:
+
+   13 |       use water_body_module, only: res_wat_d
+      |          1
+Warning: Unused module variable ‘res_wat_d’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/gwflow_wetl.f90:28:21:
+
+   28 |       real :: gw_mass                 !kg             |solute mass stored in groundwater cell
+      |                     1
+Warning: Unused variable ‘gw_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:135:3:
+
+  135 | 106   format (4i6,2i8,2x,a8,29f17.3)
+      |   1
+Warning: Label 106 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:134:3:
+
+  134 | 105   format (4i6,2i8,2x,a8,8f17.3)
+      |   1
+Warning: Label 105 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:133:3:
+
+  133 | 104   format (4i6,2i8,2x,a8,4f12.3,23f17.3)
+      |   1
+Warning: Label 104 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:132:3:
+
+  132 | 103   format (4i6,i8,4x,a,5x,4f12.3)
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:131:3:
+
+  131 | 102   format (4i6,2i8,2x,a,24f12.3)
+      |   1
+Warning: Label 102 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:130:3:
+
+  130 | 101   format (4i6,2i8,2x,a,24f12.3)
+      |   1
+Warning: Label 101 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:129:3:
+
+  129 | 100   format (4i6,2i8,2x,a,40f12.3)
+      |   1
+Warning: Label 100 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_carbon_output.f90:12:10:
+
+   12 |       use hru_module, only : hru
+      |          1
+Warning: Unused module variable ‘hru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_control.f90:7:10:
+
+    7 |       use hru_module, only : hru, ihru, tillage_switch,                                           &
+      |          1
+Warning: Unused module variable ‘satexn’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_output.f90:281:3:
+
+  281 | 106   format (4i6,2i8,2x,a8,29f17.3)
+      |   1
+Warning: Label 106 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_output.f90:280:3:
+
+  280 | 105   format (4i6,2i8,2x,a8,8f17.3)
+      |   1
+Warning: Label 105 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_pathogen_output.f90:103:3:
+
+  103 | 103   format (2i6,i8,4x,a,5x,11e12.3)
+      |   1
+Warning: Label 103 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_pathogen_output.f90:102:3:
+
+  102 | 102   format (4i6,2i8,2x,a,11e12.3)
+      |   1
+Warning: Label 102 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hru_pathogen_output.f90:101:3:
+
+  101 | 101   format (4i6,2i8,2x,a,11e12.3)
+      |   1
+Warning: Label 101 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/hyd_connect.f90:15:10:
+
+   15 |       use gwflow_module, only: nat_model
+      |          1
+Warning: Unused module variable ‘nat_model’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/lsu_output.f90:263:3:
+
+  263 | 104   format (4i6,i8,a,2x,a,6f12.3,29f17.3)
+      |   1
+Warning: Label 104 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/mgt_sched.f90:444:129:
+
+  444 |             hru(j)%irr_src = mgt%op_plant                   !irrigation source: cha; res; aqu; or unlim
+      |                                                                                                                                 1
+Warning: CHARACTER expression will be truncated in assignment (5/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/plant_init.f90:115:53:
+
+  115 |           pcom(j)%pl(ipl) = pcomdb(icom)%pl(ipl)%cpnm
+      |                                                     1
+Warning: CHARACTER expression will be truncated in assignment (4/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/plant_init.f90:361:49:
+
+  361 |         hru(iihru)%luse%urb_ro = lum(ilum)%urb_ro
+      |                                                 1
+Warning: CHARACTER expression will be truncated in assignment (16/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_nut.f90:87:3:
+
+   87 | 100   format(i8,i8,100e16.8)
+      |   1
+Warning: Label 100 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_nut.f90:19:20:
+
+   19 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_salt.f90:35:32:
+
+   35 |       integer :: isalt,jj,kk,dum
+      |                                1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_salt.f90:32:25:
+
+   32 |       integer :: iexco_om
+      |                         1
+Warning: Unused variable ‘iexco_om’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_salt.f90:34:26:
+
+   34 |       integer :: iexo_allo = 0
+      |                          1
+Warning: Unused variable ‘iexo_allo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_salt.f90:33:23:
+
+   33 |       integer :: ifirst               !           |
+      |                       1
+Warning: Unused variable ‘ifirst’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_salt.f90:29:20:
+
+   29 |       integer :: ipc                  !none       |counter
+      |                    1
+Warning: Unused variable ‘ipc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_cs.f90:33:25:
+
+   33 |       integer :: iexco_om
+      |                         1
+Warning: Unused variable ‘iexco_om’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_cs.f90:35:26:
+
+   35 |       integer :: iexo_allo = 0
+      |                          1
+Warning: Unused variable ‘iexo_allo’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_cs.f90:34:23:
+
+   34 |       integer :: ifirst               !           |
+      |                       1
+Warning: Unused variable ‘ifirst’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/recall_read_cs.f90:30:20:
+
+   30 |       integer :: ipc                  !none       |counter
+      |                    1
+Warning: Unused variable ‘ipc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_cs.f90:24:24:
+
+   24 |       real    :: cs_conc           !concentration of constituent in reservoir water (g/m3 = mg/L)
+      |                        1
+Warning: Unused variable ‘cs_conc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_cs.f90:22:24:
+
+   22 |       real    :: cs_mass           !mass of constituent in reservoir water (kg)
+      |                        1
+Warning: Unused variable ‘cs_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_cs.f90:23:28:
+
+   23 |       real    :: cs_mass_out       !mass of constituent leaving the reservoir via outflow (kg)
+      |                            1
+Warning: Unused variable ‘cs_mass_out’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_cs.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody
+      |          1
+Warning: Unused module variable ‘resz’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_cs.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody
+      |          1
+Warning: Unused module variable ‘wbody’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_initial.f90:44:18:
+
+   44 |           lnvol = Log10(res_ob(ires)%evol) - Log10(res_ob(ires)%pvol)
+      |                  1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/rls_routesoil.f90:34:16:
+
+   34 |           dep = soil(j)%phys(lyr)%d
+      |                1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ru_output.f90:64:3:
+
+   64 | 102   format (4i6,2i8,25f15.3)
+      |   1
+Warning: Label 102 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ru_output.f90:63:3:
+
+   63 | 100   format (4i6,2i8,25f15.3)
+      |   1
+Warning: Label 100 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:105:18:
+
+  105 |       I_Prep_in = IonStr
+      |                  1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:207:29:
+
+  207 |       cs_aqu(iaq)%saltc(1) = upion1
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:208:29:
+
+  208 |       cs_aqu(iaq)%saltc(2) = upion2
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:209:29:
+
+  209 |       cs_aqu(iaq)%saltc(3) = upion3
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:210:29:
+
+  210 |       cs_aqu(iaq)%saltc(4) = upion4
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:211:29:
+
+  211 |       cs_aqu(iaq)%saltc(5) = upion5
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:212:29:
+
+  212 |       cs_aqu(iaq)%saltc(6) = upion6
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:213:29:
+
+  213 |       cs_aqu(iaq)%saltc(7) = upion7
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:214:29:
+
+  214 |       cs_aqu(iaq)%saltc(8) = upion8
+      |                             1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:228:24:
+
+  228 |       Sol_CaCO3_p(c5) = (Sol_CaCO3(c5)*100.0)/((1.855/(waterC*100.0))*1000.0)
+      |                        1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:229:24:
+
+  229 |       Sol_MgCO3_p(c5) = (Sol_MgCO3(c5)*100.0)/((1.855/(waterC*84.31))*1000.0)
+      |                        1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:230:24:
+
+  230 |       Sol_CaSO4_p(c5) = (Sol_CaSO4(c5)*100.0)/((1.855/(waterC*136.14))*1000.0)
+      |                        1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:231:24:
+
+  231 |       Sol_MgSO4_p(c5) = (Sol_MgSO4(c5)*100.0)/((1.855/(waterC*120.36))*1000.0)
+      |                        1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_chem_aqu.f90:232:24:
+
+  232 |       Sol_NaCl_p(c5)  = (Sol_NaCl(c5)*100.0)/((1.855/(waterC*58.44))*1000.0)
+      |                        1
+Warning: Possible change of value in conversion from REAL(8) to REAL(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_hru_init.f90:12:10:
+
+   12 |       use hydrograph_module, only : sp_ob, icmd
+      |          1
+Warning: Unused module variable ‘icmd’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_hru_init.f90:25:17:
+
+   25 |       real :: wt1                !              |
+      |                 1
+Warning: Unused variable ‘wt1’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt.f90:28:20:
+
+   28 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_roadsalt.f90:15:10:
+
+   15 |       use hru_module, only : hru, ihru, timest
+      |          1
+Warning: Unused module variable ‘timest’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_rain.f90:15:10:
+
+   15 |       use hru_module, only : hru, ihru, timest
+      |          1
+Warning: Unused module variable ‘timest’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_uptake_read.f90:16:32:
+
+   16 |       character (len=80) :: file      !           |filename
+      |                                1
+Warning: Unused variable ‘file’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_uptake_read.f90:19:36:
+
+   19 |       character (len=30) :: plnt_typ  !           |header of file
+      |                                    1
+Warning: Unused variable ‘plnt_typ’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_uptake.f90:37:20:
+
+   37 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_uptake.f90:14:10:
+
+   14 |       use hru_module, only : ep_day, ihru
+      |          1
+Warning: Unused module variable ‘ep_day’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_uptake.f90:34:27:
+
+   34 |       real    :: irrig_mass         !kg          |total salt mass in irrigation water
+      |                           1
+Warning: Unused variable ‘irrig_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_uptake.f90:35:34:
+
+   35 |       real    :: uptake_mass_total  !kg          |total uptake mass in soil layer
+      |                                  1
+Warning: Unused variable ‘uptake_mass_total’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sim_initday.f90:49:21:
+
+   49 |       integer :: ires           !none             |counter
+      |                     1
+Warning: Unused variable ‘ires’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/soils_init.f90:32:46:
+
+   32 |         sol(isol)%s%snam = soildb(isol)%s%snam
+      |                                              1
+Warning: CHARACTER expression will be truncated in assignment (16/20) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sq_greenampt.f90:190:5:
+
+  190 |  5002 format(i5,t12,f5.2,t24,f6.2,t36,f6.2,t47,f7.2,t61,f6.2,t73,f6.2,     &
+      |     1
+Warning: Label 5002 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sq_greenampt.f90:184:5:
+
+  184 |  5001 format(t2,"Time",t9,"Incremental",t22,"Cumulative",t35,"Rainfall",   &
+      |     1
+Warning: Label 5001 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sq_greenampt.f90:182:5:
+
+  182 |  5000 format(//,"Excess rainfall calculation for day ",i3," of year ",   &
+      |     1
+Warning: Label 5000 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/surface.f90:80:4:
+
+   80 | 1010  format (2(i4,1x),a5,a4,1x,10f8.3)
+      |    1
+Warning: Label 1010 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swift_output.f90:30:29:
+
+   30 |       logical :: folderExists
+      |                             1
+Warning: Unused variable ‘folderexists’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swift_output.f90:25:20:
+
+   25 |       integer :: iob
+      |                    1
+Warning: Unused variable ‘iob’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swift_output.f90:23:25:
+
+   23 |       integer :: iobj_out
+      |                         1
+Warning: Unused variable ‘iobj_out’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swift_output.f90:24:21:
+
+   24 |       integer :: irec
+      |                     1
+Warning: Unused variable ‘irec’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swift_output.f90:27:34:
+
+   27 |       character (len=8) :: wet_y_n
+      |                                  1
+Warning: Unused variable ‘wet_y_n’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swr_percmain.f90:41:10:
+
+   41 |       use gwflow_module, only : gw_soil_flag,gw_solute_flag !rtb gwflow
+      |          1
+Warning: Unused module variable ‘gw_soil_flag’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swr_percmain.f90:41:10:
+
+   41 |       use gwflow_module, only : gw_soil_flag,gw_solute_flag !rtb gwflow
+      |          1
+Warning: Unused module variable ‘gw_solute_flag’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/swr_percmain.f90:36:10:
+
+   36 |       use hru_module, only : hru, ihru, i_sep, inflpcp, isep, latlyr, latq, lyrtile, qstemm, sepbtm, sepcrktot, sepday,   &
+      |          1
+Warning: Unused module variable ‘gwsoilq’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_cs.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_cs.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘resz’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_cs.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘wbody’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_irrp.f90:43:17:
+
+   43 |           isrc = hru(j)%irr_isc
+      |                 1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_salt.f90:21:20:
+
+   21 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_salt.f90:19:21:
+
+   19 |       integer :: iwst              !none          |weather station number
+      |                     1
+Warning: Unused variable ‘iwst’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_salt.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘ob’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_salt.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_salt.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘resz’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wet_salt.f90:9:10:
+
+    9 |       use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      |          1
+Warning: Unused module variable ‘wbody’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wetland_control.f90:5:10:
+
+    5 |       use hru_module, only : hru, sedyld, sanyld, silyld, clayld, sagyld, lagyld, grayld, sedminps, sedminpa,   &
+      |          1
+Warning: Unused module variable ‘pet_day’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_cs_output.f90:19:20:
+
+   19 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/ch_cs_output.f90:20:18:
+
+   20 |       integer :: n
+      |                  1
+Warning: Unused variable ‘n’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/conditions.f90:480:25:
+
+  480 |               days_tot = d_tbl%cond(ic)%lim_const - d_tbl%cond(ic)%ob_num + 1
+      |                         1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/conditions.f90:495:27:
+
+  495 |                 days_tot = d_tbl%cond(ic)%lim_const
+      |                           1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/conditions.f90:519:32:
+
+  519 |               d_tbl%days_prob = d_tbl%cond(ic)%lim_const
+      |                                1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/conditions.f90:554:25:
+
+  554 |               days_tot = time%day_end_yr - d_tbl%cond(ic)%lim_const + d_tbl%cond(ic)%ob_num
+      |                         1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/conditions.f90:57:21:
+
+   57 |       real :: var_cur
+      |                     1
+Warning: Unused variable ‘var_cur’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_divert.f90:12:10:
+
+   12 |       use hru_module, only : hru
+      |          1
+Warning: Unused module variable ‘hru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_divert.f90:11:10:
+
+   11 |       use hydrograph_module, only : irrig,res,sp_ob1,ob
+      |          1
+Warning: Unused module variable ‘irrig’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_divert.f90:38:65:
+
+   38 |       real :: mass_diff,ion_mass,res_mass,mass_initial,irrig_mass,gw_volume
+      |                                                                 1
+Warning: Unused variable ‘irrig_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_divert.f90:11:10:
+
+   11 |       use hydrograph_module, only : irrig,res,sp_ob1,ob
+      |          1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_divert.f90:36:26:
+
+   36 |       real :: vol_fraction                  !fraction of total volume from each source object
+      |                          1
+Warning: Unused variable ‘vol_fraction’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_divert.f90:35:23:
+
+   35 |       real :: vol_total                     !total volume (m3) withdrawn from source objects
+      |                       1
+Warning: Unused variable ‘vol_total’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_irrig.f90:11:10:
+
+   11 |       use hydrograph_module, only : irrig,res,sp_ob1,ob
+      |          1
+Warning: Unused module variable ‘irrig’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_irrig.f90:37:28:
+
+   37 |       real :: irrig_fraction                !fraction of irrigation water
+      |                            1
+Warning: Unused variable ‘irrig_fraction’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_irrig.f90:36:25:
+
+   36 |       real :: irrig_total                   !irrigation removed from source (m3)
+      |                         1
+Warning: Unused variable ‘irrig_total’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_irrig.f90:11:10:
+
+   11 |       use hydrograph_module, only : irrig,res,sp_ob1,ob
+      |          1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:676:4:
+
+  676 | 7002  format(i8,50f16.8)
+      |    1
+Warning: Label 7002 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:675:4:
+
+  675 | 7001  format(20e16.8)
+      |    1
+Warning: Label 7001 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:509:19:
+
+  509 |         num_days = float(time%day_mo)
+      |                   1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:529:19:
+
+  529 |         num_days = float(time%day_end_yr)
+      |                   1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:567:19:
+
+  567 |         num_days = time%days_prt
+      |                   1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:25:59:
+
+   25 |               aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
+      |                                                           1
+Warning: Unused variable ‘aquifer_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:25:31:
+
+   25 |               aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
+      |                               1
+Warning: Unused variable ‘aquifer_thickness’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:25:46:
+
+   25 |               aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
+      |                                              1
+Warning: Unused variable ‘aquifer_volume’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:24:46:
+
+   24 |       real :: cssum1,cssum2,cssum3,hru_area_m2,sol_thick,soil_volume,soil_mass, &
+      |                                              1
+Warning: Unused variable ‘hru_area_m2’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:11:10:
+
+   11 |       use hru_module, only : hru,ihru
+      |          1
+Warning: Unused module variable ‘ihru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:24:78:
+
+   24 |       real :: cssum1,cssum2,cssum3,hru_area_m2,sol_thick,soil_volume,soil_mass, &
+      |                                                                              1
+Warning: Unused variable ‘soil_mass’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:24:68:
+
+   24 |       real :: cssum1,cssum2,cssum3,hru_area_m2,sol_thick,soil_volume,soil_mass, &
+      |                                                                    1
+Warning: Unused variable ‘soil_volume’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:24:56:
+
+   24 |       real :: cssum1,cssum2,cssum3,hru_area_m2,sol_thick,soil_volume,soil_mass, &
+      |                                                        1
+Warning: Unused variable ‘sol_thick’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/cs_balance.f90:25:67:
+
+   25 |               aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
+      |                                                                   1
+Warning: Unused variable ‘sub_ha’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/header_const.f90:5:9:
+
+    5 |      use hydrograph_module, only : res, sp_ob
+      |         1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/header_salt.f90:5:9:
+
+    5 |      use hydrograph_module, only : res, sp_ob
+      |         1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/res_hydro.f90:35:21:
+
+   35 |       real :: alpha_e
+      |                     1
+Warning: Unused variable ‘alpha_e’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:480:4:
+
+  480 | 7001  format(20e16.8)
+      |    1
+Warning: Label 7001 at (1) defined but not used [-Wunused-label]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:363:19:
+
+  363 |         num_days = float(time%day_mo)
+      |                   1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:374:19:
+
+  374 |         num_days = float(time%day_end_yr)
+      |                   1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:388:19:
+
+  388 |         num_days = time%days_prt
+      |                   1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:26:48:
+
+   26 |       real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
+      |                                                1
+Warning: Unused variable ‘avg_conc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:26:70:
+
+   26 |       real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
+      |                                                                      1
+Warning: Unused variable ‘avg_load’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:11:10:
+
+   11 |       use hru_module, only : hru,ihru
+      |          1
+Warning: Unused module variable ‘ihru’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:24:43:
+
+   24 |       real :: saltsum,hru_area_m2,sol_thick,soil_volume,soil_mass, &
+      |                                           1
+Warning: Unused variable ‘sol_thick’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:25:67:
+
+   25 |               aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha,soil_thick
+      |                                                                   1
+Warning: Unused variable ‘sub_ha’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:26:22:
+
+   26 |       real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
+      |                      1
+Warning: Unused variable ‘sum_conc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_balance.f90:26:57:
+
+   26 |       real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
+      |                                                         1
+Warning: Unused variable ‘sum_load’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_irrig.f90:11:10:
+
+   11 |       use hydrograph_module, only : irrig,res,sp_ob1,ob
+      |          1
+Warning: Unused module variable ‘irrig’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_irrig.f90:37:28:
+
+   37 |       real :: irrig_fraction                !fraction of irrigation water
+      |                            1
+Warning: Unused variable ‘irrig_fraction’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_irrig.f90:36:25:
+
+   36 |       real :: irrig_total                   !irrigation removed from source (m3)
+      |                         1
+Warning: Unused variable ‘irrig_total’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/salt_irrig.f90:11:10:
+
+   11 |       use hydrograph_module, only : irrig,res,sp_ob1,ob
+      |          1
+Warning: Unused module variable ‘res’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control.f90:29:21:
+
+   29 |       integer :: ihyd                 !              |
+      |                     1
+Warning: Unused variable ‘ihyd’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control.f90:27:20:
+
+   27 |       integer :: iob                  !              |
+      |                    1
+Warning: Unused variable ‘iob’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control.f90:15:10:
+
+   15 |       use water_allocation_module, only: wallo
+      |          1
+Warning: Unused module variable ‘wallo’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:51:15:
+
+   51 |       real :: a                       !m^2           |cross-sectional area of channel
+      |               1
+Warning: Unused variable ‘a’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:90:21:
+
+   90 |       real :: arc_len, hyd_radius, prot_len
+      |                     1
+Warning: Unused variable ‘arc_len’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:52:15:
+
+   52 |       real :: b                       !m             |bottom width of channel
+      |               1
+Warning: Unused variable ‘b’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:88:40:
+
+   88 |       real :: vel, cohes, vel_cr, b_coef, qcms, veg
+      |                                        1
+Warning: Unused variable ‘b_coef’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:96:21:
+
+   96 |       real :: bf_flow                 !m3/s          |bankfull flow rate * adjustment factor
+      |                     1
+Warning: Unused variable ‘bf_flow’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:53:15:
+
+   53 |       real :: c                       !none          |inverse of channel side slope
+      |               1
+Warning: Unused variable ‘c’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:48:20:
+
+   48 |       real :: chside                  !none          |change in horizontal distance per unit
+      |                    1
+Warning: Unused variable ‘chside’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:89:27:
+
+   89 |       real :: rad_curv, cla, pk_rto, vel_bend, vel_rch
+      |                           1
+Warning: Unused variable ‘cla’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:88:24:
+
+   88 |       real :: vel, cohes, vel_cr, b_coef, qcms, veg
+      |                        1
+Warning: Unused variable ‘cohes’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:65:19:
+
+   65 |       real :: const                   !              |
+      |                   1
+Warning: Unused variable ‘const’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:74:19:
+
+   74 |       real :: dep_e                   !              |
+      |                   1
+Warning: Unused variable ‘dep_e’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:40:28:
+
+   40 |       real :: erode_bank_cut          !cm            |widening caused by downcutting (both sides)
+      |                            1
+Warning: Unused variable ‘erode_bank_cut’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:87:20:
+
+   87 |       real :: flo_ls
+      |                    1
+Warning: Unused variable ‘flo_ls’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:25:20:
+
+   25 |       real :: flo_rt                  !m^3/s         |flow rate in reach for day
+      |                    1
+Warning: Unused variable ‘flo_rt’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:73:23:
+
+   73 |       real :: flood_dep               !              |
+      |                       1
+Warning: Unused variable ‘flood_dep’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:81:16:
+
+   81 |       real :: hc                      !m/yr          |head cut advance
+      |                1
+Warning: Unused variable ‘hc’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:90:33:
+
+   90 |       real :: arc_len, hyd_radius, prot_len
+      |                                 1
+Warning: Unused variable ‘hyd_radius’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:71:19:
+
+   71 |       integer :: ic                   !              |
+      |                   1
+Warning: Unused variable ‘ic’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:35:22:
+
+   35 |       integer :: ielem                !              |
+      |                      1
+Warning: Unused variable ‘ielem’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:32:21:
+
+   32 |       integer :: ihru                 !              |
+      |                     1
+Warning: Unused variable ‘ihru’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:29:21:
+
+   29 |       integer :: ihyd                 !              |
+      |                     1
+Warning: Unused variable ‘ihyd’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:68:19:
+
+   68 |       integer :: ii                   !none          |counter
+      |                   1
+Warning: Unused variable ‘ii’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:27:20:
+
+   27 |       integer :: iob                  !              |
+      |                    1
+Warning: Unused variable ‘iob’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:33:20:
+
+   33 |       integer :: iru                  !              |
+      |                    1
+Warning: Unused variable ‘iru’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:34:20:
+
+   34 |       integer :: ise                  !              |
+      |                    1
+Warning: Unused variable ‘ise’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:37:21:
+
+   37 |       integer :: iter
+      |                     1
+Warning: Unused variable ‘iter’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:60:24:
+
+   60 |       integer :: ivalint              !              |
+      |                        1
+Warning: Unused variable ‘ivalint’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:82:20:
+
+   82 |       integer :: max                  !              |
+      |                    1
+Warning: Unused variable ‘max’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:67:22:
+
+   67 |       real :: ob_const                !              |
+      |                      1
+Warning: Unused variable ‘ob_const’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:54:15:
+
+   54 |       real :: p                       !m             |wetting perimeter
+      |               1
+Warning: Unused variable ‘p’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:89:35:
+
+   89 |       real :: rad_curv, cla, pk_rto, vel_bend, vel_rch
+      |                                   1
+Warning: Unused variable ‘pk_rto’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:78:22:
+
+   78 |       real :: pr_ratio                !              |
+      |                      1
+Warning: Unused variable ‘pr_ratio’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:90:43:
+
+   90 |       real :: arc_len, hyd_radius, prot_len
+      |                                           1
+Warning: Unused variable ‘prot_len’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:88:46:
+
+   88 |       real :: vel, cohes, vel_cr, b_coef, qcms, veg
+      |                                              1
+Warning: Unused variable ‘qcms’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:57:18:
+
+   57 |       real :: qman                    !m^3/s or m/s  |flow rate or flow velocity
+      |                  1
+Warning: Unused variable ‘qman’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:89:22:
+
+   89 |       real :: rad_curv, cla, pk_rto, vel_bend, vel_rch
+      |                      1
+Warning: Unused variable ‘rad_curv’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:56:16:
+
+   56 |       real :: rh                      !m             |hydraulic radius
+      |                1
+Warning: Unused variable ‘rh’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:75:17:
+
+   75 |       real :: rto                     !none          |cloud cover factor
+      |                 1
+Warning: Unused variable ‘rto’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:80:23:
+
+   80 |       real :: shear_btm               !              |
+      |                       1
+Warning: Unused variable ‘shear_btm’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:79:26:
+
+   79 |       real :: shear_btm_cr            !              |
+      |                          1
+Warning: Unused variable ‘shear_btm_cr’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:69:21:
+
+   69 |       real :: sum_vol                 !              |
+      |                     1
+Warning: Unused variable ‘sum_vol’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:76:21:
+
+   76 |       real :: sumtime                 !              |
+      |                     1
+Warning: Unused variable ‘sumtime’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:63:16:
+
+   63 |       real :: tb                      !              |
+      |                1
+Warning: Unused variable ‘tb’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:62:19:
+
+   62 |       real :: tb_pr                   !              |
+      |                   1
+Warning: Unused variable ‘tb_pr’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:61:19:
+
+   61 |       real :: tbase                   !none          |flow duration (fraction of 24 hr)
+      |                   1
+Warning: Unused variable ‘tbase’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:59:20:
+
+   59 |       real :: valint                  !              |
+      |                    1
+Warning: Unused variable ‘valint’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:88:51:
+
+   88 |       real :: vel, cohes, vel_cr, b_coef, qcms, veg
+      |                                                   1
+Warning: Unused variable ‘veg’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:88:17:
+
+   88 |       real :: vel, cohes, vel_cr, b_coef, qcms, veg
+      |                 1
+Warning: Unused variable ‘vel’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:89:45:
+
+   89 |       real :: rad_curv, cla, pk_rto, vel_bend, vel_rch
+      |                                             1
+Warning: Unused variable ‘vel_bend’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:88:32:
+
+   88 |       real :: vel, cohes, vel_cr, b_coef, qcms, veg
+      |                                1
+Warning: Unused variable ‘vel_cr’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:89:54:
+
+   89 |       real :: rad_curv, cla, pk_rto, vel_bend, vel_rch
+      |                                                      1
+Warning: Unused variable ‘vel_rch’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:64:21:
+
+   64 |       real :: vol_ovb                 !              |
+      |                     1
+Warning: Unused variable ‘vol_ovb’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:72:24:
+
+   72 |       real :: vol_overmx              !              |
+      |                        1
+Warning: Unused variable ‘vol_overmx’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:15:10:
+
+   15 |       use water_allocation_module, only: wallo
+      |          1
+Warning: Unused module variable ‘wallo’ which has been explicitly imported at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/sd_channel_control3.f90:70:16:
+
+   70 |       real :: xx                      !              |
+      |                1
+Warning: Unused variable ‘xx’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/time_control.f90:129:29:
+
+  129 |           time%day_end_yr =  amin0 (time%day_end_yr, ndays(13))  ! if user inputs 366 on non-leap year
+      |                             1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/wallo_withdraw.f90:18:20:
+
+   18 |       integer :: dum
+      |                    1
+Warning: Unused variable ‘dum’ declared at (1) [-Wunused-variable]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:320:64:
+
+  320 |               d_tbl%act(iac)%option = sched(isched)%auto_crop(1)
+      |                                                                1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:323:77:
+
+  323 |               d_tbl%act(iac)%option = sched(isched)%auto_crop(pcom(j)%rot_yr)
+      |                                                                             1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:375:66:
+
+  375 |                 d_tbl%act(iac)%option = sched(isched)%auto_crop(1)
+      |                                                                  1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:378:79:
+
+  378 |                 d_tbl%act(iac)%option = sched(isched)%auto_crop(pcom(j)%rot_yr)
+      |                                                                               1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:456:63:
+
+  456 |                   pcom(j)%last_kill = pcomdb(icom)%pl(ipl)%cpnm
+      |                                                               1
+Warning: CHARACTER expression will be truncated in assignment (16/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:489:66:
+
+  489 |                 d_tbl%act(iac)%option = sched(isched)%auto_crop(1)
+      |                                                                  1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:492:79:
+
+  492 |                 d_tbl%act(iac)%option = sched(isched)%auto_crop(pcom(j)%rot_yr)
+      |                                                                               1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:522:63:
+
+  522 |                   pcom(j)%last_kill = pcomdb(icom)%pl(ipl)%cpnm
+      |                                                               1
+Warning: CHARACTER expression will be truncated in assignment (16/40) at (1) [-Wcharacter-truncation]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:567:29:
+
+  567 |             pcom(j)%rot_yr = d_tbl%act(iac)%const
+      |                             1
+Warning: Possible change of value in conversion from REAL(4) to INTEGER(4) at (1) [-Wconversion]
+/home/fgeter/csu-scripts/sp_test7/swatplus/src/actions.f90:869:43:
+
+  869 |             lu_prev = hru(j)%land_use_mgt_c
+      |                                           1
+Warning: CHARACTER expression will be truncated in assignment (25/40) at (1) [-Wcharacter-truncation]
