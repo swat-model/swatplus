@@ -16,7 +16,7 @@ Install the required packages in the order below. The Intel compiler requires Vi
 
 - Open a Windows terminal by pressing `Windows+r` and run `cmd`
 
-- In the terminal run the script `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
+- In the terminal run the script `C:\"Program Files (x86)"\Intel\oneAPI\setvars.bat`
 
 - In the same (!) terminal run the command `devenv`. This will start Visual Studio with the proper compiler settings.
 
