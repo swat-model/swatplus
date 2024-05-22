@@ -103,7 +103,7 @@
       type plant_community
        character(len=35) :: name
        integer :: npl                   !! number of plants in community
-       character(len=4), dimension(:), allocatable :: pl       !! N/A              |plant name
+       character(len=16), dimension(:), allocatable :: pl       !! N/A              |plant name
        integer :: pcomdb                !! current plant community database number
        integer :: rot_yr = 1            !! rotation year
        integer :: days_plant = 0        !!               |days since last planting - for conditional scheduling planting
