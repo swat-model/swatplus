@@ -163,19 +163,19 @@
       type (organic_flux) :: org_flux
       
       type carbon_soil_transformations
-          real :: meta_micr             !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
-          real :: str_micr              !(kg C ha-1 day-1) |C transformed from Structural Litter to S1 (Microbial Biomass)  
-          real :: str_hs                !(kg C ha-1 day-1) |C transformed from Structural Litter to S2 (Slow Humus)
-          real :: co2_meta              !(kg C ha-1 day-1) |CO2 production resulting from metabolic litter transformations               
-          real :: co2_str               !(kg C ha-1 day-1) |CO2 production resulting from lignin structural litter transformations  
-          real :: micr_hs               !(kg C ha-1 day-1) |C transformed from S1 (Microbial Biomass) to S2 (Slow Humus)    
-          real :: micr_hp               !(kg C ha-1 day-1) |C transformed from S1 (Microbial Biomass) to S3 (Passive Humus)  
-          real :: hs_micr               !(kg C ha-1 day-1) |C transformed from S2 (Slow Humus) to S1 (Microbial Biomass)  
-          real :: hs_hp                 !(kg C ha-1 day-1) |C transformed from S2 (Slow Humus) to S3 (Passive Humus)  
-          real :: hp_micr               !(kg C ha-1 day-1) |C transformed from  S3 (Passive Humus) to S1 (Microbial Biomass) 
-          real :: co2_micr              !(kg C ha-1 day-1) |CO2 production resulting from S1 (Microbial Biomass) transformations  
-          real :: co2_hs                !(kg C ha-1 day-1) |CO2 production resulting from S2 (Slow Humus)  transformations  
-          real :: co2_hp                !(kg C ha-1 day-1) |CO2 production resulting from S3 (Passive Humus) transformations  
+          real :: meta_micr = 0.            !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
+          real :: str_micr  = 0.           !(kg C ha-1 day-1) |C transformed from Structural Litter to S1 (Microbial Biomass)  
+          real :: str_hs    = 0.            !(kg C ha-1 day-1) |C transformed from Structural Litter to S2 (Slow Humus)
+          real :: co2_meta  = 0.            !(kg C ha-1 day-1) |CO2 production resulting from metabolic litter transformations               
+          real :: co2_str   = 0.            !(kg C ha-1 day-1) |CO2 production resulting from lignin structural litter transformations  
+          real :: micr_hs   = 0.            !(kg C ha-1 day-1) |C transformed from S1 (Microbial Biomass) to S2 (Slow Humus)    
+          real :: micr_hp   = 0.            !(kg C ha-1 day-1) |C transformed from S1 (Microbial Biomass) to S3 (Passive Humus)  
+          real :: hs_micr   = 0.            !(kg C ha-1 day-1) |C transformed from S2 (Slow Humus) to S1 (Microbial Biomass)  
+          real :: hs_hp     = 0.            !(kg C ha-1 day-1) |C transformed from S2 (Slow Humus) to S3 (Passive Humus)  
+          real :: hp_micr   = 0.            !(kg C ha-1 day-1) |C transformed from  S3 (Passive Humus) to S1 (Microbial Biomass) 
+          real :: co2_micr  = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S1 (Microbial Biomass) transformations  
+          real :: co2_hs    = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S2 (Slow Humus)  transformations  
+          real :: co2_hp    = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S3 (Passive Humus) transformations 
       end type carbon_soil_transformations
       type (carbon_soil_transformations) :: hscfz
       
