@@ -664,6 +664,7 @@
          case ("hc_ini")
             sd_ch(ielem)%hc_ini = chg_par(sd_ch(ielem)%hc_ini,            &
                          chg_typ, chg_val, absmin, absmax)
+            
          case ("ch_n_conc")
              sd_ch(ielem)%n_conc = chg_par (sd_ch(ielem)%n_conc, chg_typ, chg_val, absmin, absmax)
           
@@ -672,6 +673,50 @@
           
         case ("ch_p_bio")
              sd_ch(ielem)%p_bio = chg_par (sd_ch(ielem)%p_bio, chg_typ, chg_val, absmin, absmax)
+             
+         case ("pk_rto")
+            sd_ch(ielem)%pk_rto = chg_par(sd_ch(ielem)%pk_rto,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("fp_inun_days")
+            sd_ch(ielem)%fp_inun_days = chg_par(sd_ch(ielem)%fp_inun_days,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("n_setl")
+            sd_ch(ielem)%n_setl = chg_par(sd_ch(ielem)%n_setl,            &
+                         chg_typ, chg_val, absmin, absmax)
+            
+         case ("p_setl")
+            sd_ch(ielem)%p_setl = chg_par(sd_ch(ielem)%p_setl,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("n_sol_part")
+            sd_ch(ielem)%n_sol_part = chg_par(sd_ch(ielem)%n_sol_part,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("p_sol_part")
+            sd_ch(ielem)%p_sol_part = chg_par(sd_ch(ielem)%p_sol_part,            &
+                         chg_typ, chg_val, absmin, absmax)
+            
+         case ("n_dep_enr")
+            sd_ch(ielem)%n_dep_enr = chg_par(sd_ch(ielem)%n_dep_enr,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("p_dep_enr")
+            sd_ch(ielem)%p_dep_enr = chg_par(sd_ch(ielem)%p_dep_enr,            &
+                         chg_typ, chg_val, absmin, absmax)
+            
+         case ("arc_len_fr")
+            sd_ch(ielem)%arc_len_fr = chg_par(sd_ch(ielem)%arc_len_fr,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("part_size")
+            sd_ch(ielem)%part_size = chg_par(sd_ch(ielem)%part_size,            &
+                         chg_typ, chg_val, absmin, absmax)
+        
+         case ("wash_bed_fr")
+            sd_ch(ielem)%wash_bed_fr = chg_par(sd_ch(ielem)%wash_bed_fr,            &
+                         chg_typ, chg_val, absmin, absmax)
             
       !!RES
          case ("esa")

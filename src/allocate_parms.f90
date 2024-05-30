@@ -17,7 +17,7 @@
       
       integer :: mhru, mch, mpc
       
-!! initialize variables 
+!! initialize variables    
       mhyd = 1  !!added for jaehak vars
       mhru = sp_ob%hru
       mch = sp_ob%chan

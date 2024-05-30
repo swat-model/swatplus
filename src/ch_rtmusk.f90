@@ -130,6 +130,8 @@
         !! add inflow to total storage
         if (ht1%flo > 1.e-6) then
           rto = inflo / ht1%flo
+          rto = Max(0., rto)
+          rto = Min(1., rto)
           tot_stor(jrch) = tot_stor(jrch) + rto * ht1
         end if
         
@@ -140,25 +142,24 @@
           sd_ch(jrch)%in1_vol = 0.
           sd_ch(jrch)%out1_vol = 0.
         else
-          !***jga
-          !sd_ch(jrch)%msk%c1 = 0.00     !0.1358
-          !sd_ch(jrch)%msk%c2 = 0.2      !0.481484
-          !sd_ch(jrch)%msk%c3 = 0.8      !0.382716
+          if (bsn_cc%rte == 1) then
           !! Muskingum flood routing method
-          outflo = sd_ch(jrch)%msk%c1 * inflo + sd_ch(jrch)%msk%c2 * sd_ch(jrch)%in1_vol +     &
+            outflo = sd_ch(jrch)%msk%c1 * inflo + sd_ch(jrch)%msk%c2 * sd_ch(jrch)%in1_vol +     &
                                                 sd_ch(jrch)%msk%c3 * sd_ch(jrch)%out1_vol
-	      outflo = Min (outflo, tot_stor(jrch)%flo)
-          outflo = Max (outflo, 0.)
+	        outflo = Min (outflo, tot_stor(jrch)%flo)
+            outflo = Max (outflo, 0.)
                
-          !! save inflow/outflow volumes for next time step (and day) for Muskingum
-          sd_ch(jrch)%in1_vol = inflo
-          sd_ch(jrch)%out1_vol = outflo
+            !! save inflow/outflow volumes for next time step (and day) for Muskingum
+            sd_ch(jrch)%in1_vol = inflo
+            sd_ch(jrch)%out1_vol = outflo
+          else
 
-          !! Variable Storage Coefficent method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
-          scoef = 2. * dthr / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + dthr)
-          !scoef = Min (scoef, 1.)
-          !outflo = scoef * tot_stor(jrch)%flo
-        
+            !! Variable Storage Coefficent method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
+            scoef = 2. * dthr / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + dthr)
+            scoef = Min (scoef, 1.)
+            outflo = scoef * tot_stor(jrch)%flo
+          end if
+          
           !! compute outflow rating curve for next time step
           outflo_rate = outflo / dts      !convert to cms
           call rcurv_interp_flo (jrch, outflo_rate)
@@ -188,28 +189,26 @@
           end if
         
           !! if flood plain link - fill wetlands to emergency if flood plain storage available
-          !if (bsn_cc%i_fpwet == 2) then
-            do ihru = 1, sd_ch(jrch)%fp%hru_tot
-              iihru = sd_ch(jrch)%fp%hru(ihru)
-              ires= hru(iihru)%dbs%surf_stor
-              !! wetland storage can't go above emergency in release dtbl - it becomes flood plain storage
-              if (ires > 0 .and. fp_stor(jrch)%flo > 0.) then
-                if (fp_stor(jrch)%flo > (wet_ob(iihru)%evol - wet(iihru)%flo)) then
-                  rto = (wet_ob(iihru)%evol - wet(iihru)%flo) / fp_stor(jrch)%flo
-                  if (rto > 1.e-6) then
-                    wet(iihru) = wet(iihru) + rto * fp_stor(jrch)
-                    hru(iihru)%wet_obank_in = (rto * fp_stor(jrch)%flo) / (10. * hru(iihru)%area_ha)
-                    rto1 = 1. - rto
-                    fp_stor(jrch) = rto1 * fp_stor(jrch)
-                  end if
-                else
-                  wet(iihru) = wet(iihru) + fp_stor(jrch)
-                  hru(iihru)%wet_obank_in = fp_stor(jrch)%flo /  (10. * hru(iihru)%area_ha) 
-                  fp_stor(jrch) = hz
+          do ihru = 1, sd_ch(jrch)%fp%hru_tot
+            iihru = sd_ch(jrch)%fp%hru(ihru)
+            ires= hru(iihru)%dbs%surf_stor
+            !! wetland storage can't go above emergency in release dtbl - it becomes flood plain storage
+            if (ires > 0 .and. fp_stor(jrch)%flo > 0.) then
+              if (fp_stor(jrch)%flo > (wet_ob(iihru)%evol - wet(iihru)%flo)) then
+                rto = (wet_ob(iihru)%evol - wet(iihru)%flo) / fp_stor(jrch)%flo
+                if (rto > 1.e-6) then
+                  wet(iihru) = wet(iihru) + rto * fp_stor(jrch)
+                  hru(iihru)%wet_obank_in = (rto * fp_stor(jrch)%flo) / (10. * hru(iihru)%area_ha)
+                  rto1 = 1. - rto
+                  fp_stor(jrch) = rto1 * fp_stor(jrch)
                 end if
+              else
+                wet(iihru) = wet(iihru) + fp_stor(jrch)
+                hru(iihru)%wet_obank_in = fp_stor(jrch)%flo /  (10. * hru(iihru)%area_ha) 
+                fp_stor(jrch) = hz
               end if
-            end do
-          !end if
+            end if
+          end do
         
           tot_stor(jrch) = ch_stor(jrch) + fp_stor(jrch)
           
