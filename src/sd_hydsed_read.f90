@@ -66,6 +66,41 @@
       end do
       end if
 
+      inquire (file="sed_nut.cha", exist=i_exist)
+      if (.not. i_exist .or. "sed_nut.cha" == "null") then
+        allocate (sd_chd1(1))
+      else
+      do
+        open (1,file="sed_nut.cha")
+        read (1,*,iostat=eof) titldum
+        if (eof < 0) exit
+        read (1,*,iostat=eof) header
+        if (eof < 0) exit
+          do while (eof == 0)
+            read (1,*,iostat=eof) titldum
+            if (eof < 0) exit
+            imax = imax + 1
+          end do  
+          
+        db_mx%ch_sednut = imax
+           
+        allocate (sd_chd1(0:imax))
+
+        rewind (1)
+        read (1,*,iostat=eof) titldum
+        if (eof < 0) exit
+        read (1,*,iostat=eof) header
+        if (eof < 0) exit
+        
+        do idb = 1, db_mx%ch_sednut
+          read (1,*,iostat=eof) sd_chd1(idb)
+          if (eof < 0) exit
+        end do
+
+        exit
+      end do
+      end if
+
       close (1)
       return
       end subroutine sd_hydsed_read

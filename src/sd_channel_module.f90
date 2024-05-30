@@ -37,6 +37,67 @@
       end type swatdeg_hydsed_data
       type (swatdeg_hydsed_data), dimension (:), allocatable :: sd_chd
       
+      type swatdeg_sednut_data
+        character(len=25) :: name
+        character(len=16) :: order
+        real :: pk_rto = 1.         !ratio      |ratio of peak to mean daily flow in channel
+        real :: fp_inun_days = 5.   !days       |number of days fllod plain is inundated after flood
+        real :: n_setl = 0.5        !ratio      |ratio of amount of N settling and sediment settling
+        real :: p_setl = 0.5        !ratio      |ratio of amount of P settling and sediment settling
+        real :: n_sol_part = 0.01   !           |instream nitrogen soluble to particulate transformation coefficient
+        real :: p_sol_part = 0.01   !           |instream phosphorus soluble to particulate transformation coefficient
+        real :: n_dep_enr = 0.5     !           |enrichment of N in remaining water - deposition = 1/enrichment ratio
+        real :: p_dep_enr = 0.5     !           |enrichment of P in remaining water - deposition = 1/enrichment ratio
+        real :: arc_len_fr = 1.2    !frac       |fraction of arc length where bank erosion occurs
+        real :: part_size = 0.002   !mm         |particle size of channel washload
+        real :: wash_bed_fr = 0.1   !frac       |fraction of bank erosion that is washload
+      end type swatdeg_sednut_data
+      type (swatdeg_sednut_data), dimension (:), allocatable :: sd_chd1
+      
+      !! channel sediment budget for output
+      type channel_sediment_budget_output
+        real :: in_sed = 0.         !t          |incoming sediment to channel
+        real :: out_sed = 0.        !t          |outgoing sediment from channel
+        real :: fp_dep = 0.         !t          |flood plain deposition
+        real :: ch_dep = 0.         !t          |channel deposition
+        real :: bank_ero = 0.       !t          |channel bank erosion
+        real :: bed_ero = 0.        !t          |channel bed erosion
+        real :: in_no3 = 0.         !t          |incoming no3 to channel
+        real :: in_orgn = 0.        !t          |incoming organic n to channel
+        real :: out_no3 =  0.       !t          |outgoing no3 from channel
+        real :: out_orgn =  0.      !t          |outgoing organic n from channel
+        real :: fp_no3 = 0.         !t          |flood plain no3 lost
+        real :: bank_no3 = 0.       !t          |bank no3 gain
+        real :: bed_no3 = 0.        !t          |bed no3 gain
+        real :: fp_orgn = 0.        !t          |flood plain organic n deposited
+        real :: ch_orgn = 0.        !t          |channel organic n deposited
+        real :: bank_orgn = 0.      !t          |bank organic n gain from erosion
+        real :: bed_orgn = 0.       !t          |bed organic n gain from erosion
+        real :: in_solp = 0.        !t          |incoming soluble p to channel
+        real :: in_orgp = 0.        !t          |incoming organic p to channel
+        real :: out_solp =  0.      !t          |outgoing soluble p from channel
+        real :: out_orgp =  0.      !t          |outgoing organic p from channel
+        real :: fp_solp = 0.        !t          |flood plain soluble p lost
+        real :: bank_solp = 0.      !t          |bank no3 gain
+        real :: bed_solp = 0.       !t          |bed no3 gain
+        real :: fp_orgp =  0.       !t          |flood plain organic p deposited
+        real :: ch_orgp = 0.        !t          |channel organic p deposited
+        real :: bank_orgp = 0.      !t          |bank organic p gain from erosion
+        real :: bed_orgp = 0.       !t          |bed organic n gain from erosion
+        real :: no3_orgn = 0.       !t          |in channel transformation from no3 to organic n
+        real :: solp_orgp = 0.      !t          |in channel transformation from no3 to organic n
+      end type channel_sediment_budget_output
+      type (channel_sediment_budget_output), dimension (:), allocatable :: ch_sed_bud
+      type (channel_sediment_budget_output), dimension (:), allocatable :: ch_sed_bud_m, ch_sed_bud_y, ch_sed_bud_a
+      type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
+
+      type channel_morphology_output
+        real :: w_yr = 0.           !ratio      |bank cutting - widths per year 
+        real :: d_yr = 0.           !ratio      |bed down cutting - depths per year
+        real :: fp_mm = 0.          !mm/yr      |flood plain deposition - uniform across the flood plain
+      end type channel_morphology_output
+      type (channel_morphology_output), dimension (:), allocatable :: ch_morph
+      
       type gully_data
         character(len=16) :: name
         real :: hc_kh           !           |headcut erodibility
@@ -66,6 +127,7 @@
         integer :: hyd = 1
         integer :: sed = 1
         integer :: nut = 1
+        integer :: sednut = 1
       end type swatdeg_datafiles
       type (swatdeg_datafiles), dimension(:),allocatable :: sd_dat
       
@@ -117,6 +179,17 @@
         real :: n_conc = 0.         !mg/kg      |nitrogen concentration in channel bank
         real :: p_conc = 0.         !mg/kg      |phosphorus concentration in channel bank
         real :: p_bio = 0.          !frac       |fraction of p in bank that is bioavailable
+        real :: pk_rto = 1.         !ratio      |ratio of peak to mean daily flow in channel
+        real :: fp_inun_days = 5.   !days       |number of days fllod plain is inundated after flood
+        real :: n_setl = 0.5        !ratio      |ratio of amount of N settling and sediment settling
+        real :: p_setl = 0.5        !ratio      |ratio of amount of P settling and sediment settling
+        real :: n_sol_part = 0.01   !frac       |instream nitrogen soluble to particulate transformation coefficient
+        real :: p_sol_part = 0.01   !frac       |instream phosphorus soluble to particulate transformation coefficient
+        real :: n_dep_enr = 0.5     !           |enrichment of N in remaining water - deposition = 1/enrichment ratio
+        real :: p_dep_enr = 0.5     !           |enrichment of P in remaining water - deposition = 1/enrichment ratio
+        real :: arc_len_fr = 1.2    !frac       |fraction of arc length where bank erosion occurs
+        real :: part_size = 0.002   !mm         |particle size of channel washload
+        real :: wash_bed_fr = 0.2   !frac       |fraction of bank erosion that is washload
         real :: hc_kh = 0.
         real :: hc_hgt = 0.     !m          |headcut height
         real :: hc_ini = 0.
@@ -280,7 +353,92 @@
           character(len=16) :: dep_bf     =  "     m/s       "        ! (m/s)
           character(len=16) :: velav_bf   =  "     m/s       "        ! (m/s)
       end type sdch_header_units
-      type (sdch_header_units) :: sdch_hdr_units   
+      type (sdch_header_units) :: sdch_hdr_units  
+      
+      
+!!    SD_CHAN_BUD_HEADERS      
+      type sdch_bud
+          character (len=6) :: day        =  "  jday"
+          character (len=6) :: mo         =  "   mon"
+          character (len=6) :: day_mo     =  "   day"
+          character (len=6) :: yrc        =  "    yr"
+          character (len=8) :: isd        =  "   unit "
+          character (len=8) :: id         =  " gis_id "           
+          character (len=16) :: name      =  " name          "          
+          character(len=16) :: in_sed     =  "         in_sed"        ! (tons)
+          character(len=16) :: out_sed    =  "        out_sed"        ! (tons)
+          character(len=16) :: fp_dep     =  "       fp_dep  "        ! (tons)
+          character(len=16) :: ch_dep     =  "      ch_dep   "        ! (tons)
+          character(len=16) :: bank_ero   =  "    bank_ero   "        ! (tons)
+          character(len=16) :: bed_ero    =  "    bed_ero    "        ! (tons)
+          character(len=16) :: in_no3     =  "    in_no3     "        ! (tons)
+          character(len=16) :: in_orgn    =  "  in_orgn      "        ! (tons)
+          character(len=15) :: out_no3    =  " out_no3      "         ! (tons)
+          character(len=16) :: out_orgn   =  "out_orgn       "        ! (tons)
+          character(len=15) :: fp_no3     =  " fp_no3       "        ! (tons)
+          character(len=15) :: bank_no3   =  "bank_no3      "        ! (tons)
+          character(len=15) :: bed_no3    =  "bed_no3       "        ! (tons)
+          character(len=15) :: fp_orgn    =  "fp_orgn       "        ! (tons)
+          character(len=15) :: ch_orgn    =  "ch_orgn       "        ! (tons)
+          character(len=15) :: bank_orgn  =  "bank_orgn     "        ! (tons)
+          character(len=15) :: bed_orgn   =  "bed_orgn      "        ! (tons)
+          character(len=15) :: in_solp    =  "in_solp       "        ! (tons)
+          character(len=15) :: in_orgp    =  "in_orgp       "        ! (tons)
+          character(len=15) :: out_solp   =  "out_solp      "        ! (tons)
+          character(len=15) :: out_orgp   =  "out_orgp      "        ! (tons)
+          character(len=15) :: fp_solp    =  "fp_solp       "        ! (tons)
+          character(len=15) :: bank_solp  =  "bank_solp     "        ! (tons)
+          character(len=15) :: bed_solp   =  "bed_solp      "        ! (tons)
+          character(len=15) :: fp_orgp    =  "fp_orgp       "        ! (tons)
+          character(len=15) :: ch_orgp    =  "ch_orgp       "        ! (tons)
+          character(len=15) :: bank_orgp  =  "bank_orgp     "        ! (tons)
+          character(len=15) :: bed_orgp   =  "bed_orgp      "        ! (tons)
+          character(len=15) :: no3_orgn   =  "no3_orgn      "        ! (tons)
+          character(len=15) :: solp_orgp  =  "solp_orgp     "        ! (tons)
+      end type sdch_bud
+      type (sdch_bud) :: sdch_bud_hdr
+      
+      type sdch_bud_units
+          character (len=6) :: day        =  "      "
+          character (len=6) :: mo         =  "      "
+          character (len=6) :: day_mo     =  "      "
+          character (len=6) :: yrc        =  "      "
+          character (len=8) :: isd        =  "        "
+          character (len=8) :: id         =  "        "           
+          character (len=16) :: name      =  "              "        
+          character(len=16) :: in_sed     =  "           tons"       ! (tons)
+          character(len=16) :: out_sed    =  "           tons"       ! (tons)      
+          character(len=16) :: fp_dep     =  "         tons  "       ! (tons) 
+          character(len=16) :: ch_dep     =  "        tons   "       ! (tons)
+          character(len=16) :: bank_ero   =  "        tons   "       ! (tons)
+          character(len=16) :: bed_ero    =  "       tons    "       ! (tons)
+          character(len=16) :: in_no3     =  "      tons     "       ! (tons)
+          character(len=16) :: in_orgn    =  "     tons      "       ! (tons)
+          character(len=15) :: out_no3    =  "    tons       "       ! (tons)
+          character(len=16) :: out_orgn   =  "   tons        "       ! (tons)
+          character(len=15) :: fp_no3     =  "  tons        "       ! (tons)
+          character(len=15) :: bank_no3   =  "  tons        "       ! (tons)
+          character(len=15) :: bed_no3    =  "  tons        "       ! (tons)
+          character(len=16) :: fp_orgn    =  "  tons        "       ! (tons)
+          character(len=15) :: ch_orgn    =  "  tons        "       ! (tons)
+          character(len=15) :: bank_orgn  =  "  tons        "       ! (tons)
+          character(len=15) :: bed_orgn   =  "  tons        "       ! (tons)
+          character(len=15) :: in_solp    =  "  tons        "       ! (tons)
+          character(len=15) :: in_orgp    =  "  tons        "       ! (tons)
+          character(len=15) :: out_solp   =  "  tons        "       ! (tons)      
+          character(len=15) :: out_orgp   =  "  tons        "       ! (tons) 
+          character(len=15) :: fp_solp    =  "  tons        "       ! (tons)
+          character(len=15) :: bank_solp  =  "  tons        "       ! (tons)
+          character(len=15) :: bed_solp   =  "  tons        "       ! (tons)
+          character(len=15) :: fp_orgp    =  "  tons        "       ! (tons)
+          character(len=15) :: ch_orgp    =  "  tons        "       ! (tons)
+          character(len=15) :: bank_orgp  =  "  tons        "       ! (tons)
+          character(len=15) :: bed_orgp   =  "  tons        "       ! (tons)
+          character(len=15) :: no3_orgp   =  "  tons        "       ! (tons)
+          character(len=15) :: solp_orgp  =  "  tons        "       ! (tons)
+      end type sdch_bud_units
+      type (sdch_bud_units) :: sdch_bud_hdr_units   
+!!    SD_CHAN_BUD_HEADERS      
       
       type sdch_header_sub
           character (len=6) :: day        =  "  jday"
@@ -328,9 +486,89 @@
         module procedure chrc_mult
       end interface 
              
+      interface operator (+)
+        module procedure chsednut_add
+      end interface
+      
+      interface operator (/)
+        module procedure chsednut_div
+      end interface
+              
       contains
 !! routines for swatdeg_hru module
 
+      function chsednut_add(cho1,cho2) result (cho3)
+      type (channel_sediment_budget_output),  intent (in) :: cho1
+      type (channel_sediment_budget_output),  intent (in) :: cho2
+      type (channel_sediment_budget_output) :: cho3
+        cho3%in_sed = cho1%in_sed + cho2%in_sed
+        cho3%out_sed = cho1%out_sed + cho2%out_sed
+        cho3%fp_dep = cho1%fp_dep + cho2%fp_dep
+        cho3%ch_dep = cho1%ch_dep + cho2%ch_dep
+        cho3%bank_ero = cho1%bank_ero + cho2%bank_ero
+        cho3%bed_ero = cho1%bed_ero + cho2%bed_ero
+        cho3%in_no3 = cho1%in_no3 + cho2%in_no3
+        cho3%in_orgn = cho1%in_orgn + cho2%in_orgn
+        cho3%out_no3 =  cho1%out_no3 + cho2%out_no3
+        cho3%out_orgn =  cho1%out_orgn + cho2%out_orgn
+        cho3%fp_no3 = cho1%fp_no3 + cho2%fp_no3
+        cho3%bank_no3 = cho1%bank_no3 + cho2%bank_no3
+        cho3%bed_no3 = cho1%bed_no3 + cho2%bed_no3
+        cho3%fp_orgn = cho1%fp_orgn + cho2%fp_orgn
+        cho3%ch_orgn = cho1%ch_orgn + cho2%ch_orgn
+        cho3%bank_orgn = cho1%bank_orgn + cho2%bank_orgn
+        cho3%bed_orgn = cho1%bed_orgn + cho2%bed_orgn
+        cho3%in_solp = cho1%in_solp + cho2%in_solp
+        cho3%in_orgp = cho1%in_orgp + cho2%in_orgp
+        cho3%out_solp = cho1%out_solp + cho2%out_solp
+        cho3%out_orgp = cho1%out_orgp + cho2%out_orgp
+        cho3%fp_solp = cho1%fp_solp + cho2%fp_solp
+        cho3%bank_solp = cho1%bank_solp + cho2%bank_solp
+        cho3%bed_solp = cho1%bed_solp + cho2%bed_solp
+        cho3%fp_orgp =  cho1%fp_orgp + cho2%fp_orgp
+        cho3%ch_orgp = cho1%ch_orgp + cho2%ch_orgp
+        cho3%bank_orgp = cho1%bank_orgp + cho2%bank_orgp
+        cho3%bed_orgp = cho1%bed_orgp + cho2%bed_orgp
+        cho3%no3_orgn = cho1%no3_orgn + cho2%no3_orgn
+        cho3%solp_orgp = cho1%solp_orgp + cho2%solp_orgp
+      end function
+       
+      function chsednut_div (cho1,const) result (cho2)
+        type (channel_sediment_budget_output), intent (in) :: cho1
+        real, intent (in) :: const
+        type (channel_sediment_budget_output) :: cho2
+        cho2%in_sed = cho1%in_sed / const
+        cho2%out_sed = cho1%out_sed / const
+        cho2%fp_dep = cho1%fp_dep / const
+        cho2%ch_dep = cho1%ch_dep / const
+        cho2%bank_ero = cho1%bank_ero / const
+        cho2%bed_ero = cho1%bed_ero / const
+        cho2%in_no3 = cho1%in_no3 / const
+        cho2%in_orgn = cho1%in_orgn / const
+        cho2%out_no3 =  cho1%out_no3 / const
+        cho2%out_orgn =  cho1%out_orgn / const
+        cho2%fp_no3 = cho1%fp_no3 / const
+        cho2%bank_no3 = cho1%bank_no3 / const
+        cho2%bed_no3 = cho1%bed_no3 / const
+        cho2%fp_orgn = cho1%fp_orgn / const
+        cho2%ch_orgn = cho1%ch_orgn / const
+        cho2%bank_orgn = cho1%bank_orgn / const
+        cho2%bed_orgn = cho1%bed_orgn / const
+        cho2%in_solp = cho1%in_solp / const
+        cho2%in_orgp = cho1%in_orgp / const
+        cho2%out_solp = cho1%out_solp / const
+        cho2%out_orgp = cho1%out_orgp / const
+        cho2%fp_solp = cho1%fp_solp / const
+        cho2%bank_solp = cho1%bank_solp / const
+        cho2%bed_solp = cho1%bed_solp / const
+        cho2%fp_orgp =  cho1%fp_orgp / const
+        cho2%ch_orgp = cho1%ch_orgp / const
+        cho2%bank_orgp = cho1%bank_orgp / const
+        cho2%bed_orgp = cho1%bed_orgp / const
+        cho2%no3_orgn = cho1%no3_orgn / const
+        cho2%solp_orgp = cho1%solp_orgp / const
+      end function chsednut_div
+      
       function chsd_add(cho1,cho2) result (cho3)
       type (sd_ch_output),  intent (in) :: cho1
       type (sd_ch_output),  intent (in) :: cho2
@@ -361,8 +599,7 @@
        cho3%p_tot = cho1%p_tot + cho2%p_tot
        cho3%dep_bf = cho1%dep_bf + cho2%dep_bf
        cho3%velav_bf = cho1%velav_bf + cho2%velav_bf
-       
-      end function
+      end function chsd_add
        
       function chsd_div (ch1,const) result (ch2)
         type (sd_ch_output), intent (in) :: ch1

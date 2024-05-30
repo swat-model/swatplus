@@ -427,6 +427,68 @@
           end if
         end if
 !! BASIN SWAT DEG CHANNEL MORPH OUTPUT
+        
+!! BASIN SWAT DEG CHANBUD OUTPUT
+        if (pco%sd_chan_bsn%d == "y") then
+          open (2128,file="basin_sd_chanbud_day.txt", recl = 1500)
+          write (2128,*) bsn%name, prog
+          write (2128,*) sdch_bud_hdr
+          write (2128,*) sdch_bud_hdr_units
+          write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD   basin_sd_chanbud_day.txt"
+          if (pco%csvout == "y") then 
+            open (2132,file="basin_sd_chanbud_day.csv", recl = 1500)
+            write (2132,*) bsn%name, prog
+            write (2132,'(*(G0.3,:","))') sdch_bud_hdr
+            write (2132,'(*(G0.3,:","))') sdch_bud_hdr_units        
+            write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD   basin_sd_chanbud_day.csv"
+          end if
+        endif
+        
+       if (pco%sd_chan_bsn%m == "y") then
+        open (2129,file="basin_sd_chanbud_mon.txt",recl = 1500)
+        write (2129,*) bsn%name, prog
+        write (2129,*) sdch_bud_hdr
+        write (2129,*) sdch_bud_hdr_units
+        write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD basin_sd_chanbud_mon.txt"
+         if (pco%csvout == "y") then 
+           open (2133,file="basin_sd_chanbud_mon.csv",recl = 1500)
+           write (2133,*) bsn%name, prog
+           write (2133,'(*(G0.3,:","))') sdch_bud_hdr 
+           write (2133,'(*(G0.3,:","))') sdch_bud_hdr_units        
+           write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD basin_sd_chanbud_mon.csv"
+         end if
+        end if
+       
+        if (pco%sd_chan_bsn%y == "y") then
+          open (2130,file="basin_sd_chanbud_yr.txt", recl = 1500)
+          write (2130,*) bsn%name, prog
+          write (2130,*) sdch_bud_hdr 
+          write (2130,*) sdch_bud_hdr_units
+          write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD   basin_sd_chanbud_yr.txt"
+          if (pco%csvout == "y") then 
+            open (2134,file="basin_sd_chanbud_yr.csv", recl = 1500)
+            write (2134,*) bsn%name, prog
+            write (2134,'(*(G0.3,:","))') sdch_bud_hdr
+            write (2134,'(*(G0.3,:","))') sdch_bud_hdr_units        
+            write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD   basin_sd_chanbud_yr.csv"
+          end if
+        endif
+        
+        if (pco%sd_chan_bsn%a == "y") then
+          open (2131,file="basin_sd_chanbud_aa.txt",recl = 1500)
+          write (2131,*) bsn%name, prog
+          write (2131,*) sdch_bud_hdr 
+          write (2131,*) sdch_bud_hdr_units
+          write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD basin_sd_chanbud_aa.txt"
+          if (pco%csvout == "y") then 
+            open (2135,file="basin_sd_chanbud_aa.csv",recl = 1500)
+            write (2135,*) bsn%name, prog
+            write (2135,'(*(G0.3,:","))') sdch_bud_hdr 
+            write (2135,'(*(G0.3,:","))') sdch_bud_hdr_units 
+            write (9000,*) "BASIN_SWAT_DEG_CHAN_BUD basin_sd_chanbud_aa.csv"
+          end if
+        end if
+!! BASIN SWAT DEG CHANBUD OUTPUT
 
 
 !! BASIN RECALL OUTPUT (PTS - Point Source)

@@ -137,6 +137,7 @@
         integer :: recall_max = 0
         integer :: object_prt = 0
         integer :: ctbl_res
+        integer :: ch_sednut
       end type data_files_max_elements
       type (data_files_max_elements), save :: db_mx
                                  

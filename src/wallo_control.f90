@@ -19,7 +19,6 @@
       integer :: jj                         !variable for passing
       integer :: irec                       !recall id
       integer :: dum
-      real :: dmd_m3                        !m3     |demand
       real :: irr_mm                        !mm     |irrigation applied
       real :: div_total                     !m3     |cumulative available diversion water
       real :: div_daily                     !m3     |daily water diverted for irrigation
@@ -28,8 +27,9 @@
       !! zero demand, withdrawal, and unmet for entire allocation object
       wallo(iwallo)%tot = walloz
       
-      !! set total volumes of canal diversions (source = "div")
+      !! check if canal or inflow diversions and set available water from recall object
       do isrc = 1,wallo(iwallo)%src_obs
+        !! set total volumes of canal diversions (source = "div") - rtb
         if (wallo(iwallo)%src(isrc)%ob_typ == "div") then  
           irec = wallo(iwallo)%src(isrc)%ob_num !number in recall.rec
           !calculate newly available canal water
@@ -45,7 +45,20 @@
           !total available canal water for irrigation
           div_volume_total(irec) = div_volume_total(irec) + div_volume_daily(irec) !m3
         endif
-      enddo
+        
+        !! set total volumes of inflow diversions from recall file
+        if (wallo(iwallo)%src(isrc)%ob_typ == "div_rec") then  
+          irec = wallo(iwallo)%src(isrc)%rec_num !number in recall.rec
+          !total available source water
+          wallo(iwallo)%src(isrc)%div_vol = recall(irec)%hd(time%day,time%yrs)%flo !m3
+        end if
+        
+        !! set total volumes of inflow diversions from monthly flow rate (m3/s)
+        if (wallo(iwallo)%src(isrc)%ob_typ == "div_in") then  
+          !total available source water - m3
+          wallo(iwallo)%src(isrc)%div_vol = wallo(iwallo)%src(isrc)%limit_mon(time%mo) * 86400.
+        end if
+      end do
       
       !!loop through each demand object
       do idmd = 1, wallo(iwallo)%dmd_obs
@@ -66,7 +79,7 @@
           do isrc = 1, wallo(iwallo)%dmd(idmd)%dmd_src_obs
             dmd_m3 = wallod_out(iwallo)%dmd(idmd)%src(isrc)%demand
             if (dmd_m3 > 1.e-6) then
-              call wallo_withdraw (iwallo, idmd, isrc, dmd_m3)
+              call wallo_withdraw (iwallo, idmd, isrc)
             end if
           end do
         
@@ -75,7 +88,7 @@
             if (wallo(iwallo)%dmd(idmd)%src(isrc)%comp == "y") then
               dmd_m3 = wallo(iwallo)%dmd(idmd)%unmet_m3
               if (dmd_m3 > 1.e-6) then
-                call wallo_withdraw (iwallo, idmd, isrc, dmd_m3)
+                call wallo_withdraw (iwallo, idmd, isrc)
               end if
             end if
           end do

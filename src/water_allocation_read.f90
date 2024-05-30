@@ -74,12 +74,26 @@
             wallo(iwro)%src(i)%num = i
             if (eof < 0) exit
             backspace (107)
-            read (107,*,iostat=eof) k, wallo(iwro)%src(i)%ob_typ, wallo(iwro)%src(i)%ob_num,    &
+            read (107,*,iostat=eof) k, wallo(iwro)%src(i)%ob_typ
+            backspace (107)
+            !! if source is diversion into the basin, read the recall name
+            if (wallo(iwro)%src(i)%ob_typ == "div_in") then
+              read (107,*,iostat=eof) k, wallo(iwro)%src(i)%ob_typ, wallo(iwro)%src(i)%div_rec
+              !! xwalk with recall.rec
+              do idb = 1, db_mx%recall_max
+                if (wallo(iwro)%src(i)%div_rec == recall(idb)%name) then
+                  wallo(iwro)%src(i)%rec_num = idb
+                  exit
+                end if
+              end do
+            else
+              read (107,*,iostat=eof) k, wallo(iwro)%src(i)%ob_typ, wallo(iwro)%src(i)%ob_num,    &
                                                                   wallo(iwro)%src(i)%limit_mon
-            !! call wallo_control from channel
-            if (wallo(iwro)%src(i)%ob_typ == "cha") then
-              sd_ch(wallo(iwro)%src(i)%ob_num)%wallo = iwro
-              wallo(iwro)%cha = wallo(iwro)%src(i)%ob_num
+              !! call wallo_control from channel
+              if (wallo(iwro)%src(i)%ob_typ == "cha") then
+                sd_ch(wallo(iwro)%src(i)%ob_num)%wallo = iwro
+                wallo(iwro)%cha = wallo(iwro)%src(i)%ob_num
+              end if
             end if
           end do
           

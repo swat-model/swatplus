@@ -62,6 +62,12 @@
       if (up2(ipl) < pl_mass(j)%tot(ipl)%p) up2(ipl) = pl_mass(j)%tot(ipl)%p
       uapd(ipl) = up2(ipl) - pl_mass(j)%tot(ipl)%p
       uapd(ipl) = 1.5 * uapd(ipl)                     !! luxury p uptake
+      
+      !***jga
+      up2(ipl) = pcom(j)%plm(ipl)%p_fr * pl_mass(j)%ab_gr(ipl)%m
+      if (up2(ipl) < pl_mass(j)%ab_gr(ipl)%p) up2(ipl) = pl_mass(j)%ab_gr(ipl)%p
+      uapd(ipl) = up2(ipl) - pl_mass(j)%ab_gr(ipl)%p
+      uapd(ipl) = 1.5 * uapd(ipl)                     !! luxury p uptake
  
       return
       end subroutine pl_pupd

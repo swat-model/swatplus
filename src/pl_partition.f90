@@ -32,7 +32,7 @@
       
       !! partition leaf and stem (stalk) and seed (grain) mass
       if (pldb(idp)%typ == "perennial") then
-        leaf_frac_veg = 0.30    !forest
+        leaf_frac_veg = 0.05    !forest
       else
         leaf_frac_veg = 0.30    !should be plant parm
       end if
@@ -53,7 +53,7 @@
         ab_gr_frac = 1. - root_frac
         seed_mass_frac = pcom(j)%plg(ipl)%hi_adj
         leaf_mass_frac = leaf_mass_frac_veg * (1. - seed_mass_frac)
-        stem_mass_frac = (1. - leaf_mass_frac_veg) * (1. - seed_mass_frac)
+        stem_mass_frac = 1. - (leaf_mass_frac_veg + seed_mass_frac)
       end if
       
       pl_mass(j)%ab_gr(ipl)%m = ab_gr_frac * pl_mass(j)%tot(ipl)%m

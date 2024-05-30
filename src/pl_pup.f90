@@ -78,7 +78,10 @@
       hnb_d(j)%puptake = hnb_d(j)%puptake + pplnt(j)
 
       !! compute phosphorus stress
-      call nuts(pl_mass(j)%tot(ipl)%p, up2(ipl), pcom(j)%plstr(ipl)%strsp)
+      !call nuts(pl_mass(j)%tot(ipl)%p, up2(ipl), pcom(j)%plstr(ipl)%strsp)
+      
+      !***jga
+      call nuts(pl_mass(j)%ab_gr(ipl)%p, up2(ipl), pcom(j)%plstr(ipl)%strsp)
 
       return
       end subroutine pl_pup

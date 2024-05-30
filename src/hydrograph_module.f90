@@ -80,6 +80,7 @@
       type (hyd_output), dimension(:),allocatable :: hcnst
       type (hyd_output), dimension(:),allocatable :: hhr
       type (hyd_output) :: ht1, ht2, ht3, ht4, ht5, delrto
+      type (hyd_output) :: fp_dep, ch_dep, bank_ero, bed_ero, ch_trans
       
       !rtb hydrograph separation
       type (hyd_sep) :: hdsep1,hdsep2

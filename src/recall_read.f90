@@ -161,7 +161,7 @@
               !! reset daily step and sum the daily hyd
               if (istep > idaystep * time%step) then
                 !! convert daily flow m3/s -> m3 -- other subdaily inputs are in t and kg
-                recall(i)%hd(idaystep,iyrs)%flo = recall(i)%hd(idaystep,iyrs)%flo * 86400. / time%step
+                !recall(i)%hd(idaystep,iyrs)%flo = recall(i)%hd(idaystep,iyrs)%flo * 86400. / time%step
                 idaystep = idaystep + 1
                 recall(i)%hd(idaystep,iyrs) = recall(i)%hd(idaystep,iyrs) + ht1
               else

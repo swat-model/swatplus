@@ -346,22 +346,22 @@
           chflow = runoff + flowlat + flow_tile + hlt(isd)%gwflow
 
 !!        compute channel peak rate using SCS triangular unit hydrograph
-          chflow_m3 = 1000. * chflow * hlt_db(ihlt_db)%dakm2
-	      runoff_m3 = 1000. * runoff * hlt_db(ihlt_db)%dakm2
-	      bf_m3 = 1000. * (flowlat + hlt(isd)%gwflow)*hlt_db(ihlt_db)%dakm2
+          chflow_m3 = 1000. * chflow * ob(icmd)%area_ha
+	      runoff_m3 = 1000. * runoff * ob(icmd)%area_ha
+	      bf_m3 = 1000. * (flowlat + hlt(isd)%gwflow)*ob(icmd)%area_ha
           peakr = 2. * runoff_m3 / (1.5 * hlt_db(ihlt_db)%tc)
 	      peakrbf = bf_m3 / 86400.
           peakr = (peakr + peakrbf)     !* prf     
           
 !!        compute sediment yield with MUSLE
-          sedin = (runoff * peakr * 1000. * hlt_db(ihlt_db)%dakm2) ** .56 * hlt(isd)%uslefac
+          sedin = (runoff * peakr * 1000. * ob(icmd)%area_ha) ** .56 * hlt(isd)%uslefac
           
 	    !! add subsurf sediment - t=ppm*mm*km2/1000.
 	    qssubconc = 500.
-	    qssub = qssubconc * (flowlat + hlt(isd)%gwflow) * hlt_db(ihlt_db)%dakm2 / 1000.
+	    qssub = qssubconc * (flowlat + hlt(isd)%gwflow) * ob(icmd)%area_ha / 1000.
 	    sedin = sedin + qssub
 
-          cnv = hlt_db(ihlt_db)%dakm2 * 1000.
+          cnv = ob(icmd)%area_ha * 1000.
           
          !   output_waterbal - SWAT-DEG0140
         hltwb_d(isd)%precip = precip             
@@ -388,7 +388,7 @@
 !    output_nutbal - no nutrients currently in SWAT-DEG
 
 !    output_losses - SWAT-DEG
-        hltls_d(isd)%sedyld = sedin / (100. * hlt_db(ihlt_db)%dakm2) !! sedyld(isd) / hru_ha(isd)
+        hltls_d(isd)%sedyld = sedin / (100. * ob(icmd)%area_ha) !! sedyld(isd) / hru_ha(isd)
         hltls_d(isd)%sedorgn = 0.   !! sedorgn(isd)
         hltls_d(isd)%sedorgp = 0.   !! sedorgp(isd)
         hltls_d(isd)%surqno3 = 0.   !! surqno3(isd)

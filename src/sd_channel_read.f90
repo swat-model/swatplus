@@ -37,6 +37,11 @@
       !! allocate sd channel variables
       allocate (gully(0:0))
       allocate (sd_ch(0:sp_ob%chandeg))
+      allocate (ch_morph(0:sp_ob%chandeg))
+      allocate (ch_sed_bud(0:sp_ob%chandeg))
+      allocate (ch_sed_bud_m(0:sp_ob%chandeg))
+      allocate (ch_sed_bud_y(0:sp_ob%chandeg))
+      allocate (ch_sed_bud_a(0:sp_ob%chandeg))
       allocate (ch_rcurv(0:sp_ob%chandeg))
       allocate (sd_ch_vel(0:sp_ob%chandeg))
       allocate (chsd_d(0:sp_ob%chandeg))
@@ -262,10 +267,18 @@
           end if
         end do
         
-          !! set hydraulic and sediment input data (all in one file now)
+          !! set hydraulic and sediment input data
           do ihydsed = 1, db_mx%ch_lte
             if (sd_chd(ihydsed)%name == sd_dat(ichi)%hydc) then
               sd_dat(ichi)%hyd = ihydsed
+              exit
+            end if
+          end do
+          
+          !! set new nutrient and sediment input data
+          do ihydsed = 1, db_mx%ch_sednut
+            if (sd_chd1(ihydsed)%name == sd_dat(ichi)%hydc) then
+              sd_dat(ichi)%sednut = ihydsed
               exit
             end if
           end do

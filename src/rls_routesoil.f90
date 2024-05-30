@@ -15,30 +15,21 @@
       
       implicit none
 
-      real :: latqlyr               !           |
-      real :: xslat                 !           | 
-      integer :: j                  !           |
-      integer, intent (in) :: iob   !           | 
-      integer :: dep                !           |  
-      integer :: lyr                !none       |counter
+      real :: latqlyr               !mm         |lateral flow into layer 
+      integer :: j                  !           |hru number
+      integer, intent (in) :: iob   !           |object number
+      integer :: lyr                !           |layer number
 
       j = ihru
       
       latqrunon = ob(iob)%hin_lat%flo
       if (latqrunon > 1.e-9) then
       !!put in soil layers - weighted by depth of soil layer
-        dep = 0.
-        xslat = 0.
         do lyr = 1, soil(j)%nly
-          latqlyr = ((soil(j)%phys(lyr)%d - dep) / soil(j)%phys(soil(j)%nly)%d) * latqrunon
-          dep = soil(j)%phys(lyr)%d
+          latqlyr = (soil(j)%phys(lyr)%thick / soil(j)%phys(soil(j)%nly)%d) * latqrunon
           soil(j)%phys(lyr)%st = soil(j)%phys(lyr)%st + latqlyr
-          !if (soil(j)%phys(lyr)%st > soil(j)%phys(lyr)%ul) then
-          !  xslat = xslat + (soil(j)%phys(lyr)%st - soil(j)%phys(lyr)%ul)
-          !  soil(j)%phys(lyr)%st = soil(j)%phys(lyr)%ul
-          !end if
         end do
-        !add excess to surface storage
+        !! excess above ul is added to surface storage in saturation excess routine
       end if
 
       return

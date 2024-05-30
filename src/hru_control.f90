@@ -295,6 +295,8 @@
         endif
         
         !! wetland/paddy processes
+        ht2 = hz
+        wet_outflow = 0.
         if (ires > 0) then
           call wetland_control
         else

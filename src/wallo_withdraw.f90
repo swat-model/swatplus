@@ -1,4 +1,4 @@
-      subroutine wallo_withdraw (iwallo, idmd, isrc, dmd_m3)
+      subroutine wallo_withdraw (iwallo, idmd, isrc)
       
       use water_allocation_module
       use hydrograph_module
@@ -12,7 +12,6 @@
       integer, intent (in):: iwallo         !water allocation object number
       integer, intent (in) :: idmd          !water demand object number
       integer, intent (in) :: isrc          !source object number
-      real, intent (in) :: dmd_m3           !m3     |demand
       integer :: isrc_wallo                 !source object number
       integer :: j                  !none       |hru number
       integer :: dum
@@ -66,6 +65,20 @@
             wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet + dmd_m3
           end if
          
+        !! diversion inflow source
+        case ("div_rec") 
+          j = wallo(iwallo)%dmd(idmd)%src_ob(isrc)%ob_num
+          isrc_wallo = wallo(iwallo)%dmd(idmd)%src(isrc)%src
+          if (wallo(iwallo)%src(isrc)%div_vol > dmd_m3) then
+            irec = wallo(iwallo)%src(isrc)%rec_num !number in recall.rec
+            rto = dmd_m3 / wallo(iwallo)%src(isrc)%div_vol
+            ht5 = (1. - rto) * recall(irec)%hd(time%day,time%yrs)
+            wallo(iwallo)%src(isrc)%div_vol = rto * wallo(iwallo)%src(isrc)%div_vol
+            wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr = wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr + dmd_m3
+          else
+            wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet + dmd_m3
+          end if
+         
         !! aquifer source
         case ("aqu") 
           if(bsn_cc%gwflow == 0) then !proceed with original code
@@ -114,10 +127,8 @@
             wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr = wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr + withdraw
             wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet + unmet
             
-          !! unlimited groundwater source
           !! unlimited source
           case ("unl")
-            !! only have flow, no3, and minp(solp) for aquifer
             ht5%flo = dmd_m3
             wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr = wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr + dmd_m3
           end select
