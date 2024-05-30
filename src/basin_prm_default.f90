@@ -28,7 +28,7 @@
                                                                   !!  and outflow rate in determining storage on reach
          if (bsn_prm%nperco_lchtile < 1.e-6) bsn_prm%nperco_lchtile = 0.50        !! n concentration coeff for tile flow and 
                                                                   !! leach from bottom layer
-         !if (bsn_prm%evrch < 1.e-6) bsn_prm%evrch = 0.60          !! reach evaporation adjustment factor
+         if (bsn_prm%evrch < 1.e-6) bsn_prm%evrch = 0.60          !! reach evaporation adjustment factor
          if (bsn_prm%cdn < 1.e-6) bsn_prm%cdn = 1.40              !! denitrification expoential rate coefficient        
          if (bsn_prm%sdnco < 1.e-6) bsn_prm%sdnco = 1.30          !! denitrification threshold frac of field cap
          if (bsn_prm%bact_swf < 1.e-6) bsn_prm%bact_swf = 0.15    !! frac of manure containing active colony forming units

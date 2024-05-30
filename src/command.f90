@@ -349,10 +349,13 @@
             isd_chsur = ob(icmd)%props2
             if (sd_ch(isdch)%chl > 1.e-3) then
               if (bsn_cc%i_fpwet == 0) then
+                call sd_channel_control3
+              end if
+              if (bsn_cc%i_fpwet == 1) then
                 call sd_channel_control
-              else
-                call sd_channel_control3    !use for Osvaldo
-                !call sd_channel_control2   !use for Adrian/Dennis subdaily
+              end if
+              if (bsn_cc%i_fpwet == 2) then
+                call sd_channel_control2
               end if
             else
                 !! artificial channel - length=0 - no transformations
@@ -510,6 +513,7 @@
                 
         do jrch = 1, sp_ob%chandeg
           call sd_chanmorph_output (jrch)
+          call sd_chanbud_output (jrch)
           call sd_channel_output (jrch)
           if (cs_db%num_tot > 0) then 
             call cha_pesticide_output (jrch)   
@@ -568,6 +572,7 @@
         if (sp_ob%res > 0) call basin_reservoir_output
         if (sp_ob%chan > 0) call basin_channel_output
         if (sp_ob%chandeg > 0) call basin_chanmorph_output
+        if (sp_ob%chandeg > 0) call basin_chanbud_output
         if (sp_ob%chandeg > 0) call basin_sdchannel_output
         if (sp_ob%recall > 0) call basin_recall_output
         !call soil_nutcarb_output
