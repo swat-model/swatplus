@@ -44,6 +44,8 @@
       real :: washld                  !tons          |wash load  
       real :: bedld                   !tons          |bed load
       real :: dep                     !tons          |deposition
+      real :: sedp_dep                !kg            |Particulate P deposition MJW
+      real :: orgn_dep                !kg            |Particulate N deposition MJW
       real :: hc_sed                  !tons          |headcut erosion
       real :: chside                  !none          |change in horizontal distance per unit
                                       !              |change in vertical distance on channel side
@@ -109,6 +111,8 @@
       dep = 0.
       hc = 0.
       hc_sed = 0.
+      sedp_dep = 0.  !MJW 2024
+      orgn_dep = 0.  !MJW 2024
       
       !call ch_rtmusk
       !call ch_rthr
@@ -480,6 +484,9 @@
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       if (peakrate > bf_flow) then
         dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
+        !! deposit Particulate P and N in the floodplain
+        sedp_dep = sd_ch(ich)%chseq * ht1%sedp   !MJW 2024 May need to include a enrichment factor for transported sediment
+        orgn_dep = sd_ch(ich)%chseq * ht1%orgn   !MJW 2024
       end if
       
       !! compute sediment leaving the channel - washload only
@@ -526,10 +533,14 @@
         !! reset sed to tons
         ht2%sed = sedout
         
-        !! add nutrients from bank erosion - t *ppm (1/1,000,000) * 1000. kg/t
-        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc * 1000.
-        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc * 1000.
-        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio * 1000.
+        !! subtract nutrients deposited in floodplain
+        ht2%sedp = ht2%sedp - sedp_dep   !MJW 2024
+        ht2%orgn = ht2%orgn - orgn_dep   !MJW 2024
+        
+        !! add nutrients from bank erosion - t * mg/kg (ppm) * kg/1000 mg * 1000 kg/t = kg
+        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc
+        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc
+        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio
         
         !! route constituents
         call ch_rtpest

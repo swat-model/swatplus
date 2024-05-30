@@ -38,13 +38,15 @@
       integer :: ipl        !none          |sequential plant number
       integer :: idp        !none          |plant number in data file - pldb
       real :: c             !              |
+      real :: ab_gr_t       !tons          |above ground biomass of each plant
       real :: rsd_pctcov    !              |percent of cover by residue
       real :: rsd_covfact   !              |residue cover factor
       real :: can_covfact   !              |canopy cover factor
       real :: can_frcov     !              |fraction of canopy cover
       real :: rsd_sumfac    !              |sum of residue cover factor by plant
-      real :: cover         !kg/ha         |soil cover
-    
+      real :: grnd_sumfac   !              |ground cover factor for each plant
+      real :: grnd_covfact  !              |sum of plant ground cover factor by plant
+      real :: cover         !kg/ha         |soil cover - sum of residue and biomass
       j = ihru
 
       bsn_cc%cfac = 1   !***jga
@@ -64,10 +66,19 @@
       else
         !! new method using residue and biomass cover
         rsd_sumfac = 0.
+        grnd_sumfac = 0.
         do ipl = 1, pcom(j)%npl
           idp = pcom(j)%plcur(ipl)%idplt
           rsd_sumfac = rsd_sumfac + pldb(idp)%rsd_pctcov * (rsd1(j)%tot(ipl)%m +1.) / 1000.
+          if (pl_mass(j)%ab_gr(ipl)%m > 1.e-6) then
+            ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
+            grnd_sumfac = grnd_sumfac + 100. * pldb(idp)%usle_c / ab_gr_t
+          end if
         end do
+        if (grnd_sumfac < 1.e-6) then
+          grnd_sumfac = 10.
+        end if
+        
         rsd_pctcov = 100. * (1. - Exp(-rsd_sumfac))
         rsd_pctcov = amin1 (100., rsd_pctcov)
         rsd_pctcov = max (0., rsd_pctcov)
@@ -78,7 +89,17 @@
         can_covfact = 1. - can_frcov * Exp(-.328 * pcom(j)%cht_mx)
         can_covfact = amin1 (1., can_covfact)
         can_covfact = max (0., can_covfact)
-        c = Max(1.e-10, rsd_covfact * can_covfact)
+        
+        grnd_sumfac = Min (10., grnd_sumfac)
+        grnd_covfact = (1. - Exp(-grnd_sumfac))
+        grnd_covfact = amin1 (1., grnd_covfact)
+        grnd_covfact = max (0., grnd_covfact)
+        
+        !! ***jga
+        grnd_covfact = 1.34 + 0.225 * log(pldb(idp)%usle_c)
+        grnd_covfact = amin1 (1., grnd_covfact)
+        grnd_covfact = max (0., grnd_covfact)
+        c = Max(1.e-10, rsd_covfact * can_covfact * grnd_covfact)
         
         !! erosion output variables
         ero_output(j)%ero_d%c = c

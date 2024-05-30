@@ -188,57 +188,13 @@
       !call Muskingum and variable storage coefficient flood routing method
       call ch_rtmusk
               
-      call sd_channel_sediment (time%step)
-        
-      !! set values for outflow hydrograph
-      idb = ob(icmd)%props
-      jrch = ich
-      !if (ch_rcurv(jrch)%in2%xsec_area > 1.e-4 .and. ht1%flo > 1.e-4) then
-      if (ch_rcurv(jrch)%in2%xsec_area < -1.e+4) then
-        vc = ch_rcurv(jrch)%in2%flo_rate / ch_rcurv(jrch)%in2%xsec_area
-        rttime = sd_ch(ich)%chl * 1000. / (3600. * vc)
-        if (time%step == 1) rt_delt = 1.
-          !! use modified qual-2e routines
-          ht3 = ht1
-          !! total incoming to output to SWIFT
-          ob(icmd)%hin_tot = ob(icmd)%hin_tot + ht1
-          !! convert mass to concentration
-          call hyd_convert_mass_to_conc (ht3)
-          jnut = sd_dat(ich)%nut
-          ben_area = sd_ch(ich)%chw * sd_ch(ich)%chl
-          !! convert storage hyd - mass to concentration
-          if (ch_stor(ich)%flo > 0.001) then
-            call hyd_convert_mass_to_conc (ch_stor(ich))    !***jga 
-          else
-            ch_stor(ich) = hz
-          end if
-          
-          call ch_watqual4
-          
-          !! convert sediment to ppm to convert back in hyd_convert_conc_to_mass
-          ht2%sed = ht2%sed * ht2%flo / 1000000.   ! t = ppm (g/m3) * 1 t/m3 / 1000000. g/t
-          ht2%san = ht2%san * ht2%flo / 1000000.
-          ht2%sil = ht2%sil * ht2%flo / 1000000.
-          ht2%cla = ht2%cla * ht2%flo / 1000000.
-          ht2%sag = ht2%sag * ht2%flo / 1000000.
-          ht2%lag = ht2%lag * ht2%flo / 1000000.
-          ht2%grv = ht2%grv * ht2%flo / 1000000.
-          !! convert outflow and storage hyds - concentration to mass
-          call hyd_convert_conc_to_mass (ht2)
-          call hyd_convert_conc_to_mass (ch_stor(ich))
-         
-          !! compute nutrient losses using 2-stage ditch model
-          !call sd_channel_nutrients
-
-        !! reset sed to tons
-        ht2%sed = sedout
+      call sd_channel_sediment3
         
         !! route constituents
         call ch_rtpest
         !! call mike winchell's new routine for pesticide routing
         ! call ch_rtpest2
         call ch_rtpath
-      end if
       
       !salt and constituent concentrations (g/m3) for inflow water
       if(cs_db%num_salts > 0 .or. cs_db%num_cs > 0) then

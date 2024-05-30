@@ -5,6 +5,7 @@
       implicit none
             
       real :: trans_m3
+      real :: dmd_m3                        !m3     |demand
       character(len=16), dimension(:), allocatable :: trt_om_name    !treatment name in treatment.trt
       
       !water source objects
@@ -13,6 +14,9 @@
         character (len=3) :: ob_typ             !channel(cha), reservoir(res), aquifer(aqu), unlimited source(unl)
         integer :: ob_num                       !number of the object type
         real, dimension (12) :: limit_mon       !min chan flow(m3/s), min res level(frac prinicpal), max aqu depth(m)
+        character (len=25) :: div_rec
+        integer :: rec_num
+        real :: div_vol
       end type water_source_objects
 
       !demand source objects

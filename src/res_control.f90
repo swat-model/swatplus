@@ -67,6 +67,7 @@
 	    else
 	      ictbl = res_dat(idat)%release                              !! Osvaldo
           call res_rel_conds (ictbl, res(jres)%flo, ht1%flo, 0.)
+          
         endif 
         
         !! calculate water balance for day

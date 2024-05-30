@@ -47,8 +47,8 @@
           pcom(j)%plg(ipl)%lai = pldb(idp)%alai_min
           !! compute leaf biomass drop
           if (lai_init > 0.001) then
-          lai_drop = (lai_init - pcom(j)%plg(ipl)%lai) / lai_init
-            else
+            lai_drop = (lai_init - pcom(j)%plg(ipl)%lai) / lai_init
+          else
             lai_drop = 0.
           end if
           lai_drop = max (0., lai_drop)

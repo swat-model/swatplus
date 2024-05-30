@@ -18,7 +18,7 @@
         !! set default values
         if (pldb(ic)%ext_coef < 1.e-6) pldb(ic)%ext_coef = 0.65
         if (pldb(ic)%rsdco_pl < 1.e-6) pldb(ic)%rsdco_pl = bsn_prm%rsdco
-        if (pldb(ic)%usle_c <= 0.0) pldb(ic)%usle_c = 0.0
+        if (pldb(ic)%usle_c <= 0.0) pldb(ic)%usle_c = 0.001
         if (pldb(ic)%usle_c >= 1.0) pldb(ic)%usle_c = 1.0
         if (pldb(ic)%blai <= 0.0) pldb(ic)%blai = 0.0
         if (pldb(ic)%blai >= 10.0) pldb(ic)%blai = 10.0
@@ -57,10 +57,8 @@
           b2 = pldb(ic)%bioehi * .01                !! "elevated" bio-e ratio/100
 
 !!        determine shape parameters for the radiation use efficiency equation
-          call ascrv(b1, b2, c1, pldb(ic)%co2hi, plcp(ic)%ruc1,             &    
-              plcp(ic)%ruc2)
+          call ascrv(b1, b2, c1, pldb(ic)%co2hi, plcp(ic)%ruc1, plcp(ic)%ruc2)
 
-          if (pldb(ic)%usle_c < 1.e-4) pldb(ic)%usle_c = 0.001
           plcp(ic)%cvm = Log(pldb(ic)%usle_c)
 
 !!        nitrogen uptake parameters

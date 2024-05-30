@@ -11,8 +11,8 @@
       implicit none      
 
       real :: kh
-      integer :: idb                  !             |
-      integer :: i                    !none         |counter  
+      integer :: idb, idb1              !             |
+      integer :: i                      !none         |counter  
       integer :: iob, ichdat
       integer :: ich_ini                !none      |counter
       integer :: iom_ini                !none      |counter
@@ -64,6 +64,7 @@
         icmd = sp_ob1%chandeg + i - 1
         idat = ob(icmd)%props
         idb = sd_dat(idat)%hyd
+        idb1 = sd_dat(idat)%sednut
         sd_ch(i)%name = sd_chd(idb)%name
         sd_ch(i)%obj_no = icmd
         sd_ch(i)%order = sd_chd(idb)%order
@@ -73,7 +74,7 @@
         if (sd_ch(i)%chs < 1.e-9) sd_ch(i)%chs = .000001
         sd_ch(i)%chl = sd_chd(idb)%chl
         sd_ch(i)%chn = sd_chd(idb)%chn
-        if (sd_ch(i)%chn < 1.e-9) sd_ch(i)%chn = .05
+        if (sd_ch(i)%chn < .05) sd_ch(i)%chn = .05   !***jga
         sd_ch(i)%chk = sd_chd(idb)%chk      
         sd_ch(i)%cherod = sd_chd(idb)%cherod
         sd_ch(i)%cov = sd_chd(idb)%cov
@@ -98,6 +99,17 @@
         sd_ch(i)%hc_kh = gully(0)%hc_kh
         sd_ch(i)%hc_hgt = gully(0)%hc_hgt
         sd_ch(i)%hc_ini = gully(0)%hc_ini
+        sd_ch(i)%pk_rto = sd_chd1(idb1)%pk_rto
+        sd_ch(i)%fp_inun_days = sd_chd1(idb1)%fp_inun_days
+        sd_ch(i)%n_setl = sd_chd1(idb1)%n_setl
+        sd_ch(i)%p_setl = sd_chd1(idb1)%p_setl
+        sd_ch(i)%n_sol_part = sd_chd1(idb1)%n_sol_part
+        sd_ch(i)%p_sol_part = sd_chd1(idb1)%p_sol_part
+        sd_ch(i)%n_dep_enr = sd_chd1(idb1)%n_dep_enr
+        sd_ch(i)%p_dep_enr = sd_chd1(idb1)%p_dep_enr
+        sd_ch(i)%arc_len_fr = sd_chd1(idb1)%arc_len_fr
+        sd_ch(i)%part_size = sd_chd1(idb1)%part_size
+        sd_ch(i)%wash_bed_fr = sd_chd1(idb1)%wash_bed_fr
           
         !! compute headcut parameters
         kh = sd_ch(i)%hc_kh

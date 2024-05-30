@@ -34,7 +34,8 @@
       real :: actpp                     !mg/kg	       |Active pool phosphorous content
       real :: stap                      !mg/kg	       |Stable pool phosphorous content
       real :: arate                     !			   |Intermediate Variable      
-      real :: ssp                       !              | 
+      real :: ssp                       !              |     
+      real :: psp                       !              | 
 
       j = ihru
         
@@ -47,30 +48,30 @@
       if (soil1(j)%mp(l)%sta <= 1.e-6) soil1(j)%mp(l)%sta = 1.e-6
       
 !! Convert kg/ha to ppm so that it is more meaningful to compare between soil layers
-	  solp = soil1(j)%mp(l)%lab / soil(j)%phys(l)%conv_wt * 1000000.
-	  actpp = soil1(j)%mp(l)%act / soil(j)%phys(l)%conv_wt * 1000000.
-	  stap = soil1(j)%mp(l)%sta / soil(j)%phys(l)%conv_wt * 1000000.
+	  solp = soil1(j)%mp(l)%lab / soil(j)%phys(l)%conv_wt 
+	  actpp = soil1(j)%mp(l)%act / soil(j)%phys(l)%conv_wt 
+	  stap = soil1(j)%mp(l)%sta / soil(j)%phys(l)%conv_wt 
 
 !! ***************Soluble - Active Transformations***************	
 
 	  !! Dynamic PSP Ratio
 	    !!PSP = -0.045*log (% clay) + 0.001*(Solution P, mg kg-1) - 0.035*(% Organic C) + 0.43
 	    if (soil(j)%phys(l)%clay > 0.) then
-	      bsn_prm%psp = -0.045 * log(soil(j)%phys(l)%clay)+ (0.001 * solp) 
-	      bsn_prm%psp = bsn_prm%psp - (0.035  * soil1(j)%tot(l)%c) + 0.43
+	      psp = -0.045 * log(soil(j)%phys(l)%clay)+ (0.001 * solp) 
+	      psp = psp - (0.035  * soil1(j)%cbn(l)) + 0.43
 	    else
-	      bsn_prm%psp = 0.4
+	      psp = 0.4
 	    end if    		
 		!! Limit PSP range
-		if (bsn_prm%psp < .1)  bsn_prm%psp = 0.1 ! limits on PSP
-	    if (bsn_prm%psp > 0.7)  bsn_prm%psp = 0.7  
+		if (psp < .1) psp = 0.1 ! limits on PSP
+	    if (psp > 0.7) psp = 0.7  
 
         !! Calculate smoothed PSP average 
 	  if (soil(j)%ly(l)%psp_store > 0.) then
-	    bsn_prm%psp = (soil(j)%ly(l)%psp_store * 29. + bsn_prm%psp * 1.)/30
+	    psp = (soil(j)%ly(l)%psp_store * 29. + psp * 1.) / 30.
 	  end if
-        !! Store PSP for tomarrows smoothing calculation
-	  soil(j)%ly(l)%psp_store = bsn_prm%psp
+        !! Store PSP for tomrrows smoothing calculation
+	  soil(j)%ly(l)%psp_store = psp
 
 !!***************Dynamic Active/Soluble Transformation Coeff******************
 
@@ -81,14 +82,14 @@
       end if	   
 
       !! Calculate P balance
-      rto = bsn_prm%psp / (1. - bsn_prm%psp)
+      rto = psp / (1. - psp)
       rmp1 = soil1(j)%mp(l)%lab - soil1(j)%mp(l)%act * rto !! P imbalance
 
 	  !! Move P between the soluble and active pools based on Vadas et al., 2006
 		if (rmp1 >= 0.) then !! Net movement from soluble to active	
 		  rmp1 = Max(rmp1, (-1 * soil1(j)%mp(l)%lab))
 		  !! Calculate Dynamic Coefficant		
-          vara = 0.918 * (exp(-4.603 * bsn_prm%psp))          
+          vara = 0.918 * (exp(-4.603 * psp))          
 		  varb = (-0.238 * ALOG(vara)) - 1.126
 		  if (soil(j)%ly(l)%a_days >0) then 
 		    arate = vara * (soil(j)%ly(l)%a_days ** varb)
@@ -106,7 +107,7 @@
 		if (rmp1 < 0.) then !! Net movement from Active to Soluble 		
 		  rmp1 = Min(rmp1, soil1(j)%mp(l)%act)	
 		  !! Calculate Dynamic Coefficant
-		  base = (-1.08 * bsn_prm%psp) + 0.79
+		  base = (-1.08 * psp) + 0.79
 		  varc = base * (exp (-0.29))
 	       !! limit varc from 0.1 to 1
 		  if (varc > 1.0) varc  = 1.0
