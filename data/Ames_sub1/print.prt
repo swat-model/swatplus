@@ -4,7 +4,7 @@ nyskip      day_start  yrc_start  day_end   yrc_end   interval
 aa_int_cnt  
 0           
 csvout        dbout         cdfout        
-n             d             n             
+n             y             n             
 crop_yld      mgtout        hydcon        fdcout        
 b             y             n             n             
 objects                  daily       monthly        yearly         avann  

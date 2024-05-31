@@ -21,7 +21,7 @@ mgt_01                              304         0
                                                     fert          6          4    0.0        null      elem_n   180.300												
                                                     hvkl         11         10    0.0        corn       grain     0.000
                                                     fert         11         12    0.0        null    11_15_00   152.700	
-	                                                till         11         16    0.0    chisplow        null     0.000												
+	                                            till         11         16    0.0    chisplow        null     0.000												
                                                     skip          0          0      0        null        null         0											
                                                     till          4         16    0.0     fldcult        null     0.000
                                                     till          4         30    0.0     fldcult        null     0.000
@@ -38,21 +38,21 @@ mgt_01                              304         0
                                                     till         11         10    0.0    chisplow        null     0.000													
                                                     fert         12          2    0.0        null    11_52_00   142.700											
                                                     skip          0          0      0        null        null         0
-													till          4          1    0.0    chisplow        null     0.000
+						    till          4          1    0.0    chisplow        null     0.000
                                                     plnt          4         28    0.0        corn        null         0
                                                     fert          6          1    0.0        null      elem_n   181.400												
                                                     hvkl         10          7    0.0        corn       grain     0.000
                                                     fert         10          9    0.0        null    11_52_00   142.700	
                                                     till         10         11    0.0    chisplow        null     0.000																							
                                                     skip          0          0      0        null        null         0
-													till          5          1    0.0     fldcult        null     0.000
+						    till          5          1    0.0     fldcult        null     0.000
                                                     plnt          5          3    0.0        corn        null         0
                                                     fert          5          3    0.0        null      elem_n    26.000												
                                                     fert          6          6    0.0        null      elem_n   182.600	
                                                     hvkl         11          9    0.0        corn       grain     0.000
                                                     fert         11         14    0.0        null    05_10_15   336.000																						
                                                     skip          0          0      0        null        null         0
-													till          4         24    0.0     fldcult        null     0.000
+						    till          4         24    0.0     fldcult        null     0.000
                                                     fert          4         25    0.0        null      elem_n    27.000
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          6          4    0.0        null      elem_n   180.300	
@@ -61,7 +61,7 @@ mgt_01                              304         0
                                                     till         11         16    0.0    chisplow        null     0.000													
                                                     skip          0          0      0        null        null         0													
                                                     till          4         16    0.0     fldcult        null     0.000
-									                till          4         30    0.0     fldcult        null     0.000					
+						    till          4         30    0.0     fldcult        null     0.000					
                                                     plnt          5          6    0.0        corn        null         0												
                                                     fert          6         17    0.0        null    33_00_00   119.500	
                                                     hvkl         11          4    0.0        corn       grain     0.000
@@ -72,7 +72,7 @@ mgt_01                              304         0
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200	
                                                     hvkl         11          5    0.0        corn       grain     0.000
-													till         11         10    0.0    chisplow        null     0.000			
+						    till         11         10    0.0    chisplow        null     0.000			
                                                     fert         12          2    0.0        null    11_52_00   142.700			
                                                     skip          0          0      0        null        null         0														
                                                     till          4          1    0.0    chisplow        null     0.000					
@@ -80,22 +80,22 @@ mgt_01                              304         0
                                                     fert          6          1    0.0        null      elem_n   181.400	
                                                     hvkl         10          7    0.0        corn       grain     0.000
                                                     fert         10          9    0.0        null    11_52_00   142.700	
-													till         10         11    0.0    chisplow        null     0.000					
+						    till         10         11    0.0    chisplow        null     0.000					
                                                     skip          0          0      0        null        null         0														
                                                     till          5          1    0.0     fldcult        null     0.000	
-							                        fert          5          3    0.0        null      elem_n    26.000							
+					            fert          5          3    0.0        null      elem_n    26.000							
                                                     plnt          5          3    0.0        corn        null         0												
                                                     fert          6          6    0.0        null      elem_n   182.600	
                                                     hvkl         11          9    0.0        corn       grain     0.000
                                                     fert         11         14    0.0        null    05_10_15   336.000						
                                                     skip          0          0      0        null        null         0														
                                                     till          4         24    0.0     fldcult        null     0.000	
-							                        fert          4         25    0.0        null      elem_n    27.000							
+					            fert          4         25    0.0        null      elem_n    27.000							
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          6          4    0.0        null      elem_n   180.300	
                                                     hvkl         11         10    0.0        corn       grain     0.000
                                                     fert         11         12    0.0        null    11_15_00   152.700	
-					                                till         11         16    0.0     fldcult        null     0.000									
+					            till         11         16    0.0     fldcult        null     0.000									
                                                     skip          0          0      0        null        null         0														
                                                     till          4         16    0.0     fldcult        null     0.000	
                                                     till          4         30    0.0     fldcult        null     0.000							
@@ -105,129 +105,129 @@ mgt_01                              304         0
                                                     fert         11         21    0.0        null    11_52_00   167.960									
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000	
-													fert          4         16    0.0        null      elem_n    38.300							
+						    fert          4         16    0.0        null      elem_n    38.300							
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200	
                                                     hvkl         11          5    0.0        corn       grain     0.000
-													till         11         10    0.0    chisplow        null     0.000	
+						    till         11         10    0.0    chisplow        null     0.000	
                                                     fert         12          2    0.0        null    11_52_00   147.700									
                                                     skip          0          0      0        null        null         0														
                                                     till          4          1    0.0     fldcult        null     0.000							
                                                     plnt          4         28    0.0        corn        null         0												
                                                     fert          6          1    0.0        null      elem_n   181.400	
                                                     hvkl         10          7    0.0        corn       grain     0.000
-													fert         10          9    0.0        null    11_52_00   142.700	
-													till         10         11    0.0    chisplow        null     0.000									
+						    fert         10          9    0.0        null    11_52_00   142.700	
+						    till         10         11    0.0    chisplow        null     0.000									
                                                     skip          0          0      0        null        null         0														
                                                     till          5          1    0.0     fldcult        null     0.000							
                                                     plnt          5          3    0.0        corn        null         0												
                                                     fert          5          3    0.0        null      elem_n    26.000	
                                                     fert          6          6    0.0        null      elem_n   182.600	
                                                     hvkl         11          9    0.0        corn       grain     0.000
-													fert         11         14    0.0        null    05_10_15   336.000							
+						    fert         11         14    0.0        null    05_10_15   336.000							
                                                     skip          0          0      0        null        null         0														
                                                     till          4         24    0.0     fldcult        null     0.000
-											        fert          4         25    0.0        null      elem_n    27.000			
+						    fert          4         25    0.0        null      elem_n    27.000			
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          6          4    0.0        null      elem_n   180.300	
                                                     hvkl         11         10    0.0        corn       grain     0.000
-													fert         11         12    0.0        null    11_15_00   152.700
-					                                till         11         16    0.0    chisplow        null     0.000								
+					            fert         11         12    0.0        null    11_15_00   152.700
+					            till         11         16    0.0    chisplow        null     0.000								
                                                     skip          0          0      0        null        null         0														
                                                     till          4         16    0.0     fldcult        null     0.000
-									                till          4         30    0.0     fldcult        null     0.000						
+						    till          4         30    0.0     fldcult        null     0.000						
                                                     plnt          5          6    0.0        corn        null         0												
                                                     fert          6         17    0.0        null    33_00_00   119.500	
                                                     hvkl         11          4    0.0        corn       grain     0.000
-													fert         11         21    0.0        null    11_52_00   167.960							
+						    fert         11         21    0.0        null    11_52_00   167.960							
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000
                                                     fert          4         16    0.0        null      elem_n    38.300						
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200	
                                                     hvkl         11          5    0.0        corn       grain     0.000
-												    till          3         10    0.0    chisplow        null     0.000	
-													fert         11          2    0.0        null    11_52_00   142.700							
+						    till          3         10    0.0    chisplow        null     0.000	
+						    fert         11          2    0.0        null    11_52_00   142.700							
                                                     skip          0          0      0        null        null         0														
                                                     till          4          1    0.0    chisplow        null     0.000					
                                                     plnt          4         28    0.0        corn        null         0												
                                                     fert          6          1    0.0        null      elem_n   181.400
                                                     hvkl         10          7    0.0        corn       grain     0.000
-								                    fert         10          9    0.0        null    11_52_00   142.700				
-												    till         10         11    0.0    chisplow        null     0.000	
+						    fert         10          9    0.0        null    11_52_00   142.700				
+					            till         10         11    0.0    chisplow        null     0.000	
                                                     skip          0          0      0        null        null         0														
                                                     till          5          1    0.0     fldcult        null     0.000					
                                                     plnt          5          3    0.0        corn        null         0												
                                                     fert          5          3    0.0        null      elem_n    26.000
-										            fert          6          6    0.0        null      elem_n   182.600
+						    fert          6          6    0.0        null      elem_n   182.600
                                                     hvkl         11          9    0.0        corn       grain     0.000
-								                    fert         11         14    0.0        null    05_10_15   336.000				
+						    fert         11         14    0.0        null    05_10_15   336.000				
                                                     skip          0          0      0        null        null         0														
                                                     till          4         24    0.0     fldcult        null     0.000
-											        fert          4         25    0.0        null      elem_n    27.000		
+                                                    fert          4         25    0.0        null      elem_n    27.000		
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          6          4    0.0        null      elem_n   180.300
                                                     hvkl         11         10    0.0        corn       grain     0.000
-								                    fert         11         12    0.0        null    11_15_00   152.700	
-												    till         11         16    0.0     fldcult        null     0.000	
+						    fert         11         12    0.0        null    11_15_00   152.700	
+				                    till         11         16    0.0     fldcult        null     0.000	
                                                     skip          0          0      0        null        null         0														
                                                     till          4         16    0.0     fldcult        null     0.000
-													till          4         30    0.0     fldcult        null     0.000
+						    till          4         30    0.0     fldcult        null     0.000
                                                     plnt          5          6    0.0        corn        null         0												
                                                     fert          6         17    0.0        null    33_00_00   119.500
                                                     hvkl         11          4    0.0        corn       grain     0.000
-								                    fert         11         21    0.0        null    11_52_00   167.960	
+						    fert         11         21    0.0        null    11_52_00   167.960	
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000
                                                     fert          4         16    0.0        null      elem_n    38.300
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200
                                                     hvkl         11          5    0.0        corn       grain     0.000
-													till         11         10    0.0    chisplow        null     0.000
-								                    fert         12          2    0.0        null    11_52_00   142.700	
+						    till         11         10    0.0    chisplow        null     0.000
+						    fert         12          2    0.0        null    11_52_00   142.700	
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0    chisplow        null     0.000
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   181.400
                                                     hvkl         11          5    0.0        corn       grain     0.000
-							                        fert         12          2    0.0        null    11_52_00   142.700	
-													till         11         10    0.0    chisplow        null     0.000
+					            fert         12          2    0.0        null    11_52_00   142.700	
+			                            till         11         10    0.0    chisplow        null     0.000
                                                     skip          0          0      0        null        null         0														
                                                     till          5          1    0.0     fldcult        null     0.000
                                                     plnt          5          3    0.0        corn        null         0												
                                                     fert          5          3    0.0        null      elem_n    26.000
-									                fert          6          6    0.0        null    11_52_00   182.600	
+				                    fert          6          6    0.0        null    11_52_00   182.600	
                                                     hvkl         11          9    0.0        corn       grain     0.000
-							                        fert         11         14    0.0        null    05_10_15   336.000	
+						    fert         11         14    0.0        null    05_10_15   336.000	
                                                     skip          0          0      0        null        null         0														
                                                     till          4         24    0.0     fldcult        null     0.000
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          4         25    0.0        null      elem_n    27.000
-									                fert          6          4    0.0        null      elem_n   180.300	
+						    fert          6          4    0.0        null      elem_n   180.300	
                                                     hvkl         11         10    0.0        corn       grain     0.000
-							                        fert         11         12    0.0        null    11_15_00   152.700
-													till         11         16    0.0    chisplow        null     0.000
+					            fert         11         12    0.0        null    11_15_00   152.700
+						    till         11         16    0.0    chisplow        null     0.000
                                                     skip          0          0      0        null        null         0														
                                                     till          4         16    0.0     fldcult        null     0.000
-													till          4         30    0.0     fldcult        null     0.000
+						    till          4         30    0.0     fldcult        null     0.000
                                                     plnt          5          6    0.0        corn        null         0												
                                                     fert          6         17    0.0        null    33_00_00   119.500	
                                                     hvkl         11          4    0.0        corn       grain     0.000
-							                        fert         11         21    0.0        null    11_15_00   167.960
+					            fert         11         21    0.0        null    11_15_00   167.960
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000
-									                fert          4         16    0.0        null      elem_n    38.300
+					            fert          4         16    0.0        null      elem_n    38.300
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200	
                                                     hvkl         11          5    0.0        corn       grain     0.000
                                                     till         11         10    0.0     fldcult        null     0.000
-							                        fert         12          2    0.0        null    11_52_00   142.700
+					            fert         12          2    0.0        null    11_52_00   142.700
                                                     skip          0          0      0        null        null         0														
                                                     till          4          1    0.0     fldcult        null     0.000
                                                     plnt          4         28    0.0        corn        null         0												
                                                     fert          6          1    0.0        null      elem_n   181.400
                                                     hvkl         10          7    0.0        corn       grain     0.000
-								                    fert         10          9    0.0        null    11_52_00   142.700		
+						    fert         10          9    0.0        null    11_52_00   142.700		
                                                     till         10         11    0.0     fldcult        null     0.000
                                                     skip          0          0      0        null        null         0														
                                                     till          5          1    0.0     fldcult        null     0.000
@@ -235,75 +235,75 @@ mgt_01                              304         0
                                                     fert          5          3    0.0        null      elem_n    26.000
                                                     fert          6          6    0.0        null      elem_n   182.600
                                                     hvkl         11          9    0.0        corn       grain     0.000
-								                    fert         11         14    0.0        null    05_10_15   336.000		
+						    fert         11         14    0.0        null    05_10_15   336.000		
                                                     skip          0          0      0        null        null         0														
                                                     till          4         24    0.0     fldcult        null     0.000
-								                    fert          4         25    0.0        null      elem_n    27.000	
+						    fert          4         25    0.0        null      elem_n    27.000	
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          6          4    0.0        null      elem_n   180.300
                                                     hvkl         11         10    0.0        corn       grain     0.000
-								                    fert         11         12    0.0        null    11_15_00   152.700
-					                                till         11         16    0.0    chisplow        null     0.000								
+					            fert         11         12    0.0        null    11_15_00   152.700
+					            till         11         16    0.0    chisplow        null     0.000								
                                                     skip          0          0      0        null        null         0														
                                                     till          4         16    0.0     fldcult        null     0.000
-												    till          4         30    0.0     fldcult        null     0.000	
+						    till          4         30    0.0     fldcult        null     0.000	
                                                     plnt          5          6    0.0        corn        null         0												
                                                     fert          6         17    0.0        null    33_00_00   119.500
                                                     hvkl         11          4    0.0        corn       grain     0.000
-								                    fert         11         21    0.0        null    11_52_00   167.960						
+						    fert         11         21    0.0        null    11_52_00   167.960						
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000
-												    fert          4         16    0.0        null      elem_n    38.300
+					            fert          4         16    0.0        null      elem_n    38.300
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200
                                                     hvkl         11          5    0.0        corn       grain     0.000
                                                     till         11         10    0.0    chisplow        null     0.000
-								                    fert         12          2    0.0        null    11_52_00   142.700						
+						    fert         12          2    0.0        null    11_52_00   142.700						
                                                     skip          0          0      0        null        null         0														
                                                     till          4          1    0.0    chisplow        null     0.000
                                                     plnt          4         28    0.0        corn        null         0												
                                                     fert          6          1    0.0        null      elem_n   181.400
                                                     hvkl         10          7    0.0        corn       grain     0.000
-								                    fert         10          9    0.0        null    11_52_00   142.700
-											        till         10         11    0.0    chisplow        null     0.000		
+					            fert         10          9    0.0        null    11_52_00   142.700
+						    till         10         11    0.0    chisplow        null     0.000		
                                                     skip          0          0      0        null        null         0														
                                                     till          5          1    0.0     fldcult        null     0.000
                                                     plnt          5          3    0.0        corn        null         0												
                                                     fert          5          3    0.0        null      elem_n    26.000
-													fert          6          6    0.0        null      elem_n   182.600
+						    fert          6          6    0.0        null      elem_n   182.600
                                                     hvkl         11          9    0.0        corn       grain     0.000
-													fert         11         14    0.0        null    05_10_15   336.000	
+						    fert         11         14    0.0        null    05_10_15   336.000	
                                                     skip          0          0      0        null        null         0														
                                                     till          4         24    0.0     fldcult        null     0.000
-													fert          4         25    0.0        null      elem_n    27.000
+						    fert          4         25    0.0        null      elem_n    27.000
                                                     plnt          4         25    0.0        corn        null         0												
                                                     fert          6          4    0.0        null      elem_n   180.300		
                                                     hvkl         11         10    0.0        corn       grain     0.000
-													fert         11         12    0.0        null    05_10_15   152.700
-													till         11         16    0.0    chisplow        null     0.000
+						    fert         11         12    0.0        null    05_10_15   152.700
+						    till         11         16    0.0    chisplow        null     0.000
                                                     skip          0          0      0        null        null         0														
                                                     till          4         16    0.0     fldcult        null     0.000
-											        till          4         30    0.0     fldcult        null     0.000
+						    till          4         30    0.0     fldcult        null     0.000
                                                     plnt          5          6    0.0        corn        null         0												
                                                     fert          6         17    0.0        null    33_00_00   119.500	
                                                     hvkl         11          4    0.0        corn       grain     0.000
-													fert         11         21    0.0        null    11_52_00   167.960
+						    fert         11         21    0.0        null    11_52_00   167.960
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000
-												    fert          4         16    0.0        null      elem_n    38.300
+						    fert          4         16    0.0        null      elem_n    38.300
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200	
                                                     hvkl         11          5    0.0        corn       grain     0.000
-													till         11         10    0.0    chisplow        null     0.000
-													fert         12          2    0.0        null    11_52_00   142.700
+						    till         11         10    0.0    chisplow        null     0.000
+						    fert         12          2    0.0        null    11_52_00   142.700
                                                     skip          0          0      0        null        null         0														
                                                     till          3         31    0.0     fldcult        null     0.000
-												    fert          4         16    0.0        null      elem_n    38.300
+						    fert          4         16    0.0        null      elem_n    38.300
                                                     plnt          5          5    0.0        corn        null         0												
                                                     fert          6         11    0.0        null      elem_n   123.200	
                                                     hvkl         11          5    0.0        corn       grain     0.000
-													till         11         10    0.0    chisplow        null     0.000
-													fert         12          2    0.0        null    11_52_00   142.700
+						    till         11         10    0.0    chisplow        null     0.000
+						    fert         12          2    0.0        null    11_52_00   142.700
                                                     skip          0          0      0        null        null         0														
 mgt_02                              245         0
                                                     plnt          4         28    0.0        corn        null         0
