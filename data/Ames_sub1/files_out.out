@@ -20,6 +20,7 @@
  BASIN                     basin_pw_aa.txt
  CROP                      crop_yld_yr.txt
  CROP                      crop_yld_aa.txt
+ SWAT_DEG_CHAN_BUD             sd_chanbud_aa.txt
  MGT                       mgt_out.txt
  DTBL                      lu_change_out.txt
  YLD                       yield.out
@@ -36,5 +37,6 @@
  BASIN_CHANNEL             basin_cha_aa.txt
  BASIN_SWAT_DEG_CHANNEL    basin_sd_cha_aa.txt
  BASIN_SWAT_DEG_CHAN_MORPH basin_sd_chamorph_aa.txt
+ BASIN_SWAT_DEG_CHAN_BUD basin_sd_chanbud_aa.txt
  BASIN_RECALL_AA           basin_psc_aa.txt
  ROUTING_UNITS             ru_aa.txt

@@ -1,4 +1,4 @@
- demo                      SWAT+ Mar 05 2024        MODULAR Rev 2024.61.0.0                               
+ demo                      SWAT+ May 31 2024        MODULAR Rev 2024.61.3-23-gc46ffba                     
  HRU_TOTC                  hru_totc.txt
         jday          yr        unit    soil_tot_c   plant_tot_c     rsd_tot_c 
           --          --          --          kg/ha         kg/ha         kg/ha
