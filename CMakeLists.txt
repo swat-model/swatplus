@@ -12,25 +12,36 @@ project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
 include(CTest)
 
-find_package(Git REQUIRED)
+if(NOT TAG)
+    find_package(Git REQUIRED)
+    execute_process(
+      COMMAND ${GIT_EXECUTABLE} describe --tags
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      OUTPUT_VARIABLE TAG
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 
-execute_process(
-  COMMAND ${GIT_EXECUTABLE} describe --tags
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE TAG
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-if(TAG STREQUAL "")
-  # message(FATAL_ERROR "No tag info found.")
-  # this happens when git it not installed or not in the path
-  set(TAG "unknown")
+    if(TAG STREQUAL "")
+    # message(FATAL_ERROR "No tag info found.")
+    # this happens when git is not installed or not in the path
+      set(TAG "unknown")
+    endif()
 endif()
 
+string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} ARCH)
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(SWAT_OS "lin-${ARCH}")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(SWAT_OS "win-${ARCH}")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(SWAT_OS "mac-${ARCH}")
+else()
+    set(SWAT_OS "unknown")
+endif ()
 
 # SWAT Version number
-SET(SWAT_VERSION ${TAG})
-set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}")
+set(SWAT_VERSION ${TAG})
+set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}-${SWAT_OS}")
 
 # Enable this to 'TRUE' to see the fortran command on compile
 # set(CMAKE_VERBOSE_MAKEFILE FALSE)
@@ -128,6 +139,9 @@ add_test(Ames_sub1   ${Python3_EXECUTABLE}  ${check_py} ${exe_path} ${ref_dir}/A
 #############################################################################
 # Summary
 message( "-- Verbose Makefile   ${CMAKE_VERBOSE_MAKEFILE}")
+message( "-- Generator          ${CMAKE_GENERATOR_TOOLSET}")
+message( "-- VS Platform        ${CMAKE_VS_PLATFORM_TOOLSET}")
+message( "-- Build Type         ${CMAKE_BUILD_TYPE}")
 message( "-- Compiler           ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
 message( "-- FFLAGS            ${CMAKE_Fortran_FLAGS}")
 message( "--  RELEASE           ${CMAKE_Fortran_FLAGS_RELEASE}")
