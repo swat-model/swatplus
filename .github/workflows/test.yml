@@ -1,0 +1,91 @@
+# SWAT+ CI for GH, O. David, 2024
+
+name: Build/Test SWAT+
+
+on: [push, pull_request]
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+
+jobs:
+
+  build:
+    runs-on: ${{ matrix.os }}
+    if: endsWith(github.ref_name, 'main') == true
+    strategy:
+      fail-fast: false
+      matrix:
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
+        toolchain:
+          - {compiler: intel, version: '2024.1'}
+          - {compiler: intel-classic, version: '2021.9'}
+        exclude:
+          # - os: macos-latest
+          #   toolchain: {compiler: intel, version: '2024.1'}
+          # - os: windows-latest
+          #   toolchain: {compiler: intel-classic, version: '2021.9'}
+          - os: ubuntu-latest
+            toolchain: {compiler: intel-classic, version: '2021.9'}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: Install Compiler
+        uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: Build SWAT+
+        id: build_exe
+        run: |
+          echo ${{ env.FC }}
+          cmake --version
+
+          RELEASE_VERSION="latest"
+          os="$RUNNER_OS"
+
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            cmake -B build \
+              -D CMAKE_Fortran_COMPILER=${{ env.FC }}
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            cmake -B build -G "MinGW Makefiles" \
+              -D CMAKE_Fortran_COMPILER="C:\Program Files (x86)\Intel\oneAPI\compiler\2024.1\bin\${{ env.FC }}.exe"
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            cmake -B build \
+              -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
+              -D CMAKE_APPLE_SILICON_PROCESSOR="x86_64"
+          else
+            echo "$RUNNER_OS not supported."
+            exit 1
+          fi
+
+          # compile
+          cmake --build build
+
+          # check
+          ls -hl build/swatplus-*
+          file build/swatplus-*
+        shell: bash
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest
+        shell: bash
+
+      - name: Tests Results
+        if: always()
+        run: |
+          echo "Test Log:"
+          cat build/Testing/Temporary/LastTest.log
+        shell: bash
+
