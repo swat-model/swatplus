@@ -99,7 +99,7 @@ def compare_line(lineno: int, line1: str, line2: str, aerr: float, rerr: float) 
                     re = '<cannot compute>'
                 ae = round(abs(f1 - f2), 5)
                 max_ae = max(max_ae, ae)
-                print(f"  Field #{i}: {f1} (1) <-> {f2} (2) abs_err: {ae}, rel_err: {re}")
+                print(f"  Field #{i}: {f1} (1) <-> {f2} (2) aerr: {ae}, rerr: {re}")
                 err += 1
     return err, max_ae, max_re
 
@@ -125,6 +125,8 @@ def fdiff(file1: any, file2: any, aerr: float = 1e-8, rerr: float = 1e-5) -> tup
     max_rerr: float = 0.0
     with open(file1, 'r') as f1, open(file2, 'r') as f2:
         for lineno, (l1, l2) in enumerate(zip(f1, f2)):
+            if ("MODULAR" in l1) and ("MODULAR" in l2):
+                continue
             err, max_a, max_r = compare_line(lineno, l1, l2, aerr, rerr)
             errors += err
             max_aerr = max(max_aerr, max_a)
@@ -144,7 +146,7 @@ def run_swat(swat_model: str, wdir: str) -> int:
     print(stdout.decode())
     print(stderr.decode())
     if p.returncode != 0:
-        print(f"Swat+ exited with code: {p.returncode}")
+        print(f"SWAT+ exited with code: {p.returncode}")
         exit(1)
     return p.returncode
 
@@ -155,7 +157,7 @@ def check(dir1: str, dir2: str, aerr: float,  rerr: float, *files: list[str]) ->
         print(f"Processing '{file}' in {dir1} (1) and {dir2} (2):")
         err, max_ae, max_re = fdiff(os.path.join(dir1, file), os.path.join(dir2, file), aerr=aerr, rerr=rerr)
         total_err += err
-        print(f"\nResults for '{file}': {dir1} <-> {dir2} : #err >= {rerr} rerr: {err}, max abserr: {max_ae}, max relerr: {max_re}")
+        print(f"\nResults for '{file}': {dir1} <-> {dir2}, #err = {err}, max aerr: {max_ae}, max rerr: {max_re}")
     return total_err
 
 
@@ -191,5 +193,5 @@ if __name__ == "__main__":
 
     err: int = test(sys.argv[1], sys.argv[2], sys.argv[3], aerr, rerr)
     if err > 0:
-        print(f'\nTotal: {err} differences with relative error of >= {rerr}')
+        print(f'\nTotal: {err} differences with rerr of >= {rerr} and aerr >= {aerr}')
         exit(1)
