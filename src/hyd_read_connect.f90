@@ -92,17 +92,17 @@
                 
                 npests = cs_db%num_pests
                 if (npests > 0) then
-                  allocate (obcs(i)%hin(1)%pest(npests))
-                  allocate (obcs(i)%hin_sur(1)%pest(npests))
-                  allocate (obcs(i)%hin_lat(1)%pest(npests))
-                  allocate (obcs(i)%hin_til(1)%pest(npests))
+                  allocate (obcs(i)%hin(1)%pest(npests), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%pest(npests), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%pest(npests), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%pest(npests), source = 0.)
                 end if
                 npaths = cs_db%num_paths
                 if (npaths > 0) then
-                  allocate (obcs(i)%hin(1)%path(npaths))
-                  allocate (obcs(i)%hin_sur(1)%path(npaths))
-                  allocate (obcs(i)%hin_lat(1)%path(npaths))
-                  allocate (obcs(i)%hin_til(1)%path(npaths))
+                  allocate (obcs(i)%hin(1)%path(npaths), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%path(npaths), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%path(npaths), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%path(npaths), source = 0.)
                 end if
                 nmetals = cs_db%num_metals
                 if (nmetals > 0) then 
@@ -113,16 +113,16 @@
                 end if
                 nsalts = cs_db%num_salts
                 if (nsalts > 0) then 
-                  allocate (obcs(i)%hin(1)%salt(nsalts))
+                  allocate (obcs(i)%hin(1)%salt(nsalts), source = 0.)
                   allocate (obcs(i)%hin(1)%salt_min(nsalts))
                   allocate (obcs(i)%hin(1)%saltc(nsalts))
-                  allocate (obcs(i)%hin_sur(1)%salt(nsalts))
+                  allocate (obcs(i)%hin_sur(1)%salt(nsalts), source = 0.)
                   allocate (obcs(i)%hin_sur(1)%salt_min(nsalts))
                   allocate (obcs(i)%hin_sur(1)%saltc(nsalts))
-                  allocate (obcs(i)%hin_lat(1)%salt(nsalts))
+                  allocate (obcs(i)%hin_lat(1)%salt(nsalts), source = 0.)
                   allocate (obcs(i)%hin_lat(1)%salt_min(nsalts))
                   allocate (obcs(i)%hin_lat(1)%saltc(nsalts))
-                  allocate (obcs(i)%hin_til(1)%salt(nsalts))
+                  allocate (obcs(i)%hin_til(1)%salt(nsalts), source = 0.)
                   allocate (obcs(i)%hin_til(1)%salt_min(nsalts))
                   allocate (obcs(i)%hin_til(1)%saltc(nsalts))
                   obcs(i)%hin(1)%salt = 0.
@@ -140,19 +140,19 @@
                 end if
                 ncs = cs_db%num_cs !rtb cs
                 if (ncs > 0) then 
-                  allocate (obcs(i)%hin(1)%cs(ncs))
+                  allocate (obcs(i)%hin(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin(1)%cs_sorb(ncs))
                   allocate (obcs(i)%hin(1)%csc(ncs))
                   allocate (obcs(i)%hin(1)%csc_sorb(ncs))
-                  allocate (obcs(i)%hin_sur(1)%cs(ncs))
+                  allocate (obcs(i)%hin_sur(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin_sur(1)%cs_sorb(ncs))
                   allocate (obcs(i)%hin_sur(1)%csc(ncs))
                   allocate (obcs(i)%hin_sur(1)%csc_sorb(ncs))
-                  allocate (obcs(i)%hin_lat(1)%cs(ncs))
+                  allocate (obcs(i)%hin_lat(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin_lat(1)%cs_sorb(ncs))
                   allocate (obcs(i)%hin_lat(1)%csc(ncs))
                   allocate (obcs(i)%hin_lat(1)%csc_sorb(ncs))
-                  allocate (obcs(i)%hin_til(1)%cs(ncs))
+                  allocate (obcs(i)%hin_til(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin_til(1)%cs_sorb(ncs))
                   allocate (obcs(i)%hin_til(1)%csc(ncs))
                   allocate (obcs(i)%hin_til(1)%csc_sorb(ncs))
@@ -179,7 +179,7 @@
                     allocate (obcs(i)%hd(ihyd)%pest(npests))
                   end if
                   if (npaths > 0) then 
-                    allocate (obcs(i)%hd(ihyd)%path(npaths))
+                    allocate (obcs(i)%hd(ihyd)%path(npaths), source = 0.)
                   end if
                   if (nmetals > 0) then 
                     allocate (obcs(i)%hd(ihyd)%hmet(nmetals))
@@ -193,7 +193,7 @@
                     obcs(i)%hd(ihyd)%saltc = 0.
                   end if
                   if (ncs > 0) then !rtb cs
-                    allocate (obcs(i)%hd(ihyd)%cs(ncs))
+                    allocate (obcs(i)%hd(ihyd)%cs(ncs), source = 0.)
                     allocate (obcs(i)%hd(ihyd)%cs_sorb(ncs))
                     allocate (obcs(i)%hd(ihyd)%csc(ncs))
                     allocate (obcs(i)%hd(ihyd)%csc_sorb(ncs))
@@ -208,7 +208,7 @@
               !if (time%step > 0) then
                 ob(i)%day_max = ndsave
                 allocate (ob(i)%ts(ob(i)%day_max,time%step))
-                allocate (ob(i)%tsin(time%step))
+                allocate (ob(i)%tsin(time%step), source = 0.)
                 allocate (ob(i)%uh(ob(i)%day_max,time%step))
                 allocate (ob(i)%hyd_flo(ob(i)%day_max,time%step))
                 ob(i)%uh = 0.
@@ -246,15 +246,15 @@
                   npests = cs_db%num_pests
                   do iout = 1, nout
                     if (npests > 0) then 
-                      allocate (obcs(i)%hcsout_m(iout)%pest(npests))
-                      allocate (obcs(i)%hcsout_y(iout)%pest(npests))
-                      allocate (obcs(i)%hcsout_a(iout)%pest(npests))
+                      allocate (obcs(i)%hcsout_m(iout)%pest(npests), source = 0.)
+                      allocate (obcs(i)%hcsout_y(iout)%pest(npests), source = 0.)
+                      allocate (obcs(i)%hcsout_a(iout)%pest(npests), source = 0.)
                     end if
                     npaths = cs_db%num_paths
                     if (npaths > 0) then 
-                      allocate (obcs(i)%hcsout_m(iout)%path(npaths))
-                      allocate (obcs(i)%hcsout_y(iout)%path(npaths))
-                      allocate (obcs(i)%hcsout_a(iout)%path(npaths))
+                      allocate (obcs(i)%hcsout_m(iout)%path(npaths), source = 0.)
+                      allocate (obcs(i)%hcsout_y(iout)%path(npaths), source = 0.)
+                      allocate (obcs(i)%hcsout_a(iout)%path(npaths), source = 0.)
                     end if
                     
                   if (nmetals > 0) then 
@@ -263,26 +263,26 @@
                     allocate (obcs(i)%hcsout_a(iout)%hmet(nmetals))
                   end if
                   if (nsalts > 0) then !rtb salt
-                    allocate (obcs(i)%hcsout_m(iout)%salt(nsalts))
+                    allocate (obcs(i)%hcsout_m(iout)%salt(nsalts), source = 0.)
                     allocate (obcs(i)%hcsout_m(iout)%salt_min(nsalts))
                     allocate (obcs(i)%hcsout_m(iout)%saltc(nsalts))
-                    allocate (obcs(i)%hcsout_y(iout)%salt(nsalts))
+                    allocate (obcs(i)%hcsout_y(iout)%salt(nsalts), source = 0.)
                     allocate (obcs(i)%hcsout_y(iout)%salt_min(nsalts))
                     allocate (obcs(i)%hcsout_y(iout)%saltc(nsalts))
-                    allocate (obcs(i)%hcsout_a(iout)%salt(nsalts))
+                    allocate (obcs(i)%hcsout_a(iout)%salt(nsalts), source = 0.)
                     allocate (obcs(i)%hcsout_a(iout)%salt_min(nsalts))
                     allocate (obcs(i)%hcsout_a(iout)%saltc(nsalts))
                   end if
                   if (ncs > 0) then !rtb cs
-                    allocate (obcs(i)%hcsout_m(iout)%cs(ncs))
+                    allocate (obcs(i)%hcsout_m(iout)%cs(ncs), source = 0.)
                     allocate (obcs(i)%hcsout_m(iout)%cs_sorb(ncs))
                     allocate (obcs(i)%hcsout_m(iout)%csc(ncs))
                     allocate (obcs(i)%hcsout_m(iout)%csc_sorb(ncs))
-                    allocate (obcs(i)%hcsout_y(iout)%cs(ncs))
+                    allocate (obcs(i)%hcsout_y(iout)%cs(ncs), source = 0.)
                     allocate (obcs(i)%hcsout_y(iout)%cs_sorb(ncs))
                     allocate (obcs(i)%hcsout_y(iout)%csc(ncs))
                     allocate (obcs(i)%hcsout_y(iout)%csc_sorb(ncs))
-                    allocate (obcs(i)%hcsout_a(iout)%cs(ncs))
+                    allocate (obcs(i)%hcsout_a(iout)%cs(ncs), source = 0.)
                     allocate (obcs(i)%hcsout_a(iout)%cs_sorb(ncs))
                     allocate (obcs(i)%hcsout_a(iout)%csc(ncs))
                     allocate (obcs(i)%hcsout_a(iout)%csc_sorb(ncs))

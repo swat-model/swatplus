@@ -53,14 +53,14 @@
         if (mpath > 0) then
           !! allocate pathogens associated with soil and plant
           do ly = 1, soil(ihru)%nly
-            allocate (cs_soil(ihru)%ly(ly)%path(mpath))
+            allocate (cs_soil(ihru)%ly(ly)%path(mpath), source = 0.)
           end do
           do ipl = 1, pcom(ihru)%npl
-            allocate (cs_pl(ihru)%pl_in(ipl)%pest(mpath))
-            allocate (cs_pl(ihru)%pl_on(ipl)%pest(mpath))
-            allocate (cs_pl(ihru)%pl_up(ipl)%pest(mpath))
+            allocate (cs_pl(ihru)%pl_in(ipl)%pest(mpath), source = 0.)
+            allocate (cs_pl(ihru)%pl_on(ipl)%pest(mpath), source = 0.)
+            allocate (cs_pl(ihru)%pl_up(ipl)%pest(mpath), source = 0.)
           end do
-          allocate (cs_irr(ihru)%path(mpath))
+          allocate (cs_irr(ihru)%path(mpath), source = 0.)
         end if
 
         isp_ini = hru(ihru)%dbs%soil_plant_init

@@ -37,7 +37,7 @@
           
           allocate (exco_salt(imax))
           do iexco_salt = 1, imax
-            allocate (exco_salt(iexco_salt)%salt(cs_db%num_salts))
+            allocate (exco_salt(iexco_salt)%salt(cs_db%num_salts), source = 0.)
           end do
           allocate (exco_salt_num(imax))
           allocate (exco_salt_name(imax))

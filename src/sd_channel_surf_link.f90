@@ -29,7 +29,7 @@
           end select
         end do
         
-        allocate (sd_ch(ics)%fp%hru(ihru_tot))
+        allocate (sd_ch(ics)%fp%hru(ihru_tot), source = 0)
         allocate (sd_ch(ics)%fp%hru_fr(ihru_tot))
    
         !! calculate total flood plain area and set hru numbers

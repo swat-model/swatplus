@@ -29,7 +29,7 @@
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
           do ly = 1, soil(ihru)%nly
-            allocate (cs_soil(ihru)%ly(ly)%cs(npmx))
+            allocate (cs_soil(ihru)%ly(ly)%cs(npmx), source = 0.)
             allocate (cs_soil(ihru)%ly(ly)%csc(npmx))
             allocate (cs_soil(ihru)%ly(ly)%cs_sorb(npmx))
             allocate (cs_soil(ihru)%ly(ly)%csc_sorb(npmx))

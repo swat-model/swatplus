@@ -51,7 +51,7 @@
         !values for each HRU object
         read(107,*) header
         do icount=1,sp_ob%hru
-          allocate(cs_rct_soil(icount)%shale(num_geol_shale))
+          allocate(cs_rct_soil(icount)%shale(num_geol_shale), source = 0.)
           allocate(cs_rct_soil(icount)%sseratio(num_geol_shale))
           allocate(cs_rct_soil(icount)%ko2a(num_geol_shale))
           allocate(cs_rct_soil(icount)%kno3a(num_geol_shale))
@@ -75,7 +75,7 @@
         if(sp_ob%aqu > 0) then
         read(107,*) header
         do icount=1,sp_ob%aqu
-          allocate(cs_rct_aqu(icount)%shale(num_geol_shale))
+          allocate(cs_rct_aqu(icount)%shale(num_geol_shale), source = 0.)
           allocate(cs_rct_aqu(icount)%sseratio(num_geol_shale))
           allocate(cs_rct_aqu(icount)%ko2a(num_geol_shale))
           allocate(cs_rct_aqu(icount)%kno3a(num_geol_shale))  

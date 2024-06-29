@@ -31,7 +31,7 @@
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
           do ly = 1, soil(ihru)%nly
-            allocate (cs_soil(ihru)%ly(ly)%salt(npmx))
+            allocate (cs_soil(ihru)%ly(ly)%salt(npmx), source = 0.)
             allocate (cs_soil(ihru)%ly(ly)%salt_min(5))
             allocate (cs_soil(ihru)%ly(ly)%saltc(npmx))
           end do

@@ -79,7 +79,7 @@
         if (eof < 0) exit
         
        ! the precip time step has to be the same as time%step
-       allocate (hmd(i)%ts(366,hmd(i)%nbyr))
+       allocate (hmd(i)%ts(366,hmd(i)%nbyr), source = 0.)
        
        ! read and save start jd and yr
        read (108,*,iostat=eof) iyr, istep

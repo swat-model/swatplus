@@ -221,10 +221,8 @@
       type (water_temperature_data) :: w_temp
 
       integer :: fdc_npts = 27
-      real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,&
-                                        97.,98.,99./) !percent        |output percent on the fdc (input)
-      integer, dimension (27) :: fdc_days = (/1,2,4,7,11,18,37,55,73,91,110,128,146,164,182,201,219,237,256,274,292,310,329,347,&
-                                             354,358,361/)
+      real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,97.,98.,99./) !percent        |output percent on the fdc (input)
+      integer, dimension (27) :: fdc_days = (/1,2,4,7,11,18,37,55,73,91,110,128,146,164,182,201,219,237,256,274,292,310,329,347,354,358,361/)
       real, dimension (27) :: fdc_n             !               |flow on the fdc at given percents
       real, dimension (27) :: fdc_norm_mean     !               |normalized flow on the fdc at given percents
       

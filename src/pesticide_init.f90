@@ -39,18 +39,18 @@
           allocate (cs_pl(ihru)%pl_on(npl))
           allocate (cs_pl(ihru)%pl_up(npl))
           do ly = 1, nly
-            allocate (cs_soil(ihru)%ly(ly)%pest(npmx))
+            allocate (cs_soil(ihru)%ly(ly)%pest(npmx), source = 0.)
             cs_soil(ihru)%ly(ly)%pest = 0.
           end do
           do ipl = 1, npl
-            allocate (cs_pl(ihru)%pl_in(ipl)%pest(npmx))
+            allocate (cs_pl(ihru)%pl_in(ipl)%pest(npmx), source = 0.)
             cs_pl(ihru)%pl_in(ipl)%pest = 0.
-            allocate (cs_pl(ihru)%pl_on(ipl)%pest(npmx))
+            allocate (cs_pl(ihru)%pl_on(ipl)%pest(npmx), source = 0.)
             cs_pl(ihru)%pl_on(ipl)%pest = 0.
-            allocate (cs_pl(ihru)%pl_up(ipl)%pest(npmx))
+            allocate (cs_pl(ihru)%pl_up(ipl)%pest(npmx), source = 0.)
             cs_pl(ihru)%pl_up(ipl)%pest = 0.
           end do
-          allocate (cs_irr(ihru)%pest(npmx))
+          allocate (cs_irr(ihru)%pest(npmx), source = 0.)
           cs_irr(ihru)%pest = 0.
         end if
 

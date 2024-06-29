@@ -37,7 +37,7 @@
           
           allocate (exco_path(imax))
           do iexco_path = 1, imax
-            allocate (exco_path(iexco_path)%path(cs_db%num_paths))
+            allocate (exco_path(iexco_path)%path(cs_db%num_paths), source = 0.)
           end do
           allocate (exco_path_num(imax))
           allocate (exco_path_name(imax))

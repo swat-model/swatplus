@@ -41,7 +41,7 @@
           allocate (cs_pest_solsor(cs_db%num_pests))
           
           do ipest = 1, imax
-            allocate (pest_soil_ini(ipest)%soil(cs_db%num_pests))
+            allocate (pest_soil_ini(ipest)%soil(cs_db%num_pests), source = 0.)
             allocate (pest_soil_ini(ipest)%plt(cs_db%num_pests))
           end do
           

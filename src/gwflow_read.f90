@@ -603,7 +603,7 @@
       !check to see if there are USGS well names (for the national model)
       inquire(file='usgs_annual_head',exist=i_exist)
       if(usgs_obs == 1) then
-        allocate(usgs_id(gw_num_obs_wells))
+        allocate(usgs_id(gw_num_obs_wells), source = 0.d0)
       endif
       !loop through the observation well locations
       do k=1,gw_num_obs_wells
@@ -1441,7 +1441,7 @@
           !read number of shale groups, and shale value (0 or 1) for each cell
           do i=1,ncell
             gwsol_chem(i)%nshale = num_geol_shale
-            allocate(gwsol_chem(i)%shale(num_geol_shale))
+            allocate(gwsol_chem(i)%shale(num_geol_shale), source = 0)
             allocate(gwsol_chem(i)%shale_sseratio(num_geol_shale))
             allocate(gwsol_chem(i)%shale_o2a(num_geol_shale))
             allocate(gwsol_chem(i)%shale_no3a(num_geol_shale))
@@ -1634,7 +1634,7 @@
       if (nat_model == 1) then
         !read in the HUC12 subwatersheds
         open(5100,file='out.key')
-        allocate(huc12(sp_ob%outlet))
+        allocate(huc12(sp_ob%outlet), source = 0.d0)
         read(5100,*)
         read(5100,*)
         do k=1,sp_ob%outlet

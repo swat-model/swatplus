@@ -1,5 +1,5 @@
  demo                     
-  SWAT+ Mar 05 2024        MODULAR Rev 2024.61.0.0                              
+  SWAT+ Jun 18 2024        MODULAR Rev 2024.61.3-29-g03b9ecd                    
   
                                                                             --YIELD (kg/ha)--
   jday   mon   day    yr    unit PLANTNM                         MASS          C           N           P

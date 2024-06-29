@@ -590,11 +590,11 @@
         type (constituent_mass), intent (in) :: hydcs2
         type (constituent_mass) :: hydcs3
         integer :: ipest, ipath, ihmet, isalt, ics
-        allocate (hydcs3%pest(cs_db%num_pests))
-        allocate (hydcs3%path(cs_db%num_paths))
+        allocate (hydcs3%pest(cs_db%num_pests), source = 0.)
+        allocate (hydcs3%path(cs_db%num_paths), source = 0.)
         allocate (hydcs3%hmet(cs_db%num_metals))
-        allocate (hydcs3%salt(cs_db%num_salts))
-        allocate (hydcs3%cs(cs_db%num_cs))
+        allocate (hydcs3%salt(cs_db%num_salts), source = 0.)
+        allocate (hydcs3%cs(cs_db%num_cs), source = 0.)
 
         do ipest = 1, cs_db%num_pests
           hydcs3%pest(ipest) =  hydcs2%pest(ipest) + hydcs1%pest(ipest)
@@ -619,11 +619,11 @@
         type (constituent_mass) :: hydcs2
         real, intent (in) :: const
         integer :: ipest, ipath, ihmet, isalt, ics
-        allocate (hydcs2%pest(cs_db%num_pests))
-        allocate (hydcs2%path(cs_db%num_paths))
+        allocate (hydcs2%pest(cs_db%num_pests), source = 0.)
+        allocate (hydcs2%path(cs_db%num_paths), source = 0.)
         allocate (hydcs2%hmet(cs_db%num_metals))
-        allocate (hydcs2%salt(cs_db%num_salts))
-        allocate (hydcs2%cs(cs_db%num_cs)) !rtb cs
+        allocate (hydcs2%salt(cs_db%num_salts), source = 0.)
+        allocate (hydcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
 
         do ipest = 1, cs_db%num_pests
           hydcs2%pest(ipest) =  const * hydcs1%pest(ipest)
