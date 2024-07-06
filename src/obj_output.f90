@@ -168,7 +168,8 @@
                     .OR.(time%yrc == 2011 .AND. time%day == 324)) then 
                         do nly = 1, soil(iob)%nly
                             soil1(iob)%tot_org%c = soil1(iob)%hact(nly)%c + soil1(iob)%hsta(nly)%c + soil1(iob)%microb(nly)%c
-                            write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%typ, ob(iob)%name, iob, nly, (soil1(iob)%tot_org%c/1000)
+                            write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%typ, ob(iob)%name, iob, nly, &
+                                         (soil1(iob)%tot_org%c/1000)
                         end do
                 end if
               

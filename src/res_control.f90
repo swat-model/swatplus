@@ -53,8 +53,8 @@
           !! determine reservoir outflow
           irel = res_dat(idat)%release
           d_tbl => dtbl_res(irel)
-          pvol_m3 = res_ob(jres)%pvol
-          evol_m3 = res_ob(jres)%evol
+          pvol_m3 = 0.5 * res_ob(jres)%pvol
+          evol_m3 = 0.5 * res_ob(jres)%evol
           if (res_wat_d(jres)%area_ha > 1.e-6) then
             dep = wbody%flo / res_wat_d(jres)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
           else
@@ -63,6 +63,18 @@
           weir_hgt = res_ob(jres)%weir_hgt
           call conditions (jres, irel)
           call res_hydro (jres, irel, pvol_m3, evol_m3)
+          
+          !! new lag to smooth condition jumps (volume or month conditions)
+          alpha_up = Exp(-res_ob(jres)%lag_up)
+          alpha_down = Exp(-res_ob(jres)%lag_down)
+          !! lag outflow when flows are receeding
+          if (res_ob(jres)%prev_flo < ht2%flo) then
+            ht2%flo = ht2%flo * alpha_up + res_ob(jres)%prev_flo * (1. - alpha_up)
+          else
+            ht2%flo = ht2%flo * alpha_down + res_ob(jres)%prev_flo * (1. - alpha_down)
+          end if
+          res_ob(jres)%prev_flo = ht2%flo
+            
           call res_sediment
 	    else
 	      ictbl = res_dat(idat)%release                              !! Osvaldo
@@ -87,17 +99,6 @@
           res(jres)%flo = 0.
         end if
 
-        !! new lag to smooth condition jumps (volume or month conditions)
-        alpha_up = Exp(-res_ob(jres)%lag_up)
-        alpha_down = Exp(-res_ob(jres)%lag_down)
-        !! lag outflow when flows are receeding
-        if (res_ob(jres)%prev_flo < ht2%flo) then
-          ht2%flo = ht2%flo * alpha_up + res_ob(jres)%prev_flo * (1. - alpha_up)
-        else
-          ht2%flo = ht2%flo * alpha_down + res_ob(jres)%prev_flo * (1. - alpha_down)
-        end if
-        res_ob(jres)%prev_flo = ht2%flo
-            
         !! subtract evaporation from reservoir storage
         res(jres)%flo = res(jres)%flo - res_wat_d(jres)%evap
         if (res(jres)%flo < 0.) then
@@ -120,9 +121,9 @@
         end if
 
         !! subtract sediment leaving from reservoir
-        res(jres)%sed = max (0., res(jres)%sed - ht2%sed)
-        res(jres)%sil = max (0., res(jres)%sil - ht2%sil)
-        res(jres)%cla = max (0., res(jres)%cla - ht2%cla)
+        !res(jres)%sed = max (0., res(jres)%sed - ht2%sed)
+        !res(jres)%sil = max (0., res(jres)%sil - ht2%sil)
+        !res(jres)%cla = max (0., res(jres)%cla - ht2%cla)
           
         !! perform reservoir nutrient balance
         call res_nutrient (iob)
@@ -180,10 +181,10 @@
       end if
 
   !!!! for Luis only    
-      !if (jres == 1) then
-      !  write (7777,*) time%day, time%yrc, jres, res(jres)%flo, ht1%flo, ht2%flo, res_wat_d(jres)%precip,   &
-      !                    res_wat_d(jres)%evap, res_wat_d(jres)%area_ha
-      !end if
+      if (jres == 1) then
+        write (7777,*) time%day, time%yrc, jres, res(jres)%flo, ht1%flo, ht2%flo,   &
+                                                 res(jres)%sed, ht1%sed, ht2%sed
+      end if
   !!!! for Luis only
       
       return

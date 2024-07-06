@@ -7,6 +7,7 @@
       use hydrograph_module
       use constituent_mass_module
       use pesticide_data_module
+      use basin_module
       
       implicit none      
 
@@ -174,6 +175,9 @@
       !! Discretize time interval to meet the stability criterion 
       if (det > detmax) then
         sd_ch(i)%msk%substeps = Int(det / detmax) + 1
+      end if
+      if (bsn_cc%rte == 0 .and. time%step <= 1) then
+        sd_ch(i)%msk%substeps = 1
       end if
       sd_ch(i)%msk%nsteps = time%step * sd_ch(i)%msk%substeps
               

@@ -13,12 +13,11 @@
       integer :: conn_type      !               !recharge/ET connections (1=HRU; 2=LSU)
       integer :: out_cols       !               !number of columns used in writing output variables
       integer :: gw_daycount    !               !simulation day counter (for pumping time series)
-      real :: watershed_area
-      
+      real*8  :: gwflow_area    !m2             !area of the watershed occupied by active gwflow cells
       
       !grid type ------------------------------------------------------------------------------------------------------
       character*15 :: grid_type                               !"structured" or "unstructured" (usg)
-      integer :: grid_nrow						                        !number of rows in structured grid
+      integer :: grid_nrow                                    !number of rows in structured grid
       integer :: grid_ncol                                    !number of columns in structured grid
       integer, dimension (:,:), allocatable :: cell_id_usg    !usg cell number, for cell in structured grid (array)
       integer, dimension (:), allocatable :: cell_id_list     !usg cell number, for cell in structured grid (list)
@@ -28,48 +27,48 @@
       
       !groundwater state variables for each cell ----------------------------------------------------------------------
       type groundwater_state
-        real :: elev = 0.			      !m            |ground surface elevation
+        real :: elev = 0.           !m            |ground surface elevation
         real :: thck = 0.           !m            |aquifer thickness
-        real :: botm = 0.			      !m            |bottom (bedrock) elevation
+        real :: botm = 0.           !m            |bottom (bedrock) elevation
         real :: xcrd = 0.           !m            |x coordinate of cell centroid
         real :: ycrd = 0.           !m            |y coordinate of cell centroid
         real :: area = 0.           !m2           |surface area
-        real :: init = 0.			      !m            |initial groundwater head (beginning of simulation)
-        real :: head = 0.			      !m            |current simulated groundwater head
-        real :: hydc = 0.			      !m/day        |aquifer hydraulic conductivity
-        real :: spyd = 0.			      !m3/m3        |aquifer specific yield
+        real :: init = 0.           !m            |initial groundwater head (beginning of simulation)
+        real :: head = 0.           !m            |current simulated groundwater head
+        real :: hydc = 0.           !m/day        |aquifer hydraulic conductivity
+        real :: spyd = 0.           !m3/m3        |aquifer specific yield
         real :: exdp = 0.           !m            |groundwater ET extinction depth
-        integer :: stat = 0 			  !             |status (0=inactive; 1=active; 2=boundary)
+        integer :: stat = 0         !             |status (0=inactive; 1=active; 2=boundary)
         integer :: ncon = 0         !             |number of connected cells
         integer :: tile = 0         !             |tile drainage flag (0=no tile; 1=tile is present)
-        real :: hnew = 0.			      !m            |new groundwater head (at end of day)
-        real :: hold = 0.			      !m            |old groundwater head (at beginning of day)
-        real :: stor = 0.			      !m3           |currently available groundwater storage
-        real :: vbef = 0.			      !m3           |groundwater volume at beginning of day
-        real :: vaft = 0.			      !m3           |groundwater volume at end of day
-        real :: hdmo = 0.			      !m            |monthly average groundwater head
-        real :: hdyr = 0.			      !m            |annual average groundwater head
+        real :: hnew = 0.           !m            |new groundwater head (at end of day)
+        real :: hold = 0.           !m            |old groundwater head (at beginning of day)
+        real :: stor = 0.           !m3           |currently available groundwater storage
+        real :: vbef = 0.           !m3           |groundwater volume at beginning of day
+        real :: vaft = 0.           !m3           |groundwater volume at end of day
+        real :: hdmo = 0.           !m            |monthly average groundwater head
+        real :: hdyr = 0.           !m            |annual average groundwater head
       end type groundwater_state
       type (groundwater_state), dimension (:), allocatable :: gw_state
       
       
       !variables for HRU (and LSU) linkage to grid cells --------------------------------------------------------------
       !variables for linking HRUs to grid cells
-      integer :: hru_cells_link					                             !        |
-      integer, dimension (:), allocatable :: hru_num_cells					 !        |
-      integer, dimension (:), allocatable :: cell_num_hrus					 !        |
-      integer, dimension (:,:), allocatable :: hru_cells					   !        |
-      integer, dimension (:,:), allocatable :: cell_hrus					   !        |
-      real, dimension (:,:), allocatable :: hru_cells_fract					 !        |
-      real, dimension (:,:), allocatable :: cells_fract					     !        |
-      real, dimension (:,:), allocatable :: cell_hrus_fract					 !        |
+      integer :: hru_cells_link                                              !        |
+      integer, dimension (:), allocatable :: hru_num_cells                   !        |
+      integer, dimension (:), allocatable :: cell_num_hrus                   !        |
+      integer, dimension (:,:), allocatable :: hru_cells                     !        |
+      integer, dimension (:,:), allocatable :: cell_hrus                     !        |
+      real, dimension (:,:), allocatable :: hru_cells_fract                  !        |
+      real, dimension (:,:), allocatable :: cells_fract                      !        |
+      real, dimension (:,:), allocatable :: cell_hrus_fract                  !        |
       !variables for linking LSUs (landscape units) to grid cells
-      integer :: lsu_cells_link					                             !        |
-      integer :: in_lsu_cell					                               !        |
-      integer, dimension (:), allocatable :: lsu_num_cells					 !        |
-      integer, dimension (:,:), allocatable :: lsu_cells					   !        |
-      real, dimension (:,:), allocatable :: lsu_cells_fract					 !        |
-      integer, dimension (:), allocatable :: lsus_connected					 !        |
+      integer :: lsu_cells_link                                              !        |
+      integer :: in_lsu_cell                                                 !        |
+      integer, dimension (:), allocatable :: lsu_num_cells                   !        |
+      integer, dimension (:,:), allocatable :: lsu_cells                     !        |
+      real, dimension (:,:), allocatable :: lsu_cells_fract                  !        |
+      integer, dimension (:), allocatable :: lsus_connected                  !        |
       
       
       !variables for groundwater sources and sinks --------------------------------------------------------------------
@@ -141,10 +140,13 @@
       type (ss_grid) :: ss_grid_tt
       
       !rech: variables for groundwater recharge ---------------------------------------------------
-      real, dimension (:), allocatable :: gwflow_perc       !           |
+      integer, dimension (:), allocatable :: gw_bound_near  !           |nearest active cell to each boundary cell
+      real, dimension (:), allocatable :: gw_bound_dist     !m          |distance of nearest active cell to each boundary cell
+      real, dimension (:), allocatable :: gwflow_perc       !     |      
       real, dimension (:), allocatable :: gw_delay          !           |
       real, dimension (:), allocatable :: gw_rech           !           |
-      
+      real, dimension (:), allocatable :: delay             !           |
+			
       !gwet: variables for groundwater evapotranspiration -----------------------------------------
       integer :: gw_et_flag                                 !           |
       real, dimension (:), allocatable :: etremain          !           |
@@ -160,7 +162,7 @@
       real, dimension (:), allocatable :: gw_chan_elev      !           |
       real, dimension (:), allocatable :: gw_chan_K         !           |
       real, dimension (:), allocatable :: gw_chan_thick     !           |
-      real :: bed_change                                    !           |
+      real :: gw_bed_change                                 !           |
       !channel-cell connection
       type cell_channel_info
         integer :: ncon                                     !           |number of cells connected to the channel
@@ -176,8 +178,8 @@
       integer :: gw_satx_flag                               !           |
       integer :: satx_count                                 !           |for each day: number of cells that are saturated
       type satx_channel_info
-        integer :: ncon                                     !           |number of cells connected to the channel
-        integer, allocatable :: cells (:)                   !           |cells connected to the channel
+        integer :: ncon                                       !           |number of cells connected to the channel
+        integer, allocatable :: cells (:)                     !           |cells connected to the channel
       endtype satx_channel_info
       type (satx_channel_info), dimension(:), allocatable :: gw_satx_info
       
@@ -187,7 +189,7 @@
       
       !latl: variables for groundwater lateral flow -----------------------------------------------
       type cell_connections
-			  integer, allocatable :: cell_id(:)                  !           |cells connected to the cell
+        integer, allocatable :: cell_id(:)                  !           |cells connected to the cell
         real, allocatable :: latl(:)                        !m3         |groundwater flow to/from connected cell
         real, allocatable :: sat(:)                         !m          |saturated thickness of connected cell
       endtype cell_connections
@@ -304,7 +306,7 @@
         integer :: daye
       end type cell_canal_out_info
       type (cell_canal_out_info), dimension (:), allocatable :: gw_canl_out_info
-      integer :: gw_canal_ncells_out										 !     |number of cells connected to canals that receive outside water
+      integer :: gw_canal_ncells_out                     !     |number of cells connected to canals that receive outside water
       real, allocatable :: canal_out_info(:,:)           !     |characteristics for canals that receive outside water
       real, allocatable :: canal_out_conc(:)             !     |solute concentration in canals that receive outside water
       
@@ -368,7 +370,9 @@
       real ::    gw_long_disp                                 !m   |aquifer longitudinal dispersivity
       integer :: gwsol_salt                                   !    |flag for simulating salt ion groundwater transport (so4,ca,mg,na,k,cl,co3,hco3)
       integer :: gwsol_cons																		!    |flag for simulating constituent groundwater transport (seo4,seo3,boron)
-      
+      integer :: gwsol_minl                                   !    |flag for simulating salt mineral precipitation-dissolution
+      integer :: gw_nminl                                     !    |number of salt minerals (set to 5)
+       
       !main attributes of solutes
       character (len=16) :: gwsol_nm(100)
       real :: gwsol_rctn(100)
@@ -376,10 +380,10 @@
       
       !solute cell state variables
       type solute_state
-        real :: mass = 0.			      !g            |solute mass in groundwater
+        real :: mass = 0.           !g            |solute mass in groundwater
         real :: init = 0.           !g/m3         |solute concentration in groundwater at beginning of simulation
         real :: conc = 0.           !g/m3         |solute concentration in groundwater      
-        real :: cnew = 0.           !g/m3				  |new concentrations at end of time step
+        real :: cnew = 0.           !g/m3         |new concentrations at end of time step
         real :: mbef = 0.           !g            |solute mass at beginning of time step
         real :: maft = 0.           !g            |solute mass at end of time step
         real :: cnmo = 0.           !g/m3         |monthly average concentration
@@ -390,6 +394,13 @@
       end type object_solute_state
       type (object_solute_state), dimension (:), allocatable :: gwsol_state
 
+      !salt mineral cell state variables
+      real :: mass_min(100)                              !g       |solute mass added/removed from cell via precipitation-dissolution
+      type minl_state
+        real, dimension (:), allocatable :: fract        !        |fraction of cell that is the salt mineral
+      end type minl_state
+      type (minl_state), dimension (:), allocatable :: gwsol_minl_state
+      
       !solute cell chemical reaction variables
       integer, dimension (:), allocatable :: cell_int
       real :: mass_rct(100)         !g            |solute mass added/removed from cell via chemical reaction
@@ -425,7 +436,9 @@
         real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
         real :: advn = 0.           !g            |solute mass advected to/from cell
         real :: disp = 0.           !g            |solute mass dispersed to/from cell
-        real :: rctn = 0.           !g            |solute mass of chemical reaction
+        real :: rcti = 0.           !g            |solute mass of chemical reaction (input)
+        real :: rcto = 0.           !g            |solute mass of chemical reaction (output)
+        real :: minl = 0.           !g            |solute mass added (dissolution) or removed (precipitation) via salt mineral interactions
         real :: sorb = 0.           !g            |solute mass of sorption
         real :: totl = 0.           !g            |sum of mass inputs and outputs
       end type solute_ss
@@ -450,7 +463,9 @@
         real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
         real :: advn = 0.           !g            |solute mass advected to/from cell
         real :: disp = 0.           !g            |solute mass dispersed to/from cell
-        real :: rctn = 0.           !g            |solute mass of chemical reaction
+        real :: rcti = 0.           !g            |solute mass produced by chemical reaction
+        real :: rcto = 0.           !g            |solute mass consumed by chemical reaction
+        real :: minl = 0.           !g            |solute mass produced by salt mineral dissolution
         real :: sorb = 0.           !g            |solute mass of sorption
       end type solute_ss_sum
       type object_solute_ss_sum
@@ -464,12 +479,14 @@
       
       !grid mass for year and total (kg)
       real, dimension (:), allocatable :: sol_grid_chng_yr,sol_grid_rech_yr,sol_grid_gwsw_yr,sol_grid_swgw_yr, &
-                                          sol_grid_satx_yr,sol_grid_advn_yr,sol_grid_disp_yr,sol_grid_rctn_yr, &
+                                          sol_grid_satx_yr,sol_grid_advn_yr,sol_grid_disp_yr, &
+                                          sol_grid_rcti_yr,sol_grid_rcto_yr,sol_grid_minl_yr, &
                                           sol_grid_sorb_yr,sol_grid_ppag_yr,sol_grid_ppex_yr,sol_grid_tile_yr, &
                                           sol_grid_soil_yr,sol_grid_resv_yr,sol_grid_wetl_yr,sol_grid_canl_yr, &
                                           sol_grid_fpln_yr
       real, dimension (:), allocatable :: sol_grid_chng_tt,sol_grid_rech_tt,sol_grid_gwsw_tt,sol_grid_swgw_tt, &
-                                          sol_grid_satx_tt,sol_grid_advn_tt,sol_grid_disp_tt,sol_grid_rctn_tt, &
+                                          sol_grid_satx_tt,sol_grid_advn_tt,sol_grid_disp_tt, &
+                                          sol_grid_rcti_tt,sol_grid_rcto_tt,sol_grid_minl_tt, &
                                           sol_grid_sorb_tt,sol_grid_ppag_tt,sol_grid_ppex_tt,sol_grid_tile_tt, &
                                           sol_grid_soil_tt,sol_grid_resv_tt,sol_grid_wetl_tt,sol_grid_canl_tt, &
                                           sol_grid_fpln_tt
@@ -490,8 +507,9 @@
       integer, dimension (:), allocatable :: cell_included_huc12   !         |
       real(8), dimension (:), allocatable :: huc12                 !         |
       real, dimension (:,:), allocatable :: gw_huc12_wb            !         |
+      real, dimension (:,:), allocatable :: gw_huc12_wb_mo         !         |
       
-
+      
       !reading and writing --------------------------------------------------------------------------------------------
       integer :: out_gw = 1228
       integer :: in_wet_cell = 1239
@@ -524,6 +542,7 @@
       integer :: out_gwobs_usgs = 1274
       integer :: out_strobs = 1275
       integer :: out_huc12wb = 1276
+      integer :: out_huc12wb_mo = 1312
       integer :: out_gw_pumpdef = 1277
       integer :: out_gw_canal = 1278
       integer :: out_gw_fp = 1283
@@ -547,13 +566,15 @@
       integer :: out_sol_fpln = 1300
       integer :: out_sol_canl = 1301
       integer :: out_sol_wetl = 1302
-      integer :: out_sol_rctn = 1303
-      integer :: out_sol_sorb = 1304
+      integer :: out_sol_rcti = 1303
+      integer :: out_sol_rcto = 1304
+      integer :: out_sol_minl = 1305
+      integer :: out_sol_sorb = 1306
       !solute mass balance (daily, yearly, average annual)
       integer :: out_solbal_dy = 7100
       integer :: out_solbal_yr = 7200
       integer :: out_solbal_aa = 7300
       !solute observation cell concentrations
       integer :: out_gwobs_sol = 1305
-       
-      end module gwflow_module  
+        
+      end module gwflow_module     

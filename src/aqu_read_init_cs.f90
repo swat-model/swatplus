@@ -86,15 +86,19 @@
           enddo
            
           !! initial pathogens
-          do ics = 1, db_mx%pathw_ini
-            if (aqu_init_dat_c_cs(iaq)%path == path_init_name(ics)) then
-              !! initialize pathogens in aquifer water and benthic from input data
-              do ipath = 1, cs_db%num_paths
-                cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
-              end do
-              exit
-            end if
-          end do
+          do isp_ini = 1, imax
+            if (aqu_init_dat_c_cs(isp_ini)%name == aqudb(iaq)%aqu_ini) then
+              do ics = 1, db_mx%pathw_ini
+                if (aqu_init_dat_c_cs(isp_ini)%path == path_init_name(ics)) then
+                  !! initialize pathogens in aquifer water and benthic from input data
+                  do ipath = 1, cs_db%num_paths
+                    cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
+                  end do
+                  exit
+                end if
+              end do  
+            endif
+          enddo
             
           !! initial salts !rtb salt
           if(cs_db%num_salts > 0) then

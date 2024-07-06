@@ -59,9 +59,7 @@
             if (eof < 0) exit
             read (107,*,iostat=eof) path_init_name(ipathi)
             if (eof < 0) exit
-            read (107,*,iostat=eof) titldum, path_water_ini(ipathi)%water
-            if (eof < 0) exit
-            read (107,*,iostat=eof) titldum, path_water_ini(ipathi)%benthic
+            read (107,*,iostat=eof) titldum, path_water_ini(ipathi)%water, path_water_ini(ipathi)%benthic
             if (eof < 0) exit
           end do
           close (107)

@@ -23,7 +23,7 @@
 	    if (ht1%sed < 1.e-6) ht1%sed = 0.0      
         !! velsetl = 1.35 for clay particle m/d
 	    if (wbody_wb%area_ha > 1.e-6) then
-          velofl = (ht2%flo / wbody_wb%area_ha) / 10000.  ! m3/d / ha * 10000. = m/d
+          velofl = (ht1%flo / wbody_wb%area_ha) / 10000.  ! m3/d / ha * 10000. = m/d
           if (velofl > 1.e-6) then
 	        trapres = wbody_prm%sed%velsetlr / velofl
           else
@@ -33,9 +33,9 @@
 	    else
 	      trapres = 1.
         end if
-        wbody%sed = wbody%sed - (ht1%sed * trapres)
-        wbody%sil = wbody%sil - (ht1%sil * trapres)
-        wbody%cla = wbody%cla - (ht1%cla * trapres)
+        !wbody%sed = wbody%sed - (ht1%sed * trapres)
+        !wbody%sil = wbody%sil - (ht1%sil * trapres)
+        !wbody%cla = wbody%cla - (ht1%cla * trapres)
 
         !! compute concentrations
 	    if (wbody%flo > 0.) then
@@ -53,8 +53,12 @@
         
         !! compute change in sediment concentration due to settling 
         if (sed_ppm > wbody_prm%sed%nsed) then
+          wbody_prm%sed%sed_stlr = exp(-wbody_prm%sed%sed_stlr)
           sed_ppm = (sed_ppm - wbody_prm%sed%nsed) * wbody_prm%sed%sed_stlr + wbody_prm%sed%nsed
-          wbody%sed = sed_ppm * wbody%flo / 1000000.      ! ppm -> t
+          sed_ppm = Max (sed_ppm, wbody_prm%sed%nsed)
+          !wbody%sed = sed_ppm * wbody%flo / 1000000.      ! ppm -> t
+          ht2%sed = sed_ppm * ht2%flo / 1000000.
+          wbody%sed = wbody%sed - ht2%sed
           
           sil_ppm = (sil_ppm - wbody_prm%sed%nsed) * wbody_prm%sed%sed_stlr + wbody_prm%sed%nsed
           wbody%sil = sil_ppm * wbody%flo / 1000000.      ! ppm -> t

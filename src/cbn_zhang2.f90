@@ -19,7 +19,7 @@
         !!==============================================
         !! local variables
        !rnmn
-       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85–0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
+       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.850.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
        !abl     : carbon allocation from biomass to leaching; abl = (1-exp(-f/(0.01* sw+ 0.1*(kdbm)*db)) (williams, 1995)
        !abp     : allocation from biomass to passive humus; 0 (surface litter), 0.003 + 0.032*claf (all other layers) (parton et al., 1993, 1994)
        !almco2  : allocation from metabolic litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
@@ -42,7 +42,7 @@
        !cpn3    : potential n deficit resulting from the transformation of microbial biomass; calc as (pn5+pn6)-bmntp if bmntp < (pn5+pn6), otherwise = 0 (kg n ha-1 day-1)
        !cpn4    : potential n deficit resulting from the transformation of slow humus; calc as (pn7+pn8)-hsntp if hsntp < (pn7+pn8), otherwise = 0 (kg n ha-1 day-1)
        !cpn5    : potential n deficit resulting from the transformation of passive humus; calc as pn9-hpntp if hpntp < pn9, otherwise = 0 (kg n ha-1 day-1)
-       !cs      : combined factor controlling biological processes [cs = sqrt(cdg×sut)* 0.8*ox*x1), cs < 10; cs = 10, cs>=10 (williams, 1995)]
+       !cs      : combined factor controlling biological processes [cs = sqrt(cdg * sut)* 0.8*ox*x1), cs < 10; cs = 10, cs>=10 (williams, 1995)]
        !dbp     : soil bulk density of plow layer (mg m-3) (not used)
        !hsctp   : potential transformation of c in slow humus (kg ha-1 day-1)
        !hsntp   : potential transformation of n in slow humus (kg ha-1 day-1)
@@ -52,7 +52,7 @@
                 !layers = 0.000012 day-1) (parton et al.,1993, 1994)
        !hsr     : rate of transformation of slow humus under optimal conditions (all layers
                 != 0.0005 day-1) (parton et al., 1993, 1994; vitousek et al., 1993)
-       !koc     : liquid–solid partition coefficient for microbial biomass (10^3 m^3 mg-1)     
+       !koc     : liquid solid partition coefficient for microbial biomass (10^3 m^3 mg-1)
        !lmf     : fraction of the litter that is metabolic    
        !lmnf    : fraction of metabolic litter that is n (kg kg-1)  
        !lmr     : rate of transformation of metabolic litter under optimal conditions (surface =

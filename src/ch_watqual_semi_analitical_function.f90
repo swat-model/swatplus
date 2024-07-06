@@ -45,9 +45,9 @@
       wq_semianalyt = term1 + term2
       
     !! if time of residence in reach is less than or eq to timestep don't do this. MJW 2023
-      if (tres <= tdel) then
-          wq_semianalyt =cint  
-      end if
+      !if (tres <= tdel) then
+      !    wq_semianalyt = cint  
+      !end if
 
       return
       end function

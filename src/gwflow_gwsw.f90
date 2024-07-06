@@ -11,7 +11,7 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
+      integer, intent (in) :: chan_id    !       |channel number
       integer :: k                       !       |counter
       integer :: s                       !       |solute counter
       integer :: cell_id                 !       |cell in connection with the channel
@@ -22,7 +22,7 @@
       real :: chan_depth                 !m      |channel depth
       real :: chan_width                 !m      |channel width
       real :: chan_length                !m      |length of channel, in cell
-      real :: bed_elev									 !m      |elevation of channel bed, in cell
+      real :: bed_elev                   !m      |elevation of channel bed, in cell
       real :: bed_K                      !m/day  |hydraulic conductivity of channel bed, in cell
       real :: bed_thick                  !m      |thickness of channel bed, in cell
       real :: chan_stage                 !m      |elevation of water in channel, in cell
@@ -53,10 +53,10 @@
         
           !characteristics of cell
           chan_length = gw_chan_info(chan_id)%leng(k)
-          bed_elev = gw_chan_info(chan_id)%elev(k)
+          bed_elev = gw_chan_info(chan_id)%elev(k) - gw_bed_change
           bed_K = gw_chan_info(chan_id)%hydc(k)
           bed_thick = gw_chan_info(chan_id)%thck(k)
-        
+          
           !derived values
           chan_stage = bed_elev + chan_depth !stage of water in channel (m)
           flow_area = chan_width * chan_length !water exchange flow area (m2)

@@ -21,6 +21,7 @@
       use maximum_data_module
       use calibration_data_module
       use hydrograph_module
+      use gwflow_module, only : ncell
       
       implicit none
 
@@ -127,6 +128,12 @@
               cal_upd(i)%num_elem = db_mx%pcpfiles
             case ("tmp")
               cal_upd(i)%num_elem = db_mx%tmpfiles
+			case ("gwf") !rtb - all gwflow cells
+			   cal_upd(i)%num_elem = ncell
+			case ("gwf_riv") !rtb - all channels
+               cal_upd(i)%num_elem = sp_ob%chandeg
+            case ("gwf_sgl") !rtb - single value
+               cal_upd(i)%num_elem = 1
             end select
             
             allocate (cal_upd(i)%num(cal_upd(i)%num_elem))

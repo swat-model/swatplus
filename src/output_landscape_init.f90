@@ -335,10 +335,10 @@
           write (4540,*) plcarb_hdr_units
               write (9000,*) "HRU                       hru_plcarb_day.txt"          
              if (pco%csvout == "y") then
-              open (4534,file="hru_plcarb_day.csv", recl = 1500)
-              write (4534,*)  bsn%name, prog
-              write (4534,'(*(G0.3,:,","))') plcarb_hdr
-              write (4534,'(*(G0.3,:,","))') plcarb_hdr_units
+              open (4544,file="hru_plcarb_day.csv", recl = 1500)
+              write (4544,*)  bsn%name, prog
+              write (4544,'(*(G0.3,:,","))') plcarb_hdr
+              write (4544,'(*(G0.3,:,","))') plcarb_hdr_units
               write (9000,*) "HRU                       hru_plcarb_day.csv"
             end if
         endif
@@ -458,7 +458,8 @@
         !! write carbon in soil by layer
         open (9999,file = "hru_cbn_lyr.txt", recl = 1500)
           write (9999,*)  bsn%name, prog
-          write (9999,*) "        jday        mon          day       year hru     name               total soil carbon (kg/ha) by layer "
+          write (9999,*)                                     &
+    "        jday        mon          day       year hru     name               total soil carbon (kg/ha) by layer "
     
         !! write carbon in soil, plant, and residue
         open (4560,file = "hru_plc_stat.txt", recl = 1500)
@@ -515,7 +516,7 @@
           write (4566,*)  bsn%name, prog
           write (4566,*) bsn_carb_hdr
           write (4566,*) bsn_carb_hdr_units
-          write (9000,*) "BASIN                       basin_carbon_all.txt"
+          write (9000,*) "BASIN                     basin_carbon_all.txt"
         end if
           
  !! NEW BASIN CARBON ALL OUTPUT FILE
@@ -1202,7 +1203,7 @@
             write (2056,*) bsn%name, prog
             write (2056,'(*(G0.3,:,","))') wb_hdr !! bsn
             write (2056,'(*(G0.3,:,","))') wb_hdr_units
-            write (9000,*) "BASIN                    basin_wb_yr.csv"
+            write (9000,*) "BASIN                     basin_wb_yr.csv"
           end if 
         endif
         

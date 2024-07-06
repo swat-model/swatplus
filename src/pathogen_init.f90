@@ -56,9 +56,9 @@
             allocate (cs_soil(ihru)%ly(ly)%path(mpath))
           end do
           do ipl = 1, pcom(ihru)%npl
-            allocate (cs_pl(ihru)%pl_in(ipl)%pest(mpath))
-            allocate (cs_pl(ihru)%pl_on(ipl)%pest(mpath))
-            allocate (cs_pl(ihru)%pl_up(ipl)%pest(mpath))
+            allocate (cs_pl(ihru)%pl_in(ipl)%path(mpath))
+            allocate (cs_pl(ihru)%pl_on(ipl)%path(mpath))
+            allocate (cs_pl(ihru)%pl_up(ipl)%path(mpath))
           end do
           allocate (cs_irr(ihru)%path(mpath))
         end if

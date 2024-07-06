@@ -40,6 +40,7 @@
       use mgt_operations_module
       use hru_module, only : hru, ihru, ipl, phubase, yr_skip
       use plant_module
+      use soil_module
       use time_module
       use climate_module
       use basin_module
@@ -75,7 +76,6 @@
       integer :: mo                  !              |
       integer :: day_mo              !              |
       integer :: iwallo, imallo
-      
       time%yrc = time%yrc_start
       
       !! generate precip for the first day - %precip_next
@@ -372,9 +372,10 @@
         !! write channel morphology - downcutting and widening
         ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / sd_ch(ich)%chw / time%yrs_prt
         ch_morph(ich)%d_yr = ch_morph(ich)%d_yr / sd_ch(ich)%chd / time%yrs_prt
-        ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm / (5. * sd_ch(ich)%chw) / time%yrs_prt
+        ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm / (3. * sd_ch(ich)%chw *           &
+                                         sd_ch(ich)%chl * 1000.) / time%yrs_prt
         iob = sp_ob1%chandeg + ich - 1
-        !write (7778,*) ich, ob(iob)%name, ch_morph(ich)%w_yr, ch_morph(ich)%d_yr, ch_morph(ich)%fp_mm   !!commented 5/28/24 for commit
+        write (7778,*) ich, ob(iob)%name, ch_morph(ich)%w_yr, ch_morph(ich)%d_yr, ch_morph(ich)%fp_mm
       end do
           
       !! ave annual calibration output and reset time for next simulation

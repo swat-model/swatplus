@@ -56,7 +56,7 @@
             write (2586,*) bsn%name, prog
             write (2586,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
             write (2586,'(*(G0.3,:","))') hyd_hdr_units2
-            write (9000,*)   "HYDOUT                  hydout_yr.csv"
+            write (9000,*)   "HYDOUT                    hydout_yr.csv"
           end if
      end if
      

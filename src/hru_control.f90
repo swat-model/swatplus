@@ -536,9 +536,6 @@
           call cs_lch
         endif
         
-        !! compute chl-a, CBOD and dissolved oxygen loadings
-        call swr_subwq
-
         !! compute pathogen transport
         if (cs_db%num_paths > 0.) then
           call path_ls_swrouting
@@ -595,6 +592,9 @@
         qdr(j) = qday + latq(j) + qtile
 
         if (qdr(j) < 0.) qdr(j) = 0.
+
+        !! compute chl-a, CBOD and dissolved oxygen loadings
+        call swr_subwq
 
         xx = sed_con(j) + soln_con(j) + solp_con(j) + orgn_con(j) + orgp_con(j)
         if (xx > 1.e-6) then

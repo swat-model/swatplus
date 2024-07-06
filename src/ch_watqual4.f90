@@ -137,7 +137,7 @@
 
         !! calculate algal biomass concentration at end of day (phytoplanktonic algae) QUAL2E equation III-2
         factk = Theta(gra,thgra,wtmp) - Theta(ch_nut(jnut)%rhoq, thrho, wtmp)
-        algcon = 1000. * ht3%cla / ch_nut(jnut)%ai0
+        algcon = 1000. * ht3%chla / ch_nut(jnut)%ai0
         alg_m1 = wq_semianalyt (tday, rt_delt, 0., factk, algcon, algin)
          
         alg_m = wq_semianalyt (tday, rt_delt, 0., factk, algcon, algin)

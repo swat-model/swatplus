@@ -103,6 +103,7 @@
         call actions (ich, icmd, id)
       end if
  
+      ob(icmd)%hd(1) = ht2
       !! output channel organic-mineral
       ch_out_d(ich) = ob(icmd)%hd(1)                       !set outflow om hydrograph
       ch_out_d(ich)%flo = ob(icmd)%hd(1)%flo / 86400.      !m3 -> m3/s
