@@ -61,7 +61,8 @@
         ch_slope = .5 * topo_db(ith)%slope
         ch_n = hru(ihru)%luse%ovn
         !! assume length to width (l/w) ratio of 2 --> A=l*w - A=l*l/2 - l=sqrt(A/2)
-        ch_l = sqrt(hru(ihru)%area_ha / 2.)
+        !! assume channel begins at 1/2 of distance
+        ch_l = 0.5 * sqrt(hru(ihru)%area_ha / 2.)
         !ch_l = hru(ihru)%field%length / 1000.
         t_ch = .31 * ch_l * ch_n**.75 / (hru(ihru)%km**.125 * (ch_slope + .001)**.375)
         tconc(ihru) = t_ov(ihru) + t_ch

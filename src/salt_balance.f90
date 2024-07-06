@@ -22,7 +22,7 @@
       
       integer :: i,m,ob_ctr,num_days,jj
       real :: saltsum,hru_area_m2,sol_thick,soil_volume,soil_mass, &
-              aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha,soil_thick
+              aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha, soil_thick
       real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
       real :: salt_basin(28)
 
@@ -277,11 +277,21 @@
 
       !solid --> dissolved (aquifer)
       saltsum = 0.
-      ob_ctr = sp_ob1%aqu !first aquifer object
-      do i=1,sp_ob%aqu
-        saltsum = saltsum + asaltb_d(i)%salt(1)%diss !kg
-        ob_ctr = ob_ctr + 1
-      enddo
+      if(bsn_cc%gwflow == 1) then !gwflow is active
+        if(gw_solute_flag == 1) then
+          do i=1,ncell
+            do m=1,cs_db%num_salts  
+              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%minl / 1000.) !kg 
+            enddo
+          enddo
+        endif 
+      else
+        ob_ctr = sp_ob1%aqu !first aquifer object
+        do i=1,sp_ob%aqu
+          saltsum = saltsum + asaltb_d(i)%salt(1)%diss !kg
+          ob_ctr = ob_ctr + 1
+        enddo
+      endif
       salt_basin(24) = saltsum
 
       !total soil salt (dissolved)
@@ -465,17 +475,21 @@
         enddo
       enddo
       
-      !if gwflow active: zero out daily cell values for recharge (others are zeroed out in gwflow_simulate)
+      !if gwflow active: zero out daily cell values for recharge and chemical reactions (others are zeroed out in gwflow_simulate)
       if(bsn_cc%gwflow == 1) then
         if (gw_solute_flag == 1) then
           do i=1,ncell
             do m=1,cs_db%num_salts
               gwsol_ss(i)%solute(2+m)%rech = 0.
+              gwsol_ss(i)%solute(2+m)%rcti = 0.
+              gwsol_ss(i)%solute(2+m)%rcto = 0.
+              gwsol_ss(i)%solute(2+m)%minl = 0.
 					  enddo
           enddo
         endif
       endif
-          
+      
+      
 7000  format(i8,i8,i8,35e16.8)
 7001  format(20e16.8)
 

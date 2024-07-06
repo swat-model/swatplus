@@ -410,9 +410,9 @@
         if (gw_solute_flag == 1) then
           do i=1,ncell
             sol_index = 2 + cs_db%num_salts
-            cssum1 = cssum1 + (gwsol_ss(i)%solute(sol_index+1)%rctn / 1000.) !kg seo4 
-            cssum2 = cssum2 + (gwsol_ss(i)%solute(sol_index+2)%rctn / 1000.) !kg seo3
-            cssum3 = cssum3 + (gwsol_ss(i)%solute(sol_index+3)%rctn / 1000.) !kg boron  
+            cssum1 = cssum1 + ((gwsol_ss(i)%solute(sol_index+1)%rcti+gwsol_ss(i)%solute(sol_index+1)%rcto) / 1000.) !kg seo4 
+            cssum2 = cssum2 + ((gwsol_ss(i)%solute(sol_index+2)%rcti+gwsol_ss(i)%solute(sol_index+2)%rcto) / 1000.) !kg seo3
+            cssum3 = cssum3 + ((gwsol_ss(i)%solute(sol_index+3)%rcti+gwsol_ss(i)%solute(sol_index+3)%rcto) / 1000.) !kg boron  
           enddo
         endif 
       else
@@ -662,7 +662,9 @@
           do m=1,cs_db%num_cs
             do i=1,ncell
               gwsol_ss(i)%solute(sol_index)%rech = 0.
-              gwsol_ss(i)%solute(sol_index)%rctn = 0.
+              gwsol_ss(i)%solute(sol_index)%rcti = 0.
+              gwsol_ss(i)%solute(sol_index)%rcto = 0.
+              gwsol_ss(i)%solute(sol_index)%minl = 0.
               gwsol_ss(i)%solute(sol_index)%sorb = 0.
             enddo
             sol_index = sol_index + 1

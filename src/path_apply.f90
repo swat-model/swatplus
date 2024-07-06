@@ -36,7 +36,7 @@
       gc1 = 1. - gc
       do ipath = 1, cs_db%num_paths
         ipath_db = cs_db%path_num(ipath)
-        frt_t = path_db(ipath_db)%swf * frt_kg / 1000.
+        frt_t = path_db(ipath_db)%fr_manure * frt_kg / 1000.
         !! update pathogen levels on foliage
         if (pcom(j)%lai_sum > 1.e-6) then
           do ipl = 1, pcom(j)%npl

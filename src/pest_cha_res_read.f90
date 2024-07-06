@@ -59,9 +59,7 @@
           do ipesti = 1, imax
             read (107,*,iostat=eof) pest_init_name(ipesti)
             if (eof < 0) exit
-              read (107,*,iostat=eof) titldum, pest_water_ini(ipesti)%water
-              if (eof < 0) exit
-              read (107,*,iostat=eof) titldum, pest_water_ini(ipesti)%benthic
+              read (107,*,iostat=eof) titldum, pest_water_ini(ipesti)%water, pest_water_ini(ipesti)%benthic
               if (eof < 0) exit
           end do
           close (107)

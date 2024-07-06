@@ -27,7 +27,7 @@
 
       
       !only proceed if salt ions are included in simulation
-      if(cs_db%num_salts > 0 .and. fert_salt_flag.eq.1) then
+      if(cs_db%num_salts > 0 .and. fert_salt_flag == 1) then
       
         !only proceed if valid fertilizer ID is selected
         if(ifrt > 0) then

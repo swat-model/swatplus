@@ -14,16 +14,16 @@
         real :: part_DOC_para = 4000.   !           |organic carbon partition coefficient 1000 to 1200 ! 500-2000 !replacing KOC=Liquid-solid partition coefficient for Microbial Biomass (10^3 m3 Mg-1)
         real :: hlife_doc_para = 50.	!days       |DOC half life in groundwater, calculating DOC decay in groundwater ! 0-100
         !Allocation of CO2 and Carbon transformation
-	    real :: ABCO2_para_sur = 0.6    !           |Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 × (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
-        real :: ABCO2_para_sub = 0.	!           |Calculated -Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 × (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
+	    real :: ABCO2_para_sur = 0.6    !           |Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 x (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
+        real :: ABCO2_para_sub = 0.	!           |Calculated -Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 x (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
 	    real :: ABP_para_sur = 0.0      !           |Allocation from Biomass to passive Humus; 0 (surface Litter), 0.003 + 0.032 x SOL_CLAY (all other layers) (Parton et al., 1993, 1994)
         real :: ABP_para_sub = 0.0      !           |Calculated - Allocation from Biomass to passive Humus; 0 (surface Litter), 0.003 + 0.032 x SOL_CLAY (all other layers) (Parton et al., 1993, 1994)
         real :: ALMCO2_para_sur	= 0.6	!           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
         real :: ALMCO2_para_sub	= 0.55	!           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
         real :: ALSLNCO2_para_sur = 0.6	!           |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
         real :: ALSLNCO2_para_sub =0.55 !	        |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ASP_para_sur = 0.0	    !           |Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 × CLAF (all other layers) (Parton et al., 1993, 1994)
-        real :: ASP_para_sub = 0.0	    !           |Calculated - Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 × CLAF (all other layers) (Parton et al., 1993, 1994)
+        real :: ASP_para_sur = 0.0	    !           |Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 x CLAF (all other layers) (Parton et al., 1993, 1994)
+        real :: ASP_para_sub = 0.0	    !           |Calculated - Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 x CLAF (all other layers) (Parton et al., 1993, 1994)
         real :: ALSLCO2_para = 0.3	    !           |Allocation from lignin of structural Litter to CO2; 0.3 (Parton et al., 1993, 1994)
         real :: APCO2_para = 0.55	    !           |Allocation from passive Humus to CO2; 0.55 (Parton et al., 1993, 1994)
         real :: ASCO2_para = 0.55	    !           |Allocation from slow Humus to CO2; 0.55 (Parton et al., 1993, 1994)
@@ -39,9 +39,9 @@
         real :: LSR_para_sur = 0.0107	!           |Rate of potential transformation of structural Litter under optimal conditions (surface = 0.0107 d-1; all other layers = 0.0132 d-1) (Parton et al., 1994)
         real :: LSR_para_sub = 0.0132	!           |Rate of potential transformation of structural Litter under optimal conditions (surface = 0.0107 d-1; all other layers = 0.0132 d-1) (Parton et al., 1994)
         !Soil texture controls of microbial activity
-        real :: XBM_para_sur = 1.0	    !           |Control on transformation of microbial Biomass by soil texture and structure. Its values: surface Litter layer = 1; all other layers = 1 – 0.75 × (SILT + CLAY) (Parton et al., 1993, 1994)
-        real :: XBM_para_sub = 0.0	    !           |Calculated - Control on transformation of microbial Biomass by soil texture and structure. Its values: surface Litter layer = 1; all other layers = 1 – 0.75 × (SILT + CLAY) (Parton et al., 1993, 1994)
-        real :: XLSLF_para = 0.0	    !           |Calculated - Control on potential transformation of structural Litter by lignin fraction of structural Litter [XLSLF = exp(-3 × LSLF) (Parton et al., 1993, 1994)]
+        real :: XBM_para_sur = 1.0	    !           |Control on transformation of microbial Biomass by soil texture and structure. Its values: surface Litter layer = 1; all other layers = 1  0.75 x (SILT + CLAY) (Parton et al., 1993, 1994)
+        real :: XBM_para_sub = 0.0	    !           |Calculated - Control on transformation of microbial Biomass by soil texture and structure. Its values: surface Litter layer = 1; all other layers = 1  0.75 x (SILT + CLAY) (Parton et al., 1993, 1994)
+        real :: XLSLF_para = 0.0	    !           |Calculated - Control on potential transformation of structural Litter by lignin fraction of structural Litter [XLSLF = exp(-3 x LSLF) (Parton et al., 1993, 1994)]
         !Oxygen factor control parameters
         real :: OX_aa_para = 10.0	    !           !Coefficient in calculating oxygen factor 
         real :: OX_bb_para = 0.035	    !           |Coefficient in calculating oxygen factor 

@@ -8,6 +8,7 @@
       use basin_module
       use hru_module, only : hru
       use hydrograph_module
+      use soil_module
       
       implicit none
       

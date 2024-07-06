@@ -465,12 +465,14 @@
           end if
           
           !! carbon output for testing  ***jga
-          if ((time%yrc == 2007 .AND. time%day == 213) .OR. (time%yrc == 2010 .AND. time%day == 319)            &
-                                                        .OR.(time%yrc == 2011 .AND. time%day == 324)) then 
+          !if ((time%yrc == 2007 .AND. time%day == 213) .OR. (time%yrc == 2010 .AND. time%day == 319)            &
+          !                                              .OR.(time%yrc == 2011 .AND. time%day == 324)) then 
+          if (ihru == 1) then
             do nly = 1, soil(ihru)%nly
-              soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
+              !soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
             end do
-            write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name, (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
+            write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name,           &
+                                                   (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
           end if
                                                         
         select case (pco%carbout)
@@ -593,7 +595,7 @@
       !write out hydrograph components for selected channels
       if (bsn_cc%gwflow == 1) then
       do i_chan=1,sp_ob%chandeg
-        if(hydsep_flag(i_chan).eq.1) then
+        if(hydsep_flag(i_chan) == 1) then
           write(out_hyd_sep,102) time%yrc,time%day,i_chan,(hyd_sep_array(i_chan,i_count),i_count=1,7)
         endif
       enddo

@@ -235,13 +235,13 @@
         write (4809,*) bsn%name, prog
         write (4809,*) sdch_bud_hdr
         write (4809,*) sdch_bud_hdr_units
-        write (9000,*) "SWAT_DEG_CHAN_BUD             sd_chanbud_mon.txt"
+        write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_mon.txt"
          if (pco%csvout == "y") then 
            open (4813,file="sd_chanbud_mon.csv",recl = 1500)
            write (4813,*) bsn%name, prog
            write (4813,'(*(G0.3,:","))') sdch_bud_hdr 
            write (4813,'(*(G0.3,:","))') sdch_bud_hdr_units        
-           write (9000,*) "SWAT_DEG_CHAN_BUD             sd_chanbud_mon.csv"
+           write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_mon.csv"
          end if
         end if
        
@@ -250,13 +250,13 @@
           write (4810,*) bsn%name, prog
           write (4810,*) sdch_bud_hdr 
           write (4810,*) sdch_bud_hdr_units
-          write (9000,*) "SWAT_DEG_CHAN_BUD               sd_chanbud_yr.txt"
+          write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_yr.txt"
           if (pco%csvout == "y") then 
             open (4814,file="sd_chanbud_yr.csv", recl = 1500)
             write (4814,*) bsn%name, prog
             write (4814,'(*(G0.3,:","))') sdch_bud_hdr
             write (4814,'(*(G0.3,:","))') sdch_bud_hdr_units        
-            write (9000,*) "SWAT_DEG_CHAN_BUD               sd_chanbud_yr.csv"
+            write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_yr.csv"
           end if
         endif
         
@@ -265,13 +265,13 @@
           write (4811,*) bsn%name, prog
           write (4811,*) sdch_bud_hdr 
           write (4811,*) sdch_bud_hdr_units
-          write (9000,*) "SWAT_DEG_CHAN_BUD             sd_chanbud_aa.txt"
+          write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_aa.txt"
           if (pco%csvout == "y") then 
             open (4815,file="sd_chanbud_aa.csv",recl = 1500)
             write (4815,*) bsn%name, prog
             write (4815,'(*(G0.3,:","))') sdch_bud_hdr 
-            write (4818,'(*(G0.3,:","))') sdch_bud_hdr_units 
-            write (9000,*) "SWAT_DEG_CHAN_BUD             sd_chanbud_aa.csv"
+            write (4815,'(*(G0.3,:","))') sdch_bud_hdr_units 
+            write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_aa.csv"
           end if
         end if
 !! SWAT DEG CHANBUD OUTPUT

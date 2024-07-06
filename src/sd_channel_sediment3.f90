@@ -24,8 +24,9 @@
       real :: pk_rto                !ratio          |peak to mean flow rate ratio
       real :: bd_fac                !               |bulk density factor for critical velocity calculation
       real :: cohes_fac             !               |cohesion factor for critical velocity calculation
-      !real :: qman                 !m^3/s or m/s   |flow rate or flow velocity
+      !real :: qman                  !m^3/s or m/s   |flow rate or flow velocity
       real :: vel, veg, vel_cr, rad_curv, vel_bend, vel_rch, arc_len, prot_len, h_rad
+      real :: fp_m2, exp_co, florate_ob
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
@@ -46,9 +47,9 @@
       !! Another eq from Peter - Qmax=Qmean*(1+2.66*Drainage Area^-.3)
       pk_rto = 0.2 + 0.5 / 250. * ob(icmd)%area_ha
       pk_rto = Max (1., pk_rto)
-      pk_rto = 1. + 2.66 * (ob(icmd)%area_ha / 100.) ** -.3
-      !pk_rto = 1. + 1.33 * (ob(icmd)%area_ha / 100.) ** -.3
-      !pk_rto = 1. + 2. * (ob(icmd)%area_ha / 100.) ** -.3
+      pk_rto = 1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3)
+      !pk_rto = 1. + 1.33 * (ob(icmd)%area_ha / 100.) ** (-.3)
+      !pk_rto = 1. + 2. * (ob(icmd)%area_ha / 100.) ** (-.3)
       !pk_rto = Min (2., pk_rto)
       !pk_rto = 1.5
       peakrate = pk_rto * ht1%flo / 86400.     !m3/s
@@ -57,21 +58,33 @@
       call rcurv_interp_flo (ich, peakrate)
       !! use peakrate as flow rate
       h_rad = rcurv%xsec_area / rcurv%wet_perim
-      sd_ch(ich)%chn = 0.5 + 0.2 * (ob(icmd)%area_ha / 100.) ** -.3
+      sd_ch(ich)%chn = 0.39 * sd_ch(ich)%chs ** 0.38 * h_rad ** (-0.16)
+      sd_ch(ich)%chn = 0.5 + 0.2 * (ob(icmd)%area_ha / 100.) ** (-.3)
+      if (ob(icmd)%area_ha <= 5.) then
+        sd_ch(ich)%chn = 0.13
+      end if
+      if (ob(icmd)%area_ha >= 2500.) then
+        sd_ch(ich)%chn = 0.03
+      end if
+      if (ob(icmd)%area_ha > 5. .and. ob(icmd)%area_ha >= 2500.) then
+        sd_ch(ich)%chn = 0.2 / log(ob(icmd)%area_ha / 100.)
+      end if
       sd_ch(ich)%chn = Min (0.15, sd_ch(ich)%chn)
-      
-      sd_ch(ich)%chn = 0.39 * sd_ch(ich)%chs ** 0.38 * h_rad ** -0.16
-      sd_ch(ich)%chn = Min (0.15, sd_ch(ich)%chn)
-      sd_ch(ich)%chn = Max (0.03, sd_ch(ich)%chn)
+      sd_ch(ich)%chn = Max (0.02, sd_ch(ich)%chn)
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
       !vel = peakrate / rcurv%xsec_area
       
       !! compute flood plain deposition
-      sd_ch(ich)%bankfull_flo = 1.75
+      !sd_ch(ich)%bankfull_flo = 3.0
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
-      if (peakrate > bf_flow) then
-        trap_eff = 0.24 * log(sd_ch(ich)%fp_inun_days) + 0.1
-        fp_dep%sed = trap_eff * ht1%sed 
+      florate_ob = (ht1%flo / 86400.) - bf_flow
+      if (florate_ob > 0.) then
+        trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
+        fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
+        exp_co = 0.00001 * fp_m2 / florate_ob
+        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / peakrate) * (1. - exp(-exp_co))
+        fp_dep%sed = trap_eff * ht1%sed
+        
         !! deposit Particulate P and N in the floodplain
         fp_dep%orgn = trap_eff * sd_ch(ich)%n_dep_enr * ht1%orgn
         fp_dep%sedp = trap_eff * sd_ch(ich)%p_dep_enr * ht1%sedp
@@ -79,6 +92,7 @@
         fp_dep%no3 = trap_eff * ht1%no3
         fp_dep%solp = trap_eff * ht1%solp
       end if
+      !fp_dep = hz !***jga
       ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm + fp_dep%sed
       
       ht2 = ht1 - fp_dep
@@ -109,17 +123,15 @@
       ch_trans%sedp = -ch_trans%solp
       
       !! calc bank erosion
-      cohesion = (15. / (15.3 - 0.438 * sd_ch(ich)%ch_clay + 0.0044 * sd_ch(ich)%ch_clay ** 2.)) * 1000.
+      cohesion = (-87.1 + (42.82 * sd_ch(ich)%ch_clay) - (0.261 * sd_ch(ich)%ch_clay ** 2.) &
+                                     + (0.029 * sd_ch(ich)%ch_clay ** 3.))
       cohesion = amax1 (1000., cohesion)    !min 1000 for sandy soils
-      veg = 0.    !Pa 200-10000.                              !function of cover factor
+      veg = exp (-5. * sd_ch(ich)%chd) * 4500. * sd_ch(ich)%cov
       bd_fac = Max (0.001, 0.03924 * sd_ch(ich)%ch_bd * 1000. - 1000.)
       cohes_fac = 0.021 * cohesion + veg
-      vel_cr = log10 (2200. * sd_ch(ich)%chd) * (0.0004 * (bd_fac + 0.6 * cohes_fac)) ** 0.5
+      vel_cr = log10 (2200. * sd_ch(ich)%chd) * (0.0004 * (bd_fac + cohes_fac)) ** 0.5
         
-      !cohesion = (-87.1 + (42.82 * sd_ch(ich)%ch_clay) - (0.267 * sd_ch(ich)%ch_clay ** 2.) &
-      !                               + (0.029 * sd_ch(ich)%ch_clay ** 3.)) * 2.
       !cohesion = (15. / (15.3 - 0.438 * sd_ch(ich)%ch_clay + 0.0044 * sd_ch(ich)%ch_clay ** 2.)) * 1000.
-      !cohesion = amax1 (1000., cohesion)    !min 1000 for sandy soils
       !veg = exp (-5. * sd_ch(ich)%chd) * cha1(icha)%dat%cov                              !function of cover factor
       !vel_cr = log10 (8.8 * sd_ch(ich)%chd / 0.004) * (0.0004 * ((sd_ch(ich)%ch_bd *     &
       !                  1000. - 1000.) * 9.81 * 0.004 + 0.021 * cohesion + veg)) ** 0.5
@@ -142,10 +154,18 @@
       arc_len = 0.33 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
       prot_len = arc_len * sd_ch(ich)%arc_len_fr
       prot_len = 0.2 * sd_ch(ich)%chl * 1000.
-      ebank_t = ebank_m * sd_ch(ich)%chd * prot_len * sd_ch(ich)%ch_bd
-      ebank_t = 0.8 * ebank_t     !assume 80% wash load and 20% bed deposition
-      ebank_t = max (0., ebank_t)
-        
+      !rad_curv = (12. * sd_ch(ich)%chw * sd_ch(ich)%sinu ** 1.5) /        &
+      !                                 (13. * (sd_ch(ich)%sinu - 0.999) ** 0.5)
+      !cutbank_adj = 2.57 - 0.36 * log(rad_curv / sd_ch(ich)%chw)
+      !ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%arc_len_fr * prot_len * sd_ch(ich)%ch_bd
+      !ebank_t = 0.8 * ebank_t     !assume 80% wash load and 20% bed deposition
+      !ebank_t = max (0., ebank_t)
+      !ebank_t = 1000. * (vel_rch * sd_ch(ich)%chs) ** 2. * (1. - sd_ch(ich)%cov) * (sd_ch(ich)%ch_clay + 1.)
+      !sd_ch(ich)%pk_rto = 500.
+      ebank_t = (1000. * sd_ch(ich)%pk_rto * vel_rch * sd_ch(ich)%chs) ** 2. *           &
+                                                (1. - sd_ch(ich)%ch_clay / 100.)
+      prot_len = 0.2 * sd_ch(ich)%chl
+      ebank_t = ebank_t * prot_len
       bank_ero%sed = ebank_t
       !! calculate associated nutrients
       bank_ero%orgn = bank_ero%sed * sd_ch(ich)%n_conc

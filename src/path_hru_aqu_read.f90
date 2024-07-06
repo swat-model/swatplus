@@ -54,9 +54,7 @@
             if (eof < 0) exit
             read (107,*,iostat=eof) path_soil_ini(ipathi)%name
             if (eof < 0) exit
-            read (107,*,iostat=eof) titldum, path_soil_ini(ipathi)%soil
-            if (eof < 0) exit
-            read (107,*,iostat=eof) titldum, path_soil_ini(ipathi)%plt
+            read (107,*,iostat=eof) titldum, path_soil_ini(ipathi)%soil, path_soil_ini(ipathi)%plt
             if (eof < 0) exit
           end do
           close (107)

@@ -25,7 +25,7 @@
       integer :: l                        !none           |counter 
 
       !only proceed if constituents are included in simulation
-      if (cs_db%num_cs > 0 .and. fert_cs_flag.eq.1) then
+      if (cs_db%num_cs > 0 .and. fert_cs_flag == 1) then
       
         !only proceed if valid fertilizer ID is selected
         if(ifrt > 0) then

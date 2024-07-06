@@ -225,7 +225,7 @@
             if(bsn_cc%gwflow.eq.1) then
               flood_freq(ich) = 1 !flag to indicate the water is in the floodplain
               call gwflow_fpln(ich)
-						endif
+            endif
             
             sd_ch(ich)%overbank = "ob"
             rcharea = sd_ch_vel(ich)%area
@@ -406,7 +406,7 @@
         !! Peters latest channel erosion model
         !!vel = 1.37 * (sd_ch(ich)%chs ** 0.31) * (12. * sd_ch(ich)%chw) ** 0.32      !annual ave for SWIFT
         !! mean daily to peak ratio developed from GARDAY - THE STUDY OF MOST PROBABLE MEAN DAILY BANKFULL RUNOFF VOLUMES 
-        !! IN SMALL WATERSHEDS DOMINATED BY CONVECTIVE/FRONTAL CHANNEL FORMING EVENTS AND THE CO-INCIDENT INNER BERM CHANNELS – PART I. 
+        !! IN SMALL WATERSHEDS DOMINATED BY CONVECTIVE/FRONTAL CHANNEL FORMING EVENTS AND THE CO-INCIDENT INNER BERM CHANNELS PART I.
         !! Another eq from Peter - Qmax=Qmean*(1+2.66*Drainage Area^-.3)
         pk_rto = 0.2 + 0.5 / 250. * ob(icmd)%area_ha
         pk_rto = amin1 (1., pk_rto)
@@ -490,7 +490,7 @@
       end if
       
       !! compute sediment leaving the channel - washload only
-	  sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
+      sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
       
       !! set values for outflow hydrograph
       !! calculate flow velocity and travel time  ht2 = ht1   !***jga 
