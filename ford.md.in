@@ -1,9 +1,11 @@
 ---
 project: SWAT+
 output_dir: @CMAKE_CURRENT_BINARY_DIR@/doc
+src_dir: src
 version: @SWAT_VERSION@ 
 revision: @SWAT_VERSION@ 
 print_creation_date: true
+creation_date: %Y-%m-%d
 graph: true
 coloured_edges: true
 ---
