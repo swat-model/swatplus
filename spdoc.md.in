@@ -1,0 +1,11 @@
+---
+project: SWAT+
+output_dir: @CMAKE_CURRENT_BINARY_DIR@/doc
+version: @SWAT_VERSION@ 
+revision: @SWAT_VERSION@ 
+print_creation_date: true
+graph: true
+coloured_edges: true
+---
+
+SWAT+ Model Sources (@SWAT_VERSION@) 
