@@ -1,8 +1,11 @@
-# SWAT+ CI for GH, O. David, 2024
+# SWAT+ CI for GitHub, O. David, 2024, LGPL 2.1
 
 name: Build/Test SWAT+
 
-on: [push, pull_request]
+on:
+  push:
+
+  workflow_dispatch:
 
 permissions:
   contents: write
