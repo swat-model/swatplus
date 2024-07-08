@@ -1,0 +1,63 @@
+# SWAT+ CI for GitHub, O. David, 2024, LGPL 2.1
+
+name: Document SWAT+ 
+  
+on:
+  push:
+    tags:
+      - '*.*'
+      - '*.*.*'
+
+  workflow_dispatch:
+   
+permissions:
+  packages: write
+  pull-requests: write
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  documentation:
+    runs-on: ubuntu-22.04
+    if: endsWith(github.event.base_ref, 'main') == true
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-tags: true
+        fetch-depth: 0
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Install FORD on Ubuntu
+      run: |
+        sudo apt-get update
+        sudo apt install -y graphviz
+        sudo pip install ford 
+
+    - name: Build SWAT+ Documentation
+      run: |
+        T=`git describe --tags --abbrev=0`
+        cmake -B build -D TAG=${T}
+        ford ford.md
+      shell: bash
+
+    - name: Upload Documentation
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: github-pages
+        path: build/doc
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    needs: documentation
+    steps:
+      - name: Deploy Documentation to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
