@@ -20,7 +20,7 @@ permissions:
 jobs:
   documentation:
     runs-on: ubuntu-22.04
-    if: endsWith(github.event.base_ref, 'main') == true
+    # if: endsWith(github.event.base_ref, 'main') == true
 
     steps:
     - name: Checkout code
