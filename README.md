@@ -1,6 +1,6 @@
 # SWAT+
 
-The **Soil and Water Assessment Tool Plus** [SWAT+](https://swatplus.gitbook.io/docs) is a public domain model jointly developed by the USDA Agricultural Research Service ([USDA-ARS](http://ars.usda.gov)) and Texas A&M AgriLife Research, part of The Texas A&M University System. Model contributions have been made by Colorado State University. SWAT+ is a small watershed to river basin-scale model to simulate the quality and quantity of surface and ground water and predict the environmental impact of land use, land management practices, and climate change. SWAT is widely used in assessing soil erosion prevention and control, non-point source pollution control and regional management in watersheds.
+The **Soil and Water Assessment Tool Plus** [SWAT+](https://swatplus.gitbook.io/docs) is an open source model jointly developed by the USDA Agricultural Research Service ([USDA-ARS](http://ars.usda.gov)) and Texas A&M AgriLife Research, part of The Texas A&M University System. Model contributions have been made by Colorado State University and others. SWAT+ is a small watershed to river basin-scale model to simulate the quality and quantity of surface and ground water and predict the environmental impact of land use, land management practices, and climate change. SWAT is widely used in assessing soil erosion prevention and control, non-point source pollution control and regional management in watersheds.
 
 This repository contains the latest SWAT+ source code and some test data to create and test the executable for various compiler and platforms. 
 
@@ -9,13 +9,13 @@ This repository contains the latest SWAT+ source code and some test data to crea
 Get the SWAT+ sources by cloning the repository using `git`.  
 
 ```bash
-$ git clone https://github.com/odav/swatplus.git
+$ git clone https://github.com/swat-model/swatplus.git
 ```
 
 Or, download the sources directly from the artifacts, unzip. Use a tagged version (preferred).
 
 ```bash
-$ wget https://github.com/odav/swatplus/archive/refs/tags/61.3.zip
+$ wget https://github.com/swat-model/swatplus/archive/refs/tags/61.3.zip
 ```
 
 ## Directory Structure
@@ -46,6 +46,7 @@ swatplus
 │   └── ...
 ├── doc                       ---> contains all hosted documentation
 ├── CMakeLists.txt            ---> cmake project file
+├── ford.md.in                ---> FORD Documentation creation project
 ├── README.md                 ---> this file
 └── ...
 ```
@@ -65,19 +66,21 @@ Use the operating system's preferred way of adding those tools to your installat
 
 __The following sections are emphasizing various development aspects.__
 
-* [Configuring, Building, Testing, and Installing SWAT+ using cmake](doc/Building.md)
+* [Configuring, Building, Installing SWAT+ using cmake](doc/Building.md)
 - [Scenario Testing](doc/Testing.md)
 
 - [Tagging and Versioning](doc/Tagging.md)
 
 - [Developing in Visual Studio](doc/VS.md)
 
-- [FORTRAN Coding Conventions](doc/coding_conventions.md)
+- [FORTRAN Coding Conventions (alpha)](doc/coding_conventions.md)
 
 ## Documentation and References
 
-[Previous SWAT+ versions on Bitbucket](https://bitbucket.org/blacklandgrasslandmodels/modular_swatplus/src/master)
+[SWAT+ Source Documentation on GitHub](https://swat-model.github.io/swatplus)
 
-[SWAT+ Documentation](https://swatplus.gitbook.io/docs)
+[SWAT+ Input/Output Documentation on Gitbook](https://swatplus.gitbook.io/docs)
 
 [SWAT at TAMU](https://swat.tamu.edu)
+
+[Older SWAT+ versions on Bitbucket](https://bitbucket.org/blacklandgrasslandmodels/modular_swatplus/src/master)
