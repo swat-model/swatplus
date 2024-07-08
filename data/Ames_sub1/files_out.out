@@ -10,7 +10,7 @@
  HRU                       hru_plc_stat.txt
  HRU                       hru_resc_stat.txt
  HRU                       hru_soilc_stat.txt
- BASIN                       basin_carbon_all.txt
+ BASIN                     basin_carbon_all.txt
  HRU                       hru_nut_carb_gl_aa.txt
  HRU                       hru_ls_aa.txt
  HRU                       hru_pw_aa.txt
@@ -20,7 +20,7 @@
  BASIN                     basin_pw_aa.txt
  CROP                      crop_yld_yr.txt
  CROP                      crop_yld_aa.txt
- SWAT_DEG_CHAN_BUD             sd_chanbud_aa.txt
+ SWAT_DEG_CHAN_BUD         sd_chanbud_aa.txt
  MGT                       mgt_out.txt
  DTBL                      lu_change_out.txt
  YLD                       yield.out
@@ -33,10 +33,10 @@
  HRU_ORGC                  hru_orgc.txt
  BASIN_AQUIFER             basin_aqu_aa.txt
  BASIN_RESERVOIR           basin_res_aa.txt
- RECALL AA                 recall_aa.txt
+ RECALL_AA                 recall_aa.txt
  BASIN_CHANNEL             basin_cha_aa.txt
  BASIN_SWAT_DEG_CHANNEL    basin_sd_cha_aa.txt
  BASIN_SWAT_DEG_CHAN_MORPH basin_sd_chamorph_aa.txt
- BASIN_SWAT_DEG_CHAN_BUD basin_sd_chanbud_aa.txt
+ BASIN_SWAT_DEG_CHAN_BUD   basin_sd_chanbud_aa.txt
  BASIN_RECALL_AA           basin_psc_aa.txt
  ROUTING_UNITS             ru_aa.txt
