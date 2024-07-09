@@ -1,4 +1,4 @@
- demo                      SWAT+ Jun 03 2024        MODULAR Rev 2024.61.3-25-gb633f79                     
+ demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
          hru        year         mon         day crop/fert/pest operation  phubase        phuplant  soil_water      plant_bioms   surf_rsd       soil_no3      soil_solp         op_var           var1          var2             var3             var4            var5            var6           var7 
          ---         ---         ---         ---       ---         ---       deg_c           deg_c          mm            kg/ha      kg/ha          kg/ha          kg/ha          ---              ---           ---              ---              ---             ---             ---            ---
            1        1975           4           1 chisplow            TILLAGE   7.1317151E-02  0.0000000E+00   81.06810      0.0000000E+00   7000.000      6.2017806E-04  0.0000000E+00  0.3000000    
