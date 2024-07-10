@@ -6,16 +6,16 @@ This repository contains the latest SWAT+ source code and some test data to crea
 
 ## Repository
 
-Get the SWAT+ sources by cloning the repository using `git`.  
+Get the SWAT+ sources by cloning the forked repository using `git`.  
 
 ```bash
-$ git clone https://github.com/swat-model/swatplus.git
+$ git clone https://github.com/<user>/swatplus.git
 ```
 
 Or, download the sources directly from the artifacts, unzip. Use a tagged version (preferred).
 
 ```bash
-$ wget https://github.com/swat-model/swatplus/archive/refs/tags/61.3.zip
+$ wget https://github.com/swat-model/swatplus/archive/refs/tags/61.0.zip
 ```
 
 ## Directory Structure
@@ -61,6 +61,7 @@ In addition to CMake, the following tools are also needed:
 - `make` tool (for building)
 - `gfortran` or `ifort/ifx` compiler and linker (for compiling/linking)
 - `python3` (for testing, optional)
+- `ford` (for documentation generation)
 
 Use the operating system's preferred way of adding those tools to your installation. There is certainly more than one way of getting and installing them.
 
