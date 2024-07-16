@@ -22,9 +22,11 @@
       if (cs_db%num_pests == 0) return
 
       do k = 1, cs_db%num_pests
+        hpestb_d(j)%pest(k)%plant = 0.
+		hpestb_d(j)%pest(k)%in_plant = 0.
         do ipl = 1, pcom(j)%npl
-          hpestb_d(j)%pest(k)%plant = cs_pl(j)%pl_on(ipl)%pest(k)
-          hpestb_d(j)%pest(k)%in_plant = cs_pl(j)%pl_in(ipl)%pest(k) 
+          hpestb_d(j)%pest(k)%plant = hpestb_d(j)%pest(k)%plant + cs_pl(j)%pl_on(ipl)%pest(k)
+          hpestb_d(j)%pest(k)%in_plant = hpestb_d(j)%pest(k)%in_plant + cs_pl(j)%pl_in(ipl)%pest(k) 
         end do
         hpestb_d(j)%pest(k)%soil = 0.
         do ly = 1, soil(j)%nly

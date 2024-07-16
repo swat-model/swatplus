@@ -12,7 +12,7 @@
       use hru_module, only : hru
       use basin_module, only : bsn_cc
       use cs_module !rtb cs
-      use cs_aquifer !rtb cs
+      use cs_aquifer_module !rtb cs
       use ch_cs_module !rtb cs
       use res_cs_module !rtb cs
       use constituent_mass_module
