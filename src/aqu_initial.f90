@@ -5,9 +5,9 @@
       use constituent_mass_module
       use aqu_pesticide_module
       use salt_module !rtb salt
-      use salt_aquifer !rtb salt
+      use salt_aquifer_module !rtb salt
       use cs_module !rtb cs
-      use cs_aquifer !rtb cs
+      use cs_aquifer_module !rtb cs
        
       implicit none
       

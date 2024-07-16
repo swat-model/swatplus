@@ -9,8 +9,8 @@
       use pesticide_data_module
       use aqu_pesticide_module
       use salt_module
-      use salt_aquifer
-      use cs_aquifer
+      use salt_aquifer_module
+      use cs_aquifer_module
       use ch_pesticide_module
       
       implicit none

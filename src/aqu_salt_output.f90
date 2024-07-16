@@ -4,7 +4,7 @@
       use basin_module
       use aquifer_module
       use hydrograph_module, only : ob, sp_ob1
-      use salt_aquifer
+      use salt_aquifer_module
       use constituent_mass_module
       
       implicit none

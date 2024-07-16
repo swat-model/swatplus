@@ -7,7 +7,7 @@
      use ch_cs_module
      use res_cs_module
      use cs_module
-     use cs_aquifer
+     use cs_aquifer_module
      
      implicit none 
 

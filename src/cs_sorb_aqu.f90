@@ -7,7 +7,7 @@
       use aquifer_module
       use organic_mineral_mass_module
       use constituent_mass_module
-      use cs_aquifer
+      use cs_aquifer_module
       use cs_data_module
       
       implicit none

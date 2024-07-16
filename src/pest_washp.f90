@@ -26,6 +26,7 @@
       do k = 1, cs_db%num_pests
         ipest_db = cs_db%pest_num(k)
 	    !! adjust foliar pesticide for wash off
+        hpestb_d(j)%pest(k)%wash = 0.
         do ipl = 1, pcom(j)%npl
           if (cs_pl(j)%pl_on(ipl)%pest(k) >= 0.0001) then
             if (ipest_db > 0) then
@@ -33,7 +34,7 @@
               if (pest_soil > cs_pl(j)%pl_on(ipl)%pest(k)) pest_soil = cs_pl(j)%pl_on(ipl)%pest(k)
               cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + pest_soil
               cs_pl(j)%pl_on(ipl)%pest(k) = cs_pl(j)%pl_on(ipl)%pest(k) - pest_soil
-              hpestb_d(j)%pest(k)%wash = pest_soil
+              hpestb_d(j)%pest(k)%wash = hpestb_d(j)%pest(k)%wash + pest_soil
             end if
           end if 
         end do
