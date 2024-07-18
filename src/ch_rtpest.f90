@@ -146,6 +146,7 @@
 
           !! calculate fraction of soluble and sorbed pesticide
           frsol = 1. / (1. + kd * sedcon)
+          frsol = max(min(frsol,1.),0.)
           frsrb = 1. - frsol
 
           !! ASSUME DENSITY=2.6E6; KD2=KD1
