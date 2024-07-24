@@ -35,7 +35,6 @@
       real :: pest_end           !kg/ha    |amount of pesticide present at end of day
       real :: pst_decay          !kg/ha    |amount of pesticide decay in soil layer during day
       real :: pst_decay_s        !kg/ha    |amount of pesticide decay in soil profile during day
-      real :: pst_decay_f        !kg/ha    |amount of pesticide decay in foliage during day
       real :: metab_decay        !kg/ha    |amount of metabolite decay in soil layer during day
 
       j = ihru
@@ -70,27 +69,24 @@
           hpestb_d(j)%pest(k)%decay_s = pst_decay_s
 
           !! calculate degradation on plant foliage
-	      pst_decay_f = 0.
-		  !! adjust foliar pesticide for wash off
+	      !! adjust foliar pesticide for wash off
           do ipl = 1, pcom(j)%npl
             pest_init = cs_pl(j)%pl_on(ipl)%pest(k)
             if (pest_init > 1.e-12) then
               pest_end = pest_init * pestcp(ipest_db)%decay_f
               cs_pl(j)%pl_on(ipl)%pest(k) = pest_end
-              pst_decay = (pest_init - pest_end)
-              pst_decay_f = pst_decay_f + pst_decay
+              hpestb_d(j)%pest(k)%decay_f = pest_init - pest_end
               !! add decay to daughter pesticides
               do imeta = 1, pestcp(ipest_db)%num_metab
                 ipseq = pestcp(ipest_db)%daughter(imeta)%num
                 ipdb = cs_db%pest_num(ipseq)
                 mol_wt_rto = pestdb(ipdb)%mol_wt / pestdb(ipest_db)%mol_wt
-                metab_decay = pst_decay * pestcp(ipest_db)%daughter(imeta)%foliar_fr * mol_wt_rto
-                hpestb_d(j)%pest(ipseq)%metab_f = hpestb_d(j)%pest(ipseq)%metab_f + metab_decay
-                cs_pl(j)%pl_on(ipl)%pest(ipseq) = cs_pl(j)%pl_on(ipl)%pest(ipseq) + metab_decay
+                hpestb_d(j)%pest(ipseq)%metab_f = hpestb_d(j)%pest(ipseq)%metab_f + (pest_init - pest_end) *     &
+                                           pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto
+                cs_pl(j)%pl_on(ipl)%pest(ipseq) = cs_pl(j)%pl_on(ipl)%pest(ipseq) + hpestb_d(j)%pest(ipseq)%metab_f
               end do
             end if 
           end do
-        hpestb_d(j)%pest(k)%decay_f = pst_decay_f
         end if
       end do
       
