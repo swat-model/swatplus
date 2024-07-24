@@ -11,7 +11,7 @@
       use hydrograph_module, only : irrig,res,sp_ob1,ob
       use hru_module, only : hru
       use salt_module !rtb salt
-      use salt_aquifer_module !rtb salt
+      use salt_aquifer !rtb salt
       use ch_salt_module !rtb salt
       use res_salt_module !rtb salt
       use basin_module, only : bsn_cc
