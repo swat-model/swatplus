@@ -7,7 +7,7 @@
      use ch_salt_module
      use res_salt_module
      use salt_module
-     use salt_aquifer
+     use salt_aquifer_module
      
      implicit none 
 

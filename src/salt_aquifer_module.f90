@@ -1,4 +1,4 @@
-      module salt_aquifer
+      module salt_aquifer_module
 
       implicit none
     

@@ -27,7 +27,7 @@
       use salt_data_module
       use hydrograph_module, only : ob,icmd
       use salt_module
-      use salt_aquifer
+      use salt_aquifer_module
       
       implicit none
 
