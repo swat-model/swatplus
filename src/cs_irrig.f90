@@ -11,7 +11,7 @@
       use hydrograph_module, only : irrig,res,sp_ob1,ob
       use hru_module, only : hru
       use cs_module !rtb cs
-      use cs_aquifer_module !rtb cs
+      use cs_aquifer !rtb cs
       use ch_cs_module !rtb cs
       use res_cs_module !rtb cs
       use basin_module, only : bsn_cc

@@ -13,7 +13,7 @@
       use time_module
       use constituent_mass_module
       use cs_module
-      use cs_aquifer_module
+      use cs_aquifer
       use res_cs_module, only : wetcs_d,rescs_d
       use ch_cs_module, only: chcs_d
       use gwflow_module, only : gw_solute_flag,gwsol_ss,ncell,ncell,gw_state,gwsol_state
