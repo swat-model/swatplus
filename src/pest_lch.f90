@@ -54,7 +54,6 @@
           hpestb_d(j)%pest(k)%perc = 0.
           hpestb_d(j)%pest(k)%surq = 0.
           hpestb_d(j)%pest(k)%latq = 0.
-		  hpestb_d(j)%pest(k)%tileq = 0.
         end do
 
         do ly = 1, soil(j)%nly
