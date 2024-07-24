@@ -1,5 +1,5 @@
       !module for constituent mass balance in aquifers (rtb cs)
-      module cs_aquifer
+      module cs_aquifer_module
       
       implicit none
 

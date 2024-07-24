@@ -5,9 +5,9 @@
       use constituent_mass_module
       use aqu_pesticide_module
       use salt_module !rtb salt
-      use salt_aquifer !rtb salt
+      use salt_aquifer_module !rtb salt
       use cs_module !rtb cs
-      use cs_aquifer !rtb cs
+      use cs_aquifer_module !rtb cs
        
       implicit none
       
@@ -122,7 +122,9 @@
           allocate (aqupst_a(iaq)%pest(cs_db%num_pests))
           allocate (cs_aqu(iaq)%path(cs_db%num_paths))
           allocate (cs_aqu(iaq)%hmet(cs_db%num_metals))
-          allocate (cs_aqu(iaq)%salt(cs_db%num_salts))
+          cs_aqu(iaq)%pest = 0.
+		  cs_aqu(iaq)%path = 0.
+		  cs_aqu(iaq)%hmet = 0.	
         end if
         !salts !rtb salt
         if (cs_db%num_salts > 0) then

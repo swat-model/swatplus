@@ -12,7 +12,7 @@
       use soil_module
       use time_module
       use salt_module
-      use salt_aquifer
+      use salt_aquifer_module
       use constituent_mass_module
       use res_salt_module, only : wetsalt_d,ressalt_d
       use ch_salt_module, only : chsalt_d
