@@ -146,7 +146,6 @@
 
           !! calculate fraction of soluble and sorbed pesticide
           frsol = 1. / (1. + kd * sedcon)
-          frsol = max(min(frsol,1.),0.)
           frsrb = 1. - frsol
 
           !! ASSUME DENSITY=2.6E6; KD2=KD1
@@ -161,7 +160,7 @@
           !! calculate amount of pesticide that undergoes chemical or biological degradation on day in reach
           pest_init = chpstmass
           if (pest_init > 1.e-12) then
-            pest_end = chpstmass * Exp(-.693 / pestdb(jpst)%aq_hlife * tday)
+            pest_end = chpstmass * (pestcp(jpst)%decay_a * tday)
             chpstmass = pest_end
             chpst%pest(ipest)%react = pest_init - pest_end
             !! add decay to daughter pesticides
