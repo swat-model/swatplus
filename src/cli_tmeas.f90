@@ -88,7 +88,7 @@
 
         if (eof < 0) exit
        
-        allocate (tmp(i)%ts(366,tmp(i)%nbyr))
+        allocate (tmp(i)%ts(366,tmp(i)%nbyr), source = 0.)
         allocate (tmp(i)%ts2(366,tmp(i)%nbyr))
         
         ! read and save start jd and yr

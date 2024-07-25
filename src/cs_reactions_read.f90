@@ -13,8 +13,8 @@
       integer :: hru_dum,aqu_dum
       logical :: i_exist              !none          |check to determine if file exists
 
-      integer :: num_rct							!              |number of reaction parameters
-      integer :: num_groups           !						   |number of reaction groups
+      integer :: num_rct              !              |number of reaction parameters
+      integer :: num_groups           !              |number of reaction groups
       real    :: shale_fractions(500) !              |fraction of shale that covers an area's object
       
       
@@ -51,7 +51,7 @@
         !values for each HRU object
         read(107,*) header
         do icount=1,sp_ob%hru
-          allocate(cs_rct_soil(icount)%shale(num_geol_shale))
+          allocate(cs_rct_soil(icount)%shale(num_geol_shale), source = 0.)
           allocate(cs_rct_soil(icount)%sseratio(num_geol_shale))
           allocate(cs_rct_soil(icount)%ko2a(num_geol_shale))
           allocate(cs_rct_soil(icount)%kno3a(num_geol_shale))
@@ -75,7 +75,7 @@
         if(sp_ob%aqu > 0) then
         read(107,*) header
         do icount=1,sp_ob%aqu
-          allocate(cs_rct_aqu(icount)%shale(num_geol_shale))
+          allocate(cs_rct_aqu(icount)%shale(num_geol_shale), source = 0.)
           allocate(cs_rct_aqu(icount)%sseratio(num_geol_shale))
           allocate(cs_rct_aqu(icount)%ko2a(num_geol_shale))
           allocate(cs_rct_aqu(icount)%kno3a(num_geol_shale))  

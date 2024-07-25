@@ -37,7 +37,7 @@
           
           allocate (dr_salt(imax))
           do idr_salt = 1, imax
-            allocate (dr_salt(idr_salt)%salt(cs_db%num_salts))
+            allocate (dr_salt(idr_salt)%salt(cs_db%num_salts), source = 0.)
           end do
           allocate (dr_salt_num(imax))
           allocate (dr_salt_name(imax))
