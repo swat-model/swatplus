@@ -174,7 +174,7 @@
             ie = ru_def(iru)%num(ielem1)
             iob = ru_elem(ie)%obj
             iru_tot = ob(iob)%ru_tot
-            allocate (ob(iob)%ru(1))
+            allocate (ob(iob)%ru(1), source = 0)
           end do
 
           do ielem1 = 1, ru_def(iru)%num_tot

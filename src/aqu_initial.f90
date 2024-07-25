@@ -115,18 +115,18 @@
       do iaq = 1, sp_ob%aqu
         if (cs_db%num_pests > 0) then
           !! allocate constituents
-          allocate (cs_aqu(iaq)%pest(cs_db%num_pests))
+          allocate (cs_aqu(iaq)%pest(cs_db%num_pests), source = 0.)
           allocate (aqupst_d(iaq)%pest(cs_db%num_pests))
           allocate (aqupst_m(iaq)%pest(cs_db%num_pests))
           allocate (aqupst_y(iaq)%pest(cs_db%num_pests))
           allocate (aqupst_a(iaq)%pest(cs_db%num_pests))
-          allocate (cs_aqu(iaq)%path(cs_db%num_paths))
+          allocate (cs_aqu(iaq)%path(cs_db%num_paths), source = 0.)
           allocate (cs_aqu(iaq)%hmet(cs_db%num_metals))
-          allocate (cs_aqu(iaq)%salt(cs_db%num_salts))
+          allocate (cs_aqu(iaq)%salt(cs_db%num_salts), source = 0.)
         end if
         !salts !rtb salt
         if (cs_db%num_salts > 0) then
-          allocate (cs_aqu(iaq)%salt(cs_db%num_salts)) !salt ion mass (kg)
+          allocate (cs_aqu(iaq)%salt(cs_db%num_salts), source = 0.) !salt ion mass (kg)
           allocate (cs_aqu(iaq)%salt_min(5)) !salt mineral fractions
           allocate (cs_aqu(iaq)%saltc(cs_db%num_salts)) !salt ion concentration (mg/L)
           cs_aqu(iaq)%salt = 0. !rtb salt
@@ -135,7 +135,7 @@
         end if
         !constituents !rtb cs
         if (cs_db%num_cs > 0) then
-          allocate (cs_aqu(iaq)%cs(cs_db%num_cs)) !constituent mass (kg)
+          allocate (cs_aqu(iaq)%cs(cs_db%num_cs), source = 0.) !constituent mass (kg)
           allocate (cs_aqu(iaq)%csc(cs_db%num_cs)) !constituent concentration (mg/L)
           allocate (cs_aqu(iaq)%cs_sorb(cs_db%num_cs)) !sorbed constituent mass (kg/ha)
           allocate (cs_aqu(iaq)%csc_sorb(cs_db%num_cs)) !sorbed constituent mass concentration (mg/kg)

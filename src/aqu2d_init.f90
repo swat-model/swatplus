@@ -90,12 +90,12 @@
           allocate(aq_chcs(iaq)%hd(1))
           !salts
           if(cs_db%num_salts > 0) then
-            allocate(aq_chcs(iaq)%hd(1)%salt(cs_db%num_salts))
+            allocate(aq_chcs(iaq)%hd(1)%salt(cs_db%num_salts), source = 0.)
             aq_chcs(iaq)%hd(1)%salt = 0.
           endif
           !other constituents
           if(cs_db%num_cs > 0) then
-            allocate(aq_chcs(iaq)%hd(1)%cs(cs_db%num_cs))
+            allocate(aq_chcs(iaq)%hd(1)%cs(cs_db%num_cs), source = 0.)
             aq_chcs(iaq)%hd(1)%cs = 0.
           endif
         enddo

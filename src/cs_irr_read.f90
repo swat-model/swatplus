@@ -37,7 +37,7 @@
           !allocate cs irrigation array
           allocate(cs_water_irr(imax))
           do ics=1,imax
-            allocate(cs_water_irr(ics)%water(cs_db%num_cs))
+            allocate(cs_water_irr(ics)%water(cs_db%num_cs), source = 0.)
           end do
            
           !read in values

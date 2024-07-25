@@ -110,8 +110,8 @@
             
       if (cs_db%num_paths > 0) then
         do ich = 1, sp_ob%chandeg
-          allocate (ch_water(ich)%path(cs_db%num_paths))
-          allocate (ch_benthic(ich)%path(cs_db%num_paths))
+          allocate (ch_water(ich)%path(cs_db%num_paths), source = 0.)
+          allocate (ch_benthic(ich)%path(cs_db%num_paths), source = 0.)
         end do
       end if
                   
@@ -128,9 +128,9 @@
           allocate (chsalt_m(ich)%salt(cs_db%num_salts))
           allocate (chsalt_y(ich)%salt(cs_db%num_salts))   
           allocate (chsalt_a(ich)%salt(cs_db%num_salts))
-          allocate (ch_water(ich)%salt(cs_db%num_salts))
+          allocate (ch_water(ich)%salt(cs_db%num_salts), source = 0.)
           allocate (ch_water(ich)%saltc(cs_db%num_salts))
-          allocate (ch_benthic(ich)%salt(cs_db%num_salts))
+          allocate (ch_benthic(ich)%salt(cs_db%num_salts), source = 0.)
           do isalt=1,cs_db%num_salts
             chsalt_m(ich)%salt(isalt)%tot_in = 0.
             chsalt_m(ich)%salt(isalt)%tot_out = 0.
@@ -147,7 +147,7 @@
             chsalt_a(ich)%salt(isalt)%irr = 0.
             chsalt_a(ich)%salt(isalt)%water = 0.
             chsalt_a(ich)%salt(isalt)%conc = 0.
-					enddo
+          enddo
           ch_water(ich)%salt = 0.
           ch_water(ich)%saltc = 0.
         end do
@@ -159,9 +159,9 @@
           allocate (chcs_m(ich)%cs(cs_db%num_cs))
           allocate (chcs_y(ich)%cs(cs_db%num_cs))   
           allocate (chcs_a(ich)%cs(cs_db%num_cs))
-          allocate (ch_water(ich)%cs(cs_db%num_cs))
+          allocate (ch_water(ich)%cs(cs_db%num_cs), source = 0.)
           allocate (ch_water(ich)%csc(cs_db%num_cs))
-          allocate (ch_benthic(ich)%cs(cs_db%num_cs))
+          allocate (ch_benthic(ich)%cs(cs_db%num_cs), source = 0.)
           do ics=1,cs_db%num_cs
             chcs_m(ich)%cs(ics)%tot_in = 0.
             chcs_m(ich)%cs(ics)%tot_out = 0.
@@ -178,7 +178,7 @@
             chcs_a(ich)%cs(ics)%irr = 0.
             chcs_a(ich)%cs(ics)%water = 0.
             chcs_a(ich)%cs(ics)%conc = 0.
-					enddo
+          enddo
           ch_water(ich)%cs = 0.
           ch_water(ich)%csc = 0.
         end do

@@ -66,10 +66,10 @@
         allocate (reccsb_y(imax))
         allocate (reccsb_a(imax))
         do ii=1,imax
-          allocate (reccsb_d(ii)%cs(cs_db%num_cs))
-          allocate (reccsb_m(ii)%cs(cs_db%num_cs))
-          allocate (reccsb_y(ii)%cs(cs_db%num_cs))
-          allocate (reccsb_a(ii)%cs(cs_db%num_cs))
+          allocate (reccsb_d(ii)%cs(cs_db%num_cs), source = 0.)
+          allocate (reccsb_m(ii)%cs(cs_db%num_cs), source = 0.)
+          allocate (reccsb_y(ii)%cs(cs_db%num_cs), source = 0.)
+          allocate (reccsb_a(ii)%cs(cs_db%num_cs), source = 0.)
           do ics=1,cs_db%num_cs
             reccsb_d(ii)%cs(ics) = 0.
             reccsb_m(ii)%cs(ics) = 0.
@@ -83,10 +83,10 @@
         allocate (recoutcsb_y(imax))
         allocate (recoutcsb_a(imax))
         do ii=1,imax
-          allocate (recoutcsb_d(ii)%cs(cs_db%num_cs))
-          allocate (recoutcsb_m(ii)%cs(cs_db%num_cs))
-          allocate (recoutcsb_y(ii)%cs(cs_db%num_cs))
-          allocate (recoutcsb_a(ii)%cs(cs_db%num_cs))
+          allocate (recoutcsb_d(ii)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_m(ii)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_y(ii)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_a(ii)%cs(cs_db%num_cs), source = 0.)
           do ics=1,cs_db%num_cs
             recoutcsb_d(ii)%cs(ics) = 0.
             recoutcsb_m(ii)%cs(ics) = 0.
@@ -132,7 +132,7 @@
                 allocate (rec_cs(i)%hd_cs(366,nbyr))
                 do jj=1,nbyr
                   do kk=1,366  
-                    allocate (rec_cs(i)%hd_cs(kk,jj)%cs(cs_db%num_cs))
+                    allocate (rec_cs(i)%hd_cs(kk,jj)%cs(cs_db%num_cs), source = 0.)
                     rec_cs(i)%hd_cs(kk,jj)%cs = 0.
                   enddo
                 enddo
@@ -140,14 +140,14 @@
                 allocate (rec_cs(i)%hd_cs(12,nbyr))
                 do jj=1,nbyr
                   do kk=1,12  
-                    allocate (rec_cs(i)%hd_cs(kk,jj)%cs(cs_db%num_cs))
+                    allocate (rec_cs(i)%hd_cs(kk,jj)%cs(cs_db%num_cs), source = 0.)
                     rec_cs(i)%hd_cs(kk,jj)%cs = 0.
                   enddo
                 enddo
               case (3) !! annual
                 allocate (rec_cs(i)%hd_cs(1,nbyr))
                 do jj=1,nbyr
-                  allocate (rec_cs(i)%hd_cs(1,jj)%cs(cs_db%num_cs))
+                  allocate (rec_cs(i)%hd_cs(1,jj)%cs(cs_db%num_cs), source = 0.)
                   rec_cs(i)%hd_cs(1,jj)%cs = 0.
                 enddo
             end select 

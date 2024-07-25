@@ -65,10 +65,10 @@
         allocate (recsaltb_y(imax))
         allocate (recsaltb_a(imax))
         do ii=1,imax
-          allocate (recsaltb_d(ii)%salt(cs_db%num_salts))
-          allocate (recsaltb_m(ii)%salt(cs_db%num_salts))
-          allocate (recsaltb_y(ii)%salt(cs_db%num_salts))
-          allocate (recsaltb_a(ii)%salt(cs_db%num_salts))
+          allocate (recsaltb_d(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_m(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_y(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_a(ii)%salt(cs_db%num_salts), source = 0.)
           do isalt=1,cs_db%num_salts
             recsaltb_d(ii)%salt(isalt) = 0.
             recsaltb_m(ii)%salt(isalt) = 0.
@@ -82,10 +82,10 @@
         allocate (recoutsaltb_y(imax))
         allocate (recoutsaltb_a(imax))
         do ii=1,imax
-          allocate (recoutsaltb_d(ii)%salt(cs_db%num_salts))
-          allocate (recoutsaltb_m(ii)%salt(cs_db%num_salts))
-          allocate (recoutsaltb_y(ii)%salt(cs_db%num_salts))
-          allocate (recoutsaltb_a(ii)%salt(cs_db%num_salts))
+          allocate (recoutsaltb_d(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_m(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_y(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_a(ii)%salt(cs_db%num_salts), source = 0.)
           do isalt=1,cs_db%num_salts
             recoutsaltb_d(ii)%salt(isalt) = 0.
             recoutsaltb_m(ii)%salt(isalt) = 0.
@@ -132,7 +132,7 @@
                 allocate (rec_salt(i)%hd_salt(366,nbyr))
                 do jj=1,nbyr
                   do kk=1,366  
-                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts))
+                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts), source = 0.)
                     rec_salt(i)%hd_salt(kk,jj)%salt = 0.
                   enddo
                 enddo
@@ -140,14 +140,14 @@
                 allocate (rec_salt(i)%hd_salt(12,nbyr))
                 do jj=1,nbyr
                   do kk=1,12  
-                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts))
+                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts), source = 0.)
                     rec_salt(i)%hd_salt(kk,jj)%salt = 0.
                   enddo
                 enddo
               case (3) !! annual
                 allocate (rec_salt(i)%hd_salt(1,nbyr))
                 do jj=1,nbyr
-                  allocate (rec_salt(i)%hd_salt(1,jj)%salt(cs_db%num_salts))
+                  allocate (rec_salt(i)%hd_salt(1,jj)%salt(cs_db%num_salts), source = 0.)
                   rec_salt(i)%hd_salt(1,jj)%salt = 0.
                 enddo
             end select 

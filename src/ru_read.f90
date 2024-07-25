@@ -74,10 +74,10 @@
             allocate (rusaltb_y(iru)%hd(5))
             allocate (rusaltb_a(iru)%hd(5))
             do ihyd=1,5
-              allocate (rusaltb_d(iru)%hd(ihyd)%salt(cs_db%num_salts))      
-              allocate (rusaltb_m(iru)%hd(ihyd)%salt(cs_db%num_salts))
-              allocate (rusaltb_y(iru)%hd(ihyd)%salt(cs_db%num_salts))
-              allocate (rusaltb_a(iru)%hd(ihyd)%salt(cs_db%num_salts))
+              allocate (rusaltb_d(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)      
+              allocate (rusaltb_m(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
+              allocate (rusaltb_y(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
+              allocate (rusaltb_a(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
               rusaltb_d(iru)%hd(ihyd)%salt = 0.
               rusaltb_m(iru)%hd(ihyd)%salt = 0.
               rusaltb_y(iru)%hd(ihyd)%salt = 0.
@@ -153,10 +153,10 @@
             allocate (rucsb_y(iru)%hd(5))
             allocate (rucsb_a(iru)%hd(5))
             do ihyd=1,5
-              allocate (rucsb_d(iru)%hd(ihyd)%cs(cs_db%num_cs))      
-              allocate (rucsb_m(iru)%hd(ihyd)%cs(cs_db%num_cs))
-              allocate (rucsb_y(iru)%hd(ihyd)%cs(cs_db%num_cs))
-              allocate (rucsb_a(iru)%hd(ihyd)%cs(cs_db%num_cs))
+              allocate (rucsb_d(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)      
+              allocate (rucsb_m(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
+              allocate (rucsb_y(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
+              allocate (rucsb_a(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
               rucsb_d(iru)%hd(ihyd)%cs = 0.
               rucsb_m(iru)%hd(ihyd)%cs = 0.
               rucsb_y(iru)%hd(ihyd)%cs = 0.
