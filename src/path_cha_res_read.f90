@@ -47,7 +47,7 @@
           allocate (path_init_name(imax))
 
           do ipathi = 1, imax
-            allocate (path_water_ini(ipathi)%water(cs_db%num_paths))
+            allocate (path_water_ini(ipathi)%water(cs_db%num_paths), source = 0.)
             allocate (path_water_ini(ipathi)%benthic(cs_db%num_paths))
           end do
           rewind (107)

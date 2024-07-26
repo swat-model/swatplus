@@ -39,7 +39,7 @@
           
           !loop through, reading in groundwater data (concentrations, sorbed)
           do ics = 1, imax
-            allocate (cs_aqu_ini(ics)%aqu(cs_db%num_cs + cs_db%num_cs))
+            allocate (cs_aqu_ini(ics)%aqu(cs_db%num_cs + cs_db%num_cs), source = 0.)
           end do
            
           rewind (107)

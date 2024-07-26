@@ -46,7 +46,7 @@
           allocate (pest_init_name(imax))
 
           do ipesti = 1, imax
-            allocate (pest_water_ini(ipesti)%water(cs_db%num_pests))
+            allocate (pest_water_ini(ipesti)%water(cs_db%num_pests), source = 0.)
             allocate (pest_water_ini(ipesti)%benthic(cs_db%num_pests))
           end do
           

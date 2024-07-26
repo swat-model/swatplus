@@ -80,7 +80,7 @@
         if (eof < 0) exit
        
         ! the precip time step has to be the same as time%step
-        allocate (petm(i)%ts(366,petm(i)%nbyr))
+        allocate (petm(i)%ts(366,petm(i)%nbyr), source = 0.)
         
         ! read and save start jd and yr
         read (108,*,iostat=eof) iyr, istep

@@ -50,8 +50,8 @@
       if (cs_db%num_tot > 0) then
         do ires = 1, sp_ob%res
           if (cs_db%num_pests > 0) then 
-            allocate (res_water(ires)%pest(cs_db%num_pests))
-            allocate (res_benthic(ires)%pest(cs_db%num_pests))
+            allocate (res_water(ires)%pest(cs_db%num_pests), source = 0.)
+            allocate (res_benthic(ires)%pest(cs_db%num_pests), source = 0.)
             allocate (res_ob(ires)%aq_mix(cs_db%num_pests))
             allocate (respst_d(ires)%pest(cs_db%num_pests))
             allocate (respst_m(ires)%pest(cs_db%num_pests))
@@ -59,7 +59,7 @@
             allocate (respst_a(ires)%pest(cs_db%num_pests))
             allocate (res_water(ires)%path(cs_db%num_paths))
           end if 
-          allocate (res_benthic(ires)%path(cs_db%num_paths))
+          allocate (res_benthic(ires)%path(cs_db%num_paths), source = 0.)
           allocate (res_water(ires)%hmet(cs_db%num_metals))
           allocate (res_benthic(ires)%hmet(cs_db%num_metals))
           !rtb salt

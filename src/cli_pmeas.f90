@@ -86,9 +86,9 @@
         
         if (pcp(i)%tstep > 0) then
           ! the precip time step has to be the same as time%step
-          allocate (pcp(i)%tss(time%step,366,pcp(i)%nbyr))
+          allocate (pcp(i)%tss(time%step,366,pcp(i)%nbyr), source = 0.)
         else
-         allocate (pcp(i)%ts(366,pcp(i)%nbyr))
+         allocate (pcp(i)%ts(366,pcp(i)%nbyr), source = 0.)
         end if
 
         ! read and save start jd and yr

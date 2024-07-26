@@ -47,7 +47,7 @@
           allocate (cs_soil_ini(imax))
           
           do ics = 1, imax
-            allocate (cs_soil_ini(ics)%soil(cs_db%num_cs + cs_db%num_cs))
+            allocate (cs_soil_ini(ics)%soil(cs_db%num_cs + cs_db%num_cs), source = 0.)
             allocate (cs_soil_ini(ics)%plt(cs_db%num_cs + cs_db%num_cs))
           end do
            

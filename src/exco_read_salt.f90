@@ -37,7 +37,7 @@
           
           allocate (exco_salt(imax))
           do iexco_salt = 1, imax
-            allocate (exco_salt(iexco_salt)%salt(cs_db%num_salts))
+            allocate (exco_salt(iexco_salt)%salt(cs_db%num_salts), source = 0.)
           end do
           allocate (exco_salt_num(imax))
           allocate (exco_salt_name(imax))
@@ -76,10 +76,10 @@
         iexco = ob(iob)%props
         if (exco_db(iexco)%salts_file == "null") then
           obcs(iob)%hd(1)%salt = 0.
-        else		
+        else
           iexco_salt = exco_salt_num(iexco)
           obcs(iob)%hd(1)%salt = exco_salt(iexco_salt)%salt
-		end if
+        end if
       end do
       
       return

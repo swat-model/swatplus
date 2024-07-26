@@ -42,7 +42,7 @@
           allocate (cs_hmet_solsor(cs_db%num_metals))
           
           do ihmet = 1, imax
-            allocate (hmet_soil_ini(ihmet)%soil(cs_db%num_metals))
+            allocate (hmet_soil_ini(ihmet)%soil(cs_db%num_metals), source = 0.)
             allocate (hmet_soil_ini(ihmet)%plt(cs_db%num_metals))
           end do
            

@@ -37,7 +37,7 @@
           
           allocate (dr_path(imax))
           do idr_path = 1, imax
-            allocate (dr_path(idr_path)%path(cs_db%num_paths))
+            allocate (dr_path(idr_path)%path(cs_db%num_paths), source = 0.)
           end do
           allocate (dr_path_num(imax))
           allocate (dr_path_name(imax))
