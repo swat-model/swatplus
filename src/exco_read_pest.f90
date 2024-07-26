@@ -36,7 +36,7 @@
           
           allocate (exco_pest(imax))
           do iexco_pest = 1, imax
-            allocate (exco_pest(iexco_pest)%pest(cs_db%num_pests))
+            allocate (exco_pest(iexco_pest)%pest(cs_db%num_pests), source = 0.)
           end do
           allocate (exco_pest_num(imax))
           allocate (exco_pest_name(imax))

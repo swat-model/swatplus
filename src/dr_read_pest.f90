@@ -37,7 +37,7 @@
           
           allocate (dr_pest(imax))
           do idr_pest = 1, imax
-            allocate (dr_pest(idr_pest)%pest(cs_db%num_pests))
+            allocate (dr_pest(idr_pest)%pest(cs_db%num_pests), source = 0.)
           end do
           allocate (dr_pest_num(imax))
           allocate (dr_pest_name(imax))

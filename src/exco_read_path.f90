@@ -37,7 +37,7 @@
           
           allocate (exco_path(imax))
           do iexco_path = 1, imax
-            allocate (exco_path(iexco_path)%path(cs_db%num_paths))
+            allocate (exco_path(iexco_path)%path(cs_db%num_paths), source = 0.)
           end do
           allocate (exco_path_num(imax))
           allocate (exco_path_name(imax))
@@ -75,12 +75,12 @@
       ob2 = sp_ob1%exco + sp_ob%exco - 1
       do iob = ob1, ob2
         iexco = ob(iob)%props
-		if (exco_db(iexco)%path_file == "null") then
-		  obcs(iob)%hd(1)%path = 0.
-		else
+        if (exco_db(iexco)%path_file == "null") then
+           obcs(iob)%hd(1)%path = 0.
+        else
           iexco_path = exco_path_num(iexco)
           obcs(iob)%hd(1)%path = exco_path(iexco_path)%path
-		end if 
+        end if 
       end do
       
       return
