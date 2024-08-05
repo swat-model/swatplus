@@ -47,8 +47,7 @@
       write (4001,*) bsn%name, prog
       write (4001,*) ero_hdr
       write (4001,*) ero_hdr_units
-      
-      
+            
 !!!!! new checker.out file - always prints
       open (4000,file = "checker.out",recl=1200)
       write (4000,*) bsn%name, prog

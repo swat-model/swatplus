@@ -181,10 +181,10 @@
       end if
 
   !!!! for Luis only    
-      if (jres == 1) then
-        write (7777,*) time%day, time%yrc, jres, res(jres)%flo, ht1%flo, ht2%flo,   &
-                                                 res(jres)%sed, ht1%sed, ht2%sed
-      end if
+      !if (jres == 1) then
+      !  write (7777,*) time%day, time%yrc, jres, res(jres)%flo, ht1%flo, ht2%flo,   &
+      !                                           res(jres)%sed, ht1%sed, ht2%sed
+      !end if
   !!!! for Luis only
       
       return

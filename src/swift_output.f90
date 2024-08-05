@@ -27,15 +27,12 @@
       character (len=8) :: wet_y_n
       character(len=100) :: folderPath
       character(len=100) :: command
-      logical :: i_exist
-      
-      !! check for file_cio.swf to determine if SWIFT folder exist
-      inquire (file="SWIFT/file_cio.swf", exist=i_exist)
-      if (.not. i_exist) then   ! if not use system-specific command to create SWIFT folder
-        folderPath = "SWIFT"
-        command = 'mkdir ' // trim(folderPath)
-        call SYSTEM(command)
-      end if
+      logical :: folderExists
+         
+      folderPath = "SWIFT"
+      ! Use system-specific command to create a folder
+      command = 'mkdir ' // trim(folderPath)
+      call SYSTEM(command)
     
       !! write new file.cio
       open (107,file="SWIFT/file_cio.swf",recl = 1500)
@@ -49,10 +46,28 @@
       write (107, *) "ROUT_UNIT     ", in_ru%ru_def, in_ru%ru_ele
       write (107, *) "HRU           ", "  hru_dat.swf", "  hru_exco.swf", "  hru_wet.swf",    &
                                        "  hru_bmp.swf", "  hru_dr.swf"
-      write (107, *) "RECALL        ", in_rec%recall_rec
+      write (107, *) "RECALL        ", "  recall.swf"
       write (107, *) "AQUIFER       ", "  aqu_dr.swf"
       write (107, *) "LS_UNIT       ", in_regs%def_lsu, in_regs%ele_lsu
       close (107)
+      
+      !! Call the copy_file function to copy SWAT+ Inputs to SWIFT Folder
+      call copy_file(in_sim%object_cnt, "SWIFT/" // trim(adjustl(in_sim%object_cnt)))
+      call copy_file(in_sim%object_prt, "SWIFT/" // trim(adjustl(in_sim%object_prt)))
+      call copy_file(in_sim%cs_db, "SWIFT/" // trim(adjustl(in_sim%cs_db)))
+      call copy_file(in_con%hru_con, "SWIFT/" // trim(adjustl(in_con%hru_con)))
+      call copy_file(in_con%ru_con, "SWIFT/" // trim(adjustl(in_con%ru_con)))
+      call copy_file(in_con%aqu_con, "SWIFT/" // trim(adjustl(in_con%aqu_con)))
+      call copy_file(in_con%chandeg_con, "SWIFT/" // trim(adjustl(in_con%chandeg_con)))
+      call copy_file(in_con%res_con, "SWIFT/" // trim(adjustl(in_con%res_con)))
+      call copy_file(in_con%rec_con, "SWIFT/" // trim(adjustl(in_con%rec_con)))
+      call copy_file(in_con%out_con, "SWIFT/" // trim(adjustl(in_con%out_con)))
+      call copy_file(in_ru%ru_def, "SWIFT/" // trim(adjustl(in_ru%ru_def)))
+      call copy_file(in_ru%ru_ele, "SWIFT/" // trim(adjustl(in_ru%ru_ele)))
+      !call copy_file(in_rec%recall_rec, "SWIFT/" // trim(adjustl(in_rec%recall_rec)))
+      call copy_file(in_regs%def_lsu, "SWIFT/" // trim(adjustl(in_regs%def_lsu)))
+      call copy_file(in_regs%ele_lsu, "SWIFT/" // trim(adjustl(in_regs%ele_lsu)))
+
       
       !! write ave annual precip to SWIFT model
       open (107,file="SWIFT/precip.swf",recl = 1500)
@@ -192,6 +207,41 @@
         icmd = sp_ob1%res + ires - 1
         ht5 = ob(icmd)%hout_tot // ob(icmd)%hin_tot
         write (107, *) ires, ob(icmd)%name, ht5%flo, ht5%sed, ht5%orgn, ht5%sedp, ht5%no3, ht5%solp, ht5%nh3, ht5%no2
+      end do
+      close (107)
+      
+      !! write recal_swift.rec --> change files to average annual and use the object name for the file name
+      open (107,file="SWIFT/recall.swf",recl = 1500)
+      write (107,*)           "         ID            NAME              REC_TYP         FILENAME"
+      do irec = 1, db_mx%recall_max
+        write (107,*) irec, recall(irec)%name, recall(irec)%typ, recall(irec)%name
+        
+        !! write to each recall file
+        open (108,file="SWIFT/" // trim(adjustl(recall(irec)%name)),recl = 1500)
+        write (108,*) " AVE ANNUAL RECALL FILE  ", recall(irec)%filename
+        write (108,*) "     1    1    1     1    type    ", recall(irec)%filename, rec_a(irec)%flo,     &
+                rec_a(irec)%sed, rec_a(irec)%orgn, rec_a(irec)%sedp, rec_a(irec)%no3, rec_a(irec)%solp, &
+                rec_a(irec)%nh3, rec_a(irec)%no2
+        close (108)
+      end do
+      close (107)
+      
+      !! write object.prt file - using the same file for now
+      !open (107,file="object_prt.swf",recl = 1500)
+      do iobj_out = 1, mobj_out
+        !write (107,*) irec, recall(irec)%name, "   4   ", recall(irec)%name
+        
+        !! write to each object print file
+        open (108,file="SWIFT/object_prt.swf",recl = 1500)
+        write (108,*) " AVE ANNUAL OBJECT OUTPUT FILE  ", ob_out(iobj_out)%filename
+        iob = ob_out(iobj_out)%objno
+        ihyd = ob_out(iobj_out)%hydno
+        ob(iob)%hd_aa(ihyd) = ob(iob)%hd_aa(ihyd) / yrs_print
+        write (108,*) "     1    1    1     1    ", ob_out(iobj_out)%name, ob_out(iobj_out)%name,       &
+                        ob(iob)%hd_aa(ihyd)%flo, ob(iob)%hd_aa(ihyd)%sed, ob(iob)%hd_aa(ihyd)%orgn,     &
+                        ob(iob)%hd_aa(ihyd)%sedp, ob(iob)%hd_aa(ihyd)%no3, ob(iob)%hd_aa(ihyd)%solp,    &
+                        ob(iob)%hd_aa(ihyd)%nh3, ob(iob)%hd_aa(ihyd)%no2
+        close (108)
       end do
       close (107)
       

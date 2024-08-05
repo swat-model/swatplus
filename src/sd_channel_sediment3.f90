@@ -1,32 +1,42 @@
       subroutine sd_channel_sediment3
 
+      use climate_module
       use sd_channel_module
       use hydrograph_module
       use time_module
+      use hru_module, only : hru
+      use water_body_module
+      use reservoir_module
     
       implicit none     
     
       integer :: iob                !               |object number
+      integer :: ihru
+      integer :: iihru
+      integer :: ires
+      real :: rto
+      real :: rto1
       real :: trap_eff              !frac           |trap efficiency in the flood plain
       real :: cohesion              !               |soil bank cohesion 
       real :: b_exp                 !               |exponent for bank erosion equation
       real :: vel_fall              !m/s            |fall velocity of sediment particles in channel
       real :: dep_fall              !m              |fall depth of sediment particles in channel
       real :: del_rto               !frac           |fraction of sediment deposited in channel
-      real :: conc_chng             !               |change in concentration (and mass) in channel sol and org N and P
       real :: ebtm_m                !m              |erosion of bottom of channel
       real :: ebank_m               !m              |meander cut on one side
       real :: ebtm_t                !tons           |bottom erosion
       real :: ebank_t               !tons           |bank erosion
       real :: shear_btm_cr          !               |
-      real :: shear_btm             !               |  
+      real :: shear_btm             !               |    
+      real :: inflo             !m^3           |inflow water volume
+      real :: inflo_rate        !m^3/s         |inflow rate
       real :: bf_flow               !m3/s           |bankfull flow rate * adjustment factor
       real :: pk_rto                !ratio          |peak to mean flow rate ratio
       real :: bd_fac                !               |bulk density factor for critical velocity calculation
       real :: cohes_fac             !               |cohesion factor for critical velocity calculation
       !real :: qman                  !m^3/s or m/s   |flow rate or flow velocity
       real :: vel, veg, vel_cr, rad_curv, vel_bend, vel_rch, arc_len, prot_len, h_rad
-      real :: fp_m2, exp_co, florate_ob
+      real :: fp_m2, exp_co, florate_ob, precip, flovol_ob
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
@@ -40,6 +50,7 @@
       bank_ero = hz 
       bed_ero = hz 
       ch_trans = hz
+      ch_wat_d(ich)%precip = 0.
       
       !! calculate channel sed and nutrient processes if inflow > 0
       if (ht1%flo > 1.e-6) then
@@ -73,16 +84,26 @@
       sd_ch(ich)%chn = Max (0.02, sd_ch(ich)%chn)
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
       !vel = peakrate / rcurv%xsec_area
+                
+      !! add precip to inflow - km * m * 1000 m/km * ha/10000 m2 = ha
+      ch_wat_d(ich)%area_ha = sd_ch(ich)%chl * sd_ch(ich)%chw / 10.
+      !! m3 = 10. * mm * ha
+      precip = 10. * wst(iwst)%weat%precip * ch_wat_d(ich)%area_ha
+      ch_wat_d(ich)%precip = precip
+      rto = precip / ht1%flo
+      ob(icmd)%tsin(:) = (1. + rto) * ob(icmd)%tsin(:)
+      ht1%flo = ht1%flo + precip
       
       !! compute flood plain deposition
-      !sd_ch(ich)%bankfull_flo = 3.0
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
-      florate_ob = (ht1%flo / 86400.) - bf_flow
-      if (florate_ob > 0.) then
+      florate_ob = peakrate - bf_flow
+      flovol_ob = florate_ob * 86400.
+      if (flovol_ob > 0.) then
         trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
         exp_co = 0.00001 * fp_m2 / florate_ob
         trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / peakrate) * (1. - exp(-exp_co))
+        trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
         
         !! deposit Particulate P and N in the floodplain
@@ -91,12 +112,45 @@
         !! trap nitrate and sol P in flood plain - when not simulating flood plain interactions?
         fp_dep%no3 = trap_eff * ht1%no3
         fp_dep%solp = trap_eff * ht1%solp
-      end if
-      !fp_dep = hz !***jga
+        
+        !! if flood plain link - fill wetlands to emergency and add remainder to flood plain storage
+        do ihru = 1, sd_ch(ich)%fp%hru_tot
+          iihru = sd_ch(ich)%fp%hru(ihru)
+          ires= hru(iihru)%dbs%surf_stor
+          !! wetland storage can't go above emergency in release dtbl - it becomes flood plain storage
+          if (ires > 0 .and. flovol_ob > 0.) then
+            if (flovol_ob > (wet_ob(iihru)%evol - wet(iihru)%flo)) then
+              rto = (wet_ob(iihru)%evol - wet(iihru)%flo) / flovol_ob
+              if (rto > 1.e-6) then
+                wet(iihru) = wet(iihru) + rto * fp_dep
+                wet(iihru)%flo = wet(iihru)%flo + rto * flovol_ob
+                hru(iihru)%wet_obank_in = (rto * flovol_ob) / (10. * hru(iihru)%area_ha)
+                rto1 = 1. - rto
+                fp_dep = rto1 * fp_dep
+                flovol_ob = rto1 * flovol_ob
+              end if
+            else
+              wet(iihru) = wet(iihru) + fp_dep
+              wet(iihru)%flo = wet(iihru)%flo + flovol_ob
+              hru(iihru)%wet_obank_in = flovol_ob /  (10. * hru(iihru)%area_ha) 
+              fp_dep = hz
+              flovol_ob = 0.
+            end if
+          end if
+        end do
+            
+        !! add remainder to flood plain storage
+        if (flovol_ob > 0.) then
+          rto = flovol_ob / ht1%flo
+          ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
+          ht1 = ht1 - fp_dep
+        end if
+            
+      end if     ! florate_ob > 0.
+      
+      !! add sediment deposition to calculate mm of deposition over the flood plain later
       ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm + fp_dep%sed
-      
-      ht2 = ht1 - fp_dep
-      
+
       !! calculate channel deposition based on fall velocity - SWRRB book
       !! assume particle size = 0.03 mm -- median silt size
       vel_fall = 411. * sd_ch(ich)%part_size ** 2     ! m/h
@@ -108,20 +162,13 @@
         del_rto = .5 * sd_ch(ich)%chd / dep_fall
       end if
       
-      ch_dep%sed = (1. - del_rto) * ht2%sed
-      ch_dep%orgn = sd_ch(ich)%n_dep_enr * (1. - del_rto) * ht2%orgn
-      ch_dep%sedp = sd_ch(ich)%p_dep_enr * (1. - del_rto) * ht2%sedp
-      ht2 = ht2 - ch_dep
+      ch_dep%sed = (1. - del_rto) * ht1%sed
+      ch_dep%orgn = sd_ch(ich)%n_dep_enr * (1. - del_rto) * ht1%orgn
+      ch_dep%sedp = sd_ch(ich)%p_dep_enr * (1. - del_rto) * ht1%sedp
+      rto = ch_dep%flo / ht1%flo
+      ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
+      ht1 = ht1 - ch_dep
 
-      !! calculate in channel nutrient losses -  input delivery ratio
-      !! calculate in channel nutrient transformations
-      conc_chng = 1. - exp(-sd_ch(ich)%n_sol_part * rcurv%ttime)
-      ch_trans%no3 = conc_chng * ht2%no3
-      ch_trans%orgn = -ch_trans%no3
-      conc_chng = 1. - exp(-sd_ch(ich)%p_sol_part * rcurv%ttime)
-      ch_trans%solp = conc_chng * ht2%solp
-      ch_trans%sedp = -ch_trans%solp
-      
       !! calc bank erosion
       cohesion = (-87.1 + (42.82 * sd_ch(ich)%ch_clay) - (0.261 * sd_ch(ich)%ch_clay ** 2.) &
                                      + (0.029 * sd_ch(ich)%ch_clay ** 3.))
@@ -173,7 +220,9 @@
       bank_ero%no3 = 0.
       bank_ero%solp = sd_ch(ich)%p_bio * bank_ero%sed * sd_ch(ich)%p_conc
       bank_ero%no2 = 0.
-      ht2 = ht2 + bank_ero
+      rto = bank_ero%flo / ht1%flo
+      ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
+      ht1 = ht1 + bank_ero
       
       !! calculate bed erosion
       !! no downcutting below equilibrium slope
@@ -199,7 +248,9 @@
       bed_ero%no3 = 0.
       bed_ero%solp = sd_ch(ich)%p_bio * bed_ero%sed * sd_ch(ich)%p_conc
       bed_ero%no2 = 0.
-      ht2 = ht2 + bed_ero
+      rto = bed_ero%flo / ht1%flo
+      ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
+      ht1 = ht1 + bed_ero
       
       end if        ! inflow>0
 

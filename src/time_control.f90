@@ -141,7 +141,7 @@
         !! set initial soil water for hru, basin and lsu - for checking water balance
         if (pco%sw_init == "n") then
           if (time%yrs > pco%nyskip) then
-            call basin_sw_init
+            call basin_sw_init     !***jga 
             call aqu_pest_output_init
             pco%sw_init = "y"  !! won't reset again
           end if
@@ -375,7 +375,7 @@
         ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm / (3. * sd_ch(ich)%chw *           &
                                          sd_ch(ich)%chl * 1000.) / time%yrs_prt
         iob = sp_ob1%chandeg + ich - 1
-        write (7778,*) ich, ob(iob)%name, ch_morph(ich)%w_yr, ch_morph(ich)%d_yr, ch_morph(ich)%fp_mm
+        !write (7778,*) ich, ob(iob)%name, ch_morph(ich)%w_yr, ch_morph(ich)%d_yr, ch_morph(ich)%fp_mm
       end do
           
       !! ave annual calibration output and reset time for next simulation
