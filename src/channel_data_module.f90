@@ -87,8 +87,7 @@
         character(len=16) :: name
         integer :: eqn  = 0      !               |sediment routine methods: 
                                    !                   0 = original SWAT method
-                                   !                   1 = Bagnold"seqn
-        
+                                   !                   1 = Bagnold"seqn        
                                    !                   2 = Kodatie
                                    !                   3 = Molinas WU
                                    !                   4 = Yang
