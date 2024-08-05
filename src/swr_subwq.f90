@@ -75,7 +75,7 @@
  
           !! calculate organic carbon loading to main channel
           org_c = 0.
-          org_c = (soil1(j)%tot(1)%c / 100.) * enratio*sedyld(j) * 1000.
+          org_c = (soil1(j)%cbn(1) / 100.) * enratio * sedyld(j) * 1000.
           
           !!add by zhang
           !!========================
@@ -86,8 +86,8 @@
           !!========================
           
                   
-          !! calculate carbonaceous biological oxygen demand (CBOD)
-          cbodu(j) = cbodu(j) + 2.7 * org_c / (qdr(j) * hru(j)%km) !JAEHAK 2016
+          !! calculate carbonaceous biological oxygen demand (ppm or mg/L)
+          cbodu(j) = 2.7 * org_c / (qdr(j) * hru(j)%km) / 10000.  !JAEHAK 2016
 
           !! calculate dissolved oxygen saturation concentration
           !! QUAL2E equation III-29

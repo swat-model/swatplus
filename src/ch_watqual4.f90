@@ -29,19 +29,37 @@
       real :: cbodo, cbodoin, rk1_k, wq_k2m, rk1_m , rk3_k, factm, &
           bc1_k,bc3_k, rs4_k, bc3_m
       real :: rk2_m, rk2_k, alg_m_o2, bc2_k, bc1_m, bc2_m, bc4_k, &
-          bc4_m, rs5_k
+          bc4_m, rs5_k, flo_rate
       integer :: iwgn
 
       jrch = isdch
+      icmd = sp_ob1%chandeg + jrch - 1
       !! calculate flow duration
-      tday = rttime / 24.0
+      tday = rcurv%ttime / 24.0
       tday = amin1 (1., tday)
       rt_delt = 1.
-      !! use maximum daily flow depth
-      !rchdep = 0.
-      !do istep = 1, time%step
-      !  rchdep = Max (rchdep, flo_dep(istep))
-      !end do
+      
+      !! ht3 is incoming concentration
+      ht3%orgn = 1000. * ht1%orgn / ht1%flo
+      ht3%sedp = 1000. * ht1%sedp / ht1%flo
+      ht3%no3 = 1000. * ht1%no3 / ht1%flo
+      ht3%solp = 1000. * ht1%solp / ht1%flo
+      ht3%chla = 1000. * ht1%chla / ht1%flo
+      ht3%nh3 = 1000. * ht1%nh3 / ht1%flo
+      ht3%no2 = 1000. * ht1%no2 / ht1%flo
+      ht3%cbod = 1000. * ht1%cbod / ht1%flo
+      ht3%dox = 1000. * ht1%dox / ht1%flo
+
+      !! ht5 is concentration from previous time step
+      ht5%orgn = 1000. * ob(icmd)%conc_prev%orgn / ht1%flo
+      ht5%sedp = 1000. * ob(icmd)%conc_prev%sedp / ht1%flo
+      ht5%no3 = 1000. * ob(icmd)%conc_prev%no3 / ht1%flo
+      ht5%solp = 1000. * ob(icmd)%conc_prev%solp / ht1%flo
+      ht5%chla = 1000. * ob(icmd)%conc_prev%chla / ht1%flo
+      ht5%nh3 = 1000. * ob(icmd)%conc_prev%nh3 / ht1%flo
+      ht5%no2 = 1000. * ob(icmd)%conc_prev%no2 / ht1%flo
+      ht5%cbod = 1000. * ob(icmd)%conc_prev%cbod / ht1%flo
+      ht5%dox = 1000. * ob(icmd)%conc_prev%dox / ht1%flo
 
       !! calculate temperature in stream Stefan and Preudhomme. 1993.  Stream temperature estimation 
       !! from air temperature.  Water Res. Bull. p. 27-45 SWAT manual equation 2.3.13
@@ -55,12 +73,15 @@
       rk4_s =  Theta(ch_nut(jnut)%rk4,thrk4,wtmp) * ben_area    !ch_hyd(jhyd)%l *ch_hyd(jhyd)%w * rt_delt
 
       !! ht3 = concentration of incoming nutrients
-      !rchdep = ch_rcurv(jrch)%in2%dep
-      if (ht3%flo > 0. .and. rchdep > 0.) then
-        disoxin = ht3%dox - rk4_s / (ht3%flo * 1000.)   !m3*1000 l/m3 = liters
+      flo_rate = ht1%flo / 86400.     !m3/s
+      !! interpolate rating curve using peak rate
+      call rcurv_interp_flo (ich, flo_rate)
+      rchdep = rcurv%dep
+      if (ht1%flo > 0. .and. rchdep > 0.) then
+        disoxin = ht3%dox - rk4_s / (ht1%flo * 1000.)   !m3*1000 l/m3 = liters
         disoxin = max (0., disoxin)
-        dispin = ht3%solp + rs2_s / (ht3%flo * 1000.)
-        ammoin = ht3%nh3 + rs3_s / (ht3%flo * 1000.)
+        dispin = ht3%solp + rs2_s / (ht1%flo * 1000.)
+        ammoin = ht3%nh3 + rs3_s / (ht1%flo * 1000.)
 
         !! calculate effective concentration of available nitrogen QUAL2E equation III-15
         cinn = ch_stor(jrch)%nh3 + ch_stor(jrch)%no3
@@ -99,7 +120,7 @@
         !! calculate algal growth limitation factors for nitrogen
         !! and phosphorus QUAL2E equations III-13 & III-14
         fnn = cinn / (cinn + ch_nut(jnut)%k_n)
-        fpp = ch_stor(jrch)%solp / (ch_stor(jrch)%solp + ch_nut(jnut)%k_p)
+        fpp = ht3%solp / (ht3%solp + ch_nut(jnut)%k_p)
 
         !! calculate daylight average, photosynthetically active, light intensity QUAL2E equation III-8
         !! Light Averaging Option # 2
@@ -143,8 +164,8 @@
         alg_m = wq_semianalyt (tday, rt_delt, 0., factk, algcon, algin)
         alg_m2 = alg_m - alg_m1
         !! calculate fraction of algal nitrogen uptake from ammonia pool QUAL2E equation III-18
-        f1 = ch_nut(jnut)%p_n * ch_stor(jrch)%nh3 / (ch_nut(jnut)%p_n * ch_stor(jrch)%nh3 +       &
-                          (1. - ch_nut(jnut)%p_n) * ch_stor(jrch)%no3 + 1.e-6)
+        f1 = ch_nut(jnut)%p_n * ht3%nh3 / (ch_nut(jnut)%p_n * ht3%nh3 +       &
+                          (1. - ch_nut(jnut)%p_n) * ht3%no3 + 1.e-6)
         alg_no3_m = -alg_m * (1. - f1) * ch_nut(jnut)%ai1
         alg_nh4_m = -alg_m * f1 * ch_nut(jnut)%ai1
         alg_P_m = -alg_m * ch_nut(jnut)%ai2
@@ -157,7 +178,7 @@
         if (algcon_out > 5000.) algcon_out = 5000.
 
         !! calculate chlorophyll-a concentration at end of day QUAL2E equation III-1
-        ht2%chla = algcon_out * ch_nut(jnut)%ai0 / 1000.
+        ht3%chla = algcon_out * ch_nut(jnut)%ai0 / 1000.
          
         !! end algal growth 
 
@@ -165,16 +186,16 @@
         !! calculate carbonaceous biological oxygen demand at end of day QUAL2E section 3.5 equation III-26
         !! adjust rk1 to m-term and BOD & O2 mass availability
          
-        cbodo = min (ch_stor(jrch)%cbod, ch_stor(jrch)%dox)
+        cbodo = min (ht3%cbod, ht3%dox)
         cbodoin = min (ht3%cbod, ht3%dox)
         rk1_k = -Theta (ch_nut(jnut)%rk1, thrk1,wtmp)
-        rk1_m = wq_k2m (tday, rt_delt, rk1_k, ch_stor(jrch)%cbod, ht3%cbod)
+        rk1_m = wq_k2m (tday, rt_delt, rk1_k, ht5%cbod, ht3%cbod)
         !! calculate corresponding m-term
         rk3_k=0.
         if (rchdep > 0.001)  rk3_k = -Theta (ch_nut(jnut)%rk3, thrk3, wtmp) / rchdep
         factm = rk1_m
         factk = rk3_k
-        ht2%cbod = wq_semianalyt (tday, rt_delt, factm, factk, ch_stor(jrch)%cbod, ht3%cbod)
+        ht3%cbod = wq_semianalyt (tday, rt_delt, factm, factk, ht5%cbod, ht3%cbod)
 
         !! nitrogen calculations
         !! calculate organic N concentration at end of day
@@ -186,11 +207,11 @@
         rs4_k = 0.
         if (rchdep > 0.001)  rs4_k = Theta (ch_nut(jnut)%rs4, thrs4, wtmp) / rchdep   
 
-        bc3_m = wq_k2m (tday, rt_delt, -bc3_k, ch_stor(jrch)%orgn, ht3%orgn)
+        bc3_m = wq_k2m (tday, rt_delt, -bc3_k, ht5%orgn, ht3%orgn)
         factk = -rs4_k
         factm = bc3_m
-        ht2%orgn = wq_semianalyt (tday, rt_delt, factm, factk, ch_stor(jrch)%orgn, ht3%orgn)
-        if (ht2%orgn <0.) ht2%orgn = 0.
+        ht3%orgn = wq_semianalyt (tday, rt_delt, factm, factk, ht5%orgn, ht3%orgn)
+        if (ht3%orgn <0.) ht3%orgn = 0.
 
         !! calculate dissolved oxygen concentration if reach at end of day QUAL2E section 3.6 equation III-28
 
@@ -201,53 +222,74 @@
      
         factk = - rk2_k
         bc2_k = -Theta (ch_nut(jnut)%bc2, thbc2, wtmp)
-        bc1_m = wq_k2m (tday, rt_delt, factk, ch_stor(jrch)%nh3, ammoin)
-        bc2_m = wq_k2m (tday, rt_delt, bc2_k, ch_stor(jrch)%no2, ht3%no2)
+        bc1_m = wq_k2m (tday, rt_delt, factk, ht5%nh3, ammoin)
+        bc2_m = wq_k2m (tday, rt_delt, bc2_k, ht5%no2, ht3%no2)
         factm = rk1_m + rk2_m - rs4_k + bc1_m * ch_nut(jnut)%ai5 + bc2_m * ch_nut(jnut)%ai6
-        ht2%dox = wq_semianalyt (tday, rt_delt, factm, factk, ch_stor(jrch)%dox, ht3%dox)
-        if (ht2%dox <0.) ht2%dox = 0.
+        ht3%dox = wq_semianalyt (tday, rt_delt, factm, factk, ht5%dox, ht3%dox)
+        if (ht3%dox <0.) ht3%dox = 0.
           
         !! end oxygen calculations        
 
         !! calculate ammonia nitrogen concentration at end of day QUAL2E section 3.3.2 equation III-17
         factk = -bc1_k
         factm = bc1_m - bc3_m 
-        ht2%nh3 = wq_semianalyt (tday, rt_delt, factm, 0., ch_stor(jrch)%nh3, ammoin)
-        if (ht2%nh3 < 1.e-6) ht2%nh3 = 0.
+        ht3%nh3 = wq_semianalyt (tday, rt_delt, factm, 0., ht5%nh3, ammoin)
+        if (ht3%nh3 < 1.e-6) ht3%nh3 = 0.
   
         !! calculate concentration of nitrite at end of day QUAL2E section 3.3.3 equation III-19
         factm = -bc1_m + bc2_m
-        ht2%no2 = wq_semianalyt (tday, rt_delt, factm, 0., ch_stor(jrch)%no2, ht3%no2)
-        if (ht2%no2 < 1.e-6) ht2%no2 = 0.
+        ht3%no2 = wq_semianalyt (tday, rt_delt, factm, 0., ht5%no2, ht3%no2)
+        if (ht3%no2 < 1.e-6) ht3%no2 = 0.
 
         !! calculate nitrate concentration at end of day QUAL2E section 3.3.4 equation III-20
         factk = 0.
         factm = -bc2_m
         
-        ht2%no3 = wq_semianalyt (tday, rt_delt, factm, 0., ch_stor(jrch)%no3, ht3%no3)
-        if (ht2%no3 < 1.e-6) ht3%no3 = 0.
+        ht3%no3 = wq_semianalyt (tday, rt_delt, factm, 0., ht5%no3, ht3%no3)
+        if (ht3%no3 < 1.e-6) ht3%no3 = 0.
         !! end nitrogen calculations
 
         !! phosphorus calculations
         !! calculate organic phosphorus concentration at end of day QUAL2E section 3.3.6 equation III-24
         bc4_k = Theta (ch_nut(jnut)%bc4, thbc4,wtmp)
-        bc4_m = wq_k2m (tday, rt_delt, -bc4_k, ch_stor(jrch)%sedp, ht3%sedp) 
+        bc4_m = wq_k2m (tday, rt_delt, -bc4_k, ht5%sedp, ht3%sedp) 
         rs5_k = 0.
         if (rchdep > 0.001) rs5_k = Theta (ch_nut(jnut)%rs5, thrs5, wtmp) / rchdep 
 
         factk = -rs5_k
         factm = bc4_m 
 
-        ht2%sedp = wq_semianalyt (tday, rt_delt, factm, factk, ch_stor(jrch)%sedp, ht3%sedp)
-        if (ht2%sedp < 1.e-6) ht2%sedp = 0.
+        ht3%sedp = wq_semianalyt (tday, rt_delt, factm, factk, ht5%sedp, ht3%sedp)
+        if (ht3%sedp < 1.e-6) ht3%sedp = 0.
     
         !! calculate dissolved phosphorus concentration at end of day QUAL2E section 3.4.2 equation III-25
         factk = 0.
         factm = -bc4_m + ch_nut(jnut)%ai2 * alg_m
-        ht2%solp = wq_semianalyt (tday, rt_delt, factm, 0., ch_stor(jrch)%solp, dispin)
-        if (ht2%solp < 1.e-6) ht2%solp = 0.
+        ht3%solp = wq_semianalyt (tday, rt_delt, factm, 0., ht5%solp, dispin)
+        if (ht3%solp < 1.e-6) ht3%solp = 0.
         !! end phosphorus calculations
 
+        !! save concentration for next time step
+        ob(icmd)%conc_prev%orgn = ht3%orgn * ht1%flo / 1000.
+        ob(icmd)%conc_prev%sedp = ht3%sedp * ht1%flo / 1000.
+        ob(icmd)%conc_prev%no3 = ht3%no3 * ht1%flo / 1000.
+        ob(icmd)%conc_prev%solp = ht3%solp * ht1%flo / 1000.
+        ob(icmd)%conc_prev%chla = ht3%chla * ht1%flo / 1000.
+        ob(icmd)%conc_prev%nh3 = ht3%nh3 * ht1%flo / 1000.
+        ob(icmd)%conc_prev%no2 = ht3%no2 * ht1%flo / 1000.
+        ob(icmd)%conc_prev%cbod = ht3%cbod * ht1%flo / 1000.
+        ob(icmd)%conc_prev%dox = ht3%dox * ht1%flo / 1000.
+        
+        !! convert back from concentration to mass for routing
+        ht2%orgn = ht3%orgn * ht1%flo / 1000.
+        ht2%sedp = ht3%sedp * ht1%flo / 1000.
+        ht2%no3 = ht3%no3 * ht1%flo / 1000.
+        ht2%solp = ht3%solp * ht1%flo / 1000.
+        ht2%chla = ht3%chla * ht1%flo / 1000.
+        ht2%nh3 = ht3%nh3 * ht1%flo / 1000.
+        ht2%no2 = ht3%no2 * ht1%flo / 1000.
+        ht2%cbod = ht3%cbod * ht1%flo / 1000.
+        ht2%dox = ht3%dox * ht1%flo / 1000.
       else
         !! all water quality variables set to zero when no flow
         ht2 = hz

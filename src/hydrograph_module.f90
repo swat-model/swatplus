@@ -321,6 +321,7 @@
         type (hyd_output) :: trans                                          !water transfer in water allocation
         type (hyd_output) :: hin_tot                                        !total inflow hydrograph to the object
         type (hyd_output) :: hout_tot                                       !total outflow hydrograph to the object
+        type (hyd_output) :: conc_prev                                      !concentration of previous timestep for watqual2e routine
         real :: demand                                                      !water irrigation demand (ha-m)
         integer :: day_cur = 0                                              !current hydrograph day in ts
         integer :: day_max                                                  !maximum number of days to store the hydrograph

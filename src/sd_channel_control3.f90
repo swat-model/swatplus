@@ -94,7 +94,9 @@
       real :: salt_conc(8)            !kg            |salt concentration in channel water
       real :: cs_conc(8)              !kg            |constituent concentration in channel water
       real :: bf_flow                 !m3/s          |bankfull flow rate * adjustment factor
-      
+      real :: conc_chng               !              |change in concentration (and mass) in channel sol and org N and P
+      real :: inflo_rate
+      real :: aqu_inflo               !m3            |aquifer inflow if using geomorphic baseflow
       ich = isdch
       isd_db = sd_dat(ich)%hyd
       iwst = ob(icmd)%wst
@@ -103,6 +105,7 @@
       if(bsn_cc%gwflow.eq.1) flood_freq(ich) = 0
       
       !! set ht1 to incoming hydrograph
+      !! set ht1 to incoming daily hydrograph
       ht1 = ob(icmd)%hin
       
       !! set outgoing flow and sediment - ht2
@@ -117,7 +120,7 @@
       !set constituents to incoming loads (rtb salt; rtb cs)
       if (cs_db%num_tot > 0) then
         hcs1 = obcs(icmd)%hin(1)
-      endif
+      end if
       
       chsd_d(ich)%flo_in = ht1%flo / 86400.     !flow for morphology output
       ch_in_d(ich) = ht1                        !set inflow om hydrograph
@@ -147,19 +150,23 @@
         if (aq_ch(iaq)%ch(iaq_ch)%flo_fr > 0.) then
           chsd_d(ich)%aqu_in = (aq_ch(iaq)%ch(iaq_ch)%flo_fr * aq_ch(iaq)%hd%flo) / 86400.
           chsd_d(ich)%aqu_in_mm = (aq_ch(iaq)%ch(iaq_ch)%flo_fr * aq_ch(iaq)%hd%flo) / (10. * ob(icmd)%area_ha)
+          !! add aquifer flow to inflow
+          aqu_inflo = aq_ch(iaq)%ch(iaq_ch)%flo_fr * aq_ch(iaq)%hd%flo
+          rto = aqu_inflo / ht1%flo
+          ob(icmd)%tsin(:) = (1. + rto) * ob(icmd)%tsin(:)
           ht1 = ht1 + aq_ch(iaq)%ch(iaq_ch)%flo_fr * aq_ch(iaq)%hd
           !rtb salt
           do isalt=1,cs_db%num_salts
             gw_salt_in = aq_ch(iaq)%ch(iaq_ch)%flo_fr * aq_chcs(iaq)%hd(1)%salt(isalt) !kg
             chsalt_d(ich)%salt(isalt)%gw_in = gw_salt_in !kg
             hcs1%salt(isalt) = hcs1%salt(isalt) + gw_salt_in !kg
-          enddo
+          end do
           !rtb cs
           do ics=1,cs_db%num_cs
             gw_cs_in = aq_ch(iaq)%ch(iaq_ch)%flo_fr * aq_chcs(iaq)%hd(1)%cs(ics) !kg
             chcs_d(ich)%cs(ics)%gw_in = gw_cs_in !kg
             hcs1%cs(ics) = hcs1%cs(ics) + gw_cs_in !kg
-          enddo
+          end do
           aq_ch(iaq)%ch(iaq_ch)%flo_fr = 0.
         end if
       end if
@@ -170,7 +177,7 @@
         call gwflow_canl(ich) !channel --> canal seepage
         call gwflow_tile(ich) !groundwater --> channel
         call gwflow_satx(ich) !groundwater --> channel
-      endif
+      end if
       
       !! set inflow hyds for printing
       chsd_d(ich)%flo_in = ht1%flo / 86400.     !flow for morphology output - m3/s
@@ -184,18 +191,19 @@
       end if
       !! zero outgoing flow and sediment - ht2
       ht2 = hz
-
-      !call Muskingum and variable storage coefficient flood routing method
-      call ch_rtmusk
-              
+  
+      ! compute flood plain deposition and channel erosion   
       call sd_channel_sediment3
         
-        !! route constituents
-        call ch_rtpest
-        !! call mike winchell's new routine for pesticide routing
-        ! call ch_rtpest2
-        call ch_rtpath
-      
+      !call Muskingum and variable storage coefficient flood routing method
+      call ch_rtmusk
+            
+      !! route constituents
+      call ch_rtpest
+      !! call mike winchell's new routine for pesticide routing
+      ! call ch_rtpest2
+      call ch_rtpath
+        
       !salt and constituent concentrations (g/m3) for inflow water
       if(cs_db%num_salts > 0 .or. cs_db%num_cs > 0) then
         hcs2 = hcs1 !set outflow to inflow
@@ -204,58 +212,88 @@
             salt_conc(isalt) = (hcs2%salt(isalt) * 1000.) / ht2%flo !g/m3 = mg/L 
           else
             salt_conc(isalt) = 0.
-          endif
-        enddo
+          end if
+        end do
         do ics=1,cs_db%num_cs
           if(ht2%flo > 0) then
             cs_conc(ics) = (hcs2%cs(ics) * 1000.) / ht2%flo !g/m3 = mg/L 
           else
             cs_conc(ics) = 0.
-          endif
-        enddo
-      endif
-      
-      !salt mass in seepage
-      do isalt=1,cs_db%num_salts
-        seep_mass = salt_conc(isalt) * ch_wat_d(ich)%seep !g/m3 * m3 = g
-        seep_mass = seep_mass / 1000. !kg
-        if(seep_mass > hcs2%salt(isalt)) then
-          seep_mass = hcs2%salt(isalt)
-        endif
-        hcs2%salt(isalt) = hcs2%salt(isalt) - seep_mass !kg
-        chsalt_d(ich)%salt(isalt)%seep = seep_mass !kg (channel salt output)
-      enddo
-      
-      !constituent mass in seepage
-      do ics=1,cs_db%num_cs
-        seep_mass = cs_conc(ics) * ch_wat_d(ich)%seep !g/m3 * m3 = g
-        seep_mass = seep_mass / 1000. !kg
-        if(seep_mass > hcs2%cs(ics)) then
-          seep_mass = hcs2%cs(ics)
-        endif
-        hcs2%cs(ics) = hcs2%cs(ics) - seep_mass !kg
-        chcs_d(ich)%cs(ics)%seep = seep_mass !kg (channel constituent output)
-      enddo
-      
-      !! subtract evaporation
-      if (ht2%flo < ch_wat_d(ich)%evap) then
-        ch_wat_d(ich)%evap = ht2%flo
-        ht2%flo = 0.
-      else
-        ht2%flo = ht2%flo - ch_wat_d(ich)%evap
+          end if
+        end do
       end if
-
-      !! total outgoing to output to SWIFT
-      ob(icmd)%hout_tot = ob(icmd)%hout_tot + ht2
-        
-      !compute stream temperature
-      ! Call Subroutune for Ficklin Model, Linear Equation Model, Energy Balance Model
-      !ht2%temp = "output from subroutine"
       
-      !salt, constituent mass
-      if(cs_db%num_salts > 0 .or. cs_db%num_cs > 0) then
-        hcs3 = hcs2 + ch_water(ich) !incoming + storage
-      endif
+      !! don't route constituents if flow is zero
+      if (ht1%flo > 1.e-6) then
+          
+        jnut = sd_dat(ich)%nut
+        ben_area = sd_ch(ich)%chw * sd_ch(ich)%chl
+      
+        !! compute max flow depth and corresponding travel time during day
+        inflo_rate = ht3%flo / 86400.
+        call rcurv_interp_flo (jrch, inflo_rate)
+      
+        !! compute channel water quality
+        call ch_watqual4
+      
+        if (bsn_cc%qual2e == 1) then
+          !! new nutrient channel transformations - overrides qual2e
+          conc_chng = 1. - exp(-sd_ch(ich)%n_sol_part * rcurv%ttime)
+          ch_trans%no3 = conc_chng * ht1%no3
+          ch_trans%orgn = -ch_trans%no3
+          ht2%no3 = ht1%no3 + ch_trans%no3
+          ht2%orgn = ht1%orgn + ch_trans%orgn
+          conc_chng = 1. - exp(-sd_ch(ich)%p_sol_part * rcurv%ttime)
+          ch_trans%solp = conc_chng * ht1%solp
+          ch_trans%sedp = -ch_trans%solp
+          ht2%solp = ht1%solp + ch_trans%solp
+          ht2%solp = ht1%solp + ch_trans%solp
+        end if
+      
+        !salt mass in seepage
+        do isalt=1,cs_db%num_salts
+          seep_mass = salt_conc(isalt) * ch_wat_d(ich)%seep !g/m3 * m3 = g
+          seep_mass = seep_mass / 1000. !kg
+          if(seep_mass > hcs2%salt(isalt)) then
+            seep_mass = hcs2%salt(isalt)
+          end if
+          hcs2%salt(isalt) = hcs2%salt(isalt) - seep_mass !kg
+            chsalt_d(ich)%salt(isalt)%seep = seep_mass !kg (channel salt output)
+        end do
+      
+        !constituent mass in seepage
+        do ics=1,cs_db%num_cs
+          seep_mass = cs_conc(ics) * ch_wat_d(ich)%seep !g/m3 * m3 = g
+          seep_mass = seep_mass / 1000. !kg
+          if(seep_mass > hcs2%cs(ics)) then
+            seep_mass = hcs2%cs(ics)
+          end if
+          hcs2%cs(ics) = hcs2%cs(ics) - seep_mass !kg
+          chcs_d(ich)%cs(ics)%seep = seep_mass !kg (channel constituent output)
+        end do
+        !! route constituents
+        call ch_rtpest
+        !! call mike winchell's new routine for pesticide routing
+        !call ch_rtpest2
+        if (cs_db%num_pests > 0) then
+          obcs(icmd)%hd(1)%pest = hcs2%pest
+        end if
+      
+        !! total outgoing to output to SWIFT
+        ob(icmd)%hout_tot = ob(icmd)%hout_tot + ht2
+        !! route pathogens
+        call ch_rtpath
+        
+        !compute stream temperature
+        ! Call Subroutune for Ficklin Model, Linear Equation Model, Energy Balance Model
+        !ht2%temp = "output from subroutine"
+      
+        !salt, constituent mass
+        if(cs_db%num_salts > 0 .or. cs_db%num_cs > 0) then
+          hcs3 = hcs2 + ch_water(ich) !incoming + storage
+        end if
+      
+      end if        ! ht1%flo > 0.
       
       !rtb hydrograph separation
       if (rttime > det) then      ! ht1 = incoming + storage
@@ -331,24 +369,33 @@
         call wallo_control (sd_ch(isdch)%wallo)
       end if
       
+      if (ob(icmd)%hyd_flo(1,1) > 1.e-6) then
+      if (ht2%flo / ob(icmd)%hyd_flo(1,1) > 1.5) then
+        a = 1.
+      end if
+      end if
       !! set outflow hyd to ht2 after diverting water
       ob(icmd)%hd(1) = ht2
+      
+      if (isdch == 1321) then
+          write (7778,*) isdch, ht1%flo, ht2%flo
+      end if
 
       !channel salt updates
       if(cs_db%num_salts > 0) then
         do isalt=1,cs_db%num_salts
           hcs2%salt(isalt) = scoef * hcs3%salt(isalt)
           ch_water(ich)%salt(isalt) = hcs3%salt(isalt) - hcs2%salt(isalt)
-        enddo
-      endif
+        end do
+      end if
       
       !channel constituent updates
       if(cs_db%num_cs > 0) then
         do ics=1,cs_db%num_cs
           hcs2%cs(ics) = scoef * hcs3%cs(ics)
           ch_water(ich)%cs(ics) = hcs3%cs(ics) - hcs2%cs(ics)
-        enddo
-      endif
+        end do
+      end if
       
       !! calculate stream temperature
       ob(icmd)%hd(1)%temp = 5. + .75 * wst(iwst)%weat%tave
@@ -396,6 +443,13 @@
       chsd_d(isdch)%p_tot = ob(icmd)%hd(1)%sedp + ob(icmd)%hd(1)%solp
       chsd_d(ich)%dep_bf = sd_ch_vel(ich)%dep_bf
       chsd_d(ich)%velav_bf = sd_ch_vel(ich)%vel_bf
+      ch_out_d(ich) = ob(icmd)%hd(1)                       !set outflow om hydrograph
+      ch_out_d(ich)%flo = ob(icmd)%hd(1)%flo / 86400.      !m3 -> m3/s
+   
+      !! output flow to channel morphology
+      chsd_d(ich)%flo = ob(icmd)%hd(1)%flo / 86400.        !adjust if overbank flooding is moved to landscape
+      chsd_d(ich)%flo_mm = ob(icmd)%hd(1)%flo / (10. * ob(icmd)%area_ha)   !flow out in mm
+      chsd_d(ich)%peakr = peakrate
       
       !! set pesticide output variables
       do ipest = 1, cs_db%num_pests
@@ -423,8 +477,8 @@
           chsalt_d(ich)%salt(isalt)%conc = (hcs2%salt(isalt) * 1000.) / ht2%flo !g/m3 = mg/L 
         else
           chsalt_d(ich)%salt(isalt)%conc = 0.
-        endif
-      enddo
+        end if
+      end do
       
       !rtb cs - set constituent output variables
       do ics = 1, cs_db%num_cs
@@ -435,8 +489,8 @@
           chcs_d(ich)%cs(ics)%conc = (hcs2%cs(ics) * 1000.) / ht2%flo !g/m3 = mg/L 
         else
           chcs_d(ich)%cs(ics)%conc = 0.
-        endif
-      enddo
+        end if
+      end do
       
         
       !! set values for recharge hydrograph - should be trans losses

@@ -78,9 +78,8 @@
                                  !!          roughness and rain intensity
                                  !!   0 = static stmaxd read from .bsn for the global value or .sdr
                                  !! for specific hrus 
-        integer :: i_fpwet = 0   !! 0 = new sediment and nutrient routing (no QUAL2E - simplified nutrients)
-                                 !! 1 = daily routing with QUAL2E
-                                 !! 2 = subdaily routing - with QUAL2E
+        integer :: qual2e = 0    !! 0 = channel routine using QUAL2E 
+                                 !! 1 = channel routing with simplified nutrient transformations
         integer :: gwflow = 0       !!   0 = gwflow module not active; 1 = gwflow module active
       end type basin_control_codes
       type (basin_control_codes) :: bsn_cc
