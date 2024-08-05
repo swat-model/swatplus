@@ -22,6 +22,7 @@
       integer :: j                   !none          |same as ihru (hru number)
       real :: cnv_m3                 !              |
       real :: cnv_kg                 !              |
+      real :: cnv_ppm                !              |
       integer :: iob                 !              |
       integer :: ihyd                !none          |counter
       integer :: ipest               !none          |counter
@@ -70,8 +71,13 @@
       ob(icmd)%hd(3)%chla = chl_a(j) *cnv_kg          !!chl_a
       ob(icmd)%hd(3)%nh3 = 0.                         !! NH3
       ob(icmd)%hd(3)%no2 = 0.                         !! NO2
-      ob(icmd)%hd(3)%cbod = cbodu(j) * cnv_kg         !!cbodu
-      ob(icmd)%hd(3)%dox = doxq(j) *cnv_kg            !!doxq & soxy
+      if (ob(icmd)%hd(3)%flo > 0.01) then
+        cnv_ppm = 1. / (1000. * ob(icmd)%hd(3)%flo)
+      else
+        cnv_ppm = 0.
+      end if
+      ob(icmd)%hd(3)%cbod = cbodu(j) * cnv_ppm        !!cbodu
+      ob(icmd)%hd(3)%dox = doxq(j) * cnv_ppm          !!doxq & soxy
 
       ob(icmd)%hd(3)%san = sanyld(j)                  !! detached sand
       ob(icmd)%hd(3)%sil = silyld(j)                  !! detached silt

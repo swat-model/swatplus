@@ -216,6 +216,8 @@
                 sumflo = 1. * sumflo
               case ("res")      ! reservoir inflow
                 hyd_flo(:) = ob(iob)%hd(ihyd)%flo / time%step
+              case ("outlet")      ! outlet inflow
+                hyd_flo(:) = ob(iob)%hd(ihyd)%flo / time%step
               case ("recall")   ! point source inflow
                 irec = ob(iob)%num
                 if (recall(irec)%typ == 0) then    !subdaily
@@ -348,15 +350,7 @@
             isdch = ob(icmd)%num
             isd_chsur = ob(icmd)%props2
             if (sd_ch(isdch)%chl > 1.e-3) then
-              if (bsn_cc%i_fpwet == 0) then
-                call sd_channel_control3
-              end if
-              if (bsn_cc%i_fpwet == 1) then
-                call sd_channel_control
-              end if
-              if (bsn_cc%i_fpwet == 2) then
-                call sd_channel_control2
-              end if
+              call sd_channel_control3
             else
                 !! artificial channel - length=0 - no transformations
                 ob(icmd)%hd(1) = ob(icmd)%hin
