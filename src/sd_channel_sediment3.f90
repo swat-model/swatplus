@@ -6,27 +6,37 @@
     
       implicit none     
     
-      integer :: iob                !               |object number
-      real :: trap_eff              !frac           |trap efficiency in the flood plain
-      real :: cohesion              !               |soil bank cohesion 
-      real :: b_exp                 !               |exponent for bank erosion equation
-      real :: vel_fall              !m/s            |fall velocity of sediment particles in channel
-      real :: dep_fall              !m              |fall depth of sediment particles in channel
-      real :: del_rto               !frac           |fraction of sediment deposited in channel
-      real :: conc_chng             !               |change in concentration (and mass) in channel sol and org N and P
-      real :: ebtm_m                !m              |erosion of bottom of channel
-      real :: ebank_m               !m              |meander cut on one side
-      real :: ebtm_t                !tons           |bottom erosion
-      real :: ebank_t               !tons           |bank erosion
-      real :: shear_btm_cr          !               |
-      real :: shear_btm             !               |  
-      real :: bf_flow               !m3/s           |bankfull flow rate * adjustment factor
-      real :: pk_rto                !ratio          |peak to mean flow rate ratio
-      real :: bd_fac                !               |bulk density factor for critical velocity calculation
-      real :: cohes_fac             !               |cohesion factor for critical velocity calculation
+      integer :: iob = 0            !               |object number
+      real :: trap_eff = 0.         !frac           |trap efficiency in the flood plain
+      real :: cohesion = 0.         !               |soil bank cohesion 
+      real :: b_exp = 0.            !               |exponent for bank erosion equation
+      real :: vel_fall = 0.         !m/s            |fall velocity of sediment particles in channel
+      real :: dep_fall = 0.         !m              |fall depth of sediment particles in channel
+      real :: del_rto = 0.          !frac           |fraction of sediment deposited in channel
+      real :: conc_chng = 0.        !               |change in concentration (and mass) in channel sol and org N and P
+      real :: ebtm_m = 0.           !m              |erosion of bottom of channel
+      real :: ebank_m = 0.          !m              |meander cut on one side
+      real :: ebtm_t = 0.           !tons           |bottom erosion
+      real :: ebank_t = 0.          !tons           |bank erosion
+      real :: shear_btm_cr = 0.     !               |
+      real :: shear_btm = 0.        !               |  
+      real :: bf_flow = 0.          !m3/s           |bankfull flow rate * adjustment factor
+      real :: pk_rto = 0.           !ratio          |peak to mean flow rate ratio
+      real :: bd_fac = 0.           !               |bulk density factor for critical velocity calculation
+      real :: cohes_fac = 0.        !               |cohesion factor for critical velocity calculation
       !real :: qman                  !m^3/s or m/s   |flow rate or flow velocity
-      real :: vel, veg, vel_cr, rad_curv, vel_bend, vel_rch, arc_len, prot_len, h_rad
-      real :: fp_m2, exp_co, florate_ob
+      real :: vel = 0.
+      real :: veg = 0.
+      real :: vel_cr = 0.
+      real :: rad_curv = 0.
+      real :: vel_bend = 0.
+      real :: vel_rch = 0.
+      real :: arc_len = 0.
+      real :: prot_len = 0.
+      real :: h_rad = 0.
+      real :: fp_m2 = 0.
+      real :: exp_co = 0.
+      real :: florate_ob = 0.
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1

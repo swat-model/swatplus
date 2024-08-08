@@ -5,7 +5,7 @@
       
       implicit none
  
-      integer :: iihru              !           |hru number
+      integer :: iihru = 0          !           |hru number
 
       do iihru = 1, sp_ob%hru
         hru(iihru)%land_use_mgt = hru(iihru)%dbs%land_use_mgt

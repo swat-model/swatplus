@@ -6,13 +6,13 @@
       
       implicit none      
 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: itl                  !none       |counter
-      integer :: mtl                  !           |
+      integer :: itl = 0              !none       |counter
+      integer :: mtl = 0              !           |
       
       eof = 0
       imax = 0
@@ -34,7 +34,7 @@
             imax = imax + 1
           end do
           
-        allocate (tilldb(0:imax)) 
+        allocate (tilldb(0:imax))
         
         rewind (105)
         read (105,*,iostat=eof) titldum

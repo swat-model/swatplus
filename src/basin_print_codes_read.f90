@@ -6,12 +6,12 @@
       
       implicit none
        
-      character (len=500) :: header    !              |header of file
-      character (len=80) :: titldum    !              |title of file
-      character (len=16) :: name       !              |name
-      integer :: eof                   !              |end of file
+      character (len=500) :: header = "" !              |header of file
+      character (len=80) :: titldum = "" !              |title of file
+      character (len=16) :: name = ""  !              |name
+      integer :: eof = 0               !              |end of file
       logical :: i_exist               !              |check to determine if file exists
-      integer :: ii                    !none          |counter
+      integer :: ii = 0                !none          |counter
        
       eof = 0
 
@@ -30,12 +30,12 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) pco%aa_numint
         if (pco%aa_numint > 0) then
-          allocate (pco%aa_yrs(pco%aa_numint))
+          allocate (pco%aa_yrs(pco%aa_numint), source = 0)
           backspace (107)
           read (107,*,iostat=eof) pco%aa_numint, (pco%aa_yrs(ii), ii = 1, pco%aa_numint)
           if (eof < 0) exit
         else
-          allocate (pco%aa_yrs(1))
+          allocate (pco%aa_yrs(1), source = 0)
         end if
      !! read database output
         read (107,*,iostat=eof) header
@@ -142,7 +142,7 @@
      !! all pesticide outputs
         read (107,*,iostat=eof) name, pco%pest
         if (eof < 0) exit  
-		 !! salt outputs !rtb salt
+        !! salt outputs !rtb salt
         read (107,*,iostat=eof) name, pco%salt_basin
         if (eof < 0) exit
         read (107,*,iostat=eof) name, pco%salt_hru

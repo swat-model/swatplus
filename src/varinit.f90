@@ -65,15 +65,15 @@
       
       implicit none
 
-      integer :: j              !none          |HRU number
-      integer :: ly             !none          |counter
-      real :: crk               !mm H2O        |percolation due to crack flow
-      real :: enratio           !none          |enrichment ratio calculated for day in HRU
-      real :: etday             !mm H2O        |actual amount of evapotranspiration that 
+      integer :: j = 0          !none          |HRU number
+      integer :: ly = 0         !none          |counter
+      real :: crk = 0.          !mm H2O        |percolation due to crack flow
+      real :: enratio = 0.      !none          |enrichment ratio calculated for day in HRU
+      real :: etday = 0.        !mm H2O        |actual amount of evapotranspiration that 
                                 !              |occurs on day in HRU
-      real :: over_flow         !              |
-      real :: sedprev           !              | 
-      integer :: irmmdt         !              | 
+      real :: over_flow = 0.    !              |
+      real :: sedprev = 0.      !              | 
+      integer :: irmmdt = 0     !              | 
 
       j = ihru
 

@@ -5,8 +5,8 @@
       
       implicit none
 
-      integer :: ireg               !none       |calibration region number 
-      integer :: ilum               !           |region land use number
+      integer :: ireg = 0           !none       |calibration region number 
+      integer :: ilum = 0           !           |region land use number
 
       do ireg = 1, db_mx%plcal_reg
         do ilum = 1, plcal(ireg)%lum_num

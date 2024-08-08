@@ -32,9 +32,9 @@
       integer, intent (in)  :: jd
       integer, intent (out)  :: mo
       integer, intent (out)  :: day_mo
-      integer :: m1                !none          |array location (see definition of ndays)
-      integer :: nda               !julian date   |julian date of last day in the month
-      integer :: i_mo              !none          |counter
+      integer :: m1 = 0            !none          |array location (see definition of ndays)
+      integer :: nda = 0           !julian date   |julian date of last day in the month
+      integer :: i_mo = 0          !none          |counter
 
         do i_mo = 1, 12
           m1 = i_mo + 1

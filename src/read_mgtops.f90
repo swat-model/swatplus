@@ -10,13 +10,13 @@
       
       implicit none      
       
-      integer :: iyear       !            |
-      integer :: day         !            |
-      integer :: mon         !            |
-      integer :: iop         !none        |
+      integer :: iyear = 0   !            |
+      integer :: day = 0     !            |
+      integer :: mon = 0     !            |
+      integer :: iop = 0     !none        |
       integer :: isched      !            |
       integer :: jdt         !none        |julian date
-      integer :: idb         !none        | 
+      integer :: idb = 0     !none        | 
 
       iyear = 1
       do iop = 1, sched(isched)%num_ops                             !! operation loop

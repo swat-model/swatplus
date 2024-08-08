@@ -10,18 +10,32 @@
       
       implicit none      
       
-      character (len=80) :: titldum     !             |title of file
-      character (len=80) :: header      !             |header of file
-      integer :: eof                    !             |end of file
-      integer :: imax                   !             |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""  !             |title of file
+      character (len=80) :: header = "" !             |header of file
+      integer :: eof = 0                !             |end of file
+      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: i                      !none         |counter
-      integer :: iaqu                   !none         |counter
-      integer :: ictr
-      integer :: isp_ini                !             |                    !             |
-      integer :: idat                   !             |
-      integer :: init, iaq, iob, idb, ini, ipest, ipath, isalt, init_aqu, ics, iaqdb
-      real :: gw_volume,aqu_volume,aqu_bd,aqu_mass,mass_sorbed
+      integer :: i = 0                  !none         |counter
+      integer :: iaqu = 0               !none         |counter
+      integer :: ictr = 0
+      integer :: isp_ini = 0            !             |                    !             |
+      integer :: idat = 0               !             |
+      integer :: init = 0
+      integer :: iaq = 0
+      integer :: iob = 0
+      integer :: idb = 0
+      integer :: ini = 0
+      integer :: ipest = 0
+      integer :: ipath = 0
+      integer :: isalt = 0
+      integer :: init_aqu = 0
+      integer :: ics = 0
+      integer :: iaqdb = 0
+      real :: gw_volume = 0.
+      real :: aqu_volume = 0.
+      real :: aqu_bd = 0.
+      real :: aqu_mass = 0.
+      real :: mass_sorbed = 0.
       eof = 0
       imax = 0
             

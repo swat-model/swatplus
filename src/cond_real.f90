@@ -11,7 +11,7 @@
       real, intent (in)  :: var_cur         !           |current variable to check alternative
       real, intent (in)  :: var_tbl         !           |decision table variable to cpmpare with
       integer, intent (in)  :: idtbl        !none       |
-      integer :: ialt
+      integer :: ialt = 0
 
       do ialt = 1, d_tbl%alts
         if (d_tbl%alt(ic,ialt) /= "-" .and. d_tbl%act_hit(ialt) == "y") then

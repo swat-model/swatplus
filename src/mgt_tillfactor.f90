@@ -21,18 +21,18 @@
 	integer, intent (in) :: jj        !none           |HRU number
     real, intent (in) :: bmix         !none           |biological mixing efficiency: this 
                                       !               |number is zero for tillage operations
-    integer :: l                      !none           |counter 
-    integer ::m1                      !none           |array location (see definition of ndays)
-    integer :: m2                     !               |
+    integer :: l = 0                  !none           |counter 
+    integer :: m1 = 0                 !none           |array location (see definition of ndays)
+    integer :: m2 = 0                 !               |
     real :: emix                      !none           |mixing efficiency
     real :: dtil                      !mm             |depth of mixing
-    real :: XX                        !varies         |variable to hold calculation results
-    integer :: j                      !none           |counter
-    real :: zz                        !               |
-    real :: yy                        !               |
-    real :: xx1                       !               | 
-    real :: xx2                       !               | 
-    real :: csdr                      !               | 
+    real :: XX = 0.                   !varies         |variable to hold calculation results
+    integer :: j = 0                  !none           |counter
+    real :: zz = 0.                   !               |
+    real :: yy = 0.                   !               |
+    real :: xx1 = 0.                  !               | 
+    real :: xx2 = 0.                  !               | 
+    real :: csdr = 0.                 !               | 
       
 	emix = emix - bmix ! this is to avoid affecting tillage factor with biological mixing
 	

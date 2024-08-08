@@ -8,9 +8,9 @@
       
       implicit none
       
-      integer :: ireg       !none      |counter
-      integer :: ilu        !none      |counter
-      integer :: ich        !none      |counter 
+      integer :: ireg = 0   !none      |counter
+      integer :: ilu = 0    !none      |counter
+      integer :: ich = 0    !none      |counter 
       
 
         !! average output for soft data calibration

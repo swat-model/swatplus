@@ -29,11 +29,11 @@
       
       implicit none
 
-      integer :: iadep            !            |
-      integer :: j                !none        |counter
-      integer :: iob              !            |
-      integer :: ist              !            |
-      real :: const               !            |constant used for rate, days, etc
+      integer :: iadep = 0        !            |
+      integer :: j = 0            !none        |counter
+      integer :: iob = 0          !            |
+      integer :: ist = 0          !            |
+      real :: const = 0.          !            |constant used for rate, days, etc
 
       j = ihru
       iob = hru(j)%obj_no

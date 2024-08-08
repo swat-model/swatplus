@@ -52,20 +52,20 @@
       implicit none
 
       integer, intent (in) :: k  !none          |dummy argument (HRU number)
-      real :: fps                !none          |change in horizontal distance per unit
+      real :: fps = 0.           !none          |change in horizontal distance per unit
                                  !              |change in vertical distance on floodplain side
                                  !              |slopes; always set to 4 (slope=1/4)
-      real :: d                  !m             |depth of flow
-      real :: b                  !m             |bottom width of channel
-      real :: p                  !m             |wetting perimeter 
-      real :: a                  !m^2           |cross-sectional area of channel
-      real :: qq1                !m^3/s         |flow rate for a specified depth
-      real :: rh                 !m             |hydraulic radius of channel
-      real :: tt1                !km s/m        |time coefficient for specified depth
-      real :: tt2                !km s/m        |time coefficient for bankfull depth
-      real :: aa                 !none          |area/area=1 (used to calculate velocity with
+      real :: d = 0.             !m             |depth of flow
+      real :: b = 0.             !m             |bottom width of channel
+      real :: p = 0.             !m             |wetting perimeter 
+      real :: a = 0.             !m^2           |cross-sectional area of channel
+      real :: qq1 = 0.           !m^3/s         |flow rate for a specified depth
+      real :: rh = 0.            !m             |hydraulic radius of channel
+      real :: tt1 = 0.           !km s/m        |time coefficient for specified depth
+      real :: tt2 = 0.           !km s/m        |time coefficient for bankfull depth
+      real :: aa = 0.            !none          |area/area=1 (used to calculate velocity with
                                  !              |Manning"s equation)
-      real :: chsslope           !none          |change in horizontal distance per unit
+      real :: chsslope = 0.      !none          |change in horizontal distance per unit
                                  !              |change in vertical distance on channel side
                                  !              |slopes; always set to 2 (slope=1/2)
       real :: qman               !m^3/s or m/s  |flow rate or flow velocity

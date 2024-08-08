@@ -13,20 +13,20 @@
       
       implicit none
      
-      integer :: j                      !none               |HRU number
-      integer :: k                      !none               |pesticide counter
-      integer :: idp                    !                   |
+      integer :: j = 0                  !none               |HRU number
+      integer :: k = 0                  !none               |pesticide counter
+      integer :: idp = 0                !                   |
       integer, intent (in) :: jj        !none               |counter
       integer, intent (in) :: iplant    !                   |plant number xwalked from hlt_db()%plant and plants.plt
       integer, intent (in) :: iharvop   !                   |harvest operation type
-      integer :: ipl                    !none               |counter
-      real :: clippst                   !kg pst/ha          |pesticide in clippings
-      real :: yldpst                    !kg pst/ha          |pesticide removed in yield
-      real :: hi_tot                    !kg/ha)/(kg/ha)     |total harvest index = hi_ovr * harveff
-      real :: hi_ovr                    !kg/ha)/(kg/ha)     |harvest index target specified at harvest
-      real :: harveff                   !0-1                |harvest efficiency
-      real :: clip                      !0-1                |1.-harveff
-      real :: yld_rto                   !0-1            |yield to total biomass ratio
+      integer :: ipl = 0                !none               |counter
+      real :: clippst = 0.              !kg pst/ha          |pesticide in clippings
+      real :: yldpst = 0.               !kg pst/ha          |pesticide removed in yield
+      real :: hi_tot = 0.               !kg/ha)/(kg/ha)     |total harvest index = hi_ovr * harveff
+      real :: hi_ovr = 0.               !kg/ha)/(kg/ha)     |harvest index target specified at harvest
+      real :: harveff = 0.              !0-1                |harvest efficiency
+      real :: clip = 0.                 !0-1                |1.-harveff
+      real :: yld_rto = 0.              !0-1            |yield to total biomass ratio
 
       j = jj
       ipl = iplant
@@ -49,7 +49,7 @@
       hrc_d(j)%plant_c = hrc_d(j)%plant_c + pl_yield%c
       hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_yield%c
       
-	  !! adjust foliar and internal pesticide for plant removal
+      !! adjust foliar and internal pesticide for plant removal
       do k = 1, cs_db%num_pests
         !! calculate amount of pesticide removed with yield and clippings
         yld_rto = (hi_tot * pl_mass(j)%ab_gr(ipl)%m) / pl_mass(j)%tot(ipl)%m
@@ -79,7 +79,7 @@
       harv_left = clip * pl_yield
       rsd1(j)%tot(1) = harv_left + rsd1(j)%tot(1)
 
-	  !! calculation for dead roots allocations, resetting phenology, updating other pools
+      !! calculation for dead roots allocations, resetting phenology, updating other pools
       !! reset leaf area index and fraction of growing season
       if (pl_mass(j)%tot(ipl)%m > 0.001) then
         !! assume the lai biomass relationship - 0.5 lai decline for biomass removal

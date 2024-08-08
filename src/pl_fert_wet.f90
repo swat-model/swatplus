@@ -26,14 +26,23 @@
                                           !              |organic N & P concentration of septic effluent
                                           !              |between the fresh organic and the stable 
                                           !              |organic pools
-      integer :: j                        !none          |counter
+      integer :: j = 0                    !none          |counter
       integer, intent (in) :: ifrt        !              |fertilizer type from fert data base
       real, intent (in) :: frt_kg         !kg/ha         |amount of fertilizer applied
       
 
       !!added by zhang
       !!======================
-      real :: X1, X8, X10, XXX, YY, ZZ, XZ, YZ, RLN, orgc_f
+      real :: X1 = 0.
+      real :: X8 = 0.
+      real :: X10 = 0.
+      real :: XXX = 0.
+      real :: YY = 0.
+      real :: ZZ = 0.
+      real :: XZ = 0.
+      real :: YZ = 0.
+      real :: RLN = 0.
+      real :: orgc_f = 0.
       
       j = ihru
       

@@ -7,17 +7,17 @@
       
       implicit none
                   
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: i                    !none       |counter 
-      integer :: mdtbl                !none       |ending of loop
-      integer :: ic                   !none       |counter 
-      integer :: ial                  !none       |counter 
-      integer :: iac                  !none       !counter 
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: i = 0                !none       |counter 
+      integer :: mdtbl = 0            !none       |ending of loop
+      integer :: ic = 0               !none       |counter 
+      integer :: ial = 0              !none       |counter 
+      integer :: iac = 0              !none       !counter 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: idb                  !none       |counter
-      integer :: iob                  !none       |counter
+      integer :: idb = 0              !none       |counter
+      integer :: iob = 0              !none       |counter
 
       mdtbl = 0
       eof = 0
@@ -25,7 +25,7 @@
       !! read all data from hydrol.dat
       inquire (file=in_cond%dtbl_flo, exist=i_exist)
       if (.not. i_exist .or. in_cond%dtbl_flo == "null") then
-        allocate (dtbl_flo(0:0)) 
+        allocate (dtbl_flo(0:0))
       else
         do
           open (107,file=in_cond%dtbl_flo)
@@ -46,8 +46,8 @@
             allocate (dtbl_flo(i)%alt(dtbl_flo(i)%conds,dtbl_flo(i)%alts))
             allocate (dtbl_flo(i)%act(dtbl_flo(i)%acts))
             allocate (dtbl_flo(i)%act_hit(dtbl_flo(i)%alts))
-            allocate (dtbl_flo(i)%act_typ(dtbl_flo(i)%acts))
-            allocate (dtbl_flo(i)%act_app(dtbl_flo(i)%acts))
+            allocate (dtbl_flo(i)%act_typ(dtbl_flo(i)%acts), source = 0)
+            allocate (dtbl_flo(i)%act_app(dtbl_flo(i)%acts), source = 0)
             allocate (dtbl_flo(i)%act_outcomes(dtbl_flo(i)%acts,dtbl_flo(i)%alts))
             
             !read conditions and condition alternatives

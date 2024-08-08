@@ -12,22 +12,22 @@
       integer, intent (in):: iwallo         !water allocation object number
       integer, intent (in) :: idmd          !water demand object number
       integer, intent (in) :: isrc          !source object number
-      integer :: isrc_wallo                 !source object number
-      integer :: j                  !none       |hru number
-      integer :: dum
-      integer :: irec               !           |recall id
-      real :: res_min               !m3         |min reservoir volume for withdrawal
-      real :: res_vol               !m3         |reservoir volume after withdrawal
-      real :: cha_min               !m3         |minimum allowable flow in channel after withdrawal
-      real :: cha_div               !m3         |maximum amount of flow that can be diverted
-      real :: rto                   !none       |ratio of channel withdrawal to determine hydrograph removed
-      real :: avail                 !m3         |water available to withdraw from an aquifer
-      real :: extracted             !m3         |water extracted from the aquifer object (gwflow - rtb)
-      real :: dmd_unmet             !m3         |demand that is unmet (gwflow - rtb)
-      real :: hru_demand      		!m3	        |demand (copy to pass into gwflow subroutine - rtb)
-      real :: withdraw              !m3
-      real :: unmet                 !m3
-      real :: total_dmd             !m3
+      integer :: isrc_wallo = 0             !source object number
+      integer :: j = 0              !none       |hru number
+      integer :: dum = 0
+      integer :: irec = 0           !           |recall id
+      real :: res_min = 0.          !m3         |min reservoir volume for withdrawal
+      real :: res_vol = 0.          !m3         |reservoir volume after withdrawal
+      real :: cha_min = 0.          !m3         |minimum allowable flow in channel after withdrawal
+      real :: cha_div = 0.          !m3         |maximum amount of flow that can be diverted
+      real :: rto = 0.              !none       |ratio of channel withdrawal to determine hydrograph removed
+      real :: avail = 0.            !m3         |water available to withdraw from an aquifer
+      real :: extracted = 0.        !m3         |water extracted from the aquifer object (gwflow - rtb)
+      real :: dmd_unmet = 0.        !m3         |demand that is unmet (gwflow - rtb)
+      real :: hru_demand = 0.   !m3	        |demand (copy to pass into gwflow subroutine - rtb)
+      real :: withdraw = 0.         !m3
+      real :: unmet = 0.            !m3
+      real :: total_dmd = 0.        !m3
         
       !! zero withdrawal hyd for the demand source
       ht5 = hz

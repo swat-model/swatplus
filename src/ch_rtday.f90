@@ -63,30 +63,35 @@
 
       implicit none
       
-      real :: scoef         !none          |Storage coefficient (fraction of water in
-      real :: p             !m             |wetted perimeter
+      real :: scoef = 0.    !none          |Storage coefficient (fraction of water in
+      real :: p = 0.        !m             |wetted perimeter
       !real :: tbase        !not used in this subroutine
-      real :: topw          !m             |top width of main channel
-      real :: vol           !m^3 H2O       |volume of water in reach at beginning of
+      real :: topw = 0.     !m             |top width of main channel
+      real :: vol = 0.      !m^3 H2O       |volume of water in reach at beginning of
                             !              |day
-      real :: c             !none          |inverse of channel side slope
-      real :: rh            !m             |hydraulic radius
-      real :: volrt         !units         |description 
-      real :: maxrt         !units         |description 
-      real :: addp          !units         |description 
-      real :: addarea       !units         |description 
-      real :: vc            !m/s           |flow velocity in reach
-      real :: aaa           !units         |description 
-      real :: rttlc1        !units         |description 
-      real :: rttlc2        !units         |description 
-      real :: rtevp1        !units         |description 
-      real :: rtevp2        !units         |description 
-      real :: det           !hr            |time step (24 hours)
+      real :: c = 0.        !none          |inverse of channel side slope
+      real :: rh = 0.       !m             |hydraulic radius
+      real :: volrt = 0.    !units         |description 
+      real :: maxrt = 0.    !units         |description 
+      real :: addp = 0.     !units         |description 
+      real :: addarea = 0.  !units         |description 
+      real :: vc = 0.       !m/s           |flow velocity in reach
+      real :: aaa = 0.      !units         |description 
+      real :: rttlc1 = 0.   !units         |description 
+      real :: rttlc2 = 0.   !units         |description 
+      real :: rtevp1 = 0.   !units         |description 
+      real :: rtevp2 = 0.   !units         |description 
+      real :: det = 0.      !hr            |time step (24 hours)
       real :: qman          !m^3/s or m/s  |flow rate or flow velocity
-      real :: adddep        !units         |description  
-      integer :: itermx     !units         |description 
-      integer :: ihr, ires, ichan, iobhr
-      real :: depst, depstmax, rchvol
+      real :: adddep = 0.   !units         |description  
+      integer :: itermx = 0 !units         |description 
+      integer :: ihr = 0
+      integer :: ires = 0
+      integer :: ichan = 0
+      integer :: iobhr = 0
+      real :: depst = 0.
+      real :: depstmax = 0.
+      real :: rchvol = 0.
 
       !! calculate volume of water in reach
       vol = wtrin 

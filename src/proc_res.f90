@@ -27,6 +27,6 @@
         call res_initial
       end if
 
-	  return
+      return
       
       end subroutine proc_res

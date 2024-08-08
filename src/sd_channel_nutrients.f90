@@ -7,20 +7,20 @@
       
       implicit none
 
-      real :: no3_conc              !              |
-      integer :: inut               !none          |counter
-      integer :: istop              !              |
-      real :: ch_len_inc            !              |
-      real :: ch_len                !              |
-      real :: denit                 !              |
-      real :: sed_reduc             !              |
-      real :: srp_reduc             !              |
-      real :: sed_conc              !mg/L
-      real :: tp_conc               !              |
-      real :: nd_overb              !              | 
-      real :: area_m2               !              | 
-      real :: tss_conc              !              |
-      real :: sedp_reduc            !              |
+      real :: no3_conc = 0.         !              |
+      integer :: inut = 0           !none          |counter
+      integer :: istop = 0          !              |
+      real :: ch_len_inc = 0.       !              |
+      real :: ch_len = 0.           !              |
+      real :: denit = 0.            !              |
+      real :: sed_reduc = 0.        !              |
+      real :: srp_reduc = 0.        !              |
+      real :: sed_conc = 0.         !mg/L
+      real :: tp_conc = 0.          !              |
+      real :: nd_overb = 0.         !              | 
+      real :: area_m2 = 0.          !              | 
+      real :: tss_conc = 0.         !              |
+      real :: sedp_reduc = 0.       !              |
      
       inut = 0
       istop = 0

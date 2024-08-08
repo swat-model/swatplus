@@ -20,10 +20,24 @@
 
       implicit none
       
-      integer :: i,m,ob_ctr,num_days,sol_index,jj
-      real :: cssum1,cssum2,cssum3,hru_area_m2,sol_thick,soil_volume,soil_mass, &
-              aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha
-      real :: cs_basin(87)
+      integer :: i = 0
+      integer :: m = 0
+      integer :: ob_ctr = 0
+      integer :: num_days = 0
+      integer :: sol_index = 0
+      integer :: jj = 0
+      real :: cssum1 = 0.
+      real :: cssum2 = 0.
+      real :: cssum3 = 0.
+      real :: hru_area_m2 = 0.
+      real :: sol_thick = 0.
+      real :: soil_volume = 0.
+      real :: soil_mass = 0.
+      real :: aquifer_thickness = 0.
+      real :: aquifer_volume = 0.
+      real :: aquifer_mass = 0.
+      real :: sub_ha = 0.
+      real :: cs_basin(87) = 0.
 
       !basin-wide constituent mass balance ------------------------------------------------------------------------------------------------
 

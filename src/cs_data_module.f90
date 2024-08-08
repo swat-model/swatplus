@@ -10,9 +10,9 @@
         real :: kd_born = 0.                                !! |           |sorption partition coefficient for boron
         real :: kseo4 = 0.                                  !! |1/day      |first-order rate constant for seo4 reduction to seo3
         real :: kseo3 = 0.                                  !! |1/day      |first-order rate constant for seo3 reduction to elemental se
-        real :: se_ino3                                     !! |           |selenium reduction inhibition factor
-        real :: oxy_soil                                    !! |mg/L       |oxygen concentration in soil water
-        real :: oxy_aqu                                     !! |mg/L       |oxygen concentration in groundwater
+        real :: se_ino3 = 0.                                !! |           |selenium reduction inhibition factor
+        real :: oxy_soil = 0.                               !! |mg/L       |oxygen concentration in soil water
+        real :: oxy_aqu = 0.                                !! |mg/L       |oxygen concentration in groundwater
         real, dimension(:), allocatable :: shale            !! |           |fraction of object area that is occupied by shale formations (source of se)
         real, dimension(:), allocatable :: sseratio         !! |           |sulfur/se ratio in shale material
         real, dimension(:), allocatable :: ko2a             !! |1/day      |first-order rate constant for autotrophic reduction of dissolved oxygen
@@ -28,10 +28,11 @@
       real, dimension(:,:), allocatable :: rct_shale !reaction parameters for shale
       
       !number of geologic formations with shale
-      integer :: num_geol_shale
+      integer :: num_geol_shale = 0
       
       !plant boron tolerance parameters
-      integer :: bor_tol_sim                                           !      |flag to simulate boron effect on plant growth
-      real, dimension (:), allocatable :: bor_stress_a,bor_stress_b    !      |a and b parameters in boron relative yield equations
+      integer :: bor_tol_sim = 0                                       !      |flag to simulate boron effect on plant growth
+      real, dimension (:), allocatable :: bor_stress_a                 !      |a and b parameters in boron relative yield equations
+      real, dimension (:), allocatable :: bor_stress_b                 !      |a and b parameters in boron relative yield equations
       
       end module cs_data_module 

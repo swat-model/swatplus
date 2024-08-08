@@ -11,21 +11,21 @@
       
       implicit none
 
-      integer :: i                          !       |counter
-      integer :: j                          !       |counter
-      integer :: k                          !       |counter
-      integer :: s                          !       |solute counter
-      integer :: cell_id                    !       |gwflow cell
-      integer :: hru_id                     !       |id of HRU
-      integer :: ob_num											!       |object number of HRU
-      real :: hru_gwet_volume               !m3     |gwet volume for HRU
-      real :: lsu_gwet_volume               !m3     |gwet volume for landscape unit
-      real :: max_gwet                      !m3     |potential ET for cell
-      real :: et_surface                    !m      |ground surface
-      real :: et_bottom                     !m      |lower elevation bound for ET to occur
-      real :: gw_head                       !m      |groundwater head of the cell
-      real :: gwet                          !mm			|depth of groundwater ET for cell
-      real :: gwet_volume                   !m3     |actual ET for cell
+      integer :: i = 0                      !       |counter
+      integer :: j = 0                      !       |counter
+      integer :: k = 0                      !       |counter
+      integer :: s = 0                      !       |solute counter
+      integer :: cell_id = 0                !       |gwflow cell
+      integer :: hru_id = 0                 !       |id of HRU
+      integer :: ob_num = 0                 !       |object number of HRU
+      real :: hru_gwet_volume = 0.          !m3     |gwet volume for HRU
+      real :: lsu_gwet_volume = 0.          !m3     |gwet volume for landscape unit
+      real :: max_gwet = 0.                 !m3     |potential ET for cell
+      real :: et_surface = 0.               !m      |ground surface
+      real :: et_bottom = 0.                !m      |lower elevation bound for ET to occur
+      real :: gw_head = 0.                  !m      |groundwater head of the cell
+      real :: gwet = 0.                     !mm     |depth of groundwater ET for cell
+      real :: gwet_volume = 0.              !m3     |actual ET for cell
       
       
       
@@ -81,7 +81,7 @@
       do k=1,sp_ob%hru
         max_gwet = etremain(k) !maximum ET rate from the water table (mm)
         do i=1,hru_num_cells(k)
-					max_gwet = max_gwet * hru_cells_fract(k,i) !mm
+          max_gwet = max_gwet * hru_cells_fract(k,i) !mm
           cell_id = hru_cells(k,i)
           et_surface = gw_state(cell_id)%elev !ground surface
           et_bottom = et_surface - gw_state(cell_id)%exdp !lower elevation bound for ET to occur

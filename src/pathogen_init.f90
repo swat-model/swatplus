@@ -40,12 +40,12 @@
       
       implicit none
 
-      integer :: mpath          !          |
-      integer :: ly             !none      |counter
-      integer :: ipath          !none      |counter
-      integer :: ipath_db       !          |
-      integer :: isp_ini
-      integer :: ipl            !none      |plant number
+      integer :: mpath = 0      !          |
+      integer :: ly = 0         !none      |counter
+      integer :: ipath = 0      !none      |counter
+      integer :: ipath_db = 0   !          |
+      integer :: isp_ini = 0
+      integer :: ipl = 0        !none      |plant number
 
       do ihru = 1, sp_ob%hru  
         !! allocate pathogens
