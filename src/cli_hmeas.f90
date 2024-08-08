@@ -7,16 +7,16 @@
       
       implicit none
       
-      character (len=80) :: titldum     !title of file
-      character (len=80) :: header      !header of file
-      integer :: eof                    !end of file
-      integer ::i                       !none      |counter
-      integer :: imax                   !none      |determine max number for array (imax) and total number in file
-      integer :: iyr                    !none      |number of years
+      character (len=80) :: titldum = ""  !title of file
+      character (len=80) :: header = "" !header of file
+      integer :: eof = 0                !end of file
+      integer :: i = 0                  !none      |counter
+      integer :: imax = 0               !none      |determine max number for array (imax) and total number in file
+      integer :: iyr = 0                !none      |number of years
       logical :: i_exist                !none      |check to determine if file exists
-      integer :: istep                  !units     |description
-      integer :: iyr_prev               !none      |previous year
-      integer :: iyrs                   !units     |description
+      integer :: istep = 0              !units     |description
+      integer :: iyr_prev = 0           !none      |previous year
+      integer :: iyrs = 0               !units     |description
        
        eof = 0
        imax = 0

@@ -41,15 +41,15 @@
       
       implicit none
 
-      integer ::j               !none          |HRU number
-	  real:: df                 !none		   |oriented and random roughness decay factor - based
+      integer :: j = 0          !none          |HRU number
+	  real:: df = 0.            !none		   |oriented and random roughness decay factor - based
                                 !              |on cumulative EI and cumulative precip_eff
-      real:: hru_slpp           !%	           |average percent slope steepness
-      real:: sol_orgm           !%      	   |percent organic matter content in soil material
+      real:: hru_slpp = 0.      !%	           |average percent slope steepness
+      real:: sol_orgm = 0.      !%      	   |percent organic matter content in soil material
       !real:: sol_orr            !cm			   |oriented roughness (ridges) after a rain event 
-      real:: sol_rrr            !cm			   |random roughness after a rain event
-      real:: ei                 !Mj*mm/ha*hr   |USLE rainfall erosion index
-      real :: xx                !              |
+      real:: sol_rrr = 0.       !cm			   |random roughness after a rain event
+      real:: ei = 0.            !Mj*mm/ha*hr   |USLE rainfall erosion index
+      real :: xx = 0.           !              |
       
       j = ihru
 
@@ -91,4 +91,4 @@
 !	endif
    
    	return
-	end subroutine swr_depstor
+        end subroutine swr_depstor

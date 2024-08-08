@@ -19,42 +19,42 @@
       
       integer, intent (in) :: init   !           |
       integer, intent (in) :: iihru  !none       |hru number to send to plant_init
-      integer :: day_mo
-      integer :: icom                !           |plant community counter
-      integer :: idp                 !           |
-      integer :: j                   !none       |counter
-      integer :: iob                 !           |spatial object number
-      integer :: iwgn                !           |weather generator number
-      integer :: mo                  !none       |counter 
-      integer :: iday                !none       |counter 
-      integer :: icp                 !none       |counter 
-      integer :: ilum                !none       |counter 
-      integer :: idb                 !none       |counter 
-      integer :: isched              !           |
-      integer :: iop                 !none       |management operation counter 
-      integer :: irot                !none       |rotation year counter 
-      integer :: igrow               !none       |julian day growth begins
-      integer :: iday_sum            !none       |day for southern hemisphere (182-181)
-      integer :: iday_sh             !none       |julian day growth begins in souther hemisphere
-      integer :: jday_prev           !none       |julian day of previous operation
-      real :: phutot                 !heat unit  |total potential heat units for year (used
+      integer :: day_mo = 0
+      integer :: icom = 0            !           |plant community counter
+      integer :: idp = 0             !           |
+      integer :: j = 0               !none       |counter
+      integer :: iob = 0             !           |spatial object number
+      integer :: iwgn = 0            !           |weather generator number
+      integer :: mo = 0              !none       |counter 
+      integer :: iday = 0            !none       |counter 
+      integer :: icp = 0             !none       |counter 
+      integer :: ilum = 0            !none       |counter 
+      integer :: idb = 0             !none       |counter 
+      integer :: isched = 0          !           |
+      integer :: iop = 0             !none       |management operation counter 
+      integer :: irot = 0            !none       |rotation year counter 
+      integer :: igrow = 0           !none       |julian day growth begins
+      integer :: iday_sum = 0        !none       |day for southern hemisphere (182-181)
+      integer :: iday_sh = 0         !none       |julian day growth begins in souther hemisphere
+      integer :: jday_prev = 0       !none       |julian day of previous operation
+      real :: phutot = 0.            !heat unit  |total potential heat units for year (used
                                      !           |when no crop is growing)
-      real :: tave                   !           |
-      real :: phuday                 !           |
-      real :: xx                     !           |
-      real :: xm                     !           |
-      real :: sin_sl                 !           |
-      real :: sl_len                 !           | 
-      real :: phu0                   !deg C      |base zero heat units for year
-      real :: sd                     !radians    |solar declination: latitude at which the sun
+      real :: tave = 0.              !           |
+      real :: phuday = 0.            !           |
+      real :: xx = 0.                !           |
+      real :: xm = 0.                !           |
+      real :: sin_sl = 0.            !           |
+      real :: sl_len = 0.            !           | 
+      real :: phu0 = 0.              !deg C      |base zero heat units for year
+      real :: sd = 0.                !radians    |solar declination: latitude at which the sun
                                      !           |is directly overhead at noon
-      real :: sdlat                  !none       |(-Tan(sd)*Tan(lat))
-      real :: h                      !none       |Acos(-Tan(sd)*Tan(lat))
-      real :: daylength              !hours      |daylength
-      real :: laimx_pop              !           |max lai given plant population
-      real :: matur_frac             !frac       |fraction to maturity - use hu for annuals and years to maturity for perennials
-      real :: f                      !none       |fraction of plant's maximum lai corresponding to a given fraction of phu
-      real :: dd                  !none          |relative distance of the earth from the sun
+      real :: sdlat = 0.             !none       |(-Tan(sd)*Tan(lat))
+      real :: h = 0.                 !none       |Acos(-Tan(sd)*Tan(lat))
+      real :: daylength = 0.         !hours      |daylength
+      real :: laimx_pop = 0.         !           |max lai given plant population
+      real :: matur_frac = 0.        !frac       |fraction to maturity - use hu for annuals and years to maturity for perennials
+      real :: f = 0.                 !none       |fraction of plant's maximum lai corresponding to a given fraction of phu
+      real :: dd = 0.             !none          |relative distance of the earth from the sun
       
       j = iihru
 
@@ -83,9 +83,9 @@
         pcom(j)%npl = pcomdb(icom)%plants_com
         ipl = pcom(j)%npl
         allocate (pcom(j)%pl(ipl))
-        allocate (pcom(j)%plg(ipl)) 
-        allocate (pcom(j)%plm(ipl)) 
-        allocate (pl_mass(j)%tot(ipl)) 
+        allocate (pcom(j)%plg(ipl))
+        allocate (pcom(j)%plm(ipl))
+        allocate (pl_mass(j)%tot(ipl))
         allocate (pl_mass(j)%ab_gr(ipl))
         allocate (pl_mass(j)%leaf(ipl))
         allocate (pl_mass(j)%stem(ipl))
@@ -93,15 +93,15 @@
         allocate (pl_mass(j)%root(ipl))
         allocate (pl_mass(j)%yield_tot(ipl))
         allocate (pl_mass(j)%yield_yr(ipl))
-        allocate (pcom(j)%plstr(ipl)) 
-        allocate (pcom(j)%plcur(ipl)) 
+        allocate (pcom(j)%plstr(ipl))
+        allocate (pcom(j)%plcur(ipl))
         allocate (rsd1(j)%tot(ipl))
         allocate (rsd1(j)%meta(ipl))
         allocate (rsd1(j)%str(ipl))
         allocate (rsd1(j)%lignin(ipl))
         !! allocate water uptake by layer
         do ipl = 1, pcom(j)%npl
-          allocate (pcom(j)%plcur(ipl)%uptake(soil(j)%nly))
+          allocate (pcom(j)%plcur(ipl)%uptake(soil(j)%nly), source = 0.)
           pcom(j)%plcur(ipl)%uptake = 0.
         end do
 

@@ -21,7 +21,7 @@
       integer, intent (in) :: jj          !none           |HRU
       integer, intent (in) :: ifrt        !               |fertilizer type from fert data base
       real, intent (in) :: frt_kg         !kg/ha          |amount of fertilizer applied 
-      integer :: ics                      !               |constituent counter
+      integer :: ics = 0                  !               |constituent counter
 
       !only proceed if constituents are included in simulation
       if(cs_db%num_cs > 0) then

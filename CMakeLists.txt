@@ -137,7 +137,7 @@ set(test_dir "${PROJECT_BINARY_DIR}/data")
 set(ref_dir "${PROJECT_SOURCE_DIR}/data")
 
 # error tolerances
-set(rerr "0.05")
+set(rerr "0.01")
 set(aerr "1e-8")
 
 # add_test(Ithaca_sub6 python3 ${check_py} ${exe_path} ${ref_dir}/Ithaca_sub6 ${test_dir} ${aerr} ${rerr})

@@ -9,13 +9,13 @@
       
       implicit none
        
-      integer :: ireg          !none      |counter
-      integer :: ilu           !none      |counter
-      integer :: iord          !none      |counter
-      integer :: ihru_s        !none      |counter
-      integer :: ich           !          |
-      integer :: ich_s         !none      |counter
-      real :: ha_hru           !          |
+      integer :: ireg = 0      !none      |counter
+      integer :: ilu = 0       !none      |counter
+      integer :: iord = 0      !none      |counter
+      integer :: ihru_s = 0    !none      |counter
+      integer :: ich = 0       !          |
+      integer :: ich_s = 0     !none      |counter
+      real :: ha_hru = 0.      !          |
       
       
         !! sum landscape output for soft data calibration

@@ -32,9 +32,9 @@
       
       implicit none
 
-      integer :: j           !none          |HRU number
-      real :: aphu           !heat units    |fraction of total heat units accumulated 
-      integer :: isched      !              |
+      integer :: j = 0       !none          |HRU number
+      real :: aphu = 0.      !heat units    |fraction of total heat units accumulated 
+      integer :: isched = 0  !              |
 
       j = ihru
       isched = hru(j)%mgt_ops
@@ -66,7 +66,7 @@
           end if
           !if (dorm_flag == 1) aphu = 999.
           if (mgt%op == "skip") then
-	        call mgt_sched (isched)
+           call mgt_sched (isched)
           end if
           if (yr_skip(j) == 1) exit
         end do

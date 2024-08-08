@@ -15,21 +15,21 @@
       
       implicit none
 
-      character (len=80) :: titldum      !           |title of file
-      character (len=80) :: header       !           |header of file
-      integer :: eof                     !           |end of file
-      integer :: imax                    !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = "" !           |title of file
+      character (len=80) :: header = ""  !           |header of file
+      integer :: eof = 0                 !           |end of file
+      integer :: imax = 0                !none       |determine max number for array (imax) and total number in file
       logical :: i_exist                 !none       |check to determine if file exists
-      integer :: i                       !none       |counter
-      integer :: ires                    !none       |counter 
-      integer :: ihyd                    !none       |counter 
-      integer :: k                       !           |
-      integer :: irel                    !none       |counter
-      integer :: ised                    !none       |counter
-      integer :: inut                    !none       |counter
-      integer :: isp_ini                 !none       |counter
-      integer :: ics                     !none       |counter
-      integer :: isstor                  !none       |counter
+      integer :: i = 0                   !none       |counter
+      integer :: ires = 0                !none       |counter 
+      integer :: ihyd = 0                !none       |counter 
+      integer :: k = 0                   !           |
+      integer :: irel = 0                !none       |counter
+      integer :: ised = 0                !none       |counter
+      integer :: inut = 0                !none       |counter
+      integer :: isp_ini = 0             !none       |counter
+      integer :: ics = 0                 !none       |counter
+      integer :: isstor = 0              !none       |counter
       
       eof = 0
       imax = 0

@@ -9,16 +9,16 @@
       
       implicit none
 
-      integer :: i
+      integer :: i = 0
       
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iwet                 !none       |counter 
-      integer :: k                    !           |
-      integer :: isalt                !none       |counter
-      integer :: ics                  !none       |counter
+      integer :: iwet = 0             !none       |counter 
+      integer :: k = 0                !           |
+      integer :: isalt = 0            !none       |counter
+      integer :: ics = 0              !none       |counter
       
       eof = 0
       imax = 0

@@ -20,9 +20,9 @@
       integer, intent (in) :: ifrt        !               |fertilizer type from fert data base
       real, intent (in) :: frt_kg         !kg/ha          |amount of fertilizer applied
       integer, intent (in) :: fertop      !               | 
-      real :: xx                          !               |surface application fraction 
-      integer :: ics                      !               |constituent counter
-      integer :: l                        !none           |counter 
+      real :: xx = 0.                     !               |surface application fraction 
+      integer :: ics = 0                  !               |constituent counter
+      integer :: l = 0                    !none           |counter 
 
       !only proceed if constituents are included in simulation
       if (cs_db%num_cs > 0 .and. fert_cs_flag == 1) then

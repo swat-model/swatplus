@@ -9,11 +9,18 @@
 
       implicit none
       
-      character (len=80) :: titldum, header
-      integer :: eof, imax, ob1, ob2
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
+      integer :: ob1 = 0
+      integer :: ob2 = 0
       logical :: i_exist              !none       |check to determine if file exists
 
-      integer :: ii, idr,idr_om, iob
+      integer :: ii = 0
+      integer :: idr = 0
+      integer :: idr_om = 0
+      integer :: iob = 0
 
       eof = 0
       imax = 0
@@ -36,8 +43,8 @@
           
           db_mx%dr_om = imax
           
-          allocate (dr(0:imax))       !! change to dr_om
-          allocate (dr_om_num(0:imax))
+          allocate (dr(0:imax))       !
+          allocate (dr_om_num(0:imax), source = 0)
           allocate (dr_om_name(0:imax))
           rewind (107)
           read (107,*,iostat=eof) titldum

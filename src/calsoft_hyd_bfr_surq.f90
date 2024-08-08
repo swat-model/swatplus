@@ -19,18 +19,18 @@
       
       implicit none
       
-      integer :: isim          !          |
-      integer :: ireg          !none      |counter
-      integer :: ilum          !none      |counter
-      integer :: iihru         !none      |counter
-      integer :: icn           !none      |counter
-      integer :: ihru_s        !none      |counter
-      integer :: iter_ind      !          |end of loop
-      real :: rmeas            !          |
-      real :: denom            !          |
-      real :: soft             !          |
-      real :: diff             !          |
-      real :: chg_val          !          |  
+      integer :: isim = 0      !          |
+      integer :: ireg = 0      !none      |counter
+      integer :: ilum = 0      !none      |counter
+      integer :: iihru = 0     !none      |counter
+      integer :: icn = 0       !none      |counter
+      integer :: ihru_s = 0    !none      |counter
+      integer :: iter_ind = 0  !          |end of loop
+      real :: rmeas = 0.       !          |
+      real :: denom = 0.       !          |
+      real :: soft = 0.        !          |
+      real :: diff = 0.        !          |
+      real :: chg_val = 0.     !          |  
 
       ! calibrate cn3_swf for surface runoff
         iter_ind = 1
@@ -174,5 +174,5 @@
         end if
         end do      ! icn
 
-	  return
+      return
       end subroutine calsoft_hyd_bfr_surq

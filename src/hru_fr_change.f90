@@ -13,20 +13,20 @@
   
       character(len=25), intent (in) :: lsu_elem_upd    !file name of updated lsu_unit.ele 
       character(len=25), intent (in) :: ru_elem_upd     !file name of updated rout_unit.ele 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i                    !none       |counter
-      integer :: isp                  !none       |counter
-      integer :: k                    !           |
-      integer :: iob                  !           |
-      integer :: idr                  !none       |counter
-      integer :: ii                   !none       |counter
-      integer :: ihru                 !none       |counter
-      integer :: iprop
-      integer :: ihyd
-      integer :: ielem
+      integer :: i = 0                !none       |counter
+      integer :: isp = 0              !none       |counter
+      integer :: k = 0                !           |
+      integer :: iob = 0              !           |
+      integer :: idr = 0              !none       |counter
+      integer :: ii = 0               !none       |counter
+      integer :: ihru = 0             !none       |counter
+      integer :: iprop = 0
+      integer :: ihyd = 0
+      integer :: ielem = 0
       
       eof = 0
       

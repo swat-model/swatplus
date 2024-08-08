@@ -8,9 +8,9 @@
 
       implicit none
     
-      integer :: isched                 !              | 
-      integer :: iauto                  !none          |counter
-      integer :: ictl                   !none          |counter
+      integer :: isched = 0             !              | 
+      integer :: iauto = 0              !none          |counter
+      integer :: ictl = 0               !none          |counter
           
       !! set cross walk for auto management operations
       do ihru = 1, sp_ob%hru
@@ -28,6 +28,6 @@
          end if
       end do
     
-	  return
+      return
       
       end subroutine proc_cond

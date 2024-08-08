@@ -5,7 +5,7 @@
       !integer :: int_print = 1       !! current interval between daily prints
       character (len=25) :: cal_sim = " Original Simulation"
       real :: cal_adj = 0.0
-      real :: yrs_print
+      real :: yrs_print = 0.
       integer, dimension (13) :: ndays = (/0,31,60,91,121,152,182,213,244,274,305,335,366/)
       integer, dimension (13) :: ndays_leap = (/0,31,60,91,121,152,182,213,244,274,305,335,366/)
       integer, dimension (13) :: ndays_noleap = (/0,31,59,90,120,151,181,212,243,273,304,334,365/)

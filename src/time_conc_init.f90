@@ -9,16 +9,16 @@
       
       implicit none 
       
-      integer :: ii                !none         |counter
-      integer :: ielem             !none         |counter
-      integer :: iob               !             | 
-      integer :: ith               !             | 
-      integer :: ifld              !             |
-      real :: tov                  !             |
-      real :: ch_slope             !             |
-      real :: ch_n                 !             |
-      real :: ch_l                 !             | 
-      real :: t_ch                 !hr           |time for flow entering the farthest upstream 
+      integer :: ii = 0            !none         |counter
+      integer :: ielem = 0         !none         |counter
+      integer :: iob = 0           !             | 
+      integer :: ith = 0           !             | 
+      integer :: ifld = 0          !             |
+      real :: tov = 0.             !             |
+      real :: ch_slope = 0.        !             |
+      real :: ch_n = 0.            !             |
+      real :: ch_l = 0.            !             | 
+      real :: t_ch = 0.            !hr           |time for flow entering the farthest upstream 
                                    !             |channel to reach the subbasin outlet
 
      ! compute weighted Mannings n for each subbasin

@@ -48,43 +48,43 @@
       
       implicit none
 
-      integer :: j1              !none          |counter
-      integer :: j               !none          |HRU number 
-      integer :: m               !none          |counter
-      real:: cone                !mm/hr         |effective saturated lateral conductivity - based
+      integer :: j1 = 0          !none          |counter
+      integer :: j = 0           !none          |HRU number 
+      integer :: m = 0           !none          |counter
+      real:: cone = 0.           !mm/hr         |effective saturated lateral conductivity - based
                                  !              |on water table depth and conk/sol_k of layers
-      real:: depth               !mm            |actual depth from surface to impermeable layer 
-      real:: dg                  !mm            |depth of soil layer
-      real:: ad                  !              | 
-      real:: ap                  !              |
-      real:: hdrain              !mm            |equivalent depth from water surface in drain tube to
+      real:: depth = 0.          !mm            |actual depth from surface to impermeable layer 
+      real:: dg = 0.             !mm            |depth of soil layer
+      real:: ad = 0.             !              | 
+      real:: ap = 0.             !              |
+      real:: hdrain = 0.         !mm            |equivalent depth from water surface in drain tube to
                                  !              |impermeable layer
-      real:: gee                 !none          |factor -g- in Kirkham equation
-      real:: gee1                !              | 
-      real:: gee2                !              | 
-      real:: gee3                !              | 
-      real:: pi	                 !              |
-      real:: k2                  !              |
-      real:: k3                  !              |
-      real:: k4                  !              |
-      real:: k5                  !              |
-      real:: k6                  !              |
-      real :: y1                 !mm            |dummy variable for dtwt 
-      integer :: isdr            !              |
-      real :: above              !mm            |depth of top layer considered
-      real :: x                  !              |
-      real :: sum                !              | 
-      real :: deep               !mm            |total thickness of saturated zone
-      real :: xx                 !              |
-      real :: hdmin              !              |
-      real :: storro             !mm            |surface storage that must b
+      real:: gee = 0.            !none          |factor -g- in Kirkham equation
+      real:: gee1 = 0.           !              | 
+      real:: gee2 = 0.           !              | 
+      real:: gee3 = 0.           !              | 
+      real:: pi = 0.             !              |
+      real:: k2 = 0.             !              |
+      real:: k3 = 0.             !              |
+      real:: k4 = 0.             !              |
+      real:: k5 = 0.             !              |
+      real:: k6 = 0.             !              |
+      real :: y1 = 0.            !mm            |dummy variable for dtwt 
+      integer :: isdr = 0        !              |
+      real :: above = 0.         !mm            |depth of top layer considered
+      real :: x = 0.             !              |
+      real :: sum = 0.           !              | 
+      real :: deep = 0.          !mm            |total thickness of saturated zone
+      real :: xx = 0.            !              |
+      real :: hdmin = 0.         !              |
+      real :: storro = 0.        !mm            |surface storage that must b
                                  !              |can move to the tile drain tube
-      real :: stor               !mm            |surface storage for the day in a given HRU
-      real :: dflux              !mm/hr         |drainage flux
-      real :: em                 !mm            |distance from water level in the drains to water table 
+      real :: stor = 0.          !mm            |surface storage for the day in a given HRU
+      real :: dflux = 0.         !mm/hr         |drainage flux
+      real :: em = 0.            !mm            |distance from water level in the drains to water table 
                                  !              |at midpoint: em is negative during subirrigation
-      real :: ddranp             !              |
-      real :: dot                !mm            |actual depth from impermeable layer to water level
+      real :: ddranp = 0.        !              |
+      real :: dot = 0.           !mm            |actual depth from impermeable layer to water level
                                  !              |above drain during subsurface irrigation
       real :: cosh
       real :: cos

@@ -10,22 +10,22 @@
     implicit none    
 
 	real :: sol_thick(soil(ihru)%nly) !            |
-	real :: cum_rd                    !            |
-    real :: cum_d                     !            | 
-    real :: cum_rf                    !            |
-    real :: x1                        !            |
-    real :: x2                        !            |
-	integer :: k                      !            |
-    integer :: l                      !none        |number of soil layer that manure applied
-    integer :: jj                     !none        |counter
-    real :: a                         !            |
-    real :: b                         !            |
-    real :: c                         !            | 
-    real :: d                         !            |
-    real :: rtfr                      !none        |root fraction
-    real :: xx1                       !            |
-    real :: xx2                       !            |
-    real :: xx                        !            |
+	real :: cum_rd = 0.               !            |
+    real :: cum_d = 0.                !            | 
+    real :: cum_rf = 0.               !            |
+    real :: x1 = 0.                   !            |
+    real :: x2 = 0.                   !            |
+	integer :: k = 0                  !            |
+    integer :: l = 0                  !none        |number of soil layer that manure applied
+    integer :: jj = 0                 !none        |counter
+    real :: a = 0.                    !            |
+    real :: b = 0.                    !            |
+    real :: c = 0.                    !            | 
+    real :: d = 0.                    !            |
+    real :: rtfr = 0.                 !none        |root fraction
+    real :: xx1 = 0.                  !            |
+    real :: xx2 = 0.                  !            |
+    real :: xx = 0.                   !            |
 	
 	jj = ihru
       
@@ -85,4 +85,4 @@
     
     return
    
-	end subroutine pl_rootfr
+       end subroutine pl_rootfr

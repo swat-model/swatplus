@@ -23,20 +23,26 @@
       integer, intent (inout) :: idmd       !water demand object number
       integer, intent (inout) :: ihru       !HRU that receives irrigation water
       character*10 :: irrig_type  
-      integer :: isrc												!irrigation source counter
-      integer :: irrig_nsource						  !number of irrigation sources for the object
-      integer :: irrig_ob                   !object number of irrigation source
-      integer :: ires                       !reservoir ID
-      integer :: iaq                        !aquifer ID
-      integer :: ichan                      !channel ID
-      integer :: obnum                      !object number
-      integer :: obnum_chan                 !channel object number
-      integer :: ics                        !constituent counter
-      integer :: wetland                    !wetland flag
-      real :: irrig_total                   !irrigation removed from source (m3)
-      real :: irrig_fraction							  !fraction of irrigation water
-      real :: irrig_volume                  !volume (m3) of irrigation water
-      real :: mass_diff,ion_mass,res_mass,mass_initial,irrig_mass,gw_volume,cs_conc
+      integer :: isrc = 0                   !irrigation source counter
+      integer :: irrig_nsource = 0          !number of irrigation sources for the object
+      integer :: irrig_ob = 0               !object number of irrigation source
+      integer :: ires = 0                   !reservoir ID
+      integer :: iaq = 0                    !aquifer ID
+      integer :: ichan = 0                  !channel ID
+      integer :: obnum = 0                  !object number
+      integer :: obnum_chan = 0             !channel object number
+      integer :: ics = 0                    !constituent counter
+      integer :: wetland = 0                !wetland flag
+      real :: irrig_total = 0.              !irrigation removed from source (m3)
+      real :: irrig_fraction = 0.           !fraction of irrigation water
+      real :: irrig_volume = 0.             !volume (m3) of irrigation water
+      real :: mass_diff = 0.
+      real :: ion_mass = 0.
+      real :: res_mass = 0.
+      real :: mass_initial = 0.
+      real :: irrig_mass = 0.
+      real :: gw_volume = 0.
+      real :: cs_conc = 0.
       
 
       !determine number of irrigation sources
@@ -66,7 +72,7 @@
             if(ion_mass.gt.res_mass) then
               mass_diff = ion_mass - res_mass
             endif  
-					  ion_mass = ion_mass - mass_diff
+            ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove constituent mass from the reservoir
             res_water(ires)%cs(ics) = res_water(ires)%cs(ics) - ion_mass !kg
@@ -94,7 +100,7 @@
             if(ion_mass.gt.cs_aqu(iaq)%cs(ics)) then
               mass_diff = ion_mass - cs_aqu(iaq)%cs(ics)
             endif  
-					  ion_mass = ion_mass - mass_diff
+            ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             cs_aqu(iaq)%cs(ics) = cs_aqu(iaq)%cs(ics) - ion_mass !kg - remove from storage
             acsb_d(iaq)%cs(ics)%irr = acsb_d(iaq)%cs(ics)%irr + ion_mass !kg - include in aquifer constituent balance
@@ -130,7 +136,7 @@
               if(ion_mass.gt.ch_water(ichan)%cs(ics)) then
                 mass_diff = ion_mass - ch_water(ichan)%cs(ics) 
               endif  
-						  ion_mass = ion_mass - mass_diff
+              ion_mass = ion_mass - mass_diff
               if(ion_mass.lt.0) ion_mass = 0.
               ch_water(ichan)%cs(ics) = ch_water(ichan)%cs(ics) - ion_mass !kg - remove from storage
               chcs_d(ichan)%cs(ics)%irr = chcs_d(ichan)%cs(ics)%irr + ion_mass !kg - include in channel constituent balance
@@ -143,7 +149,7 @@
                 cs_soil(ihru)%ly(1)%cs(ics) = cs_soil(ihru)%ly(1)%cs(ics) + (ion_mass/hru(ihru)%area_ha) !kg/ha - add to soil layer
                 hcsb_d(ihru)%cs(ics)%irsw = hcsb_d(ihru)%cs(ics)%irsw + (ion_mass/hru(ihru)%area_ha) !kg/ha - include in soil constituent balance
               endif
-					  endif
+            endif
           enddo
         
         !canal diversion sources  

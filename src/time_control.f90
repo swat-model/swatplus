@@ -57,25 +57,27 @@
       
       implicit none
 
-      integer :: j                   !none          |counter
-      integer :: julian_day          !none          |counter
-      integer :: id                  !              |
-      integer :: isched              !              |
-      integer :: ich                 !none          |counter
-      integer :: idp                 !              |
-      integer :: iplt
-      integer :: iupd                !none          |counter
-      integer :: ipest               !none          |counter
-      integer :: date_time(8)        !              | 
+      integer :: j = 0               !none          |counter
+      integer :: julian_day = 0      !none          |counter
+      integer :: id = 0              !              |
+      integer :: isched = 0          !              |
+      integer :: ich = 0             !none          |counter
+      integer :: idp = 0             !              |
+      integer :: iplt = 0
+      integer :: iupd = 0            !none          |counter
+      integer :: ipest = 0           !none          |counter
+      integer :: date_time(8) = 0    !              | 
       character*10 b(3)              !              |
-      real :: crop_yld_t_ha          !t/ha          |annual and ave annual basin crop yields
-      real :: sw_init
-      real :: sno_init
-      integer :: iob                 !              |
-      integer :: curyr               !              |
-      integer :: mo                  !              |
-      integer :: day_mo              !              |
-      integer :: iwallo, imallo
+      real :: crop_yld_t_ha = 0.     !t/ha          |annual and ave annual basin crop yields
+      real :: sw_init = 0.
+      real :: sno_init = 0.
+      integer :: iob = 0             !              |
+      integer :: curyr = 0           !              |
+      integer :: mo = 0              !              |
+      integer :: day_mo = 0          !              |
+      integer :: iwallo = 0
+      integer :: imallo = 0
+      
       time%yrc = time%yrc_start
       
       !! generate precip for the first day - %precip_next

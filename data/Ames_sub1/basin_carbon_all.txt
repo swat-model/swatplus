@@ -1,4 +1,4 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-07-18        MODULAR Rev 2024.61.0.1-32-g1347b93                    
         jday         yr            org_soilc        org_plc       org_resc
                                        kg/ha          kg/ha          kg/ha
          365        1975  basin    8772.735      0.0000000E+00   8429.526    

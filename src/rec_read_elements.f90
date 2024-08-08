@@ -6,20 +6,20 @@
       use hydrograph_module
       implicit none
 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: imax                 !none       |end of loop
-      integer :: isp                  !none       |counter
-      integer :: mcal                 !           |           
-      integer :: mreg                 !none       |end of loop
-      integer :: i                    !none       |counter
-      integer :: k                    !           |  
-      integer :: nspu                 !none       |end of loop
-      integer :: ielem1               !           | 
-      integer :: ireg                 !none       |counter
-      integer :: irec                 !none       |counter
+      integer :: imax = 0             !none       |end of loop
+      integer :: isp = 0              !none       |counter
+      integer :: mcal = 0             !           |           
+      integer :: mreg = 0             !none       |end of loop
+      integer :: i = 0                !none       |counter
+      integer :: k = 0                !           |  
+      integer :: nspu = 0             !none       |end of loop
+      integer :: ielem1 = 0           !           | 
+      integer :: ireg = 0             !none       |counter
+      integer :: irec = 0             !none       |counter
       
       imax = 0
       mcal = 0
@@ -37,27 +37,30 @@
         if (eof < 0) exit
         
         !! allocate recall outputsby region
-        allocate (srec_d(0:mreg)); allocate (srec_m(0:mreg)); allocate (srec_y(0:mreg)); allocate (srec_a(0:mreg))
+        allocate (srec_d(0:mreg))
+        allocate (srec_m(0:mreg))
+        allocate (srec_y(0:mreg))
+        allocate (srec_a(0:mreg))
 
       do i = 1, mreg
 
         read (107,*,iostat=eof) k, pcu_out(i)%name, pcu_out(i)%area_ha, nspu      
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, pcu_out(i)%name, pcu_out(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (pcu_out(i)%num(ielem1))
+          allocate (pcu_out(i)%num(ielem1), source = 0)
           pcu_out(i)%num = defunit_num
           pcu_out(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (pcu_out(i)%num(sp_ob%hru))
+          allocate (pcu_out(i)%num(sp_ob%hru), source = 0)
           pcu_out(i)%num_tot = sp_ob%recall
           do irec = 1, sp_ob%recall
             pcu_out(i)%num(irec) = irec
@@ -88,20 +91,20 @@
         read (107,*,iostat=eof) k, pcu_reg(i)%name, pcu_reg(i)%area_ha, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, pcu_reg(i)%name, pcu_reg(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (pcu_reg(i)%num(ielem1))
+          allocate (pcu_reg(i)%num(ielem1), source = 0)
           pcu_reg(i)%num = defunit_num
           pcu_reg(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (pcu_reg(i)%num(sp_ob%recall))
+          allocate (pcu_reg(i)%num(sp_ob%recall), source = 0)
           pcu_reg(i)%num_tot = sp_ob%recall
           do irec = 1, sp_ob%recall
             pcu_reg(i)%num(irec) = irec

@@ -10,24 +10,24 @@
       
       implicit none
 
-      character (len=80) :: titldum     !             |title of file
-      character (len=80) :: header      !             |header of file
-      integer :: eof                    !             |end of file
+      character (len=80) :: titldum = ""  !             |title of file
+      character (len=80) :: header = "" !             |header of file
+      integer :: eof = 0                !             |end of file
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: imax                   !             |determine max number for array (imax) and total number in file
-      integer :: mcal                   !             |
-      integer :: mreg                   !             |
-      integer :: mlug
-      integer :: ireg
-      integer :: i                      !none         |counter
-      integer :: k                      !             |
-      integer :: ilum
-      integer :: nspu                   !             | 
-      integer :: isp                    !             |
-      integer :: ielem1                 !none         |counter
-      integer :: iihru                  !none         |counter
-      integer :: ihru_tot               !             |
-      integer :: ilsu                   !             |
+      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
+      integer :: mcal = 0               !             |
+      integer :: mreg = 0               !             |
+      integer :: mlug = 0
+      integer :: ireg = 0
+      integer :: i = 0                  !none         |counter
+      integer :: k = 0                  !             |
+      integer :: ilum = 0
+      integer :: nspu = 0               !             | 
+      integer :: isp = 0                !             |
+      integer :: ielem1 = 0             !none         |counter
+      integer :: iihru = 0              !none         |counter
+      integer :: ihru_tot = 0           !             |
+      integer :: ilsu = 0               !             |
       
       imax = 0
       mcal = 0
@@ -46,10 +46,22 @@
         !! allocate regional output files
         allocate (lsu_reg(0:mreg))
         allocate (region(0:mreg))
-        allocate (rwb_d(mreg)); allocate (rwb_m(mreg)); allocate (rwb_y(mreg)); allocate (rwb_a(mreg))
-        allocate (rnb_d(mreg)); allocate (rnb_m(mreg)); allocate (rnb_y(mreg)); allocate (rnb_a(mreg))
-        allocate (rls_d(mreg)); allocate (rls_m(mreg)); allocate (rls_y(mreg)); allocate (rls_a(mreg))
-        allocate (rpw_d(mreg)); allocate (rpw_m(mreg)); allocate (rpw_y(mreg)); allocate (rpw_a(mreg))
+        allocate (rwb_d(mreg))
+        allocate (rwb_m(mreg))
+        allocate (rwb_y(mreg))
+        allocate (rwb_a(mreg))
+        allocate (rnb_d(mreg))
+        allocate (rnb_m(mreg))
+        allocate (rnb_y(mreg))
+        allocate (rnb_a(mreg))
+        allocate (rls_d(mreg))
+        allocate (rls_m(mreg))
+        allocate (rls_y(mreg))
+        allocate (rls_a(mreg))
+        allocate (rpw_d(mreg))
+        allocate (rpw_m(mreg))
+        allocate (rpw_y(mreg))
+        allocate (rpw_a(mreg))
 
         db_mx%landuse = mlug
       
@@ -69,8 +81,8 @@
 
       !! allocate land use within each region for soft cal and output
       do ireg = 1, mreg
-        allocate (region(ireg)%lum_ha_tot(mlug))
-        allocate (region(ireg)%lum_num_tot(mlug))
+        allocate (region(ireg)%lum_ha_tot(mlug), source = 0.)
+        allocate (region(ireg)%lum_num_tot(mlug), source = 0)
         region(ireg)%lum_ha_tot = 0.
         region(ireg)%lum_num_tot = 0
         region(ireg)%lum_ha_tot = 0.
@@ -87,20 +99,20 @@
         read (107,*,iostat=eof) k, lsu_reg(i)%name, lsu_reg(i)%area_ha, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, lsu_reg(i)%name, lsu_reg(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (lsu_reg(i)%num(ielem1))
+          allocate (lsu_reg(i)%num(ielem1), source = 0)
           lsu_reg(i)%num = defunit_num
           lsu_reg(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (lsu_reg(i)%num(sp_ob%hru))
+          allocate (lsu_reg(i)%num(sp_ob%hru), source = 0)
           lsu_reg(i)%num_tot = sp_ob%hru
           do ihru = 1, sp_ob%hru
             lsu_reg(i)%num(ihru) = ihru
@@ -165,8 +177,8 @@
       do ireg = 1, mreg
         ihru = 0
         region(ireg)%num_tot = ihru_tot
-        allocate (region(ireg)%num(ihru_tot))
-        allocate (region(ireg)%hru_ha(ihru_tot))
+        allocate (region(ireg)%num(ihru_tot), source = 0)
+        allocate (region(ireg)%hru_ha(ihru_tot), source = 0.)
         do ielem1 = 1, db_mx%lsu_reg     !lsu_reg(ireg)%num_tot      !elements - lsu, hru or hru_lte
           select case (reg_elem(ireg)%obtyp)
           case ("hru")

@@ -13,11 +13,11 @@
       
       implicit none
    
-      integer :: j                     !none           |HRU number
-      integer :: k                     !none           |counter
+      integer :: j = 0                 !none           |HRU number
+      integer :: k = 0                 !none           |counter
       integer, intent (in) :: jj       !none           |counter
       integer, intent (in) :: iplant   !               |plant number xwalked from hlt_db()%plant and plants.plt
-      integer :: ly                    !none           |soil layer
+      integer :: ly = 0                !none           |soil layer
 
       j = jj
       ipl = iplant
@@ -26,7 +26,7 @@
       call pl_rootfr
       
       !! allocate dead roots, N, P to soil layers
-	  do ly = 1, soil(j)%nly
+      do ly = 1, soil(j)%nly
 	      soil1(j)%rsd(ly) = soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl) + soil1(j)%rsd(ly)
       end do
       
@@ -51,7 +51,7 @@
         cs_pl(j)%pl_on(ipl)%pest(k) = 0.
       end do
 
-	  !! reset plant variables
+      !! reset plant variables
       pcom(j)%plg(ipl) = plgz
       pcom(j)%plm(ipl) = plmz
       pcom(j)%plstr(ipl) = plstrz

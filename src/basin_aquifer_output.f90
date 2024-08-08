@@ -8,8 +8,8 @@
       
       implicit none
       
-      integer :: iaq   !none      |counter
-      real :: const    !          |     
+      integer :: iaq = 0 !none      |counter
+      real :: const = 0. !          |     
 
      
         !! sum monthly variables

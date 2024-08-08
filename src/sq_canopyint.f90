@@ -31,14 +31,14 @@
       
       implicit none
 
-      real :: xx                 !mm H2O        |precipitation prior to canopy interception 
-      integer :: j               !none          |HRU number
-      integer :: ii              !none          |counter
-      real ::canmxl              !mm H2O        |maximum canopy storage at current day's leaf
+      real :: xx = 0.            !mm H2O        |precipitation prior to canopy interception 
+      integer :: j = 0           !none          |HRU number
+      integer :: ii = 0          !none          |counter
+      real :: canmxl = 0.        !mm H2O        |maximum canopy storage at current day's leaf
                                  !              |area
-      real :: canstori           !mm H2O        |initial canopy storage water content 
-      integer :: iwst            !none          |counter
-      integer :: iob
+      real :: canstori = 0.      !mm H2O        |initial canopy storage water content 
+      integer :: iwst = 0        !none          |counter
+      integer :: iob = 0
       !real :: precip_eff        !mm            |daily effective precip for runoff calculations = precipday + ls_overq + snomlt - canstor
                                  !     |precip_eff = precipday + ls_overq - snofall + snomlt - canstor
       

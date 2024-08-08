@@ -9,8 +9,8 @@
       
       integer, intent (in) :: icha         !none       !channel number
       real, intent (in) :: flow_dep     !m          !flow depth to interpolate rating curve
-      integer :: ielev                  !none       |counter for point on the rating curve
-      real :: rto                       !ratio      |storage time constant for the reach on
+      integer :: ielev = 0              !none       |counter for point on the rating curve
+      real :: rto = 0.                  !ratio      |storage time constant for the reach on
       
         !! interpolate rating curve using inflow rates
         do ielev = 1, ch_rcurv(icha)%npts

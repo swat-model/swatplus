@@ -2,17 +2,17 @@
     
       implicit none
       
-      integer :: isep                !          |
-      integer :: ilu                 !          | 
-      integer :: ulu                 !          |
-      integer :: iwgen               !          |
-      character (len=1) :: timest    !          |
+      integer :: isep = 0            !          |
+      integer :: ilu = 0             !          | 
+      integer :: ulu = 0             !          |
+      integer :: iwgen = 0           !          |
+      character (len=1) :: timest = "" !          |
      
       type uptake_parameters
        real :: water_dis = 10.        !               |the uptake distribution for water is hardwired
-       real :: water_norm             !none           |water uptake normalization parameter 
-       real :: n_norm                 !none           |nitrogen uptake normalization parameter 
-       real :: p_norm                 !none           |phosphorus uptake normalization parameter
+       real :: water_norm = 0.        !none           |water uptake normalization parameter 
+       real :: n_norm = 0.            !none           |nitrogen uptake normalization parameter 
+       real :: p_norm = 0.            !none           |phosphorus uptake normalization parameter
       end type uptake_parameters
       type (uptake_parameters)  :: uptake
 
@@ -26,7 +26,7 @@
       end type irrigation_sources
       
       type topography
-           character(len=40) :: name
+           character(len=40) :: name = ""
            real :: elev = 0.         !!               |m             |elevation of HRU
            real :: slope = 0.        !!	hru_slp(:)    |m/m           |average slope steepness in HRU
            real :: slope_len = 0.    !! slsubbsn(:)   |m             |average slope length for erosion
@@ -46,7 +46,7 @@
       end type field
       
       type hydrology
-           character(len=40) :: name
+           character(len=40) :: name = ""
            real :: lat_ttime = 0.   !! lat_ttime(:)  |days          |days of lateral soil flow across the hillslope
            real :: lat_sed = 0.     !! lat_sed(:)    |g/L           |sediment concentration in lateral flow
            real :: canmx = 0.       !! canmx(:)      |mm H2O        |maximum canopy storage
@@ -64,13 +64,13 @@
            real :: perco = 0.       !!               |0-1           |percolation coefficient - linear adjustment to daily perc
            real :: lat_orgn = 0.
            real :: lat_orgp = 0.
-           real :: pet_co  = 1.0  
+           real :: pet_co  = 1.0
            real :: latq_co = 0.3    !!               |              |lateral soil flow coefficient - linear adjustment to daily lat flow
            real :: perco_lim = 1.   !!               |              |percolation coefficient-limits perc from bottom layer
       end type hydrology
       
       type snow_parameters
-         character (len=40) :: name
+         character (len=40) :: name = ""
          real :: falltmp = 0.     !deg C         |snowfall temp
          real :: melttmp = 0.5    !deg C         |snow melt base temp 
          real :: meltmx = 4.5     !mm/deg C/day  |Max melt rate for snow during year (June 21)
@@ -96,21 +96,21 @@
       type (subsurface_drainage_parameters), dimension (:), allocatable :: sdr
               
       type landuse
-          character(len=40) :: name
+          character(len=40) :: name = ""
           integer :: cn_lu = 0
           integer :: cons_prac = 0
           real :: usle_p = 0.           !! none     | USLE equation support practice (P) factor daily
-          character (len=16) :: urb_ro  !! none     | urban runoff model
+          character (len=16) :: urb_ro = ""!! none     | urban runoff model
                                         !!          | "usgs_reg", simulate using USGS regression eqs
                                         !!          | "buildup_washoff", simulate using build up/wash off alg 
-          integer ::  urb_lu = 0        !! none     | urban land type identification number
+          integer :: urb_lu = 0         !! none     | urban land type identification number
           real :: ovn = 0.05            !! none     | Manning's "n" value for overland flow
       end type landuse
       type (landuse), dimension (:), allocatable :: luse
       
       type soil_plant_initialize
         character(len=40) :: name = ""
-        real :: sw_frac
+        real :: sw_frac = 0.
         character(len=40) :: nutc = ""
         character(len=40) :: pestc = ""
         character(len=40) :: pathc = ""
@@ -205,19 +205,19 @@
      
       type hydrologic_response_unit
         character(len=40) :: name = ""
-        integer :: obj_no
-        real :: area_ha
-        real :: km
-        integer :: surf_stor                    !points to res() for surface storage
+        integer :: obj_no = 0
+        real :: area_ha = 0.
+        real :: km = 0.
+        integer :: surf_stor = 0                !points to res() for surface storage
         type (hru_databases) :: dbs             !database pointers
         type (hru_databases_char) :: dbsc       !database pointers
-        integer :: land_use_mgt
-        character(len=40) :: land_use_mgt_c
-        integer :: lum_group
-        character(len=40) :: lum_group_c        !land use group for soft cal and output
-        character(len=40) :: region
-        integer :: plant_cov
-        integer :: mgt_ops
+        integer :: land_use_mgt = 0
+        character(len=40) :: land_use_mgt_c = ""
+        integer :: lum_group = 0
+        character(len=40) :: lum_group_c = ""   !land use group for soft cal and output
+        character(len=40) :: region = ""
+        integer :: plant_cov = 0
+        integer :: mgt_ops = 0
         integer :: tiledrain = 0
         integer :: septic = 0
         integer :: fstrip = 0
@@ -235,7 +235,8 @@
         type (land_use_mgt_variables) :: lumv
         type (subsurface_drainage_parameters) :: sdr
         type (snow_parameters) :: sno
-        real :: snocov1, snocov2
+        real :: snocov1 = 0.
+        real :: snocov2 = 0.
         integer :: cur_op = 1
         integer :: irr = 0                      !none       |set to 1 if irrigated during simulation - for wb soft cal
         integer :: irr_dmd_dtbl = 0
@@ -248,7 +249,7 @@
         real :: water_seep = 0.
         real :: water_evap = 0.
         real :: wet_obank_in = 0.               !mm         |inflow from overbank into wetlands
-        real :: precip_aa
+        real :: precip_aa = 0.
         character(len=1) :: wet_fp = "n"
         character(len=5) :: irr_src = "unlim"   !           |irrigation source, Jaehak 2022
         real :: strsa = 0.
@@ -261,135 +262,224 @@
       type (hydrologic_response_unit), dimension(:), allocatable, target :: hru_init
 
       
-      real :: precip_eff        !! mm   |daily effective precip for runoff calculations = precipday + ls_overq + snomlt - canstor
+      real :: precip_eff = 0.   !! mm   |daily effective precip for runoff calculations = precipday + ls_overq + snomlt - canstor
                                 !!      |precip_eff = precipday + ls_overq - snofall + snomlt - canstor
-      real :: qday              !! mm   |surface runoff that reaches main channel during day in HRU
-      real :: satexq_chan       !! mm   |saturation excess runoff that reaches main channel during day in HRU
+      real :: qday = 0.         !! mm   |surface runoff that reaches main channel during day in HRU
+      real :: satexq_chan = 0.  !! mm   |saturation excess runoff that reaches main channel during day in HRU
 
 
 !!    new/modified arrays for plant competition
-      integer :: ipl, isol
+      integer :: ipl = 0
+      integer :: isol = 0
 
-      real :: strsa_av,strsn_av,strsp_av,strstmp_av
-      real :: rto_no3,rto_solp,uno3d_tot,uapd_tot,sum_no3
-      real :: sum_solp
-      real, dimension (:), allocatable :: epmax,cvm_com
-      real, dimension (:), allocatable :: rsdco_plcom, translt
-      real, dimension (:), allocatable :: uno3d,uapd
-      real, dimension (:), allocatable :: par,htfac,un2,up2
+      real :: strsa_av = 0.
+      real :: strsn_av = 0.
+      real :: strsp_av = 0.
+      real :: strstmp_av = 0.
+      real :: rto_no3 = 0.
+      real :: rto_solp = 0.
+      real :: uno3d_tot = 0.
+      real :: uapd_tot = 0.
+      real :: sum_no3 = 0.
+      real :: sum_solp = 0.
+      real, dimension (:), allocatable :: epmax
+      real, dimension (:), allocatable :: cvm_com
+      real, dimension (:), allocatable :: rsdco_plcom
+      real, dimension (:), allocatable :: translt
+      real, dimension (:), allocatable :: uno3d
+      real, dimension (:), allocatable :: uapd
+      real, dimension (:), allocatable :: par
+      real, dimension (:), allocatable :: htfac
+      real, dimension (:), allocatable :: un2
+      real, dimension (:), allocatable :: up2
       integer, dimension (:), allocatable :: iseptic
      
 !! septic variables for output.std
-      real :: qp_cms, sw_excess, albday
-      real :: wt_shall
-      real :: sq_rto
-      real :: snomlt, snofall, fixn, qtile
-      real :: latlyr                 !!mm            |lateral flow in soil layer for the day
-      real :: inflpcp                !!mm            |amount of precipitation that infiltrates
-      real :: fertn, sepday, bioday
-      real :: sepcrk, sepcrktot, fertno3, fertnh3, fertorgn, fertsolp
-      real :: fertorgp
-      real :: fertp, grazn, grazp, sdti
-      real :: voltot                 !!mm            |total volumne of cracks expressed as depth per area unit
-      real :: volcrmin               !!mm            |minimum crack volume allowed in any soil layer
-      real :: canev, usle, rcn
-      real :: enratio
-      real :: vpd
-      real :: pet_day, ep_day
-      real :: snoev
-      real :: es_day, ls_overq, latqrunon, tilerunon
-      real :: ep_max
-      real :: bsprev
-      real :: usle_ei
-      real :: snocov1, snocov2, lyrtile
+      real :: qp_cms = 0.
+      real :: sw_excess = 0.
+      real :: albday = 0.
+      real :: wt_shall = 0.
+      real :: sq_rto = 0.
+      real :: snomlt = 0.
+      real :: snofall = 0.
+      real :: fixn = 0.
+      real :: qtile = 0.
+      real :: latlyr = 0.            !!mm            |lateral flow in soil layer for the day
+      real :: inflpcp = 0.           !!mm            |amount of precipitation that infiltrates
+      real :: fertn = 0.
+      real :: sepday = 0.
+      real :: bioday = 0.
+      real :: sepcrk = 0.
+      real :: sepcrktot = 0.
+      real :: fertno3 = 0.
+      real :: fertnh3 = 0.
+      real :: fertorgn = 0.
+      real :: fertsolp = 0.
+      real :: fertorgp = 0.
+      real :: fertp = 0.
+      real :: grazn = 0.
+      real :: grazp = 0.
+      real :: sdti = 0.
+      real :: voltot = 0.            !!mm            |total volumne of cracks expressed as depth per area unit
+      real :: volcrmin = 0.          !!mm            |minimum crack volume allowed in any soil layer
+      real :: canev = 0.
+      real :: usle = 0.
+      real :: rcn = 0.
+      real :: enratio = 0.
+      real :: vpd = 0.
+      real :: pet_day = 0.
+      real :: ep_day = 0.
+      real :: snoev = 0.
+      real :: es_day = 0.
+      real :: ls_overq = 0.
+      real :: latqrunon = 0.
+      real :: tilerunon = 0.
+      real :: ep_max = 0.
+      real :: bsprev = 0.
+      real :: usle_ei = 0.
+      real :: snocov1 = 0.
+      real :: snocov2 = 0.
+      real :: lyrtile = 0.
 
-      real :: etday
-      integer :: mo
-      integer :: ihru             !!none          |HRU number
-      integer :: nd_30
-      integer :: mpst, mlyr   
+      real :: etday = 0.
+      integer :: mo = 0
+      integer :: ihru = 0         !!none          |HRU number
+      integer :: nd_30 = 0
+      integer :: mpst = 0
+      integer :: mlyr = 0
 ! date
-      character(len=8) :: date
+      character(len=8) :: date = ""
 
 !! septic change added iseptic 1/28/09 gsm
-      integer :: isep_ly   
+      integer :: isep_ly = 0
       real, dimension (:), allocatable :: qstemm
 !! septic changes added 1/28/09 gsm
-      real, dimension (:), allocatable :: bio_bod, biom,rbiom
-      real, dimension (:), allocatable :: fcoli, bz_perc, plqm
+      real, dimension (:), allocatable :: bio_bod
+      real, dimension (:), allocatable :: biom
+      real, dimension (:), allocatable :: rbiom
+      real, dimension (:), allocatable :: fcoli
+      real, dimension (:), allocatable :: bz_perc
+      real, dimension (:), allocatable :: plqm
 !! Septic system by Jaehak Jeong
       integer, dimension (:), allocatable :: i_sep
       integer, dimension (:), allocatable :: sep_tsincefail
       
  !!   change per JGA 9/8/2011 gsm for output.mgt 
-      real, dimension (:), allocatable :: sol_sumno3, sol_sumsolp
+      real, dimension (:), allocatable :: sol_sumno3
+      real, dimension (:), allocatable :: sol_sumsolp
 
 !     Sediment parameters added by Balaji for the new routines
 
-      real, dimension (:), allocatable :: sanyld,silyld,clayld,sagyld
-      real, dimension (:), allocatable :: lagyld,grayld
+      real, dimension (:), allocatable :: sanyld
+      real, dimension (:), allocatable :: silyld
+      real, dimension (:), allocatable :: clayld
+      real, dimension (:), allocatable :: sagyld
+      real, dimension (:), allocatable :: lagyld
+      real, dimension (:), allocatable :: grayld
       integer, dimension (:), allocatable :: itb
       
 !!!!!! drains
       real, dimension (:), allocatable :: wnan
 
       real, dimension (:), allocatable :: phusw
-      integer, dimension (:), allocatable :: yr_skip, isweep
-      real :: sweepeff
+      integer, dimension (:), allocatable :: yr_skip
+      integer, dimension (:), allocatable :: isweep
+      real :: sweepeff = 0.
 
       real, dimension (:), allocatable :: ranrns_hru
       integer, dimension (:), allocatable :: itill
 
       real, dimension (:), allocatable :: tc_gwat
       real, dimension (:), allocatable :: wfsh
-      real, dimension (:), allocatable :: sed_con, orgn_con, orgp_con
-      real, dimension (:), allocatable :: soln_con, solp_con
+      real, dimension (:), allocatable :: sed_con
+      real, dimension (:), allocatable :: orgn_con
+      real, dimension (:), allocatable :: orgp_con
+      real, dimension (:), allocatable :: soln_con
+      real, dimension (:), allocatable :: solp_con
       real, dimension (:), allocatable :: filterw
       real, dimension (:), allocatable :: cn2
       real, dimension (:), allocatable :: smx
       real, dimension (:), allocatable :: cnday
       real, dimension (:), allocatable :: tconc
-      real, dimension (:), allocatable :: usle_cfac,usle_eifac
+      real, dimension (:), allocatable :: usle_cfac
+      real, dimension (:), allocatable :: usle_eifac
       real, dimension (:), allocatable :: t_ov
-      real, dimension (:), allocatable :: canstor,ovrlnd
+      real, dimension (:), allocatable :: canstor
+      real, dimension (:), allocatable :: ovrlnd
 
 !    Drainmod tile equations  08/2006 
-	  real, dimension (:), allocatable :: cumei,cumeira
-	  real, dimension (:), allocatable :: cumrt, cumrai
+      real, dimension (:), allocatable :: cumei
+      real, dimension (:), allocatable :: cumeira
+      real, dimension (:), allocatable :: cumrt
+      real, dimension (:), allocatable :: cumrai
       real, dimension (:), allocatable :: sstmaxd
-	  real, dimension (:), allocatable :: stmaxd
+      real, dimension (:), allocatable :: stmaxd
 !    Drainmod tile equations  08/2006
       real, dimension (:), allocatable :: surqsolp
       real, dimension (:), allocatable :: cklsp
       real, dimension (:), allocatable :: pplnt
       real, dimension (:), allocatable :: brt
 
-      real, dimension (:), allocatable :: twash,doxq
+      real, dimension (:), allocatable :: twash
+      real, dimension (:), allocatable :: doxq
       real, dimension (:), allocatable :: percn
-      real, dimension (:), allocatable :: cbodu,chl_a,qdr
-      real, dimension (:), allocatable :: latno3,latq,nplnt
+      real, dimension (:), allocatable :: cbodu
+      real, dimension (:), allocatable :: chl_a
+      real, dimension (:), allocatable :: qdr
+      real, dimension (:), allocatable :: latno3
+      real, dimension (:), allocatable :: latq
+      real, dimension (:), allocatable :: nplnt
       real, dimension (:), allocatable :: tileno3
-      real, dimension (:), allocatable :: sedminpa,sedminps,sedorgn
-      real, dimension (:), allocatable :: sedorgp,sedyld,sepbtm
-      real, dimension (:), allocatable :: surfq,surqno3
-      real, dimension (:,:), allocatable :: surqsalt,latqsalt,tilesalt,percsalt,gwupsalt,urbqsalt,irswsalt,irgwsalt,wetqsalt,   &
-                wtspsalt !rtb salt
-      real, dimension (:,:), allocatable :: surqcs,latqcs,tilecs,perccs,gwupcs,urbqcs,sedmcs,irswcs,irgwcs,wetqcs,wtspcs !rtb cs
+      real, dimension (:), allocatable :: sedminpa
+      real, dimension (:), allocatable :: sedminps
+      real, dimension (:), allocatable :: sedorgn
+      real, dimension (:), allocatable :: sedorgp
+      real, dimension (:), allocatable :: sedyld
+      real, dimension (:), allocatable :: sepbtm
+      real, dimension (:), allocatable :: surfq
+      real, dimension (:), allocatable :: surqno3
+      real, dimension (:,:), allocatable :: surqsalt
+      real, dimension (:,:), allocatable :: latqsalt
+      real, dimension (:,:), allocatable :: tilesalt
+      real, dimension (:,:), allocatable :: percsalt
+      real, dimension (:,:), allocatable :: gwupsalt
+      real, dimension (:,:), allocatable :: urbqsalt
+      real, dimension (:,:), allocatable :: irswsalt
+      real, dimension (:,:), allocatable :: irgwsalt
+      real, dimension (:,:), allocatable :: wetqsalt
+      real, dimension (:,:), allocatable :: wtspsalt
+      real, dimension (:,:), allocatable :: surqcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: latqcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: tilecs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: perccs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: gwupcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: urbqcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: sedmcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: irswcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: irgwcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: wetqcs                                                                       !rtb cs
+      real, dimension (:,:), allocatable :: wtspcs                                                                       !rtb cs
       real, dimension (:), allocatable :: phubase
       real, dimension (:), allocatable :: dormhr
       real, dimension (:,:), allocatable :: wrt
-      real, dimension (:,:), allocatable :: bss,surf_bs  
+      real, dimension (:,:), allocatable :: bss
+      real, dimension (:,:), allocatable :: surf_bs
       integer, dimension (:), allocatable :: swtrg
       real, dimension (:), allocatable :: rateinf_prev
       real, dimension (:), allocatable :: urb_abstinit
       !! burn
       integer, dimension (:), allocatable :: grz_days
-      integer, dimension (:), allocatable :: igrz,ndeat
+      integer, dimension (:), allocatable :: igrz
+      integer, dimension (:), allocatable :: ndeat
 
-      real, dimension (:), allocatable :: gwsoilq,satexq !rtb gwflow
+      real, dimension (:), allocatable :: gwsoilq        !rtb gwflow
+      real, dimension (:), allocatable :: satexq         !rtb gwflow
       real, dimension (:,:), allocatable :: bss_ex !rtb gwflow
-      real, dimension (:), allocatable :: gwsoiln,gwsoilp,satexn !rtb gwflow
-      real, dimension (:), allocatable :: irrn,irrp !rtb irrig (irrigation nutrient mass)
+      real, dimension (:), allocatable :: gwsoiln                !rtb gwflow
+      real, dimension (:), allocatable :: gwsoilp                !rtb gwflow
+      real, dimension (:), allocatable :: satexn                 !rtb gwflow
+      real, dimension (:), allocatable :: irrn      !rtb irrig (irrigation nutrient mass)
+      real, dimension (:), allocatable :: irrp      !rtb irrig (irrigation nutrient mass)
 
 !!     gsm added for sdr (drainage) 7/24/08
       integer, dimension (:,:), allocatable :: mgt_ops
@@ -399,8 +489,10 @@
 ! Modifications to Pesticide and Water routing routines by Balaji Narasimhan
 !Additional buffer and filter strip variables Mike White
 
-	real, dimension (:), allocatable :: ubnrunoff,ubntss
-	real, dimension (:,:), allocatable :: ovrlnd_dt,hhsurfq	
+	real, dimension (:), allocatable :: ubnrunoff
+	real, dimension (:), allocatable :: ubntss
+	real, dimension (:,:), allocatable :: ovrlnd_dt
+	real, dimension (:,:), allocatable :: hhsurfq
 	real, dimension (:,:,:), allocatable :: hhsurf_bs
 
 !! subdaily erosion modeling by Jaehak Jeong

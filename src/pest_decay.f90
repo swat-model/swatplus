@@ -22,20 +22,20 @@
       
       implicit none 
       
-      integer :: j               !none     |hru number
-      integer :: k               !none     |seqential pesticide number being simulated
-      integer :: ipl             !none     |plant number
-      integer :: ipest_db        !none     |pesticide number from pesticide data base
-      integer :: l               !none     |layer number
-      integer :: ipseq           !none     |sequential basin pesticide number
-      integer :: ipdb            !none     |seqential pesticide number of daughter pesticide
-      integer :: imeta           !none     |pesticide metabolite counter
-      real :: mol_wt_rto         !ratio    |molecular weight ratio of duaghter to parent pesticide
-      real :: pest_init          !kg/ha    |amount of pesticide present at beginning of day
-      real :: pest_end           !kg/ha    |amount of pesticide present at end of day
-      real :: pst_decay          !kg/ha    |amount of pesticide decay in soil layer during day
-      real :: pst_decay_s        !kg/ha    |amount of pesticide decay in soil profile during day
-      real :: metab_decay        !kg/ha    |amount of metabolite decay in soil layer during day
+      integer :: j = 0           !none     |hru number
+      integer :: k = 0           !none     |seqential pesticide number being simulated
+      integer :: ipl = 0         !none     |plant number
+      integer :: ipest_db = 0    !none     |pesticide number from pesticide data base
+      integer :: l = 0           !none     |layer number
+      integer :: ipseq = 0       !none     |sequential basin pesticide number
+      integer :: ipdb = 0        !none     |seqential pesticide number of daughter pesticide
+      integer :: imeta = 0       !none     |pesticide metabolite counter
+      real :: mol_wt_rto = 0.    !ratio    |molecular weight ratio of duaghter to parent pesticide
+      real :: pest_init = 0.     !kg/ha    |amount of pesticide present at beginning of day
+      real :: pest_end = 0.      !kg/ha    |amount of pesticide present at end of day
+      real :: pst_decay = 0.     !kg/ha    |amount of pesticide decay in soil layer during day
+      real :: pst_decay_s = 0.   !kg/ha    |amount of pesticide decay in soil profile during day
+      real :: metab_decay = 0.   !kg/ha    |amount of metabolite decay in soil layer during day
 
       j = ihru
 
@@ -69,7 +69,7 @@
           hpestb_d(j)%pest(k)%decay_s = pst_decay_s
 
           !! calculate degradation on plant foliage
-	      !! adjust foliar pesticide for wash off
+          !! adjust foliar pesticide for wash off
           do ipl = 1, pcom(j)%npl
             pest_init = cs_pl(j)%pl_on(ipl)%pest(k)
             if (pest_init > 1.e-12) then

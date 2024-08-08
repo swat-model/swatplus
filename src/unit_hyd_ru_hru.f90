@@ -9,11 +9,11 @@
       
       implicit none
       
-      integer :: iihru          !       |hru counter
-      integer :: iiru           !       |routing unit counter
-      integer :: iob            !       |object counter
-      integer :: ihyd           !       |receiving hyd counter
-      real :: tc                !       |time of concentration for incoming hru and ru
+      integer :: iihru = 0      !       |hru counter
+      integer :: iiru = 0       !       |routing unit counter
+      integer :: iob = 0        !       |object counter
+      integer :: ihyd = 0       !       |receiving hyd counter
+      real :: tc = 0.           !       |time of concentration for incoming hru and ru
 
       if (time%step > 1) then
         do iihru = 1, sp_ob%hru

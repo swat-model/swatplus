@@ -5,11 +5,11 @@
        
        implicit none
        
-       character (len=80) :: titldum    !           |title of file
-       character (len=500) :: header    !           |header of file       
-       integer :: eof                   !           |end of file
-       integer :: mo                    !           |
-       integer :: day_mo                !           |
+       character (len=80) :: titldum = "" !           |title of file
+       character (len=500) :: header = "" !           |header of file       
+       integer :: eof = 0               !           |end of file
+       integer :: mo = 0                !           |
+       integer :: day_mo = 0            !           |
        logical :: i_exist              !none       |check to determine if file exists
        
        eof = 0

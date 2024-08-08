@@ -16,18 +16,18 @@
       
       implicit none
                   
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: i                    !none       |counter 
-      integer :: mdtbl                !none       |ending of loop
-      integer :: ic                   !none       |counter 
-      integer :: ial                  !none       |counter 
-      integer :: iac                  !none       !counter 
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: i = 0                !none       |counter 
+      integer :: mdtbl = 0            !none       |ending of loop
+      integer :: ic = 0               !none       |counter 
+      integer :: ial = 0              !none       |counter 
+      integer :: iac = 0              !none       !counter 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: idb                  !none       |counter
-      integer :: iburn                !none       |counter
-      integer :: ihru                 !none       |counter
+      integer :: idb = 0              !none       |counter
+      integer :: iburn = 0            !none       |counter
+      integer :: ihru = 0             !none       |counter
       
       mdtbl = 0
       eof = 0
@@ -35,7 +35,7 @@
       !! read all data from hydrol.dat
       inquire (file=in_cond%dtbl_lum, exist=i_exist)
       if (.not. i_exist .or. in_cond%dtbl_lum == "null") then
-        allocate (dtbl_lum(0:0)) 
+        allocate (dtbl_lum(0:0))
       else
         do
           open (107,file=in_cond%dtbl_lum)
@@ -53,12 +53,12 @@
             read (107,*,iostat=eof) dtbl_lum(i)%name, dtbl_lum(i)%conds, dtbl_lum(i)%alts, dtbl_lum(i)%acts
             if (eof < 0) exit
             allocate (dtbl_lum(i)%cond(dtbl_lum(i)%conds))
-            allocate (dtbl_lum(i)%con_act(dtbl_lum(i)%conds))
+            allocate (dtbl_lum(i)%con_act(dtbl_lum(i)%conds), source = 0)
             allocate (dtbl_lum(i)%alt(dtbl_lum(i)%conds,dtbl_lum(i)%alts))
             allocate (dtbl_lum(i)%act(dtbl_lum(i)%acts))
             allocate (dtbl_lum(i)%act_hit(dtbl_lum(i)%alts))
-            allocate (dtbl_lum(i)%act_typ(dtbl_lum(i)%acts))
-            allocate (dtbl_lum(i)%act_app(dtbl_lum(i)%acts))
+            allocate (dtbl_lum(i)%act_typ(dtbl_lum(i)%acts), source = 0)
+            allocate (dtbl_lum(i)%act_app(dtbl_lum(i)%acts), source = 0)
             allocate (dtbl_lum(i)%act_outcomes(dtbl_lum(i)%acts,dtbl_lum(i)%alts))
             
             !read conditions and condition alternatives

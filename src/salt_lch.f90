@@ -52,12 +52,24 @@
       
       implicit none
       
-      integer :: j,jj
-      integer :: isalt
-      integer :: sol_index,gw_soil_flag
-      real :: cosalt,cosurfsalt,percsaltlyr(8),ssfsaltlyr,vsalt
-      real :: hru_area_m2,water_volume,salt_mass_kg
-      real :: ro_mass,wet_ro_mass,sro,vv,ww
+      integer :: j = 0
+      integer :: jj = 0
+      integer :: isalt = 0
+      integer :: sol_index = 0
+      integer :: gw_soil_flag = 0
+      real :: cosalt = 0.
+      real :: cosurfsalt = 0.
+      real :: percsaltlyr(8) = 0.
+      real :: ssfsaltlyr = 0.
+      real :: vsalt = 0.
+      real :: hru_area_m2 = 0.
+      real :: water_volume = 0.
+      real :: salt_mass_kg = 0.
+      real :: ro_mass = 0.
+      real :: wet_ro_mass = 0.
+      real :: sro = 0.
+      real :: vv = 0.
+      real :: ww = 0.
 
       j = 0
       j = ihru
@@ -90,7 +102,7 @@
           
           !! add salt leached from layer above
           cs_soil(j)%ly(jj)%salt(isalt) = cs_soil(j)%ly(jj)%salt(isalt) + percsaltlyr(isalt)
-	    if (cs_soil(j)%ly(jj)%salt(isalt) < 1.e-6) then
+          if (cs_soil(j)%ly(jj)%salt(isalt) < 1.e-6) then
             cs_soil(j)%ly(jj)%salt(isalt) = 0.0
           endif
 
@@ -165,7 +177,7 @@
           hru_area_m2 = hru(j)%area_ha * 10000. !ha --> m2
           water_volume = (soil(j)%phys(jj)%st/1000.) * hru_area_m2
           if(cs_soil(j)%ly(jj)%salt(isalt).lt.0) then
-			  cs_soil(j)%ly(jj)%salt(isalt) = 0.
+                    cs_soil(j)%ly(jj)%salt(isalt) = 0.
           endif
           salt_mass_kg = cs_soil(j)%ly(jj)%salt(isalt) * hru(j)%area_ha !kg
           !calculate concentration in mg/L
@@ -173,7 +185,7 @@
             cs_soil(j)%ly(jj)%saltc(isalt) = (salt_mass_kg * 1000.) / water_volume !g/m3 = mg/L
           else
             cs_soil(j)%ly(jj)%saltc(isalt) = 0.
-			endif
+                  endif
         enddo
       enddo
 

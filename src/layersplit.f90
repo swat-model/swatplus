@@ -7,13 +7,13 @@
       
       implicit none
       
-      integer :: nly               !none         |end of loop
-      integer :: nly1              !             |
-      integer :: lyn               !none         |counter
-      integer :: ly                !none         |counter
-	  real, intent(in):: dep_new   !             |
+      integer :: nly = 0           !none         |end of loop
+      integer :: nly1 = 0          !             |
+      integer :: lyn = 0           !none         |counter
+      integer :: ly = 0            !none         |counter
+      real, intent(in):: dep_new   !             |
       
-	  nly = soil(ihru)%nly
+      nly = soil(ihru)%nly
 
       allocate (layer1(nly))
       allocate (phys1(nly))
@@ -52,5 +52,5 @@
       
       deallocate (layer1)
       deallocate (phys1)
-	  return
+          return
       end        

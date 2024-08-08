@@ -15,79 +15,79 @@
       !real :: timeint(1000)
       real :: a1 = .2                   !             |
       real :: a2 = .8                   !             | 
-      integer :: ihlt_db                !             |
-      integer :: iwgn                   !             |
-      integer :: iplt                   !none         |counter
-      real :: precip                    !mm           |precipitation
-      real :: tmax                      !deg C        |maximum average monthly temperature
-      real :: tmin                      !deg C        |minimum average monthly temperature
-      real :: raobs                     !             | 
-      real :: rmx                       !             | 
-      real :: tave                      !             |  
-      real :: yield                     !             | 
-      real :: ws                        !             | 
-      real :: strsair                   !             | 
-      real :: snowfall                  !             |
-      real :: snowmelt                  !             | 
-      real :: runoff                    !             | 
-      real :: xx                        !             | 
+      integer :: ihlt_db = 0            !             |
+      integer :: iwgn = 0               !             |
+      integer :: iplt = 0               !none         |counter
+      real :: precip = 0.               !mm           |precipitation
+      real :: tmax = 0.                 !deg C        |maximum average monthly temperature
+      real :: tmin = 0.                 !deg C        |minimum average monthly temperature
+      real :: raobs = 0.                !             | 
+      real :: rmx = 0.                  !             | 
+      real :: tave = 0.                 !             |  
+      real :: yield = 0.                !             | 
+      real :: ws = 0.                   !             | 
+      real :: strsair = 0.              !             | 
+      real :: snowfall = 0.             !             |
+      real :: snowmelt = 0.             !             | 
+      real :: runoff = 0.               !             | 
+      real :: xx = 0.                   !             | 
       real :: exp                       !             |  
-      real :: r2                        !             | 
+      real :: r2 = 0.                   !             | 
       real :: max                     !             | 
-      real :: cn_sd                     !             | 
-      real :: precipeff                 !             | 
-      real :: xxi                       !             | 
-      real :: xsd                       !             | 
-      real :: ch                        !             | 
+      real :: cn_sd = 0.                !             | 
+      real :: precipeff = 0.            !             | 
+      real :: xxi = 0.                  !             | 
+      real :: xsd = 0.                  !             | 
+      real :: ch = 0.                   !             | 
       real :: tan                       !             | 
-      real :: hlat                      !             | 
+      real :: hlat = 0.                 !             | 
       real :: acos                      !             | 
-      real :: ramm                      !MJ/m2        |extraterrestrial radiation  
-      real :: pet                       !             | 
-      real :: tstress                   !             |sum of temperature stress
-      real :: tk                        !deg C        |mean air temperature
-      real :: alb                       !none         |albedo when soil is moist
-      real :: d                         !cm           |displacement height for plant type
-      real :: gma                       !kPa/deg C    |psychrometric constant
-      real :: ho                        !none         |variable to hold intermediate calculation
+      real :: ramm = 0.                 !MJ/m2        |extraterrestrial radiation  
+      real :: pet = 0.                  !             | 
+      real :: tstress = 0.              !             |sum of temperature stress
+      real :: tk = 0.                   !deg C        |mean air temperature
+      real :: alb = 0.                  !none         |albedo when soil is moist
+      real :: d = 0.                    !cm           |displacement height for plant type
+      real :: gma = 0.                  !kPa/deg C    |psychrometric constant
+      real :: ho = 0.                   !none         |variable to hold intermediate calculation
                                         !             |result
-      real :: aph                       !             | 
-      real :: aet                       !mm            |sum of actual et during growing season (for hi water stress)
-      real :: b1                        !             |
-      real :: delg                      !             |
-      real :: parad                     !             |
-      real :: drymat                    !             |
-      real :: satco                     !             |
-      real :: pl_aerfac                 !             |
-      integer :: iend                   !             |points to rule set in d_table
-      integer :: istart                 !none         |points to rule set in d_table  
-      real :: scparm                    !             |
-      real :: air                       !             |
+      real :: aph = 0.                  !             | 
+      real :: aet = 0.                  !mm            |sum of actual et during growing season (for hi water stress)
+      real :: b1 = 0.                   !             |
+      real :: delg = 0.                 !             |
+      real :: parad = 0.                !             |
+      real :: drymat = 0.               !             |
+      real :: satco = 0.                !             |
+      real :: pl_aerfac = 0.            !             |
+      integer :: iend = 0               !             |points to rule set in d_table
+      integer :: istart = 0             !none         |points to rule set in d_table  
+      real :: scparm = 0.               !             |
+      real :: air = 0.                  !             |
       real :: amin1                     !             |
-      real :: tgx                       !             |
-      real :: rto                       !none         |cloud cover factor
-      real :: reg                       !             |
-      real :: deltalai                  !             |
-      real :: sw_excess                 !mm H2O       |amount of water in excess of field capacity
+      real :: tgx = 0.                  !             |
+      real :: rto = 0.                  !none         |cloud cover factor
+      real :: reg = 0.                  !             |
+      real :: deltalai = 0.             !             |
+      real :: sw_excess = 0.            !mm H2O       |amount of water in excess of field capacity
                                         !             |stored in soil layer on the current day
-      real :: swf                       !cfu          |fraction of manure containing active colony forming units
-      real :: flowlat                   !             |
-      real :: f                         !             |
-      real :: ff                        !             |
-      real :: flow_tile                 !             |
-      real :: perc                      !             |
-      real :: revap                     !mm           |revap
-      real :: percdeep                  !             |
-      real :: chflow                    !             |
-      real :: chflow_m3                 !m^3/s        |Runoff in CMS
-      real :: runoff_m3                 !             |
-      real :: bf_m3                     !             | 
-      real :: peakr                     !m^3/s        |peak runoff rate in channel
-      real :: peakrbf                   !             |
-      real :: sedin                     !             | 
-      real :: qssubconc                 !             |
-      real :: qssub                     !             |
-      real :: cnv                       !none         |conversion factor (mm => m^3)
+      real :: swf = 0.                  !cfu          |fraction of manure containing active colony forming units
+      real :: flowlat = 0.              !             |
+      real :: f = 0.                    !             |
+      real :: ff = 0.                   !             |
+      real :: flow_tile = 0.            !             |
+      real :: perc = 0.                 !             |
+      real :: revap = 0.                !mm           |revap
+      real :: percdeep = 0.             !             |
+      real :: chflow = 0.               !             |
+      real :: chflow_m3 = 0.            !m^3/s        |Runoff in CMS
+      real :: runoff_m3 = 0.            !             |
+      real :: bf_m3 = 0.                !             | 
+      real :: peakr = 0.                !m^3/s        |peak runoff rate in channel
+      real :: peakrbf = 0.              !             |
+      real :: sedin = 0.                !             | 
+      real :: qssubconc = 0.            !             |
+      real :: qssub = 0.                !             |
+      real :: cnv = 0.                  !none         |conversion factor (mm => m^3)
         
       ihlt_db = ob(icmd)%props
       iwst = ob(icmd)%wst

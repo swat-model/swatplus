@@ -39,9 +39,9 @@
 
       implicit none
 
-      integer :: idp
-      integer :: j           !none      |hru number
-      real :: matur_frac     !frac      |fraction to maturity - use hu for annuals and years to maturity for perennials
+      integer :: idp = 0
+      integer :: j = 0       !none      |hru number
+      real :: matur_frac = 0.  !frac      |fraction to maturity - use hu for annuals and years to maturity for perennials
 
       j = ihru
 

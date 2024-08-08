@@ -41,9 +41,9 @@
       
       implicit none
 
-      integer :: j           !none                   |HRU number
-      real :: usle           !metric tons/ha         | daily soil loss predicted with USLE equation
-      real :: rock           !percent                |rock fragments
+      integer :: j = 0       !none                   |HRU number
+      real :: usle = 0.      !metric tons/ha         | daily soil loss predicted with USLE equation
+      real :: rock = 0.      !percent                |rock fragments
 
       j = ihru
       
@@ -70,12 +70,12 @@
         sedyld(j) = sedyld(j) / Exp(hru(j)%sno_mm * 3. / 25.4)
       end if
 
-	  !! Particle size distribution of sediment yield
-	  !sanyld(j) = sedyld(j) * soil(j)%det_san    !! Sand yield
-	  !silyld(j) = sedyld(j) * soil(j)%det_sil    !! Silt yield
-	  !clayld(j) = sedyld(j) * soil(j)%det_cla    !! Clay yield
-	  !sagyld(j) = sedyld(j) * soil(j)%det_sag    !! Small Aggregate yield
-	  !lagyld(j) = sedyld(j) * soil(j)%det_lag    !! Large Aggregate yield
+      !! Particle size distribution of sediment yield
+      !sanyld(j) = sedyld(j) * soil(j)%det_san    !! Sand yield
+      !silyld(j) = sedyld(j) * soil(j)%det_sil    !! Silt yield
+      !clayld(j) = sedyld(j) * soil(j)%det_cla    !! Clay yield
+      !sagyld(j) = sedyld(j) * soil(j)%det_sag    !! Small Aggregate yield
+      !lagyld(j) = sedyld(j) * soil(j)%det_lag    !! Large Aggregate yield
 
       !! compute erosion with usle (written to output for comparison)
       usle = 1.292 * usle_ei * cklsp(j) / 11.8

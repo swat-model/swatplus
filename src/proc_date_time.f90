@@ -5,7 +5,7 @@
   
       implicit none
      
-      integer :: date_time(8)           !              |
+      integer :: date_time(8) = 0       !              |
       character*10 b(3)                 !              |
   
       !call cpu_time(sim_start)

@@ -2,19 +2,19 @@
     
       implicit none
 
-      real :: reactw                  !mg pst        |amount of pesticide in reach that is lost through reactions
-      real :: volatpst                !mg pst        |amount of pesticide lost from reach by volatilization
-      real :: setlpst                 !mg pst        |amount of pesticide moving from water to sediment due to settling
-      real :: resuspst                !mg pst        |amount of pesticide moving from sediment to reach due to resuspension
-      real :: difus                   !mg pst        |diffusion of pesticide from sediment to reach
-      real :: reactb                  !mg pst        |amount of pesticide in sediment that is lost through reactions
-      real :: bury                    !mg pst        |loss of pesticide from active sediment layer by burial
+      real :: reactw = 0.             !mg pst        |amount of pesticide in reach that is lost through reactions
+      real :: volatpst = 0.           !mg pst        |amount of pesticide lost from reach by volatilization
+      real :: setlpst = 0.            !mg pst        |amount of pesticide moving from water to sediment due to settling
+      real :: resuspst = 0.           !mg pst        |amount of pesticide moving from sediment to reach due to resuspension
+      real :: difus = 0.              !mg pst        |diffusion of pesticide from sediment to reach
+      real :: reactb = 0.             !mg pst        |amount of pesticide in sediment that is lost through reactions
+      real :: bury = 0.               !mg pst        |loss of pesticide from active sediment layer by burial
 
       type reservoir
         character(len=13) :: name = "default"
         integer :: ob = 0                           !object number if reservoir object; hru number if hru object
         integer :: props = 0                        !points to res_dat
-        integer :: iweir                    !       !weir ID Jaehak 2023 
+        integer :: iweir = 0                !       !weir ID Jaehak 2023 
         character (len=1) :: rel_tbl = "d"          !d == decision table, c == conditions table
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
         real :: pvol = 0.                   !ha-m   |vol of water needed to fill the res to the princ spillway (read in as ha-m and converted to m^3)
@@ -37,7 +37,7 @@
       type (reservoir), dimension(:),allocatable :: res_ob
       
       type wetland
-        integer :: iweir                    !       !weir ID   Jaehak 2022
+        integer :: iweir = 0                !       !weir ID   Jaehak 2022
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
         real :: pvol = 0.                   !m^3    |vol of water needed to fill the res to the princ spillway (read in as ha-m and converted to m^3)
         real :: esa = 0.                    !ha     |res surface area when res is filled to emerg spillway 
@@ -74,9 +74,9 @@
           character (len=6) :: mo     =   "   mon"
           character (len=6) :: day_mo =   "   day"
           character (len=6) :: yrc    =   "    yr"
-          character (len=8) :: j      =   "  resnum "
-          character (len=9) :: id     =   "  gis_id "        
-          character (len=16) :: name  =   " name               " 
+          character (len=9) :: j      =   "  resnum "
+          character (len=9) :: id     =   "  gis_id "
+          character (len=16) :: name  =   " name           "
           character (len=13) :: flo   =   "        flo"     !! ha-m         |volume of water
           character (len=12) :: sed   =   "       sed"      !! metric tons  |sediment 
           character (len=10) :: orgn  =   "    orgn"        !! kg N         |organic N
@@ -166,9 +166,9 @@
           character (len=6) :: mo     = "      "
           character (len=6) :: day_mo = "      "
           character (len=6) :: yrc    = "      "
-          character (len=8) :: j      = "         "
-          character (len=9) :: id     = "         "        
-          character (len=16) :: name  = "                   " 
+          character (len=9) :: j      = "         "
+          character (len=9) :: id     = "         "
+          character (len=16) :: name  = "               "
           character (len=13) :: flo   = "        ha-m"    !! ha-m         |volume of water
           character (len=12) :: sed   = "   met_tons"     !! metric tons  |sediment 
           character (len=10) :: orgn  = "    kg N"        !! kg N         |organic N
@@ -215,7 +215,7 @@
        
        type res_header_unit2
            !! last part of units 
-        character (len=10) :: area_ha   =    "        ha"  
+        character (len=10) :: area_ha   =    "        ha"
         character (len=10) :: evap      =    "        mm"
         character (len=10) :: seep      =    "        mm"        !mm     |seepage from res bottom
         character (len=10) :: sed_setl  =    "         t"        !t      |sediment settling

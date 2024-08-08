@@ -50,28 +50,28 @@
       
     implicit none
       
-	integer :: k                    !               |
-    integer :: j                    !               |
-    integer :: ulu                  !               |
-	real :: percent_clay            !percent	    |percent clay
-    real :: percent_silt            !percent	    |percent silt
-    real :: percent_sand            !percent	    |percent sand
-    real :: erod_k                  !g/J		    |soil detachability value	
-	real :: ke_direct               !J/m2/mm	    |rainfall kinetic energy of direct throughfall
-    real :: ke_leaf                 !J/m2/mm	    |rainfall kinetic energy of leaf drainage
-    real :: ke_total                !J/m2   	    |total kinetic energy of rainfall
-    real :: pheff                   !m			    |effective plant height
-    real :: c                       !               |
-	real :: rdepth_direct           !mm		        |rainfall depth of direct throughfall
-    real :: rdepth_leaf             !mm		        |rainfall depth of leaf drainage
-    real :: rdepth_tot              !mm		        |total rainfall depth 
-    real :: canopy_cover            !               |
-	real :: bed_shear               !N/m2		    |shear stress b/w stream bed and flow	
-    real :: sedspl                  !tons		    |sediment yield by rainfall impact during time step
-    real :: sedov                   !tons		    |sediment yield by overland flow during time step
-    real :: rain_d50                !               |
-    real :: rintnsty                !mm/hr          |rainfall intensity
-    real :: cover                   !kg/ha          |soil cover
+    integer :: k = 0                !               |
+    integer :: j = 0                !               |
+    integer :: ulu = 0              !               |
+    real :: percent_clay = 0.       !percent        |percent clay
+    real :: percent_silt = 0.       !percent        |percent silt
+    real :: percent_sand = 0.       !percent        |percent sand
+    real :: erod_k = 0.             !g/J            |soil detachability value    
+    real :: ke_direct = 0.          !J/m2/mm        |rainfall kinetic energy of direct throughfall
+    real :: ke_leaf = 0.            !J/m2/mm        |rainfall kinetic energy of leaf drainage
+    real :: ke_total = 0.           !J/m2           |total kinetic energy of rainfall
+    real :: pheff = 0.              !m              |effective plant height
+    real :: c = 0.                  !               |
+    real :: rdepth_direct = 0.      !mm             |rainfall depth of direct throughfall
+    real :: rdepth_leaf = 0.        !mm             |rainfall depth of leaf drainage
+    real :: rdepth_tot = 0.         !mm             |total rainfall depth 
+    real :: canopy_cover = 0.       !               |
+    real :: bed_shear = 0.          !N/m2           |shear stress b/w stream bed and flow    
+    real :: sedspl = 0.             !tons           |sediment yield by rainfall impact during time step
+    real :: sedov = 0.              !tons           |sediment yield by overland flow during time step
+    real :: rain_d50 = 0.           !               |
+    real :: rintnsty = 0.           !mm/hr          |rainfall intensity
+    real :: cover = 0.              !kg/ha          |soil cover
 
 	j = ihru
 	ulu = hru(j)%luse%urb_lu
@@ -185,5 +185,5 @@
     end do
     end if
       
-	return
+    return
     end subroutine ero_ovrsed

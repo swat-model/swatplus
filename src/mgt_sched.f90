@@ -21,36 +21,37 @@
       
       implicit none
       
-      integer :: icom              !         |  
-      integer :: idp               !         |
-      integer :: j                 !none     |counter
-      integer :: iharvop           !         |harvest operation type 
-      integer :: idtill            !none     |tillage type
-      integer :: ifrt              !         |fertilizer type from fert data base
-      integer :: iob               !         | 
-      integer :: ipestcom          !none     |counter
-      integer :: ipest             !none     |sequential pesticide type from pest community
-      integer :: ipestop           !none     |surface application fraction from chem app data base 
-      integer :: irrop             !none     |irrigation ops data base pointer
-      integer :: jj                !none     |counter
+      integer :: icom = 0          !         |  
+      integer :: idp = 0           !         |
+      integer :: j = 0             !none     |counter
+      integer :: iharvop = 0       !         |harvest operation type 
+      integer :: idtill = 0        !none     |tillage type
+      integer :: ifrt = 0          !         |fertilizer type from fert data base
+      integer :: iob = 0           !         | 
+      integer :: ipestcom = 0      !none     |counter
+      integer :: ipest = 0         !none     |sequential pesticide type from pest community
+      integer :: ipestop = 0       !none     |surface application fraction from chem app data base 
+      integer :: irrop = 0         !none     |irrigation ops data base pointer
+      integer :: jj = 0            !none     |counter
       integer :: isched            !         | 
-      integer :: iburn             !none     |burn type from fire data base
-      integer :: ifertop           !frac     |surface application fraction from chem app data base
-      integer :: iplt_bsn
-      integer :: ireg
-      integer :: ilum
-      real :: fr_curb              !none     |availability factor, the fraction of the 
+      integer :: iburn = 0         !none     |burn type from fire data base
+      integer :: ifertop = 0       !frac     |surface application fraction from chem app data base
+      integer :: iplt_bsn = 0
+      integer :: ireg = 0
+      integer :: ilum = 0
+      real :: fr_curb = 0.         !none     |availability factor, the fraction of the 
       integer :: ires = 0
-      integer :: ipud, ipdl        !none     |counter Jaehak 2022
+      integer :: ipud = 0          !none     |counter Jaehak 2022
+      integer :: ipdl = 0          !none     |counter Jaehak 2022
                                    !         |curb length that is sweepable
-      real :: biomass              !         |
-      real :: frt_kg               !kg/ha    |amount of fertilizer applied
-      real :: pest_kg              !kg/ha    |amount of pesticide applied 
+      real :: biomass = 0.         !         |
+      real :: frt_kg = 0.          !kg/ha    |amount of fertilizer applied
+      real :: pest_kg = 0.         !kg/ha    |amount of pesticide applied 
       real :: chg_par              !variable |new parameter value
-      real :: wsa1
-      real :: harveff
-      integer :: idb               !none     |counter
-      integer :: itr
+      real :: wsa1 = 0.
+      real :: harveff = 0.
+      integer :: idb = 0           !none     |counter
+      integer :: itr = 0
 
       j = ihru
       ires= hru(j)%dbs%surf_stor ! for paddy management Jaehak 2022

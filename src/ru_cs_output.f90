@@ -9,9 +9,9 @@
       implicit none
       
       integer, intent (in) :: iru        !             |
-      integer :: iob                     !             |
-      integer :: ics                     !						 |constituent counter
-      integer :: ihyd                    !             |hydrograph counter
+      integer :: iob = 0                 !             |
+      integer :: ics = 0                 !						 |constituent counter
+      integer :: ihyd = 0                !             |hydrograph counter
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs constituent mass loadings and concentrations from routing units

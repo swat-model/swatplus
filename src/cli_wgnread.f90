@@ -7,17 +7,17 @@
       
       implicit none
             
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: iwgn                 !           | 
-      integer :: mwnd_dir             !           | 
-      integer :: iwndir               !none       |counter
-      integer :: imo                  !none       |counter 
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: iwgn = 0             !           | 
+      integer :: mwnd_dir = 0         !           | 
+      integer :: iwndir = 0           !none       |counter
+      integer :: imo = 0              !none       |counter 
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists  
-      integer :: mo                   !none       !counter
-      integer :: idir                 !none       !counter
+      integer :: mo = 0               !none       !counter
+      integer :: idir = 0             !none       !counter
 
       
       eof = 0
@@ -29,18 +29,18 @@
         allocate (wgn(0:1))
         allocate (wgn_n(1))
         allocate (wgn_orig(0:1))
-        allocate (wgncur(3,0:1))
-        allocate (wgnold(3,0:1))
+        allocate (wgncur(3,0:1), source = 0.)
+        allocate (wgnold(3,0:1), source = 0.)
         wgncur = 0.
         wgnold = 0.
         allocate (wgn_pms(0:1))
-        allocate (frad(0:1,1))
-        allocate (rnd2(0:1))
-         allocate (rnd3(0:1))
-         allocate (rnd8(0:1))
-         allocate (rnd9(0:1))
-         allocate (rndseed(10,0:1))
-         allocate (idg(9))
+        allocate (frad(0:1,1), source = 0.)
+        allocate (rnd2(0:1), source = 0.)
+        allocate (rnd3(0:1), source = 0.)
+        allocate (rnd8(0:1), source = 0.)
+        allocate (rnd9(0:1), source = 0.)
+        allocate (rndseed(10,0:1), source = 0)
+        allocate (idg(9), source = 0)
         call gcycl
       else 
       do
@@ -67,17 +67,17 @@
         allocate (wgn_n(imax))
         allocate (wgn_pms(imax))
         allocate (wgn_orig(imax))
-        allocate (wgncur(3,imax))
-        allocate (wgnold(3,imax))
+        allocate (wgncur(3,imax), source = 0.)
+        allocate (wgnold(3,imax), source = 0.)
         wgncur = 0.
         wgnold = 0.
-        allocate (rnd2(imax))
-        allocate (frad(imax,time%step))
-        allocate (rnd3(imax))
-        allocate (rnd8(imax))
-        allocate (rnd9(imax))
-        allocate (rndseed(10,imax))
-        allocate (idg(9))
+        allocate (rnd2(imax), source = 0.)
+        allocate (frad(imax,time%step), source = 0.)
+        allocate (rnd3(imax), source = 0.)
+        allocate (rnd8(imax), source = 0.)
+        allocate (rnd9(imax), source = 0.)
+        allocate (rndseed(10,imax), source = 0)
+        allocate (idg(9), source = 0)
         rnd2 = 0.
         rnd3 = 0.
         rnd8 = 0.

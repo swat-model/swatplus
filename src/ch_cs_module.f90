@@ -31,7 +31,7 @@
           character (len=6) :: day_mo =     "   day"
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
-          character (len=12) :: id =        " gis_id "           
+          character (len=12) :: id =        " gis_id "
           character(len=18) :: seo4in =     "seo4_in "
           character(len=18) :: seo3in =     "seo3_in  "
           character(len=18) :: bornin =     "born_in  "

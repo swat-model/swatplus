@@ -26,14 +26,15 @@
       
       implicit none 
 
-      integer :: j           !none          |HRU number
-      integer :: jj          !none          |counter
-      real :: xx             !none          |variable to hold intermediate calculation
+      integer :: j = 0       !none          |HRU number
+      integer :: jj = 0      !none          |counter
+      real :: xx = 0.        !none          |variable to hold intermediate calculation
                              !              |result
-      real :: vap            !kg P/ha       |exponential coefficient for P leached and tile flow
-      real :: plch           !kg P/ha       |amount of P leached from soil layer
+      real :: vap = 0.       !kg P/ha       |exponential coefficient for P leached and tile flow
+      real :: plch = 0.      !kg P/ha       |amount of P leached from soil layer
       
-      integer :: ly          !none          |counter 
+      integer :: ly = 0      !none       
+      real :: tmp_calc = 0.
 
       j = ihru
       
@@ -66,6 +67,9 @@
         vap = 0.
 	   if (ly /= i_sep(j)) then
          vap = -soil(j)%ly(ly)%prk / (.01 * soil(j)%phys(ly)%st + .1 * bsn_prm%pperco *  soil(j)%phys(ly)%bd)
+         if (vap < -80.0) then ! This check was added to prevent gfortran aborting on the Exp(ww) function below.
+          vap = -80
+         endif
          plch = .001 * soil1(j)%mp(ly)%lab * (1. - Exp(vap))
          plch = Min(plch, soil1(j)%mp(ly)%lab)
 	     soil1(j)%mp(ly)%lab = soil1(j)%mp(ly)%lab - plch
@@ -84,7 +88,7 @@
            soil1(j)%mp(ly)%lab = soil1(j)%mp(ly)%lab - plch
            hls_d(j)%tilelabp = plch
          endif
-	   endif
+        endif
      !rtb gwflow: store phosphorus leaching concentration for gwflow module
      if(bsn_cc%gwflow == 1 .and. gw_solute_flag == 1) then
        gwflow_percsol(j,2) = hls_d(j)%lchlabp  

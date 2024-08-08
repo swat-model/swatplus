@@ -19,15 +19,15 @@
       
       implicit none
        
-      real :: bb        !none          |variable used to store intermediate 
+      real :: bb = 0.   !none          |variable used to store intermediate 
                         !              |calculation result
-      real :: cnimp     !none          |curve number for impervious areas
-      integer :: j      !none          |HRU number
-      real :: pb        !none          |variable used to store intermediate
+      real :: cnimp = 0.  !none          |curve number for impervious areas
+      integer :: j = 0  !none          |HRU number
+      real :: pb = 0.   !none          |variable used to store intermediate
                         !              |calculation result
-      real :: r2        !none          |retention parameter in CN equation
-      real :: surfqimp  !mm H2O        |surface runoff from impervious area
-      integer :: ulu    !              |
+      real :: r2 = 0.   !none          |retention parameter in CN equation
+      real :: surfqimp = 0.!mm H2O        |surface runoff from impervious area
+      integer :: ulu = 0  !              |
 
       j = ihru
 

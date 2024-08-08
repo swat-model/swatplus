@@ -8,11 +8,11 @@
             
       implicit none
 
-      integer :: iihru              !none   |hru number to send to plant_init
-      integer :: ipl
-      integer :: iplt
-      integer :: ipl_bsn
-      integer :: num_plts_cur       !none   |temporary counter for number of different plants in basin
+      integer :: iihru = 0          !none   |hru number to send to plant_init
+      integer :: ipl = 0
+      integer :: iplt = 0
+      integer :: ipl_bsn = 0
+      integer :: num_plts_cur = 0   !none   |temporary counter for number of different plants in basin
 
       allocate (plts_bsn(db_mx%plantparm))
       

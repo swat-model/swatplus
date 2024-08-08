@@ -9,23 +9,23 @@
       
       implicit none      
       
-      character (len=80) :: titldum   !             |title of file
-      character (len=80) :: header    !             |header of file
-      integer :: eof                  !             |end of file
-      integer :: imax                 !none         |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!             |title of file
+      character (len=80) :: header = "" !             |header of file
+      integer :: eof = 0              !             |end of file
+      integer :: imax = 0             !none         |determine max number for array (imax) and total number in file
       logical :: i_exist              !none         |check to determine if file exists
-      integer :: idb                  !             |
-      integer :: ts_sed               !none         |time step for channel sediment routing
+      integer :: idb = 0              !             |
+      integer :: ts_sed = 0           !none         |time step for channel sediment routing
       
       eof = 0
       imax = 0
       maxint = 10
       
       ts_sed = Max (10, time%step)
-      allocate (timeint(ts_sed))
-      allocate (hyd_rad(ts_sed))
-      allocate (trav_time(ts_sed))
-      allocate (flo_dep(ts_sed))
+      allocate (timeint(ts_sed), source = 0.)
+      allocate (hyd_rad(ts_sed), source = 0.)
+      allocate (trav_time(ts_sed), source = 0.)
+      allocate (flo_dep(ts_sed), source = 0.)
       
       inquire (file=in_cha%hyd_sed, exist=i_exist)
       if (.not. i_exist .or. in_cha%hyd_sed == "null") then

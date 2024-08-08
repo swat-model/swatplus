@@ -10,13 +10,13 @@
       
       implicit none
 
-      character (len=80) :: titldum                        !         |title of file
-      character (len=80) :: header                         !         |header of file
-      integer :: eof                                       !         |end of file
-      integer :: imax                                      !         |determine max number for array (imax) and total number in file
-      integer :: mchg_par                                  !         |
+      character (len=80) :: titldum = ""                   !         |title of file
+      character (len=80) :: header = ""                    !         |header of file
+      integer :: eof = 0                                   !         |end of file
+      integer :: imax = 0                                  !         |determine max number for array (imax) and total number in file
+      integer :: mchg_par = 0                              !         |
       logical :: i_exist                                   !         |check to determine if file exists
-      integer :: i                                         !none     |counter
+      integer :: i = 0                                     !none     |counter
             
       imax = 0
       mchg_par = 0

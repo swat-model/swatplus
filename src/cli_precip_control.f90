@@ -41,11 +41,11 @@
       implicit none
            
       integer, intent (in) :: istart           !none          |0 for initial (first day), 1 for following days
-      integer :: iwgn             !              |
-      integer :: ipg              !              | 
-      integer :: ist              !none          |counter
-      integer :: yrs_to_start     !              |
-      integer :: cur_day
+      integer :: iwgn = 0         !              |
+      integer :: ipg = 0          !              | 
+      integer :: ist = 0          !none          |counter
+      integer :: yrs_to_start = 0 !              |
+      integer :: cur_day = 0
 
       character(len=1) :: out_bounds = 'n'
         

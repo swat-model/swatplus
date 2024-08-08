@@ -9,9 +9,9 @@
       implicit none
       
       integer, intent (in) :: iru        !             |
-      integer :: iob                     !             |
-      integer :: isalt                   !						 |salt ion counter
-      integer :: ihyd                    !             |hydrograph counter
+      integer :: iob = 0                 !             |
+      integer :: isalt = 0               !             |salt ion counter
+      integer :: ihyd = 0                !             |hydrograph counter
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs salt mass loadings and concentrations from routing units

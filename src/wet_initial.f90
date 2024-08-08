@@ -15,17 +15,17 @@
       implicit none
       
       integer, intent (in) :: iihru     !none       |
-      integer :: iprop                  !           |  
-      integer :: init_om
-      integer :: ihyd                   !none       |counter 
-      integer :: init                   !           |
-      integer :: iweir                  !              |
-      integer :: icon                   !           |
-      integer :: isalt									!						|salt ion counter
-      real :: x1                        !           |
-      real :: wet_h                     !           |
-      real :: wet_h1                    !           | 
-      real :: wet_fr                    !           |
+      integer :: iprop = 0              !           |  
+      integer :: init_om = 0
+      integer :: ihyd = 0               !none       |counter 
+      integer :: init = 0               !           |
+      integer :: iweir = 0              !           |
+      integer :: icon = 0               !           |
+      integer :: isalt = 0              !           |salt ion counter
+      real :: x1 = 0.                   !           |
+      real :: wet_h = 0.                !           |
+      real :: wet_h1 = 0.               !           | 
+      real :: wet_fr = 0.               !           |
   
         iprop = hru(iihru)%dbs%surf_stor
         iweir = wet_ob(iihru)%iweir

@@ -11,22 +11,22 @@
       
       implicit none
 
-      integer, intent (in) :: hru_id		 !       |hru number
-      integer :: k                       !       |counter
-      integer :: s                       !       |solute counter
-      integer :: jj                      !       |soil layer counter
-      integer :: cell_id                 !       |cell in connection with the channel
-      real :: hru_Q                      !m3     |volume transferred from cell to the soil profile
-      real :: hru_soilz                  !m      |thickness of HRU soil profile
-      real :: vadose_z    							 !m			 |thickness of cell vadose zone
-      real :: poly_area                  !m2     |area of cell within the HRU
-      real :: solmass(100)               !g      |solute mass transferred from cell
-      real :: water_depth(100)           !m      |depth of groundwater in each soil layer
-      real :: water_depth_tot            !m      |total depth of groundwater in the soil profile
-      real :: sol_thick                  !m      |thickness of soil layer
-      real :: layer_fraction             !       |fraction of saturated soil profile within the layer
-      real :: layer_transfer             !       |amount of water and solute transferred to the soil layer
-      real :: hru_area_m2                !m2     |surface area of the hru
+      integer, intent (in) :: hru_id     !       |hru number
+      integer :: k = 0                   !       |counter
+      integer :: s = 0                   !       |solute counter
+      integer :: jj = 0                  !       |soil layer counter
+      integer :: cell_id = 0             !       |cell in connection with the channel
+      real :: hru_Q = 0.                 !m3     |volume transferred from cell to the soil profile
+      real :: hru_soilz = 0.             !m      |thickness of HRU soil profile
+      real :: poly_area = 0.             !m2     |area of cell within the HRU
+      real :: solmass(100) = 0.          !g      |solute mass transferred from cell
+      real :: vadose_z = 0.              !m       |thickness of cell vadose zone
+      real :: water_depth(100) = 0.      !m      |depth of groundwater in each soil layer
+      real :: water_depth_tot = 0.       !m      |total depth of groundwater in the soil profile
+      real :: sol_thick = 0.             !m      |thickness of soil layer
+      real :: layer_fraction = 0.        !       |fraction of saturated soil profile within the layer
+      real :: layer_transfer = 0.        !       |amount of water and solute transferred to the soil layer
+      real :: hru_area_m2 = 0.           !m2     |surface area of the hru
       
 
 

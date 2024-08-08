@@ -2,7 +2,7 @@
 
       implicit none
     
-      real :: testing_aquifer
+      real :: testing_aquifer = 0.
       
       type salt_balance_aqu
         real :: diss = 0.            !! |kg       |salt ion mass transferred from sorbed phase to dissolved phase

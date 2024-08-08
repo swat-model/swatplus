@@ -9,14 +9,14 @@
       
       implicit none
 
-      integer :: isno                 !none       |counter
-      integer :: ifield_db            !           |
-      integer :: itopohd_db           !           |
-      integer :: ihyd_db              !           |
-      integer :: itopo_db             !           |
-      integer :: isno_db
-      integer :: iob                  !           |
-      real :: perc_ln_func            !none       |function to convert perco to perc_lim
+      integer :: isno = 0             !none       |counter
+      integer :: ifield_db = 0        !           |
+      integer :: itopohd_db = 0       !           |
+      integer :: ihyd_db = 0          !           |
+      integer :: itopo_db = 0         !           |
+      integer :: isno_db = 0
+      integer :: iob = 0              !           |
+      real :: perc_ln_func = 0.       !none       |function to convert perco to perc_lim
     
       !!assign topography and hyd parameters
       do ihru = 1, sp_ob%hru

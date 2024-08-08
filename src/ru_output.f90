@@ -7,7 +7,7 @@
       implicit none
       
       integer, intent (in) :: iru             !             |
-      integer :: iob                          !             |
+      integer :: iob = 0                      !             |
       
       iob = sp_ob1%ru + iru - 1 
    

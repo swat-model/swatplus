@@ -8,25 +8,25 @@
       
       implicit none
 
-      character (len=80) :: titldum    !          |title of file
-      character (len=80) :: header     !          |header of file
-      integer :: eof                   !          |end of file
-      integer :: ihru                  !          |number of hrus
+      character (len=80) :: titldum = "" !          |title of file
+      character (len=80) :: header = ""  !          |header of file
+      integer :: eof = 0               !          |end of file
+      integer :: ihru = 0              !          |number of hrus
       logical :: i_exist               !          |check to determine if file exists
-      integer :: imax                  !          |determine max number for array (imax) and total number in file
-      integer :: mcal                  !units     |description
-      integer :: mreg                  !units     |description
-      integer :: i                     !none      |counter
-      integer :: nspu                  !units     |description
-      integer :: isp                   !none      |counter
-      integer :: ielem                 !none      |counter
-      integer :: ii                    !none      |counter
-      integer :: ie                    !none      |counter
-      integer :: ie1                   !beginning of loop
-      integer :: ie2                   !ending of loop
-      integer :: iord_mx               !ending of loop
-      integer :: iord                  !none      |counter
-      integer :: ich_s                 !none      |counter
+      integer :: imax = 0              !          |determine max number for array (imax) and total number in file
+      integer :: mcal = 0              !units     |description
+      integer :: mreg = 0              !units     |description
+      integer :: i = 0                 !none      |counter
+      integer :: nspu = 0              !units     |description
+      integer :: isp = 0               !none      |counter
+      integer :: ielem = 0             !none      |counter
+      integer :: ii = 0                !none      |counter
+      integer :: ie = 0                !none      |counter
+      integer :: ie1 = 0               !beginning of loop
+      integer :: ie2 = 0               !ending of loop
+      integer :: iord_mx = 0           !ending of loop
+      integer :: iord = 0              !none      |counter
+      integer :: ich_s = 0             !none      |counter
       
       imax = 0
       mcal = 0
@@ -34,7 +34,7 @@
  
       inquire (file=in_chg%ch_sed_budget_sft, exist=i_exist)
       if (.not. i_exist .or. in_chg%ch_sed_budget_sft == "null") then
-           allocate (chcal(0:0))	      
+           allocate (chcal(0:0))
       else 
       do
         open (107,file=in_chg%ch_sed_budget_sft)
@@ -51,7 +51,7 @@
         read (107,*,iostat=eof) chcal(i)%name, chcal(i)%ord_num, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) chcal(i)%name, chcal(i)%ord_num,  nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit         
@@ -74,7 +74,7 @@
             end if
             if (ii == nspu .and. elem_cnt(ii) < 0) exit
           end do
-          allocate (chcal(i)%num(ielem))
+          allocate (chcal(i)%num(ielem), source = 0)
           chcal(i)%num_tot = ielem
 
           ielem = 0
@@ -105,7 +105,7 @@
           deallocate (elem_cnt)
         else
           !!all channels are in region
-          allocate (chcal(i)%num(sp_ob%chandeg))
+          allocate (chcal(i)%num(sp_ob%chandeg), source = 0)
           chcal(i)%num_tot = sp_ob%chandeg
           do ich = 1, sp_ob%chandeg
             chcal(i)%num(ich) = ich

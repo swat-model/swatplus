@@ -9,7 +9,7 @@
       
       implicit none
 
-      real :: snocov2             !none          |2nd shape parameter for snow cover equation
+      real :: snocov2 = 0.        !none          |2nd shape parameter for snow cover equation
                                   !              |This parameter is determined by solving the
                                   !              |equation for 95% snow cover
       snocov1 = 0.

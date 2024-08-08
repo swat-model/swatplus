@@ -40,23 +40,23 @@
           character (len=6) :: day_mo =     "   day"
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
-          character (len=8) :: id =         " gis_id "           
+          character (len=8) :: id =         " gis_id "
           character (len=16) :: name =      " name"
           character (len=16) :: pest =      " pesticide"
           character(len=13) :: tot_in =     "tot_in_kg "            ! (kg)
           character(len=13) :: sol_out =    "sol_out_kg "           ! (kg)
           character(len=14) :: sor_out =    "sor_out_kg "           ! (kg)
-          character(len=13) :: react =      "react_h2o_kg"        	! (kg)
-          character(len=13) :: metab =      "metab_h2o_kg"        	! (kg)
-          character(len=10) :: volat =      "volat_kg"        		! (kg)
-          character(len=10) :: settle =     "settle_kg"        		! (kg)
-          character(len=13) :: resus =      "resuspend_kg"        	! (kg)
-          character(len=11) :: difus =      "diffuse_kg "        	! (kg)
+          character(len=13) :: react =      "react_h2o_kg"          ! (kg)
+          character(len=13) :: metab =      "metab_h2o_kg"          ! (kg)
+          character(len=10) :: volat =      "volat_kg"            ! (kg)
+          character(len=10) :: settle =     "settle_kg"            ! (kg)
+          character(len=13) :: resus =      "resuspend_kg"          ! (kg)
+          character(len=11) :: difus =      "diffuse_kg "          ! (kg)
           character(len=15) :: react_bot =  "react_benth_kg "       ! (kg)
-          character(len=14) :: metab_bot =  "metab_benth_kg "       ! (kg)
+          character(len=15) :: metab_bot =  "metab_benth_kg "       ! (kg)
           character(len=14) :: bury =       "bury_benth_kg "        ! (kg)
           character(len=14) :: water =      "water_stor_kg "        ! (kg)
-          character(len=13) :: benthic =    "benthic_kg"        	! (kg)
+          character(len=13) :: benthic =    "benthic_kg"          ! (kg)
       end type res_pesticide_header
       type (res_pesticide_header) :: respest_hdr
      

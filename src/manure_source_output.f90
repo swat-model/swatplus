@@ -7,8 +7,8 @@
       implicit none
       
       integer, intent (in) :: imallo        !             |
-      integer :: idmd
-      integer :: isrc
+      integer :: idmd = 0
+      integer :: isrc = 0
 
       !! loop through and print each demand object
       do isrc = 1, mallo(imallo)%src_obs

@@ -5,10 +5,10 @@
       
       implicit none
 
-      integer :: imp                  !           |
-      integer :: ihru                 !none       |counter 
-      integer :: iob                  !           |
-      integer :: ihru_db              !           | 
+      integer :: imp = 0              !           |
+      integer :: ihru = 0             !none       |counter 
+      integer :: iob = 0              !           |
+      integer :: ihru_db = 0          !           | 
 
       !!assign database pointers for the hru
       imp = 0

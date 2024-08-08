@@ -29,10 +29,10 @@
 
       type channel_data_char_input
         character(len=16) :: name = "default"
-        character(len=16) :: init                       !points to initial_cha
-        character(len=16) :: hyd                        !points to hydrology.res for hydrology inputs
-        character(len=16) :: sed                        !sediment inputs-points to sediment.res
-        character(len=16) :: nut                        !nutrient inputs-points to nutrient.res
+        character(len=16) :: init = ""                  !points to initial_cha
+        character(len=16) :: hyd = ""                   !points to hydrology.res for hydrology inputs
+        character(len=16) :: sed = ""                   !sediment inputs-points to sediment.res
+        character(len=16) :: nut = ""                   !nutrient inputs-points to nutrient.res
       end type channel_data_char_input
       type (channel_data_char_input), dimension(:), allocatable :: ch_dat_c
 
@@ -84,7 +84,7 @@
       type (channel_hyd_data), dimension(:), allocatable :: ch_hyd
       
       type channel_sed_data
-        character(len=16) :: name
+        character(len=16) :: name = ""
         integer :: eqn  = 0      !               |sediment routine methods: 
                                    !                   0 = original SWAT method
                                    !                   1 = Bagnold"seqn
@@ -108,7 +108,7 @@
       type (channel_sed_data), dimension(:), allocatable :: ch_sed
             
       type channel_nut_data
-        character(len=16) :: name
+        character(len=16) :: name = ""
         real :: onco = 0.        ! ppm           |channel organic n concentration
         real :: opco = 0.        ! ppm           |channel organic p concentration
         real :: rs1 = 1.          ! m/day or m/hr   |local algal settling rate in reach at 20 deg C
@@ -158,7 +158,7 @@
       type (channel_nut_data), dimension(:), allocatable :: ch_nut
 
       type channel_temperature_data
-        character(len=16) :: name
+        character(len=16) :: name = ""
         real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
         real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
         real :: sur_lat = 1.        ! none          |coefficient influencing suface and lateral flow temperature contributions

@@ -33,11 +33,11 @@
       
       implicit none
       
-      integer :: ly             !none        |counter
-      real :: const             !none        |counter
-      integer :: iihru          !none        |counter
-      integer :: j              !none        |counter
-      integer :: iob
+      integer :: ly = 0         !none        |counter
+      real :: const = 0.        !none        |counter
+      integer :: iihru = 0      !none        |counter
+      integer :: j = 0          !none        |counter
+      integer :: iob = 0
            
       !! basin output - zero daily basin outputs before summing
       bsn_org_soil = soil_org_z

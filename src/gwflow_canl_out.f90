@@ -12,20 +12,20 @@
       
       implicit none
 
-      integer :: i                       !       |cell counter
-      integer :: s                       !       |counter of groundwater solutes
-      integer :: cell_id                 !       |cell in connection with the canal 
-      real :: width                      !m      |canal width
-      real :: depth                      !m      |canal depth
-      real :: thick                      !m      |canal bed thickness
-      real :: length                     !m      |length of canal in the cell
-      real :: stage                      !m      |stage of canal in the cell
-      real :: bed_K											 !m/day  |hydraulic conductivity of canal bed in the cell
-      real :: flow_area                  !m2     |groundwater flow area of water exchange, in cell
-      real :: canal_bed                  !m      |canal bed elevation in the cell
-      real :: head_diff                  !m      |head difference between canal stage and groundwater head
-      real :: Q                          !m3/day |water exchange flow rate, calculated by Darcy's Law
-      real :: solmass(100)               !g      |solute mass transferred
+      integer :: i = 0                   !       |cell counter
+      integer :: s = 0                   !       |counter of groundwater solutes
+      integer :: cell_id = 0             !       |cell in connection with the canal 
+      real :: width = 0.                 !m      |canal width
+      real :: depth = 0.                 !m      |canal depth
+      real :: thick = 0.                 !m      |canal bed thickness
+      real :: length = 0.                !m      |length of canal in the cell
+      real :: stage = 0.                 !m      |stage of canal in the cell
+      real :: bed_K = 0.                 !m/day  |hydraulic conductivity of canal bed in the cell
+      real :: flow_area = 0.             !m2     |groundwater flow area of water exchange, in cell
+      real :: canal_bed = 0.             !m      |canal bed elevation in the cell
+      real :: head_diff = 0.             !m      |head difference between canal stage and groundwater head
+      real :: Q = 0.                     !m3/day |water exchange flow rate, calculated by Darcy's Law
+      real :: solmass(100) = 0.          !g      |solute mass transferred
       
       
       

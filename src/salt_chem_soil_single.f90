@@ -15,12 +15,34 @@
 
       implicit none
 
-      integer j,jj,m,n,dum,iter_count,hru_num,lay_num
-      real    ion1,ion2,ion3,ion4,ion5,ion6,ion7,ion8
-      real    sol_water,sol_thick,waterC,sol_bd,&        
-          Sol_CaCO3_p(1000),Sol_MgCO3_p(1000),Sol_CaSO4_p(1000),&        
-          Sol_MgSO4_p(1000),Sol_NaCl_p(1000)
-      real    I_Prep_in,I_diff,SkipedIEX
+      integer :: j = 0
+      integer :: jj = 0
+      integer :: m = 0
+      integer :: n = 0
+      integer :: dum = 0
+      integer :: iter_count = 0
+      integer :: hru_num
+      integer :: lay_num
+      real :: ion1 = 0.
+      real :: ion2 = 0.
+      real :: ion3 = 0.
+      real :: ion4 = 0.
+      real :: ion5 = 0.
+      real :: ion6 = 0.
+      real :: ion7 = 0.
+      real :: ion8 = 0.
+      real :: sol_water = 0.
+      real :: sol_thick = 0.
+      real :: waterC
+      real :: sol_bd = 0.
+      real :: Sol_CaCO3_p(1000) = 0.
+      real :: Sol_MgCO3_p(1000) = 0.
+      real :: Sol_CaSO4_p(1000) = 0.
+      real :: Sol_MgSO4_p(1000) = 0.
+      real :: Sol_NaCl_p(1000) = 0.
+      real :: I_Prep_in = 0.
+      real :: I_diff = 0.
+      real :: SkipedIEX = 0.
       double precision IonStr,IS_temp,&                 
           K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,&                 
           error1ST,error2ND,error3RD,errorTotal

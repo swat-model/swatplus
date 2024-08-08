@@ -27,14 +27,14 @@
           character (len=6) :: day_mo =     "   day"
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
-          character (len=8) :: id =         " gis_id "           
-          character (len=16) :: name =      " name              "        
-          character(len=16) :: pth_in =     " path_in_#cfu/100ml"         ! # cfu/100ml
-          character(len=15) :: pth_out =    " path_out_#cfu/100ml"        ! # cfu/100ml
-          character(len=15) :: dre_off =    "  dre_off_#cfu/100ml "         ! # cfu/100ml
-          character(len=15) :: regrow =     "    regrow_#cfu/100ml"         ! # cfu/100ml
-          character(len=15) :: water =      " water_stor_#cfu/100ml"        ! # cfu/100ml
-          character(len=15) :: benthic =    "   benthic_#cfu/100ml"         ! # cfu/100ml
+          character (len=8) :: id =         " gis_id "
+          character (len=16) :: name =      " name           "
+          character(len=19) :: pth_in =     " path_in_#cfu/100ml"         ! # cfu/100ml
+          character(len=20) :: pth_out =    " path_out_#cfu/100ml"        ! # cfu/100ml
+          character(len=21) :: dre_off =    "  dre_off_#cfu/100ml "         ! # cfu/100ml
+          character(len=21) :: regrow =     "    regrow_#cfu/100ml"         ! # cfu/100ml
+          character(len=22) :: water =      " water_stor_#cfu/100ml"        ! # cfu/100ml
+          character(len=21) :: benthic =    "   benthic_#cfu/100ml"         ! # cfu/100ml
       end type ch_pathogen_header
       type (ch_pathogen_header) :: chpath_hdr
      

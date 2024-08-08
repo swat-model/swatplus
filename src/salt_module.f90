@@ -10,7 +10,7 @@
         real :: diss = 0.            !! |kg/ha       |salt ion mass transferred from sorbed phase to dissolved phase
         real :: surq = 0.            !! |kg/ha       |salt ion mass lost in surface runoff in HRU
         real :: latq = 0.            !! |kg/ha       |salt ion mass in lateral flow in HRU
-        real :: urbq = 0.            !! |kg/ha			 |salt ion mass in urban runoff
+        real :: urbq = 0.            !! |kg/ha       |salt ion mass in urban runoff
         real :: wetq = 0.            !! |kg/ha       |salt ion mass in wetland runoff
         real :: tile = 0.            !! |kg/ha       |salt ion mass in tile flow in HRU
         real :: perc = 0.            !! |kg/ha       |salt ion mass leached past bottom of soil
@@ -25,7 +25,7 @@
         real :: fert = 0.            !! |kg/ha       |salt ion mass added to soil via fertilizer 
         real :: amnd = 0.            !! |kg/ha       |salt ion mass added to soil via salt amendments
         real :: uptk = 0.            !! |kg/ha       |salt ion mass taken up by crop roots
-        real :: conc = 0.						 !! |mg/L        |salt ion concentration in soil water (averaged over all soil layers)
+        real :: conc = 0.            !! |mg/L        |salt ion concentration in soil water (averaged over all soil layers)
       end type salt_balance
       
       type object_salt_balance
@@ -66,7 +66,7 @@
       
       !salt uptake
       real, dimension(:,:), allocatable :: salt_uptake_kg       !specified daily salt mass taken up by crop roots (kg/ha)
-      integer :: salt_uptake_on                                 !flag for simulating salt uptake
+      integer :: salt_uptake_on = 0                             !flag for simulating salt uptake
       
       !urban salt concentrations
       real, dimension(:,:), allocatable :: salt_urban_conc      !salt ion conc in suspended solid load from imp areas (mg salt / kg sed)
@@ -75,7 +75,7 @@
       type output_saltbal_header
          character (len=8) :: yrc =        "      yr"
          character (len=8) :: mon =        "      mo"
-         character (len=8) :: day =        "    jday"  
+         character (len=8) :: day =        "    jday"
          character(len=16) :: lat =        "     lat_kg"
          character(len=16) :: gw =         "      gw_kg"
          character(len=16) :: sur =        "     sur_kg"

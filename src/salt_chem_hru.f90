@@ -30,17 +30,43 @@
 
       implicit none
 
-      integer j,jj,m,iter_count
-      real    ion1,ion2,ion3,ion4,ion5,ion6,ion7,ion8,&        
-          hru_area_m2,water_volume
-      real    sol_water,sol_thick,waterC,&        
-          Sol_CaCO3_p(1000),Sol_MgCO3_p(1000),Sol_CaSO4_p(1000),&        
-          Sol_MgSO4_p(1000),Sol_NaCl_p(1000)
-      real    I_Prep_in,I_diff,SkipedIEX
-      real    soil_volume,mass_before,mass_after,&        
-          salt_mass_kg,soil_mass,sol_bd,&        
-          mass_before_dis,mass_before_sol,total_before,&        
-          mass_after_dis,mass_after_sol,total_after
+      integer :: j = 0
+      integer :: jj = 0
+      integer :: m = 0
+      integer :: iter_count = 0
+      real :: ion1 = 0.
+      real :: ion2 = 0.
+      real :: ion3 = 0.
+      real :: ion4 = 0.
+      real :: ion5 = 0.
+      real :: ion6 = 0.
+      real :: ion7 = 0.
+      real :: ion8 = 0.
+      real :: hru_area_m2 = 0.
+      real :: water_volume = 0.
+      real :: sol_water = 0.
+      real :: sol_thick = 0.
+      real :: waterC = 0.
+      real :: Sol_CaCO3_p(1000) = 0.
+      real :: Sol_MgCO3_p(1000) = 0.
+      real :: Sol_CaSO4_p(1000) = 0.
+      real :: Sol_MgSO4_p(1000) = 0.
+      real :: Sol_NaCl_p(1000) = 0.
+      real :: I_Prep_in = 0.
+      real :: I_diff = 0.
+      real :: SkipedIEX = 0.
+      real :: soil_volume = 0.
+      real :: mass_before = 0.
+      real :: mass_after = 0.
+      real :: salt_mass_kg = 0.
+      real :: soil_mass = 0.
+      real :: sol_bd = 0.
+      real :: mass_before_dis = 0.
+      real :: mass_before_sol = 0.
+      real :: total_before = 0.
+      real :: mass_after_dis = 0.
+      real :: mass_after_sol = 0.
+      real :: total_after = 0.
       double precision IonStr,IS_temp,&                 
           K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,&                 
           error1ST,error2ND,error3RD,errorTotal
@@ -104,10 +130,10 @@
         do m=1,cs_db%num_salts
           if(cs_soil(j)%ly(jj)%salt(m).lt.0) then
             cs_soil(j)%ly(jj)%salt(m) = 0.
-			endif
+          endif
           if(cs_soil(j)%ly(jj)%saltc(m).lt.0) then
             cs_soil(j)%ly(jj)%saltc(m) = 0.
-			endif
+          endif
           salt_mass_kg = cs_soil(j)%ly(jj)%salt(m) * hru(j)%area_ha !kg of salt
           mass_before = mass_before + salt_mass_kg
           if(water_volume.gt.0) then
@@ -355,7 +381,7 @@
       implicit none
 
       double precision IS_temp,A,B,C,D,E,F,G
-      real CharBal(7)
+      real :: CharBal(7)
       
       DATA CharBal/2.0, -2.0, -2.0, -1.0, 2.0, 1.0, 1.0/     
       
@@ -380,11 +406,14 @@
       use salt_data_module
       use organic_mineral_mass_module
 
-      real CharBal(7),a_size(7),I_Prep_in
+      real :: CharBal(7)
+      real :: a_size(7)
+      real :: I_Prep_in
       DATA CharBal/2.0, -2.0, -2.0, -1.0, 2.0, 1.0, 1.0/
       DATA a_size/6.0, 4.0, 4.5, 4.0, 8.0, 4.5, 3.0/
-      integer :: ii
-      real :: A,B
+      integer :: ii = 0
+      real :: A = 0.
+      real :: B = 0.
       A = 0.5 !at 298 K
       B = 0.33 !at 298 K
       
@@ -768,11 +797,29 @@
       use salt_data_module
 
       implicit none 
-      real CEC,Sel_K1,Sel_K2,Sel_K3,Sel_K4,Sel_K5,Sel_K6,&     
-          XCAINI,XMGINI,XNAINI,XKINI,&     
-          DeltaX_Ca,DeltaX_Mg,DeltaX_Na,DeltaX_K,&     
-          Con_Ca,Con_Mg,Con_Na,Con_K,&     
-          X_Ca,X_Mg,X_Na,X_K
+      real :: CEC = 0.
+      real :: Sel_K1 = 0.
+      real :: Sel_K2 = 0.
+      real :: Sel_K3 = 0.
+      real :: Sel_K4 = 0.
+      real :: Sel_K5 = 0.
+      real :: Sel_K6 = 0.
+      real :: XCAINI = 0.
+      real :: XMGINI = 0.
+      real :: XNAINI = 0.
+      real :: XKINI = 0.
+      real :: DeltaX_Ca = 0.
+      real :: DeltaX_Mg = 0.
+      real :: DeltaX_Na = 0.
+      real :: DeltaX_K = 0.
+      real :: Con_Ca = 0.
+      real :: Con_Mg = 0.
+      real :: Con_Na = 0.
+      real :: Con_K = 0.
+      real :: X_Ca = 0.
+      real :: X_Mg = 0.
+      real :: X_Na = 0.
+      real :: X_K = 0.
 
       !CEC selected based on soil type; for simplicity, for now used one value based on the sandy-loam soil type
       CEC = 15 ! meq/100g soil 

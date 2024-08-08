@@ -20,12 +20,12 @@
       
       implicit none
 
-      integer :: iadep            !            |
-      integer :: j                !none        |counter
-      integer :: iob              !            |
-      integer :: ist              !            |
-      integer :: ics              !            |constituent counter
-      real :: const               !            |constant used for rate, days, etc
+      integer :: iadep = 0        !            |
+      integer :: j = 0            !none        |counter
+      integer :: iob = 0          !            |
+      integer :: ist = 0          !            |
+      integer :: ics = 0          !            |constituent counter
+      real :: const = 0.          !            |constant used for rate, days, etc
 
       j = ihru
       
@@ -51,7 +51,7 @@
             hcsb_d(j)%cs(ics)%dryd = atmodep_cs(iadep)%cs(ics)%drymo(ist) / const  !kg/ha
             !add both to soil profile  
             cs_soil(j)%ly(1)%cs(ics) = cs_soil(j)%ly(1)%cs(ics) + (hcsb_d(j)%cs(ics)%rain + hcsb_d(j)%cs(ics)%dryd)
-					enddo
+          enddo
         end if 
         
         !yearly values
@@ -63,7 +63,7 @@
             hcsb_d(j)%cs(ics)%dryd = atmodep_cs(iadep)%cs(ics)%dryyr(ist) / 365.  !kg/ha
             !add both to soil profile  
             cs_soil(j)%ly(1)%cs(ics) = cs_soil(j)%ly(1)%cs(ics) + (hcsb_d(j)%cs(ics)%rain + hcsb_d(j)%cs(ics)%dryd)
-					enddo  
+          enddo  
         endif
         
       end if
@@ -77,9 +77,9 @@
           hcsb_d(j)%cs(ics)%dryd = atmodep_cs(iadep)%cs(ics)%dry / 365.  !kg/ha
           !add both to soil profile  
           cs_soil(j)%ly(1)%cs(ics) = cs_soil(j)%ly(1)%cs(ics) + (hcsb_d(j)%cs(ics)%rain + hcsb_d(j)%cs(ics)%dryd)
-				enddo
+        enddo
       endif
-		
+
       endif
       
       

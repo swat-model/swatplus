@@ -4,7 +4,7 @@
      
       !! hydrology.hyd
       type hydrology_db
-        character(len=16) :: name  !!none          |0          |0      |name
+        character(len=16) :: name = ""!!none          |0          |0      |name
         real :: lat_ttime = 0.     !!days          |0-120      |0      |Exponential of the lateral flow travel time
         real :: lat_sed = 0.       !!g/L           |sediment concentration in lateral flow
         real :: canmx = 0.         !!mm H2O        |maximum canopy storage

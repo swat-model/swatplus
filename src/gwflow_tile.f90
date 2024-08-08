@@ -10,18 +10,18 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
-      integer :: k                       !       |counter for cells connected to the channel
-      integer :: cell_id                 !			 |id of cell connected to the channel
-      integer :: s                       !       |counter of groundwater solutes
-      integer :: isalt                   !       |salt ion counter
-      integer :: ics                     !       |constituent counter
-      integer :: sol_index
-      real :: chan_volume                !m3     |water volume in channel before groundwater exchange occurs
-      real :: tile_elev                  !m      |elevation of tile drain
-      real :: head_diff                  !m      |head difference between groundwater head and tile drain
-      real :: Q                          !m3/day |tile drainage outflow rate, calculated by Darcy's Law
-      real :: solmass(100)               !g      |solute mass transferred from groundwater to channel, via tile
+      integer, intent (in) :: chan_id    !       |channel number
+      integer :: k = 0                   !       |counter for cells connected to the channel
+      integer :: cell_id = 0             !       |id of cell connected to the channel
+      integer :: s = 0                   !       |counter of groundwater solutes
+      integer :: isalt = 0               !       |salt ion counter
+      integer :: ics = 0                 !       |constituent counter
+      integer :: sol_index = 0
+      real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
+      real :: tile_elev = 0.             !m      |elevation of tile drain
+      real :: head_diff = 0.             !m      |head difference between groundwater head and tile drain
+      real :: Q = 0.                     !m3/day |tile drainage outflow rate, calculated by Darcy's Law
+      real :: solmass(100) = 0.          !g      |solute mass transferred from groundwater to channel, via tile
       
       
       

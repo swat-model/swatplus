@@ -23,31 +23,31 @@
       
       implicit none 
       
-      integer :: iday                    !            |
-      integer :: ihdmx                   !            |
-      real :: sumfrac                    !            |
-      real :: sumarea                    !            |
-      integer :: ielem                   !none        |counter
-      integer :: ise                     !none        |counter
-      integer :: iob                     !            |
-      integer :: iday_cur                !            |
-      integer :: ihtypno                 !            |
-      real :: ef                         !            | 
-      real :: cnv_m3                     !            |
-      real :: cnv                        !            |hru conversion from mm to m3 with del ratio applied
-      integer :: ii                      !none        |counter
-      real :: ts_flo_mm                  !mm          |total flow during the time step
-      real :: rto                        !none        |cloud cover factor
-      integer :: istep                   !            |
-      integer :: ipest                   !            |
-      integer :: isalt                   !            |salt ion counter
-      integer :: ics                     !            |constituent counter
-      integer :: hru_num
-      integer :: istep_bak               !none        |counter
-      integer :: day_cur                 !none        |counter
-      integer :: day_next                !none        |counter
-      integer :: tinc                    !none        |
-      integer :: inext_step
+      integer :: iday = 0                !            |
+      integer :: ihdmx = 0               !            |
+      real :: sumfrac = 0.               !            |
+      real :: sumarea = 0.               !            |
+      integer :: ielem = 0               !none        |counter
+      integer :: ise = 0                 !none        |counter
+      integer :: iob = 0                 !            |
+      integer :: iday_cur = 0            !            |
+      integer :: ihtypno = 0             !            |
+      real :: ef = 0.                    !            | 
+      real :: cnv_m3 = 0.                !            |
+      real :: cnv = 0.                   !            |hru conversion from mm to m3 with del ratio applied
+      integer :: ii = 0                  !none        |counter
+      real :: ts_flo_mm = 0.             !mm          |total flow during the time step
+      real :: rto = 0.                   !none        |cloud cover factor
+      integer :: istep = 0               !            |
+      integer :: ipest = 0               !            |
+      integer :: isalt = 0               !            |salt ion counter
+      integer :: ics = 0                 !            |constituent counter
+      integer :: hru_num = 0
+      integer :: istep_bak = 0           !none        |counter
+      integer :: day_cur = 0             !none        |counter
+      integer :: day_next = 0            !none        |counter
+      integer :: tinc = 0                !none        |
+      integer :: inext_step = 0
            
       iday = 1
       ihdmx = 2
@@ -286,5 +286,5 @@
         ob(icmd)%hyd_flo(day_cur,1) = ob(icmd)%hd(1)%flo
       end if
       
-	return
+    return
     end subroutine ru_control

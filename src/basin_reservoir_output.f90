@@ -8,8 +8,8 @@
       
       implicit none
       
-      integer :: ires        !none      |counter
-      real :: const
+      integer :: ires = 0    !none      |counter
+      real :: const = 0.
      
         !! zero daily variables
         bres = resmz

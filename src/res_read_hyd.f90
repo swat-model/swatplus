@@ -7,12 +7,12 @@
       
       implicit none     
          
-      character (len=80) :: titldum     !             |title of file
-      character (len=80) :: header      !             |header of file
-      integer :: eof                    !             |end of file
-      integer :: imax                   !             |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""  !             |title of file
+      character (len=80) :: header = "" !             |header of file
+      integer :: eof = 0                !             |end of file
+      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: ires                   !none         |counter
+      integer :: ires = 0               !none         |counter
       
       eof = 0
       imax = 0

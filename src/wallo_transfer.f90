@@ -11,8 +11,8 @@
 
       integer, intent (in):: iwallo         !water allocation object number
       integer, intent (in) :: idmd          !water demand object number
-      integer :: j                  !none       |object number of specific type (cha, res, aqu, etc)
-      integer :: iob                !none       |object number (ob)
+      integer :: j = 0              !none       |object number of specific type (cha, res, aqu, etc)
+      integer :: iob = 0            !none       |object number (ob)
 
       !! check if water is available from each source - set withdrawal and unmet
       select case (wallo(iwallo)%dmd(idmd)%rcv_ob)

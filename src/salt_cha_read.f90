@@ -10,12 +10,13 @@
  
       implicit none
       
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist
-      integer :: isalt
-      integer :: isalti
+      integer :: isalt = 0
+      integer :: isalti = 0
 
       eof = 0
       
@@ -40,7 +41,7 @@
           allocate (salt_cha_ini(imax))
 
           do isalt=1,imax
-            allocate (salt_cha_ini(isalt)%conc(cs_db%num_salts))
+            allocate (salt_cha_ini(isalt)%conc(cs_db%num_salts), source = 0.)
           enddo
           
           rewind (107)

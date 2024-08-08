@@ -3,7 +3,7 @@
       implicit none    
           
       type pesticide_db
-        character(len=16) :: name   !!                      |pesticide name
+        character(len=16) :: name = ""!!                      |pesticide name
         real :: koc = 0.            !! (mL/g)               |soil adsorption coeff normalized for soil org carbon content
         real :: washoff = 0.        !! none                 |frac of pesticide on foliage which is washed off by rainfall event 
         real :: foliar_hlife = 0.   !! days                 |half-life of pest on foliage
@@ -18,17 +18,17 @@
         real :: ben_bury = 0.       !! m/day                |burial velocity in benthic sediment
         real :: ben_hlife = 0.      !! days                 |half-life of pest in benthic sediment
         real :: pl_uptake = 0.      !! none                 |fraction taken up by plant 
-        character(len=32) :: descrip                        !pesticide description
+        character(len=32) :: descrip = ""                   !pesticide description
       end type pesticide_db
       type (pesticide_db), dimension(:), allocatable, save :: pestdb
       
       type daughter_decay_fractions
-        character(len=16) :: name   !! daughter pesticide name
-        integer :: num              !! sequential pesticide number in simulation
-        real :: foliar_fr           !! 0-1                  |fraction of parent foilar degrading to daughter
-        real :: soil_fr             !! 0-1                  |fraction of parent soil degrading to daughter
-        real :: aq_fr               !! 0-1                  |fraction of parent aquatic degrading to daughter
-        real :: ben_fr              !! 0-1                  |fraction of parent benthic degrading to daughter
+        character(len=16) :: name = ""!! daughter pesticide name
+        integer :: num = 0          !! sequential pesticide number in simulation
+        real :: foliar_fr = 0.      !! 0-1                  |fraction of parent foilar degrading to daughter
+        real :: soil_fr = 0.        !! 0-1                  |fraction of parent soil degrading to daughter
+        real :: aq_fr = 0.          !! 0-1                  |fraction of parent aquatic degrading to daughter
+        real :: ben_fr = 0.         !! 0-1                  |fraction of parent benthic degrading to daughter
       end type daughter_decay_fractions
       
       type pesticide_cp         !! calculated parameters from input parms

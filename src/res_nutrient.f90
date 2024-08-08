@@ -9,15 +9,15 @@
       implicit none      
       
       integer, intent (in) :: iob
-      real :: nitrok             !              |
-      real :: phosk              !              |
-      real :: tpco               !              |
-      real :: chlaco             !              |
-      integer :: iwst            !none          |weather station number
-      real :: nsetlr             !              |
-      real :: psetlr             !              |
-      real :: conc_n             !              |
-      real :: conc_p             !              |
+      real :: nitrok = 0.        !              |
+      real :: phosk = 0.         !              |
+      real :: tpco = 0.          !              |
+      real :: chlaco = 0.        !              |
+      integer :: iwst = 0        !none          |weather station number
+      real :: nsetlr = 0.        !              |
+      real :: psetlr = 0.        !              |
+      real :: conc_n = 0.        !              |
+      real :: conc_p = 0.        !              |
       real :: theta              !              |
       
 

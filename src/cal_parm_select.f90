@@ -45,15 +45,15 @@
       integer, intent (in) :: ielem                         !                | 
       integer, intent (in) :: num_db                        !                | 
       integer, intent (in) :: ly                            !                |
-      integer :: jj                                         !                |soil layer counter
-      integer :: ipl                                        !                |soil layer counter
-      integer :: ihru                                       !                |hru counter
+      integer :: jj = 0                                     !                |soil layer counter
+      integer :: ipl = 0                                    !                |soil layer counter
+      integer :: ihru = 0                                   !                |hru counter
       real :: exp                                           !                | 
-      real :: c_val                                         !                | 
-      real :: abmax                                         !                | 
+      real :: c_val = 0.                                    !                | 
+      real :: abmax = 0.                                    !                | 
       real :: chg_par                                       !variable        |new parameter value
-      real :: perc_ln_func                                  !none       |function to convert perco to perc_lim
-      real :: rock                                          !                | 
+      real :: perc_ln_func = 0.                             !none       |function to convert perco to perc_lim
+      real :: rock = 0.                                     !                | 
 
       select case (chg_parm)
 

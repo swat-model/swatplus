@@ -16,15 +16,15 @@
       real, intent (in) :: at2           !none          |monthly mean for distribution
       real, intent (in) :: at3           !none          |upper limit for distribution
       integer, intent (in out) :: at4i   !none          |random number seed 
-      real :: u3                         !              | 
-      real :: rn                         !none          |random number between 0.0 and 1.0
-      real :: y                          !              | 
-      real :: b1                         !              | 
-      real :: b2                         !              | 
-      real :: x1                         !              | 
-      real :: xx                         !              | 
-      real :: yy                         !              | 
-      real :: amn                        !              | 
+      real :: u3 = 0.                    !              | 
+      real :: rn = 0.                    !none          |random number between 0.0 and 1.0
+      real :: y = 0.                     !              | 
+      real :: b1 = 0.                    !              | 
+      real :: b2 = 0.                    !              | 
+      real :: x1 = 0.                    !              | 
+      real :: xx = 0.                    !              | 
+      real :: yy = 0.                    !              | 
+      real :: amn = 0.                   !              | 
       real :: atri                       !none          |daily value generated for distribution
       real :: aunif                      !              | 
 

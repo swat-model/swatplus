@@ -6,11 +6,11 @@
       implicit none
       
       integer :: irch     !none      |counter
-      integer :: ised     !none      |counter
+      integer :: ised = 0 !none      |counter
       integer :: idat     !units     |description
-      real :: bnksize     !units     |description
-      real :: bedsize     !units     |description
-      real :: sc          !units     |description    
+      real :: bnksize = 0.  !units     |description
+      real :: bedsize = 0.  !units     |description
+      real :: sc = 0.     !units     |description    
       
       ised = ch_dat(idat)%sed
       bnksize = ch_sed(ised)%bnk_d50 / 1000.  !! Units conversion Micrometer to Millimeters

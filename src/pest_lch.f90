@@ -35,17 +35,17 @@
       
       implicit none        
       
-      integer :: j         !none          |HRU number
-      integer :: k         !none          |counter
-      integer :: ipest_db  !none          |pesticide number from pest.dat
-      integer :: ly        !none          |counter (soil layers)
-      real :: kd                !(mg/kg)/(mg/L) |koc * carbon
-      real :: yy           !              |
-      real :: vf           !              |
-      real :: xx           !kg/ha         |amount of pesticide removed from soil layer
-      real :: zdb1         !              |
-      real :: co           !kg/mm-ha      |concentration of pesticide in water
-      real :: csurf        !kg/mm-ha      |concentration of pesticide in surq and latq            | 
+      integer :: j = 0     !none          |HRU number
+      integer :: k = 0     !none          |counter
+      integer :: ipest_db = 0!none          |pesticide number from pest.dat
+      integer :: ly = 0    !none          |counter (soil layers)
+      real :: kd = 0.           !(mg/kg)/(mg/L) |koc * carbon
+      real :: yy = 0.      !              |
+      real :: vf = 0.      !              |
+      real :: xx = 0.      !kg/ha         |amount of pesticide removed from soil layer
+      real :: zdb1 = 0.    !              |
+      real :: co = 0.      !kg/mm-ha      |concentration of pesticide in water
+      real :: csurf = 0.   !kg/mm-ha      |concentration of pesticide in surq and latq            | 
 
       j = ihru
 

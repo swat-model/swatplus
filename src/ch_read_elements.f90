@@ -8,21 +8,21 @@
       
       implicit none
 
-      character (len=80) :: titldum    !          |title of file
-      character (len=80) :: header     !          |header of file
-      integer :: eof                   !          |end of file
-      integer :: imax                  !          |determine max number for array (imax) and total number in file
-      integer :: mcal                  !units     |description
+      character (len=80) :: titldum = "" !          |title of file
+      character (len=80) :: header = ""  !          |header of file
+      integer :: eof = 0               !          |end of file
+      integer :: imax = 0              !          |determine max number for array (imax) and total number in file
+      integer :: mcal = 0              !units     |description
       logical :: i_exist               !          |check to determine if file exists
-      integer :: mreg                  !units     |description 
-      integer :: i                     !none      |counter
-      integer :: k                     !units     |description
-      integer :: nspu                  !units     |description
-      integer :: isp                   !none      |counter
-      integer :: ielem1                !units     |description
-      integer :: icha                  !none      |counter 
-      integer :: ireg                  !none      |counter
-      integer :: ires                  !none      |counter
+      integer :: mreg = 0              !units     |description 
+      integer :: i = 0                 !none      |counter
+      integer :: k = 0                 !units     |description
+      integer :: nspu = 0              !units     |description
+      integer :: isp = 0               !none      |counter
+      integer :: ielem1 = 0            !units     |description
+      integer :: icha = 0              !none      |counter 
+      integer :: ireg = 0              !none      |counter
+      integer :: ires = 0              !none      |counter
      
       imax = 0
       mcal = 0
@@ -39,27 +39,30 @@
         read (107,*,iostat=eof) header
         
         !! allocate channel outputs for regions
-        allocate (schsd_d(0:mreg)); allocate (schsd_m(0:mreg)); allocate (schsd_y(0:mreg)); allocate (schsd_a(0:mreg))
+        allocate (schsd_d(0:mreg))
+        allocate (schsd_m(0:mreg))
+        allocate (schsd_y(0:mreg))
+        allocate (schsd_a(0:mreg))
 
       do i = 1, mreg
 
         read (107,*,iostat=eof) k, ccu_out(i)%name, ccu_out(i)%area_ha, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, ccu_out(i)%name, ccu_out(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (ccu_out(i)%num(ielem1))
+          allocate (ccu_out(i)%num(ielem1), source = 0)
           ccu_out(i)%num = defunit_num
           ccu_out(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (ccu_out(i)%num(sp_ob%hru))
+          allocate (ccu_out(i)%num(sp_ob%hru), source = 0)
           ccu_out(i)%num_tot = sp_ob%res
           do icha = 1, sp_ob%chan
             ccu_out(i)%num(ires) = icha
@@ -90,20 +93,20 @@
         read (107,*,iostat=eof) k, ccu_reg(i)%name, ccu_reg(i)%area_ha, nspu      
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, ccu_reg(i)%name, ccu_reg(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (ccu_reg(i)%num(ielem1))
+          allocate (ccu_reg(i)%num(ielem1), source = 0)
           ccu_reg(i)%num = defunit_num
           ccu_reg(i)%num_tot = ielem1
 
         else
           !!all channels are in region 
-          allocate (ccu_reg(i)%num(sp_ob%hru))
+          allocate (ccu_reg(i)%num(sp_ob%hru), source = 0)
           ccu_reg(i)%num_tot = sp_ob%chan
           do icha = 1, sp_ob%chan
             ccu_reg(i)%num(icha) = icha

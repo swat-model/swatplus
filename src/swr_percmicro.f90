@@ -38,11 +38,11 @@
       implicit none
       
       integer, intent (in) :: ly1     !none          |soil layer number
-      integer :: j                    !none          |HRU number
-      real :: ho                      !none          |variable to hold intermediate calculation
+      integer :: j = 0                !none          |HRU number
+      real :: ho = 0.                 !none          |variable to hold intermediate calculation
                                       !              |result
-      real :: ratio                   !none          |ratio of seepage to (latq + sepday)
-      real :: sol_k_sep               !              |
+      real :: ratio = 0.              !none          |ratio of seepage to (latq + sepday)
+      real :: sol_k_sep = 0.          !              |
 
       j = ihru
 

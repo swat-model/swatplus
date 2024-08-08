@@ -14,9 +14,9 @@
        
        implicit none
       
-       character (len=80) :: titldum   !           |title of file
-       character (len=80) :: header    !           |header of file
-       integer :: eof                  !           |end of file
+       character (len=80) :: titldum = ""!           |title of file
+       character (len=80) :: header = "" !           |header of file
+       integer :: eof = 0              !           |end of file
        logical :: i_exist              !none       |check to determine if file exists
        
        eof = 0
@@ -24,7 +24,7 @@
        inquire (file=in_chg%codes_sft, exist=i_exist)
        if (.not. i_exist .or. in_chg%codes_sft == "null") then
  !       allocate (cal_codes(0:0))
-       else		            
+       else
          do 
            open (107,file=in_chg%codes_sft)
            read (107,*,iostat=eof) titldum
@@ -40,7 +40,7 @@
              cal_codes%plt == "y" .or. cal_codes%sed == "y" .or.            &
              cal_codes%nut == "y" .or. cal_codes%chsed == "y" .or.          &
              cal_codes%chnut == "y" .or. cal_codes%res == "y") cal_soft = "y"
-	   end if
+         end if
        
        close(107)
        return

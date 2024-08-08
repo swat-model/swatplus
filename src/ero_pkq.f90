@@ -29,11 +29,11 @@
       
       implicit none
 
-      integer :: j      !none          |HRU number
-      real :: altc      !              |
-      real :: qp_cfs    !ft3/s         |peak flow rate    
-      integer :: iob    !              | 
-      real :: xx
+      integer :: j = 0  !none          |HRU number
+      real :: altc = 0. !              |
+      real :: qp_cfs = 0. !ft3/s         |peak flow rate    
+      integer :: iob = 0  !              | 
+      real :: xx = 0.
       
       j = ihru
       iob = hru(j)%obj_no

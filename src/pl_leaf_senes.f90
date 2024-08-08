@@ -12,17 +12,17 @@
       
       implicit none 
       
-      integer :: j              !none               |HRU number
-      integer :: idp            !                   |
-      integer :: iob            !                   |
-      integer :: iwgn           !                   |
-      real :: rto               !none               |ratio of current years of growth:years to maturity of perennial
-      real :: ppet              !mm/mm              |running average of precip over pet
-      real :: leaf_tov_mon      !months             |leaf turnover rate months
-      real :: coef              !                   |coefficient for ppet - leaf turnover equation
-      real :: exp_co            !                   |exponent for ppet - leaf turnover equation
-      real :: lai_init          !                   |lai before senescence
-      real :: lai_drop          !                   |lai decline due to senescence
+      integer :: j = 0          !none               |HRU number
+      integer :: idp = 0        !                   |
+      integer :: iob = 0        !                   |
+      integer :: iwgn = 0       !                   |
+      real :: rto = 0.          !none               |ratio of current years of growth:years to maturity of perennial
+      real :: ppet = 0.         !mm/mm              |running average of precip over pet
+      real :: leaf_tov_mon = 0. !months             |leaf turnover rate months
+      real :: coef = 0.         !                   |coefficient for ppet - leaf turnover equation
+      real :: exp_co = 0.       !                   |exponent for ppet - leaf turnover equation
+      real :: lai_init = 0.     !                   |lai before senescence
+      real :: lai_drop = 0.     !                   |lai decline due to senescence
       
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt

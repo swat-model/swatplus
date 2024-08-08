@@ -5,12 +5,12 @@
     character(len=50) :: cfind                   !             |
     integer :: iseq                              !             |
     integer :: max                               !             | 
-    character(len=50), dimension(max) ::  sch    !             |
-    integer :: nf                                !             |
+    character(len=50), dimension(max) :: sch     !             |
+    integer :: nf = 0                            !             |
     integer :: int                               !             |
-    integer :: nn                                !none         |number of subdaily computation points for stable 
+    integer :: nn = 0                            !none         |number of subdaily computation points for stable 
                                                  !             |routing in the muskingum routing method
-    integer :: nl                                !none         |number of layers being mixed
+    integer :: nl = 0                            !none         |number of layers being mixed
     
     nf = 1
     nl = max

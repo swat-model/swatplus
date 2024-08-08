@@ -41,12 +41,12 @@
       
       implicit none
       
-      real :: drift             !kg               |amount of pesticide drifting onto main 
+      real :: drift = 0.        !kg               |amount of pesticide drifting onto main 
                                 !                 |channel in subbasin
-      real :: hrupstd           !varies           |HRU daily pesticide output array
-      integer :: j              !none             |HRU number 
-      integer :: ly             !none             |counter 
-      integer :: ires           !none             |counter
+      real :: hrupstd = 0.      !varies           |HRU daily pesticide output array
+      integer :: j = 0          !none             |HRU number 
+      integer :: ly = 0         !none             |counter 
+      integer :: ires = 0       !none             |counter
 
       !!initialize variables at beginning of day
       cbodu = 0.

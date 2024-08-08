@@ -6,19 +6,19 @@
       
       implicit none
   
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: isep                 !none       |counter
+      integer :: isep = 0             !none       |counter
       
       eof = 0
       imax = 0
       
       inquire (file=in_str%septic_str,exist=i_exist)                  
       if (.not. i_exist .or. in_str%septic_str == "null") then 
-        allocate (sep(0:0)) 
+        allocate (sep(0:0))
       else
         do 
           open (172,file=in_str%septic_str)

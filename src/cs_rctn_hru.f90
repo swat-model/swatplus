@@ -12,13 +12,28 @@
 
       implicit none
 
-      integer :: j,jj,n,dum
-      real :: cseo4,cseo3
-      real :: conc_old,conc_new,conc_rg,k_rg,phi_value, &
-              hru_area_m2,water_volume,gw_volume, &
-              mass_seo4_before,mass_seo3_before, &
-              mass_seo4_after,mass_seo3_after
-      real :: cs_mass_kg,seo4_conc,seo3_conc,no3_conc
+      integer :: j = 0
+      integer :: jj = 0
+      integer :: n = 0
+      integer :: dum = 0
+      real :: cseo4 = 0.
+      real :: cseo3 = 0.
+      real :: conc_old
+      real :: conc_new
+      real :: conc_rg
+      real :: k_rg
+      real :: phi_value
+      real :: hru_area_m2 = 0.
+      real :: water_volume = 0.
+      real :: gw_volume = 0.
+      real :: mass_seo4_before = 0.
+      real :: mass_seo3_before = 0.
+      real :: mass_seo4_after = 0.
+      real :: mass_seo3_after = 0.
+      real :: cs_mass_kg = 0.
+      real :: seo4_conc = 0.
+      real :: seo3_conc = 0.
+      real :: no3_conc = 0.
       dimension conc_old(3),conc_new(3),conc_rg(3),k_rg(4,3),phi_value(3)
       
       
@@ -126,12 +141,35 @@
 
       implicit none
 
-      integer :: j,jj,k_slope,kk
-      real :: conc_rg,conc_old,k_rg,cseo4,cseo3, &
-              no3inhib,hru_area_m2,no3_mass_kg,no3_conc, &
-              seo4red,seo3red,dseo4,dseo3,dno3,cno3, &
-              o2,o2red,no3red,yseo4_o2,yseo4_no3,se_prod_o2,se_prod_no3, &
-              ko2a,kno3,sseratio
+      integer :: j
+      integer :: jj
+      integer :: k_slope
+      integer :: kk = 0
+      real :: conc_rg
+      real :: conc_old
+      real :: k_rg
+      real :: cseo4 = 0.
+      real :: cseo3 = 0.
+      real :: no3inhib = 0.
+      real :: hru_area_m2 = 0.
+      real :: no3_mass_kg = 0.
+      real :: no3_conc = 0.
+      real :: seo4red = 0.
+      real :: seo3red = 0.
+      real :: dseo4 = 0.
+      real :: dseo3 = 0.
+      real :: dno3 = 0.
+      real :: cno3 = 0.
+      real :: o2 = 0.
+      real :: o2red = 0.
+      real :: no3red = 0.
+      real :: yseo4_o2 = 0.
+      real :: yseo4_no3 = 0.
+      real :: se_prod_o2 = 0.
+      real :: se_prod_no3 = 0.
+      real :: ko2a = 0.
+      real :: kno3 = 0.
+      real :: sseratio = 0.
       dimension conc_rg(3),conc_old(3),k_rg(4,3)
 
       !get concentration of SeO4 and SeO3

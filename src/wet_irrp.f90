@@ -12,12 +12,13 @@
       
       implicit none
       
-      integer :: iob              !none      |hru or wro number
-      integer :: iru              !none      |routing unit number
-      integer :: isrc             !none      |irrigation source ID
-      real :: wsa1                !m2        |water surface area 
-      integer :: j,i
-      real :: rto
+      integer :: iob = 0          !none      |hru or wro number
+      integer :: iru = 0          !none      |routing unit number
+      integer :: isrc = 0         !none      |irrigation source ID
+      real :: wsa1 = 0.           !m2        |water surface area 
+      integer :: j = 0
+      integer :: i = 0
+      real :: rto = 0.
       
       j = ihru
       wsa1 = hru(j)%area_ha * 10.

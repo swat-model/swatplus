@@ -12,16 +12,16 @@
       
       implicit none
                   
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: i                    !none       |counter 
-      integer :: mdtbl                !none       |ending of loop
-      integer :: ic                   !none       |counter 
-      integer :: ial                  !none       |counter 
-      integer :: iac                  !none       !counter 
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: i = 0                !none       |counter 
+      integer :: mdtbl = 0            !none       |ending of loop
+      integer :: ic = 0               !none       |counter 
+      integer :: ial = 0              !none       |counter 
+      integer :: iac = 0              !none       !counter 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: idb                  !none       |counter
+      integer :: idb = 0              !none       |counter
        
       mdtbl = 0
       eof = 0
@@ -29,7 +29,7 @@
       !! read all data from hydrol.dat
       inquire (file=in_cond%dtbl_res, exist=i_exist)
       if (.not. i_exist .or. in_cond%dtbl_res == "null") then
-        allocate (dtbl_res(0:0)) 
+        allocate (dtbl_res(0:0))
       else
         do
           open (107,file=in_cond%dtbl_res)
@@ -50,8 +50,8 @@
             allocate (dtbl_res(i)%alt(dtbl_res(i)%conds,dtbl_res(i)%alts))
             allocate (dtbl_res(i)%act(dtbl_res(i)%acts))
             allocate (dtbl_res(i)%act_hit(dtbl_res(i)%alts))
-            allocate (dtbl_res(i)%act_typ(dtbl_res(i)%acts))
-            allocate (dtbl_res(i)%act_app(dtbl_res(i)%acts))
+            allocate (dtbl_res(i)%act_typ(dtbl_res(i)%acts), source = 0)
+            allocate (dtbl_res(i)%act_app(dtbl_res(i)%acts), source = 0)
             allocate (dtbl_res(i)%act_outcomes(dtbl_res(i)%acts,dtbl_res(i)%alts))
             
             !read conditions and condition alternatives

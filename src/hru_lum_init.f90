@@ -9,12 +9,12 @@
       implicit none
 
       integer, intent (in)  :: iihru    !none       |hru number
-      integer :: iob                    !           |spatial object number
-      integer :: ilu                    !none       |land use number 
-      integer :: ilug                   !none       |counter 
-      integer :: isched                 !           |management schedule number
-      integer :: iwst                   !           |weather station number
-      integer :: iwgn                   !           |weather generator number
+      integer :: iob = 0                !           |spatial object number
+      integer :: ilu = 0                !none       |land use number 
+      integer :: ilug = 0               !none       |counter 
+      integer :: isched = 0             !           |management schedule number
+      integer :: iwst = 0               !           |weather station number
+      integer :: iwgn = 0               !           |weather generator number
 
         !!assign land use pointers for the hru
         ilu = hru(iihru)%land_use_mgt

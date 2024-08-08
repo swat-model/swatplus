@@ -20,12 +20,12 @@
       
       implicit none
 
-      integer :: iadep            !            |
-      integer :: j                !none        |counter
-      integer :: iob              !            |
-      integer :: ist              !            |
-      integer :: isalt            !            |salt ion counter
-      real :: const               !            |constant used for rate, days, etc
+      integer :: iadep = 0        !            |
+      integer :: j = 0            !none        |counter
+      integer :: iob = 0          !            |
+      integer :: ist = 0          !            |
+      integer :: isalt = 0        !            |salt ion counter
+      real :: const = 0.          !            |constant used for rate, days, etc
 
       j = ihru
       
@@ -52,7 +52,7 @@
             !add both to soil profile  
             cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + (hsaltb_d(j)%salt(isalt)%rain + & 
                 hsaltb_d(j)%salt(isalt)%dryd)
-					enddo
+          enddo
         end if 
         
         !yearly values
@@ -65,7 +65,7 @@
             !add both to soil profile  
             cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + (hsaltb_d(j)%salt(isalt)%rain +   &
                hsaltb_d(j)%salt(isalt)%dryd)
-					enddo  
+          enddo  
         endif
         
       end if
@@ -80,9 +80,9 @@
           !add both to soil profile  
           cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + (hsaltb_d(j)%salt(isalt)%rain +  &
              hsaltb_d(j)%salt(isalt)%dryd)
-				enddo
+        enddo
       endif
-		
+    
       endif
        
       return

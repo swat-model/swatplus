@@ -45,18 +45,18 @@
       
       implicit none
 
-      integer :: ii               !none          |counter
+      integer :: ii = 0           !none          |counter
       integer :: iwgn             !units         |description 
-      real :: sd                  !radians       |solar declination: latitude at which the sun
+      real :: sd = 0.             !radians       |solar declination: latitude at which the sun
                                   !              |is directly overhead at noon
-      real :: sdlat               !none          |(-Tan(sd)*Tan(lat))
-      real :: h                   !none          |Acos(-Tan(sd)*Tan(lat))
-      real :: ys                  !none          |Sin(sd)*Sin(lat) 
-      real :: yc                  !none          |Cos(sd)*Cos(lat)
-      real :: dd                  !none          |relative distance of the earth from the sun
+      real :: sdlat = 0.          !none          |(-Tan(sd)*Tan(lat))
+      real :: h = 0.              !none          |Acos(-Tan(sd)*Tan(lat))
+      real :: ys = 0.             !none          |Sin(sd)*Sin(lat) 
+      real :: yc = 0.             !none          |Cos(sd)*Cos(lat)
+      real :: dd = 0.             !none          |relative distance of the earth from the sun
       real :: cosrho(time%step)   !none          |Cos(zenith angle for hour)
-      real :: totrho              !none          |sum of cosrho values for all hours of day
-      real :: hr_angle            !none          |hour angle
+      real :: totrho = 0.         !none          |sum of cosrho values for all hours of day
+      real :: hr_angle = 0.       !none          |hour angle
 
       !! Reset prior day category for precipitation     
       if (wst(iwst)%weat%precip >= 0.1) then

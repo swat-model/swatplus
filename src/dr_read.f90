@@ -6,14 +6,14 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: imax                 !           |
-      integer :: mdr_sp               !           |ending of loop 
-      integer :: ii                   !none       |counter
-      integer :: i                    !none       |counter
+      integer :: imax = 0             !           |
+      integer :: mdr_sp = 0           !           |ending of loop 
+      integer :: ii = 0               !none       |counter
+      integer :: i = 0                !none       |counter
 
       eof = 0
       imax = 0

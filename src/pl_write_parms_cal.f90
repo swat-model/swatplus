@@ -8,11 +8,11 @@
        
        implicit none        
       
-       integer :: eof                  !           |end of file
-       integer :: mreg                 !none       |end of loop
-       integer :: i                    !none       |counter
-       integer :: ilum
-       integer :: ilum_mx 
+       integer :: eof = 0              !           |end of file
+       integer :: mreg = 0             !none       |end of loop
+       integer :: i = 0                !none       |counter
+       integer :: ilum = 0
+       integer :: ilum_mx = 0
        
        mreg = 0
        eof = 0

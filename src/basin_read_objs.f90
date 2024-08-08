@@ -14,11 +14,11 @@
       
       implicit none
       
-      character (len=80) :: titldum   !            |title of file
-      character (len=80) :: header    !            |header
-      integer :: eof                  !            |end of file
-      integer :: nriv                 !            |number of gwflow river cells
-      integer :: riv_id               !            |id of gwflow river cell
+      character (len=80) :: titldum = ""!            |title of file
+      character (len=80) :: header = "" !            |header
+      integer :: eof = 0              !            |end of file
+      integer :: nriv = 0             !            |number of gwflow river cells
+      integer :: riv_id = 0           !            |id of gwflow river cell
       logical :: i_exist              !            |check to determine if file exists
       
       eof = 0
@@ -90,7 +90,7 @@
       
       allocate (ob(sp_ob%objs))
       allocate (obcs(sp_ob%objs))
-      allocate (obcs_alloc(sp_ob%objs))
+      allocate (obcs_alloc(sp_ob%objs), source = 0)
       obcs_alloc = 0
       allocate (obom(sp_ob%objs))
       return    

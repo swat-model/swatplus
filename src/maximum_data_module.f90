@@ -81,7 +81,7 @@
         integer :: plcal_reg = 0      !! none     |max number of regions for plant calibration
         integer :: ch_reg = 0         !! none     |max number of regions for channel calibration
         integer :: lscal_prms = 0     !! none     |max number of parameters for landscape hru calibration
-        integer :: res_dat = 0      
+        integer :: res_dat = 0
         integer :: res_init = 0
         integer :: res_hyd = 0
         integer :: res_sed = 0
@@ -89,7 +89,7 @@
         integer :: res_salt = 0 !rtb salt
         integer :: res_cs = 0 !rtb cs
         integer :: res_weir = 0
-        integer :: wet_dat = 0      
+        integer :: wet_dat = 0
         integer :: wet_hyd = 0
         integer :: ch_surf = 0
         integer :: ch_dat = 0
@@ -104,14 +104,14 @@
         integer :: exco_om = 0
         integer :: exco_pest = 0
         integer :: exco_path = 0
-        integer :: exco_hmet = 0 
+        integer :: exco_hmet = 0
         integer :: exco_salt = 0
         integer :: dr = 0
         integer :: dr_om = 0
         integer :: trt_om = 0
         integer :: dr_pest = 0
         integer :: dr_path = 0
-        integer :: dr_hmet = 0 
+        integer :: dr_hmet = 0
         integer :: dr_salt = 0
         integer :: sol_plt_ini = 0
         integer :: pest_ini = 0
@@ -137,8 +137,8 @@
         integer :: pudl_db = 0
         integer :: recall_max = 0
         integer :: object_prt = 0
-        integer :: ctbl_res
-        integer :: ch_sednut
+        integer :: ctbl_res = 0
+        integer :: ch_sednut = 0
       end type data_files_max_elements
       type (data_files_max_elements), save :: db_mx
                                  

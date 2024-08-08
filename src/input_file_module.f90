@@ -10,7 +10,7 @@
         character(len=25) :: prt = "print.prt"
         character(len=25) :: object_prt = "object.prt"
         character(len=25) :: object_cnt = "object.cnt"
-        character(len=25) :: cs_db = "constituents.cs"		
+        character(len=25) :: cs_db = "constituents.cs"
       end type input_sim
       type (input_sim) :: in_sim
 
@@ -242,7 +242,7 @@
       type input_soils
        character(len=25) :: soils_sol = "soils.sol"
        character(len=25) :: nut_sol = "nutrients.sol"
-       character(len=25) :: lte_sol = "soils_lte.sol"      
+       character(len=25) :: lte_sol = "soils_lte.sol"
       end type input_soils
       type (input_soils) :: in_sol
 
@@ -251,7 +251,7 @@
        character(len=25) :: dtbl_lum = "lum.dtl"
        character(len=25) :: dtbl_res = "res_rel.dtl"
        character(len=25) :: dtbl_scen = "scen_lu.dtl"
-       character(len=25) :: dtbl_flo = "flo_con.dtl"       
+       character(len=25) :: dtbl_flo = "flo_con.dtl"
       end type input_condition
       type (input_condition) :: in_cond
            
@@ -278,32 +278,32 @@
       type (input_regions) :: in_regs
       
       type input_path_pcp
-        character(len=80) :: pcp = " "  
+        character(len=80) :: pcp = " "
       end type input_path_pcp
       type (input_path_pcp) :: in_path_pcp
       
      type input_path_tmp
-        character(len=80) :: tmp = " "  
+        character(len=80) :: tmp = " "
       end type input_path_tmp
       type (input_path_tmp) :: in_path_tmp
       
      type input_path_slr
-        character(len=80) :: slr = " "  
+        character(len=80) :: slr = " "
       end type input_path_slr
       type (input_path_slr) :: in_path_slr
            
      type input_path_hmd
-        character(len=80) :: hmd = " "  
+        character(len=80) :: hmd = " "
       end type input_path_hmd
       type (input_path_hmd) :: in_path_hmd
       
      type input_path_wnd
-        character(len=80) :: wnd = " "  
+        character(len=80) :: wnd = " "
       end type input_path_wnd
       type (input_path_wnd) :: in_path_wnd
       
     type input_path_pet
-        character(len=80) :: peti = " "  
+        character(len=80) :: peti = " "
       end type input_path_pet
       type (input_path_pet) :: in_path_pet
       

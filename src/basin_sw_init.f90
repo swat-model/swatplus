@@ -11,11 +11,11 @@
       
       implicit none
 
-      integer :: ihru     !none      |counter
-      integer :: iihru    !          |
-      integer :: ilsu     !none      |counter
-      integer :: ielem    !          |
-      real :: const       !          |constant used for rate, days, etc
+      integer :: ihru = 0 !none      |counter
+      integer :: iihru = 0  !          |
+      integer :: ilsu = 0 !none      |counter
+      integer :: ielem = 0  !          |
+      real :: const = 0.  !          |constant used for rate, days, etc
             
       ! initialize hru soil and snow water
       do ihru = 1, sp_ob%hru

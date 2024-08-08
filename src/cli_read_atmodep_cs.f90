@@ -11,18 +11,18 @@
       
       implicit none
       
-      character (len=80) :: file      !           |filename
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: iadep                !           |counter
-      integer :: imo                  !           |counter
-      integer :: iyr                  !           |counter
-      integer :: imo_atmo             !           |
+      character (len=80) :: file = "" !           |filename
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: iadep = 0            !           |counter
+      integer :: imo = 0              !           |counter
+      integer :: iyr = 0              !           |counter
+      integer :: imo_atmo = 0         !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo            !           |
-      integer :: ics                  !           |constituent counter
-      real    :: station_name
+      integer :: iyrc_atmo = 0        !           |
+      integer :: ics = 0              !           |constituent counter
+      real    :: station_name = 0.
       
       eof = 0
 
@@ -40,13 +40,13 @@
         read(5050,*)
       
         !allocate arrays
-        allocate(atmodep_cs(0:atmodep_cont%num_sta))
+        allocate (atmodep_cs(0:atmodep_cont%num_sta))
         
         !loop through the stations (num_sta is set in cli_read_atmodep subroutine)
         do iadep = 1, atmodep_cont%num_sta
           
           !allocate arrays
-          allocate(atmodep_cs(iadep)%cs(cs_db%num_cs))
+          allocate (atmodep_cs(iadep)%cs(cs_db%num_cs))
           
           !average annual values
           if (atmodep_cont%timestep == "aa") then
@@ -66,14 +66,14 @@
             read(5050,*) station_name !station name
             !wet deposition
             do ics=1,cs_db%num_cs
-              allocate(atmodep_cs(iadep)%cs(ics)%rfmo(atmodep_cont%num))
+              allocate (atmodep_cs(iadep)%cs(ics)%rfmo(atmodep_cont%num), source = 0.)
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%rfmo(imo),imo=1,atmodep_cont%num)
             enddo
             !dry deposition
             do ics=1,cs_db%num_cs
-              allocate(atmodep_cs(iadep)%cs(ics)%drymo(atmodep_cont%num))
+              allocate (atmodep_cs(iadep)%cs(ics)%drymo(atmodep_cont%num), source = 0.)
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%drymo(imo),imo=1,atmodep_cont%num)
@@ -85,14 +85,14 @@
             read(5050,*) station_name !station name
             !wet deposition
             do ics=1,cs_db%num_cs
-              allocate(atmodep_cs(iadep)%cs(ics)%rfyr(atmodep_cont%num)) 
+              allocate (atmodep_cs(iadep)%cs(ics)%rfyr(atmodep_cont%num), source = 0.)
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%rfyr(iyr),iyr=1,atmodep_cont%num)
             enddo
             !dry deposition
             do ics=1,cs_db%num_cs
-              allocate(atmodep_cs(iadep)%cs(ics)%dryyr(atmodep_cont%num))
+              allocate (atmodep_cs(iadep)%cs(ics)%dryyr(atmodep_cont%num), source = 0.)
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%dryyr(iyr),iyr=1,atmodep_cont%num)
