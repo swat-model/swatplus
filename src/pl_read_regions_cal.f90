@@ -8,21 +8,21 @@
       
       implicit none 
 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      integer :: nspu                 !           | 
-      integer :: mcal                 !           |
-      integer :: mreg                 !           |
-      integer :: i                    !none       |counter 
-      integer :: isp                  !none       |counter 
-      integer :: ielem1               !none       |counter  
-      integer :: ihru                 !none       |counter 
-      integer :: iihru                !none       |counter 
-      integer :: ilum_mx              !           | 
-      integer :: ilum                 !none       |counter  
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      integer :: nspu = 0             !           | 
+      integer :: mcal = 0             !           |
+      integer :: mreg = 0             !           |
+      integer :: i = 0                !none       |counter 
+      integer :: isp = 0              !none       |counter 
+      integer :: ielem1 = 0           !none       |counter  
+      integer :: ihru = 0             !none       |counter 
+      integer :: iihru = 0            !none       |counter 
+      integer :: ilum_mx = 0          !           | 
+      integer :: ilum = 0             !none       |counter  
       
       imax = 0
       mcal = 0
@@ -30,7 +30,7 @@
  
     inquire (file=in_chg%plant_gro_sft, exist=i_exist)
     if (.not. i_exist .or. in_chg%plant_gro_sft == "null" ) then
-      allocate (plcal(0:0))	
+      allocate (plcal(0:0))
     else
       do
         open (107,file=in_chg%plant_gro_sft)
@@ -47,14 +47,14 @@
         read (107,*,iostat=eof) plcal(i)%name, plcal(i)%lum_num, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) plcal(i)%name, plcal(i)%lum_num,  nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (plcal(i)%num(ielem1))
+          allocate (plcal(i)%num(ielem1), source = 0)
           plcal(i)%num = defunit_num
           plcal(i)%num_tot = ielem1
           do ihru = 1, plcal(i)%num_tot
@@ -64,7 +64,7 @@
           deallocate (defunit_num)
         else
           !!all hrus are in region
-          allocate (plcal(i)%num(sp_ob%hru))
+          allocate (plcal(i)%num(sp_ob%hru), source = 0)
           plcal(i)%num_tot = sp_ob%hru
           do ihru = 1, sp_ob%hru
             plcal(i)%num(ihru) = ihru

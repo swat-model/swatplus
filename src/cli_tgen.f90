@@ -32,11 +32,11 @@
       
       implicit none
 
-      real :: tmxg               !deg C         |generated maximum temperature for the day
-      real :: tmng               !deg C         |generated minimum temperature for the day
-      real :: tamp               !deg C         |difference between mean monthly air temperature
+      real :: tmxg = 0.          !deg C         |generated maximum temperature for the day
+      real :: tmng = 0.          !deg C         |generated minimum temperature for the day
+      real :: tamp = 0.          !deg C         |difference between mean monthly air temperature
                                  !              |and monthly max or min temperature
-      real :: txxm               !deg C         |modified monthly maximum temperature
+      real :: txxm = 0.          !deg C         |modified monthly maximum temperature
       integer :: iwgn            !              |
 
       tamp = .5 * (wgn(iwgn)%tmpmx(time%mo) - wgn(iwgn)%tmpmn(time%mo))

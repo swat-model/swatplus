@@ -9,10 +9,10 @@
       
       implicit none
 
-      integer :: iob        !       |object number
-      integer :: iwst       !       |weather station number
-      integer :: iwgn       !       |weather generator station number
-      integer :: igage      !       |number of measured precip or temperature gage
+      integer :: iob = 0    !       |object number
+      integer :: iwst = 0   !       |weather station number
+      integer :: iwgn = 0   !       |weather generator station number
+      integer :: igage = 0  !       |number of measured precip or temperature gage
       
       !! set precip and temp lapse for each object
       do iob = 1, sp_ob%objs

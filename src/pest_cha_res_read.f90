@@ -10,11 +10,13 @@
 
       implicit none
  
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ipest, ipesti
+      integer :: ipest = 0
+      integer :: ipesti = 0
 
       eof = 0
       
@@ -47,7 +49,7 @@
 
           do ipesti = 1, imax
             allocate (pest_water_ini(ipesti)%water(cs_db%num_pests), source = 0.)
-            allocate (pest_water_ini(ipesti)%benthic(cs_db%num_pests))
+            allocate (pest_water_ini(ipesti)%benthic(cs_db%num_pests), source = 0.)
           end do
           
           rewind (107)

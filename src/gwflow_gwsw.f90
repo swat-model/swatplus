@@ -12,27 +12,27 @@
       implicit none
 
       integer, intent (in) :: chan_id    !       |channel number
-      integer :: k                       !       |counter
-      integer :: s                       !       |solute counter
-      integer :: cell_id                 !       |cell in connection with the channel
-      integer :: isalt                   !       |salt ion counter
-      integer :: ics                     !       |constituent counter
-      integer :: sol_index               !
-      integer :: dum
-      real :: chan_depth                 !m      |channel depth
-      real :: chan_width                 !m      |channel width
-      real :: chan_length                !m      |length of channel, in cell
-      real :: bed_elev                   !m      |elevation of channel bed, in cell
-      real :: bed_K                      !m/day  |hydraulic conductivity of channel bed, in cell
-      real :: bed_thick                  !m      |thickness of channel bed, in cell
-      real :: chan_stage                 !m      |elevation of water in channel, in cell
-      real :: flow_area                  !m2     |groundwater flow area of water exchange, in cell
-      real :: gw_head                    !m      |current groundwater head in cell
-      real :: Q                          !m3/day |water exchange flow rate, calculated by Darcy's Law
-      real :: head_diff                  !m      |head difference between channel stage and groundwater head
-      real :: chan_volume                !m3     |water volume in channel before groundwater exchange occurs
-      real :: chan_csol(100)             !g/m3   |solute concentration in channel water
-      real :: solmass(100)               !g      |solute mass transferred
+      integer :: k = 0                   !       |counter
+      integer :: s = 0                   !       |solute counter
+      integer :: cell_id = 0             !       |cell in connection with the channel
+      integer :: isalt = 0               !       |salt ion counter
+      integer :: ics = 0                 !       |constituent counter
+      integer :: sol_index = 0           !
+      integer :: dum = 0
+      real :: chan_depth = 0.            !m      |channel depth
+      real :: chan_width = 0.            !m      |channel width
+      real :: chan_length = 0.           !m      |length of channel, in cell
+      real :: bed_elev = 0.              !m      |elevation of channel bed, in cell
+      real :: bed_K = 0.                 !m/day  |hydraulic conductivity of channel bed, in cell
+      real :: bed_thick = 0.             !m      |thickness of channel bed, in cell
+      real :: chan_stage = 0.            !m      |elevation of water in channel, in cell
+      real :: flow_area = 0.             !m2     |groundwater flow area of water exchange, in cell
+      real :: gw_head = 0.               !m      |current groundwater head in cell
+      real :: Q = 0.                     !m3/day |water exchange flow rate, calculated by Darcy's Law
+      real :: head_diff = 0.             !m      |head difference between channel stage and groundwater head
+      real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
+      real :: chan_csol(100) = 0.        !g/m3   |solute concentration in channel water
+      real :: solmass(100) = 0.          !g      |solute mass transferred
       
       
       !current channel storage (m3)

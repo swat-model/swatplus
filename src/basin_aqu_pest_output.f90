@@ -12,11 +12,11 @@
       
       implicit none
       
-      integer :: ipest 
-      integer :: iaq
-      integer :: iob
-      real :: const
-      real :: stor_init      !kg         |store initial pesticide when entire object is zero'd
+      integer :: ipest = 0
+      integer :: iaq = 0
+      integer :: iob = 0
+      real :: const = 0.
+      real :: stor_init = 0. !kg         |store initial pesticide when entire object is zero'd
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs HRU variables on daily, monthly and annual time steps

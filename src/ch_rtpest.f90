@@ -85,25 +85,25 @@
 
       implicit none
       
-      integer :: ipest          !none                   |pesticide counter - sequential
-      integer :: jpst           !none                   |pesticide counter from data base
-      integer :: ipseq          !none                   |sequential basin pesticide number
-      integer :: ipdb           !none                   |seqential pesticide number of daughter pesticide
-      integer :: imeta          !none                   |pesticide metabolite counter
-      real :: mol_wt_rto        !ratio                  |molecular weight ratio of duaghter to parent pesticide
-      real :: pstin             !mg pst                 |total pesticide transported into reach during time step
-      real :: kd                !(mg/kg)/(mg/L)         |koc * carbon
-      real :: depth             !m             |depth of water in reach
-      real :: chpstmass         !mg pst        |mass of pesticide in reach
-      real :: sedpstmass        !mg pst        |mass of pesticide in bed sediment
-      real :: fd2               !units         |description
-      real :: solmax            !units         |description
-      real :: sedcon            !g/m^3         |sediment concentration 
-      real :: tday              !none          |flow duration (fraction of 24 hr)
-      real :: por               !none          |porosity of bottom sediments
-      real :: pest_init         !mg            |amount of pesticide before decay
-      real :: pest_end          !mg            |amount of pesticide after decay
-      real :: rto_out           !none          |ratio of outflow to sum of outflow and storage
+      integer :: ipest = 0      !none                   |pesticide counter - sequential
+      integer :: jpst = 0       !none                   |pesticide counter from data base
+      integer :: ipseq = 0      !none                   |sequential basin pesticide number
+      integer :: ipdb = 0       !none                   |seqential pesticide number of daughter pesticide
+      integer :: imeta = 0      !none                   |pesticide metabolite counter
+      real :: mol_wt_rto = 0.   !ratio                  |molecular weight ratio of duaghter to parent pesticide
+      real :: pstin = 0.        !mg pst                 |total pesticide transported into reach during time step
+      real :: kd = 0.           !(mg/kg)/(mg/L)         |koc * carbon
+      real :: depth = 0.        !m             |depth of water in reach
+      real :: chpstmass = 0.    !mg pst        |mass of pesticide in reach
+      real :: sedpstmass = 0.   !mg pst        |mass of pesticide in bed sediment
+      real :: fd2 = 0.          !units         |description
+      real :: solmax = 0.       !units         |description
+      real :: sedcon = 0.       !g/m^3         |sediment concentration 
+      real :: tday = 0.         !none          |flow duration (fraction of 24 hr)
+      real :: por = 0.          !none          |porosity of bottom sediments
+      real :: pest_init = 0.    !mg            |amount of pesticide before decay
+      real :: pest_end = 0.     !mg            |amount of pesticide after decay
+      real :: rto_out = 0.      !none          |ratio of outflow to sum of outflow and storage
 
       !! zero outputs
       chpst_d(jrch) = chpstz
@@ -146,7 +146,6 @@
 
           !! calculate fraction of soluble and sorbed pesticide
           frsol = 1. / (1. + kd * sedcon)
-          frsol = max(min(frsol,1.),0.)
           frsrb = 1. - frsol
 
           !! ASSUME DENSITY=2.6E6; KD2=KD1

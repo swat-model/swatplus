@@ -8,8 +8,8 @@
       
       implicit none
              
-      integer :: ichan      !none       |counter
-      real :: const         !           |
+      integer :: ichan = 0  !none       |counter
+      real :: const = 0.    !           |
 
       bch_stor_d = chaz
       bch_in_d = chaz

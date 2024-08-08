@@ -32,7 +32,13 @@
       real, intent (in) :: term_m
       real, intent (in) :: cprev
       real, intent (in) :: cint
-      real :: help1, help2, help3, help4, term1, term2, yy
+      real :: help1 = 0.
+      real :: help2 = 0.
+      real :: help3 = 0.
+      real :: help4 = 0.
+      real :: term1 = 0.
+      real :: term2 = 0.
+      real :: yy = 0.
       real :: wq_semianalyt
 
       help1 = 1. / tres - prock
@@ -83,7 +89,13 @@
       real, intent (in) :: tk
       real, intent (in) :: c1
       real, intent (in) :: c2
-      real :: h1, h2, help, tm, h3, wq_k2m, wq_semianalyt
+      real :: h1 = 0.
+      real :: h2 = 0.
+      real :: help = 0.
+      real :: tm = 0.
+      real :: h3 = 0.
+      real :: wq_k2m
+      real :: wq_semianalyt
       
       h1 = wq_semianalyt (t1, t2, 0., 0., c1, c2)
       h2 = wq_semianalyt (t1, t2, 0., tk, c1, c2)

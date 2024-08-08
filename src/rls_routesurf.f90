@@ -18,12 +18,12 @@
       
       implicit none
       
-      integer :: j                      !       |
+      integer :: j = 0                  !       |
       integer :: iob                    !       |
-      integer :: ifield                 !       |
+      integer :: ifield = 0             !       |
       real, intent (in)  :: tile_fr_surf    !m3     |overland tile flow
-      real :: sed                       !       |
-      real :: trancap                   !       |
+      real :: sed = 0.                  !       |
+      real :: trancap = 0.              !       |
 
       j = ihru
       ifield = hru(j)%dbs%field

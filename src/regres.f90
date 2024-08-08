@@ -38,12 +38,12 @@
                                                                            !              |  2 suspended solid load
                                                                            !              |  3 total nitrogen
                                                                            !              |  4 total phosphorus
-      real, dimension (5,3) :: beta                                        !              |
+      real, dimension (5,3) :: beta = 0.                                   !              |
       real :: regres                                                       !kg            |amount of constituent removed in surface
                                                                            !              |runoff
-      integer :: ulu                                                       !              |
-      integer :: j                                                         !none          |HRU number
-      integer :: ii                                                        !none          |precipitation category
+      integer :: ulu = 0                                                   !              |
+      integer :: j = 0                                                     !none          |HRU number
+      integer :: ii = 0                                                    !none          |precipitation category
       real, dimension(5,3) :: bcod =                                   &   !none          |regression coefficients for calculating
                                                                            !              |carbonaceous oxygen demand of urban runoff                                 
            reshape ((/407.0, 0.626, 0.710, 0.379, 1.518,               &

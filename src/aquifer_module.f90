@@ -46,7 +46,7 @@
         real :: orgn = 0.       !kg/ha P    |organic nitrogen in aquifer - currently static
         real :: no3_rchg = 0.   !kg/ha N    |nitrate NO3-N flowing into aquifer from another object  
         real :: no3_loss = 0.   !kg/ha      |nitrate NO3-N loss
-        real :: no3_lat         !kg/ha N    |nitrate loading to reach in groundwater
+        real :: no3_lat = 0.    !kg/ha N    |nitrate loading to reach in groundwater
         real :: no3_seep = 0.   !kg/ha N    |seepage of no3 to next object
         real :: flo_cha = 0.    !mm H2O     |surface runoff flowing into channels
         real :: flo_res = 0.    !mm H2O     |surface runoff flowing into reservoirs
@@ -72,23 +72,23 @@
       type (aquifer_dynamic) :: aquz
 
        type aquifer_init_data_char
-        character (len=16) :: name                 !xwalk with aqudb(iaqu)%aqu_ini 
-        character (len=16) :: org_min              !points to initial organic-mineral input file
-        character (len=16) :: pest                 !points to initial pesticide input file
-        character (len=16) :: path                 !points to initial pathogen input file
-        character (len=16) :: hmet                 !points to initial heavy metals input file
-        character (len=16) :: salt                 !points to initial salt input file
+        character (len=16) :: name = ""            !xwalk with aqudb(iaqu)%aqu_ini 
+        character (len=16) :: org_min = ""         !points to initial organic-mineral input file
+        character (len=16) :: pest = ""            !points to initial pesticide input file
+        character (len=16) :: path = ""            !points to initial pathogen input file
+        character (len=16) :: hmet = ""            !points to initial heavy metals input file
+        character (len=16) :: salt = ""            !points to initial salt input file
       end type aquifer_init_data_char
       type (aquifer_init_data_char), dimension(:), allocatable :: aqu_init_dat_c
       
       !rtb salt/cs
       type aquifer_init_data_char_cs
-        character (len=16) :: name                 !xwalk with aqudb(iaqu)%aqu_ini 
-        character (len=16) :: pest                 !points to initial pesticide input file
-        character (len=16) :: path                 !points to initial pathogen input file
-        character (len=16) :: hmet                 !points to initial heavy metals input file
-        character (len=16) :: salt                 !points to initial salt input file (salt_aqu.ini)
-        character (len=16) :: cs                   !points to initial constituent input file (cs_aqu.ini)
+        character (len=16) :: name = ""            !xwalk with aqudb(iaqu)%aqu_ini 
+        character (len=16) :: pest = ""            !points to initial pesticide input file
+        character (len=16) :: path = ""            !points to initial pathogen input file
+        character (len=16) :: hmet = ""            !points to initial heavy metals input file
+        character (len=16) :: salt = ""            !points to initial salt input file (salt_aqu.ini)
+        character (len=16) :: cs = ""              !points to initial constituent input file (cs_aqu.ini)
       end type aquifer_init_data_char_cs
       type (aquifer_init_data_char_cs), dimension(:), allocatable :: aqu_init_dat_c_cs
       
@@ -107,9 +107,9 @@
           character (len=6) :: mo       =      "   mon"
           character (len=6) :: day_mo   =      "   day"
           character (len=6) :: yrc      =      "    yr"
-          character (len=8) :: isd      =      "   unit "                                            
-          character (len=8) :: id       =      " gis_id "           
-          character (len=16) :: name    =      " name              "          
+          character (len=8) :: isd      =      "   unit "
+          character (len=8) :: id       =      " gis_id "
+          character (len=16) :: name    =      " name           "
           character(len=16) :: flo      =      "            flo"        ! (mm)
           character(len=16) :: dep_wt   =      "         dep_wt"        ! (m)
           character(len=15) :: stor     =      "           stor"        ! (mm)
@@ -135,9 +135,9 @@
           character (len=6) :: mo       =  "      "
           character (len=6) :: day_mo   =  "      "
           character (len=6) :: yrc      =  "      "
-          character (len=8) :: isd      =  "        "                                            
-          character (len=8) :: id       =  "        "           
-          character (len=16) :: name    =  "                   "          
+          character (len=8) :: isd      =  "        "
+          character (len=8) :: id       =  "        "
+          character (len=16) :: name    =  "                "
           character(len=16) :: flo      =  "              mm"         ! (mm)
           character (len=16) :: depwt   =  "              m "         ! (m)
           character(len=15) :: stor     =  "             mm"          ! (mm)

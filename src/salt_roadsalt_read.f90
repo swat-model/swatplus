@@ -10,22 +10,30 @@
       
       implicit none
       
-      character (len=80) :: file      !           |filename
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      character (len=4) :: salt_ion   !           |
-      character (len=15) :: station_name	!       |
-      integer :: eof                  !           |end of file
-      integer :: iadep                !           |counter
-      integer :: imo                  !           |counter
-      integer :: iyr                  !           |counter
-      integer :: imo_atmo             !           |
+      character (len=80) :: file = "" !           |filename
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      character (len=4) :: salt_ion = ""!           |
+      character (len=15) :: station_name = "" !       |
+      integer :: eof = 0              !           |end of file
+      integer :: iadep = 0            !           |counter
+      integer :: imo = 0              !           |counter
+      integer :: iyr = 0              !           |counter
+      integer :: imo_atmo = 0         !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo            !           |
-      integer :: isalt                !           |salt ion counter
-      integer :: imonth               !           |month counter
-      integer :: year_index,yr_weat,year_days,iday,day_flag(366),dum
-      real    :: day_precip,day_temp,year_precip,day_fraction
+      integer :: iyrc_atmo = 0        !           |
+      integer :: isalt = 0            !           |salt ion counter
+      integer :: imonth = 0           !           |month counter
+      integer :: year_index = 0
+      integer :: yr_weat = 0
+      integer :: year_days = 0
+      integer :: iday = 0
+      integer :: day_flag(366) = 0
+      integer :: dum = 0
+      real    :: day_precip = 0.
+      real    :: day_temp = 0.
+      real    :: year_precip = 0.
+      real    :: day_fraction = 0.
       
       
       eof = 0
@@ -44,13 +52,13 @@
         read(5051,*)
       
         !allocate arrays
-        allocate(rdapp_salt(0:atmodep_cont%num_sta))
+        allocate (rdapp_salt(0:atmodep_cont%num_sta))
 
         !loop through the stations (num_sta is set in cli_read_atmodep subroutine)
         do iadep = 1, atmodep_cont%num_sta
           
           !allocate arrays
-          allocate(rdapp_salt(iadep)%salt(cs_db%num_salts))
+          allocate (rdapp_salt(iadep)%salt(cs_db%num_salts))
           
           !average annual values
           if (atmodep_cont%timestep == "aa") then
@@ -64,24 +72,24 @@
           if (atmodep_cont%timestep == "mo") then
             read(5051,*) station_name !station name
             do isalt=1,cs_db%num_salts
-              allocate(rdapp_salt(iadep)%salt(isalt)%roadmo(atmodep_cont%num))
+              allocate (rdapp_salt(iadep)%salt(isalt)%roadmo(atmodep_cont%num), source = 0.)
               read(5051,*) salt_ion,(rdapp_salt(iadep)%salt(isalt)%roadmo(imo),imo=1,atmodep_cont%num)
             enddo 
           end if
-					
+                              
           !yearly values
           if (atmodep_cont%timestep == "yr") then
             read(5051,*) station_name !station name
             do isalt=1,cs_db%num_salts
-              allocate(rdapp_salt(iadep)%salt(isalt)%roadyr(atmodep_cont%num))
+              allocate (rdapp_salt(iadep)%salt(isalt)%roadyr(atmodep_cont%num), source = 0.)
               read(5051,*) salt_ion,(rdapp_salt(iadep)%salt(isalt)%roadyr(iyr),iyr=1,atmodep_cont%num)
             enddo 
             !loop through the years, partitioning annual salt load to daily salt loadings
             !(based on precipitation and temperature)
             do isalt=1,cs_db%num_salts
-              allocate(rdapp_salt(iadep)%salt(isalt)%roadday(366,atmodep_cont%num))
+              allocate (rdapp_salt(iadep)%salt(isalt)%roadday(366,atmodep_cont%num), source = 0.)
               rdapp_salt(iadep)%salt(isalt)%roadday = 0.
-						enddo
+                                    enddo
             year_index = atmodep_cont%yr_init
             yr_weat = 1 !weather year index
             do iyr=1,atmodep_cont%num

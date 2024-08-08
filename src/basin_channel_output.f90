@@ -7,7 +7,7 @@
       
       implicit none
              
-      integer :: ich    !none      |counter
+      integer :: ich = 0  !none      |counter
 
       bch_d = chz
 
