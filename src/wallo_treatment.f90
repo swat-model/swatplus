@@ -7,8 +7,8 @@
 
       integer, intent (in):: iwallo         !water allocation object number
       integer, intent (in) :: idmd          !water demand object number
-      integer :: itrt               !none       |treatment database number
-      integer :: irec               !none       |recall database number
+      integer :: itrt = 0           !none       |treatment database number
+      integer :: irec = 0           !none       |recall database number
       
       !! treatment option for treating water
       if (wallo(iwallo)%dmd(idmd)%treat_typ == "treat") then

@@ -43,17 +43,17 @@
       
       implicit none      
 
-      integer :: j              !none          |HRU number
-      integer :: idp            !              | 
-      integer :: npl_gro        !              | 
-      integer :: ip 
-      integer :: jpl            !none          |counter
-      real :: x1                !              |
-      real :: sum               !              |
-      real :: sumf              !              |
-      real :: sumle             !              |
-      real :: fi                !              |
-      character(len=1) :: comp_light
+      integer :: j = 0          !none          |HRU number
+      integer :: idp = 0        !              | 
+      integer :: npl_gro = 0    !              | 
+      integer :: ip = 0
+      integer :: jpl = 0        !none          |counter
+      real :: x1 = 0.           !              |
+      real :: sum = 0.          !              |
+      real :: sumf = 0.         !              |
+      real :: sumle = 0.        !              |
+      real :: fi = 0.           !              |
+      character(len=1) :: comp_light = ""
       
       j = ihru  
       par = 0.

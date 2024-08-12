@@ -9,10 +9,18 @@
 
       implicit none
  
-      character (len=80) :: titldum, header
-      integer :: eof, imax, ob1, ob2
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
+      integer :: ob1 = 0
+      integer :: ob2 = 0
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iexco_pest, ii, ipest, iexco, iob
+      integer :: iexco_pest = 0
+      integer :: ii = 0
+      integer :: ipest = 0
+      integer :: iexco = 0
+      integer :: iob = 0
       eof = 0
       imax = 0
       
@@ -36,9 +44,9 @@
           
           allocate (exco_pest(imax))
           do iexco_pest = 1, imax
-            allocate (exco_pest(iexco_pest)%pest(cs_db%num_pests))
+            allocate (exco_pest(iexco_pest)%pest(cs_db%num_pests), source = 0.)
           end do
-          allocate (exco_pest_num(imax))
+          allocate (exco_pest_num(imax), source = 0)
           allocate (exco_pest_name(imax))
           rewind (107)
           read (107,*,iostat=eof) titldum

@@ -10,10 +10,10 @@
       
       implicit none 
        
-      integer :: i                   !           |counter
-      integer :: chan_id             !           |id of channel
-      integer :: elem_count          !           |counter
-      real :: line_array(2000)       !           |array to hold all daily values (flow, conc, load)
+      integer :: i = 0               !           |counter
+      integer :: chan_id = 0         !           |id of channel
+      integer :: elem_count = 0      !           |counter
+      real :: line_array(2000) = 0.  !           |array to hold all daily values (flow, conc, load)
       
       
       !print out daily conc and loads for specified channels (in cs_streamobs file)

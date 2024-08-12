@@ -23,39 +23,39 @@
 
       integer, intent (in)  :: ob_cur         !          |
       integer, intent (in)  :: idtbl          !none      |
-      integer :: ob_num                       !          |object number   
-      integer :: ic                           !none      |counter
-      integer :: ialt                         !none      |counter
-      integer :: iac                          !none      |counter
-      integer :: iob                          !          |
-      real :: targ_val                        !          |
-      real :: ran_num                         !          |
+      integer :: ob_num = 0                   !          |object number   
+      integer :: ic = 0                       !none      |counter
+      integer :: ialt = 0                     !none      |counter
+      integer :: iac = 0                      !none      |counter
+      integer :: iob = 0                      !          |
+      real :: targ_val = 0.                   !          |
+      real :: ran_num = 0.                    !          |
       real :: aunif                           !          |
-      integer :: ires                         !          |
-      integer :: ipl                          !          |
-      integer :: iipl                         !          |
-      integer :: id                           !          |
-      integer :: isched                       !          |
-      integer :: iauto                        !          |
-      integer :: ivar_cur 
-      integer :: ivar_tbl
-      real :: targ                            !          |
-      integer :: pl_sum                       !none      |number of plants growing
-      integer :: days_tot                     !none      |
-      integer :: iwgn                         !units     |
-      integer :: ly                           !units     |soil layer
-      real :: strs_sum                        !none      |sum of stress (water or n) of all growing plants
-      real :: prob_cum                        !          |
-      real :: prob_apply                      !          |
-      real :: hru_exp_left                    !          |number of hru's expected to still be applied (uniform or normal distr)
-      real :: hru_act_left                    !          |number of hru's actually still to be applied
-      real :: flo_m3
-      real :: wt_tot
-      real :: p_lab_tot
-      real :: p_lab_ppm
-      real :: rto
-      real :: var_cur
-      character(len=1) :: pl_chk
+      integer :: ires = 0                     !          |
+      integer :: ipl = 0                      !          |
+      integer :: iipl = 0                     !          |
+      integer :: id = 0                       !          |
+      integer :: isched = 0                   !          |
+      integer :: iauto = 0                    !          |
+      integer :: ivar_cur = 0
+      integer :: ivar_tbl = 0
+      real :: targ = 0.                       !          |
+      integer :: pl_sum = 0                   !none      |number of plants growing
+      integer :: days_tot = 0                 !none      |
+      integer :: iwgn = 0                     !units     |
+      integer :: ly = 0                       !units     |soil layer
+      real :: strs_sum = 0.                   !none      |sum of stress (water or n) of all growing plants
+      real :: prob_cum = 0.                   !          |
+      real :: prob_apply = 0.                 !          |
+      real :: hru_exp_left = 0.               !          |number of hru's expected to still be applied (uniform or normal distr)
+      real :: hru_act_left = 0.               !          |number of hru's actually still to be applied
+      real :: flo_m3 = 0.
+      real :: wt_tot = 0.
+      real :: p_lab_tot = 0.
+      real :: p_lab_ppm = 0.
+      real :: rto = 0.
+      real :: var_cur = 0.
+      character(len=1) :: pl_chk = ""
       
       d_tbl%act_hit = "y"
       do ic = 1, d_tbl%conds

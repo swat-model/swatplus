@@ -26,20 +26,20 @@
         real :: long = 0.0                          !! degrees      |longitude of weather station 
         real :: elev = 0.0                          !!              |elevation of weather station used to compile weather generator data
         real :: rain_yrs = 10.0                     !! none         |number of years of recorded maximum 0.5h rainfall used to calculate values for rainhhmx(:)
-        real, dimension (12) :: tmpmx               !! deg C        |avg monthly maximum air temperature
-        real, dimension (12) :: tmpmn               !! deg C        |avg monthly minimum air temperature
-        real, dimension (12) :: tmpstdmx            !! deg C        |standard deviation for avg monthly maximum air temperature 
-        real, dimension (12) :: tmpstdmn            !! deg C        |standard deviation for avg monthly minimum air temperature
-        real, dimension (12) :: pcpmm               !! mm           |amount of precipitation in month
-        real, dimension (12) :: pcpstd              !! mm/day       |standard deviation for the average daily
-        real, dimension (12) :: pcpskw              !! none         |skew coefficient for the average daily precipitation
-        real, dimension (12) :: pr_wd               !! none         |probability of wet day after dry day in month 
-        real, dimension (12) :: pr_ww               !! none         |probability of wet day after wet day in month
-        real, dimension (12) :: pcpd                !! days         |average number of days of precipitation in the month
-        real, dimension (12) :: rainhmx             !! mm           |maximum 0.5 hour rainfall in month
-        real, dimension (12) :: solarav             !! MJ/m^2/day   |average daily solar radiation for the month
-        real, dimension (12) :: dewpt               !! deg C        |average dew point temperature for the month
-        real, dimension (12) :: windav              !! m/s          |average wind speed for the month
+        real, dimension (12) :: tmpmx = 0.          !! deg C        |avg monthly maximum air temperature
+        real, dimension (12) :: tmpmn = 0.          !! deg C        |avg monthly minimum air temperature
+        real, dimension (12) :: tmpstdmx = 0.       !! deg C        |standard deviation for avg monthly maximum air temperature 
+        real, dimension (12) :: tmpstdmn = 0.       !! deg C        |standard deviation for avg monthly minimum air temperature
+        real, dimension (12) :: pcpmm = 0.          !! mm           |amount of precipitation in month
+        real, dimension (12) :: pcpstd = 0.         !! mm/day       |standard deviation for the average daily
+        real, dimension (12) :: pcpskw = 0.         !! none         |skew coefficient for the average daily precipitation
+        real, dimension (12) :: pr_wd = 0.          !! none         |probability of wet day after dry day in month 
+        real, dimension (12) :: pr_ww = 0.          !! none         |probability of wet day after wet day in month
+        real, dimension (12) :: pcpd = 0.           !! days         |average number of days of precipitation in the month
+        real, dimension (12) :: rainhmx = 0.        !! mm           |maximum 0.5 hour rainfall in month
+        real, dimension (12) :: solarav = 0.        !! MJ/m^2/day   |average daily solar radiation for the month
+        real, dimension (12) :: dewpt = 0.          !! deg C        |average dew point temperature for the month
+        real, dimension (12) :: windav = 0.         !! m/s          |average wind speed for the month
       end type weather_generator_db
       type (weather_generator_db), dimension(:),allocatable :: wgn
       type (weather_generator_db), dimension(:),allocatable :: wgn_orig
@@ -61,7 +61,7 @@
         real :: p_pet_rto = 0.                  !!               |30 day sum of PRECIP/PET ratio
         real, dimension (12) :: pcf = 0.        !!               |normalization factor for precipitation
         real, dimension (12) :: amp_r = 0.      !!               |alpha factor for rain(mo max 0.5h rain)
-        real, dimension (12) :: pet             !!               |average monthly PET (mm)
+        real, dimension (12) :: pet = 0.        !!               |average monthly PET (mm)
         integer, dimension (:), allocatable :: mne_ppet          !!none          |next element in precip-pet linked list
         real, dimension (:), allocatable :: precip_mce           !!mm            |precip on current day of 30 day list 
         real, dimension (:), allocatable :: pet_mce              !!mm            |pet on current day of 30 day list 
@@ -77,22 +77,23 @@
       type (wind_direction_db), dimension(:),allocatable :: wnd_dir
       
       type weather_daily
-        real :: precip
+        real :: precip = 0.
         real :: precip_next = 0.                            !! mm           |precip generated for next day
-        real :: tmax
-        real :: tmin
-        real :: tave
-        real :: solrad
-        real :: solradmx
-        real :: rhum
-        real :: dewpt
-        real :: windsp
-        real :: pet
-        real :: wndir
-        real :: phubase0                                    !! deg C        |cumulative base 0 heat units
-        real :: ppet                                        !! mm/mm        |climatic moisture index - cumulative p/pet
-        real :: daylength                                   !! hr           |day length
-        real :: precip_half_hr                              !! frac         |fraction of total rainfall on day that occurs
+        real :: tmax = 0.
+        real :: tmin = 0.
+        real :: tave = 0.
+        real :: solrad = 0.
+        real :: solradmx = 0.
+        real :: rhum = 0.
+        real :: dewpt = 0.
+        real :: windsp = 0.
+        real :: pet = 0.0
+        !real :: pet
+        real :: wndir = 0.
+        real :: phubase0 = 0.                               !! deg C        |cumulative base 0 heat units
+        real :: ppet = 0.                                   !! mm/mm        |climatic moisture index - cumulative p/pet
+        real :: daylength = 0.                              !! hr           |day length
+        real :: precip_half_hr = 0.                         !! frac         |fraction of total rainfall on day that occurs
                                                             !!              |during 0.5h highest intensity rainfall
         character(len=3) :: precip_prior_day = "dry"        !!              |"dry" or "wet"
         real, dimension(:), allocatable :: ts               !! mm           |subdaily precip - current day
@@ -113,7 +114,7 @@
       
       type weather_codes_station_char
         !character (len=50) ::  wst = ""      !!  weather station name
-        character (len=50) ::  wgn = ""       !!  weather generator name
+        character (len=50) :: wgn = ""        !!  weather generator name
         character (len=50) :: pgage = ""      !!  gage name for rainfall 
         character (len=50) :: tgage = ""      !!  gage name for temperature
         character (len=50) :: sgage = ""      !!  gage name for solar radiation
@@ -125,7 +126,7 @@
 
       type weather_station
         character(len=50) :: name = "Farmer Branch IL"
-        real :: lat                         ! degrees    |latitude
+        real :: lat = 0.                    ! degrees    |latitude
         type (weather_codes_station_char) :: wco_c
         type (weather_codes_station) :: wco 
         type (weather_daily) :: weat
@@ -137,14 +138,14 @@
         real, dimension(12) :: radinc = 0   ! MJ/m^2     |monthly solar radiation adjustment
         real, dimension(12) :: huminc = 0   ! none       |monthly humidity adjustment
         real, dimension(:), allocatable :: tlag     ! deg C      |daily average temperature for channel temp lag
-        real :: airlag_temp                 ! deg C      |average temperature w_temp%airlag_d days ago
+        real :: airlag_temp = 0.            ! deg C      |average temperature w_temp%airlag_d days ago
         integer :: tlag_mne = 1             !            |next element (day) for the air temp linked list
       end type weather_station
       type (weather_station), dimension(:),allocatable :: wst
          
       type climate_change_variables
         character(len=50) :: name = "Increment or Scenario"
-        integer :: ref_yr                   ! none       |reference year to begin incremental adjustments
+        integer :: ref_yr = 0               ! none       |reference year to begin incremental adjustments
         real :: co2inc = 0                  ! ppm        |annual CO2 increment
         real, dimension(12) :: rfinc = 0    ! deg C      |monthly precipitation annual increment
         real, dimension(12) :: tmpinc = 0   ! deg C      |monthly temperature annual increment
@@ -158,23 +159,23 @@
       end type climate_change_variables
          
       type climate_measured_data
-        character (len=50) :: filename
-        real :: lat                         !! latitude of raingage         
-        real :: long                        !! longitude of raingage
-        real :: elev                        !! elevation of raingage
-        integer :: nbyr                     !! number of years of daily rainfall
-        integer :: tstep                    !! timestep of precipitation  
+        character (len=50) :: filename = ""
+        real :: lat = 0.                    !! latitude of raingage         
+        real :: long = 0.                   !! longitude of raingage
+        real :: elev = 0.                   !! elevation of raingage
+        integer :: nbyr = 0                 !! number of years of daily rainfall
+        integer :: tstep = 0                !! timestep of precipitation  
         
         integer :: days_gen = 0             !! number of missing days - generated 
         integer :: yrs_start = 1            !! number of years of simulation before record starts
         
-        integer :: start_day                !! daily precip start julian day
-        integer :: start_yr                 !! daily precip start year
-        integer :: end_day                  !! daily precip end julian day
-        integer :: end_yr                   !! daily precip end year
-        real, dimension (12) :: mean_mon    !! same as variable unit        |mean monthly measured value
-        real, dimension (12) :: max_mon     !! same as variable unit        |maximum monthly measured value
-        real, dimension (12) :: min_mon     !! same as variable unit        |minimum monthly measured value
+        integer :: start_day = 0            !! daily precip start julian day
+        integer :: start_yr = 0             !! daily precip start year
+        integer :: end_day = 0              !! daily precip end julian day
+        integer :: end_yr = 0               !! daily precip end year
+        real, dimension (12) :: mean_mon = 0. !! same as variable unit        |mean monthly measured value
+        real, dimension (12) :: max_mon = 0.  !! same as variable unit        |maximum monthly measured value
+        real, dimension (12) :: min_mon = 0.  !! same as variable unit        |minimum monthly measured value
         
         real, dimension (:,:), allocatable :: ts
         real, dimension (:,:), allocatable :: ts2
@@ -192,21 +193,21 @@
         real :: no3_rf = .2         !! ave annual nitrate in rainfall - mg/l
         real :: nh4_dry = 0.        !! ave annual ammonia dry deposition - kg/ha/yr
         real :: no3_dry = 0.        !! ave annual nitrate dry deposition - kg/ha/yr
-        character(len=50) :: name
+        character(len=50) :: name = ""
         real, dimension(:), allocatable :: nh4_rfmo
         real, dimension(:), allocatable :: no3_rfmo
         real, dimension(:), allocatable :: nh4_drymo
         real, dimension(:), allocatable :: no3_drymo
         real, dimension(:), allocatable :: nh4_rfyr
         real, dimension(:), allocatable :: no3_rfyr
-        real, dimension(:), allocatable :: nh4_dryyr 
-        real, dimension(:), allocatable :: no3_dryyr     
+        real, dimension(:), allocatable :: nh4_dryyr
+        real, dimension(:), allocatable :: no3_dryyr
       end type atmospheric_deposition
       type (atmospheric_deposition),dimension(:), allocatable :: atmodep
  
       type atmospheric_deposition_control
         integer :: num_sta = 0
-        character(len=2) :: timestep
+        character(len=2) :: timestep = ""
         integer :: ts = 0
         integer :: mo_init = 0
         integer :: yr_init = 0
@@ -220,12 +221,12 @@
       character(len=1) :: cs_atmo = "n"
       
       type atmospheric_deposition_cs
-        real :: rf                                  !! concentration in rainfall - mg/l
-        real :: dry                                 !! dry deposition - kg/ha/yr
+        real :: rf = 0.                             !! concentration in rainfall - mg/l
+        real :: dry = 0.                            !! dry deposition - kg/ha/yr
         real, dimension(:), allocatable :: rfmo
         real, dimension(:), allocatable :: drymo
         real, dimension(:), allocatable :: rfyr
-        real, dimension(:), allocatable :: dryyr 
+        real, dimension(:), allocatable :: dryyr
       end type atmospheric_deposition_cs
       type object_deposition_cs
         type (atmospheric_deposition_cs), dimension (:), allocatable :: salt
@@ -236,7 +237,7 @@
       
       !rtb salt
       type road_salt
-        real :: road                                 !! ave annual salt ion loading via road salt application (kg/ha)
+        real :: road = 0.                            !! ave annual salt ion loading via road salt application (kg/ha)
         real, dimension(:,:), allocatable :: roadday !! daily salt ion loading via road salt application (kg/ha)
         real, dimension(:), allocatable :: roadmo    !! monthly salt ion loading via road salt application (kg/ha)
         real, dimension(:), allocatable :: roadyr    !! yearly salt ion loading via road salt application (kg/ha)
@@ -249,10 +250,10 @@
       character(len=50), dimension(:), allocatable :: wst_n
       character(len=50), dimension(:), allocatable :: wgn_n
       character(len=50), dimension(:), allocatable :: pcp_n
-      character(len=50), dimension(:), allocatable :: tmp_n 
+      character(len=50), dimension(:), allocatable :: tmp_n
       character(len=50), dimension(:), allocatable :: slr_n
       character(len=50), dimension(:), allocatable :: hmd_n
-      character(len=50), dimension(:), allocatable :: wnd_n   
+      character(len=50), dimension(:), allocatable :: wnd_n
       character(len=50), dimension(:), allocatable :: atmo_n
       character(len=50), dimension(:), allocatable :: petm_n
           

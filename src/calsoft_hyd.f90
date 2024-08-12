@@ -19,24 +19,24 @@
       
       implicit none
       
-      integer :: iter_all      !none      |counter
-      integer :: iterall       !none      |counter
-      integer :: isim          !          |
-      integer :: ireg          !none      |counter
-      integer :: ilum          !none      |counter
-      integer :: iihru         !none      |counter
-      integer :: icn           !none      |counter
-      integer :: ihru_s        !none      |counter
-      integer :: iter_ind      !          |end of loop
-      integer :: ietco         !none      |counter
-      integer :: ik            !none      |counter
-      integer :: iperco        !none      |counter
-      real :: rmeas            !          |
-      real :: denom            !          |
-      real :: soft             !          |
-      real :: diff             !          |
-      real :: chg_val          !          | 
-      real :: perc_ln_func
+      integer :: iter_all = 0  !none      |counter
+      integer :: iterall = 0   !none      |counter
+      integer :: isim = 0      !          |
+      integer :: ireg = 0      !none      |counter
+      integer :: ilum = 0      !none      |counter
+      integer :: iihru = 0     !none      |counter
+      integer :: icn = 0       !none      |counter
+      integer :: ihru_s = 0    !none      |counter
+      integer :: iter_ind = 0  !          |end of loop
+      integer :: ietco = 0     !none      |counter
+      integer :: ik = 0        !none      |counter
+      integer :: iperco = 0    !none      |counter
+      real :: rmeas = 0.       !          |
+      real :: denom = 0.       !          |
+      real :: soft = 0.        !          |
+      real :: diff = 0.        !          |
+      real :: chg_val = 0.     !          | 
+      real :: perc_ln_func = 0.
 
       ! calibrate hydrology
         iter_all = 1
@@ -844,5 +844,5 @@
         
       !cal_codes%hyd_hru = "n"
       
-	  return
+      return
       end subroutine calsoft_hyd

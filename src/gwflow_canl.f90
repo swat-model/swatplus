@@ -11,33 +11,39 @@
       
       implicit none
 
-      integer, intent (in) :: chan_id		 !       |channel number
-      integer :: c											 !       |counter for canals connected to the channel
-      integer :: k                       !       |counter for cells connected to a canal
-      integer :: s                       !       |counter of groundwater solutes
-      integer :: canal_id                !       |canal in connection with the channel
-      integer :: cell_id                 !       |cell in connection with the canal
-      integer :: day_beg                 !       |beginning day (julian) of active canal
-      integer :: day_end                 !       |ending day (julian) of active canal
-      integer :: isalt                   !       |salt ion counter
-      integer :: ics                     !       |constituent counter
-      integer :: sol_index 
-      integer :: dum
-      real :: chan_volume                !m3     |water volume in channel before groundwater exchange occurs
-      real :: width                      !m      |canal width
-      real :: depth                      !m      |canal depth
-      real :: thick                      !m      |canal bed thickness
-      real :: length                     !m      |length of canal in the cell
-      real :: stage                      !m      |stage of canal in the cell
-      real :: bed_K											 !m/day  |hydraulic conductivity of canal bed in the cell
-      real :: flow_area                  !m2     |groundwater flow area of water exchange, in cell
-      real :: canal_bed                  !m      |canal bed elevation in the cell
-      real :: head_diff                  !m      |head difference between canal stage and groundwater head
-      real :: Q                          !m3/day |water exchange flow rate, calculated by Darcy's Law
-      real :: chan_csol(100)             !g/m3   |solute concentration in channel water
-      real :: solmass(100)               !g      |solute mass transferred
-      real :: conc_nh3,conc_no2,conc_dox,conc_orgn
-      real :: mass_nh3,mass_no2,mass_dox,mass_orgn
+      integer, intent (in) :: chan_id    !       |channel number
+      integer :: c = 0                   !       |counter for canals connected to the channel
+      integer :: k = 0                   !       |counter for cells connected to a canal
+      integer :: s = 0                   !       |counter of groundwater solutes
+      integer :: canal_id = 0            !       |canal in connection with the channel
+      integer :: cell_id = 0             !       |cell in connection with the canal
+      integer :: day_beg = 0             !       |beginning day (julian) of active canal
+      integer :: day_end = 0             !       |ending day (julian) of active canal
+      integer :: isalt = 0               !       |salt ion counter
+      integer :: ics = 0                 !       |constituent counter
+      integer :: sol_index = 0
+      integer :: dum = 0
+      real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
+      real :: width = 0.                 !m      |canal width
+      real :: depth = 0.                 !m      |canal depth
+      real :: thick = 0.                 !m      |canal bed thickness
+      real :: length = 0.                !m      |length of canal in the cell
+      real :: stage = 0.                 !m      |stage of canal in the cell
+      real :: bed_K = 0.                  !m/day  |hydraulic conductivity of canal bed in the cell
+      real :: flow_area = 0.             !m2     |groundwater flow area of water exchange, in cell
+      real :: canal_bed = 0.             !m      |canal bed elevation in the cell
+      real :: head_diff = 0.             !m      |head difference between canal stage and groundwater head
+      real :: Q = 0.                     !m3/day |water exchange flow rate, calculated by Darcy's Law
+      real :: chan_csol(100) = 0.        !g/m3   |solute concentration in channel water
+      real :: solmass(100) = 0.          !g      |solute mass transferred
+      real :: conc_nh3 = 0.
+      real :: conc_no2 = 0.
+      real :: conc_dox = 0.
+      real :: conc_orgn = 0.
+      real :: mass_nh3 = 0.
+      real :: mass_no2 = 0.
+      real :: mass_dox = 0.
+      real :: mass_orgn = 0.
       
       
       !only proceed if canal-cell exchange is active

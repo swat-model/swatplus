@@ -14,11 +14,12 @@
 
       intrinsic Len, Index, AdjustL
 
-      character (len=*) ::  file_name
+      character (len=*) :: file_name
       character (len=Len(file_name)) ::  temp_name
-      character (len=26) :: low_case = "abcdefghijklmnopqrstuvwxyz",      &
-                            up_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      integer :: ii, j
+      character (len=26) :: low_case = "abcdefghijklmnopqrstuvwxyz"
+      character (len=26) :: up_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      integer :: ii = 0
+      integer :: j = 0
 
       temp_name = ""
       j = 0

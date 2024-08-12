@@ -18,12 +18,12 @@
       implicit none
 
       real, parameter :: bk = 0.01      !              |was .0006
-      integer :: j                      !none          |HRU number
-      integer :: l                      !none          |counter 
-      real :: rto                       !              |
-      real :: rmp1                      !kg P/ha       |amount of phosphorus moving from the solution
+      integer :: j = 0                  !none          |HRU number
+      integer :: l = 0                  !none          |counter 
+      real :: rto = 0.                  !              |
+      real :: rmp1 = 0.                 !kg P/ha       |amount of phosphorus moving from the solution
                                         !              |mineral to the active mineral pool in the soil layer
-      real :: roc                       !kg P/ha       |amount of phosphorus moving from the active
+      real :: roc = 0.                  !kg P/ha       |amount of phosphorus moving from the active
                                         !              |mineral to the stable mineral pool in the soil layer
 
       j = ihru

@@ -10,19 +10,19 @@
       
       implicit none
 
-      integer :: j          !none          |hru number
-      integer :: ipath      !none          |pathogen counter
-      integer :: ipl        !none          |plant number
-      integer :: ipath_db   !none          |pathogen number from data file
-      integer :: isp_ini    !none          |soil-plant initialization number from data file
-      real :: pl_ini        !              |
-      real :: sol_ini       !              |
-      real :: pl_die_gro
-      real :: sol_die_gro
-      real :: bacdiegrosol_out
-      real :: bacdiegroplt_out
+      integer :: j = 0      !none          |hru number
+      integer :: ipath = 0  !none          |pathogen counter
+      integer :: ipl = 0    !none          |plant number
+      integer :: ipath_db = 0 !none          |pathogen number from data file
+      integer :: isp_ini = 0  !none          |soil-plant initialization number from data file
+      real :: pl_ini = 0.   !              |
+      real :: sol_ini = 0.  !              |
+      real :: pl_die_gro = 0.
+      real :: sol_die_gro = 0.
+      real :: bacdiegrosol_out = 0.
+      real :: bacdiegroplt_out = 0.
       real :: theta
-      real :: wash_off      !               |pathogen wash off
+      real :: wash_off = 0. !               |pathogen wash off
 
       j = ihru
          

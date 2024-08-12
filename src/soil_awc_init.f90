@@ -31,13 +31,13 @@
       
       implicit none
 
-      integer :: ly           !none          |soil layer counter
-      integer :: nly          !none          |number of soil layers
-      real :: sumpor          !mm            |porosity of profile
-      real :: pormm           !mm            |porosity in mm depth
+      integer :: ly = 0       !none          |soil layer counter
+      integer :: nly = 0      !none          |number of soil layers
+      real :: sumpor = 0.     !mm            |porosity of profile
+      real :: pormm = 0.      !mm            |porosity in mm depth
       integer :: isol         !              |   
-      real :: drpor           !              |
-      real :: depth_prev      !              |
+      real :: drpor = 0.      !              |
+      real :: depth_prev = 0. !              |
       
       !! reset soil parameters based on awc
       nly = soil(isol)%nly

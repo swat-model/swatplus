@@ -6,12 +6,12 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
       integer :: imax = 0.            !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iu                   !none       |counter 
+      integer :: iu = 0               !none       |counter 
            
       inquire (file=in_parmdb%urban_urb, exist=i_exist)
       if (.not. i_exist .or. in_parmdb%urban_urb == "null") then
@@ -30,7 +30,7 @@
             imax = imax + 1
           end do
           
-        allocate (urbdb(0:imax)) 
+        allocate (urbdb(0:imax))
         
         rewind (108)
         read (108,*,iostat=eof) titldum

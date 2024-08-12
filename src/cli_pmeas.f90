@@ -8,21 +8,21 @@
 
       implicit none
             
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      integer :: iyr                  !none       |number of years 
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      integer :: iyr = 0              !none       |number of years 
       logical :: i_exist              !none       |check to determine if file exists 
-      integer :: mpcp                 !           |
-      integer :: i                    !none       |counter
-      integer :: istep                !           |
-      integer :: iyr_prev             !none       |previous year
-      integer :: iyrs                 !           |
-      integer :: iss                  !none       |counter
-      integer :: mo
-      integer :: day_mo
-      integer :: ihr
+      integer :: mpcp = 0             !           |
+      integer :: i = 0                !none       |counter
+      integer :: istep = 0            !           |
+      integer :: iyr_prev = 0         !none       |previous year
+      integer :: iyrs = 0             !           |
+      integer :: iss = 0              !none       |counter
+      integer :: mo = 0
+      integer :: day_mo = 0
+      integer :: ihr = 0
             
        mpcp = 0
        eof = 0
@@ -86,9 +86,9 @@
         
         if (pcp(i)%tstep > 0) then
           ! the precip time step has to be the same as time%step
-          allocate (pcp(i)%tss(time%step,366,pcp(i)%nbyr))
+          allocate (pcp(i)%tss(time%step,366,pcp(i)%nbyr), source = 0.)
         else
-         allocate (pcp(i)%ts(366,pcp(i)%nbyr))
+         allocate (pcp(i)%ts(366,pcp(i)%nbyr), source = 0.)
         end if
 
         ! read and save start jd and yr

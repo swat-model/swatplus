@@ -10,9 +10,9 @@
       implicit none
       
       integer, intent (in) :: iaq        !             |
-      real :: const                      !             |constant used for rate, days, etc
-      integer :: iob                     !             |
-      integer :: ics
+      real :: const = 0.                 !             |constant used for rate, days, etc
+      integer :: iob = 0                 !             |
+      integer :: ics = 0
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs constituent mass loadings and concentrations in aquifers

@@ -14,25 +14,28 @@
 
       implicit none
       
-      integer :: iaqu
-      integer :: icha
-      integer :: ires
-      integer :: ihyd
-      integer :: idat
-      integer :: idb
-      integer :: iobj_out
-      integer :: irec
-      integer :: iob
-      real :: wyld_rto
-      character (len=8) :: wet_y_n
-      character(len=100) :: folderPath
-      character(len=100) :: command
-      logical :: folderExists
-         
-      folderPath = "SWIFT"
-      ! Use system-specific command to create a folder
-      command = 'mkdir ' // trim(folderPath)
-      call SYSTEM(command)
+      integer :: iaqu = 0
+      integer :: icha = 0
+      integer :: ires = 0
+      integer :: ihyd = 0
+      integer :: idat = 0
+      integer :: idb = 0
+      integer :: iobj_out = 0
+      integer :: irec = 0
+      integer :: iob = 0
+      real :: wyld_rto = 0.
+      character (len=8) :: wet_y_n = ""
+      character(len=100) :: folderPath = ""
+      character(len=100) :: command = ""
+      logical :: i_exist
+      
+      !! check for file_cio.swf to determine if SWIFT folder exist
+      inquire (file="SWIFT/file_cio.swf", exist=i_exist)
+      if (.not. i_exist) then   ! if not use system-specific command to create SWIFT folder
+        folderPath = "SWIFT"
+        command = 'mkdir ' // trim(folderPath)
+        call SYSTEM(command)
+      end if
     
       !! write new file.cio
       open (107,file="SWIFT/file_cio.swf",recl = 1500)

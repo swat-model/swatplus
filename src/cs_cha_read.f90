@@ -10,12 +10,14 @@
  
       implicit none
       
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist
-      integer :: ics,i
-      integer :: icsi
+      integer :: ics = 0
+      integer :: i = 0
+      integer :: icsi = 0
 
       eof = 0
       
@@ -40,7 +42,7 @@
           allocate (cs_cha_ini(imax))
 
           do ics=1,imax
-            allocate (cs_cha_ini(ics)%conc(cs_db%num_cs))
+            allocate (cs_cha_ini(ics)%conc(cs_db%num_cs), source = 0.)
           enddo
           
           rewind (107)
@@ -64,7 +66,7 @@
         open(107,file='cs_streamobs')
         read(107,*)
         read(107,*) cs_str_nobs
-        allocate(cs_str_obs(cs_str_nobs))
+        allocate (cs_str_obs(cs_str_nobs), source = 0)
         do i=1,cs_str_nobs
           read(107,*) cs_str_obs(i)
         enddo

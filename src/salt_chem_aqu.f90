@@ -31,12 +31,30 @@
       
       implicit none
 
-      integer iaq
-      integer m,iter_count
-      real    ion1,ion2,ion3,ion4,ion5,ion6,ion7,ion8,hru_area_m2,gw_volume
-      real    waterC,Sol_CaCO3_p(1000),Sol_MgCO3_p(1000),Sol_CaSO4_p(1000),Sol_MgSO4_p(1000),Sol_NaCl_p(1000)
-      real    I_Prep_in,I_diff,SkipedIEX
-      real    mass_before,mass_after         
+      integer :: iaq = 0
+      integer :: m = 0
+      integer :: iter_count = 0
+      real :: ion1 = 0.
+      real :: ion2 = 0.
+      real :: ion3 = 0.
+      real :: ion4 = 0.
+      real :: ion5 = 0.
+      real :: ion6 = 0.
+      real :: ion7 = 0.
+      real :: ion8 = 0.
+      real :: hru_area_m2 = 0.
+      real :: gw_volume = 0.
+      real :: waterC = 0.
+      real :: Sol_CaCO3_p(1000) = 0.
+      real :: Sol_MgCO3_p(1000) = 0.
+      real :: Sol_CaSO4_p(1000) = 0.
+      real :: Sol_MgSO4_p(1000) = 0.
+      real :: Sol_NaCl_p(1000) = 0.
+      real :: I_Prep_in = 0.
+      real :: I_diff = 0.
+      real :: SkipedIEX = 0.
+      real :: mass_before = 0.
+      real :: mass_after = 0.
       double precision IonStr,IS_temp,K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,error1ST,error2ND,error3RD,errorTotal
       
       !aquifer ID
@@ -68,10 +86,10 @@
       do m=1,cs_db%num_salts
         if(cs_aqu(iaq)%salt(m).lt.0) then
           cs_aqu(iaq)%salt(m) = 0.
-		endif
+        endif
         if(cs_aqu(iaq)%saltc(m).lt.0) then
           cs_aqu(iaq)%saltc(m) = 0.
-		endif
+        endif
         mass_before = mass_before + cs_aqu(iaq)%salt(m) !kg of salt
         if(gw_volume.gt.0) then
           cs_aqu(iaq)%saltc(m) = (cs_aqu(iaq)%salt(m) * 1000.) / gw_volume !g/m3 = mg/L

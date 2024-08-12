@@ -7,7 +7,7 @@
       implicit none
       
       integer, intent (in) :: irec            !          |     
-      integer :: iob                          !          |
+      integer :: iob = 0                      !          |
    
       iob = sp_ob1%recall + irec - 1   !!!!!! added for new output write
              

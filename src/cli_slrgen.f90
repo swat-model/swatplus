@@ -23,8 +23,8 @@
       
       implicit none
 
-      real :: rx                     !none          |variable to hold intermediate calculation
-      real ::  rav                   !MJ/m^2        |modified monthly average solar radiation
+      real :: rx = 0.                !none          |variable to hold intermediate calculation
+      real :: rav = 0.               !MJ/m^2        |modified monthly average solar radiation
       integer :: iwgn                !              |
 
       rav = wgn(iwgn)%solarav(time%mo) / (1. - 0.5 * wgn_pms(iwgn)%pr_wdays(time%mo))

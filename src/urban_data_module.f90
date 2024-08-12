@@ -3,7 +3,7 @@
       implicit none
           
       type urban_db
-        character(len=16) :: urbnm
+        character(len=16) :: urbnm = ""
         real :: fimp = 0.05        !! fraction          |fraction of HRU area that is imp
         real :: fcimp = 0.05       !! fraction          |fraction of HRU that is classified as directly connected imp
         real :: curbden = 0.0      !! km/ha             |curb length density              

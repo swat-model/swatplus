@@ -9,30 +9,30 @@
       
       implicit none
 
-      real :: sep_opt                   !                |
-      real :: filt_w                    !                |
-      real :: grwat_veg                 !                |
-      real :: plq_rt                    !                |
-      real :: pr_w                      !none            |probability of wet day after dry day in month 
-      real :: rchrg                     !mm              |recharge
-      real :: sedst                     !metric tons     |amount of sediment stored in reach
+      real :: sep_opt = 0.              !                |
+      real :: filt_w = 0.               !                |
+      real :: grwat_veg = 0.            !                |
+      real :: plq_rt = 0.               !                |
+      real :: pr_w = 0.                 !none            |probability of wet day after dry day in month 
+      real :: rchrg = 0.                !mm              |recharge
+      real :: sedst = 0.                !metric tons     |amount of sediment stored in reach
                                         !                |reentrained in channel sediment routing
-      real :: sol_wp                    !                |
-      real :: thalf                     !days            |time for the amount of solids on
+      real :: sol_wp = 0.               !                |
+      real :: thalf = 0.                !days            |time for the amount of solids on
                                         !                |impervious areas to build up to 1/2
                                         !                |the maximum level
-      real :: tnconc                    !mg N/kg sed     |concentration of total nitrogen in
+      real :: tnconc = 0.               !mg N/kg sed     |concentration of total nitrogen in
                                         !                |suspended solid load from impervious
                                         !                |areas
-      real :: tno3conc                  !mg NO3-N/kg sed |concentration of NO3-N in suspended
+      real :: tno3conc = 0.             !mg NO3-N/kg sed |concentration of NO3-N in suspended
                                         !                |solid load from impervious areas
-      real :: tpconc                    !mg P/kg sed     |concentration of total phosphorus in
+      real :: tpconc = 0.               !mg P/kg sed     |concentration of total phosphorus in
                                         !                |suspended solid load from impervious
                                         !                |areas 
-      real :: urbcoef                   !1/mm            |wash-off coefficient for removal of
+      real :: urbcoef = 0.              !1/mm            |wash-off coefficient for removal of
                                         !                |constituents from an impervious surface
-      real :: urbcn2                    ! none           |moisture condiction II curve number for imp areas
-      real :: vp                        !                |  
+      real :: urbcn2 = 0.               ! none           |moisture condiction II curve number for imp areas
+      real :: vp = 0.                   !                |  
 
 !!  septic changes 6/07/10  jaehak
       bio_bod = 0.

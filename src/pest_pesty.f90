@@ -21,14 +21,14 @@
       
       implicit none 
 
-      real :: conc        !              |concentration of pesticide in soil
-      real :: er          !none          |enrichment ratio for pesticides
-      real :: zdb1        !              |
-      real :: kd          !(mg/kg)/(mg/L) |koc * carbon
-      integer :: j        !none          |HRU number
-      integer :: k        !none          |counter
-      integer :: ipest_db !none          |pesticide number from database
-      real :: pest_init   !kg/ha         |amount of pesticide in soil
+      real :: conc = 0.   !              |concentration of pesticide in soil
+      real :: er = 0.     !none          |enrichment ratio for pesticides
+      real :: zdb1 = 0.   !              |
+      real :: kd = 0.     !(mg/kg)/(mg/L) |koc * carbon
+      integer :: j = 0    !none          |HRU number
+      integer :: k = 0    !none          |counter
+      integer :: ipest_db = 0!none          |pesticide number from database
+      real :: pest_init = 0.!kg/ha         |amount of pesticide in soil
 
       j = ihru
 

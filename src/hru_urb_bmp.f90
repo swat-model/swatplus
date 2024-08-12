@@ -6,13 +6,13 @@
     
     implicit none
     
-    integer :: j          !none          |HRU number 
-    integer :: xx         !              |
-    real :: sedppm        !              |
-    real :: solnppm       !              |
-    real :: solpppm       !              | 
-    real :: sednppm       !              |
-    real :: sedpppm       !              |
+    integer :: j = 0      !none          |HRU number 
+    integer :: xx = 0     !              |
+    real :: sedppm = 0.   !              |
+    real :: solnppm = 0.  !              |
+    real :: solpppm = 0.  !              | 
+    real :: sednppm = 0.  !              |
+    real :: sedpppm = 0.  !              |
 
 	j = 0
 	j = ihru

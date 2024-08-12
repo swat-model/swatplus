@@ -14,8 +14,8 @@
       implicit none
       
       integer, intent (in) :: ihru             !            |
-      integer :: j
-      integer :: iob
+      integer :: j = 0
+      integer :: iob = 0
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs HRU variables on daily, monthly and annual time steps

@@ -8,12 +8,12 @@
       
       implicit none
 
-      integer :: j          !none          |hru number
-      integer :: ipath      !none          |pathogen counter
-      integer :: ipath_db   !none          |pathogen number from data file
-      integer :: isp_ini    !none          |soil-plant initialization number from data file
-      real :: cpath         !              |concentration of pathogen in soil
-      real :: path_kd
+      integer :: j = 0      !none          |hru number
+      integer :: ipath = 0  !none          |pathogen counter
+      integer :: ipath_db = 0 !none          |pathogen number from data file
+      integer :: isp_ini = 0  !none          |soil-plant initialization number from data file
+      real :: cpath = 0.    !              |concentration of pathogen in soil
+      real :: path_kd = 0.
 
       j = ihru
          

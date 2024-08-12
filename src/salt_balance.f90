@@ -20,11 +20,26 @@
 
       implicit none
       
-      integer :: i,m,ob_ctr,num_days,jj
-      real :: saltsum,hru_area_m2,sol_thick,soil_volume,soil_mass, &
-              aquifer_thickness,aquifer_volume,aquifer_mass, sub_ha, soil_thick
-      real :: sum_conc,avg_conc(cs_db%num_salts),sum_load,avg_load(11)
-      real :: salt_basin(28)
+      integer :: i = 0
+      integer :: m = 0
+      integer :: ob_ctr = 0
+      integer :: num_days = 0
+      integer :: jj = 0
+      real :: saltsum = 0.
+      real :: hru_area_m2 = 0.
+      real :: sol_thick = 0.
+      real :: soil_volume = 0.
+      real :: soil_mass = 0.
+      real :: aquifer_thickness = 0.
+      real :: aquifer_volume = 0.
+      real :: aquifer_mass = 0.
+      real :: sub_ha = 0.
+      real :: soil_thick = 0.
+      real :: sum_conc = 0.
+      real :: avg_conc(cs_db%num_salts)
+      real :: sum_load = 0.
+      real :: avg_load(11) = 0.
+      real :: salt_basin(28) = 0.
 
       
       !basin-wide salt mass balance -------------------------------------------------------------------------------------------------------

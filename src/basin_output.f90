@@ -9,11 +9,11 @@
       
       implicit none
 
-      integer :: ihru     !none      |counter
-      integer :: iihru    !          |
-      real :: const       !          |constant used for rate, days, etc
-      real :: sw_init       !          |
-      real :: sno_init       !          |
+      integer :: ihru = 0 !none      |counter
+      integer :: iihru = 0  !          |
+      real :: const = 0.  !          |constant used for rate, days, etc
+      real :: sw_init = 0.  !          |
+      real :: sno_init = 0.  !          |
               
       !! zero daily basin outputs before summing
       sw_init = bwb_d%sw_init

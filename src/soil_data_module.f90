@@ -3,10 +3,10 @@
       implicit none
       
       type soil_lte_database
-       character(len=16) :: texture
-       real :: awc
-       real :: por
-       real :: scon
+       character(len=16) :: texture = ""
+       real :: awc = 0.
+       real :: por = 0.
+       real :: scon = 0.
       end type soil_lte_database
       type (soil_lte_database), dimension(:), allocatable :: soil_lte
     
@@ -62,7 +62,7 @@
       
       type soil_profile_db
         character(len=20) :: snam = " "       !! NA            |soil series name 
-        integer ::  nly  = 1                  !! none          |number of soil layers  
+        integer :: nly  = 1                   !! none          |number of soil layers  
         character(len=16) :: hydgrp = "A"     !! NA            |hydrologic soil group
         real :: zmx = 1500.                   !! mm            |maximum rooting depth
         real :: anion_excl = 0.5              !! none          |fraction of porosity from which anions are excluded
