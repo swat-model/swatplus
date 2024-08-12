@@ -10,24 +10,24 @@
 
       implicit none
       
-      integer :: iob                !none       |channel object number
+      integer :: iob = 0            !none       |channel object number
       !integer :: iwst               !none       |weather station number
-      real :: tdx                   !           |
-      real :: t_md
-      real :: ke_beta
-      real ::f_wind
-      real :: k_e
-      real :: ssff
-      real :: h_sr
-      real :: e_s
-      real :: e_a
-      real :: cloud
-      real :: e_atm
-      real :: h_atm
-      real :: numerator
-      real :: t_equil
-      real :: k_factor
-      real :: t_heat_exch
+      real :: tdx = 0.              !           |
+      real :: t_md = 0.
+      real :: ke_beta = 0.
+      real :: f_wind = 0.
+      real :: k_e = 0.
+      real :: ssff = 0.
+      real :: h_sr = 0.
+      real :: e_s = 0.
+      real :: e_a = 0.
+      real :: cloud = 0.
+      real :: e_atm = 0.
+      real :: h_atm = 0.
+      real :: numerator = 0.
+      real :: t_equil = 0.
+      real :: k_factor = 0.
+      real :: t_heat_exch = 0.
       
       !! Stream Temperature from heat exchange
       

@@ -5,9 +5,15 @@
 
       implicit none
       
-      character (len=80) :: title
-      integer :: max_table, tnum_conds, ii, ictbl, isub_con, icc, imod
-      integer ::  eof
+      character (len=80) :: title = ""
+      integer :: max_table = 0
+      integer :: tnum_conds = 0
+      integer :: ii = 0
+      integer :: ictbl = 0
+      integer :: isub_con = 0
+      integer :: icc = 0
+      integer :: imod = 0
+      integer :: eof = 0
       logical :: i_exist         !                |check to determine if file exists
    
       inquire (file="res_conds.dat", exist=i_exist)
@@ -24,15 +30,15 @@
       !! read data for each condition table
       do ictbl = 1, max_table
         read (100,*) ctbl(ictbl)%name, ctbl(ictbl)%num_conds, ctbl(ictbl)%num_modules
-        allocate (ctbl(ictbl)%conds(ctbl(ictbl)%num_conds)) 
-        allocate (ctbl(ictbl)%mods(ctbl(ictbl)%num_modules)) 
+        allocate (ctbl(ictbl)%conds(ctbl(ictbl)%num_conds))
+        allocate (ctbl(ictbl)%mods(ctbl(ictbl)%num_modules))
       
         !! loop through all conditions
         do ii = 1, ctbl(ictbl)%num_conds 
           !! read total number of sub conditions
           read (100,*) isub_con
           backspace (100)
-          allocate (ctbl(ictbl)%conds(ii)%scon(isub_con)) 
+          allocate (ctbl(ictbl)%conds(ii)%scon(isub_con))
           read (100,*) ctbl(ictbl)%conds(ii)%num_conds, (ctbl(ictbl)%conds(ii)%scon(icc), icc = 1, isub_con),    &
               ctbl(ictbl)%conds(ii)%action
         end do
@@ -47,12 +53,12 @@
           do ii = 1, tnum_conds
             read (100,*) isub_con
             backspace (100)
-            allocate (ctbl(ictbl)%mods(imod)%con(ii)%scon(isub_con)) 
+            allocate (ctbl(ictbl)%mods(imod)%con(ii)%scon(isub_con))
             read (100,*) ctbl(ictbl)%mods(imod)%con(ii)%num_conds, (ctbl(ictbl)%mods(imod)%con(ii)%scon(icc), icc = 1, isub_con),  &
                 ctbl(ictbl)%mods(imod)%con(ii)%action
           end do
         end do
       end do
     
-	  return      
+         return      
       end subroutine res_read_conds

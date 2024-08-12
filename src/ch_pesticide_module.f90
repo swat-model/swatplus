@@ -4,8 +4,8 @@
       
       implicit none
               
-      real :: frsol             !none          |fraction of pesticide in reach that is soluble
-      real :: frsrb             !none          |fraction of pesticide in reach that is sorbed
+      real :: frsol = 0.        !none          |fraction of pesticide in reach that is soluble
+      real :: frsrb = 0.        !none          |fraction of pesticide in reach that is sorbed
       
       type ch_pesticide_processes
         real :: tot_in = 0.             ! kg        !total pesticide into reservoir
@@ -45,8 +45,8 @@
           character (len=6) :: day_mo =     "   day"
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
-          character (len=8) :: id =         " gis_id "           
-          character (len=16) :: name =      " name              "  
+          character (len=8) :: id =         " gis_id "
+          character (len=16) :: name =      " name           "
           character (len=16) :: pest =      " pesticide"
           character(len=13) :: tot_in =     "tot_in_kg "            ! (kg)
           character(len=13) :: sol_out =    "sol_out_kg "           ! (kg)

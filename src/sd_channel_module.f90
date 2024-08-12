@@ -2,17 +2,22 @@
     
       implicit none
 
-      integer :: maxint                           !number of intervals in hydrograph for degredation
-      real :: wtemp                             !stream water temperature C
-      real :: peakrate, sed_reduc_t, no3_reduc_kg, tp_reduc_kg, tp_reduc, srp_reduc_kg
+      integer :: maxint = 0                       !number of intervals in hydrograph for degredation
+      real :: wtemp = 0.                        !stream water temperature C
+      real :: peakrate = 0.
+      real :: sed_reduc_t = 0.
+      real :: no3_reduc_kg = 0.
+      real :: tp_reduc_kg = 0.
+      real :: tp_reduc = 0.
+      real :: srp_reduc_kg = 0.
       real, dimension(:), allocatable :: hyd_rad    !m^2        |hydraulic radius for each hydrograph time step
       real, dimension(:), allocatable :: trav_time  !days       |time spent in each hydrograph time step
       real, dimension(:), allocatable :: flo_dep    !m^2        |hydraulic radius for each hydrograph time step
       real, dimension(:), allocatable :: timeint    !days       |time spent in each hydrograph time step
       
       type swatdeg_hydsed_data
-        character(len=25) :: name
-        character(len=16) :: order
+        character(len=25) :: name = ""
+        character(len=16) :: order = ""
         real :: chw = 0.            !m          |channel width
         real :: chd = 0.            !m          |channel depth
         real :: chs = 0.            !m/m        |channel slope
@@ -21,7 +26,7 @@
         real :: chk = 0.            !mm/h       |channel bottom conductivity
         real :: cherod = 0.         !           |channel erodibility
         real :: cov = 0.            !0-1        |channel cover factor
-        real :: sinu                !none       |sinuousity - ratio of channel length and straight line length
+        real :: sinu = 0.           !none       |sinuousity - ratio of channel length and straight line length
         real :: chseq = 0.          !m/m        |equilibrium channel slope
         real :: d50 = 0.            !mm         |channel median sediment size
         real :: ch_clay = 0.        !%          |clay percent of bank and bed
@@ -38,8 +43,8 @@
       type (swatdeg_hydsed_data), dimension (:), allocatable :: sd_chd
       
       type swatdeg_sednut_data
-        character(len=25) :: name
-        character(len=16) :: order
+        character(len=25) :: name = ""
+        character(len=16) :: order = ""
         real :: pk_rto = 1.         !ratio      |ratio of peak to mean daily flow in channel
         real :: fp_inun_days = 5.   !days       |number of days fllod plain is inundated after flood
         real :: n_setl = 0.5        !ratio      |ratio of amount of N settling and sediment settling
@@ -99,10 +104,10 @@
       type (channel_morphology_output), dimension (:), allocatable :: ch_morph
       
       type gully_data
-        character(len=16) :: name
-        real :: hc_kh           !           |headcut erodibility
-        real :: hc_hgt          !m          |headcut height
-        real :: hc_ini          !km         |initial channel length for gullies
+        character(len=16) :: name = ""
+        real :: hc_kh = 0.      !           |headcut erodibility
+        real :: hc_hgt = 0.     !m          |headcut height
+        real :: hc_ini = 0.     !km         |initial channel length for gullies
       end type gully_data
       type (gully_data), dimension (:), allocatable :: gully
 
@@ -145,37 +150,37 @@
       type muskingum_parameters
         integer :: nsteps = 1       !none       |number of daily time steps required for stability
         integer :: substeps = 1     !none       |number of time substeps required for stability
-        real :: c1
-        real :: c2
-        real :: c3
+        real :: c1 = 0.
+        real :: c2 = 0.
+        real :: c3 = 0.
       end type muskingum_parameters
 
       type swatdeg_channel_dynamic
         character(len=25) :: name = "default"
-        integer :: props
-        integer :: obj_no
-        integer :: wallo                    !water allocation object number
+        integer :: props = 0
+        integer :: obj_no = 0
+        integer :: wallo = 0                !water allocation object number
         integer :: aqu_link = 0             !aquifer the channel is linked to
         integer :: aqu_link_ch = 0          !sequential channel number in the aquifer
-        character(len=25) :: region
-        character(len=25) :: order
+        character(len=25) :: region = ""
+        character(len=25) :: order = ""
         real :: chw = 3.        !m          |channel width
         real :: chd = .5        !m          |channel depth
         real :: chs = .01       !m/m        |channel slope
         real :: chl = .1        !km         |channel length
-        real :: chn             !           |channel Manning's n
-        real :: chk             !mm/h       |channel bottom conductivity
-        real :: cov             !0-1        |channel cover factor
-        real :: sinu            !none       |sinuousity - ratio of channel length and straight line length
-        real :: chseq           !m/m        |equilibrium channel slope
-        real :: d50
-        real :: ch_clay
-        real :: carbon
-        real :: ch_bd
-        real :: chss
-        real :: bankfull_flo
-        real :: fps
-        real :: fpn
+        real :: chn = 0.        !           |channel Manning's n
+        real :: chk = 0.        !mm/h       |channel bottom conductivity
+        real :: cov = 0.        !0-1        |channel cover factor
+        real :: sinu = 0.       !none       |sinuousity - ratio of channel length and straight line length
+        real :: chseq = 0.      !m/m        |equilibrium channel slope
+        real :: d50 = 0.
+        real :: ch_clay = 0.
+        real :: carbon = 0.
+        real :: ch_bd = 0.
+        real :: chss = 0.
+        real :: bankfull_flo = 0.
+        real :: fps = 0.
+        real :: fpn = 0.
         real :: n_conc = 0.         !mg/kg      |nitrogen concentration in channel bank
         real :: p_conc = 0.         !mg/kg      |phosphorus concentration in channel bank
         real :: p_bio = 0.          !frac       |fraction of p in bank that is bioavailable
@@ -206,7 +211,7 @@
         type (floodplain_parameters) :: fp
         real, dimension (:), allocatable :: kd      !           |aquatic mixing velocity (diffusion/dispersion)-using mol_wt
         real, dimension (:), allocatable :: aq_mix  ! m/day     |aquatic mixing velocity (diffusion/dispersion)-using mol_wt
-        character (len=2) :: overbank               !           |"ib"=in bank; "ob"=overbank flood
+        character (len=2) :: overbank = ""          !           |"ib"=in bank; "ob"=overbank flood
       end type swatdeg_channel_dynamic
       type (swatdeg_channel_dynamic), dimension (:), allocatable :: sd_ch
       type (swatdeg_channel_dynamic), dimension (:), allocatable :: sdch_init  
@@ -287,8 +292,8 @@
           character (len=6) :: day_mo     =  "   day"
           character (len=6) :: yrc        =  "    yr"
           character (len=8) :: isd        =  "   unit "
-          character (len=8) :: id         =  " gis_id "           
-          character (len=16) :: name      =  " name          "         
+          character (len=8) :: id         =  " gis_id "
+          character (len=16) :: name      =  " name          "
           character(len=16) :: flo_in     =  "         flo_in"        ! (m^3/s)
           character(len=16) :: aqu_in     =  "         geo_bf"        ! (m^3/s)
           character(len=16) :: flo        =  "        flo_out"        ! (m^3/s)
@@ -324,8 +329,8 @@
           character (len=6) :: day_mo     =  "      "
           character (len=6) :: yrc        =  "      "
           character (len=8) :: isd        =  "        "
-          character (len=8) :: id         =  "        "           
-          character (len=16) :: name      =  "              "        
+          character (len=8) :: id         =  "        "
+          character (len=16) :: name      =  "              "
           character(len=16) :: flo_in     =  "          m^3/s"       ! (m^3/s)
           character(len=16) :: aqu_in     =  "          m^3/s"       ! (m^3/s)      
           character(len=16) :: flo        =  "          m^3/s"       ! (m^3/s) 
@@ -363,8 +368,8 @@
           character (len=6) :: day_mo     =  "   day"
           character (len=6) :: yrc        =  "    yr"
           character (len=8) :: isd        =  "   unit "
-          character (len=8) :: id         =  " gis_id "           
-          character (len=16) :: name      =  " name          "          
+          character (len=8) :: id         =  " gis_id "
+          character (len=16) :: name      =  " name          "
           character(len=16) :: in_sed     =  "         in_sed"        ! (tons)
           character(len=16) :: out_sed    =  "        out_sed"        ! (tons)
           character(len=16) :: fp_dep     =  "       fp_dep  "        ! (tons)
@@ -404,8 +409,8 @@
           character (len=6) :: day_mo     =  "      "
           character (len=6) :: yrc        =  "      "
           character (len=8) :: isd        =  "        "
-          character (len=8) :: id         =  "        "           
-          character (len=16) :: name      =  "              "        
+          character (len=8) :: id         =  "        "
+          character (len=16) :: name      =  "              "
           character(len=16) :: in_sed     =  "           tons"       ! (tons)
           character(len=16) :: out_sed    =  "           tons"       ! (tons)      
           character(len=16) :: fp_dep     =  "         tons  "       ! (tons) 
@@ -446,9 +451,9 @@
           character (len=6) :: day_mo     =  "   day"
           character (len=6) :: yrc        =  "    yr"
           character (len=8) :: isd        =  "   unit "
-          character (len=8) :: id         =  " gis_id " 
+          character (len=8) :: id         =  " gis_id "
           character (len=8) :: ii         =  "  tstep "
-          character (len=16) :: name      =  " name          "        
+          character (len=16) :: name      =  " name          "
           character(len=16) :: hyd_flo    =  "        flo_out"        ! (m^3/s)
       end type sdch_header_sub
       type (sdch_header_sub) :: sdch_hdr_subday
@@ -459,9 +464,9 @@
           character (len=6) :: day_mo     =  "      "
           character (len=6) :: yrc        =  "      "
           character (len=8) :: isd        =  "        "
-          character (len=8) :: id         =  "        " 
+          character (len=8) :: id         =  "        "
           character (len=8) :: ii         =  "        "
-          character (len=16) :: name      =  "              "         
+          character (len=16) :: name      =  "              "
           character (len=16) :: hyd_flo   =  "        m^3/s   "        ! (m^3/s)
       end type sdch_header_units_sub
       type (sdch_header_units) :: sdch_hdr_units_sub

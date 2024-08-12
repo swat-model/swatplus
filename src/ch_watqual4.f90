@@ -13,24 +13,79 @@
       
       implicit none
 
-      real :: tday, wtmp, fll, gra
-      real :: lambda, fnn, fpp, algi, fl_1, xx, yy, zz, ww
-      real :: cordo, f1, algcon
-      real :: thgra = 1.047, thrho = 1.047, thrs1 = 1.024
-      real :: thrs2 = 1.074, thrs3 = 1.074, thrs4 = 1.024, thrs5 = 1.024
-      real :: thbc1 = 1.083, thbc2 = 1.047, thbc3 = 1.047, thbc4 = 1.047
-      real :: thrk1 = 1.047, thrk2 = 1.024, thrk3 = 1.024, thrk4 = 1.060
-      real :: soxy             !mg O2/L       |saturation concetration of dissolved oxygen
-      real :: theta, rs2_s, rs3_s, rk4_s
-      real :: disoxin, dispin, ammoin, cinn
-      real :: algin
-      real :: factk, wq_semianalyt, alg_m1, alg_m, alg_m2
-      real :: alg_no3_m, alg_nh4_m, alg_p_m, alg_set, algcon_out
-      real :: cbodo, cbodoin, rk1_k, wq_k2m, rk1_m , rk3_k, factm, &
-          bc1_k,bc3_k, rs4_k, bc3_m
-      real :: rk2_m, rk2_k, alg_m_o2, bc2_k, bc1_m, bc2_m, bc4_k, &
-          bc4_m, rs5_k, flo_rate
-      integer :: iwgn
+      real :: tday = 0.
+      real :: wtmp = 0.
+      real :: fll = 0.
+      real :: gra = 0.
+      real :: lambda = 0.
+      real :: fnn = 0.
+      real :: fpp = 0.
+      real :: algi = 0.
+      real :: fl_1 = 0.
+      real :: xx = 0.
+      real :: yy = 0.
+      real :: zz = 0.
+      real :: ww = 0.
+      real :: cordo = 0.
+      real :: f1 = 0.
+      real :: algcon = 0.
+      real :: thgra = 1.047
+      real :: thrho = 1.047
+      real :: thrs1 = 1.024
+      real :: thrs2 = 1.074
+      real :: thrs3 = 1.074
+      real :: thrs4 = 1.024
+      real :: thrs5 = 1.024
+      real :: thbc1 = 1.083
+      real :: thbc2 = 1.047
+      real :: thbc3 = 1.047
+      real :: thbc4 = 1.047
+      real :: thrk1 = 1.047
+      real :: thrk2 = 1.024
+      real :: thrk3 = 1.024
+      real :: thrk4 = 1.060
+      real :: soxy = 0.        !mg O2/L       |saturation concetration of dissolved oxygen
+      real :: theta
+      real :: rs2_s = 0.
+      real :: rs3_s = 0.
+      real :: rk4_s = 0.
+      real :: disoxin = 0.
+      real :: dispin = 0.
+      real :: ammoin = 0.
+      real :: cinn = 0.
+      real :: algin = 0.
+      real :: factk = 0.
+      real :: wq_semianalyt
+      real :: alg_m1 = 0.
+      real :: alg_m = 0.
+      real :: alg_m2 = 0.
+      real :: alg_no3_m = 0.
+      real :: alg_nh4_m = 0.
+      real :: alg_p_m = 0.
+      real :: alg_set = 0.
+      real :: algcon_out = 0.
+      real :: cbodo = 0.
+      real :: cbodoin = 0.
+      real :: rk1_k = 0.
+      real :: wq_k2m 
+      real :: rk1_m = 0.
+      real :: rk3_k = 0.
+      real :: factm = 0.
+      real :: bc1_k = 0.
+      real :: bc3_k = 0.
+      real :: rs4_k = 0.
+      real :: bc3_m = 0.
+      real :: rk2_m = 0.
+      real :: rk2_k = 0.
+      real :: alg_m_o2 = 0.
+      real :: bc2_k = 0.
+      real :: bc1_m = 0.
+      real :: bc2_m = 0.
+      real :: bc4_k = 0.
+      real :: bc4_m = 0.
+      real :: rs5_k = 0.
+      real :: flo_rate = 0.
+      integer :: iwgn = 0
 
       jrch = isdch
       icmd = sp_ob1%chandeg + jrch - 1
@@ -98,8 +153,8 @@
 
         !! O2 impact calculations
         !! calculate nitrification rate correction factor for low oxygen QUAL2E equation III-21
-	    if (ht3%dox < 0.001) ht3%dox = 0.001
-	    if (ht3%dox > 30.) ht3%dox = 30.
+        if (ht3%dox < 0.001) ht3%dox = 0.001
+        if (ht3%dox > 30.) ht3%dox = 30.
         cordo = 1.0 - Exp(-0.6 * ht3%dox)
         !! end O2 impact calculations
        
@@ -116,7 +171,7 @@
           lambda = ch_nut(jnut)%lambda0
         endif
 
-	    if (lambda > ch_nut(jnut)%lambda0) lambda = ch_nut(jnut)%lambda0
+        if (lambda > ch_nut(jnut)%lambda0) lambda = ch_nut(jnut)%lambda0
         !! calculate algal growth limitation factors for nitrogen
         !! and phosphorus QUAL2E equations III-13 & III-14
         fnn = cinn / (cinn + ch_nut(jnut)%k_n)
@@ -299,4 +354,3 @@
       return
       end subroutine ch_watqual4
       
-

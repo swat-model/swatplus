@@ -6,11 +6,12 @@
  
       implicit none
       
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: ipath
-      integer :: ipathi
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: ipath = 0
+      integer :: ipathi = 0
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
 
       eof = 0
@@ -42,7 +43,7 @@
           
           do ipath = 1, imax
             allocate (path_soil_ini(ipath)%soil(cs_db%num_paths))
-            allocate (path_soil_ini(ipath)%plt(cs_db%num_paths))
+            allocate (path_soil_ini(ipath)%plt(cs_db%num_paths), source = 0.)
           end do
            
           rewind (107)

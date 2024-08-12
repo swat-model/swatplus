@@ -95,91 +95,91 @@
                 !of structural litter [xlslf = exp(-3* lslf) (parton et al., 1993, 1994)]
        !prmt_51 !coef adjusts microbial activity function in top soil layer (0.1_1.)
        
-       integer :: j              !                     |number of hru
-       integer :: k              !none                 |counter
-       integer :: kk             !                     |
-       integer :: lmnta          !                     |      
-       integer :: min_n_ppm      !                     |
-       integer :: lslncat        !                     |
-       integer :: min_n          !                     |
-       real :: sol_mass          !                     |
-       real :: sol_min_n         !                     |
-       real :: fc                !mm H2O               |amount of water available to plants in soil layer at field capacity (fc - wp),Index:(layer,HRU)
-       real :: wc                !none                 |scaling factor for soil water impact on daily
-       real :: sat               !                     |
-       real :: void              !                     |
-       real :: cdg               !                     |soil temperature control on biological processes
-       real :: x3                !none                 |amount of c transformed from passive, slow, metabolic, and non-lignin structural pools to microbial pool
-       real :: lscta             !                     |
-       real :: lslcta            !                     |
-       real :: lslncta           !                     |
-       real :: lsnta             !                     |
-       real :: lmcta             !                     |
-       real :: nf                !                     |
-       real :: a1                !                     |
-       real :: asx               !                     |
-       real :: apx               !                     |
-       real :: a1co2             !                     |
-       real :: df1               !                     |
-       real :: df2               !                     |
-       real :: snmn              !
-       real :: df3               !                     |
-       real :: df4               !                     |
-       real :: df5               !                     |
-       real :: df6               !                     |
-       real :: add               !                     |
-       real :: adf1              !                     |
-       real :: adf2              !                     |
-       real :: adf3              !                     |
-       real :: adf4              !                     |
-       real :: adf5              !                     |
-       real :: tot               !                     |
-       real :: pn1               !                     |
-       real :: pn2               !                     |
-       real :: pn3               !                     |
-       real :: pn4               !                     |
-       real :: pn5               !                     |
-       real :: pn6               !                     |
-       real :: pn7               !                     |
-       real :: pn8               !                     |
-       real :: pn9               !                     |
-       real :: cpn1              !                     |
-       real :: cpn2              !                     |
-       real :: cpn3              !                     |
-       real :: cpn4              !                     |
-       real :: cpn5              !                     |
-       real :: wmin              !                     |
-       real :: dmdn              !                     |
-       real :: wdn               !kg N/ha              |amount of nitrogen lost from nitrate pool in
-       real :: deltawn           !                     |
-       real :: deltabmc          !                     |
-       real :: snta              !                     |
-       real :: till_eff          !                     |
-       real :: rlr               !                     |
-       real :: xbm               !                     |
-       real :: bmcta             !                     |
-       real :: bmnta             !                     |
-       real :: hscta             !                     |
-       real :: hsnta             !                     |
-       real :: hpcta             !                     |
-       real :: hpnta             !                     |
+       integer :: j = 0          !                     |number of hru
+       integer :: k = 0          !none                 |counter
+       integer :: kk = 0         !                     |
+       integer :: lmnta = 0      !                     |      
+       integer :: min_n_ppm = 0  !                     |
+       integer :: lslncat = 0    !                     |
+       integer :: min_n = 0      !                     |
+       real :: sol_mass = 0.     !                     |
+       real :: sol_min_n = 0.    !                     |
+       real :: fc = 0.           !mm H2O               |amount of water available to plants in soil layer at field capacity (fc - wp),Index:(layer,HRU)
+       real :: wc = 0.           !none                 |scaling factor for soil water impact on daily
+       real :: sat = 0.          !                     |
+       real :: void = 0.         !                     |
+       real :: cdg = 0.          !                     |soil temperature control on biological processes
+       real :: x3 = 0.           !none                 |amount of c transformed from passive, slow, metabolic, and non-lignin structural pools to microbial pool
+       real :: lscta = 0.        !                     |
+       real :: lslcta = 0.       !                     |
+       real :: lslncta = 0.      !                     |
+       real :: lsnta = 0.        !                     |
+       real :: lmcta = 0.        !                     |
+       real :: nf = 0.           !                     |
+       real :: a1 = 0.           !                     |
+       real :: asx = 0.          !                     |
+       real :: apx = 0.          !                     |
+       real :: a1co2 = 0.        !                     |
+       real :: df1 = 0.          !                     |
+       real :: df2 = 0.          !                     |
+       real :: snmn = 0.         !
+       real :: df3 = 0.          !                     |
+       real :: df4 = 0.          !                     |
+       real :: df5 = 0.          !                     |
+       real :: df6 = 0.          !                     |
+       real :: add = 0.          !                     |
+       real :: adf1 = 0.         !                     |
+       real :: adf2 = 0.         !                     |
+       real :: adf3 = 0.         !                     |
+       real :: adf4 = 0.         !                     |
+       real :: adf5 = 0.         !                     |
+       real :: tot = 0.          !                     |
+       real :: pn1 = 0.          !                     |
+       real :: pn2 = 0.          !                     |
+       real :: pn3 = 0.          !                     |
+       real :: pn4 = 0.          !                     |
+       real :: pn5 = 0.          !                     |
+       real :: pn6 = 0.          !                     |
+       real :: pn7 = 0.          !                     |
+       real :: pn8 = 0.          !                     |
+       real :: pn9 = 0.          !                     |
+       real :: cpn1 = 0.         !                     |
+       real :: cpn2 = 0.         !                     |
+       real :: cpn3 = 0.         !                     |
+       real :: cpn4 = 0.         !                     |
+       real :: cpn5 = 0.         !                     |
+       real :: wmin = 0.         !                     |
+       real :: dmdn = 0.         !                     |
+       real :: wdn = 0.          !kg N/ha              |amount of nitrogen lost from nitrate pool in
+       real :: deltawn = 0.      !                     |
+       real :: deltabmc = 0.     !                     |
+       real :: snta = 0.         !                     |
+       real :: till_eff = 0.     !                     |
+       real :: rlr = 0.          !                     |
+       real :: xbm = 0.          !                     |
+       real :: bmcta = 0.        !                     |
+       real :: bmnta = 0.        !                     |
+       real :: hscta = 0.        !                     |
+       real :: hsnta = 0.        !                     |
+       real :: hpcta = 0.        !                     |
+       real :: hpnta = 0.        !                     |
        real :: fcgd              !                     |
-       real :: rsdn_pct          !                     |
-       real :: sum               !                     |
-       real :: sum1              !                     |potential n supply resulting from the transformation of structural litter; calc as lsntp-(pn1+pn2) if lsntp > (pn1+pn2), otherwise = 0 (kg n ha-1 day-1)
-       real :: sum2              !                     |
-       real :: sum3              !                     |
-       real :: sum4              !                     |
-       real :: sum5              !                     |
-       real :: reduc             !none                 |fraction of water uptake by plants achieved
-       real :: rnmn              !                     |
-       real :: hmp_rate          !                     |
-       real :: hmp               !kg P/ha              |amount of phosphorus moving from the organic
-       real :: decr              !                     |
-       real :: rmp               !kg P/ha              |amount of phosphorus moving from fresh organic
-       real :: rto               !none                 |cloud cover factor
-       real :: rspc              !                     |
-       real :: xx                !varies    |variable to hold calculation results
+       real :: rsdn_pct = 0.     !                     |
+       real :: sum = 0.          !                     |
+       real :: sum1 = 0.         !                     |potential n supply resulting from the transformation of structural litter; calc as lsntp-(pn1+pn2) if lsntp > (pn1+pn2), otherwise = 0 (kg n ha-1 day-1)
+       real :: sum2 = 0.         !                     |
+       real :: sum3 = 0.         !                     |
+       real :: sum4 = 0.         !                     |
+       real :: sum5 = 0.         !                     |
+       real :: reduc = 0.        !none                 |fraction of water uptake by plants achieved
+       real :: rnmn = 0.         !                     |
+       real :: hmp_rate = 0.     !                     |
+       real :: hmp = 0.          !kg P/ha              |amount of phosphorus moving from the organic
+       real :: decr = 0.         !                     |
+       real :: rmp = 0.          !kg P/ha              |amount of phosphorus moving from fresh organic
+       real :: rto = 0.          !none                 |cloud cover factor
+       real :: rspc = 0.         !                     |
+       real :: xx = 0.           !varies    |variable to hold calculation results
        
        !! initialize local variables
        deltawn = 0.

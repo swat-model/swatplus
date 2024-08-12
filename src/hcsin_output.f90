@@ -6,12 +6,12 @@
 
       implicit none
       
-      integer :: iin              !none          |counter
-      integer :: ipest            !none          |pesticide counter
-      integer :: ipath            !none          |pathogen counter
-      integer :: imetal           !none          |heavy metal counter
-      integer :: isalt            !none          |salt counter
-      integer :: iob              !none          |object counter
+      integer :: iin = 0          !none          |counter
+      integer :: ipest = 0        !none          |pesticide counter
+      integer :: ipath = 0        !none          |pathogen counter
+      integer :: imetal = 0       !none          |heavy metal counter
+      integer :: isalt = 0        !none          |salt counter
+      integer :: iob = 0          !none          |object counter
            
       do iob = 1, sp_ob%objs
         do iin = 1, ob(iob)%rcv_tot

@@ -2,7 +2,7 @@
     
       implicit none
      
-      integer :: basin_plants           !! number of different plants in the basin
+      integer :: basin_plants = 0       !! number of different plants in the basin
       
       type plant_growth 
          real :: cht = 0.               !! m                |canopy height 
@@ -62,7 +62,7 @@
       end type plant_status
       
       type plant_stress
-        real :: reg                     !! none         |stress factor that most limits plant growth
+        real :: reg = 0.                !! none         |stress factor that most limits plant growth
                                         !!                on current day
         real :: strsw = 1.              !! none         |frac of potential plant growth achieved on the day where the
                                         !!                reduction is caused by water stress
@@ -90,26 +90,26 @@
       end type auto_operations
       
       type fertilize_future                         !! set to the fert_fut action in the lum.dtl
-        character(len=35) :: name                   !! name of the fertilizer operation (from the dtbl)
+        character(len=35) :: name = ""              !! name of the fertilizer operation (from the dtbl)
         integer :: num = 0                          !! number of the future fertilizer application (from the dtbl)
-        character(len=35) :: fertname               !! fertilizer name in fertilizer.frt
+        character(len=35) :: fertname = ""          !! fertilizer name in fertilizer.frt
         integer :: fertnum = 0                      !! fertilizer number in fertilizer.frt
         integer :: day_fert = 0                     !! future julian day to apply fert (must be within a year of test) 
         real :: fert_kg = 0.                        !! kg/ha - amount of fertilzer applied
-        character(len=35) :: fertop                 !! application type in chem_app.ops
+        character(len=35) :: fertop = ""            !! application type in chem_app.ops
         integer :: appnum = 0                       !! application number in chem_app.ops
       end type fertilize_future
       
       type plant_community
-       character(len=35) :: name
-       integer :: npl                   !! number of plants in community
+       character(len=35) :: name = ""
+       integer :: npl = 0               !! number of plants in community
        character(len=16), dimension(:), allocatable :: pl       !! N/A              |plant name
-       integer :: pcomdb                !! current plant community database number
+       integer :: pcomdb = 0            !! current plant community database number
        integer :: rot_yr = 1            !! rotation year
        integer :: days_plant = 0        !!               |days since last planting - for conditional scheduling planting
        integer :: days_harv = 0         !!               |days since last harvest - for conditional scheduling planting
        integer :: days_irr = 0          !!               |days since last irrigation - for conditional scheduling planting
-       character(len=16) :: last_kill   !!               |name of last plant killed
+       character(len=16) :: last_kill = ""!!               |name of last plant killed
        real :: cht_mx = 0.              !! m             |height of tallest plant in community for pet calculation
        real :: lai_sum = 0.             !! m/m           |sum of lai for each plant
        real :: laimx_sum = 0.           !! m/m           |sum of maximum lai for each plant - for canopy interception

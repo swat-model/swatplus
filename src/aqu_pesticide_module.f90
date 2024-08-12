@@ -35,15 +35,15 @@
           character (len=6) :: day_mo =     "   day"
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
-          character (len=8) :: id =         " gis_id "         
+          character (len=8) :: id =         " gis_id "
           character (len=16) :: name =      " name           "
           character (len=16) :: pest =      " pesticide      "
           character(len=13) :: tot_in =     "  tot_in_kg "          ! (mg)
           character(len=13) :: sol_out =    "  sol_flo_kg"          ! (mg)
           character(len=13) :: sor_out =    "  sor_flo_kg"          ! (mg)
           character(len=13) :: sol_perc =   "sol_perc_kg"           ! (mg)
-          character(len=13) :: react =      "react_kg"        	    ! (mg)
-          character(len=13) :: metab =      "metab_kg"        	    ! (mg)
+          character(len=13) :: react =      "react_kg"             ! (mg)
+          character(len=13) :: metab =      "metab_kg"             ! (mg)
           character(len=13) :: stor_ave  =  "stor_ave_kg"           ! (mg)
           character(len=13) :: stor_init =  "stor_init_kg"          ! (mg)
           character(len=13) :: stor_final=  "stor_final_kg"         ! (mg)

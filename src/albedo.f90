@@ -10,10 +10,10 @@
       
       implicit none
         
-      real :: cej       !none           |constant
-      real :: eaj       !none           |soil cover index      
-      integer :: j      ! none          |HRU number
-      real :: cover     !kg/ha          |soil cover
+      real :: cej = 0.  !none           |constant
+      real :: eaj = 0.  !none           |soil cover index      
+      integer :: j = 0  ! none          |HRU number
+      real :: cover = 0.  !kg/ha          |soil cover
       
       j = ihru
 

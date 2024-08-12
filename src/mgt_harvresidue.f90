@@ -21,10 +21,10 @@
       
       implicit none
  
-      integer :: j                      !none           |HRU number
+      integer :: j = 0                  !none           |HRU number
       integer, intent (in) :: jj        !none           |hru number
       real, intent (in) :: harveff      !0-1            |harvest efficiency
-      integer :: ipl                    !none           |sequential plant number in community
+      integer :: ipl = 0                !none           |sequential plant number in community
       
       j = jj
       

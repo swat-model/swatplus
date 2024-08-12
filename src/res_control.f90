@@ -12,19 +12,19 @@
       
       implicit none
 
-      integer :: ii                   !none          |counter 
+      integer :: ii = 0               !none          |counter 
       integer :: jres                 !none          |reservoir number
-      integer :: idat                 !              |
-      integer :: irel                 !              |
-      integer :: iob                  !none          |counter
-      integer :: ictbl
-      integer :: icon                  !! nbs
-      real :: pvol_m3
-      real :: evol_m3
-      real :: dep
-      real :: weir_hgt
-      real :: alpha_up
-      real :: alpha_down
+      integer :: idat = 0             !              |
+      integer :: irel = 0             !              |
+      integer :: iob = 0              !none          |counter
+      integer :: ictbl = 0
+      integer :: icon = 0              !! nbs
+      real :: pvol_m3 = 0.
+      real :: evol_m3 = 0.
+      real :: dep = 0.
+      real :: weir_hgt = 0.
+      real :: alpha_up = 0.
+      real :: alpha_down = 0.
 
       ht1 = ob(icmd)%hin    !! set incoming flow
       ht2 = resz            !! zero outgoing flow

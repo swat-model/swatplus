@@ -17,19 +17,19 @@
 
       implicit none
       
-      character (len=80) :: titldum     !          |title of file
-      character (len=80) :: header      !          |header of file
-      integer :: eof                    !          |end of file
-      integer :: imax                   !units     |description
+      character (len=80) :: titldum = ""  !          |title of file
+      character (len=80) :: header = "" !          |header of file
+      integer :: eof = 0                !          |end of file
+      integer :: imax = 0               !units     |description
       logical :: i_exist                !          |check to determine if file exists
-      integer :: ichi                   !none      |counter
-      integer :: isp_ini                !          |counter
-      integer :: ics                    !none      |counter
-      integer :: inut                   !none      |counter 
-      integer :: ihydsed                !none      |counter
-      integer :: i                      !none      |counter
-      integer :: k                      !none      |counter
-      integer :: isalt                  !none      |counter for salt ion
+      integer :: ichi = 0               !none      |counter
+      integer :: isp_ini = 0            !          |counter
+      integer :: ics = 0                !none      |counter
+      integer :: inut = 0               !none      |counter 
+      integer :: ihydsed = 0            !none      |counter
+      integer :: i = 0                  !none      |counter
+      integer :: k = 0                  !none      |counter
+      integer :: isalt = 0              !none      |counter for salt ion
 
       eof = 0
       imax = 0
@@ -77,17 +77,19 @@
       allocate (chpst_y(0:sp_ob%chandeg))
       allocate (chpst_a(0:sp_ob%chandeg))
       allocate (chsalt_d(0:sp_ob%chandeg)) !rtb salt
+
       allocate (chsalt_m(0:sp_ob%chandeg))
       allocate (chsalt_y(0:sp_ob%chandeg))
       allocate (chsalt_a(0:sp_ob%chandeg))
       allocate (chcs_d(0:sp_ob%chandeg)) !rtb cs
+
       allocate (chcs_m(0:sp_ob%chandeg))
       allocate (chcs_y(0:sp_ob%chandeg))
       allocate (chcs_a(0:sp_ob%chandeg))
       
       !rtb hydrograph separation
       allocate (ch_stor_hdsep(sp_ob%chandeg))
-      allocate (hyd_sep_array(sp_ob%chandeg,7))
+      allocate (hyd_sep_array(sp_ob%chandeg,7), source = 0.)
       hyd_sep_array = 0.
       
       if (cs_db%num_pests > 0) then
@@ -98,10 +100,10 @@
         allocate (bchpst_y%pest(cs_db%num_pests))
         allocate (bchpst_a%pest(cs_db%num_pests))
         do ich = 1, sp_ob%chandeg
-          allocate (sd_ch(ich)%aq_mix(cs_db%num_pests))
+          allocate (sd_ch(ich)%aq_mix(cs_db%num_pests), source = 0.)
           allocate (chpst_d(ich)%pest(cs_db%num_pests))
           allocate (chpst_m(ich)%pest(cs_db%num_pests))
-          allocate (chpst_y(ich)%pest(cs_db%num_pests))   
+          allocate (chpst_y(ich)%pest(cs_db%num_pests))
           allocate (chpst_a(ich)%pest(cs_db%num_pests))
           allocate (ch_water(ich)%pest(cs_db%num_pests))
           allocate (ch_benthic(ich)%pest(cs_db%num_pests))
@@ -110,15 +112,15 @@
             
       if (cs_db%num_paths > 0) then
         do ich = 1, sp_ob%chandeg
-          allocate (ch_water(ich)%path(cs_db%num_paths))
-          allocate (ch_benthic(ich)%path(cs_db%num_paths))
+          allocate (ch_water(ich)%path(cs_db%num_paths), source = 0.)
+          allocate (ch_benthic(ich)%path(cs_db%num_paths), source = 0.)
         end do
       end if
                   
       if (cs_db%num_metals > 0) then
         do ich = 1, sp_ob%chandeg
-          allocate (ch_water(ich)%hmet(cs_db%num_metals))
-          allocate (ch_benthic(ich)%hmet(cs_db%num_metals))
+          allocate (ch_water(ich)%hmet(cs_db%num_metals), source = 0.)
+          allocate (ch_benthic(ich)%hmet(cs_db%num_metals), source = 0.)
         end do
       end if
                   
@@ -126,11 +128,11 @@
         do ich = 1, sp_ob%chandeg
           allocate (chsalt_d(ich)%salt(cs_db%num_salts))
           allocate (chsalt_m(ich)%salt(cs_db%num_salts))
-          allocate (chsalt_y(ich)%salt(cs_db%num_salts))   
+          allocate (chsalt_y(ich)%salt(cs_db%num_salts))
           allocate (chsalt_a(ich)%salt(cs_db%num_salts))
-          allocate (ch_water(ich)%salt(cs_db%num_salts))
-          allocate (ch_water(ich)%saltc(cs_db%num_salts))
-          allocate (ch_benthic(ich)%salt(cs_db%num_salts))
+          allocate (ch_water(ich)%salt(cs_db%num_salts), source = 0.)
+          allocate (ch_water(ich)%saltc(cs_db%num_salts), source = 0.)
+          allocate (ch_benthic(ich)%salt(cs_db%num_salts), source = 0.)
           do isalt=1,cs_db%num_salts
             chsalt_m(ich)%salt(isalt)%tot_in = 0.
             chsalt_m(ich)%salt(isalt)%tot_out = 0.
@@ -147,7 +149,7 @@
             chsalt_a(ich)%salt(isalt)%irr = 0.
             chsalt_a(ich)%salt(isalt)%water = 0.
             chsalt_a(ich)%salt(isalt)%conc = 0.
-					enddo
+          enddo
           ch_water(ich)%salt = 0.
           ch_water(ich)%saltc = 0.
         end do
@@ -157,11 +159,11 @@
         do ich = 1, sp_ob%chandeg
           allocate (chcs_d(ich)%cs(cs_db%num_cs))
           allocate (chcs_m(ich)%cs(cs_db%num_cs))
-          allocate (chcs_y(ich)%cs(cs_db%num_cs))   
+          allocate (chcs_y(ich)%cs(cs_db%num_cs))
           allocate (chcs_a(ich)%cs(cs_db%num_cs))
-          allocate (ch_water(ich)%cs(cs_db%num_cs))
-          allocate (ch_water(ich)%csc(cs_db%num_cs))
-          allocate (ch_benthic(ich)%cs(cs_db%num_cs))
+          allocate (ch_water(ich)%cs(cs_db%num_cs), source = 0.)
+          allocate (ch_water(ich)%csc(cs_db%num_cs), source = 0.)
+          allocate (ch_benthic(ich)%cs(cs_db%num_cs), source = 0.)
           do ics=1,cs_db%num_cs
             chcs_m(ich)%cs(ics)%tot_in = 0.
             chcs_m(ich)%cs(ics)%tot_out = 0.
@@ -178,7 +180,7 @@
             chcs_a(ich)%cs(ics)%irr = 0.
             chcs_a(ich)%cs(ics)%water = 0.
             chcs_a(ich)%cs(ics)%conc = 0.
-					enddo
+          enddo
           ch_water(ich)%cs = 0.
           ch_water(ich)%csc = 0.
         end do

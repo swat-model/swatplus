@@ -58,29 +58,29 @@
       
       implicit none
 
-      real :: cod          !kg            |carbonaceous biological oxygen demand of 
+      real :: cod = 0.     !kg            |carbonaceous biological oxygen demand of 
                            !              |surface runoff from urban area
-      real :: sus_sol      !kg/ha         |suspended solid loading in surface runoff
+      real :: sus_sol = 0. !kg/ha         |suspended solid loading in surface runoff
                            !              |from urban area
-      real :: tn           !kg            |total nitrogen in surface runoff from
+      real :: tn = 0.      !kg            |total nitrogen in surface runoff from
                            !              |urban area
-      real :: tp           !kg            |total phosphorus in surface runoff from 
+      real :: tp = 0.      !kg            |total phosphorus in surface runoff from 
                            !              |urban area
-      real :: urbk         !1/hr          |
-      real :: turo         !              |
-      real :: dirto        !kg/ha         |amount of solids built up on impervious
+      real :: urbk = 0.    !1/hr          |
+      real :: turo = 0.    !              |
+      real :: dirto = 0.   !kg/ha         |amount of solids built up on impervious
                            !              |surfaces at beginning of day
-      real :: durf         !hr            |duration of rainfall
-      real :: rp1          !none          |variable to hold intermediate calculation
+      real :: durf = 0.    !hr            |duration of rainfall
+      real :: rp1 = 0.     !none          |variable to hold intermediate calculation
                            !              |value 
-      real :: dirt         !kg/curb km    |amount of solids built up on impervious
+      real :: dirt = 0.    !kg/curb km    |amount of solids built up on impervious
                            !              |surfaces 
-      integer :: j         !none          |HRU number
-      integer :: iob       !              |
+      integer :: j = 0     !none          |HRU number
+      integer :: iob = 0   !              |
       real :: regres       !              |
-      real :: xx           !              |
+      real :: xx = 0.      !              |
       real :: exp          !              |
-      real :: tno3         !              |
+      real :: tno3 = 0.    !              |
 
       j = ihru
       ulu = hru(j)%luse%urb_lu
@@ -100,7 +100,7 @@
                                              * (1. - urbdb(ulu)%fimp)
 
           !! The sediment loading from urban imprevious area is assumed 
-	      !! to be all sitly particles
+          !! to be all sitly particles
           silyld(j) = (.001 * sus_sol) * urbdb(ulu)%fimp                &
                                   + silyld(j) * (1. - urbdb(ulu)%fimp)
           sanyld(j) = sanyld(j) * (1. - urbdb(ulu)%fimp)
@@ -153,7 +153,7 @@
                                    sedyld(j) * (1. - urbdb(ulu)%fimp)
 
           !! The sediment loading from urban imprevious area is assumed 
-	      !! to be all sitly particles
+          !! to be all sitly particles
           silyld(j) = (.001 * sus_sol * hru(j)%area_ha) *                         &
                      urbdb(ulu)%fimp + silyld(j) * (1. - urbdb(ulu)%fimp)
           sanyld(j) = sanyld(j) * (1. - urbdb(ulu)%fimp)

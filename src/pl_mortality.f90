@@ -9,11 +9,11 @@
       
       implicit none 
       
-      integer :: j              !none               |HRU number
-      integer :: idp            !                   |
-      real :: bm_dieoff
-      real :: rto
-      real :: rto1
+      integer :: j = 0          !none               |HRU number
+      integer :: idp = 0        !                   |
+      real :: bm_dieoff = 0.
+      real :: rto = 0.
+      real :: rto1 = 0.
                
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt

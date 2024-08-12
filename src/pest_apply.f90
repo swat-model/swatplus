@@ -32,15 +32,15 @@
       
       implicit none
       
-      integer :: j                       !none          |HRU number
+      integer :: j = 0                   !none          |HRU number
       integer, intent (in) :: jj         !none          |HRU number
-      integer :: ipl                     !none          |plant number
-      real :: gc                         !none          |fraction of ground covered by plant foliage
+      integer :: ipl = 0                 !none          |plant number
+      real :: gc = 0.                    !none          |fraction of ground covered by plant foliage
       integer, intent (in) :: ipest      !none          |sequential hru pesticide number
       integer, intent (in) :: pestop     !              | 
       real, intent (in) :: pest_kg       !kg/ha         |amount of pesticide applied 
-      real :: surf_frac                  !kg/ha         |amount added to soil surface layer - rest to second layer 
-      real :: pl_frac                    !0-1           |fraction of pesticide applied to each plant
+      real :: surf_frac = 0.             !kg/ha         |amount added to soil surface layer - rest to second layer 
+      real :: pl_frac = 0.               !0-1           |fraction of pesticide applied to each plant
 
       j = jj
 

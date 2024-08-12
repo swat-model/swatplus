@@ -47,44 +47,45 @@
       
       implicit none
 
-      integer :: j               !none          |HRU number
+      integer :: j = 0           !none          |HRU number
 !!    real, parameter :: esd = 500., etco = 0.80, effnup = 0.1
-      real :: esd                !mm            |maximum soil depth from which evaporation
+      real :: esd = 0.           !mm            |maximum soil depth from which evaporation
                                  !              |is allowed to occur
-      real :: etco               !              |
-      real :: effnup             !              ! 
-      real :: no3up              !kg N/ha       |amount of nitrate moving upward in profile 
-      real :: es_max             !mm H2O        |maximum amount of evaporation (soil et)
+      real :: etco = 0.          !              |
+      real :: effnup = 0.        !              ! 
+      real :: no3up = 0.         !kg N/ha       |amount of nitrate moving upward in profile 
+      real :: es_max = 0.        !mm H2O        |maximum amount of evaporation (soil et)
                                  !              |that can occur on current day in HRU
-      real :: eos1               !none          |variable to hold intermediate calculation
+      real :: eos1 = 0.          !none          |variable to hold intermediate calculation
                                  !              |result
-      real :: xx                 !none          |variable to hold intermediate calculation 
+      real :: xx = 0.            !none          |variable to hold intermediate calculation 
                                  !              |result
-      real :: cej                !              |
-      real :: eaj                !none          |weighting factor to adjust PET for impact of
+      real :: cej = 0.           !              |
+      real :: eaj = 0.           !none          |weighting factor to adjust PET for impact of
                                  !              |plant cover    
-      real :: pet                !mm H2O        |amount of PET remaining after water stored
+      real :: pet = 0.           !mm H2O        |amount of PET remaining after water stored
                                  !              |in canopy is evaporated
-      real :: esleft             !mm H2O        |potenial soil evap that is still available
-      real :: evzp               !              |
-      real :: eosl               !mm H2O        |maximum amount of evaporation that can occur
+      real :: esleft = 0.        !mm H2O        |potenial soil evap that is still available
+      real :: evzp = 0.          !              |
+      real :: eosl = 0.          !mm H2O        |maximum amount of evaporation that can occur
                                  !              |from soil profile
-      real :: dep                !mm            |soil depth from which evaporation will occur
+      real :: dep = 0.           !mm            |soil depth from which evaporation will occur
                                  !              |in current soil layer
-      real :: evz                !              | 
-      real :: sev                !mm H2O        |amount of evaporation from soil layer
-      real :: sev_st             !mm H2O        |evaporation / soil water for no3 flux from layer 1 -> 2
-      real :: cover              !kg/ha         |soil cover
-      real :: wetvol_mm          !mm            |wetland water volume - average depth over hru
-      integer :: ly              !none          |counter     
-      integer:: ires,ihyd !Jaehak 2022
+      real :: evz = 0.           !              | 
+      real :: sev = 0.           !mm H2O        |amount of evaporation from soil layer
+      real :: sev_st = 0.        !mm H2O        |evaporation / soil water for no3 flux from layer 1 -> 2
+      real :: cover = 0.         !kg/ha         |soil cover
+      real :: wetvol_mm = 0.     !mm            |wetland water volume - average depth over hru
+      integer :: ly = 0          !none          |counter     
+      integer:: ires = 0  !Jaehak 2022
+      integer:: ihyd = 0  !Jaehak 2022
 
       j = ihru
       pet = pet_day
 !!    added statements for test of real statement above
-	esd = 500.  !soil(j)%zmx
-	etco = 0.80
-	effnup = 0.05
+      esd = 500.  !soil(j)%zmx
+      etco = 0.80
+      effnup = 0.05
       ires= hru(j)%dbs%surf_stor !Jaehak 2022
 
 

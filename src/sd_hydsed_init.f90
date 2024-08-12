@@ -11,55 +11,57 @@
       
       implicit none      
 
-      real :: kh
-      integer :: idb, idb1              !             |
-      integer :: i                      !none         |counter  
-      integer :: iob, ichdat
-      integer :: ich_ini                !none      |counter
-      integer :: iom_ini                !none      |counter
-      integer :: ipest_ini              !none      |counter
-      integer :: ipest_db               !none      |counter
-      integer :: ipath_ini              !none      |counter
-      integer :: isalt_ini							!none      |counter
-      integer :: ics_ini                !none      |counter
-      integer :: ipest                  !none      |counter
-      integer :: ipath                  !none      |counter
-      integer :: idat
-      integer :: i_dep                  !none      |counter
-      integer :: icha
-      integer :: isalt
-      integer :: ics
+      real :: kh = 0.
+      integer :: idb = 0                !             |
+      integer :: idb1 = 0               !             |
+      integer :: i = 0                  !none         |counter  
+      integer :: iob = 0
+      integer :: ichdat = 0
+      integer :: ich_ini = 0            !none      |counter
+      integer :: iom_ini = 0            !none      |counter
+      integer :: ipest_ini = 0          !none      |counter
+      integer :: ipest_db = 0           !none      |counter
+      integer :: ipath_ini = 0          !none      |counter
+      integer :: isalt_ini = 0   !none      |counter
+      integer :: ics_ini = 0            !none      |counter
+      integer :: ipest = 0              !none      |counter
+      integer :: ipath = 0              !none      |counter
+      integer :: idat = 0
+      integer :: i_dep = 0              !none      |counter
+      integer :: icha = 0
+      integer :: isalt = 0
+      integer :: ics = 0
       
-      real :: aa                      !none         |area/area=1 (used to calculate velocity with
+      real :: aa = 0.                 !none         |area/area=1 (used to calculate velocity with
                                       !             |Manning"s equation)
-      real :: a                       !m^2          |cross-sectional area of channel
-      real :: b                       !m            |bottom width of channel
-      real :: d                       !m            |depth of flow
-      real :: p                       !m            |wetting perimeter
-      real :: chside                  !none         |change in horizontal distance per unit
+      real :: a = 0.                  !m^2          |cross-sectional area of channel
+      real :: b = 0.                  !m            |bottom width of channel
+      real :: d = 0.                  !m            |depth of flow
+      real :: p = 0.                  !m            |wetting perimeter
+      real :: chside = 0.             !none         |change in horizontal distance per unit
                                       !             |change in vertical distance on channel side
                                       !             |slopes; always set to 2 (slope=1/2)
-      real :: fps                     !none         |change in horizontal distance per unit
+      real :: fps = 0.                !none         |change in horizontal distance per unit
                                       !             |change in vertical distance on floodplain side
                                       !             |slopes; always set to 4 (slope=1/4)
       integer :: max                  !             |
-      real :: rh                      !m            |hydraulic radius
+      real :: rh = 0.                 !m            |hydraulic radius
       real :: qman                    !m^3/s or m/s |flow rate or flow velocity
-      real :: bedvol                  !m^3          |volume of river bed sediment
+      real :: bedvol = 0.             !m^3          |volume of river bed sediment
       
-      real :: dep                     !             |
-      real :: vel                     !             |
-      real :: flow_dep
-      real :: celerity
-      real :: msk1         !units             |description 
-      real :: msk2         !units             |description 
-      real :: detmax       !units             |description 
-      real :: xkm          !hr                |storage time constant for the reach
-      real :: det          !hr                |time step
-      real :: denom        !none              |variable to hold intermediate calculation
-      real :: rto          !none              |ratio of channel volume to total volume
-      real :: rto1         !none              |ratio of flood plain volume to total volume
-      real :: sumc         !none              |sum of Muskingum coefficients
+      real :: dep = 0.                !             |
+      real :: vel = 0.                !             |
+      real :: flow_dep = 0.
+      real :: celerity = 0.
+      real :: msk1 = 0.    !units             |description 
+      real :: msk2 = 0.    !units             |description 
+      real :: detmax = 0.  !units             |description 
+      real :: xkm = 0.     !hr                |storage time constant for the reach
+      real :: det = 0.     !hr                |time step
+      real :: denom = 0.   !none              |variable to hold intermediate calculation
+      real :: rto = 0.     !none              |ratio of channel volume to total volume
+      real :: rto1 = 0.    !none              |ratio of flood plain volume to total volume
+      real :: sumc = 0.    !none              |sum of Muskingum coefficients
       
       do i = 1, sp_ob%chandeg
         icmd = sp_ob1%chandeg + i - 1

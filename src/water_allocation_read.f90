@@ -11,22 +11,22 @@
       
       implicit none 
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i                    !none       |counter
-      integer :: k                    !none       |counter
-      integer :: isrc                 !none       |counter
-      integer :: iwro                 !none       |number of water allocation objects
-      integer :: num_objs
-      integer :: idmd
-      integer :: idb
-      integer :: idb_irr
-      integer :: ihru
-      integer :: isrc_wallo
-      integer :: div_found
+      integer :: i = 0                !none       |counter
+      integer :: k = 0                !none       |counter
+      integer :: isrc = 0             !none       |counter
+      integer :: iwro = 0             !none       |number of water allocation objects
+      integer :: num_objs = 0
+      integer :: idmd = 0
+      integer :: idb = 0
+      integer :: idb_irr = 0
+      integer :: ihru = 0
+      integer :: isrc_wallo = 0
+      integer :: div_found = 0
       
       eof = 0
       imax = 0
@@ -203,9 +203,9 @@
           enddo
           if(div_found == 1) then
             !prepare array
-            allocate(div_volume_daily(sp_ob%recall))
-            allocate(div_volume_total(sp_ob%recall))
-            allocate(div_volume_used(sp_ob%recall))
+            allocate (div_volume_daily(sp_ob%recall), source = 0.)
+            allocate (div_volume_total(sp_ob%recall), source = 0.)
+            allocate (div_volume_used(sp_ob%recall), source = 0.)
             div_volume_daily = 0.
             div_volume_total = 0.
             div_volume_used = 0.

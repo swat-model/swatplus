@@ -13,13 +13,14 @@
       
       implicit none
       
-      character (len=80) :: file      !           |filename
-      character (len=80) :: header    !           |header of file
-      character (len=30) :: name      !           |header of file
-      character (len=30) :: plnt_typ  !           |header of file
+      character (len=80) :: file = "" !           |filename
+      character (len=80) :: header = "" !           |header of file
+      character (len=30) :: name = "" !           |header of file
+      character (len=30) :: plnt_typ = ""!           |header of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: eof                  !           |end of file
-      integer :: i,j                  !           |counters
+      integer :: eof = 0              !           |end of file
+      integer :: i = 0                !           |counters
+      integer :: j = 0                !           |counters
       
       
       eof = 0
@@ -41,7 +42,7 @@
         read(5054,*) header
         
         !allocate array
-        allocate(salt_uptake_kg(db_mx%plantparm,cs_db%num_salts))
+        allocate (salt_uptake_kg(db_mx%plantparm,cs_db%num_salts), source = 0.)
         salt_uptake_kg = 0.
         
         !loop through the plant communities

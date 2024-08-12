@@ -5,19 +5,19 @@
       
       implicit none
       
-      integer :: mhyd                                                    !none          |max number of hydrographs
-      integer :: mcmd                                                    !              |
-      integer :: inum2                                                   !none          |inflow hydrograph storage location number
-      integer :: jrch                                                    !none          |reach number
-      integer :: jrchq                                                   !              |
-      integer :: mrte                                                    !              |
-      integer :: ihout                                                   !none          |outflow hydrograph storage location number
-      integer :: iwst                                                    !              | 
-      integer :: isdch                                                   !              |
-      integer :: icmd                                                    !              |
-      integer :: ich                                                     !none          |object number 
-      integer :: mobj_out                                                !none          |end of loop
-      integer :: isd_chsur                                               !              | 
+      integer :: mhyd = 0                                                !none          |max number of hydrographs
+      integer :: mcmd = 0                                                !              |
+      integer :: inum2 = 0                                               !none          |inflow hydrograph storage location number
+      integer :: jrch = 0                                                !none          |reach number
+      integer :: jrchq = 0                                               !              |
+      integer :: mrte = 0                                                !              |
+      integer :: ihout = 0                                               !none          |outflow hydrograph storage location number
+      integer :: iwst = 0                                                !              | 
+      integer :: isdch = 0                                               !              |
+      integer :: icmd = 0                                                !              |
+      integer :: ich = 0                                                 !none          |object number 
+      integer :: mobj_out = 0                                            !none          |end of loop
+      integer :: isd_chsur = 0                                           !              | 
       integer, dimension (:), allocatable :: rcv_sum                     !              |
       integer, dimension (:), allocatable :: dfn_sum                     !              |
       integer, dimension (:), allocatable :: elem_cnt                    !              |
@@ -169,30 +169,30 @@
       type (hyd_output) :: chomz
 
       type object_output
-        character (len=3) :: name
-        character (len=3) :: obtyp     !! object type: hru,hlt,hs,rxc,dr,out,sdc
-        integer :: obtypno             !! object type number: 1=hru, 2=hru_lte, 3=channel
-        character (len=6) :: hydtyp    !! hydrograph type: tot,rhg,sur,lat,til
-        integer :: objno               !! object number
-        integer :: hydno               !! code computes from hydtyp
-        character (len=26) :: filename !! file with hydrograph output from the object
+        character (len=3) :: name = ""
+        character (len=3) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
+        integer :: obtypno = 0         !! object type number: 1=hru, 2=hru_lte, 3=channel
+        character (len=6) :: hydtyp = "" !! hydrograph type: tot,rhg,sur,lat,til
+        integer :: objno = 0           !! object number
+        integer :: hydno = 0           !! code computes from hydtyp
+        character (len=26) :: filename = ""!! file with hydrograph output from the object
         integer :: unitno = 6100       !! filename unit number
       end type object_output
       type (object_output), dimension (:), allocatable :: ob_out
       
       type channel_floodplain_water_balance
-        real :: inflo               !! m3       | inflow
-        real :: outflo              !! m3       | outflow
-        real :: tl                  !! m3       | transmission losses
-        real :: ev                  !! m3       | evaporation
-        real :: ch_stor_init        !! m3       | channel storage at start of time step
-        real :: ch_stor             !! m3       | channel storage at end of time step
-        real :: fp_stor_init        !! m3       | flood plain storage at start of time step (all flood plain storage above wetland emergency volume)
-        real :: fp_stor             !! m3       | flood plain storage at end of time step
-        real :: tot_stor_init       !! m3       | total channel + wetland storage at start of time step
-        real :: tot_stor            !! m3       | total channel + wetland storage at end of time step
-        real :: wet_stor_init       !! m3       | wetland flood plain storage at start of time step
-        real :: wet_stor            !! m3       | wetland flood plain storage at end of time step
+        real :: inflo = 0.          !! m3       | inflow
+        real :: outflo = 0.         !! m3       | outflow
+        real :: tl = 0.             !! m3       | transmission losses
+        real :: ev = 0.             !! m3       | evaporation
+        real :: ch_stor_init = 0.   !! m3       | channel storage at start of time step
+        real :: ch_stor = 0.        !! m3       | channel storage at end of time step
+        real :: fp_stor_init = 0.   !! m3       | flood plain storage at start of time step (all flood plain storage above wetland emergency volume)
+        real :: fp_stor = 0.        !! m3       | flood plain storage at end of time step
+        real :: tot_stor_init = 0.  !! m3       | total channel + wetland storage at start of time step
+        real :: tot_stor = 0.       !! m3       | total channel + wetland storage at end of time step
+        real :: wet_stor_init = 0.  !! m3       | wetland flood plain storage at start of time step
+        real :: wet_stor = 0.       !! m3       | wetland flood plain storage at end of time step
       end type channel_floodplain_water_balance
       type (channel_floodplain_water_balance), dimension (:), allocatable :: ch_fp_wb
       
@@ -211,11 +211,11 @@
         real :: min = 1.e10
         real :: max = 0.
         real :: mean = 0
-        real, dimension (27) :: p        !probabilities for all points on the fdc
+        real, dimension (27) :: p = 0.   !probabilities for all points on the fdc
       end type duration_curve_points
 
       type water_temperature_data
-        character(len=16) :: name
+        character(len=16) :: name = ""
         real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
         real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
         real :: sur_lat = 1.        ! none          |coefficient influencing suface and lateral flow temperature contributions
@@ -226,12 +226,10 @@
       type (water_temperature_data) :: w_temp
 
       integer :: fdc_npts = 27
-      real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,&
-                                        97.,98.,99./) !percent        |output percent on the fdc (input)
-      integer, dimension (27) :: fdc_days = (/1,2,4,7,11,18,37,55,73,91,110,128,146,164,182,201,219,237,256,274,292,310,329,347,&
-                                             354,358,361/)
-      real, dimension (27) :: fdc_n             !               |flow on the fdc at given percents
-      real, dimension (27) :: fdc_norm_mean     !               |normalized flow on the fdc at given percents
+      real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,97.,98.,99./) !percent        |output percent on the fdc (input)
+      integer, dimension (27) :: fdc_days = (/1,2,4,7,11,18,37,55,73,91,110,128,146,164,182,201,219,237,256,274,292,310,329,347,354,358,361/)
+      real, dimension (27) :: fdc_n = 0.        !               |flow on the fdc at given percents
+      real, dimension (27) :: fdc_norm_mean = 0.  !               |normalized flow on the fdc at given percents
       
       type flow_duration_curve
         integer :: mfe = 1
@@ -248,34 +246,34 @@
                
       type flashiness_index
         !flashiness index sum ((qi)-q(i-1)) / sum (qi)
-        real :: sum_q_q1            !sum of difference in current day flow minus previous day flow
-        real :: sum_q               !sum of daily flow over simulation period
+        real :: sum_q_q1 = 0.       !sum of difference in current day flow minus previous day flow
+        real :: sum_q = 0.          !sum of daily flow over simulation period
         real :: q_prev = 0.         !previous day flow
-        real :: index               !index
+        real :: index = 0.          !index
       end type flashiness_index
                
       type object_connectivity
         character(len=16) :: name = "default"
         character(len=8) :: typ = " "   !object type - ie hru, hru_lte, sub, chan, res, recall
-        integer :: nhyds                !hru=5, chan=3 - see type hd_tot for each object
-        real :: lat                     !latitude (degrees)
-        real :: long                    !longitude (degrees)
+        integer :: nhyds = 0            !hru=5, chan=3 - see type hd_tot for each object
+        real :: lat = 0.                !latitude (degrees)
+        real :: long = 0.               !longitude (degrees)
         real :: elev = 100.             !elevation (m)
-        real :: plaps                   !precipitation lapse applied to object precip
-        real :: tlaps                   !temperature lapse applied to object precip
+        real :: plaps = 0.              !precipitation lapse applied to object precip
+        real :: tlaps = 0.              !temperature lapse applied to object precip
         real :: area_ha = 80.           !input drainag area - ha
         integer :: sp_ob_no = 1         !spatial object number - ie: hru number, channel number, etc
         real :: area_ha_calc = 80.      !calculated drainage area-ha. only for checking - doesn't work if routing across landscape
         integer :: props = 1            !properties number from data base (ie hru.dat, sub.dat) - change props to data
-        character (len=50) ::  wst_c    !weather station name
+        character (len=50) :: wst_c = ""  !weather station name
         integer :: wst = 1              !weather station number
-        integer :: constit              !constituent data pointer to pesticides, pathogens, metals, salts
-        integer :: props2               !overbank connectivity pointer to landscape units - change props2 to overbank
-        character(len=16) :: ruleset    !points to the name of the dtbl in flo_con.dtl for out flow control
-        integer :: flo_dtbl             !dtbl pointer for flow fraction of hydrograph
+        integer :: constit = 0          !constituent data pointer to pesticides, pathogens, metals, salts
+        integer :: props2 = 0           !overbank connectivity pointer to landscape units - change props2 to overbank
+        character(len=16) :: ruleset = "" !points to the name of the dtbl in flo_con.dtl for out flow control
+        integer :: flo_dtbl = 0         !dtbl pointer for flow fraction of hydrograph
         integer :: num = 1              !spatial object number- ie hru number corresponding to sequential command number
                                         !this is the first column in hru_dat (doesn"t have to be sequential)
-        integer*8 :: gis_id             !gis number for database purposes
+        integer*8 :: gis_id = 0         !gis number for database purposes
         integer :: fired = 0            !0=not fired; 1=fired off as a command
         integer :: cmd_next = 0         !next command (object) number
         integer :: cmd_prev = 0         !previous command (object) number
@@ -283,9 +281,9 @@
         integer :: src_tot = 0          !total number of outgoing (source) objects
         integer :: rcv_tot = 0          !total number of incoming (receiving) hydrographs
         integer :: dfn_tot = 0          !total number of defining objects (ie hru"s within a subbasin)
-        integer :: ru_tot               !number of routing units that contain this object
+        integer :: ru_tot = 0           !number of routing units that contain this object
         integer,  dimension (:), allocatable :: ru                  !subbasin the element is in
-        integer :: elem                 !subbasins element number for this object- used for routing over (can only have one)
+        integer :: elem = 0             !subbasins element number for this object- used for routing over (can only have one)
         integer :: flood_ch_lnk = 0     !channel the landscape unit is linked to
         integer :: flood_ch_elem = 0    !landscape unit number - 1 is nearest to stream
         integer :: flood_frac = 0       !fraction of flood flow assigned to the object
@@ -322,10 +320,10 @@
         type (hyd_output) :: hin_tot                                        !total inflow hydrograph to the object
         type (hyd_output) :: hout_tot                                       !total outflow hydrograph to the object
         type (hyd_output) :: conc_prev                                      !concentration of previous timestep for watqual2e routine
-        real :: demand                                                      !water irrigation demand (ha-m)
+        real :: demand = 0.                                                 !water irrigation demand (ha-m)
         integer :: day_cur = 0                                              !current hydrograph day in ts
-        integer :: day_max                                                  !maximum number of days to store the hydrograph
-        real :: peakrate                                                    !peak flow rate during time step - m3/s
+        integer :: day_max = 0                                              !maximum number of days to store the hydrograph
+        real :: peakrate = 0.                                               !peak flow rate during time step - m3/s
         
         type (hyd_output), dimension(:),allocatable :: hin_d
         type (hyd_output), dimension(:),allocatable :: hin_m
@@ -347,13 +345,13 @@
       
       !water rights elements (objects) within the water rights object
       type water_rights_elements
-        integer :: num
-        character (len=16) :: ob_typ            !object type - hru, channel, reservoir, etc
-        integer :: ob_num                       !object number
-        character (len=16) :: irr_typ           !character from irr.ops - was irr demand, minimum flow, flow fraction, etc
-        integer :: irr_no                       !irrigation number from irr.ops - walk irr_typ
-        real :: amount                          !0 for irr demand; ha-m for min_flo; frac for min_frac
-        integer :: rights                       !0-100 scale
+        integer :: num = 0
+        character (len=16) :: ob_typ = ""       !object type - hru, channel, reservoir, etc
+        integer :: ob_num = 0                   !object number
+        character (len=16) :: irr_typ = ""      !character from irr.ops - was irr demand, minimum flow, flow fraction, etc
+        integer :: irr_no = 0                   !irrigation number from irr.ops - walk irr_typ
+        real :: amount = 0.                     !0 for irr demand; ha-m for min_flo; frac for min_frac
+        integer :: rights = 0                   !0-100 scale
       end type water_rights_elements
 
       !water allocation
@@ -362,7 +360,7 @@
         real :: applied = 0.                    !irrigation applied         |mm
         real :: runoff = 0.                     !irrigation surface runoff  |mm
         real :: eff = 1.                        !irrigation efficiency as a fraction of irrigation. Jaehak 2022
-        real :: frac_surq                       !fraction of irrigation lost in runoff flow. Jaehak 2022
+        real :: frac_surq = 0.                  !fraction of irrigation lost in runoff flow. Jaehak 2022
         !hyd_output units are in mm and mg/L
         type (hyd_output) :: water              !irrigation water
       end type irrigation_water_transfer
@@ -370,15 +368,15 @@
       
       !recall hydrograph inputs
       type recall_hydrograph_inputs
-        character (len=25) :: name
+        character (len=25) :: name = ""
         integer :: num = 0                    !number of elements
         integer :: typ = -1                   !recall type - 0=subdaily, 1=day, 2=mon, 3=year
-        character(len=25) :: filename         !filename
+        character(len=25) :: filename = ""    !filename
         !hd and hyd_flo units are in cms and mg/L
         type (hyd_output), dimension (:,:), allocatable :: hd   !m3/s for flow  |input total hyd for daily, monthly, annual and exco
         real, dimension (:,:), allocatable :: hyd_flo           !m3/s           |input total flow hyd only for subdaily recall
-        integer :: start_yr             !! start year of point source file
-        integer :: end_yr               !! end year of point source file
+        integer :: start_yr = 0         !! start year of point source file
+        integer :: end_yr = 0           !! end year of point source file
       end type recall_hydrograph_inputs
       type (recall_hydrograph_inputs),dimension(:),allocatable:: recall
 
@@ -427,19 +425,19 @@
       type (object_total_hydrographs) :: hd_tot
       
       type routing_unit_data
-        character(len=16) :: name
-        integer :: num_tot
+        character(len=16) :: name = ""
+        integer :: num_tot = 0
         integer, dimension (:), allocatable :: num             !points to subbasin element (sub_elem)
       end type routing_unit_data
       type (routing_unit_data),dimension(:), allocatable:: ru_def
       
       type routing_unit_elements
-        character(len=16) :: name
+        character(len=16) :: name = ""
         integer :: obj = 1              !object number
-        character (len=3) :: obtyp      !object type- 1=hru, 2=hru_lte, 11=export coef, etc
+        character (len=3) :: obtyp = "" !object type- 1=hru, 2=hru_lte, 11=export coef, etc
         integer :: obtypno = 0          !2-number of hru_lte"s or 1st hru_lte command
         real :: frac = 0                !fraction of element in ru (expansion factor)
-        character(len=16) :: dr_name    !name of dr in delratio.del
+        character(len=16) :: dr_name = "" !name of dr in delratio.del
         type (hyd_output) :: dr         !calculated (or input in delratio.del) dr's for element
       end type routing_unit_elements
       type (routing_unit_elements), dimension(:), allocatable :: ru_elem
@@ -448,7 +446,7 @@
             
       !channel-surface element linkage for overbank flooding
       type channel_surface_elements
-        character(len=16) :: name
+        character(len=16) :: name = ""
         integer :: num = 0                                      !number of elements
         integer :: chnum = 0                                    !channel number
         integer :: resnum = 0
@@ -474,10 +472,10 @@
       
       !channel-aquifer linkage for geomorphic base flow model
       type channel_aquifer_elements
-        character(len=16) :: name
+        character(len=16) :: name = ""
         integer :: num_tot = 0                          !number of elements
         integer, dimension(:), allocatable :: num       !channel numbers
-        real :: len_tot                                 !total length of channels in aquifer (km)
+        real :: len_tot = 0.                            !total length of channels in aquifer (km)
         type (hyd_output) :: hd                         !baseflow hydrograph for the aquifer
         type (geomorphic_baseflow_channel_data), dimension(:),allocatable :: ch
       end type channel_aquifer_elements
@@ -558,7 +556,7 @@
       end type hyd_in_header
       type (hyd_in_header) :: hyd_in_hdr
       
-    type hyd_out_header        
+      type hyd_out_header        
         character (len=15) :: flo_out  =    "        flo_out"        !! m^3/s        |water out      
         character (len=15) :: sed_out  =    "        sed_out"        !! metric tons  |sediment out
         character (len=15) :: orgn_out =    "       orgn_out"        !! kg N         |organic N out
@@ -638,7 +636,8 @@
         character (len=15) :: temp_out =   "       temp_out"        !! deg c        |temperature        
       end type sed_hyd_header
       type (sed_hyd_header) :: sd_hyd_hdr
-     type sd_hyd_header_units
+
+      type sd_hyd_header_units
         character (len=15) :: flo_in    =  "          m^3/s"        !! avg daily m^3/s        |volume of water
         character (len=15) :: flo_out   =  "          m^3/s"        !! avg daily m^3/s        |volume of water
         character (len=15) :: sed_in    =  "           tons"        !! metric tons  |sediment
@@ -681,7 +680,7 @@
       type (sol_header) :: sol_hdr
       
       type plant_header        
-        character (len=15) :: name =  "     name        "       !!none         |plant name 
+        character (len=17) :: name =  "     name        "       !!none         |plant name 
         character (len=15) :: growing =  "growing"              !!none         |plant growing             
         character (len=15) :: dormant =  "dormant"              !!none         |plant dormant
         character (len=15) :: lai =  "lai"                      !!none         |leaf area index 
@@ -715,13 +714,13 @@
       type (flood_plain_header) :: fp_hdr
       
       type ch_watbod_header 
-        character (len=6) :: day           = "  jday"       
+        character (len=6) :: day           = "  jday"
         character (len=6) :: mo            = "   mon"
         character (len=6) :: day_mo        = "   day"
-        character (len=6) :: yrc           = "    yr"       
-        character (len=9) :: isd           = "     unit"        
-        character (len=9) :: id            = "   gis_id"       
-        character (len=15) :: name         = "   name        "   
+        character (len=6) :: yrc           = "    yr"
+        character (len=9) :: isd           = "     unit"
+        character (len=9) :: id            = "   gis_id"
+        character (len=15) :: name         = "   name        "
         character (len=15) :: area_ha      = '          area'
         character (len=15) :: precip       = '        precip'
         character (len=15) :: evap         = '          evap'
@@ -733,10 +732,10 @@
         character (len=6) :: day           = "      "
         character (len=6) :: mo            = "      "
         character (len=6) :: day_mo        = "      "
-        character (len=6) :: yrc           = "      "       
-        character (len=9) :: isd           = "         "                                            
-        character (len=9) :: id            = "         "       
-        character (len=15) :: name         = "              "    
+        character (len=6) :: yrc           = "      "
+        character (len=9) :: isd           = "         "
+        character (len=9) :: id            = "         "
+        character (len=15) :: name         = "              "
         character (len=15) :: area_ha      = '            ha'
         character (len=15) :: precip       = '           m^3'
         character (len=15) :: evap         = '           m^3'
@@ -745,13 +744,13 @@
       type (ch_watbod_header_units) :: ch_wbod_hdr_units
       
       type ch_watbod_inoutheader 
-        character (len=6) :: day           = "  jday"       
+        character (len=6) :: day           = "  jday"
         character (len=6) :: mo            = "   mon"
         character (len=6) :: day_mo        = "   day"
-        character (len=6) :: yrc           = "    yr"              
+        character (len=6) :: yrc           = "    yr"
         character (len=9) :: id            = "  unit"
-        character (len=9) :: gis_id        = " gis_id" 
-        character (len=15) :: name         = "   name        "   
+        character (len=9) :: gis_id        = " gis_id"
+        character (len=15) :: name         = "   name        "
       end type ch_watbod_inoutheader
       type (ch_watbod_inoutheader) :: ch_wbod_inouthdr
       
@@ -759,10 +758,10 @@
         character (len=6) :: day           = "      "
         character (len=6) :: mo            = "      "
         character (len=6) :: day_mo        = "      "
-        character (len=6) :: yrc           = "      "                                                 
-        character (len=9) :: id            = "         " 
-        character (len=9) :: gis_id        = "         " 
-        character (len=15) :: name         = "              "    
+        character (len=6) :: yrc           = "      "
+        character (len=9) :: id            = "         "
+        character (len=9) :: gis_id        = "         "
+        character (len=15) :: name         = "              "
       end type ch_watbod_inoutheader_units
       type (ch_watbod_inoutheader_units) :: ch_wbod_inouthdr_units
         
@@ -847,7 +846,7 @@
         character (len=12) :: day_mo =  "            "
         character (len=13) :: yrc    =  "            "
         character (len=12) :: name   =  "            "
-        character (len=6) :: otype   =  "      "    
+        character (len=6) :: otype   =  "      "
         character (len=17) :: flo    =  "            m^3/s"      !! m^3/s        |volume of water
         character (len=15) :: sed    =  "           tons"        !! metric tons  |sediment
         character (len=15) :: orgn   =  "            kgN"        !! kg N         |organic N
@@ -875,7 +874,7 @@
         character (len=12) :: day_mo =  "            "
         character (len=13) :: yrc    =  "            "
         character (len=12) :: name   =  "            "
-        character (len=6) :: otype   =  "      "    
+        character (len=6) :: otype   =  "      "
         character (len=13) :: iotyp  =  "            "
         character (len=9) :: iotypno =  "         "
         character (len=8) :: hydio   =  "        "
@@ -917,8 +916,8 @@
         character (len=12) :: mo     =  "         mon"
         character (len=12) :: day_mo =  "         day"
         character (len=13) :: yrc    =  "          yr"
-        character (len=12) :: name   =  "name        "       
-        character (len=6) ::  blank  =  "      "
+        character (len=12) :: name   =  "name        "
+        character (len=6) :: blank  =  "      "
       end type rec_header_time
        type (rec_header_time) :: rec_hdr_time
        
@@ -938,7 +937,7 @@
         character (len=13) :: mean  =     "      mean "
         character (len=11) :: max   =     "       max "
         character (len=18) :: p01   =     "       p.1 "
-        character (len=13) :: p05   =     "       p.5 "     
+        character (len=13) :: p05   =     "       p.5 "
         character (len=19) :: p1    =     "        p1 "
         character (len=15) :: p2    =     "        p2 "
         character (len=15) :: p3    =     "        p3 "
@@ -969,8 +968,8 @@
       type (output_flow_duration_header) :: fdc_hdr
 	  
       type calibration_header          
-        character (len=16) :: name        =   "     name      "        
-        character (len=12) :: ha          =   "     ha     "                                             
+        character (len=16) :: name        =   "     name      "
+        character (len=12) :: ha          =   "     ha     "
         character (len=12) :: nbyr        =   "   nbyr     "
         character (len=12) :: prec        =   "   precip   "
 		character (len=16) :: meas        =   "     name      "
@@ -1004,13 +1003,13 @@
 		character (len=12) :: etco        =   "   etco     "
 		character (len=12) :: perco       =   "  perco     "
 		character (len=12) :: revapc      =   "  revapc    "
-		character (len=12) :: cn3_swf     =   " cn3_swf    "	
+		character (len=12) :: cn3_swf     =   " cn3_swf    "
       end type calibration_header    
       type (calibration_header) :: calb_hdr	 
 	  
       type calibration2_header         
         character (len=16) :: name     =   "       name "
-        character (len=12) :: dakm2    =   "     da_km2 "                                            
+        character (len=12) :: dakm2    =   "     da_km2 "
         character (len=12) :: cn2      =   "        cn2 "
         character (len=12) :: tc       =   "     tc_min "
         character (len=12) :: soildep  =   " soildep_mm "
@@ -1024,7 +1023,7 @@
         character (len=12) :: percc    =   "      percc "
         character (len=12) :: sw       =   "    sw_frac "
         character (len=12) :: gw       =   "      gw_mm "
-        character (len=12) :: gwflow   =   "  gwflow_mm "        
+        character (len=12) :: gwflow   =   "  gwflow_mm "
         character (len=12) :: gwdeep   =   "  gwdeep_mm "
         character (len=12) :: snow     =   "    snow_mm "
         character (len=12) :: xlat     =   "       xlat "
@@ -1046,7 +1045,7 @@
       
       type calibration3_header         
         character (len=16) :: name     =   "       name "
-        character (len=12) :: chgtyp   =   "    chg_typ "                                            
+        character (len=12) :: chgtyp   =   "    chg_typ "
         character (len=12) :: val      =   "        val "
         character (len=12) :: conds    =   "      conds "
         character (len=12) :: lyr1     =   "       lyr1 "
@@ -1061,12 +1060,12 @@
       
       type output_checker_header         
         character (len=16) :: sname =    "                "
-        character (len=16) :: hydgrp =   "                "        
+        character (len=16) :: hydgrp =   "                "
         character (len=12) :: zmx    =   "       zmx  "
         character (len=12) :: usle_k  =  "     usle_k "
         character (len=12) :: sumfc   =  "      sumfc "
         character (len=12) :: sumul   =  "      sumul "
-        character (len=12) :: usle_p  =  "     usle_p "     
+        character (len=12) :: usle_p  =  "     usle_p "
         character (len=12) :: usle_ls =  "    usle_ls "
         character (len=12) :: esco    =  "       esco "
         character (len=12) :: epco    =  "       epco "
@@ -1077,20 +1076,20 @@
       end type output_checker_header    
       type (output_checker_header) :: chk_hdr
       
-  type output_checker_unit         
+      type output_checker_unit         
         character (len=16) :: sname =    "sname           "
-        character (len=16) :: hydgrp =   "hydgrp          "       
+        character (len=16) :: hydgrp =   "hydgrp          "
         character (len=12) :: zmx    =   "       (mm) "
         character (len=12) :: usle_k  =  "            "
         character (len=12) :: sumfc   =  "       (mm) "
         character (len=12) :: sumul   =  "       (mm) "
-        character (len=12) :: usle_p  =  "            "     
+        character (len=12) :: usle_p  =  "            "
         character (len=12) :: usle_ls =  "            "
         character (len=12) :: esco    =  "            "
         character (len=12) :: epco    =  "            "
         character (len=12) :: cn3_swf =  "            "
         character (len=12) :: perco   =  "            "
-        character (len=12) :: latq_co =  "            "                                          
+        character (len=12) :: latq_co =  "            "
         character (len=16) :: tiledrain ="0=notile;1=tile;"
       end type output_checker_unit    
       type (output_checker_unit) :: chk_unit

@@ -14,18 +14,18 @@
       implicit none
       
       ! read subbasin parameters (ie drainage area and topographic inputs)
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i                    !           |
+      integer :: i = 0                !           |
       integer :: max                  !           |
-      integer :: k                    !           |
-      integer :: ith                  !none       |counter
-      integer :: isalt                !none       |salt ion counter (rtb salt)
-      integer :: ics                  !none       |constituent counter (rtb cs)
-      integer :: ihyd                 !none       |hydrograph counter
+      integer :: k = 0                !           |
+      integer :: ith = 0              !none       |counter
+      integer :: isalt = 0            !none       |salt ion counter (rtb salt)
+      integer :: ics = 0              !none       |constituent counter (rtb cs)
+      integer :: ihyd = 0             !none       |hydrograph counter
       
       mru_db = 0
       eof = 0
@@ -53,9 +53,9 @@
         allocate (ru_m(sp_ob%ru))
         allocate (ru_y(sp_ob%ru))
         allocate (ru_a(sp_ob%ru))
-        allocate (ru_tc(0:sp_ob%ru))
-        allocate (ru_n(0:sp_ob%ru))
-        allocate (itsb(sp_ob%ru))
+        allocate (ru_tc(0:sp_ob%ru), source = 0.)
+        allocate (ru_n(0:sp_ob%ru), source = 0.)
+        allocate (itsb(sp_ob%ru), source = 0)
 
         !rtb salt
         if (cs_db%num_salts > 0) then
@@ -74,10 +74,10 @@
             allocate (rusaltb_y(iru)%hd(5))
             allocate (rusaltb_a(iru)%hd(5))
             do ihyd=1,5
-              allocate (rusaltb_d(iru)%hd(ihyd)%salt(cs_db%num_salts))      
-              allocate (rusaltb_m(iru)%hd(ihyd)%salt(cs_db%num_salts))
-              allocate (rusaltb_y(iru)%hd(ihyd)%salt(cs_db%num_salts))
-              allocate (rusaltb_a(iru)%hd(ihyd)%salt(cs_db%num_salts))
+              allocate (rusaltb_d(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
+              allocate (rusaltb_m(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
+              allocate (rusaltb_y(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
+              allocate (rusaltb_a(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
               rusaltb_d(iru)%hd(ihyd)%salt = 0.
               rusaltb_m(iru)%hd(ihyd)%salt = 0.
               rusaltb_y(iru)%hd(ihyd)%salt = 0.
@@ -153,10 +153,10 @@
             allocate (rucsb_y(iru)%hd(5))
             allocate (rucsb_a(iru)%hd(5))
             do ihyd=1,5
-              allocate (rucsb_d(iru)%hd(ihyd)%cs(cs_db%num_cs))      
-              allocate (rucsb_m(iru)%hd(ihyd)%cs(cs_db%num_cs))
-              allocate (rucsb_y(iru)%hd(ihyd)%cs(cs_db%num_cs))
-              allocate (rucsb_a(iru)%hd(ihyd)%cs(cs_db%num_cs))
+              allocate (rucsb_d(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
+              allocate (rucsb_m(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
+              allocate (rucsb_y(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
+              allocate (rucsb_a(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
               rucsb_d(iru)%hd(ihyd)%cs = 0.
               rucsb_m(iru)%hd(ihyd)%cs = 0.
               rucsb_y(iru)%hd(ihyd)%cs = 0.

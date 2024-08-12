@@ -46,15 +46,15 @@
       
       implicit none 
 
-      real :: xx           !none          |dummy variable to accept function value
+      real :: xx = 0.      !none          |dummy variable to accept function value
                            !              |which is then discarded
-      real :: rn           !none          |random number between 0.0 and 1.0
-      integer :: ii        !none          |variable to hold calculated value 
-      integer :: j         !none          |counter
-      integer :: k         !none          |counter, and variable
-      integer :: rndseed10 !none          |seed for random number generator that is 
+      real :: rn = 0.      !none          |random number between 0.0 and 1.0
+      integer :: ii = 0    !none          |variable to hold calculated value 
+      integer :: j = 0     !none          |counter
+      integer :: k = 0     !none          |counter, and variable
+      integer :: rndseed10 = 0!none          |seed for random number generator that is 
                            !              |used to reset other random number seeds 
-      integer :: iwgn      !none          |counter 
+      integer :: iwgn = 0  !none          |counter 
       real :: aunif        !              |
       
       

@@ -16,13 +16,13 @@
       
       implicit none
       
-      integer :: nplt
-      integer :: icom
-      integer :: iauto
-      integer :: isched
-      integer :: id
-      integer :: nly1
-      integer :: iihru
+      integer :: nplt = 0
+      integer :: icom = 0
+      integer :: iauto = 0
+      integer :: isched = 0
+      integer :: id = 0
+      integer :: nly1 = 0
+      integer :: iihru = 0
 
       allocate (hru_init(0:sp_ob%hru))
       allocate (soil_init(0:sp_ob%hru))
@@ -33,11 +33,11 @@
       do iihru = 1, sp_ob%hru
         icom = hru(iihru)%plant_cov
         nplt = pcomdb(icom)%plants_com
-        allocate (pcom_init(iihru)%plg(nplt)) 
-        allocate (pcom_init(iihru)%plm(nplt)) 
-        allocate (pcom_init(iihru)%plstr(nplt)) 
+        allocate (pcom_init(iihru)%plg(nplt))
+        allocate (pcom_init(iihru)%plm(nplt))
+        allocate (pcom_init(iihru)%plstr(nplt))
         allocate (pcom_init(iihru)%plcur(nplt))
-        allocate (pl_mass_init(iihru)%tot(nplt)) 
+        allocate (pl_mass_init(iihru)%tot(nplt))
         allocate (pl_mass_init(iihru)%ab_gr(nplt))
         allocate (pl_mass_init(iihru)%leaf(nplt))
         allocate (pl_mass_init(iihru)%stem(nplt))
@@ -50,9 +50,9 @@
         allocate (pcom_init(iihru)%dtbl(sched(isched)%num_autos))
         do iauto = 1, sched(isched)%num_autos
           id = sched(isched)%num_db(iauto)
-          allocate (pcom_init(iihru)%dtbl(iauto)%num_actions(dtbl_lum(id)%acts))
+          allocate (pcom_init(iihru)%dtbl(iauto)%num_actions(dtbl_lum(id)%acts), source = 0)
           pcom_init(iihru)%dtbl(iauto)%num_actions = 1
-          allocate (pcom_init(iihru)%dtbl(iauto)%days_act(dtbl_lum(id)%acts))
+          allocate (pcom_init(iihru)%dtbl(iauto)%days_act(dtbl_lum(id)%acts), source = 0)
           pcom_init(iihru)%dtbl(iauto)%days_act = 0
         end do
              
@@ -101,5 +101,5 @@
         aqu_d = aqu_om_init
       end if
 
-	  return
+      return
       end subroutine cal_allo_init

@@ -28,26 +28,29 @@
       implicit none
 
       real, dimension(time%step) :: hyd_flo     !flow hydrograph
-      integer :: in                   !              | 
-      integer :: iob                  !              |
-      integer :: iday                 !              |
-      integer :: isd                  !none          |counter
-      integer :: ires                 !none          |reservoir number
-      integer :: irec                 !              |
-      integer :: iout                 !none          |counter
-      integer :: ihtyp                !              |
-      integer :: iaq                  !none          |counter
-      integer :: j                    !none          |counter
-      integer :: nly, ly
-      integer :: ihyd                 !              |
-      integer :: idr                  !              |
-      integer :: iwro                 !              |
-      real :: conv                    !              |
-      real :: frac_in                 !              |
-      integer :: ts1,ts2
-      integer i_count                 !rtb gwflow
-      integer :: i_mfl,i_chan         !rtb gwflow    |counter
-      real :: sumflo
+      integer :: in = 0               !              | 
+      integer :: iob = 0              !              |
+      integer :: iday = 0             !              |
+      integer :: isd = 0              !none          |counter
+      integer :: ires = 0             !none          |reservoir number
+      integer :: irec = 0             !              |
+      integer :: iout = 0             !none          |counter
+      integer :: ihtyp = 0            !              |
+      integer :: iaq = 0              !none          |counter
+      integer :: j = 0                !none          |counter
+      integer :: nly = 0
+      integer :: ly = 0
+      integer :: ihyd = 0             !              |
+      integer :: idr = 0              !              |
+      integer :: iwro = 0             !              |
+      real :: conv = 0.               !              |
+      real :: frac_in = 0.            !              |
+      integer :: ts1 = 0
+      integer :: ts2 = 0
+      integer :: i_count = 0          !rtb gwflow
+      integer :: i_mfl = 0            !rtb gwflow    |counter
+      integer :: i_chan = 0           !rtb gwflow    |counter
+      real :: sumflo = 0.
 
       icmd = sp_ob1%objs
       do while (icmd /= 0)
@@ -533,7 +536,7 @@
             call res_pesticide_output (j)
             if (cs_db%num_salts > 0) then !rtb salt
               call res_salt_output (j)
-						endif
+            endif
             if (cs_db%num_cs > 0) then !rtb cs
               call res_cs_output (j)
             endif

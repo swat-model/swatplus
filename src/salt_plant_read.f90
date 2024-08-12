@@ -7,10 +7,11 @@
       
       implicit none
  
-      character (len=80) :: titldum
-      character (len=80) :: header
-      character (len=12) :: plant_name
-      integer :: isalt,iplant
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      character (len=12) :: plant_name = ""
+      integer :: isalt = 0
+      integer :: iplant = 0
       logical :: i_exist              !none       |check to determine if file exists
 
 
@@ -36,8 +37,8 @@
         read(107,*)
         read(107,*)
         read(107,*) header
-        allocate(salt_stress_a(db_mx%plantparm))
-        allocate(salt_stress_b(db_mx%plantparm))
+        allocate (salt_stress_a(db_mx%plantparm), source = 0.)
+        allocate (salt_stress_b(db_mx%plantparm), source = 0.)
         do iplant=1,db_mx%plantparm
           read(107,*) plant_name,salt_stress_a(iplant),salt_stress_b(iplant)
         enddo

@@ -9,10 +9,18 @@
 
       implicit none
  
-      character (len=80) :: titldum, header
-      integer :: eof, imax, ob1, ob2
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
+      integer :: ob1 = 0
+      integer :: ob2 = 0
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iexco_path,ii, ipath, iexco, iob
+      integer :: iexco_path = 0
+      integer :: ii = 0
+      integer :: ipath = 0
+      integer :: iexco = 0
+      integer :: iob = 0
 
       eof = 0
       imax = 0
@@ -37,9 +45,9 @@
           
           allocate (exco_path(imax))
           do iexco_path = 1, imax
-            allocate (exco_path(iexco_path)%path(cs_db%num_paths))
+            allocate (exco_path(iexco_path)%path(cs_db%num_paths), source = 0.)
           end do
-          allocate (exco_path_num(imax))
+          allocate (exco_path_num(imax), source = 0)
           allocate (exco_path_name(imax))
           rewind (107)
           read (107,*,iostat=eof) titldum
@@ -75,12 +83,12 @@
       ob2 = sp_ob1%exco + sp_ob%exco - 1
       do iob = ob1, ob2
         iexco = ob(iob)%props
-		if (exco_db(iexco)%path_file == "null") then
-		  obcs(iob)%hd(1)%path = 0.
-		else
+        if (exco_db(iexco)%path_file == "null") then
+           obcs(iob)%hd(1)%path = 0.
+        else
           iexco_path = exco_path_num(iexco)
           obcs(iob)%hd(1)%path = exco_path(iexco_path)%path
-		end if 
+        end if 
       end do
       
       return

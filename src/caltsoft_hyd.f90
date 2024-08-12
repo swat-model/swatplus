@@ -14,30 +14,30 @@
       
       implicit none
       
-      integer :: iter_all      !none      |counter
-      integer :: iterall       !none      |counter
-      integer :: isim          !          |
-      integer :: ireg          !none      |counter
-      integer :: ilum          !none      |counter
-      integer :: iihru         !none      |counter
-      integer :: icn           !none      |counter
-      integer :: ihru_s        !none      |counter
-      integer :: iter_ind      !          |end of loop
-      integer :: ietco         !none      |counter
-      integer :: ik            !none      |counter
-      integer :: iperco        !none      |counter
-      real :: rmeas            !          |
-      real :: denom            !          |
-      real :: soft             !          |
-      real :: diff             !          |
-      real :: chg_val          !          | 
-      real :: qn1              !          |
-      real :: qn3              !          |
-      real :: s3               !none      |retention parameter for CN3
-      real :: rto3             !none      |fraction difference between CN3 and CN1 
-      real :: rtos             !none      |fraction difference between CN=99 and CN1 
-      real :: sumul            !mm H2O    |amount of water held in soil profile at saturation
-      real :: sumfc            !mm H2O    |amount of water held in the soil profile at field capacity
+      integer :: iter_all = 0  !none      |counter
+      integer :: iterall = 0   !none      |counter
+      integer :: isim = 0      !          |
+      integer :: ireg = 0      !none      |counter
+      integer :: ilum = 0      !none      |counter
+      integer :: iihru = 0     !none      |counter
+      integer :: icn = 0       !none      |counter
+      integer :: ihru_s = 0    !none      |counter
+      integer :: iter_ind = 0  !          |end of loop
+      integer :: ietco = 0     !none      |counter
+      integer :: ik = 0        !none      |counter
+      integer :: iperco = 0    !none      |counter
+      real :: rmeas = 0.       !          |
+      real :: denom = 0.       !          |
+      real :: soft = 0.        !          |
+      real :: diff = 0.        !          |
+      real :: chg_val = 0.     !          | 
+      real :: qn1 = 0.         !          |
+      real :: qn3 = 0.         !          |
+      real :: s3 = 0.          !none      |retention parameter for CN3
+      real :: rto3 = 0.        !none      |fraction difference between CN3 and CN1 
+      real :: rtos = 0.        !none      |fraction difference between CN=99 and CN1 
+      real :: sumul = 0.       !mm H2O    |amount of water held in soil profile at saturation
+      real :: sumfc = 0.       !mm H2O    |amount of water held in the soil profile at field capacity
       
       !calibrate hydrology
         iter_all = 1
@@ -764,5 +764,5 @@
         
       cal_codes%hyd_hru = "n"
       
-	  return
+      return
       end subroutine caltsoft_hyd

@@ -3,11 +3,11 @@
       implicit none
  
       type wind_erosion_factors
-        real :: bare             !!t/d      |erosion from bare soil
-        real :: veg              !!         |vegetation factor
-        real :: rough            !!         |roughness factor
-        real :: unshelt          !!         |unsheltered distance factor
-        real :: erod             !!         |wind erodibility factor
+        real :: bare = 0.        !!t/d      |erosion from bare soil
+        real :: veg = 0.         !!         |vegetation factor
+        real :: rough = 0.       !!         |roughness factor
+        real :: unshelt = 0.     !!         |unsheltered distance factor
+        real :: erod = 0.        !!         |wind erodibility factor
       end type wind_erosion_factors
       type (wind_erosion_factors) :: wind_factors
             

@@ -50,27 +50,36 @@
       
       implicit none
       
-      integer :: j           !none      |hru number
-      integer :: k           !none      |counter 
-      integer :: ir          !none      |flag to denote bottom of root zone reached
-      integer :: idp         !          | 
-      integer :: ulu         !          |urban land use from urban.urb
-      integer :: isalt       !          |salt ion counter (rtb salt)
-      real :: sum            !          |
-      real :: sum_wuse       !mm H2O    |water uptake by plants from all layers
-      real :: sum_wusep      !mm H2O    |previous water uptake by plants from all layers
-      real :: reduc          !none      |fraction of water uptake by plants achieved
+      integer :: j = 0       !none      |hru number
+      integer :: k = 0       !none      |counter 
+      integer :: ir = 0      !none      |flag to denote bottom of root zone reached
+      integer :: idp = 0     !          | 
+      integer :: ulu = 0     !          |urban land use from urban.urb
+      integer :: isalt = 0   !          |salt ion counter (rtb salt)
+      real :: sum = 0.       !          |
+      real :: sum_wuse = 0.  !mm H2O    |water uptake by plants from all layers
+      real :: sum_wusep = 0. !mm H2O    |previous water uptake by plants from all layers
+      real :: reduc = 0.     !none      |fraction of water uptake by plants achieved
                              !          |where the reduction is caused by low water
                              !          |content
 
-      real :: sump           !          |
-      real :: gx             !mm        |lowest depth in layer from which nitrogen
+      real :: sump = 0.      !          |
+      real :: gx = 0.        !mm        |lowest depth in layer from which nitrogen
                              !          |may be removed
-      real :: wuse           !mm H2O    |water uptake by plants in each soil layer
-      real :: satco          !          | 
-      real :: scparm         !          |  
-      real :: reduc_salt,reduc_salt_min,sw_decrease,salt_decrease,theta_w, & !rtb salt
-              soil_TDS,soil_TDS_sat,soil_ECe,a_val,b_val,depth
+      real :: wuse = 0.      !mm H2O    |water uptake by plants in each soil layer
+      real :: satco = 0.     !          | 
+      real :: scparm = 0.    !          |  
+      real :: reduc_salt = 0.                                                !rtb salt
+      real :: reduc_salt_min = 0.                                            !rtb salt
+      real :: sw_decrease = 0.                                               !rtb salt
+      real :: salt_decrease = 0.                                             !rtb salt
+      real :: theta_w = 0.                                                   !rtb salt
+      real :: soil_TDS = 0.                                                  !rtb salt
+      real :: soil_TDS_sat = 0.                                              !rtb salt
+      real :: soil_ECe = 0.                                                  !rtb salt
+      real :: a_val = 0.                                                     !rtb salt
+      real :: b_val = 0.                                                     !rtb salt
+      real :: depth = 0.                                                     !rtb salt
 
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
