@@ -250,15 +250,18 @@
         if (bsn_cc%qual2e == 1) then
           !! new nutrient channel transformations - overrides qual2e
           conc_chng = 1. - exp(-sd_ch(ich)%n_sol_part * rcurv%ttime)
-          ch_trans%no3 = conc_chng * ht1%no3
-          ch_trans%orgn = -ch_trans%no3
-          ht2%no3 = ht1%no3 + ch_trans%no3
+          ch_trans%orgn = conc_chng * ht1%orgn
+          ch_trans%orgn = Min (ht1%no3, ch_trans%orgn)
+          ch_trans%no3 = ch_trans%orgn
           ht2%orgn = ht1%orgn + ch_trans%orgn
+          ht2%no3 = ht1%no3 - ch_trans%no3
+          
           conc_chng = 1. - exp(-sd_ch(ich)%p_sol_part * rcurv%ttime)
-          ch_trans%solp = conc_chng * ht1%solp
-          ch_trans%sedp = -ch_trans%solp
-          ht2%solp = ht1%solp + ch_trans%solp
-          ht2%solp = ht1%solp + ch_trans%solp
+          ch_trans%sedp = conc_chng * ht1%sedp
+          ch_trans%sedp = Min (ht1%solp, ch_trans%sedp)
+          ch_trans%solp = ch_trans%sedp
+          ht2%sedp = ht1%sedp + ch_trans%sedp
+          ht2%solp = ht1%solp - ch_trans%solp
         end if
       
         !salt mass in seepage
@@ -388,9 +391,10 @@
       !! set outflow hyd to ht2 after diverting water
       ob(icmd)%hd(1) = ht2
       
-      if (isdch == 1321) then
-          write (7778,*) isdch, ht1%flo, ht2%flo
-      end if
+      !if (isdch == 780) then
+      !    !write (7778,*) isdch, ht1%flo, ht2%flo
+      !    write (7778,*) isdch, ht2%orgn, ht2%no3
+      !end if
 
       !channel salt updates
       if(cs_db%num_salts > 0) then
@@ -428,6 +432,42 @@
       ch_out_d(isdch) = ob(icmd)%hd(1)                       !set outflow om hydrograph
       ch_out_d(isdch)%flo = ob(icmd)%hd(1)%flo / 86400.      !m3 -> m3/s
       
+      !! channel sediment budget for output
+      ch_sed_bud(ich)%in_sed = ht1%sed
+      ch_sed_bud(ich)%out_sed = ht2%sed
+      ch_sed_bud(ich)%fp_dep = fp_dep%sed
+      ch_sed_bud(ich)%ch_dep = ch_dep%sed
+      ch_sed_bud(ich)%bank_ero = bank_ero%sed
+      ch_sed_bud(isdch)%fp_dep = fp_dep%sed
+      ch_sed_bud(isdch)%ch_dep = ch_dep%sed
+      ch_sed_bud(isdch)%bank_ero = bank_ero%sed
+
+      !! channel nutrient budget for output
+      ch_sed_bud(ich)%in_no3 = ht1%no3
+      ch_sed_bud(ich)%in_orgn = ht1%orgn
+      ch_sed_bud(ich)%out_no3 = ht2%no3
+      ch_sed_bud(ich)%out_orgn = ht2%orgn
+      ch_sed_bud(ich)%fp_no3 = fp_dep%no3
+      ch_sed_bud(ich)%bank_no3 = bank_ero%no3
+      ch_sed_bud(ich)%bed_no3 = bed_ero%no3
+      ch_sed_bud(ich)%fp_orgn = fp_dep%orgn
+      ch_sed_bud(ich)%ch_orgn = ch_dep%orgn
+      ch_sed_bud(ich)%bank_orgn = bank_ero%orgn
+      ch_sed_bud(ich)%bed_orgn = bed_ero%orgn
+      ch_sed_bud(ich)%in_solp = ht1%solp
+      ch_sed_bud(ich)%in_orgp = ht1%sedp
+      ch_sed_bud(ich)%out_solp = ht2%solp
+      ch_sed_bud(ich)%out_orgp = ht2%sedp
+      ch_sed_bud(ich)%fp_solp = fp_dep%solp
+      ch_sed_bud(ich)%bank_solp = bank_ero%solp
+      ch_sed_bud(ich)%bed_solp = bed_ero%solp
+      ch_sed_bud(ich)%fp_orgp = fp_dep%sedp
+      ch_sed_bud(ich)%ch_orgp = ch_dep%sedp
+      ch_sed_bud(ich)%bank_orgp = bank_ero%sedp
+      ch_sed_bud(ich)%bed_orgp = bed_ero%sedp
+      ch_sed_bud(ich)%no3_orgn = ch_trans%no3
+      ch_sed_bud(ich)%solp_orgp = ch_trans%solp
+
       !! output channel morphology
       chsd_d(isdch)%flo = ob(icmd)%hd(1)%flo / 86400.        !adjust if overbank flooding is moved to landscape
       chsd_d(isdch)%flo_mm = ob(icmd)%hd(1)%flo / (10. * ob(icmd)%area_ha)   !flow out in mm
@@ -435,9 +475,6 @@
       chsd_d(isdch)%sed_in = ob(icmd)%hin%sed
       chsd_d(isdch)%sed_out = ob(icmd)%hd(1)%sed
       chsd_d(isdch)%sed_stor = ch_stor(isdch)%sed
-      ch_sed_bud(isdch)%fp_dep = fp_dep%sed
-      ch_sed_bud(isdch)%ch_dep = ch_dep%sed
-      ch_sed_bud(isdch)%bank_ero = bank_ero%sed
       ch_sed_bud(isdch)%bed_ero = bed_ero%sed
       chsd_d(isdch)%washld = ob(icmd)%hd(1)%sed
       chsd_d(isdch)%bedld = ch_dep%sed

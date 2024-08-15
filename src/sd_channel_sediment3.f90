@@ -48,6 +48,7 @@
       real :: florate_ob = 0.
       real :: precip = 0.
       real :: flovol_ob = 0.
+      real :: wet_fill = 0.
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
@@ -109,6 +110,7 @@
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       florate_ob = peakrate - bf_flow
       flovol_ob = florate_ob * 86400.
+      flovol_ob = Min (flovol_ob, ht1%flo)
       if (flovol_ob > 0.) then
         trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
@@ -123,39 +125,32 @@
         !! trap nitrate and sol P in flood plain - when not simulating flood plain interactions?
         fp_dep%no3 = trap_eff * ht1%no3
         fp_dep%solp = trap_eff * ht1%solp
+        ht1 = ht1 - fp_dep
         
-        !! if flood plain link - fill wetlands to emergency and add remainder to flood plain storage
+        !! if flood plain link - fill wetlands to emergency
         do ihru = 1, sd_ch(ich)%fp%hru_tot
           iihru = sd_ch(ich)%fp%hru(ihru)
           ires= hru(iihru)%dbs%surf_stor
-          !! wetland storage can't go above emergency in release dtbl - it becomes flood plain storage
-          if (ires > 0 .and. flovol_ob > 0.) then
-            if (flovol_ob > (wet_ob(iihru)%evol - wet(iihru)%flo)) then
-              rto = (wet_ob(iihru)%evol - wet(iihru)%flo) / flovol_ob
-              if (rto > 1.e-6) then
-                wet(iihru) = wet(iihru) + rto * fp_dep
-                wet(iihru)%flo = wet(iihru)%flo + rto * flovol_ob
-                hru(iihru)%wet_obank_in = (rto * flovol_ob) / (10. * hru(iihru)%area_ha)
-                rto1 = 1. - rto
-                fp_dep = rto1 * fp_dep
-                flovol_ob = rto1 * flovol_ob
-              end if
-            else
-              wet(iihru) = wet(iihru) + fp_dep
-              wet(iihru)%flo = wet(iihru)%flo + flovol_ob
-              hru(iihru)%wet_obank_in = flovol_ob /  (10. * hru(iihru)%area_ha) 
-              fp_dep = hz
-              flovol_ob = 0.
+          !! fill wetland storage to emergency volume
+          wet_fill = wet_ob(iihru)%evol - wet(iihru)%flo
+          !! calculate overbank volume left to fill wetland
+          flovol_ob = flovol_ob - wet_fill
+          if (flovol_ob < 0.) then
+            wet_fill = wet_fill + flovol_ob
+            flovol_ob = 0.
+          end if
+          if (ires > 0 .and. wet_fill > 0.) then
+            rto = wet_fill / ht1%flo
+            rto = Min (1., rto)
+            if (rto > 1.e-6) then
+              wet(iihru) = wet(iihru) + rto * ht1
+              hru(iihru)%wet_obank_in = (rto * ht1%flo) / (10. * hru(iihru)%area_ha)
+              rto1 = 1. - rto
+              ob(icmd)%tsin(:) = rto1 * ob(icmd)%tsin(:)
+              ht1 = rto1 * ht1
             end if
           end if
         end do
-            
-        !! add remainder to flood plain storage
-        if (flovol_ob > 0.) then
-          rto = flovol_ob / ht1%flo
-          ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
-          ht1 = ht1 - fp_dep
-        end if
             
       end if     ! florate_ob > 0.
       
@@ -264,41 +259,6 @@
       ht1 = ht1 + bed_ero
       
       end if        ! inflow>0
-
-      !! channel sediment budget for output
-      ch_sed_bud(ich)%in_sed = ht1%sed
-      ch_sed_bud(ich)%out_sed = ht2%sed
-      ch_sed_bud(ich)%fp_dep = fp_dep%sed
-      ch_sed_bud(ich)%ch_dep = ch_dep%sed
-      ch_sed_bud(ich)%bank_ero = bank_ero%sed
-      ch_sed_bud(ich)%bed_ero = bed_ero%sed
-
-      !! channel nutrient budget for output
-      ch_sed_bud(ich)%in_no3 = ht1%no3
-      ch_sed_bud(ich)%in_orgn = ht1%orgn
-      ch_sed_bud(ich)%out_no3 = ht2%no3
-      ch_sed_bud(ich)%out_orgn = ht2%orgn
-      ch_sed_bud(ich)%fp_no3 = fp_dep%no3
-      ch_sed_bud(ich)%bank_no3 = bank_ero%no3
-      ch_sed_bud(ich)%bed_no3 = bed_ero%no3
-      ch_sed_bud(ich)%fp_orgn = fp_dep%orgn
-      ch_sed_bud(ich)%ch_orgn = ch_dep%orgn
-      ch_sed_bud(ich)%bank_orgn = bank_ero%orgn
-      ch_sed_bud(ich)%bed_orgn = bed_ero%orgn
-      ch_sed_bud(ich)%in_solp = ht1%solp
-      ch_sed_bud(ich)%in_orgp = ht1%sedp
-      ch_sed_bud(ich)%out_solp = ht2%solp
-      ch_sed_bud(ich)%out_orgp = ht2%sedp
-      ch_sed_bud(ich)%fp_solp = fp_dep%solp
-      ch_sed_bud(ich)%bank_solp = bank_ero%solp
-      ch_sed_bud(ich)%bed_solp = bed_ero%solp
-      ch_sed_bud(ich)%fp_orgp = fp_dep%sedp
-      ch_sed_bud(ich)%ch_orgp = ch_dep%sedp
-      ch_sed_bud(ich)%bank_orgp = bank_ero%sedp
-      ch_sed_bud(ich)%bed_orgp = bed_ero%sedp
-      ch_sed_bud(ich)%no3_orgn = ch_trans%no3
-      ch_sed_bud(ich)%solp_orgp = ch_trans%solp
-
 
       return
       end subroutine sd_channel_sediment3
