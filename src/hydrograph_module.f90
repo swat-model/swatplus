@@ -26,6 +26,7 @@
       real, dimension (:), allocatable :: hyd_km2                        !              |  
       integer, dimension (:), allocatable :: ob_order                    !              |
       real, dimension(:,:,:), allocatable:: rchhr                        !              |
+      real, allocatable :: wyld_rto(:)                                   !mm=m3/(10*ha) |output runoff/precip ratio 
       
       type hyd_output
         real :: flo = 0.               !! m^3           |volume of water
@@ -1093,6 +1094,40 @@
         character (len=16) :: tiledrain ="0=notile;1=tile;"
       end type output_checker_unit    
       type (output_checker_unit) :: chk_unit
+        
+      type hru_exco_header_type
+        character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
+        character (len=16) :: sed  =    "sed "        !! metric tons  |sediment
+        character (len=16) :: orgn =    "orgn "        !! kg N         |organic N
+        character (len=16) :: sedp =    "sedp "        !! kg P         |organic P
+        character (len=16) :: no3  =    "no3 "        !! kg N         |NO3-N
+        character (len=16) :: solp =    "solp "        !! kg P         |mineral (soluble P)
+        !character (len=16) :: chla =    "chla "        !! kg           |chlorophyll-a
+        character (len=16) :: nh3  =    "nh3 "        !! kg N         |NH3
+        character (len=16) :: no2  =    "no2 "        !! kg N         |NO2
+      end type hru_exco_header_type
+      
+      
+      type hru_exco_header_unit
+        character (len=16) :: unitflo    =  "m^3 "        !! m^3          |volume of water
+        character (len=16) :: unitsed    =  "tons "        !! metric tons  |sediment
+        character (len=16) :: unitorgn   =  "kgN "        !! kg N         |organic N
+        character (len=16) :: unitsedp   =  "kgP "        !! kg P         |organic P
+        character (len=16) :: unitno3    =  "kgN "        !! kg N         |NO3-N
+        character (len=16) :: unitsolp   =  "kgP "        !! kg P         |mineral (soluble P)
+        !character (len=16) :: unitchla   =  "kg "        !! kg           |chlorophyll-a
+        character (len=16) :: unitnh3    =  "kgN "        !! kg N         |NH3
+        character (len=16) :: unitno2    =  "kgN "        !! kg N         |NO2
+      end type hru_exco_header_unit
+      
+      
+      type hru_exco_header
+        character(len=16) :: hd_type(5) = ["total_flow ", " percolation ", " surface_runoff ", " lateral_flow ", " tile_flow "]
+        type (hru_exco_header_type) :: hyd_type
+        type (hru_exco_header_unit) :: hyd_unit
+      end type hru_exco_header
+      type (hru_exco_header) :: hru_exco_hdr
+
       
       interface operator (+)
         module procedure hydout_add
