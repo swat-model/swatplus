@@ -1096,7 +1096,7 @@
       type (output_checker_unit) :: chk_unit
         
       type hru_exco_header_type
-        character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
+        !character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
         character (len=16) :: sed  =    "sed "        !! metric tons  |sediment
         character (len=16) :: orgn =    "orgn "        !! kg N         |organic N
         character (len=16) :: sedp =    "sedp "        !! kg P         |organic P
@@ -1109,7 +1109,7 @@
       
       
       type hru_exco_header_unit
-        character (len=16) :: unitflo    =  "m^3 "        !! m^3          |volume of water
+        !character (len=16) :: unitflo    =  "m^3 "        !! m^3          |volume of water
         character (len=16) :: unitsed    =  "tons "        !! metric tons  |sediment
         character (len=16) :: unitorgn   =  "kgN "        !! kg N         |organic N
         character (len=16) :: unitsedp   =  "kgP "        !! kg P         |organic P

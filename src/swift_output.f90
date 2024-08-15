@@ -28,6 +28,15 @@
       character(len=100) :: command = ""
       logical :: i_exist
       
+      201 format (5xA8,A5,46X,*(A12F2.0A4,1xA12F2.0A4))     ! format of precip.swf headers
+      301 format (I,1xA,F,6xF)                              ! format of precip.swf
+      202 format (5xA8,A5,9X,A16,27xA8,7xA,12x1A4,3x1A4)    ! format of hru_dat.swf headers
+      302 format (1I,1x2A, G ,1x*(G))                       ! format of hru_dat.swf
+      203 format (A8,*(2x1A,10x1A, 6x1A, 2x6A))             ! format of hru_exco.swf headers      
+      303 format (I8,*(2x1A,F16.4, 7F16.4,10x))             ! format of hru_exco.swf 
+      204 format (5xA8,1x*(A5,10x))    ! format of hru_dat.swf headers
+      !304 format (*)                       ! format of hru_dat.swf
+      
       !! check for file_cio.swf to determine if SWIFT folder exist
       inquire (file="SWIFT/file_cio.swf", exist=i_exist)
       if (.not. i_exist) then   ! if not use system-specific command to create SWIFT folder
@@ -75,12 +84,12 @@
       open (107,file="SWIFT/precip.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) db_mx%wst
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 201) "iwst ", "name ", "precip_aa/", yrs_print,'yrs', "pet_aa/", yrs_print, 'yrs'
+      write (107, '(5xA8,A5,34x,A16,6xA16)') "--- ", "---- ", "mm", "mm"
       do iwst = 1, db_mx%wst
         wst(iwst)%precip_aa = wst(iwst)%precip_aa / yrs_print
         wst(iwst)%pet_aa = wst(iwst)%pet_aa / yrs_print
-        write (107, *) iwst, wst(iwst)%name, wst(iwst)%precip_aa, wst(iwst)%pet_aa
+        write (107, 301) iwst, wst(iwst)%name, wst(iwst)%precip_aa, wst(iwst)%pet_aa
       end do
       close (107)
       
@@ -88,10 +97,10 @@
       open (107,file="SWIFT/hru_dat.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%hru
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 202) "iwst ", "name ", "land_use_mgt_c", "slope", "hydgrp", "null", "null"
+      write (107, 202) "--- ", "---- ", "--------------", "m/m", "------", "null", "null"
       do ihru = 1, sp_ob%hru
-        write (107, *) ihru, ob(ihru)%name, hru(ihru)%land_use_mgt_c, hru(ihru)%topo%slope,    &
+        write (107, 302) ihru, ob(ihru)%name, hru(ihru)%land_use_mgt_c, hru(ihru)%topo%slope,    &
                                                     soil(ihru)%hydgrp, "  null", "   null"
       end do
       close (107)
@@ -100,9 +109,11 @@
       open (107,file="SWIFT/hru_exco.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%hru
-      write (107, '(A8,2x,*(1A,9x1A,7x7A))') "HRU ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', hru_exco_hdr%hyd_type, ihyd = 1, hd_tot%hru)
+      write (107, 203) "HRU ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', &
+          hru_exco_hdr%hyd_type, ihyd = 1, hd_tot%hru)
 
-      write (107, '(A8,1x,*(1xA))') "--- ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', hru_exco_hdr%hyd_unit, ihyd = 1, hd_tot%hru)
+      write (107, 203) "--- ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', &
+          hru_exco_hdr%hyd_unit, ihyd = 1, hd_tot%hru)
       
       do ihru = 1, sp_ob%hru
         icmd = hru(ihru)%obj_no
@@ -121,9 +132,10 @@
         end do
         
         !! write to SWIFT hru export coefficient file
-        write(107, '(I8,2x,*(1A16,f16.4, 7f16.4))') ihru, (hru_exco_hdr%hd_type(ihyd), wyld_rto(ihyd), ob(icmd)%hd_aa(ihyd)%sed, ob(icmd)%hd_aa(ihyd)%orgn, &
-                   ob(icmd)%hd_aa(ihyd)%sedp, ob(icmd)%hd_aa(ihyd)%no3, ob(icmd)%hd_aa(ihyd)%solp, &
-                   ob(icmd)%hd_aa(ihyd)%nh3, ob(icmd)%hd_aa(ihyd)%no2, ihyd = 1, hd_tot%hru)
+        write(107, 303) ihru, (hru_exco_hdr%hd_type(ihyd), &
+            wyld_rto(ihyd), ob(icmd)%hd_aa(ihyd)%sed, ob(icmd)%hd_aa(ihyd)%orgn, &
+            ob(icmd)%hd_aa(ihyd)%sedp, ob(icmd)%hd_aa(ihyd)%no3, ob(icmd)%hd_aa(ihyd)%solp, &
+            ob(icmd)%hd_aa(ihyd)%nh3, ob(icmd)%hd_aa(ihyd)%no2, ihyd = 1, hd_tot%hru)
         
         !! Deallocate the wyld_rto array
         deallocate(wyld_rto)
@@ -135,8 +147,8 @@
       open (107,file="SWIFT/hru_wet.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%hru
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 204) "ires", "psa ", "pdep", "esa ", "edep"
+      write (107, 204) "----", "frac", "mm  ", "frac", "mm  "
       do ihru = 1, sp_ob%hru
         icmd = hru(ihru)%obj_no
         
