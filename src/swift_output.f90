@@ -23,7 +23,6 @@
       integer :: iobj_out = 0
       integer :: irec = 0
       integer :: iob = 0
-      real :: wyld_rto = 0.
       character (len=8) :: wet_y_n = ""
       character(len=100) :: folderPath = ""
       character(len=100) :: command = ""
@@ -101,28 +100,36 @@
       open (107,file="SWIFT/hru_exco.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%hru
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, '(A8,2x,*(1A,9x1A,7x7A))') "HRU ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', hru_exco_hdr%hyd_type, ihyd = 1, hd_tot%hru)
+
+      write (107, '(A8,1x,*(1xA))') "--- ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', hru_exco_hdr%hyd_unit, ihyd = 1, hd_tot%hru)
+      
       do ihru = 1, sp_ob%hru
         icmd = hru(ihru)%obj_no
-        write (107, *) ihru
+        !! Allocate wyld_rto array based on the number of hydrological components
+        allocate(wyld_rto(hd_tot%hru))
         
-        !! write to SWIFT input file
         do ihyd = 1, hd_tot%hru
-          !! convert mass to concentrations
-          if (ob(icmd)%hd_aa(ihyd)%flo > 1.e-6) then
-              call hyd_convert_mass_to_conc (ob(icmd)%hd_aa(ihyd))
-          else
-              ob(icmd)%hd_aa(ihyd) = hz
-          end if
-          !! output runoff/precip ratio - mm=m3/(10*ha)
-          wyld_rto = hru(ihru)%flow(ihyd) / (hru(ihru)%precip_aa + 1.e-6)
-          write (107, *) wyld_rto, ob(icmd)%hd_aa(ihyd)%sed, ob(icmd)%hd_aa(ihyd)%orgn,         &
-                ob(icmd)%hd_aa(ihyd)%sedp, ob(icmd)%hd_aa(ihyd)%no3, ob(icmd)%hd_aa(ihyd)%solp, &
-                ob(icmd)%hd_aa(ihyd)%nh3, ob(icmd)%hd_aa(ihyd)%no2
+            !! convert mass to concentrations
+            if (ob(icmd)%hd_aa(ihyd)%flo > 1.e-6) then
+                call hyd_convert_mass_to_conc(ob(icmd)%hd_aa(ihyd))
+            else
+                ob(icmd)%hd_aa(ihyd) = hz
+            end if
+            !! output runoff/precip ratio - mm=m3/(10*ha)
+            wyld_rto(ihyd) = hru(ihru)%flow(ihyd) / (hru(ihru)%precip_aa + 1.e-6)
         end do
+        
+        !! write to SWIFT hru export coefficient file
+        write(107, '(I8,2x,*(1A16,f16.4, 7f16.4))') ihru, (hru_exco_hdr%hd_type(ihyd), wyld_rto(ihyd), ob(icmd)%hd_aa(ihyd)%sed, ob(icmd)%hd_aa(ihyd)%orgn, &
+                   ob(icmd)%hd_aa(ihyd)%sedp, ob(icmd)%hd_aa(ihyd)%no3, ob(icmd)%hd_aa(ihyd)%solp, &
+                   ob(icmd)%hd_aa(ihyd)%nh3, ob(icmd)%hd_aa(ihyd)%no2, ihyd = 1, hd_tot%hru)
+        
+        !! Deallocate the wyld_rto array
+        deallocate(wyld_rto)
       end do
-      close (107)
+
+      close(107)
       
       !! write hru wetland inputs to SWIFT model
       open (107,file="SWIFT/hru_wet.swf",recl = 1500)
