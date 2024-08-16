@@ -9,8 +9,8 @@
       implicit none
       
       integer :: j             !none          |hru number
-      real :: const            !              |constant used for rate, days, etc
-      integer :: iob              !                |
+      real :: const = 0.       !              |constant used for rate, days, etc
+      integer :: iob = 0          !                |
       
       iob = sp_ob1%hru + j - 1
 

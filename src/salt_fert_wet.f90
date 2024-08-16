@@ -21,7 +21,7 @@
       integer, intent (in) :: jj          !none           |HRU
       integer, intent (in) :: ifrt        !               |fertilizer type from fert data base
       real, intent (in) :: frt_kg         !kg/ha          |amount of fertilizer applied 
-      integer :: isalt                    !               |salt ion counter
+      integer :: isalt = 0                !               |salt ion counter
 
       !only proceed if salt ions are included in simulation
       if(cs_db%num_salts > 0) then

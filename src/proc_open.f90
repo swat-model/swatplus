@@ -23,6 +23,6 @@
 
       call header_write
            
-	  return
+      return
       
       end subroutine proc_open

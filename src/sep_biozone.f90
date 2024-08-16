@@ -47,57 +47,57 @@
       
 	implicit none
 
-    integer bz_lyr             !none          |soil layer where biozone exists
-    integer isp                !none          |type of septic system for current hru
-    integer j                  !none          |hru
-    integer nly                !              |
-	real*8 bz_vol              !m^3           |volume of biozone
-    real*8 rtrate              !              |
-    real*8 qin                 !m^3 H2O       |water in reach during time step
-    real*8 qout                !              |
-    real*8 rplqm               !kg/ha         |daily change in plaque
-	real*8 ntr_rt              !1/day         |nitrification reaction rate
-    real*8 dentr_rt            !1/day         |denitrification reaction rate
-    real*8 bod_rt              !1/day         |BOD reaction rate
-    real*8 fcoli_rt            !1/day         |fecal coliform reaction rate
-    real*8 rtof                !none          |weighting factor used to partition the 
+    integer :: bz_lyr = 0      !none          |soil layer where biozone exists
+    integer :: isp = 0         !none          |type of septic system for current hru
+    integer :: j = 0           !none          |hru
+    integer :: nly = 0         !              |
+	real*8 :: bz_vol = 0.d0    !m^3           |volume of biozone
+    real*8 :: rtrate = 0.d0    !              |
+    real*8 :: qin = 0.d0       !m^3 H2O       |water in reach during time step
+    real*8 :: qout = 0.d0      !              |
+    real*8 :: rplqm = 0.d0     !kg/ha         |daily change in plaque
+	real*8 :: ntr_rt = 0.d0    !1/day         |nitrification reaction rate
+    real*8 :: dentr_rt = 0.d0  !1/day         |denitrification reaction rate
+    real*8 :: bod_rt = 0.d0    !1/day         |BOD reaction rate
+    real*8 :: fcoli_rt = 0.d0  !1/day         |fecal coliform reaction rate
+    real*8 :: rtof = 0.d0      !none          |weighting factor used to partition the 
                                !              |organic N & P concentration of septic effluent
                                !              |between the fresh organic and the stable 
                                !              |organic pools
-    real*8 xx                  !none          |temp variable, used to hold calculated
+    real*8 :: xx = 0.d0        !none          |temp variable, used to hold calculated
                                !              |value needed in later equations
-    real*8 bodi                !              |
-    real*8 bode                !              |
-	real*8 rnit                !kg/ha         |nitrification during the day
-    real*8 rdenit              !kg/ha         |denitrification during the day
-    real*8 rmort               !kg/ha         |daily mortality of bacteria
-    real*8 rrsp                !kg/ha         |daily resparation of bacteria
-    real*8 rslg                !kg/ha         |daily slough-off bacteria
-    real*8 rbod                !mg/l          |daily change in bod concentration
-    real*8 rfcoli              !cfu/100ml     |daily change in fecal coliform
-	real*8 nh3_begin           !              | 
-    real*8 nh3_end             !              |
-    real*8 nh3_inflw_ste       !              |
-    real*8 no3_begin           !              |
-    real*8 no3_end             !              |
-	real*8 no3_inflow_ste      !              |
-    real*8 bza                 !              |
-    real*8 qi                  !              |
-    real*8 nperc               !              |
-	real*8 nh3_init            !              | 
-    real*8 no3_init            !              |
-    real*8 hvol                !              |
-    real*8 solpconc            !              |
-    real*8 solpsorb            !              |
-    real*8 qlyr                !              | 
-    real*8 qsrf                !              |
-	real*8 solp_init           !              |
-    real*8 solp_begin          !              |
-    real*8 solp_end            !              |
-    real*8 svolp               !              |
-    real*8 totalp              !              |
-    real*8 ctmp                !              |
-    real*8 percp               !              |
+    real*8 :: bodi = 0.d0      !              |
+    real*8 :: bode = 0.d0      !              |
+	real*8 :: rnit = 0.d0      !kg/ha         |nitrification during the day
+    real*8 :: rdenit = 0.d0    !kg/ha         |denitrification during the day
+    real*8 :: rmort = 0.d0     !kg/ha         |daily mortality of bacteria
+    real*8 :: rrsp = 0.d0      !kg/ha         |daily resparation of bacteria
+    real*8 :: rslg = 0.d0      !kg/ha         |daily slough-off bacteria
+    real*8 :: rbod = 0.d0      !mg/l          |daily change in bod concentration
+    real*8 :: rfcoli = 0.d0    !cfu/100ml     |daily change in fecal coliform
+	real*8 :: nh3_begin = 0.d0 !              | 
+    real*8 :: nh3_end = 0.d0   !              |
+    real*8 :: nh3_inflw_ste = 0.d0!              |
+    real*8 :: no3_begin = 0.d0 !              |
+    real*8 :: no3_end = 0.d0   !              |
+	real*8 :: no3_inflow_ste = 0.d0!              |
+    real*8 :: bza = 0.d0       !              |
+    real*8 :: qi = 0.d0        !              |
+    real*8 :: nperc = 0.d0     !              |
+	real*8 :: nh3_init = 0.d0  !              | 
+    real*8 :: no3_init = 0.d0  !              |
+    real*8 :: hvol = 0.d0      !              |
+    real*8 :: solpconc = 0.d0  !              |
+    real*8 :: solpsorb = 0.d0  !              |
+    real*8 :: qlyr = 0.d0      !              | 
+    real*8 :: qsrf = 0.d0      !              |
+	real*8 :: solp_init = 0.d0 !              |
+    real*8 :: solp_begin = 0.d0  !              |
+    real*8 :: solp_end = 0.d0  !              |
+    real*8 :: svolp = 0.d0     !              |
+    real*8 :: totalp = 0.d0    !              |
+    real*8 :: ctmp = 0.d0      !              |
+    real*8 :: percp = 0.d0     !              |
 
 	j = ihru
 	nly = soil(j)%nly

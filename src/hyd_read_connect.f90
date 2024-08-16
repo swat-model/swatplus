@@ -19,29 +19,29 @@
       integer, intent(in) :: ndsave   !           |
       integer, intent(in) :: nspu     !           | 
       integer, intent(in) :: nspu1    !           |
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      character (len=20) ::con_file   !           |
+      character (len=20) :: con_file  !           |
       character (len=8) :: obtyp      !           |
-      integer :: isp                  !none       |counter
-      integer :: cmd_prev             !none       |previous command (object) number
-      integer :: ob1                  !none       |beginning of loop
-      integer :: ob2                  !none       |ending of loop
-      integer :: i                    !none       |object counter
-      integer :: isp_ob               !none       |spatial object counter
-      integer :: nout                 !           |       
-      integer :: iout                 !           |       
-      integer :: k                    !           |
-      integer :: ihyd                 !           |hydrograph counter
-      integer :: npests               !           |pesticides counter
-      integer :: npaths               !           |pathogens counter
-      integer :: nmetals              !           |heavy metals counter
-      integer :: nsalts               !           |salts counter
-      integer :: ncs                  !           |constituent counter
-      integer :: aqu_found            !           |rtb gwflow
+      integer :: isp = 0              !none       |counter
+      integer :: cmd_prev = 0         !none       |previous command (object) number
+      integer :: ob1 = 0              !none       |beginning of loop
+      integer :: ob2 = 0              !none       |ending of loop
+      integer :: i = 0                !none       |object counter
+      integer :: isp_ob = 0           !none       |spatial object counter
+      integer :: nout = 0             !           |       
+      integer :: iout = 0             !           |       
+      integer :: k = 0                !           |
+      integer :: ihyd = 0             !           |hydrograph counter
+      integer :: npests = 0           !           |pesticides counter
+      integer :: npaths = 0           !           |pathogens counter
+      integer :: nmetals = 0          !           |heavy metals counter
+      integer :: nsalts = 0           !           |salts counter
+      integer :: ncs = 0              !           |constituent counter
+      integer :: aqu_found = 0        !           |rtb gwflow
       
       eof = 0
       imax = 0
@@ -106,10 +106,10 @@
                 end if
                 nmetals = cs_db%num_metals
                 if (nmetals > 0) then 
-                  allocate (obcs(i)%hin(1)%hmet(nmetals))
-                  allocate (obcs(i)%hin_sur(1)%hmet(nmetals))
-                  allocate (obcs(i)%hin_lat(1)%hmet(nmetals))
-                  allocate (obcs(i)%hin_til(1)%hmet(nmetals))
+                  allocate (obcs(i)%hin(1)%hmet(nmetals), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%hmet(nmetals), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%hmet(nmetals), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%hmet(nmetals), source = 0.)
                 end if
                 nsalts = cs_db%num_salts
                 if (nsalts > 0) then 
@@ -117,14 +117,14 @@
                   allocate (obcs(i)%hin_sur(1)%salt(nsalts), source = 0.)
                   allocate (obcs(i)%hin_lat(1)%salt(nsalts), source = 0.)
                   allocate (obcs(i)%hin_til(1)%salt(nsalts), source = 0.)
-                  allocate (obcs(i)%hin(1)%salt_min(nsalts))
-                  allocate (obcs(i)%hin(1)%saltc(nsalts))
-                  allocate (obcs(i)%hin_sur(1)%salt_min(nsalts))
-                  allocate (obcs(i)%hin_sur(1)%saltc(nsalts))
-                  allocate (obcs(i)%hin_lat(1)%salt_min(nsalts))
-                  allocate (obcs(i)%hin_lat(1)%saltc(nsalts))
-                  allocate (obcs(i)%hin_til(1)%salt_min(nsalts))
-                  allocate (obcs(i)%hin_til(1)%saltc(nsalts))
+                  allocate (obcs(i)%hin(1)%salt_min(nsalts), source = 0.)
+                  allocate (obcs(i)%hin(1)%saltc(nsalts), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%salt_min(nsalts), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%saltc(nsalts), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%salt_min(nsalts), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%saltc(nsalts), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%salt_min(nsalts), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%saltc(nsalts), source = 0.)
                   obcs(i)%hin(1)%salt = 0.
                   obcs(i)%hin(1)%salt_min = 0.
                   obcs(i)%hin(1)%saltc = 0.
@@ -144,18 +144,18 @@
                   allocate (obcs(i)%hin_sur(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin_lat(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin_til(1)%cs(ncs), source = 0.)
-                  allocate (obcs(i)%hin(1)%cs_sorb(ncs))
-                  allocate (obcs(i)%hin(1)%csc(ncs))
-                  allocate (obcs(i)%hin(1)%csc_sorb(ncs))
-                  allocate (obcs(i)%hin_sur(1)%cs_sorb(ncs))
-                  allocate (obcs(i)%hin_sur(1)%csc(ncs))
-                  allocate (obcs(i)%hin_sur(1)%csc_sorb(ncs))
-                  allocate (obcs(i)%hin_lat(1)%cs_sorb(ncs))
-                  allocate (obcs(i)%hin_lat(1)%csc(ncs))
-                  allocate (obcs(i)%hin_lat(1)%csc_sorb(ncs))
-                  allocate (obcs(i)%hin_til(1)%cs_sorb(ncs))
-                  allocate (obcs(i)%hin_til(1)%csc(ncs))
-                  allocate (obcs(i)%hin_til(1)%csc_sorb(ncs))
+                  allocate (obcs(i)%hin(1)%cs_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin(1)%csc(ncs), source = 0.)
+                  allocate (obcs(i)%hin(1)%csc_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%cs_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%csc(ncs), source = 0.)
+                  allocate (obcs(i)%hin_sur(1)%csc_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%cs_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%csc(ncs), source = 0.)
+                  allocate (obcs(i)%hin_lat(1)%csc_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%cs_sorb(ncs), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%csc(ncs), source = 0.)
+                  allocate (obcs(i)%hin_til(1)%csc_sorb(ncs), source = 0.)
                   obcs(i)%hin(1)%cs = 0.
                   obcs(i)%hin(1)%cs_sorb = 0.
                   obcs(i)%hin(1)%csc = 0.
@@ -182,21 +182,21 @@
                     allocate (obcs(i)%hd(ihyd)%path(npaths), source = 0.)
                   end if
                   if (nmetals > 0) then 
-                    allocate (obcs(i)%hd(ihyd)%hmet(nmetals))
+                    allocate (obcs(i)%hd(ihyd)%hmet(nmetals), source = 0.)
                   end if
                   if (nsalts > 0) then !rtb salt
                     allocate (obcs(i)%hd(ihyd)%salt(nsalts))
-                    allocate (obcs(i)%hd(ihyd)%salt_min(nsalts))
-                    allocate (obcs(i)%hd(ihyd)%saltc(nsalts))
+                    allocate (obcs(i)%hd(ihyd)%salt_min(nsalts), source = 0.)
+                    allocate (obcs(i)%hd(ihyd)%saltc(nsalts), source = 0.)
                     obcs(i)%hd(ihyd)%salt = 0.
                     obcs(i)%hd(ihyd)%salt_min = 0.
                     obcs(i)%hd(ihyd)%saltc = 0.
                   end if
                   if (ncs > 0) then !rtb cs
                     allocate (obcs(i)%hd(ihyd)%cs(ncs), source = 0.)
-                    allocate (obcs(i)%hd(ihyd)%cs_sorb(ncs))
-                    allocate (obcs(i)%hd(ihyd)%csc(ncs))
-                    allocate (obcs(i)%hd(ihyd)%csc_sorb(ncs))
+                    allocate (obcs(i)%hd(ihyd)%cs_sorb(ncs), source = 0.)
+                    allocate (obcs(i)%hd(ihyd)%csc(ncs), source = 0.)
+                    allocate (obcs(i)%hd(ihyd)%csc_sorb(ncs), source = 0.)
                     obcs(i)%hd(ihyd)%cs = 0.
                     obcs(i)%hd(ihyd)%cs_sorb = 0.
                     obcs(i)%hd(ihyd)%csc = 0.
@@ -209,8 +209,8 @@
                 ob(i)%day_max = ndsave
                 allocate (ob(i)%ts(ob(i)%day_max,time%step))
                 allocate (ob(i)%tsin(time%step), source = 0.)
-                allocate (ob(i)%uh(ob(i)%day_max,time%step))
-                allocate (ob(i)%hyd_flo(ob(i)%day_max,time%step))
+                allocate (ob(i)%uh(ob(i)%day_max,time%step), source = 0.)
+                allocate (ob(i)%hyd_flo(ob(i)%day_max,time%step), source = 0.)
                 ob(i)%uh = 0.
                 ob(i)%hyd_flo = 0.
               !end if
@@ -228,13 +228,13 @@
 
               if (ob(i)%src_tot > 0) then
                 nout = ob(i)%src_tot
-                allocate (ob(i)%obj_out(nout))
+                allocate (ob(i)%obj_out(nout), source = 0)
                 allocate (ob(i)%obtyp_out(nout))
-                allocate (ob(i)%obtypno_out(nout))
+                allocate (ob(i)%obtypno_out(nout), source = 0)
                 allocate (ob(i)%htyp_out(nout))
-                allocate (ob(i)%ihtyp_out(nout))
-                allocate (ob(i)%frac_out(nout))
-                allocate (ob(i)%rcvob_inhyd(nout))
+                allocate (ob(i)%ihtyp_out(nout), source = 0)
+                allocate (ob(i)%frac_out(nout), source = 0.)
+                allocate (ob(i)%rcvob_inhyd(nout), source = 0)
                 allocate (ob(i)%hout_m(nout))
                 allocate (ob(i)%hout_y(nout))
                 allocate (ob(i)%hout_a(nout))
@@ -258,34 +258,34 @@
                     end if
                     
                   if (nmetals > 0) then 
-                    allocate (obcs(i)%hcsout_m(iout)%hmet(nmetals))
-                    allocate (obcs(i)%hcsout_y(iout)%hmet(nmetals))
-                    allocate (obcs(i)%hcsout_a(iout)%hmet(nmetals))
+                    allocate (obcs(i)%hcsout_m(iout)%hmet(nmetals), source = 0.)
+                    allocate (obcs(i)%hcsout_y(iout)%hmet(nmetals), source = 0.)
+                    allocate (obcs(i)%hcsout_a(iout)%hmet(nmetals), source = 0.)
                   end if
                   if (nsalts > 0) then !rtb salt
                     allocate (obcs(i)%hcsout_m(iout)%salt(nsalts), source = 0.)
                     allocate (obcs(i)%hcsout_y(iout)%salt(nsalts), source = 0.)
                     allocate (obcs(i)%hcsout_a(iout)%salt(nsalts), source = 0.)
-                    allocate (obcs(i)%hcsout_m(iout)%salt_min(nsalts))
-                    allocate (obcs(i)%hcsout_m(iout)%saltc(nsalts))
-                    allocate (obcs(i)%hcsout_y(iout)%salt_min(nsalts))
-                    allocate (obcs(i)%hcsout_y(iout)%saltc(nsalts))
-                    allocate (obcs(i)%hcsout_a(iout)%salt_min(nsalts))
-                    allocate (obcs(i)%hcsout_a(iout)%saltc(nsalts))
+                    allocate (obcs(i)%hcsout_m(iout)%salt_min(nsalts), source = 0.)
+                    allocate (obcs(i)%hcsout_m(iout)%saltc(nsalts), source = 0.)
+                    allocate (obcs(i)%hcsout_y(iout)%salt_min(nsalts), source = 0.)
+                    allocate (obcs(i)%hcsout_y(iout)%saltc(nsalts), source = 0.)
+                    allocate (obcs(i)%hcsout_a(iout)%salt_min(nsalts), source = 0.)
+                    allocate (obcs(i)%hcsout_a(iout)%saltc(nsalts), source = 0.)
                   end if
                   if (ncs > 0) then !rtb cs
                     allocate (obcs(i)%hcsout_m(iout)%cs(ncs), source = 0.)
                     allocate (obcs(i)%hcsout_y(iout)%cs(ncs), source = 0.)
                     allocate (obcs(i)%hcsout_a(iout)%cs(ncs), source = 0.)
-                    allocate (obcs(i)%hcsout_m(iout)%cs_sorb(ncs))
-                    allocate (obcs(i)%hcsout_m(iout)%csc(ncs))
-                    allocate (obcs(i)%hcsout_m(iout)%csc_sorb(ncs))
-                    allocate (obcs(i)%hcsout_y(iout)%cs_sorb(ncs))
-                    allocate (obcs(i)%hcsout_y(iout)%csc(ncs))
-                    allocate (obcs(i)%hcsout_y(iout)%csc_sorb(ncs))
-                    allocate (obcs(i)%hcsout_a(iout)%cs_sorb(ncs))
-                    allocate (obcs(i)%hcsout_a(iout)%csc(ncs))
-                    allocate (obcs(i)%hcsout_a(iout)%csc_sorb(ncs))
+                    allocate (obcs(i)%hcsout_m(iout)%cs_sorb(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_m(iout)%csc(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_m(iout)%csc_sorb(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_y(iout)%cs_sorb(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_y(iout)%csc(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_y(iout)%csc_sorb(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_a(iout)%cs_sorb(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_a(iout)%csc(ncs), source = 0.)
+                    allocate (obcs(i)%hcsout_a(iout)%csc_sorb(ncs), source = 0.)
                   end if
                 end do
                 end if
@@ -312,7 +312,7 @@
                   if (eof < 0) exit
               else
                 !! set outflow object type to 0 - needed in final hyd_read_connect loop 
-                allocate (ob(i)%obtypno_out(1))
+                allocate (ob(i)%obtypno_out(1), source = 0)
                 ob(i)%obtypno_out(1) = 0
               end if
 

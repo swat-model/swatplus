@@ -36,34 +36,34 @@
       
       implicit none
 
-      real :: chflow_m3              !m^3/s         |Runoff in CMS
-      real :: sf_area                !m^2           |area of waterway sides in sheetflow
-      real :: surq_remove            !%             |percent of surface runoff capture in VFS
-      real :: sed_remove             !%             |percent of sediment capture in VFS
-      real :: sf_sed                 !kg/m^2        |sediment loads on sides of waterway
-      real :: vc                     !m/s           |flow velocity in reach
-      real :: chflow_day             !m^3/day	    |Runoff
-      integer :: j                   !none          |HRU number
-      real :: rchdep                 !m             |depth of flow on day
-      real :: p                      !              |
-      real :: rh                     !m             |hydraulic radius
+      real :: chflow_m3 = 0.         !m^3/s         |Runoff in CMS
+      real :: sf_area = 0.           !m^2           |area of waterway sides in sheetflow
+      real :: surq_remove = 0.       !%             |percent of surface runoff capture in VFS
+      real :: sed_remove = 0.        !%             |percent of sediment capture in VFS
+      real :: sf_sed = 0.            !kg/m^2        |sediment loads on sides of waterway
+      real :: vc = 0.                !m/s           |flow velocity in reach
+      real :: chflow_day = 0.        !m^3/day	    |Runoff
+      integer :: j = 0               !none          |HRU number
+      real :: rchdep = 0.            !m             |depth of flow on day
+      real :: p = 0.                 !              |
+      real :: rh = 0.                !m             |hydraulic radius
       real :: qman                   !m^3/s or m/s  |flow rate or flow velocity 
-      real :: sedin                  !mg		    |Sediment in waterway 
-      real :: sf_depth               !              |
-      real :: sedint                 !mg		    |Sediment into waterway channel
-      real :: cyin                   !              |
-      real :: cych                   !              |
-      real :: rcharea
-      real :: depnet                 !metric tons   |
-      real :: deg                    !metric tons   |sediment reentrained in water by channel
+      real :: sedin = 0.             !mg		    |Sediment in waterway 
+      real :: sf_depth = 0.          !              |
+      real :: sedint = 0.            !mg		    |Sediment into waterway channel
+      real :: cyin = 0.              !              |
+      real :: cych = 0.              !              |
+      real :: rcharea = 0.
+      real :: depnet = 0.            !metric tons   |
+      real :: deg = 0.               !metric tons   |sediment reentrained in water by channel
                                      !              |degradation
-      real :: dep                    !              |
-      real :: sedout                 !mg	        | Sediment out of waterway channel
-      real :: sed_frac               !              |
-      real :: surq_frac              !              |
-      real :: sedtrap                !              | 
-      real :: xrem                   !              | 
-      integer :: k                   !m^3/s         |Total number of HRUs plus this HRU number
+      real :: dep = 0.               !              |
+      real :: sedout = 0.            !mg	        | Sediment out of waterway channel
+      real :: sed_frac = 0.          !              |
+      real :: surq_frac = 0.         !              |
+      real :: sedtrap = 0.           !              | 
+      real :: xrem = 0.              !              | 
+      integer :: k = 0               !m^3/s         |Total number of HRUs plus this HRU number
       
 !!	set variables
       j = ihru

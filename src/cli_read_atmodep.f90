@@ -8,15 +8,15 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: iadep                !           |counter
-      integer :: imo                  !           |counter
-      integer :: iyr                  !           |counter
-      integer :: imo_atmo             !           |
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: iadep = 0            !           |counter
+      integer :: imo = 0              !           |counter
+      integer :: iyr = 0              !           |counter
+      integer :: imo_atmo = 0         !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo            !           |
+      integer :: iyrc_atmo = 0        !           |
       
       eof = 0
 
@@ -85,10 +85,10 @@
             end if 
           
             if (atmodep_cont%timestep == "mo") then
-              allocate (atmodep(iadep)%nh4_rfmo(atmodep_cont%num))
-              allocate (atmodep(iadep)%no3_rfmo(atmodep_cont%num))
-              allocate (atmodep(iadep)%nh4_drymo(atmodep_cont%num))
-              allocate (atmodep(iadep)%no3_drymo(atmodep_cont%num))
+              allocate (atmodep(iadep)%nh4_rfmo(atmodep_cont%num), source = 0.)
+              allocate (atmodep(iadep)%no3_rfmo(atmodep_cont%num), source = 0.)
+              allocate (atmodep(iadep)%nh4_drymo(atmodep_cont%num), source = 0.)
+              allocate (atmodep(iadep)%no3_drymo(atmodep_cont%num), source = 0.)
               read (127,*,iostat=eof) atmodep(iadep)%name
               if (eof < 0) exit
               atmo_n(iadep) = atmodep(iadep)%name
@@ -103,10 +103,10 @@
             end if
               
             if (atmodep_cont%timestep == "yr") then
-              allocate (atmodep(iadep)%nh4_rfyr(atmodep_cont%num))
-              allocate (atmodep(iadep)%no3_rfyr(atmodep_cont%num))
-              allocate (atmodep(iadep)%nh4_dryyr(atmodep_cont%num))
-              allocate (atmodep(iadep)%no3_dryyr(atmodep_cont%num))
+              allocate (atmodep(iadep)%nh4_rfyr(atmodep_cont%num), source = 0.)
+              allocate (atmodep(iadep)%no3_rfyr(atmodep_cont%num), source = 0.)
+              allocate (atmodep(iadep)%nh4_dryyr(atmodep_cont%num), source = 0.)
+              allocate (atmodep(iadep)%no3_dryyr(atmodep_cont%num), source = 0.)
               read (127,*,iostat=eof) atmodep(iadep)%name
               if (eof < 0) exit
               atmo_n(iadep) = atmodep(iadep)%name

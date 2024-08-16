@@ -12,30 +12,32 @@
       
       implicit none
            
-      character(len=16) :: chg_parm                           !                |               
-      character(len=16) :: chg_typ                            !variable        |type of change (absval, abschg, pctchg)
-      character(len=1) :: cond_met                            !                |       
-      character(len=1) :: pl_find                             !                |       
-      integer :: lyr                                          !none            |counter
-      integer :: iyr                                          !                |
-      integer :: ichg_par                                     !none            |counter
-      integer :: ispu                                         !none            |counter
-      integer :: ielem                                        !none            |counter
-      real :: chg_val                                         !                |
-      real :: absmin                                          !                |minimum range for variable
-      real :: absmax                                          !                |maximum change for variable
-      integer :: num_db                                       !                |
-      integer :: ic                                           !none            |counter
-      integer :: ipg                                          !                |
-      integer :: ipl                                          !                |
-      integer :: iyear                                        !none            |counter
-      real :: val_cur                                         !variable        |current parameter value
+      character(len=16) :: chg_parm = ""                      !                |               
+      character(len=16) :: chg_typ = ""                       !variable        |type of change (absval, abschg, pctchg)
+      character(len=1) :: cond_met = ""                       !                |       
+      character(len=1) :: pl_find = ""                        !                |       
+      integer :: lyr = 0                                      !none            |counter
+      integer :: iyr = 0                                      !                |
+      integer :: ichg_par = 0                                 !none            |counter
+      integer :: ispu = 0                                     !none            |counter
+      integer :: ielem = 0                                    !none            |counter
+      real :: chg_val = 0.                                    !                |
+      real :: absmin = 0.                                     !                |minimum range for variable
+      real :: absmax = 0.                                     !                |maximum change for variable
+      integer :: num_db = 0                                   !                |
+      integer :: ic = 0                                       !none            |counter
+      integer :: ipg = 0                                      !                |
+      integer :: ipl = 0                                      !                |
+      integer :: iyear = 0                                    !none            |counter
+      real :: val_cur = 0.                                    !variable        |current parameter value
                                                               !                |the standard temperature (20 degrees C)
       real :: chg_par                                         !variable        |type of change (absval, abschg, pctchg)
-      integer :: iday                                         !none            |counter
-      integer :: ig                                           !                |
-      integer :: nvar                                         !                |number of plant cal variables (1=lai_pot, 2=harv_idx)
-      integer :: cal_lyr1, cal_lyr2, iplant
+      integer :: iday = 0                                     !none            |counter
+      integer :: ig = 0                                       !                |
+      integer :: nvar = 0                                     !                |number of plant cal variables (1=lai_pot, 2=harv_idx)
+      integer :: cal_lyr1 = 0
+      integer :: cal_lyr2 = 0
+      integer :: iplant = 0
          
       do ichg_par = 1, db_mx%cal_upd
         do ispu = 1, cal_upd(ichg_par)%num_elem

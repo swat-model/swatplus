@@ -15,18 +15,18 @@
       
         implicit none 
         
-        integer :: ihru            !none          !counter       
-        integer :: npmx            !none          |total number of pesticides
-        integer :: ly              !none          |counter
-        integer :: ipest           !none          |counter    
-        integer :: nly             !none          |max soil layers
-        integer :: npl             !none          |max plants
-        integer :: ipest_db        !              | 
-        integer :: isp_ini         !              |
-        integer :: ipl             !none          |plant number
-        real :: wt1                !              |
-        real :: solpst             !              |
-        real :: pl_frac            !0-1           |fraction of pesticide applied to each plant
+        integer :: ihru = 0        !none          !counter       
+        integer :: npmx = 0        !none          |total number of pesticides
+        integer :: ly = 0          !none          |counter
+        integer :: ipest = 0       !none          |counter    
+        integer :: nly = 0         !none          |max soil layers
+        integer :: npl = 0         !none          |max plants
+        integer :: ipest_db = 0    !              | 
+        integer :: isp_ini = 0     !              |
+        integer :: ipl = 0         !none          |plant number
+        real :: wt1 = 0.           !              |
+        real :: solpst = 0.        !              |
+        real :: pl_frac = 0.       !0-1           |fraction of pesticide applied to each plant
         
       !! allocate hru pesticides
       do ihru = 1, sp_ob%hru

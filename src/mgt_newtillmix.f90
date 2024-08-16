@@ -38,16 +38,16 @@
       integer, intent (in) :: jj       !none           |HRU number
       integer, intent (in) :: idtill   !none           |tillage type
       real, intent (in) :: bmix        !               | 
-      integer :: l                     !none           |counter
-      integer :: k                     !none           |counter
-      integer :: kk                    !               |
-      integer :: npmx                  !               |
-      integer :: ipl
+      integer :: l = 0                 !none           |counter
+      integer :: k = 0                 !none           |counter
+      integer :: kk = 0                !               |
+      integer :: npmx = 0              !               |
+      integer :: ipl = 0
       !CB 12/2/09 nl and a are not used.
-      real :: emix                     !none           |mixing efficiency
-      real :: dtil                     !mm             |depth of mixing
-      real :: frac_mixed               !               |
-      real :: frac_non_mixed           !               |
+      real :: emix = 0.                !none           |mixing efficiency
+      real :: dtil = 0.                !mm             |depth of mixing
+      real :: frac_mixed = 0.          !               |
+      real :: frac_non_mixed = 0.      !               |
       !!by zhang
       !!=============   
       real :: smix(22+cs_db%num_pests+12)         !varies         |amount of substance in soil profile
@@ -60,7 +60,8 @@
       real :: sol_msm(soil(jj)%nly)     !              |sol_mass mixed
       real :: sol_msn(soil(jj)%nly)     !              |sol_mass not mixed 
       real :: frac_dep(soil(jj)%nly)    !              |fraction of soil layer in tillage depth
-      real :: frac1, frac2
+      real :: frac1 = 0.
+      real :: frac2 = 0.
 
       npmx = cs_db%num_pests
 
@@ -95,10 +96,10 @@
       sol_msm = 0.
       sol_msn = 0.
 
-	!! incorporate pathogens - no mixing - lost from transport
+      !! incorporate pathogens - no mixing - lost from transport
       if (dtil > 10.) then     
         !! incorporate pathogens
-	  end if
+      end if
 
       do l = 1, soil(jj)%nly
         sol_mass(l) = (soil(jj)%phys(l)%thick / 1000.) * 10000. *                    &

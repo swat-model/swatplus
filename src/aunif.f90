@@ -29,7 +29,7 @@
 
       integer, intent (in out) :: x1   !none           |random number generator seed (integer)
                                        !               |where  0 < x1 < 2147483647
-      integer :: x2
+      integer :: x2 = 0
 
       x2 = x1 / 127773
       x1 = 16807 * (x1-x2*127773) - x2 * 2836

@@ -9,7 +9,7 @@
       
       implicit none
       
-      integer :: ihru       !none       |hru number
+      integer :: ihru = 0   !none       |hru number
 
       !! total wetland flood plain volume at start of simulation
       do jrch = 1, sp_ob%chandeg

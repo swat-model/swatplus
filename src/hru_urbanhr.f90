@@ -56,22 +56,22 @@
       
       implicit none
 
-      real :: sus_sol      !kg            |suspended solid loading in surface runoff
+      real :: sus_sol = 0. !kg            |suspended solid loading in surface runoff
                            !              |from urban area
-      real :: tn           !kg            |total nitrogen in surface runoff from
+      real :: tn = 0.      !kg            |total nitrogen in surface runoff from
                            !              |urban area
 
-      real :: tp           !kg            |total phosphorus in surface runoff from 
+      real :: tp = 0.      !kg            |total phosphorus in surface runoff from 
                            !              |urban area
-      real :: urbk         !1/hr          | 
-      real :: dirto        !kg/ha         |amount of solids built up on impervious
+      real :: urbk = 0.    !1/hr          | 
+      real :: dirto = 0.   !kg/ha         |amount of solids built up on impervious
                            !              |surfaces at the beginning of time step
-      integer :: j         !none          |HRU number
-      real :: qdt          !              |
-	  real*8 :: dirt       !kg/curb km    |amount of solids built up on impervious
+      integer :: j = 0     !none          |HRU number
+      real :: qdt = 0.     !              |
+	  real*8 :: dirt = 0.d0  !kg/curb km    |amount of solids built up on impervious
                            !              |surfaces
-      integer :: k         !none          |counter 
-      integer :: tno3      !              |
+      integer :: k = 0     !none          |counter 
+      integer :: tno3 = 0  !              |
 
       j = ihru
       ulu = hru(j)%luse%urb_lu

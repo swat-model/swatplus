@@ -15,22 +15,22 @@
       
       implicit none
 
-      integer :: ical_sed        !          |
-      integer :: iter_all        !          |end of loop
-      integer :: iterall         !none      |counter
-      integer :: isim            !          |
-      integer :: ireg            !none      |counter
-      integer :: iord            !none      |counter
-      real :: soft               !          |
-      real :: diff               !          |
-      real :: chg_val            !          |
-      integer :: ich_s           !none      |counter
-      integer :: iich            !          |
-      integer :: icov            !none      |counter
-      real :: rmeas              !          |
-      real :: denom              !          |
-      integer :: iter_ind        !          |end of loop
-      integer :: ierod           !none      |counter
+      integer :: ical_sed = 0    !          |
+      integer :: iter_all = 0    !          |end of loop
+      integer :: iterall = 0     !none      |counter
+      integer :: isim = 0        !          |
+      integer :: ireg = 0        !none      |counter
+      integer :: iord = 0        !none      |counter
+      real :: soft = 0.          !          |
+      real :: diff = 0.          !          |
+      real :: chg_val = 0.       !          |
+      integer :: ich_s = 0       !none      |counter
+      integer :: iich = 0        !          |
+      integer :: icov = 0        !none      |counter
+      real :: rmeas = 0.         !          |
+      real :: denom = 0.         !          |
+      integer :: iter_ind = 0    !          |end of loop
+      integer :: ierod = 0       !none      |counter
       
             
       !calibrate sediment
@@ -516,5 +516,5 @@
 
 777    end do      ! iter
       
-	  return
+      return
       end subroutine calsoft_chsed

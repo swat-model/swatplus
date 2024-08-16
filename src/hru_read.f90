@@ -13,22 +13,22 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i                    !           |
+      integer :: i = 0                !           |
       integer :: max                  !           |
-      integer :: k                    !           |
-      integer :: ilum                 !none       |counter
-      integer :: ith                  !none       |counter 
-      integer :: ithyd                !none       |counter
-      integer :: isol                 !none       |counter
-      integer :: isno                 !none       |counter
-      integer :: ifld                 !none       |counter
-      integer :: isp_ini              !none       |counter
-      integer :: ics                  !none       |counter
+      integer :: k = 0                !           |
+      integer :: ilum = 0             !none       |counter
+      integer :: ith = 0              !none       |counter 
+      integer :: ithyd = 0            !none       |counter
+      integer :: isol = 0             !none       |counter
+      integer :: isno = 0             !none       |counter
+      integer :: ifld = 0             !none       |counter
+      integer :: isp_ini = 0          !none       |counter
+      integer :: ics = 0              !none       |counter
       
       eof = 0
       imax = 0
