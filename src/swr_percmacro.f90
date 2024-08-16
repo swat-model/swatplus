@@ -27,11 +27,11 @@
       
       implicit none
 
-      integer :: j              !none          |HRU number
-      integer :: ly             !none          |counter (soil layer)
+      integer :: j = 0          !none          |HRU number
+      integer :: ly = 0         !none          |counter (soil layer)
       real :: crklch = 0.5      !none          | 
-      real :: xx                !mm H2O        |water deficiency in soil layer
-      real :: crk               !mm H2O        |percolation due to crack flow
+      real :: xx = 0.           !mm H2O        |water deficiency in soil layer
+      real :: crk = 0.          !mm H2O        |percolation due to crack flow
 
       j = ihru
 

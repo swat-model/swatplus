@@ -45,43 +45,43 @@
       
       implicit none
       
-      integer :: j                 !none          |HRU number            
-      integer :: idp               !              |
-      integer :: iob               !              |
-      real :: tk                   !deg K         |average air temperature on current day for HRU
-      real :: pb                   !kPa           |mean atmospheric pressure
-      real :: gma                  !kPa/deg C     |psychrometric constant
-      real :: xl                   !MJ/kg         |latent heat of vaporization
-      real :: ea                   !kPa           |saturated vapor pressure
-      real :: ed                   !              |
-      real :: dlt                  !kPa/deg C     |slope of the saturation vapor pressure-
+      integer :: j = 0             !none          |HRU number            
+      integer :: idp = 0           !              |
+      integer :: iob = 0           !              |
+      real :: tk = 0.              !deg K         |average air temperature on current day for HRU
+      real :: pb = 0.              !kPa           |mean atmospheric pressure
+      real :: gma = 0.             !kPa/deg C     |psychrometric constant
+      real :: xl = 0.              !MJ/kg         |latent heat of vaporization
+      real :: ea = 0.              !kPa           |saturated vapor pressure
+      real :: ed = 0.              !              |
+      real :: dlt = 0.             !kPa/deg C     |slope of the saturation vapor pressure-
                                    !              |temperature curve 
-      real :: ramm                 !MJ/m2         |extraterrestrial radiation
-      real :: ralb1                !MJ/m2         |net incoming radiation
-      real :: ralb                 !MJ/m2         |net incoming radiation for PET
-      real :: xx                   !kPa           |difference between vpd and vpthreshold
-      real :: rbo                  !none          |net emissivity
-      real :: rto                  !none          |cloud cover factor 
-      real :: rn                   !MJ/m2         |net radiation
-      real :: uzz                  !m/s           |wind speed at height zz
-      real :: zz                   !cm            |height at which wind speed is determined
-      real :: zom                  !cm            |roughness length for momentum transfer
-      real :: zov                  !cm            |roughness length for vapor transfer
-      real :: rv                   !s/m           |aerodynamic resistance to sensible heat and
+      real :: ramm = 0.            !MJ/m2         |extraterrestrial radiation
+      real :: ralb1 = 0.           !MJ/m2         |net incoming radiation
+      real :: ralb = 0.            !MJ/m2         |net incoming radiation for PET
+      real :: xx = 0.              !kPa           |difference between vpd and vpthreshold
+      real :: rbo = 0.             !none          |net emissivity
+      real :: rto = 0.             !none          |cloud cover factor 
+      real :: rn = 0.              !MJ/m2         |net radiation
+      real :: uzz = 0.             !m/s           |wind speed at height zz
+      real :: zz = 0.              !cm            |height at which wind speed is determined
+      real :: zom = 0.             !cm            |roughness length for momentum transfer
+      real :: zov = 0.             !cm            |roughness length for vapor transfer
+      real :: rv = 0.              !s/m           |aerodynamic resistance to sensible heat and
                                    !              |vapor transfer
-      real :: rn_pet               !MJ/m2         |net radiation for continuous crop cover 
-      real :: fvpd                 !kPa           |amount of vapor pressure deficit over 
+      real :: rn_pet = 0.          !MJ/m2         |net radiation for continuous crop cover 
+      real :: fvpd = 0.            !kPa           |amount of vapor pressure deficit over 
                                    !              |threshold value
-      real :: rc                   !s/m           |canopy resistance
-      real :: rho                  !MJ/(m3*kPa)   |K1*0.622*xl*rho/pb
-      real :: rout                 !MJ/m2         |outgoing radiation
-      real :: d                    !cm            |displacement height for plant type
-      real :: chz                  !cm            |vegetation height
-      real :: gsi_adj              !              |
-      real :: pet_alpha            !none          |alpha factor in Priestley-Taylor PET equation
+      real :: rc = 0.              !s/m           |canopy resistance
+      real :: rho = 0.             !MJ/(m3*kPa)   |K1*0.622*xl*rho/pb
+      real :: rout = 0.            !MJ/m2         |outgoing radiation
+      real :: d = 0.               !cm            |displacement height for plant type
+      real :: chz = 0.             !cm            |vegetation height
+      real :: gsi_adj = 0.         !              |
+      real :: pet_alpha = 0.       !none          |alpha factor in Priestley-Taylor PET equation
       real :: ee                   !              | 
-      real ::  gsi_wav             !              | 
-      integer :: igrocom           !              | 
+      real :: gsi_wav = 0.         !              | 
+      integer :: igrocom = 0       !              | 
 
       !! initialize local variables
       j = ihru
@@ -105,7 +105,7 @@
 
       !!calculate the slope of the saturation vapor pressure curve
       dlt = 4098. * ea / (w%tave + 237.3)**2
-	
+
 !! DETERMINE POTENTIAL ET
 
       select case (bsn_cc%pet)
@@ -127,7 +127,7 @@
 
           !! cloud cover factor equation 2.2.19
             if (w%solradmx < 1.e-4) then
-		    rto = 0.
+              rto = 0.
             else
               rto = 0.9 * (w%solrad / w%solradmx) + 0.1
             end if

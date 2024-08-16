@@ -2,8 +2,8 @@
     
       implicit none 
 
-      integer :: iru                               !none            |counter
-      integer :: mru_db                            !                |
+      integer :: iru = 0                           !none            |counter
+      integer :: mru_db = 0                        !                |
       real, dimension (:), allocatable :: ru_tc    !                |    
       real, dimension (:), allocatable :: ru_n     !                |
       integer, dimension (:), allocatable :: itsb  !none            |end of loop

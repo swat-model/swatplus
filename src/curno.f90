@@ -38,15 +38,15 @@
    
       integer, intent (in) :: h            !none          |HRU number
       real, intent (in) :: cnn             !cnn           |none          |SCS runoff curve number for moisture condition II
-      real :: c2                           !none          |variable used to hold calculated value 
-      real :: cn1                          !none          |SCS runoff curve number for moisture condition I
-      real :: cn3                          !none          |SCS runoff curve number for moisture condition III
-      real :: s3                           !none          |retention parameter for CN3
-      real :: rto3                         !none          |fraction difference between CN3 and CN1 retention parameters
-      real :: rtos                         !none          |fraction difference between CN=99 and CN1 retention parameters
-      real :: smxold                       !              | 
-      real :: sumul                        !mm H2O        |amount of water held in soil profile at saturation
-      real :: sumfc                        !mm H2O        |amount of water held in the soil profile at field capacity
+      real :: c2 = 0.                      !none          |variable used to hold calculated value 
+      real :: cn1 = 0.                     !none          |SCS runoff curve number for moisture condition I
+      real :: cn3 = 0.                     !none          |SCS runoff curve number for moisture condition III
+      real :: s3 = 0.                      !none          |retention parameter for CN3
+      real :: rto3 = 0.                    !none          |fraction difference between CN3 and CN1 retention parameters
+      real :: rtos = 0.                    !none          |fraction difference between CN=99 and CN1 retention parameters
+      real :: smxold = 0.                  !              | 
+      real :: sumul = 0.                   !mm H2O        |amount of water held in soil profile at saturation
+      real :: sumfc = 0.                   !mm H2O        |amount of water held in the soil profile at field capacity
       real :: max                        !              |
       real :: amin1                        !              |
       

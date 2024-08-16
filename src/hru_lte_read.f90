@@ -13,50 +13,50 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: grow_start           !           |
-      integer :: grow_end             !           |
-      integer :: ipl                  !none       |counter
-      integer :: istart
-      integer :: iend
-      integer :: itext
-      real :: rtos                    !none       |fraction difference between CN=99 and CN1 
-      real :: rto3                    !none       |fraction difference between CN3 and CN1 
-      real :: a1                      !           |
-      real :: a2                      !           |
-      integer :: i                    !           | 
-      integer :: isd_h                !none       |counter 
-      integer :: k                    !           |
-      integer :: idb                  !none       |counter
-      integer :: mo                   !none       |counter
-      real :: qn1                     !           |
-      real :: qn3                     !           |
-      real :: s3                      !none       |retention parameter for CN3 
-      real :: sumul                   !mm H2O     |amount of water held in soil profile at saturation
-      real :: sumfc                   !mm H2O     |amount of water held in the soil profile at field capacity 
-      real :: xi                      !           |
-      real :: xx                      !           |
+      integer :: grow_start = 0       !           |
+      integer :: grow_end = 0         !           |
+      integer :: ipl = 0              !none       |counter
+      integer :: istart = 0
+      integer :: iend = 0
+      integer :: itext = 0
+      real :: rtos = 0.               !none       |fraction difference between CN=99 and CN1 
+      real :: rto3 = 0.               !none       |fraction difference between CN3 and CN1 
+      real :: a1 = 0.                 !           |
+      real :: a2 = 0.                 !           |
+      integer :: i = 0                !           | 
+      integer :: isd_h = 0            !none       |counter 
+      integer :: k = 0                !           |
+      integer :: idb = 0              !none       |counter
+      integer :: mo = 0               !none       |counter
+      real :: qn1 = 0.                !           |
+      real :: qn3 = 0.                !           |
+      real :: s3 = 0.                 !none       |retention parameter for CN3 
+      real :: sumul = 0.              !mm H2O     |amount of water held in soil profile at saturation
+      real :: sumfc = 0.              !mm H2O     |amount of water held in the soil profile at field capacity 
+      real :: xi = 0.                 !           |
+      real :: xx = 0.                 !           |
       real :: sin                     !           |
       real :: cos                     !           |
-      integer :: iwgn                 !           |
-      integer :: iplt                 !none       |counter
-      integer :: imo                  !none       |counter
-      real :: hu_init                 !           |
-      real :: phutot                  !heat unit  |total potential heat units for year (used
+      integer :: iwgn = 0             !           |
+      integer :: iplt = 0             !none       |counter
+      integer :: imo = 0              !none       |counter
+      real :: hu_init = 0.            !           |
+      real :: phutot = 0.             !heat unit  |total potential heat units for year (used
                                       !           |when no crop is growing) 
-      integer :: iday                 !none       |counter
-      real :: tave                    !           |
-      real :: phuday                  !           | 
-      real :: xm                      !           |
-      real :: sin_sl                  !           |
-      real :: ch_len                  !           |
-      real :: ch_sl                   !           | 
-      real :: sd_sl                   !           |
-      integer :: msd_h                !           | 
+      integer :: iday = 0             !none       |counter
+      real :: tave = 0.               !           |
+      real :: phuday = 0.             !           | 
+      real :: xm = 0.                 !           |
+      real :: sin_sl = 0.             !           |
+      real :: ch_len = 0.             !           |
+      real :: ch_sl = 0.              !           | 
+      real :: sd_sl = 0.              !           |
+      integer :: msd_h = 0            !           | 
       
       eof = 0
       imax = 0

@@ -16,40 +16,40 @@
       implicit none     
     
       integer, intent (in) :: ts_int  !none          |number of time steps in a day
-      real :: ts_hr                   !hours         |time step
+      real :: ts_hr = 0.              !hours         |time step
       
       !real :: rcharea                !m^2           |cross-sectional area of flow
-      integer :: isd_db               !              |
-      real :: erode_btm               !cm            |
-      real :: erode_bank              !cm            |meander cut on one side
-      real :: erode_bank_cut          !cm            |widening caused by downcutting (both sides)
-      real :: deg_btm                 !tons          |bottom erosion
-      real :: deg_bank                !tons          |bank erosion
-      real :: sedout                  !mg		     |sediment out of waterway channel
-      real :: washld                  !tons          |wash load  
-      real :: bedld                   !tons          |bed load
-      real :: dep                     !tons          |deposition
-      real :: hc_sed                  !tons          |headcut erosion 
-      real :: e_btm                   !cm            |erosion on bottom of channel at each time step
-      real :: dep_btm                 !cm            |deposition on bottom of channel
-      real :: pr_ratio                !              |
-      real  :: tw                     !              |
-      real :: shear_btm_cr            !              |
-      real :: shear_btm               !              |
-      real :: shear_bank_cr           !              | 
-      real :: qmm                     !              | 
-      real :: qh                      !              | 
-      real :: hc                      !m/yr          |head cut advance
+      integer :: isd_db = 0           !              |
+      real :: erode_btm = 0.          !cm            |
+      real :: erode_bank = 0.         !cm            |meander cut on one side
+      real :: erode_bank_cut = 0.     !cm            |widening caused by downcutting (both sides)
+      real :: deg_btm = 0.            !tons          |bottom erosion
+      real :: deg_bank = 0.           !tons          |bank erosion
+      real :: sedout = 0.             !mg            |sediment out of waterway channel
+      real :: washld = 0.             !tons          |wash load  
+      real :: bedld = 0.              !tons          |bed load
+      real :: dep = 0.                !tons          |deposition
+      real :: hc_sed = 0.             !tons          |headcut erosion 
+      real :: e_btm = 0.              !cm            |erosion on bottom of channel at each time step
+      real :: dep_btm = 0.            !cm            |deposition on bottom of channel
+      real :: pr_ratio = 0.           !              |
+      real  :: tw = 0.                !              |
+      real :: shear_btm_cr = 0.       !              |
+      real :: shear_btm = 0.          !              |
+      real :: shear_bank_cr = 0.      !              | 
+      real :: qmm = 0.                !              | 
+      real :: qh = 0.                 !              | 
+      real :: hc = 0.                 !m/yr          |head cut advance
       integer :: max                  !              |
-      real :: chns                    !              |
-      integer :: ihval                !none          |counter 
-      real :: perim_bed               !              |
-      real :: perim_bank              !              |
-      real :: s_bank                  !              |
-      real :: shear_bank              !              |
-      real :: shear_bank_adj          !              | 
-      real :: e_bank                  !              | 
-      real :: bf_flow                 !m3/s          |bankfull flow rate * adjustment factor
+      real :: chns = 0.               !              |
+      integer :: ihval = 0            !none          |counter 
+      real :: perim_bed = 0.          !              |
+      real :: perim_bank = 0.         !              |
+      real :: s_bank = 0.             !              |
+      real :: shear_bank = 0.         !              |
+      real :: shear_bank_adj = 0.     !              | 
+      real :: e_bank = 0.             !              | 
+      real :: bf_flow = 0.            !m3/s          |bankfull flow rate * adjustment factor
            
       ich = isdch
       isd_db = sd_dat(ich)%hyd

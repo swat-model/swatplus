@@ -16,13 +16,18 @@
       
       integer, intent (in) :: icmd !command counter (incoming)
       integer, intent (in) :: ihru !HRU number (incoming)
-      integer :: iwst              !none          |weather station number
-      integer :: isalt             !salt ion counter
-      integer :: dum
-      real    :: salt_mass_beg,salt_conc_beg,salt_mass_end,salt_conc_end
-      real    :: salt_inflow,salt_outflow,salt_seep
-      real    :: mass_avail        !track available salt ion mass in the wetland (kg)
-      real    :: seep_mass				 !salt ion mass lost via seepage (and added to soil profile) (kg/ha)
+      integer :: iwst = 0          !none          |weather station number
+      integer :: isalt = 0         !salt ion counter
+      integer :: dum = 0
+      real    :: salt_mass_beg = 0.
+      real    :: salt_conc_beg = 0.
+      real    :: salt_mass_end = 0.
+      real    :: salt_conc_end = 0.
+      real    :: salt_inflow = 0.
+      real    :: salt_outflow = 0.
+      real    :: salt_seep = 0.
+      real    :: mass_avail = 0.   !track available salt ion mass in the wetland (kg)
+      real    :: seep_mass = 0.    !salt ion mass lost via seepage (and added to soil profile) (kg/ha)
       
       !mass balance output (by HRU for wetlands): prepare by setting to 0
       do isalt=1,cs_db%num_salts
@@ -40,7 +45,7 @@
         salt_mass_beg = wet_water(ihru)%salt(isalt) !kg
         if(wet(ihru)%flo > 0.) then
           salt_conc_beg = (salt_mass_beg * 1000.) / wet(ihru)%flo !g/m3
-				else
+        else
           salt_conc_beg = 0.
         endif
         mass_avail = salt_mass_beg
@@ -67,7 +72,7 @@
         salt_mass_end = salt_mass_beg + (salt_inflow - salt_outflow - salt_seep) !kg
         if(wet(ihru)%flo > 0.) then
           salt_conc_end = (salt_mass_end * 1000.) / wet(ihru)%flo !g/m3
-				else
+        else
           salt_conc_end = 0.
         endif
           

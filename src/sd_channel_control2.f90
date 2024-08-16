@@ -11,12 +11,12 @@
     
       implicit none     
     
-      integer :: isd_db               !              |
-      integer :: ipest                !              |
-      integer :: id
-      integer :: iaq
-      integer :: iaq_ch
-      integer :: ii
+      integer :: isd_db = 0           !              |
+      integer :: ipest = 0            !              |
+      integer :: id = 0
+      integer :: iaq = 0
+      integer :: iaq_ch = 0
+      integer :: ii = 0
       
       ich = isdch
       isd_db = sd_dat(ich)%hyd
@@ -55,7 +55,8 @@
       !call variable storage coefficient flood routing method
       call ch_rtmusk
               
-      call sd_channel_sediment (time%step)
+      !call sd_channel_sediment (time%step)   
+      call sd_channel_sediment3
         
       !! use modified qual-2e routines
       ht3 = ht1

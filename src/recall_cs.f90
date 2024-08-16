@@ -15,10 +15,10 @@
       integer :: irec
       
       !local variables
-      integer :: ics					!            |constituent counter
-      integer :: ichan        !            |id of source channel
-      real :: cs_conc         !g/m3        |concentration of constituent in source channel
-      real :: div_mass        !kg          |mass of constituent in diversion water
+      integer :: ics = 0 !            |constituent counter
+      integer :: ichan = 0    !            |id of source channel
+      real :: cs_conc = 0.    !g/m3        |concentration of constituent in source channel
+      real :: div_mass = 0.   !kg          |mass of constituent in diversion water
       
       
       !depending on the point source type, add/remove constituent mass to object
@@ -43,7 +43,7 @@
                 else
                   !source: add mass
                   obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(time%day,time%yrs)%cs(ics)
-								endif
+                endif
               enddo
               if(rec_cs(irec)%pts_type.eq.1) then
                 reccsb_d(irec)%cs = obcs(icmd)%hd(1)%cs
@@ -72,7 +72,7 @@
                 obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(1,time%yrs)%cs(ics)
               enddo
               if(rec_cs(irec)%pts_type.eq.1) then
-								reccsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
+                reccsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
               else
                 recoutcsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
               endif

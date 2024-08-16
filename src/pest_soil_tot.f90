@@ -12,10 +12,10 @@
       
       implicit none       
       
-      integer :: j        !none          |HRU number
-      integer :: k        !none          |sequential pesticide number 
-      integer :: ly       !none          |soil layer
-      integer :: ipl             !none     |plant number
+      integer :: j = 0    !none          |HRU number
+      integer :: k = 0    !none          |sequential pesticide number 
+      integer :: ly = 0   !none          |soil layer
+      integer :: ipl = 0         !none     |plant number
 
       j = ihru
 

@@ -30,9 +30,9 @@
       implicit none
 
       integer :: isol         !              |
-      real :: sa              !ha            |surface area of impounded water body
-      real :: cl              !              |
-      real :: si              !m/n           |slope of main channel
+      real :: sa = 0.         !ha            |surface area of impounded water body
+      real :: cl = 0.         !              |
+      real :: si = 0.         !m/n           |slope of main channel
 
       sa = soil(isol)%phys(1)%sand / 100.
       cl = soil(isol)%phys(1)%clay  / 100.

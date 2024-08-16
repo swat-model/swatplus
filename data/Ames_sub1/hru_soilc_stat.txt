@@ -1,4 +1,4 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-07-18        MODULAR Rev 2024.61.0.1-32-g1347b93                    
         jday        mon        day         yr            unit              gis_id     name              tot_org_c          str_c          lib_c         meta_c          man_c    humus_low_c   humus_pass_c       microb_c
                                                                                                             kg/ha          kg/ha          kg/ha          kg/ha          kg/ha          kg/ha          kg/ha          kg/ha
          365          12          31        1975           1                     1 hru0001            4386.369      5.1080967E-10  5.5364041E-10  0.0000000E+00  0.0000000E+00  1.0781458E-11  1.1151467E-14  1.6715649E-13

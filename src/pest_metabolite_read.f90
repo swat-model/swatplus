@@ -8,17 +8,17 @@
       
       implicit none
 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      character (len=16) :: parent_name
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      character (len=16) :: parent_name = ""
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ip                   !none       |pestdb counter
-      integer :: ipb                  !none       |basin sequential pesticide counter
-      integer :: imeta                !none       |metabolite counter
-      integer :: iparent              !none       |parent counter
-      integer :: num_metab            !none       |number of matabolites for each parent
+      integer :: ip = 0               !none       |pestdb counter
+      integer :: ipb = 0              !none       |basin sequential pesticide counter
+      integer :: imeta = 0            !none       |metabolite counter
+      integer :: iparent = 0          !none       |parent counter
+      integer :: num_metab = 0        !none       |number of matabolites for each parent
       
       eof = 0
       imax = 0

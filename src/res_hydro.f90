@@ -16,23 +16,23 @@
       real,  intent (in) :: pvol_m3
       real,  intent (in) :: evol_m3
       integer,  intent (in) :: jres             !none      |hru number
-      integer :: iweir             !none      |weir ID 
-      integer :: nstep            !none      |counter
-      integer :: tstep            !none      |hru number
-      integer :: iac              !none      |counter 
-      integer :: ic              !none      |counter
+      integer :: iweir = 0         !none      |weir ID 
+      integer :: nstep = 0        !none      |counter
+      integer :: tstep = 0        !none      |hru number
+      integer :: iac = 0          !none      |counter 
+      integer :: ic = 0          !none      |counter
       integer,  intent (in) :: id               !none      |hru number
-      integer :: ial              !none      |counter
-      integer :: irel             !          |
-      integer :: iob              !none      |hru or wro number
-      real :: vol                 !          |
-      real :: b_lo                !          |
-      character(len=1) :: action  !          |
-      real :: res_h               !m         |water depth
-      real :: demand              !m3        |irrigation demand by hru or wro
-      real :: wsa1                !m2        |water surface area 
-      real :: hgt_above           !m         |height of water above the above bottom of weir
-      real :: alpha_e
+      integer :: ial = 0          !none      |counter
+      integer :: irel = 0         !          |
+      integer :: iob = 0          !none      |hru or wro number
+      real :: vol = 0.            !          |
+      real :: b_lo = 0.           !          |
+      character(len=1) :: action = ""!          |
+      real :: res_h = 0.          !m         |water depth
+      real :: demand = 0.         !m3        |irrigation demand by hru or wro
+      real :: wsa1 = 0.           !m2        |water surface area 
+      real :: hgt_above = 0.      !m         |height of water above the above bottom of weir
+      real :: alpha_e = 0.
       
       !! store initial values
       vol = wbody%flo

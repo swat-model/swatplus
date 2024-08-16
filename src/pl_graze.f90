@@ -11,32 +11,32 @@
       
       implicit none 
 
-      integer :: j         !none        |HRU number
-      integer :: l         !none        |number of soil layer that manure applied
-      integer :: it        !none        |manure/fertilizer id from fertilizer.frt
-      real :: xx           !none        |variable to hold intermediate calculation result
-      real :: dmi          !kg/ha       |biomass in HRU prior to grazing and trampling
-      real :: zz           !none        |variable to hold intermediate calculation
+      integer :: j = 0     !none        |HRU number
+      integer :: l = 0     !none        |number of soil layer that manure applied
+      integer :: it = 0    !none        |manure/fertilizer id from fertilizer.frt
+      real :: xx = 0.      !none        |variable to hold intermediate calculation result
+      real :: dmi = 0.     !kg/ha       |biomass in HRU prior to grazing and trampling
+      real :: zz = 0.      !none        |variable to hold intermediate calculation
                            !            |result
-      real :: yz
-      real :: yy           !none        |variable to hold intermediate calculation
+      real :: yz = 0.
+      real :: yy = 0.      !none        |variable to hold intermediate calculation
                            !            |result
-      real :: xz           !            |the amount of organic carbon allocated to structural litter C pool  
-      real :: x8           !            |organic carbon applied (kg C/ha)   
-      real :: x10          !frac        |the fraction of carbon in fertilizer that is allocated to metabolic litter C pool
-      real :: x1           !            |fertlizer applied to layer (kg/ha)
-      real :: rln          !            | 
-      real :: orgc_f       !frac        |fraction of organic carbon in fertilizer
-      integer :: ipl       !none        |counter
-      real :: manure_kg
-      real :: eat_plant     !frac       |fraction of above ground biomass of each plant eaten
-      real :: eat_seed      !frac       |fraction of seed of each plant eaten
-      real :: eat_leaf      !frac       |fraction of leaf of each plant eaten
-      real :: eat_stem      !frac       |fraction of stem of each plant eaten
-      real :: tramp_plant   !frac       |fraction of above ground biomass of each plant trampled
-      real :: tramp_seed    !frac       |fraction of seed of each plant trampled
-      real :: tramp_leaf    !frac       |fraction of leaf of each plant trampled
-      real :: tramp_stem    !frac       |fraction of stem of each plant trampled
+      real :: xz = 0.      !            |the amount of organic carbon allocated to structural litter C pool  
+      real :: x8 = 0.      !            |organic carbon applied (kg C/ha)   
+      real :: x10 = 0.     !frac        |the fraction of carbon in fertilizer that is allocated to metabolic litter C pool
+      real :: x1 = 0.      !            |fertlizer applied to layer (kg/ha)
+      real :: rln = 0.     !            | 
+      real :: orgc_f = 0.  !frac        |fraction of organic carbon in fertilizer
+      integer :: ipl = 0   !none        |counter
+      real :: manure_kg = 0.
+      real :: eat_plant = 0.  !frac       |fraction of above ground biomass of each plant eaten
+      real :: eat_seed = 0. !frac       |fraction of seed of each plant eaten
+      real :: eat_leaf = 0. !frac       |fraction of leaf of each plant eaten
+      real :: eat_stem = 0. !frac       |fraction of stem of each plant eaten
+      real :: tramp_plant = 0.!frac       |fraction of above ground biomass of each plant trampled
+      real :: tramp_seed = 0. !frac       |fraction of seed of each plant trampled
+      real :: tramp_leaf = 0. !frac       |fraction of leaf of each plant trampled
+      real :: tramp_stem = 0. !frac       |fraction of stem of each plant trampled
 
       j = ihru
 

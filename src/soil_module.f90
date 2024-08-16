@@ -1,24 +1,24 @@
      module soil_module
     
      implicit none
-     
+
        type soilayer
         real :: ec = 0.
         real :: cal = 0.
         real :: ph = 0.
         real :: alb = 0.         !! none          albedo when soil is moist
         real :: usle_k = 0.      !!               USLE equation soil erodibility (K) factor 
-        real ::conk = 0.         !! mm/hr          lateral saturated hydraulic conductivity for each profile layer in a give HRU. 
-        real ::flat = 0.         !! mm H2O         lateral flow storage array
+        real :: conk = 0.        !! mm/hr          lateral saturated hydraulic conductivity for each profile layer in a give HRU. 
+        real :: flat = 0.        !! mm H2O         lateral flow storage array
         real :: prk = 0.         !! mm H2O         percolation from soil layer on current day
         real :: volcr = 0.       !! mm             crack volume for soil layer 
-        real :: tillagef = 0. 
+        real :: tillagef = 0.
         real :: rtfr = 0.        !! none           root fraction
         real :: watp = 0.
         integer :: a_days = 0
         integer :: b_days = 0
         real :: psp_store = 0.
-        real :: ssp_store = 0.    
+        real :: ssp_store = 0.
         real :: percc = 0.       !!
         real :: latc = 0.        !!
         real :: vwt = 0.         !!
@@ -53,7 +53,7 @@
         character(len=16) :: snam = ""     !! NA            soil series name  
         character(len=16) :: hydgrp = ""    !! NA            hydrologic soil group
         character(len=16) :: texture = ""
-        integer ::  nly  = 0               !! none          number of soil layers 
+        integer :: nly  = 0                !! none          number of soil layers 
         type (soil_physical_properties),dimension (:), allocatable:: phys
         type (soilayer), dimension (:), allocatable :: ly
         real, dimension(:),allocatable :: pest              !! kg/ha    total pesticide in the soil profile

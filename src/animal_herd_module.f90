@@ -3,7 +3,7 @@
       implicit none
 
       type animals
-        character(len=16) :: name   !           |animal name (cattle, sheep, goats, etc)
+        character(len=16) :: name = ""!           |animal name (cattle, sheep, goats, etc)
         real :: phyp = 0.           !           |
         real :: pthd = 0.           !           |
         real :: pthu = 0.           !           |

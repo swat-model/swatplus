@@ -16,9 +16,9 @@
       character (len=16), intent (in) :: str_name     !              |
       integer, intent (in) :: istr                    !              |
       integer, intent (in) :: j                       !none          |HRU number
-      integer :: jj                                   !none          |counter
-      real :: tch                                     !              |
-      real :: b                                       !m             |bottom width of channel
+      integer :: jj = 0                               !none          |counter
+      real :: tch = 0.                                !              |
+      real :: b = 0.                                  !m             |bottom width of channel
 
       select case(str_name)
 
