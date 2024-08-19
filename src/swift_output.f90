@@ -23,19 +23,30 @@
       integer :: iobj_out = 0
       integer :: irec = 0
       integer :: iob = 0
+      integer :: i = 0                              ! loop counter
+      integer, parameter :: ifile = 14              ! number of SWAT input files to copy to SWIFT folder
       character (len=8) :: wet_y_n = ""
       character(len=100) :: folderPath = ""
       character(len=100) :: command = ""
+      character(len=25)  :: file_list(ifile) = "" ! list of SWAT input files to copy to SWIFT folder
       logical :: i_exist
       
+      ! SWIFT file formats
       201 format (5xA8,A5,46X,*(A12F2.0A4,1xA12F2.0A4))     ! format of precip.swf headers
       301 format (I,1xA,F,6xF)                              ! format of precip.swf
       202 format (5xA8,A5,9X,A16,27xA8,7xA,12x1A4,3x1A4)    ! format of hru_dat.swf headers
       302 format (1I,1x2A, G ,1x*(G))                       ! format of hru_dat.swf
       203 format (A8,*(2x1A,10x1A, 6x1A, 2x6A))             ! format of hru_exco.swf headers      
       303 format (I8,*(2x1A,F16.4, 7F16.4,10x))             ! format of hru_exco.swf 
-      204 format (5xA8,1x*(A5,10x))    ! format of hru_dat.swf headers
-      !304 format (*)                       ! format of hru_dat.swf
+      204 format (5xA8,1x*(A5,10x))                         ! format of hru_wet.swf headers
+      205 format (11xA, 10xA, 10x,*(A))                     ! format of chan_dat.swf headers
+      305 format (i,A, A,*(F16.4))                          ! format of chan_dat.swf
+      206 format (7xA, 1xA, 23x,*(A))                       ! format of chan_dr.swf headers
+      306 format (i,A, A,*(F16.4))                          ! format of chan_dr.swf
+      207 format (8xA,1x*(A))                               ! format of aqu_dr.swf headers
+      208 format (7xA, 1xA, 23x,*(A6,9x))                   ! format of res_dat.swf headers
+      209 format (7xA, 1xA, 13x,*(A))                       ! format of res_dr.swf headers
+  
       
       !! check for file_cio.swf to determine if SWIFT folder exist
       inquire (file="SWIFT/file_cio.swf", exist=i_exist)
@@ -62,22 +73,16 @@
       write (107, *) "LS_UNIT       ", in_regs%def_lsu, in_regs%ele_lsu
       close (107)
       
-      !! Call the copy_file function to copy SWAT+ Inputs to SWIFT Folder
-      call copy_file(in_sim%object_cnt, "SWIFT/" // trim(adjustl(in_sim%object_cnt)))
-      call copy_file(in_sim%object_prt, "SWIFT/" // trim(adjustl(in_sim%object_prt)))
-      call copy_file(in_sim%cs_db, "SWIFT/" // trim(adjustl(in_sim%cs_db)))
-      call copy_file(in_con%hru_con, "SWIFT/" // trim(adjustl(in_con%hru_con)))
-      call copy_file(in_con%ru_con, "SWIFT/" // trim(adjustl(in_con%ru_con)))
-      call copy_file(in_con%aqu_con, "SWIFT/" // trim(adjustl(in_con%aqu_con)))
-      call copy_file(in_con%chandeg_con, "SWIFT/" // trim(adjustl(in_con%chandeg_con)))
-      call copy_file(in_con%res_con, "SWIFT/" // trim(adjustl(in_con%res_con)))
-      call copy_file(in_con%rec_con, "SWIFT/" // trim(adjustl(in_con%rec_con)))
-      call copy_file(in_con%out_con, "SWIFT/" // trim(adjustl(in_con%out_con)))
-      call copy_file(in_ru%ru_def, "SWIFT/" // trim(adjustl(in_ru%ru_def)))
-      call copy_file(in_ru%ru_ele, "SWIFT/" // trim(adjustl(in_ru%ru_ele)))
-      !call copy_file(in_rec%recall_rec, "SWIFT/" // trim(adjustl(in_rec%recall_rec)))
-      call copy_file(in_regs%def_lsu, "SWIFT/" // trim(adjustl(in_regs%def_lsu)))
-      call copy_file(in_regs%ele_lsu, "SWIFT/" // trim(adjustl(in_regs%ele_lsu)))
+      ! Create a list of SWAT input files to copy to the SWIFT folder
+      file_list = [in_sim%object_cnt, in_sim%object_prt,          & 
+          in_sim%cs_db, in_con%hru_con, in_con%ru_con, in_con%aqu_con, in_con%chandeg_con,  &
+          in_con%res_con, in_con%rec_con, in_con%out_con, in_ru%ru_def, in_ru%ru_ele,       &
+          in_regs%def_lsu, in_regs%ele_lsu]
+      
+      ! Loop through the file list and copy each file to the SWIFT folder
+      do i = 1, ifile
+         call copy_file(file_list(i), "SWIFT/" // trim(adjustl(file_list(i))))
+      end do
 
       
       !! write ave annual precip to SWIFT model
@@ -109,11 +114,11 @@
       open (107,file="SWIFT/hru_exco.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%hru
-      write (107, 203) "HRU ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', &
-          hru_exco_hdr%hyd_type, ihyd = 1, hd_tot%hru)
+      write (107, 203) "HRU ", (hru_swift_hdr%hd_type(ihyd), 'wyld_rto', &
+          hru_swift_hdr%exco, ihyd = 1, hd_tot%hru)
 
-      write (107, 203) "--- ", (hru_exco_hdr%hd_type(ihyd), 'wyld_rto', &
-          hru_exco_hdr%hyd_unit, ihyd = 1, hd_tot%hru)
+      write (107, 203) "--- ", (hru_swift_hdr%hd_type(ihyd), 'wyld_rto', &
+          hru_swift_hdr%exco_unit, ihyd = 1, hd_tot%hru)
       
       do ihru = 1, sp_ob%hru
         icmd = hru(ihru)%obj_no
@@ -132,7 +137,7 @@
         end do
         
         !! write to SWIFT hru export coefficient file
-        write(107, 303) ihru, (hru_exco_hdr%hd_type(ihyd), &
+        write(107, 303) ihru, (hru_swift_hdr%hd_type(ihyd), &
             wyld_rto(ihyd), ob(icmd)%hd_aa(ihyd)%sed, ob(icmd)%hd_aa(ihyd)%orgn, &
             ob(icmd)%hd_aa(ihyd)%sedp, ob(icmd)%hd_aa(ihyd)%no3, ob(icmd)%hd_aa(ihyd)%solp, &
             ob(icmd)%hd_aa(ihyd)%nh3, ob(icmd)%hd_aa(ihyd)%no2, ihyd = 1, hd_tot%hru)
@@ -166,12 +171,12 @@
       !! write channel data for SWIFT
       open (107,file="SWIFT/chan_dat.swf",recl = 1500)
       write (107, *) bsn%name
-      write (107, *) " OUTPUT NAMES - NUBZ"
+      write (107, 205) sd_chd_hdr
       do icha = 1, sp_ob%chandeg
         icmd = sp_ob1%chandeg + icha - 1
         idat = ob(icmd)%props
         idb = sd_dat(idat)%hyd
-        write (107, *) icha, sd_chd(idb)
+        write (107, 305) icha, sd_chd(idb)
       end do
       close (107)
       
@@ -179,8 +184,8 @@
       open (107,file="SWIFT/chan_dr.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%chandeg
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 206) "icha ", "name ", hru_swift_hdr%dr
+      write (107, 206) "--- ", "---- ", hru_swift_hdr%dr_unit
       do icha = 1, sp_ob%chandeg
         icmd = sp_ob1%chandeg + icha - 1
         ht5 = ob(icmd)%hout_tot // ob(icmd)%hin_tot
@@ -198,8 +203,8 @@
       open (107,file="SWIFT/aqu_dr.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%aqu
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 207) "iaqu ", hru_swift_hdr%dr
+      write (107, 207) "--- ",  hru_swift_hdr%dr_unit
       do iaqu = 1, sp_ob%aqu
         icmd = sp_ob1%aqu + iaqu - 1
         ht5 = ob(icmd)%hout_tot // ob(icmd)%hin_tot
@@ -211,8 +216,8 @@
       open (107,file="SWIFT/res_dat.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%res
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 208) "icha ", "name ", "psa  ", "pvol ", "esa  ", "evol "
+      write (107, 208) "---- ", "---- ", "frac ", "m3   ", "frac ", "m3   " 
       do ires = 1, sp_ob%res
         write (107, *) ires, res_hyd(ires)%name, res_hyd(ires)%psa, res_hyd(ires)%pvol, res_hyd(ires)%esa,    &
                                                                       res_hyd(ires)%evol
@@ -223,8 +228,8 @@
       open (107,file="SWIFT/res_dr.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) sp_ob%res
-      write (107, *) " OUTPUT NAMES - NUBZ"
-      write (107, *) " OUTPUT UNITS - NUBZ"
+      write (107, 209) "ires ", "name ", hru_swift_hdr%dr
+      write (107, 209) "---- ", "---- ", hru_swift_hdr%dr_unit
       do ires = 1, sp_ob%res
         icmd = sp_ob1%res + ires - 1
         ht5 = ob(icmd)%hout_tot // ob(icmd)%hin_tot
