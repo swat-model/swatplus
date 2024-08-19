@@ -471,6 +471,33 @@
       end type sdch_header_units_sub
       type (sdch_header_units) :: sdch_hdr_units_sub
      
+      type sd_chd_header
+        character (len=16)  :: name         = "name"
+        character(len=16)   :: order        = "order"
+        character (len=16)  :: chw          = 'chw'             !m          |channel width
+        character (len=16)  :: chd          = 'chd'             !m          |channel depth
+        character (len=16)  :: chs          = 'chs'             !m/m        |channel slope
+        character (len=16)  :: chl          = 'chl'             !m          |channel length
+        character (len=16)  :: chn          = 'chn'             !           |channel Manning's n
+        character (len=16)  :: chk          = 'chk'             !mm/h       |channel bottom conductivity
+        character (len=16)  :: cherod       = 'cherod'          !           |channel erodibility
+        character (len=16)  :: cov          = 'cov'             !0-1        |channel cover factor
+        character (len=16)  :: sinu         = 'sinu'            !           |sinuousity - ratio of channel length and straight line length
+        character (len=16)  :: chseq        = 'chseq'           !m/m        |equilibrium channel slope
+        character (len=16)  :: d50          = 'd50'             !           |median particle size
+        character (len=16)  :: ch_clay      = 'ch_clay'         !%          |clay percent of bank and bed
+        character (len=16)  :: carbon       = 'carbon'          !%          |carbon percent of bank and bed
+        character (len=16)  :: ch_bd        = 'ch_bd'           !g/cm^3     |channel bank density
+        character (len=16)  :: chss         = 'chss'            !           |channel sediment supply
+        character (len=16)  :: bankfull_flo = 'bankfull_flo'    !m^3/s |bankfull flow
+        character (len=16)  :: fps          = 'fps'             !           |flood plain slope
+        character (len=16)  :: fpn          = 'fpn'             !           |flood plain Manning's n
+        character (len=16)  :: n_conc       = 'n_conc'          !mg/kg      |nitrogen concentration in channel bank
+        character (len=16)  :: p_conc       = 'p_conc'          !mg/kg      |phosphorus concentration in channel bank
+        character (len=16)  :: p_bio        = 'p_bio'           !frac       |fraction of p in bank that is bioavailable
+      end type sd_chd_header
+      type (sd_chd_header) :: sd_chd_hdr
+      
       interface operator (+)
         module procedure chsd_add
       end interface
