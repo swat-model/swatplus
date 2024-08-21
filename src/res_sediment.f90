@@ -10,9 +10,11 @@
       
       implicit none
 
-      real :: trapres                       !              |
-      real :: velofl                        !              |  
-      real :: sed_ppm, sil_ppm, cla_ppm 
+      real :: trapres = 0.                  !              |
+      real :: velofl = 0.                   !              |  
+      real :: sed_ppm = 0.
+      real :: sil_ppm = 0.
+      real :: cla_ppm = 0.
 
       if (wbody%flo < 1.e-6) then
         ! reservoir is empty

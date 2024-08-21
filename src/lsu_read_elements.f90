@@ -8,18 +8,18 @@
       
       implicit none
 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      integer :: nspu                 !           |
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      integer :: nspu = 0             !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: mcal                 !           |
-      integer :: mlsu                 !none       |counter
-      integer :: i                    !none       |counter
-      integer :: k                    !           |
-      integer :: isp                  !none       |counter
-      integer :: ielem1               !none       |counter
+      integer :: mcal = 0             !           |
+      integer :: mlsu = 0             !none       |counter
+      integer :: i = 0                !none       |counter
+      integer :: k = 0                !           |
+      integer :: isp = 0              !none       |counter
+      integer :: ielem1 = 0           !none       |counter
       !integer :: iihru                !none       |counter
             
       imax = 0
@@ -41,29 +41,41 @@
         allocate (lsu_out(0:mlsu))
                 
         !allocate subbasin (landscape unit) inputs and outputs
-        allocate (ruwb_d(0:mlsu)); allocate (ruwb_m(0:mlsu)); allocate (ruwb_y(0:mlsu)); allocate (ruwb_a(0:mlsu))
-        allocate (runb_d(0:mlsu)); allocate (runb_m(0:mlsu)); allocate (runb_y(0:mlsu)); allocate (runb_a(0:mlsu))
-        allocate (ruls_d(0:mlsu)); allocate (ruls_m(0:mlsu)); allocate (ruls_y(0:mlsu)); allocate (ruls_a(0:mlsu))
-        allocate (rupw_d(0:mlsu)); allocate (rupw_m(0:mlsu)); allocate (rupw_y(0:mlsu)); allocate (rupw_a(0:mlsu))
+        allocate (ruwb_d(0:mlsu))
+        allocate (ruwb_m(0:mlsu))
+        allocate (ruwb_y(0:mlsu))
+        allocate (ruwb_a(0:mlsu))
+        allocate (runb_d(0:mlsu))
+        allocate (runb_m(0:mlsu))
+        allocate (runb_y(0:mlsu))
+        allocate (runb_a(0:mlsu))
+        allocate (ruls_d(0:mlsu))
+        allocate (ruls_m(0:mlsu))
+        allocate (ruls_y(0:mlsu))
+        allocate (ruls_a(0:mlsu))
+        allocate (rupw_d(0:mlsu))
+        allocate (rupw_m(0:mlsu))
+        allocate (rupw_y(0:mlsu))
+        allocate (rupw_a(0:mlsu))
         
       do i = 1, mlsu
 
         read (107,*,iostat=eof) k, lsu_out(i)%name, lsu_out(i)%area_ha, nspu      
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, lsu_out(i)%name, lsu_out(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (lsu_out(i)%num(ielem1))
+          allocate (lsu_out(i)%num(ielem1), source = 0)
           lsu_out(i)%num = defunit_num
           lsu_out(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
-          allocate (lsu_out(i)%num(0:0))
+          allocate (lsu_out(i)%num(0:0), source = 0)
           !!all hrus are in region 
           !allocate (lsu_out(i)%num(sp_ob%hru))
           !lsu_out(i)%num_tot = sp_ob%hru

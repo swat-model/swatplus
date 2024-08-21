@@ -13,10 +13,10 @@
       implicit none
       
       integer, intent (in) :: jrch             !            |
-      integer :: isalt                         !            |
-      integer :: iru
-      integer :: iob
-      real :: const
+      integer :: isalt = 0                     !            |
+      integer :: iru = 0
+      integer :: iob = 0
+      real :: const = 0.
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs salt mass in channels

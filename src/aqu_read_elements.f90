@@ -8,21 +8,21 @@
       
       implicit none
 
-      character (len=80) :: titldum     !             |title of file
-      character (len=80) :: header      !             |header of file
-      integer :: eof                    !             |end of file
-      integer :: imax                   !             |determine max number for array (imax) and total number in file
-      integer :: mcal                   !             |
+      character (len=80) :: titldum = ""  !             |title of file
+      character (len=80) :: header = "" !             |header of file
+      integer :: eof = 0                !             |end of file
+      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
+      integer :: mcal = 0               !             |
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: mreg                   !             |
-      integer :: i                      !none         |counter
-      integer :: k                      !             |
-      integer :: nspu                   !             | 
-      integer :: isp                    !             |
-      integer :: ielem1                 !none         |counter
-      integer :: ihru                   !none         |counter
-      integer :: iaqu                   !none         |counter
-      integer :: ireg                   !none         |counter
+      integer :: mreg = 0               !             |
+      integer :: i = 0                  !none         |counter
+      integer :: k = 0                  !             |
+      integer :: nspu = 0               !             | 
+      integer :: isp = 0                !             |
+      integer :: ielem1 = 0             !none         |counter
+      integer :: ihru = 0               !none         |counter
+      integer :: iaqu = 0               !none         |counter
+      integer :: ireg = 0               !none         |counter
                 
       mreg = 0
       imax = 0
@@ -39,29 +39,34 @@
         read (107,*,iostat=eof) header
         if (eof < 0) exit
         
-        allocate (acu_reg(0:mreg)); allocate (acu_out(0:mreg)); allocate (acu_cal(0:mreg))
+        allocate (acu_reg(0:mreg))
+        allocate (acu_out(0:mreg))
+        allocate (acu_cal(0:mreg))
         !! allocate aquifer outputs for writing
-        allocate (saqu_d(0:mreg)); allocate (saqu_m(0:mreg)); allocate (saqu_y(0:mreg)); allocate (saqu_a(0:mreg))
+        allocate (saqu_d(0:mreg))
+        allocate (saqu_m(0:mreg))
+        allocate (saqu_y(0:mreg))
+        allocate (saqu_a(0:mreg))
 
       do i = 1, mreg
 
         read (107,*,iostat=eof) k, acu_out(i)%name, acu_out(i)%area_ha, nspu        
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, acu_out(i)%name, acu_out(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (acu_out(i)%num(ielem1))
+          allocate (acu_out(i)%num(ielem1), source = 0)
           acu_out(i)%num = defunit_num
           acu_out(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (acu_out(i)%num(sp_ob%hru))
+          allocate (acu_out(i)%num(sp_ob%hru), source = 0)
           acu_out(i)%num_tot = sp_ob%hru
           do ihru = 1, sp_ob%hru
             acu_out(i)%num(ihru) = ihru
@@ -73,7 +78,7 @@
          
       db_mx%aqu_out = mreg
       end do 
-      end if	  
+      end if      
 
     !! setting up regions for aquifer soft cal and/or output by type
     inquire (file=in_regs%def_aqu_reg, exist=i_exist)
@@ -91,20 +96,20 @@
         read (107,*,iostat=eof) k, acu_reg(i)%name, acu_reg(i)%area_ha, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           backspace (107)
           read (107,*,iostat=eof) k, acu_reg(i)%name, acu_reg(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (acu_reg(i)%num(ielem1))
+          allocate (acu_reg(i)%num(ielem1), source = 0)
           acu_reg(i)%num = defunit_num
           acu_reg(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (acu_reg(i)%num(sp_ob%hru))
+          allocate (acu_reg(i)%num(sp_ob%hru), source = 0)
           acu_reg(i)%num_tot = sp_ob%hru
           do iaqu = 1, sp_ob%aqu
             acu_reg(i)%num(ihru) = iaqu
@@ -117,7 +122,7 @@
       db_mx%aqu_reg = mreg
       
       end do 
-      end if	  
+      end if      
 
       !! if no regions are input, don"t need elements
       if (mreg > 0) then

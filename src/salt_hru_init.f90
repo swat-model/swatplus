@@ -16,14 +16,15 @@
       
       implicit none 
         
-      integer :: ihru            !none          !counter       
-      integer :: npmx            !none          |total number of pesticides     
-      integer :: ly              !none          |counter
-      integer :: isalt           !none          |counter
-      integer :: isalt_db        !              | 
-      integer :: isp_ini         !              |
-      real :: wt1                !              |
-      real :: hru_area_m2,water_volume
+      integer :: ihru = 0        !none          !counter       
+      integer :: npmx = 0        !none          |total number of pesticides     
+      integer :: ly = 0          !none          |counter
+      integer :: isalt = 0       !none          |counter
+      integer :: isalt_db = 0    !              | 
+      integer :: isp_ini = 0     !              |
+      real :: wt1 = 0.           !              |
+      real :: hru_area_m2 = 0.
+      real :: water_volume = 0.
         
         
       !! allocate hru salts
@@ -31,12 +32,12 @@
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
           do ly = 1, soil(ihru)%nly
-            allocate (cs_soil(ihru)%ly(ly)%salt(npmx))
-            allocate (cs_soil(ihru)%ly(ly)%salt_min(5))
-            allocate (cs_soil(ihru)%ly(ly)%saltc(npmx))
+            allocate (cs_soil(ihru)%ly(ly)%salt(npmx), source = 0.)
+            allocate (cs_soil(ihru)%ly(ly)%salt_min(5), source = 0.)
+            allocate (cs_soil(ihru)%ly(ly)%saltc(npmx), source = 0.)
           end do
           !allocate (cs_pl(ihru)%salt(npmx))
-          allocate (cs_irr(ihru)%saltc(npmx))
+          allocate (cs_irr(ihru)%saltc(npmx), source = 0.)
         end if
 
         isp_ini = hru(ihru)%dbs%soil_plant_init

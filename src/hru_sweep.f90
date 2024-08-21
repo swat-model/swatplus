@@ -28,10 +28,10 @@
       
       implicit none
 
-      integer :: j             !j             |none          |HRU number 
-      real :: dirt             !kg/curb km    |amount of solids built up on impervious
+      integer :: j = 0         !j             |none          |HRU number 
+      real :: dirt = 0.        !kg/curb km    |amount of solids built up on impervious
                                !              |surfaces
-      real :: fr_curb          !none          |availability factor, the fraction of the 
+      real :: fr_curb = 0.     !none          |availability factor, the fraction of the 
                                !              |curb length that is sweepable
 
       j = 0

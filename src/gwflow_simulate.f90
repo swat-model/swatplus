@@ -17,74 +17,147 @@
       implicit none
       
       !counters and general information
-      integer  i                         !           |counter
-      integer  j                         !           |counter
-      integer  k                         !           |counter
-      integer  n                         !           |counter
-      integer  s                         !           |solute counter
-      integer  dum                       !           |dummy variable
-      integer  num_ts                    !           |number of flow time steps during the daily time step
-      integer :: cell_id                 !           |id of gwflow cell
-      real :: sum                        !           |general summation
+      integer :: i = 0                !           |counter
+      integer :: j = 0                !           |counter
+      integer :: k = 0                !           |counter
+      integer :: n = 0                !           |counter
+      integer :: s = 0                !           |solute counter
+      integer :: dum = 0              !           |dummy variable
+      integer :: num_ts = 0           !           |number of flow time steps during the daily time step
+      integer :: cell_id = 0          !           |id of gwflow cell
+      real :: sum = 0.                !           |general summation
       !lateral flow calculations
-      real :: area1                   !m2         |spatial area of first connected cell
-      real :: area2                   !m2         |spatial area of second connected cell
-      real :: area                    !m2         |smaller of the two areas
-      real :: conn_length             !m          |length of connection between two adjacent cells
-      real :: dist_x                  !m          |x distance between centroids of adjacent cells
-      real :: dist_y                  !m          |y distance between centroids of adjacent cells
-      real :: grad_distance           !m          |distance between centroids of two connected cells
-      real :: Q_cell                  !m3         |groundater flow between two cells
-      real :: face_K                  !m/day      |hydraulic conductivity at cell interface
-      real :: sat_thick1              !m          |saturated thickness of connected cell
-      real :: sat_thick2              !m          |saturated thickness of cell
-      real :: face_sat                !m          |saturated thickness at cell interface
+      real :: area1 = 0.              !m2         |spatial area of first connected cell
+      real :: area2 = 0.              !m2         |spatial area of second connected cell
+      real :: area = 0.               !m2         |smaller of the two areas
+      real :: conn_length = 0.        !m          |length of connection between two adjacent cells
+      real :: dist_x = 0.             !m          |x distance between centroids of adjacent cells
+      real :: dist_y = 0.             !m          |y distance between centroids of adjacent cells
+      real :: grad_distance = 0.      !m          |distance between centroids of two connected cells
+      real :: Q_cell = 0.             !m3         |groundater flow between two cells
+      real :: face_K = 0.             !m/day      |hydraulic conductivity at cell interface
+      real :: sat_thick1 = 0.         !m          |saturated thickness of connected cell
+      real :: sat_thick2 = 0.         !m          |saturated thickness of cell
+      real :: face_sat = 0.           !m          |saturated thickness at cell interface
       !storage calculations
-      real :: stor_change             !m3         |daily change in groundwater storage for a cell
-      real :: sat_change              !m          |daily change in saturated thickness for a cell
-      real :: flow_area               !m2         |groundwater flow area between cells
-      real :: Q                       !m3         |total flow in/out of cell
-      real :: gradient                !m/m        |groundwater gradient between cells
+      real :: stor_change = 0.        !m3         |daily change in groundwater storage for a cell
+      real :: sat_change = 0.         !m          |daily change in saturated thickness for a cell
+      real :: flow_area = 0.          !m2         |groundwater flow area between cells
+      real :: Q = 0.                  !m3         |total flow in/out of cell
+      real :: gradient = 0.           !m/m        |groundwater gradient between cells
       !groundwater conditions
-      real :: frac_sat                !           |fraction of cells that are saturated (i.e., water table at ground surface)
-      real :: depth_wt_avg            !m          |average water table depth from all grid cells
+      real :: frac_sat = 0.           !           |fraction of cells that are saturated (i.e., water table at ground surface)
+      real :: depth_wt_avg = 0.       !m          |average water table depth from all grid cells
       !water balance analysis       
-      real :: mass_error              !           |mass error in groundwater balance and solute mass balance
+      real :: mass_error = 0.         !           |mass error in groundwater balance and solute mass balance
       !tile drainage outflow
-      real :: sum_tile(50)            !m3         |summation of flow from tile cell groups
-      real :: sum_mass(50,100)        !g          |total solute mass in tile cell groups
-      real :: c_tile(50,100)          !g/m3       |average concentration of solute mass in tile cell groups
+      real :: sum_tile(50) = 0.       !m3         |summation of flow from tile cell groups
+      real :: sum_mass(50,100) = 0.   !g          |total solute mass in tile cell groups
+      real :: c_tile(50,100) = 0.     !g/m3       |average concentration of solute mass in tile cell groups
       !grid totals of fluxes for day (m3, mm)
-      real*8   vbef_grid,vaft_grid,rech_grid,gwet_grid,gwsw_grid,swgw_grid,satx_grid,soil_grid,latl_grid, &
-               bndr_grid,ppag_grid,ppdf_grid,ppex_grid,tile_grid,resv_grid,wetl_grid,canl_grid,fpln_grid        			 
+      real*8 :: vbef_grid = 0.d0
+      real*8 :: vaft_grid = 0.d0
+      real*8 :: rech_grid = 0.d0
+      real*8 :: gwet_grid = 0.d0
+      real*8 :: gwsw_grid = 0.d0
+      real*8 :: swgw_grid = 0.d0
+      real*8 :: satx_grid = 0.d0
+      real*8 :: soil_grid = 0.d0
+      real*8 :: latl_grid = 0.d0
+      real*8 :: bndr_grid = 0.d0
+      real*8 :: ppag_grid = 0.d0
+      real*8 :: ppdf_grid = 0.d0
+      real*8 :: ppex_grid = 0.d0
+      real*8 :: tile_grid = 0.d0
+      real*8 :: resv_grid = 0.d0
+      real*8 :: wetl_grid = 0.d0
+      real*8 :: canl_grid = 0.d0
+      real*8 :: fpln_grid = 0.d0
       !groundwater solutes
-      integer  t                      !           |counter for solute transport time steps
-      real :: gw_trans_time_step      !days       |length of solute transport time steps
-      real :: time_fraction           !           |fraction of flow time step     
-      real :: gw_volume_old           !m3         |cell groundwater volume from previous flow time step
-      real :: gw_volume_new           !m3         |cell groundwater volume from current flow time step
-      real :: gw_volume_inter         !m3         |interpolated cell groundwater volume for the current transport time step
-      real :: mass_adv(100)           !g          |solute mass advected into/out of cell
-      real :: mass_dsp(100)           !g          |solute mass dispersed into/out of cell
-      real :: m_change(100)           !g          |change in cell's solute mass, for one transport time step
-      real :: del_no_sorp             !g          |change in cell's solute mass, without sorption
-      real :: mass_sorb(100)          !g          |solute mass sorbed
+      integer :: t = 0                !           |counter for solute transport time steps
+      real :: gw_trans_time_step = 0. !days       |length of solute transport time steps
+      real :: time_fraction = 0.      !           |fraction of flow time step     
+      real :: gw_volume_old = 0.      !m3         |cell groundwater volume from previous flow time step
+      real :: gw_volume_new = 0.      !m3         |cell groundwater volume from current flow time step
+      real :: gw_volume_inter = 0.    !m3         |interpolated cell groundwater volume for the current transport time step
+      real :: mass_adv(100) = 0.      !g          |solute mass advected into/out of cell
+      real :: mass_dsp(100) = 0.      !g          |solute mass dispersed into/out of cell
+      real :: m_change(100) = 0.      !g          |change in cell's solute mass, for one transport time step
+      real :: del_no_sorp = 0.        !g          |change in cell's solute mass, without sorption
+      real :: mass_sorb(100) = 0.     !g          |solute mass sorbed
       !total grid values for solute mass (kg)
-      real     sol_grid_mbef,sol_grid_maft,sol_grid_rech,sol_grid_gwsw,sol_grid_swgw,sol_grid_satx, &
-               sol_grid_advn,sol_grid_disp,sol_grid_rcti,sol_grid_rcto,sol_grid_minl, &
-               sol_grid_sorb,sol_grid_ppag,sol_grid_ppex, &
-               sol_grid_tile,sol_grid_soil,sol_grid_resv,sol_grid_wetl,sol_grid_canl,sol_grid_fpln
+      real :: sol_grid_mbef = 0.
+      real :: sol_grid_maft = 0.
+      real :: sol_grid_rech = 0.
+      real :: sol_grid_gwsw = 0.
+      real :: sol_grid_swgw = 0.
+      real :: sol_grid_satx = 0.
+      real :: sol_grid_advn = 0.
+      real :: sol_grid_disp = 0.
+      real :: sol_grid_rcti = 0.
+      real :: sol_grid_rcto = 0.
+      real :: sol_grid_minl = 0.
+      real :: sol_grid_sorb = 0.
+      real :: sol_grid_ppag = 0.
+      real :: sol_grid_ppex = 0.
+      real :: sol_grid_tile = 0.
+      real :: sol_grid_soil = 0.
+      real :: sol_grid_resv = 0.
+      real :: sol_grid_wetl = 0.
+      real :: sol_grid_canl = 0.
+      real :: sol_grid_fpln = 0.
       !usgs observation wells
-      real     head_sum,head_avg,head_mae,error_sum,head_residual,error_sum_well,head_mae_well(1000,2),sat_div_well(1000,2)
-      integer  write_yr,usgs_yr,val_count,val_count_well,num_yrs_calb,num_yrs_test
-      real     head_mae_calb,head_mae_test,sat_sum,sat_avg,sum_sat,sum_sat_well,sat_div,sat_div_calb,sat_div_test
-      integer  num_gw_meas,num_gw_meas_calb,num_gw_meas_test,num_gw_meas_well(500,2)
+      real :: head_sum = 0.
+      real :: head_avg = 0.
+      real :: head_mae = 0.
+      real :: error_sum = 0.
+      real :: head_residual = 0.
+      real :: error_sum_well = 0.
+      real :: head_mae_well(1000,2) = 0.
+      real :: sat_div_well(1000,2) = 0.
+      integer :: write_yr = 0
+      integer :: usgs_yr = 0
+      integer :: val_count = 0
+      integer :: val_count_well = 0
+      integer :: num_yrs_calb = 0
+      integer :: num_yrs_test = 0
+      real :: head_mae_calb = 0.
+      real :: head_mae_test = 0.
+      real :: sat_sum = 0.
+      real :: sat_avg = 0.
+      real :: sum_sat = 0.
+      real :: sum_sat_well = 0.
+      real :: sat_div = 0.
+      real :: sat_div_calb = 0.
+      real :: sat_div_test = 0.
+      integer :: num_gw_meas = 0
+      integer :: num_gw_meas_calb = 0
+      integer :: num_gw_meas_test = 0
+      integer :: num_gw_meas_well(500,2) = 0
       !stream observations
-      integer  chan_count,month_count,month_count_calb,month_count_test
-      real     sum_obs_flow,sum_sim_flow,mean_obs_flow,mean_sim_flow
-      real     sum_resi_nse,sum_diff_nse,sum_resi_nse1,sum_diff_nse1,sum_num,sum_den,sum_den1,sum_den2
-      real     cc,sum_sim_sd,sum_obs_sd,sim_sd,obs_sd
-      integer  num_months_calb,num_months_test
+      integer :: chan_count = 0
+      integer :: month_count = 0
+      integer :: month_count_calb = 0
+      integer :: month_count_test = 0
+      real :: sum_obs_flow = 0.
+      real :: sum_sim_flow = 0.
+      real :: mean_obs_flow = 0.
+      real :: mean_sim_flow = 0.
+      real :: sum_resi_nse = 0.
+      real :: sum_diff_nse = 0.
+      real :: sum_resi_nse1 = 0.
+      real :: sum_diff_nse1 = 0.
+      real :: sum_num = 0.
+      real :: sum_den = 0.
+      real :: sum_den1 = 0.
+      real :: sum_den2 = 0.
+      real :: cc = 0.
+      real :: sum_sim_sd = 0.
+      real :: sum_obs_sd = 0.
+      real :: sim_sd = 0.
+      real :: obs_sd = 0.
+      integer :: num_months_calb = 0
+      integer :: num_months_test = 0
       
       
       
@@ -169,7 +242,7 @@
                 do s=1,gw_nsolute !loop through the solutes
                   c_tile(i,s) = sum_mass(i,s) / sum_tile(i) !g/m3
                 enddo
-               else
+              else
                 do s=1,gw_nsolute !loop through the solutes
                   c_tile(i,s) = 0. !g/m3
                 enddo
@@ -294,9 +367,9 @@
                 !calculate groundwater flow between the cells, using Darcy's Law
                 if(gw_state(cell_id)%stat == 0) then
                   Q_cell = 0.
-                 elseif(gw_state(cell_id)%stat == 2 .and. bc_type == 2) then !boundary cell
+                elseif(gw_state(cell_id)%stat == 2 .and. bc_type == 2) then !boundary cell
                   Q_cell = 0.
-                 else
+                else
                   !length of connection between the two cells
                   area1 = gw_state(cell_id)%area !area of connected cell
                   area2 = gw_state(i)%area !area of current cell
@@ -447,7 +520,7 @@
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_state(i)%solute(s)%cnew = gwsol_state(i)%solute(s)%mass / gw_volume_inter
                   enddo
-                 else
+                else
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_state(i)%solute(s)%cnew = 0.
                     gwsol_state(i)%solute(s)%mass = 0.
@@ -2076,11 +2149,11 @@
         if (stream_obs == 1) then
           if(gw_num_obs_chan.gt.0) then
           !first, calculate Nash-Sutcliffe model efficiciency coefficient (NSE) for each specified channel
-          allocate(stream_nse(gw_num_obs_chan,2))
-          allocate(stream_nse1(gw_num_obs_chan,2))
-          allocate(stream_nnse(gw_num_obs_chan,2))
-          allocate(stream_kg(gw_num_obs_chan,2))
-          allocate(stream_pbias(gw_num_obs_chan,2))
+          allocate (stream_nse(gw_num_obs_chan,2), source = 0.)
+          allocate (stream_nse1(gw_num_obs_chan,2), source = 0.)
+          allocate (stream_nnse(gw_num_obs_chan,2), source = 0.)
+          allocate (stream_kg(gw_num_obs_chan,2), source = 0.)
+          allocate (stream_pbias(gw_num_obs_chan,2), source = 0.)
           stream_nse = -9.99
           stream_nse1 = -9.99
           stream_nnse = -9.99
@@ -2119,7 +2192,7 @@
                   stream_nse(i,1) = 1 - (sum_resi_nse / sum_diff_nse)
                   stream_nse1(i,1) = 1 - (sum_resi_nse1 / sum_diff_nse1)
                   stream_nnse(i,1) = 1 / (2 - stream_nse(i,1))
-              endif
+                endif
                 !calculate PBIAS
                 sum_num = 0.
                 sum_den = 0.
@@ -2430,7 +2503,7 @@
         mass_dsp = 0.
         mass_rct = 0.
         mass_sorb = 0.
-			endif
+      endif
        
       
       

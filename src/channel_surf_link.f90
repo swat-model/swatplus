@@ -8,15 +8,15 @@
       
       implicit none
       
-      character (len=3) :: iobtyp   !none          |object type
-      integer :: ics                !none          |counter 
-      integer :: ii                 !none          |counter 
-      integer :: i                  !units         |description  
-      integer :: iob                !units         |description   
-      integer :: ihru               !none          |counter 
-      integer :: ichan
-      real :: tot_ha                !units         |description 
-      integer :: iobtypno
+      character (len=3) :: iobtyp = ""!none          |object type
+      integer :: ics = 0            !none          |counter 
+      integer :: ii = 0             !none          |counter 
+      integer :: i = 0              !units         |description  
+      integer :: iob = 0            !units         |description   
+      integer :: ihru = 0           !none          |counter 
+      integer :: ichan = 0
+      real :: tot_ha = 0.           !units         |description 
+      integer :: iobtypno = 0
 
       tot_ha = 0
       

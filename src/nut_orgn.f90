@@ -22,11 +22,11 @@
       
       implicit none
 
-      integer :: j             !none          |HRU number
-      real :: orgn_kgha        !kg N/ha       |amount of organic N in first soil layer
-      real :: wt1              !kg/ha         |weight of upper soil layer
-      real :: er               !none          |enrichment ratio           
-      real :: frac             !              |fraction of organic N in soil
+      integer :: j = 0         !none          |HRU number
+      real :: orgn_kgha = 0.   !kg N/ha       |amount of organic N in first soil layer
+      real :: wt1 = 0.         !kg/ha         |weight of upper soil layer
+      real :: er = 0.          !none          |enrichment ratio           
+      real :: frac = 0.        !              |fraction of organic N in soil
 
       j = ihru
 
@@ -47,7 +47,7 @@
       !! kg/ha = t / ha * 1000. kg/t
       sedorgn(j) = 1000. * frac * sedyld(j) / hru(j)%area_ha
 
-	  !! update soil nitrogen pools only for HRU calculations
+      !! update soil nitrogen pools only for HRU calculations
       if (orgn_kgha > 1.e-6) then
        soil1(j)%hact(1)%n = soil1(j)%hact(1)%n - sedorgn(j) * (soil1(j)%hact(1)%n / orgn_kgha)
        soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n - sedorgn(j) * (soil1(j)%hsta(1)%n / orgn_kgha)

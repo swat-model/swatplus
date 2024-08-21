@@ -6,18 +6,18 @@
        
        implicit none
       
-       character (len=80) :: titldum   !           |title of file
-       character (len=80) :: header    !           |header of file
-       integer :: eof                  !           |end of file
+       character (len=80) :: titldum = ""!           |title of file
+       character (len=80) :: header = "" !           |header of file
+       integer :: eof = 0              !           |end of file
        logical :: i_exist              !none       |check to determine if file exists
-       integer :: mlsp                 !none       |end of loop
-       integer :: i                    !none       |counter
+       integer :: mlsp = 0             !none       |end of loop
+       integer :: i = 0                !none       |counter
        
        eof = 0
 
       inquire (file=in_chg%wb_parms_sft, exist=i_exist)
       if (.not. i_exist .or. in_chg%wb_parms_sft == "null") then
-        allocate (ls_prms(0:0))	   	   
+        allocate (ls_prms(0:0))
       else   
        do 
          open (107,file = in_chg%wb_parms_sft)

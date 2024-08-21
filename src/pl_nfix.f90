@@ -31,15 +31,15 @@
       
       implicit none
 
-      integer :: j           !none      |hru number
-      integer :: l           !none      |counter (soil layer)
-      integer :: idp         !none      |plant number from plants.plt
-      real :: uno3l          !kg N/ha   |plant nitrogen demand
-      real :: fxw            !          | 
-      real :: sumn           !kg N/ha   |total amount of nitrate stored in soil profile
-      real :: fxn            !          |
-      real :: fxg            !          |
-      real :: fxr            !          |
+      integer :: j = 0       !none      |hru number
+      integer :: l = 0       !none      |counter (soil layer)
+      integer :: idp = 0     !none      |plant number from plants.plt
+      real :: uno3l = 0.     !kg N/ha   |plant nitrogen demand
+      real :: fxw = 0.       !          | 
+      real :: sumn = 0.      !kg N/ha   |total amount of nitrate stored in soil profile
+      real :: fxn = 0.       !          |
+      real :: fxg = 0.       !          |
+      real :: fxr = 0.       !          |
 
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt

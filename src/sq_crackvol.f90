@@ -15,12 +15,12 @@
       
       implicit none
       
-      real :: crlag              !none          |lag factor for day
+      real :: crlag = 0.         !none          |lag factor for day
       real :: crlagdry = .99     !none          |lag in crack development when soil is dry
       real :: crlagwet = 0.      !none          |lag in crack development when soil is wet
-      integer :: j               !none          |HRU number
-      integer :: l               !none          |counter
-      real :: volcrnew           !mm            |crack volume for soil layer based on new 
+      integer :: j = 0           !none          |HRU number
+      integer :: l = 0           !none          |counter
+      real :: volcrnew = 0.      !mm            |crack volume for soil layer based on new 
                                  !              |moisture conditions
 
       j = 0

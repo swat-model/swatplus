@@ -27,16 +27,16 @@
 
       implicit none
       
-      real :: vv                  !none          |variable to hold intermediate calculation 
-      real :: rhm                 !none          |mean monthly relative humidity adjusted for
+      real :: vv = 0.             !none          |variable to hold intermediate calculation 
+      real :: rhm = 0.            !none          |mean monthly relative humidity adjusted for
                                   !              |wet or dry condiditions
-      real :: yy                  !none          |variable to hold intermediate calculation
-      real :: uplm                !none          |highest relative humidity value allowed for
+      real :: yy = 0.             !none          |variable to hold intermediate calculation
+      real :: uplm = 0.           !none          |highest relative humidity value allowed for
                                   !              |any day in month
-      real :: blm                 !none          |lowest relative humidity value allowed for
+      real :: blm = 0.            !none          |lowest relative humidity value allowed for
                                   !              |any day in month
-      real :: rhmo                !none          |mean monthly relative humidity
-      real :: tmpmean             !deg C         |average temperature for the month in HRU
+      real :: rhmo = 0.           !none          |mean monthly relative humidity
+      real :: tmpmean = 0.        !deg C         |average temperature for the month in HRU
       real :: atri                !none          |daily value generated for distribution
       real :: ee                  !              |
       integer :: iwgn             !              |

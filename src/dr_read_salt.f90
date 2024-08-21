@@ -9,10 +9,18 @@
 
       implicit none
  
-      character (len=80) :: titldum, header
-      integer :: eof, imax, ob1, ob2
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: imax = 0
+      integer :: ob1 = 0
+      integer :: ob2 = 0
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: idr_salt, ii, isalt, idr, iob
+      integer :: idr_salt = 0
+      integer :: ii = 0
+      integer :: isalt = 0
+      integer :: idr = 0
+      integer :: iob = 0
 
       eof = 0
       imax = 0
@@ -37,9 +45,9 @@
           
           allocate (dr_salt(imax))
           do idr_salt = 1, imax
-            allocate (dr_salt(idr_salt)%salt(cs_db%num_salts))
+            allocate (dr_salt(idr_salt)%salt(cs_db%num_salts), source = 0.)
           end do
-          allocate (dr_salt_num(imax))
+          allocate (dr_salt_num(imax), source = 0)
           allocate (dr_salt_name(imax))
           rewind (107)
           read (107,*,iostat=eof) titldum

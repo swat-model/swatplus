@@ -1,4 +1,4 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-07-18        MODULAR Rev 2024.61.0.1-32-g1347b93                    
          jday        mon          day       year hru     name               total soil carbon (kg/ha) by layer 
            1           1           1        1975 hru     hru0001           2.0000000E-13  2.0000000E-13  2.0000000E-13  2.0000000E-13  2.0000000E-13
            2           1           2        1975 hru     hru0001           2.0000000E-13  2.0000000E-13  2.0000000E-13  2.0000000E-13  2.0000000E-13

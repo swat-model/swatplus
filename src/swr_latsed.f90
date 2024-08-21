@@ -30,7 +30,7 @@
       
       implicit none
 
-      integer :: j              !none          |HRU number
+      integer :: j = 0          !none          |HRU number
 
       j = ihru
 

@@ -26,21 +26,21 @@
       implicit none
 
       !integer, dimension (:), allocatable :: elem_cnt1   !           |  
-      character (len=80) :: titldum                       !           |title of file
-      character (len=80) :: header                        !           |header of file
-      integer :: eof                                      !           |end of file
-      integer :: imax                                     !none       |determine max number for array (imax) and total number in file
-      integer :: nspu                                     !           |
+      character (len=80) :: titldum = ""                  !           |title of file
+      character (len=80) :: header = ""                   !           |header of file
+      integer :: eof = 0                                  !           |end of file
+      integer :: imax = 0                                 !none       |determine max number for array (imax) and total number in file
+      integer :: nspu = 0                                 !           |
       logical :: i_exist                                  !none       |check to determine if file exists
-      integer :: i                                        !none       |counter
-      integer :: ie                                       !none       |counter
-      integer :: mcal                                     !           |
-      integer :: isp                                      !none       |counter
-      integer :: ical                                     !none       |counter
-      integer :: ipar                                     !           |
-      integer :: ielem1                                   !none       |counter
-      integer :: nconds                                   !none       |counter
-      integer :: icond                                    !none       |counter
+      integer :: i = 0                                    !none       |counter
+      integer :: ie = 0                                   !none       |counter
+      integer :: mcal = 0                                 !           |
+      integer :: isp = 0                                  !none       |counter
+      integer :: ical = 0                                 !none       |counter
+      integer :: ipar = 0                                 !           |
+      integer :: ielem1 = 0                               !none       |counter
+      integer :: nconds = 0                               !none       |counter
+      integer :: icond = 0                                !none       |counter
       
       imax = 0
       mcal = 0
@@ -68,7 +68,7 @@
         if (eof < 0) exit
         if (nspu > 0) then
           backspace (107)
-          allocate (elem_cnt(nspu))
+          allocate (elem_cnt(nspu), source = 0)
           read (107,*,iostat=eof) cal_upd(i)%name, cal_upd(i)%chg_typ, cal_upd(i)%val, cal_upd(i)%conds,    &
               cal_upd(i)%lyr1, cal_upd(i)%lyr2, cal_upd(i)%year1, cal_upd(i)%year2, cal_upd(i)%day1,        &
               cal_upd(i)%day2, cal_upd(i)%num_tot, (elem_cnt(isp), isp = 1, nspu)
@@ -136,14 +136,14 @@
                cal_upd(i)%num_elem = 1
             end select
             
-            allocate (cal_upd(i)%num(cal_upd(i)%num_elem))
+            allocate (cal_upd(i)%num(cal_upd(i)%num_elem), source = 0)
             do ie = 1, cal_upd(i)%num_elem
                 cal_upd(i)%num(ie) = ie
             end do
           else
 
             call define_unit_elements (nspu, ielem1)
-            allocate (cal_upd(i)%num(ielem1))
+            allocate (cal_upd(i)%num(ielem1), source = 0)
             cal_upd(i)%num = defunit_num
             cal_upd(i)%num_elem = ielem1
             deallocate (defunit_num)

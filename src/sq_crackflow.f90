@@ -24,9 +24,9 @@
       
       implicit none
 
-      integer :: j      !none          |HRU number
-      real :: voli      !none          |volume available for crack flow
-      integer :: ii     !none          |counter
+      integer :: j = 0  !none          |HRU number
+      real :: voli = 0. !none          |volume available for crack flow
+      integer :: ii = 0 !none          |counter
 
       j = ihru
 

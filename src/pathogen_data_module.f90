@@ -3,7 +3,7 @@
       implicit none
     
       type pathogen_db
-        character(len=16) :: pathnm         
+        character(len=16) :: pathnm = ""
         real :: do_soln = 0.       !! 1/day         |Die-off factor for pers bac in soil solution
         real :: gr_soln = 0.       !! 1/day         |Growth factor for pers bac in soil solution
         real :: do_sorb = 0.       !! 1/day         |Die-off factor for pers bac adsorbed to soil part
@@ -15,14 +15,14 @@
         real :: gr_plnt = 0.       !! 1/day         |Growth factor for persistent pathogen on foliage
         real :: fr_manure = 0.     !! none          |frac of manure containing active colony forming units (cfu)
         real :: perco = 0.         !! none          |Pathogen perc coeff ratio of solution bacteria in surf layer
-        real :: det_thrshd         !! # cfu/m^2     |Threshold detection level for less pers bac when pathogen levels
+        real :: det_thrshd = 0.    !! # cfu/m^2     |Threshold detection level for less pers bac when pathogen levels
                                                     !drop to this amt the model considers bac in the soil to be 
                                                     !insignificant and sets the levels to zero
         real :: do_stream = 0.     !! 1/day         |Die-off factor for persistent pathogen in streams
         real :: gr_stream = 0.     !! 1/day         |growth factor for persistent pathogen in streams
         real :: do_res = 0.        !! 1/day         |Die-off factor for less persistent pathogen in reservoirs
         real :: gr_res = 0.        !! 1/day         |growth factor for less persistent pathogen in reservoirs
-        real :: conc_min           !!               |minimum pathogen concentration
+        real :: conc_min = 0.      !!               |minimum pathogen concentration
       end type pathogen_db
       type (pathogen_db), dimension(:), allocatable  :: path_db
       
