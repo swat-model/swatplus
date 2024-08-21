@@ -1,0 +1,41 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "",
+      "name": "01010002",
+      "currentDir": "C:\\Users\\taci.ugraskan\\source\\repos\\SWATPLUS\\UserFiles\\NAM\\01010002"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "",
+      "name": "x01010002",
+      "currentDir": "C:\\Users\\taci.ugraskan\\source\\repos\\SWATPLUS\\UserFiles\\NAM\\x01010002"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "",
+      "name": "mami",
+      "currentDir": "C:\\Users\\taci.ugraskan\\source\\repos\\SWATPLUS\\UserFiles\\Mamidala\\TxtInOut_HeatUnits_Problem\\TxtInOut"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "",
+      "name": "10190007",
+      "currentDir": "C:\\Users\\taci.ugraskan\\source\\repos\\SWATPLUS\\UserFiles\\10190007"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "",
+      "name": "07080101",
+      "currentDir": "C:\\Users\\taci.ugraskan\\source\\repos\\SWATPLUS\\UserFiles\\07080101\\07080101"
+    }
+  ]
+}
