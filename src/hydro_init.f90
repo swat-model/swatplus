@@ -48,25 +48,25 @@
       
       implicit none
 
-      integer :: j              !none          |counter            
-      integer :: l              !none          |counter
-      real :: scmx              !mm/hr         |maximum soil hydraulic conductivity
-      real :: xx                !none          |variable to hold calculation result
-      real :: tsoil             !              | 
-      integer :: iob            !              | 
-      integer :: iwst           !              | 
-      integer :: iwgn           !              | 
-      real :: sffc              !              | 
-      integer :: nly            !none          |end of loop
-      integer :: k              !none          |counter
-      integer :: ipl            !none          |counter  
-      integer :: isdr           !none          |conversion factor to convert kg/ha to g/t(ppm)
-      real :: sd
-      real :: dd
-      real :: sdlat
-      real :: hlat 
-      real :: daylength
-      real :: rock
+      integer :: j = 0          !none          |counter            
+      integer :: l = 0          !none          |counter
+      real :: scmx = 0.         !mm/hr         |maximum soil hydraulic conductivity
+      real :: xx = 0.           !none          |variable to hold calculation result
+      real :: tsoil = 0.        !              | 
+      integer :: iob = 0        !              | 
+      integer :: iwst = 0       !              | 
+      integer :: iwgn = 0       !              | 
+      real :: sffc = 0.         !              | 
+      integer :: nly = 0        !none          |end of loop
+      integer :: k = 0          !none          |counter
+      integer :: ipl = 0        !none          |counter  
+      integer :: isdr = 0       !none          |conversion factor to convert kg/ha to g/t(ppm)
+      real :: sd = 0.
+      real :: dd = 0.
+      real :: sdlat = 0.
+      real :: hlat = 0.
+      real :: daylength = 0.
+      real :: rock = 0.
 
       do j = 1, sp_ob%hru
        ihru = j

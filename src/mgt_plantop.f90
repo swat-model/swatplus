@@ -40,9 +40,9 @@
 
       implicit none
 
-      integer :: j            !none          |HRU number
+      integer :: j = 0        !none          |HRU number
       integer :: min          !              | 
-      real :: plt_zmx         !mm            |rooting depth of plant
+      real :: plt_zmx = 0.    !mm            |rooting depth of plant
       
       j = ihru
       

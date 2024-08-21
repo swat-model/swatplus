@@ -9,18 +9,18 @@
 
       implicit none
       
-      character (len=80) :: titldum     !              |title of file
-      character (len=80) :: header      !              |header of file
-      integer :: eof                    !              |end of file
-      integer :: i                      !units         |description
-      integer :: imax                   !units         |description
+      character (len=80) :: titldum = ""  !              |title of file
+      character (len=80) :: header = "" !              |header of file
+      integer :: eof = 0                !              |end of file
+      integer :: i = 0                  !units         |description
+      integer :: imax = 0               !units         |description
       logical :: i_exist                !              |check to determine if file exists
-      integer :: ichi                   !none          |counter
-      integer :: k                      !units         |description
-      integer :: iinit                  !none          |counter
-      integer :: ihyd                   !none          |counter
-      integer :: ised                   !none          |counter
-      integer :: inut                   !none          |counter
+      integer :: ichi = 0               !none          |counter
+      integer :: k = 0                  !units         |description
+      integer :: iinit = 0              !none          |counter
+      integer :: ihyd = 0               !none          |counter
+      integer :: ised = 0               !none          |counter
+      integer :: inut = 0               !none          |counter
       
       eof = 0
       imax = 0

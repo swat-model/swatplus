@@ -29,6 +29,6 @@
       
       if (cal_soft == "y" .or. cal_hard == "y") call cal_allo_init
 
-	  return
+      return
       
       end subroutine proc_cal

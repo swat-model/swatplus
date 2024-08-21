@@ -11,16 +11,16 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: mcal                 !           |
-      integer :: mreg                 !none       |end of loop
-      integer :: ireg                 !none       |counter 
-      integer :: mlug                 !none       |end of loop
-      integer :: ilum                 !none       |counter
+      integer :: mcal = 0             !           |
+      integer :: mreg = 0             !none       |end of loop
+      integer :: ireg = 0             !none       |counter 
+      integer :: mlug = 0             !none       |end of loop
+      integer :: ilum = 0             !none       |counter
        
       imax = 0
       mcal = 0
@@ -43,10 +43,22 @@
           allocate (lscal(0:mreg))
           allocate (region(0:mreg))
           !! allocate regional output files
-          allocate (rwb_d(mreg)); allocate (rwb_m(mreg)); allocate (rwb_y(mreg)); allocate (rwb_a(mreg))
-          allocate (rnb_d(mreg)); allocate (rnb_m(mreg)); allocate (rnb_y(mreg)); allocate (rnb_a(mreg))
-          allocate (rls_d(mreg)); allocate (rls_m(mreg)); allocate (rls_y(mreg)); allocate (rls_a(mreg))
-          allocate (rpw_d(mreg)); allocate (rpw_m(mreg)); allocate (rpw_y(mreg)); allocate (rpw_a(mreg))
+          allocate (rwb_d(mreg))
+          allocate (rwb_m(mreg))
+          allocate (rwb_y(mreg))
+          allocate (rwb_a(mreg))
+          allocate (rnb_d(mreg))
+          allocate (rnb_m(mreg))
+          allocate (rnb_y(mreg))
+          allocate (rnb_a(mreg))
+          allocate (rls_d(mreg))
+          allocate (rls_m(mreg))
+          allocate (rls_y(mreg))
+          allocate (rls_a(mreg))
+          allocate (rpw_d(mreg))
+          allocate (rpw_m(mreg))
+          allocate (rpw_y(mreg))
+          allocate (rpw_a(mreg))
 
           db_mx%lsu_reg = mreg
 
@@ -57,8 +69,8 @@
             
             db_mx%landuse = region(ireg)%nlum
             mlug = region(ireg)%nlum
-            allocate (region(ireg)%lum_ha_tot(mlug))
-            allocate (region(ireg)%lum_num_tot(mlug))
+            allocate (region(ireg)%lum_ha_tot(mlug), source = 0.)
+            allocate (region(ireg)%lum_num_tot(mlug), source = 0)
             allocate (lscal(ireg)%lum(mlug))
             !! allocate land use for each regional output
             allocate (rwb_a(ireg)%lum(mlug))
@@ -89,8 +101,8 @@
             !! if calibrating the entire region - later we can set up for lsu/regional calibrations
             if (region(ireg)%name == "basin" .or. db_mx%lsu_reg == 1) then
               region(ireg)%num_tot = sp_ob%hru
-              allocate (region(ireg)%num(sp_ob%hru))
-              allocate (region(ireg)%hru_ha(sp_ob%hru))
+              allocate (region(ireg)%num(sp_ob%hru), source = 0)
+              allocate (region(ireg)%hru_ha(sp_ob%hru), source = 0.)
               do ihru = 1, sp_ob%hru
                 region(ireg)%num(ihru) = ihru
                 region(ireg)%hru_ha(ihru) = bsn%area_ls_ha * lsu_elem(ihru)%bsn_frac
@@ -101,7 +113,7 @@
 
           exit
         end do 
-      end if	  
-	  
+      end if
+
       return
       end subroutine lcu_read_softcal

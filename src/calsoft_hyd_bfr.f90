@@ -18,8 +18,8 @@
       
       implicit none
       
-      integer :: iter_all      !none      |counter
-      integer :: iterall       !none      |counter
+      integer :: iter_all = 0  !none      |counter
+      integer :: iterall = 0   !none      |counter
 
       ! calibrate hydrology
       iter_all = 1
@@ -45,5 +45,5 @@
         
       !cal_codes%hyd_hru = "n"
       
-	  return
+      return
       end subroutine calsoft_hyd_bfr

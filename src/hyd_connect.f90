@@ -16,33 +16,33 @@
       
       implicit none
 
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      character (len=3) :: iob_out    !           !object type out
-      character (len=3) :: iobtyp     !none       |object type
-      integer :: nspu                 !           |
-      integer :: cmdno                !           |
-      integer :: idone                !           | 
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      character (len=3) :: iob_out = "" !           !object type out
+      character (len=3) :: iobtyp = ""  !none       |object type
+      integer :: nspu = 0             !           |
+      integer :: cmdno = 0            !           |
+      integer :: idone = 0            !           | 
       !integer :: hydno
-      integer :: cmd_prev             !           |
-      integer :: ob1                  !none       |beginning of loop
-      integer :: ob2                  !none       |ending of loop
-      integer :: iobj_tot             !           |
-      real :: mexco_sp                !           |
-      integer :: i                    !none       |counter
-      integer :: ii                   !none       |counter
-      integer :: ielem                !none       |counter 
-      integer :: k                    !none       |counter
-      integer :: iob                  !           |
-      integer :: kk                   !none       |counter
-      integer :: j                    !           |
-      integer :: ielem_db             !           |
-      integer :: jj                   !none       |counter
-      integer :: iord                 !none       |counter
-      integer :: isrc_tot             !           |
-      integer :: iorder               !           |
-      integer :: ircv                 !none       |counter
-      integer :: ircv_ob              !           |
+      integer :: cmd_prev = 0         !           |
+      integer :: ob1 = 0              !none       |beginning of loop
+      integer :: ob2 = 0              !none       |ending of loop
+      integer :: iobj_tot = 0         !           |
+      real :: mexco_sp = 0.           !           |
+      integer :: i = 0                !none       |counter
+      integer :: ii = 0               !none       |counter
+      integer :: ielem = 0            !none       |counter 
+      integer :: k = 0                !none       |counter
+      integer :: iob = 0              !           |
+      integer :: kk = 0               !none       |counter
+      integer :: j = 0                !           |
+      integer :: ielem_db = 0         !           |
+      integer :: jj = 0               !none       |counter
+      integer :: iord = 0             !none       |counter
+      integer :: isrc_tot = 0         !           |
+      integer :: iorder = 0           !           |
+      integer :: ircv = 0             !none       |counter
+      integer :: ircv_ob = 0          !           |
       integer :: max                  !           |
       logical :: i_exist
     
@@ -51,9 +51,9 @@
       mexco_sp = 0
       cmd_prev = 0
 
-      allocate (rcv_sum(sp_ob%objs))
-      allocate (dfn_sum(sp_ob%objs))
-      allocate (ru_seq(sp_ob%objs))
+      allocate (rcv_sum(sp_ob%objs), source = 0)
+      allocate (dfn_sum(sp_ob%objs), source = 0)
+      allocate (ru_seq(sp_ob%objs), source = 0)
       rcv_sum = 0
       dfn_sum = 0
       ru_seq = 0
@@ -196,7 +196,7 @@
         do i = 1, sp_ob%objs
           nspu = ob(i)%ru_tot
           if (nspu > 0) then
-            allocate (ob(i)%obj_subs(nspu))
+            allocate (ob(i)%obj_subs(nspu), source = 0)
           end if
         end do
 
@@ -296,29 +296,37 @@
         end do
 
       !! allocate zero arrays for constituents
-      allocate (hin_csz%pest(cs_db%num_pests))
-      allocate (hin_csz%path(cs_db%num_paths))
-      allocate (hin_csz%hmet(cs_db%num_metals))
-      allocate (hin_csz%salt(cs_db%num_salts)) !rtb salt
-      allocate (hin_csz%cs(cs_db%num_cs)) !rtb se 
+      allocate (hin_csz%pest(cs_db%num_pests), source = 0.)
+      allocate (hin_csz%path(cs_db%num_paths), source = 0.)
+      allocate (hin_csz%salt(cs_db%num_salts), source = 0.) !rtb salt
+
+      allocate (hin_csz%cs(cs_db%num_cs), source = 0.) !rtb se 
+
+      allocate (hcs1%pest(cs_db%num_pests), source = 0.)
+      allocate (hcs1%path(cs_db%num_paths), source = 0.)
+      allocate (hcs1%salt(cs_db%num_salts), source = 0.) !rtb salt
+
+      allocate (hcs1%cs(cs_db%num_cs), source = 0.) !rtb cs
+
+      allocate (hcs2%pest(cs_db%num_pests), source = 0.)
+      allocate (hcs2%path(cs_db%num_paths), source = 0.)
+      allocate (hcs2%salt(cs_db%num_salts), source = 0.) !rtb salt
+
+      allocate (hcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
+
+      allocate (hcs3%pest(cs_db%num_pests), source = 0.)
+      allocate (hcs3%path(cs_db%num_paths), source = 0.)
+      allocate (hcs3%salt(cs_db%num_salts), source = 0.) !rtb salt
+
+      allocate (hcs3%cs(cs_db%num_cs), source = 0.) !rtb cs
+
           
-      allocate (hcs1%pest(cs_db%num_pests))
-      allocate (hcs1%path(cs_db%num_paths))
-      allocate (hcs1%hmet(cs_db%num_metals))
-      allocate (hcs1%salt(cs_db%num_salts)) !rtb salt
-      allocate (hcs1%cs(cs_db%num_cs)) !rtb cs
+      allocate (hcs1%hmet(cs_db%num_metals), source = 0.)
         
-      allocate (hcs2%pest(cs_db%num_pests))
-      allocate (hcs2%path(cs_db%num_paths))
-      allocate (hcs2%hmet(cs_db%num_metals))
-      allocate (hcs2%salt(cs_db%num_salts)) !rtb salt
-      allocate (hcs2%cs(cs_db%num_cs)) !rtb cs
+      allocate (hcs2%hmet(cs_db%num_metals), source = 0.)
       
-      allocate (hcs3%pest(cs_db%num_pests))
-      allocate (hcs3%path(cs_db%num_paths))
-      allocate (hcs3%hmet(cs_db%num_metals))
-      allocate (hcs3%salt(cs_db%num_salts)) !rtb salt
-      allocate (hcs3%cs(cs_db%num_cs)) !rtb cs
+      allocate (hcs3%hmet(cs_db%num_metals), source = 0.)
+      allocate (hin_csz%hmet(cs_db%num_metals), source = 0.)
 
       hin_csz%pest = 0.
       hin_csz%path = 0.
@@ -330,17 +338,17 @@
       do i = 1, sp_ob%objs
         if (ob(i)%rcv_tot > 0) then
           nspu = ob(i)%rcv_tot
-          allocate (ob(i)%obj_in(nspu))
+          allocate (ob(i)%obj_in(nspu), source = 0)
           allocate (ob(i)%obtyp_in(nspu))
-          allocate (ob(i)%obtypno_in(nspu))
+          allocate (ob(i)%obtypno_in(nspu), source = 0)
           allocate (ob(i)%htyp_in(nspu))
-          allocate (ob(i)%ihtyp_in(nspu))
-          allocate (ob(i)%frac_in(nspu))
+          allocate (ob(i)%ihtyp_in(nspu), source = 0)
+          allocate (ob(i)%frac_in(nspu), source = 0.)
           allocate (ob(i)%hin_uh(nspu))
           !! allocate unit hyd for all incoming hyd's
           do ii = 1, nspu
-            allocate (ob(i)%hin_uh(ii)%uh(bsn_prm%day_lag_mx,time%step))
-            allocate (ob(i)%hin_uh(ii)%hyd_flo(bsn_prm%day_lag_mx,time%step))
+            allocate (ob(i)%hin_uh(ii)%uh(bsn_prm%day_lag_mx,time%step), source = 0.)
+            allocate (ob(i)%hin_uh(ii)%hyd_flo(bsn_prm%day_lag_mx,time%step), source = 0.)
             ob(i)%hin_uh(ii)%uh = 0.
             ob(i)%hin_uh(ii)%hyd_flo = 0.
           end do

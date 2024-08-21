@@ -6,13 +6,14 @@
 
       implicit none
  
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: ihmet
-      integer :: ihmeti
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: ihmet = 0
+      integer :: ihmeti = 0
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ipest
+      integer :: ipest = 0
 
       eof = 0
       
@@ -42,8 +43,8 @@
           allocate (cs_hmet_solsor(cs_db%num_metals))
           
           do ihmet = 1, imax
-            allocate (hmet_soil_ini(ihmet)%soil(cs_db%num_metals))
-            allocate (hmet_soil_ini(ihmet)%plt(cs_db%num_metals))
+            allocate (hmet_soil_ini(ihmet)%soil(cs_db%num_metals), source = 0.)
+            allocate (hmet_soil_ini(ihmet)%plt(cs_db%num_metals), source = 0.)
           end do
            
           rewind (107)

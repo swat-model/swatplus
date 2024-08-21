@@ -10,11 +10,12 @@
       
       implicit none
  
-      character (len=80) :: titldum
-      character (len=80) :: header
-      character (len=30) :: fert_name
-      integer :: isalti
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      character (len=30) :: fert_name = ""
+      integer :: isalti = 0
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
 
       eof = 0
@@ -29,7 +30,7 @@
         !allocate fertilizer array
         allocate (fert_salt(db_mx%fertparm))
         
-				!set flag
+        !set flag
         fert_salt_flag = 1
         
         !read in the salt ion fertilizer rates (kg/ha) for each fertilizer type

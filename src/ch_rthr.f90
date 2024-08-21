@@ -46,23 +46,23 @@
       
       implicit none
 
-      integer :: ii        !none          |counter (hour)
-      integer :: jrch      !none          |reach number
-      real :: scoef        !none          |storage coefficient
-      real :: vol          !m^3 H2O       |volume of water in reach
-      real :: topw         !m             |width of channel at water level
-      real :: inflo_rate   !m^3/s         |inflow rate
-      real :: ttime        !hr            |travel time through the reach
-      real :: t_inc        !hr            |time in routing step - 1/time%step
-      real :: outflo       !m^3           |outflow water volume
-      real :: tl           !m^3           |transmission losses during time step
-      real :: trans_loss   !m^3           |transmission losses during day
-      real :: ev           !m^3           |evaporation during time step
-      real :: evap         !m^3           |evaporation losses during day
-      real :: rto          !              |ratio for interpolating rating curve
-      real :: outflo_sum   !m^3           |total outflow for the day
-      integer :: iwst
-      integer :: ielev
+      integer :: ii = 0    !none          |counter (hour)
+      integer :: jrch = 0  !none          |reach number
+      real :: scoef = 0.   !none          |storage coefficient
+      real :: vol = 0.     !m^3 H2O       |volume of water in reach
+      real :: topw = 0.    !m             |width of channel at water level
+      real :: inflo_rate = 0.!m^3/s         |inflow rate
+      real :: ttime = 0.   !hr            |travel time through the reach
+      real :: t_inc = 0.   !hr            |time in routing step - 1/time%step
+      real :: outflo = 0.  !m^3           |outflow water volume
+      real :: tl = 0.      !m^3           |transmission losses during time step
+      real :: trans_loss = 0.!m^3           |transmission losses during day
+      real :: ev = 0.      !m^3           |evaporation during time step
+      real :: evap = 0.    !m^3           |evaporation losses during day
+      real :: rto = 0.     !              |ratio for interpolating rating curve
+      real :: outflo_sum = 0.!m^3           |total outflow for the day
+      integer :: iwst = 0
+      integer :: ielev = 0
 
       jrch = isdch
       jhyd = sd_dat(jrch)%hyd

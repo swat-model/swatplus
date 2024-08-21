@@ -33,14 +33,14 @@
 
       integer, intent (in) :: jj       !none           |HRU number
       integer, intent (in) :: idtill   !none           |tillage type
-      integer :: l                     !none           |counter
-      integer :: k                     !none           |counter
-      integer :: npmx                  !               |
+      integer :: l = 0                 !none           |counter
+      integer :: k = 0                 !none           |counter
+      integer :: npmx = 0              !               |
       !CB 12/2/09 nl and a are not used.
-      real :: emix                     !none           |mixing efficiency
-      real :: dtil                     !mm             |depth of mixing
-      real :: frac_mixed               !               |
-      real :: frac_non_mixed           !               |
+      real :: emix = 0.                !none           |mixing efficiency
+      real :: dtil = 0.                !mm             |depth of mixing
+      real :: frac_mixed = 0.          !               |
+      real :: frac_non_mixed = 0.      !               |
       !!by zhang
       !!=============   
       real :: smix(22+cs_db%num_pests+12)         !varies         |amount of substance in soil profile
@@ -54,7 +54,7 @@
       real :: sol_msn(soil(jj)%nly)     !              |sol_mass not mixed 
       real :: frac_dep(soil(jj)%nly)    !              |fraction of soil layer in tillage depth
       real :: frac_dep1(soil(jj)%nly)    !              |fraction of soil layer in tillage depth plus ponding water
-      real :: tdep
+      real :: tdep = 0.
 
       npmx = cs_db%num_pests
 

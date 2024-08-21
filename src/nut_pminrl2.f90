@@ -17,25 +17,25 @@
       
       implicit none      
 
-      integer :: j                      !none          |HRU number
-      integer :: l                      !none          |counter 
-      real :: rto                       !              |
-      real :: rmp1                      !kg P/ha       |amount of phosphorus moving from the solution
+      integer :: j = 0                  !none          |HRU number
+      integer :: l = 0                  !none          |counter 
+      real :: rto = 0.                  !              |
+      real :: rmp1 = 0.                 !kg P/ha       |amount of phosphorus moving from the solution
                                         !              |mineral to the active mineral pool in the soil layer
-      real :: roc                       !kg P/ha       |amount of phosphorus moving from the active
+      real :: roc = 0.                  !kg P/ha       |amount of phosphorus moving from the active
                                         !              |mineral to the stable mineral pool in the soil layer
-      real :: wetness                   !              |
-      real :: base                      !              |
-      real :: vara                      !		       |Intermediate Variable
-      real :: varb                      !    	       |Intermediate Variable
-      real :: varc                      !    	       |Intermediate Variable
-      real :: as_p_coeff                !              | 
-      real :: solp                      !mg/kg	       |Solution pool phosphorous content
-      real :: actpp                     !mg/kg	       |Active pool phosphorous content
-      real :: stap                      !mg/kg	       |Stable pool phosphorous content
-      real :: arate                     !			   |Intermediate Variable      
-      real :: ssp                       !              |     
-      real :: psp                       !              | 
+      real :: wetness = 0.              !              |
+      real :: base = 0.                 !              |
+      real :: vara = 0.                 !		       |Intermediate Variable
+      real :: varb = 0.                 !    	       |Intermediate Variable
+      real :: varc = 0.                 !    	       |Intermediate Variable
+      real :: as_p_coeff = 0.           !              | 
+      real :: solp = 0.                 !mg/kg	       |Solution pool phosphorous content
+      real :: actpp = 0.                !mg/kg	       |Active pool phosphorous content
+      real :: stap = 0.                 !mg/kg	       |Stable pool phosphorous content
+      real :: arate = 0.                !			   |Intermediate Variable      
+      real :: ssp = 0.                  !              |     
+      real :: psp = 0.                  !              | 
 
       j = ihru
         

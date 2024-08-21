@@ -20,13 +20,13 @@
       
       implicit none
 
-      integer :: iadep            !            |
-      integer :: j                !none        |counter
-      integer :: iob              !            |
-      integer :: ist              !            |
-      integer :: isalt            !            |salt ion counter
-      integer :: dum
-      real :: const               !            |constant used for rate, days, etc
+      integer :: iadep = 0        !            |
+      integer :: j = 0            !none        |counter
+      integer :: iob = 0          !            |
+      integer :: ist = 0          !            |
+      integer :: isalt = 0        !            |salt ion counter
+      integer :: dum = 0
+      real :: const = 0.          !            |constant used for rate, days, etc
 
       j = ihru
       
@@ -49,7 +49,7 @@
             hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iadep)%salt(isalt)%roadmo(ist) / const  !kg/ha
             !add both to soil profile  
             cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
-					enddo
+          enddo
         endif 
         
         !yearly values
@@ -60,7 +60,7 @@
             hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iadep)%salt(isalt)%roadday(time%day,ist)  !kg/ha
             !add both to soil profile  
             cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
-					enddo
+          enddo
         endif
         
       endif
@@ -73,7 +73,7 @@
           hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iadep)%salt(isalt)%road / 365.  !kg/ha
           !add both to soil profile  
           cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
-				enddo
+        enddo
       endif
        
       endif

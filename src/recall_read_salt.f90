@@ -10,29 +10,32 @@
       
       implicit none      
  
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      character(len=16) :: ob_name
-      character(len=8) :: ob_typ
-      integer :: imax                 !none       |end of loop
-      integer :: iyr                  !           |
-      integer :: jday                 !           |
-      integer :: mo                   !           |
-      integer :: day_mo               !           |
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      character(len=16) :: ob_name = ""
+      character(len=8) :: ob_typ = ""
+      integer :: imax = 0             !none       |end of loop
+      integer :: iyr = 0              !           |
+      integer :: jday = 0             !           |
+      integer :: mo = 0               !           |
+      integer :: day_mo = 0           !           |
+      integer :: eof = 0              !           |end of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: nbyr                 !none       !number of years the land use occurred 
-      integer :: k                    !           |
-      integer :: iyrs                 !           | 
-      integer :: iyr_prev             !none       |previous year
-      integer :: istep                !           | 
-      integer :: ipc                  !none       |counter
-      integer :: ii                   !none       |counter
-      integer :: i                    !           |
-      integer :: iexco_om
-      integer :: ifirst               !           |
+      integer :: nbyr = 0             !none       !number of years the land use occurred 
+      integer :: k = 0                !           |
+      integer :: iyrs = 0             !           | 
+      integer :: iyr_prev = 0         !none       |previous year
+      integer :: istep = 0            !           | 
+      integer :: ipc = 0              !none       |counter
+      integer :: ii = 0               !none       |counter
+      integer :: i = 0                !           |
+      integer :: iexco_om = 0
+      integer :: ifirst = 0           !           |
       integer :: iexo_allo = 0
-      integer :: isalt,jj,kk,dum
+      integer :: isalt = 0
+      integer :: jj = 0
+      integer :: kk = 0
+      integer :: dum = 0
       
       eof = 0
       imax = 0
@@ -65,10 +68,10 @@
         allocate (recsaltb_y(imax))
         allocate (recsaltb_a(imax))
         do ii=1,imax
-          allocate (recsaltb_d(ii)%salt(cs_db%num_salts))
-          allocate (recsaltb_m(ii)%salt(cs_db%num_salts))
-          allocate (recsaltb_y(ii)%salt(cs_db%num_salts))
-          allocate (recsaltb_a(ii)%salt(cs_db%num_salts))
+          allocate (recsaltb_d(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_m(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_y(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_a(ii)%salt(cs_db%num_salts), source = 0.)
           do isalt=1,cs_db%num_salts
             recsaltb_d(ii)%salt(isalt) = 0.
             recsaltb_m(ii)%salt(isalt) = 0.
@@ -82,10 +85,10 @@
         allocate (recoutsaltb_y(imax))
         allocate (recoutsaltb_a(imax))
         do ii=1,imax
-          allocate (recoutsaltb_d(ii)%salt(cs_db%num_salts))
-          allocate (recoutsaltb_m(ii)%salt(cs_db%num_salts))
-          allocate (recoutsaltb_y(ii)%salt(cs_db%num_salts))
-          allocate (recoutsaltb_a(ii)%salt(cs_db%num_salts))
+          allocate (recoutsaltb_d(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_m(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_y(ii)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_a(ii)%salt(cs_db%num_salts), source = 0.)
           do isalt=1,cs_db%num_salts
             recoutsaltb_d(ii)%salt(isalt) = 0.
             recoutsaltb_m(ii)%salt(isalt) = 0.
@@ -132,7 +135,7 @@
                 allocate (rec_salt(i)%hd_salt(366,nbyr))
                 do jj=1,nbyr
                   do kk=1,366  
-                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts))
+                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts), source = 0.)
                     rec_salt(i)%hd_salt(kk,jj)%salt = 0.
                   enddo
                 enddo
@@ -140,14 +143,14 @@
                 allocate (rec_salt(i)%hd_salt(12,nbyr))
                 do jj=1,nbyr
                   do kk=1,12  
-                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts))
+                    allocate (rec_salt(i)%hd_salt(kk,jj)%salt(cs_db%num_salts), source = 0.)
                     rec_salt(i)%hd_salt(kk,jj)%salt = 0.
                   enddo
                 enddo
               case (3) !! annual
                 allocate (rec_salt(i)%hd_salt(1,nbyr))
                 do jj=1,nbyr
-                  allocate (rec_salt(i)%hd_salt(1,jj)%salt(cs_db%num_salts))
+                  allocate (rec_salt(i)%hd_salt(1,jj)%salt(cs_db%num_salts), source = 0.)
                   rec_salt(i)%hd_salt(1,jj)%salt = 0.
                 enddo
             end select 

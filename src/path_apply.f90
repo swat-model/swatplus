@@ -21,14 +21,14 @@
       implicit none
             
       real, intent (in)  :: frt_kg
-      real :: frt_t        !          |
-      real :: gc           !none      |fraction of ground covered by plant foliage
-      real :: gc1          !          | 
-      real :: pl_frac      !0-1       |fraction of pesticide applied to each plant
-      integer :: ipath     !none      |counter
-      integer :: ipath_db  !          |pathogen type from pathogens.pth data input file
-      integer :: j         !          |
-      integer :: ipl       !none      |plant number
+      real :: frt_t = 0.   !          |
+      real :: gc = 0.      !none      |fraction of ground covered by plant foliage
+      real :: gc1 = 0.     !          | 
+      real :: pl_frac = 0. !0-1       |fraction of pesticide applied to each plant
+      integer :: ipath = 0 !none      |counter
+      integer :: ipath_db = 0!          |pathogen type from pathogens.pth data input file
+      integer :: j = 0     !          |
+      integer :: ipl = 0   !none      |plant number
       
       !! add pathogens - #cfu/g * t(manure)/ha * 1.e6 g/t * ha/10,000 m^2 = 100.  **should be conc in manure
       gc = (1.99532 - erfc(1.333 * pcom(j)%lai_sum - 2.)) / 2.1

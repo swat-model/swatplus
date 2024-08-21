@@ -17,8 +17,8 @@
       implicit none
  
       integer, intent (in) :: iob   !           |object number
-      integer :: j                  !           |hru number
-      integer :: lyr                !           |tile soil layer
+      integer :: j = 0              !           |hru number
+      integer :: lyr = 0            !           |tile soil layer
       real, intent (in)  :: tile_fr_surf    !m3     |overland tile flow
 
       j = ihru

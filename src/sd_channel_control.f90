@@ -22,80 +22,89 @@
       implicit none     
     
       !real :: rcharea                !m^2           |cross-sectional area of flow
-      real :: flo_rt                  !m^3/s         |flow rate in reach for day
-      integer :: isd_db               !              |
-      integer :: iob                  !              |
-      integer :: idb                  !none          |channel data pointer
-      integer :: ihyd                 !              |
-      integer :: ipest                !              |
-      integer :: isalt                !              |salt ion counter (rtb salt)
-      integer :: ihru                 !              |
-      integer :: iru                  !              |
-      integer :: ise                  !              |
-      integer :: ielem                !              |
-      integer :: id
-      integer :: iter
-      real :: ebtm_m                  !m             |erosion of bottom of channel
-      real :: ebank_m                 !m             |meander cut on one side
-      real :: erode_bank_cut          !cm            |widening caused by downcutting (both sides)
-      real :: ebtm_t                  !tons          |bottom erosion
-      real :: ebank_t                 !tons          |bank erosion
-      real :: sedout                  !mg		     |sediment out of waterway channel
-      real :: washld                  !tons          |wash load  
-      real :: bedld                   !tons          |bed load
-      real :: dep                     !tons          |deposition
-      real :: sedp_dep                !kg            |Particulate P deposition MJW
-      real :: orgn_dep                !kg            |Particulate N deposition MJW
-      real :: hc_sed                  !tons          |headcut erosion
-      real :: chside                  !none          |change in horizontal distance per unit
+      real :: flo_rt = 0.             !m^3/s         |flow rate in reach for day
+      integer :: isd_db = 0           !              |
+      integer :: iob = 0              !              |
+      integer :: idb = 0              !none          |channel data pointer
+      integer :: ihyd = 0             !              |
+      integer :: ipest = 0            !              |
+      integer :: isalt = 0            !              |salt ion counter (rtb salt)
+      integer :: ihru = 0             !              |
+      integer :: iru = 0              !              |
+      integer :: ise = 0              !              |
+      integer :: ielem = 0            !              |
+      integer :: id = 0
+      integer :: iter = 0
+      real :: ebtm_m = 0.             !m             |erosion of bottom of channel
+      real :: ebank_m = 0.            !m             |meander cut on one side
+      real :: erode_bank_cut = 0.     !cm            |widening caused by downcutting (both sides)
+      real :: ebtm_t = 0.             !tons          |bottom erosion
+      real :: ebank_t = 0.            !tons          |bank erosion
+      real :: sedout = 0.             !mg         |sediment out of waterway channel
+      real :: washld = 0.             !tons          |wash load  
+      real :: bedld = 0.              !tons          |bed load
+      real :: dep = 0.                !tons          |deposition
+      real :: hc_sed = 0.             !tons          |headcut erosion
+      real :: chside = 0.             !none          |change in horizontal distance per unit
                                       !              |change in vertical distance on channel side
                                       !              |slopes; always set to 2 (slope=1/2)
-      real :: a                       !m^2           |cross-sectional area of channel
-      real :: b                       !m             |bottom width of channel
-      real :: c                       !none          |inverse of channel side slope
-      real :: p                       !m             |wetting perimeter
+      real :: a = 0.                  !m^2           |cross-sectional area of channel
+      real :: b = 0.                  !m             |bottom width of channel
+      real :: c = 0.                  !none          |inverse of channel side slope
+      real :: p = 0.                  !m             |wetting perimeter
 
-      real :: rh                      !m             |hydraulic radius
+      real :: rh = 0.                 !m             |hydraulic radius
       real :: qman                    !m^3/s or m/s  |flow rate or flow velocity
-      real :: frac                    !0-1           |fraction of hydrograph 
-      real :: valint                  !              | 
-      integer :: ivalint              !              |
-      real :: tbase                   !none          |flow duration (fraction of 24 hr)
-      real :: tb_pr                   !              |
-      real :: tb                      !              |
-      real :: vol_ovb                 !              |
-      real :: const                   !              |
-      integer :: ics                  !none          |counter
-      real :: ob_const                !              |
-      integer :: ii                   !none          |counter
-      real :: sum_vol                 !              |
-      real :: xx                      !              | 
-      integer :: ic                   !              |
-      real :: vol_overmx              !              |
-      real :: flood_dep               !              | 
-      real :: dep_e                   !              |
-      real :: rto                     !none          |cloud cover factor 
-      real :: sumtime                 !              |
-      real :: vc                      !m/s           |flow velocity in reach
-      real :: pr_ratio                !              |
-      real :: shear_btm_cr            !              |
-      real :: shear_btm               !              |  
-      real :: hc                      !m/yr          |head cut advance
+      real :: frac = 0.               !0-1           |fraction of hydrograph 
+      real :: valint = 0.             !              | 
+      integer :: ivalint = 0          !              |
+      real :: tbase = 0.              !none          |flow duration (fraction of 24 hr)
+      real :: tb_pr = 0.              !              |
+      real :: tb = 0.                 !              |
+      real :: vol_ovb = 0.            !              |
+      real :: const = 0.              !              |
+      integer :: ics = 0              !none          |counter
+      real :: ob_const = 0.           !              |
+      integer :: ii = 0               !none          |counter
+      real :: sum_vol = 0.            !              |
+      real :: xx = 0.                 !              | 
+      integer :: ic = 0               !              |
+      real :: vol_overmx = 0.         !              |
+      real :: flood_dep = 0.          !              | 
+      real :: dep_e = 0.              !              |
+      real :: rto = 0.                !none          |cloud cover factor 
+      real :: sumtime = 0.            !              |
+      real :: vc = 0.                 !m/s           |flow velocity in reach
+      real :: pr_ratio = 0.           !              |
+      real :: shear_btm_cr = 0.       !              |
+      real :: shear_btm = 0.          !              |  
+      real :: hc = 0.                 !m/yr          |head cut advance
       integer :: max                  !              |  
-      integer :: iaq
-      integer :: iaq_ch
-      real :: det                     !hr            |time step
-      real :: scoef                   !none          |Storage coefficient
-      real :: flo_ls
-      real :: vel, cohes, vel_cr, b_coef, qcms, veg
-      real :: rad_curv, cla, pk_rto, vel_bend, vel_rch
-      real :: arc_len, hyd_radius, prot_len
-      real :: gw_salt_in              !kg            |salt loading to channel from aquifer
-      real :: gw_cs_in                !kg            |constituent loading to channel from aquifer
-      real :: seep_mass               !kg            |salt mass in seepage water
-      real :: salt_conc(8)            !kg            |salt concentration in channel water
-      real :: cs_conc(8)              !kg            |constituent concentration in channel water
-      real :: bf_flow                 !m3/s          |bankfull flow rate * adjustment factor
+      integer :: iaq = 0
+      integer :: iaq_ch = 0
+      real :: det = 0.                !hr            |time step
+      real :: scoef = 0.              !none          |Storage coefficient
+      real :: flo_ls = 0.
+      real :: vel = 0.
+      real :: cohes = 0.
+      real :: vel_cr = 0.
+      real :: b_coef = 0.
+      real :: qcms = 0.
+      real :: veg = 0.
+      real :: rad_curv = 0.
+      real :: cla = 0.
+      real :: pk_rto = 0.
+      real :: vel_bend = 0.
+      real :: vel_rch = 0.
+      real :: arc_len = 0.
+      real :: hyd_radius = 0.
+      real :: prot_len = 0.
+      real :: gw_salt_in = 0.         !kg            |salt loading to channel from aquifer
+      real :: gw_cs_in = 0.           !kg            |constituent loading to channel from aquifer
+      real :: seep_mass = 0.          !kg            |salt mass in seepage water
+      real :: salt_conc(8) = 0.       !kg            |salt concentration in channel water
+      real :: cs_conc(8) = 0.         !kg            |constituent concentration in channel water
+      real :: bf_flow = 0.            !m3/s          |bankfull flow rate * adjustment factor
       
       ich = isdch
       isd_db = sd_dat(ich)%hyd
@@ -111,8 +120,6 @@
       dep = 0.
       hc = 0.
       hc_sed = 0.
-      sedp_dep = 0.  !MJW 2024
-      orgn_dep = 0.  !MJW 2024
       
       !call ch_rtmusk
       !call ch_rthr
@@ -225,7 +232,7 @@
             if(bsn_cc%gwflow.eq.1) then
               flood_freq(ich) = 1 !flag to indicate the water is in the floodplain
               call gwflow_fpln(ich)
-            endif
+						endif
             
             sd_ch(ich)%overbank = "ob"
             rcharea = sd_ch_vel(ich)%area
@@ -406,7 +413,7 @@
         !! Peters latest channel erosion model
         !!vel = 1.37 * (sd_ch(ich)%chs ** 0.31) * (12. * sd_ch(ich)%chw) ** 0.32      !annual ave for SWIFT
         !! mean daily to peak ratio developed from GARDAY - THE STUDY OF MOST PROBABLE MEAN DAILY BANKFULL RUNOFF VOLUMES 
-        !! IN SMALL WATERSHEDS DOMINATED BY CONVECTIVE/FRONTAL CHANNEL FORMING EVENTS AND THE CO-INCIDENT INNER BERM CHANNELS PART I.
+        !! IN SMALL WATERSHEDS DOMINATED BY CONVECTIVE/FRONTAL CHANNEL FORMING EVENTS AND THE CO-INCIDENT INNER BERM CHANNELS � PART I. 
         !! Another eq from Peter - Qmax=Qmean*(1+2.66*Drainage Area^-.3)
         pk_rto = 0.2 + 0.5 / 250. * ob(icmd)%area_ha
         pk_rto = amin1 (1., pk_rto)
@@ -484,13 +491,10 @@
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       if (peakrate > bf_flow) then
         dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
-        !! deposit Particulate P and N in the floodplain
-        sedp_dep = sd_ch(ich)%chseq * ht1%sedp   !MJW 2024 May need to include a enrichment factor for transported sediment
-        orgn_dep = sd_ch(ich)%chseq * ht1%orgn   !MJW 2024
       end if
       
       !! compute sediment leaving the channel - washload only
-      sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
+    sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
       
       !! set values for outflow hydrograph
       !! calculate flow velocity and travel time  ht2 = ht1   !***jga 
@@ -533,14 +537,10 @@
         !! reset sed to tons
         ht2%sed = sedout
         
-        !! subtract nutrients deposited in floodplain
-        ht2%sedp = ht2%sedp - sedp_dep   !MJW 2024
-        ht2%orgn = ht2%orgn - orgn_dep   !MJW 2024
-        
-        !! add nutrients from bank erosion - t * mg/kg (ppm) * kg/1000 mg * 1000 kg/t = kg
-        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc
-        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc
-        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio
+        !! add nutrients from bank erosion - t *ppm (1/1,000,000) * 1000. kg/t
+        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc * 1000.
+        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc * 1000.
+        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio * 1000.
         
         !! route constituents
         call ch_rtpest

@@ -38,21 +38,21 @@
       
       implicit none 
 
-      integer :: j         !none          |HRU number
-      integer :: jj        !none          |counter 
-      integer :: jlo       !none          |counter for taking tile no3 from lower layers
-      real :: sro          !mm H2O        |surface runoff 
-      real :: ssfnlyr      !kg N/ha       |nitrate transported in lateral flow from layer
-      real :: percnlyr     !kg N/ha       |nitrate leached to next lower layer with
+      integer :: j = 0     !none          |HRU number
+      integer :: jj = 0    !none          |counter 
+      integer :: jlo = 0   !none          |counter for taking tile no3 from lower layers
+      real :: sro = 0.     !mm H2O        |surface runoff 
+      real :: ssfnlyr = 0. !kg N/ha       |nitrate transported in lateral flow from layer
+      real :: percnlyr = 0.  !kg N/ha       |nitrate leached to next lower layer with
                            !              |percolation
-      real :: vv           !mm H2O        |water mixing with nutrient in layer
-      real :: vno3         !              |
-      real :: co           !kg N/mm       |concentration of nitrate in solution
-      real :: ww           !varies        |variable to hold intermediate calculation
-      real :: ul_sum       !mm            |sum of porosity in tile layer to lowest layer
-      real :: no3_sum      !kg/ha         |sum of no3 in tile layer to lowest layer
-      real :: tileno3_left !kg/ha         |remaining no3 if not available from layers below tile
-      real :: st_sum
+      real :: vv = 0.      !mm H2O        |water mixing with nutrient in layer
+      real :: vno3 = 0.    !              |
+      real :: co = 0.      !kg N/mm       |concentration of nitrate in solution
+      real :: ww = 0.      !varies        |variable to hold intermediate calculation
+      real :: ul_sum = 0.  !mm            |sum of porosity in tile layer to lowest layer
+      real :: no3_sum = 0. !kg/ha         |sum of no3 in tile layer to lowest layer
+      real :: tileno3_left = 0.!kg/ha         |remaining no3 if not available from layers below tile
+      real :: st_sum = 0.
 
       j = ihru
 
@@ -82,6 +82,9 @@
         vv = soil(j)%ly(jj)%prk + sro + soil(j)%ly(jj)%flat + 1.e-10
         if (hru(j)%lumv%ldrain == jj) vv = vv + qtile
         ww = -vv / ((1. - soil(j)%anion_excl) * soil(j)%phys(jj)%ul)
+        if (ww < -80.0) then   ! This check was added to prevent gfortran aborting on the Exp(ww) function below.
+          ww = -80
+        endif
         vno3 = soil1(j)%mn(jj)%no3 * (1. - Exp(ww))
         co = Max(vno3 / vv, 0.)     !kg/ha/mm (if * 100 = ppm)
 

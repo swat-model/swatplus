@@ -11,19 +11,19 @@
       
       implicit none
       
-      character (len=80) :: file      !           |filename
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      character (len=4) :: salt_ion   !           |
-      character (len=15) :: station_name	!       |
-      integer :: eof                  !           |end of file
-      integer :: iadep                !           |counter
-      integer :: imo                  !           |counter
-      integer :: iyr                  !           |counter
-      integer :: imo_atmo             !           |
+      character (len=80) :: file = "" !           |filename
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      character (len=4) :: salt_ion = ""!           |
+      character (len=15) :: station_name = ""!       |
+      integer :: eof = 0              !           |end of file
+      integer :: iadep = 0            !           |counter
+      integer :: imo = 0              !           |counter
+      integer :: iyr = 0              !           |counter
+      integer :: imo_atmo = 0         !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo            !           |
-      integer :: isalt                !           |salt ion counter
+      integer :: iyrc_atmo = 0        !           |
+      integer :: isalt = 0            !           |salt ion counter
       
       eof = 0
 
@@ -44,13 +44,13 @@
         read(5050,*)
       
         !allocate arrays
-        allocate(atmodep_salt(0:atmodep_cont%num_sta))
+        allocate (atmodep_salt(0:atmodep_cont%num_sta))
         
         !loop through the stations (num_sta is set in cli_read_atmodep subroutine)
         do iadep = 1, atmodep_cont%num_sta
           
           !allocate arrays
-          allocate(atmodep_salt(iadep)%salt(cs_db%num_salts))
+          allocate (atmodep_salt(iadep)%salt(cs_db%num_salts))
           
           !average annual values
           if (atmodep_cont%timestep == "aa") then
@@ -69,11 +69,11 @@
           if (atmodep_cont%timestep == "mo") then
             read(5050,*) station_name !station name
             do isalt=1,cs_db%num_salts
-              allocate(atmodep_salt(iadep)%salt(isalt)%rfmo(atmodep_cont%num))
+              allocate (atmodep_salt(iadep)%salt(isalt)%rfmo(atmodep_cont%num), source = 0.)
               read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%rfmo(imo),imo=1,atmodep_cont%num)
             enddo 
             do isalt=1,cs_db%num_salts
-              allocate(atmodep_salt(iadep)%salt(isalt)%drymo(atmodep_cont%num))
+              allocate (atmodep_salt(iadep)%salt(isalt)%drymo(atmodep_cont%num), source = 0.)
               read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%drymo(imo),imo=1,atmodep_cont%num)
             enddo 
           end if
@@ -82,11 +82,11 @@
           if (atmodep_cont%timestep == "yr") then
             read(5050,*) station_name !station name
             do isalt=1,cs_db%num_salts
-              allocate(atmodep_salt(iadep)%salt(isalt)%rfyr(atmodep_cont%num))
+              allocate (atmodep_salt(iadep)%salt(isalt)%rfyr(atmodep_cont%num), source = 0.)
               read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%rfyr(iyr),iyr=1,atmodep_cont%num)
             enddo 
             do isalt=1,cs_db%num_salts
-              allocate(atmodep_salt(iadep)%salt(isalt)%dryyr(atmodep_cont%num))
+              allocate (atmodep_salt(iadep)%salt(isalt)%dryyr(atmodep_cont%num), source = 0.)
               read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%dryyr(iyr),iyr=1,atmodep_cont%num)
             enddo 
           end if

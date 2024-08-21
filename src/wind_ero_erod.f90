@@ -5,11 +5,11 @@
       
       implicit none
       
-      real :: sand                 !none          |fraction of sand in soil material
-      integer :: j                 !none          |hru number
-      real :: clay                 !none          |fraction clay content in soil material 
-      real :: silt                 !%             |percent silt content in soil material
-      real :: cla                  !kg/L          |amt of cla in res (read in as mg/L and converted to kg/L)
+      real :: sand = 0.            !none          |fraction of sand in soil material
+      integer :: j = 0             !none          |hru number
+      real :: clay = 0.            !none          |fraction clay content in soil material 
+      real :: silt = 0.            !%             |percent silt content in soil material
+      real :: cla = 0.             !kg/L          |amt of cla in res (read in as mg/L and converted to kg/L)
      
       sand = sol(j)%phys(1)%sand
       silt = sol(J)%phys(1)%silt

@@ -8,20 +8,20 @@
       implicit none      
 
       integer, intent (in) :: i     !none           |counter  
-      integer :: i_dep              !none           |counter
-      integer :: ifp_dep            !none           |counter
+      integer :: i_dep = 0          !none           |counter
+      integer :: ifp_dep = 0        !none           |counter
       
-      real :: a                     !m^2            |cross-sectional area of channel
-      real :: b                     !m              |bottom width of channel
-      real :: p                     !m              |wetting perimeter
-      real :: rh                    !m              |hydraulic radius
+      real :: a = 0.                !m^2            |cross-sectional area of channel
+      real :: b = 0.                !m              |bottom width of channel
+      real :: p = 0.                !m              |wetting perimeter
+      real :: rh = 0.               !m              |hydraulic radius
       real :: qman                  !m^3/s or m/s   |flow rate or flow velocity
-      real :: dep                   !               |
-      real :: a_bf                  !               |
-      real :: p_bf                  !               |
-      real :: vol_bf
-      real :: vel                   !               |
-      real :: frac_abov
+      real :: dep = 0.              !               |
+      real :: a_bf = 0.             !               |
+      real :: p_bf = 0.             !               |
+      real :: vol_bf = 0.
+      real :: vel = 0.              !               |
+      real :: frac_abov = 0.
 
       b = sd_ch(i)%chw - 2. * sd_ch(i)%chd * sd_ch(i)%chss
       !! check if bottom width (b) is < 0

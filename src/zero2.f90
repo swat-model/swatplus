@@ -8,20 +8,20 @@
 
       implicit none
 
-      real :: cklsp                 !                 |
+      real :: cklsp = 0.            !                 |
 
-      real :: zdb                   !mm               |division term from net pesticide equation
+      real :: zdb = 0.              !mm               |division term from net pesticide equation
 
       cklsp = 0.
 
       ovrlnd = 0.
 
-	  sedyld = 0.
-	  sanyld = 0.
-	  silyld = 0.
-	  clayld = 0.
-	  sagyld = 0.
-	  lagyld = 0.
+      sedyld = 0.
+      sanyld = 0.
+      silyld = 0.
+      clayld = 0.
+      sagyld = 0.
+      lagyld = 0.
       smx = 0.
       surf_bs = 0.
       twash = 0.

@@ -6,11 +6,12 @@
       
       implicit none
  
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: isalt
-      integer :: isalti
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: isalt = 0
+      integer :: isalti = 0
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
 
       eof = 0
@@ -40,8 +41,8 @@
           
           allocate (salt_soil_ini(imax))
           do isalt = 1, imax
-            allocate (salt_soil_ini(isalt)%soil(cs_db%num_salts+5))
-            allocate (salt_soil_ini(isalt)%plt(cs_db%num_salts+5))
+            allocate (salt_soil_ini(isalt)%soil(cs_db%num_salts+5), source = 0.)
+            allocate (salt_soil_ini(isalt)%plt(cs_db%num_salts+5), source = 0.)
           end do
            
           rewind (107)

@@ -7,10 +7,11 @@
       
       implicit none
  
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: ics
-      integer :: eof, imax
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: ics = 0
+      integer :: eof = 0
+      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
 
       eof = 0
@@ -47,8 +48,8 @@
           allocate (cs_soil_ini(imax))
           
           do ics = 1, imax
-            allocate (cs_soil_ini(ics)%soil(cs_db%num_cs + cs_db%num_cs))
-            allocate (cs_soil_ini(ics)%plt(cs_db%num_cs + cs_db%num_cs))
+            allocate (cs_soil_ini(ics)%soil(cs_db%num_cs + cs_db%num_cs), source = 0.)
+            allocate (cs_soil_ini(ics)%plt(cs_db%num_cs + cs_db%num_cs), source = 0.)
           end do
            
           rewind (107)

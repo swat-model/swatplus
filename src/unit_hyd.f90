@@ -50,21 +50,21 @@
       
       implicit none
       
-      real :: ql                !           | 
-      real :: sumq              !           |
-      real :: tb                !           |
-      real :: tp                !           |
-      integer :: i              !none       |counter
-      real :: xi                !           |
-      real :: q                 !           |
+      real :: ql = 0.           !           | 
+      real :: sumq = 0.         !           |
+      real :: tb = 0.           !           |
+      real :: tp = 0.           !           |
+      integer :: i = 0          !none       |counter
+      real :: xi = 0.           !           |
+      real :: q = 0.            !           |
       integer :: max            !           |
-      integer :: itb            !           |
-      integer :: istep          !none       |time step that corresponds to time%step for routing
-      integer :: iday           !none       |current day in the unit hydrograph
-      integer :: t_inc          !none       |time increments within the time step to sum the unit hyd
-      integer :: ts_base        !none       |number of time steps in base of hydrograph
-      real :: t_inc_hr          !hr         |time increment
-      real :: t_tot             !hr         |total time in the hydrograph
+      integer :: itb = 0        !           |
+      integer :: istep = 0      !none       |time step that corresponds to time%step for routing
+      integer :: iday = 0       !none       |current day in the unit hydrograph
+      integer :: t_inc = 0      !none       |time increments within the time step to sum the unit hyd
+      integer :: ts_base = 0    !none       |number of time steps in base of hydrograph
+      real :: t_inc_hr = 0.     !hr         |time increment
+      real :: t_tot = 0.        !hr         |total time in the hydrograph
       
       real, intent (in)  :: tc
       real, intent (out), dimension(bsn_prm%day_lag_mx,time%step) :: uh
@@ -74,7 +74,7 @@
       sumq = 0.
       uh = 0.
       tb = .5 + .6 * tc + bsn_prm%tb_adj    !baseflow time, hr
-      if (tb > 48.) tb = 48.			    !maximum 48hrs
+      if (tb > 48.) tb = 48.                !maximum 48hrs
       tp = .375 * tb                        ! time to peak flow
 
       !! sum 20 points on the unit hydrograph to get sum for the time%step
@@ -123,6 +123,6 @@
           uh(i,istep) = uh(i, istep) / sumq
         end do
       end do
-	  
+        
       return
       end subroutine unit_hyd

@@ -10,16 +10,16 @@
       
       implicit none
 
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: mlu                  !           |
-      integer :: ilu                  !           |landuse type 
-      integer :: ipcom                !none       |counter
-      integer :: isched               !           |
-      integer :: ipr                  !none       |counter
+      integer :: mlu = 0              !           |
+      integer :: ilu = 0              !           |landuse type 
+      integer :: ipcom = 0            !none       |counter
+      integer :: isched = 0           !           |
+      integer :: ipr = 0              !none       |counter
        
       mlu = 0
       eof = 0

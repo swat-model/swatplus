@@ -36,9 +36,9 @@
       end type mineral_phosphorus
       
       type soil_profile_mass1
-        character (len=16) :: name
-        real :: tot_mn                                              !       |total mineral n pool (no3+nh4) in soil profile
-        real :: tot_mp                                              !       |mineral p pool (wsol+lab+act+sta) in soil profile
+        character (len=16) :: name = ""
+        real :: tot_mn = 0.                                         !       |total mineral n pool (no3+nh4) in soil profile
+        real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
@@ -85,11 +85,11 @@
       type (organic_mass) :: bsn_org_soil                           !       |total soil organics in basin
       type (organic_mass) :: bsn_org_pl                             !       |total plant organics in basin
       type (organic_mass) :: bsn_org_rsd                            !       |total residue organics in basin
-      real :: bsn_mn                                                !       |total mineral n pool (no3+nh4) in soil profile
-      real :: bsn_mp                                                !       |mineral p pool (wsol+lab+act+sta) in soil profile
+      real :: bsn_mn = 0.                                           !       |total mineral n pool (no3+nh4) in soil profile
+      real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in soil profile
 
       type residue_mass1        !surface residue
-        character (len=16) :: name
+        character (len=16) :: name = ""
         type (organic_mass), dimension(:), allocatable :: tot       !       |total mass surface residue litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool-dimensioned by plant
@@ -105,7 +105,7 @@
       type (residue_mass1), dimension(:), allocatable :: rsd1_init
 
       type plant_community_mass
-       character(len=4) :: name
+       character(len=4) :: name = ""
        type (organic_mass), dimension(:), allocatable :: tot        !kg/ha      |total biomass for individual plant in community
        type (organic_mass), dimension(:), allocatable :: ab_gr      !kg/ha      |above ground biomass for individual plant in community
        type (organic_mass), dimension(:), allocatable :: leaf       !kg/ha      |leaf mass for individual plant in community
@@ -147,22 +147,22 @@
       
       
       type mineral_mass
-        real :: m               !kg or kg/ha      |total object mass
-        real :: no3             !kg or kg/ha      |nitrate mass
-        real :: no2             !kg or kg/ha      |nitrite mass
-        real :: nh4             !kg or kg/ha      |ammonium mass  
-        real :: po4             !kg or kg/ha      |phosphate mass 
+        real :: m = 0.          !kg or kg/ha      |total object mass
+        real :: no3 = 0.        !kg or kg/ha      |nitrate mass
+        real :: no2 = 0.        !kg or kg/ha      |nitrite mass
+        real :: nh4 = 0.        !kg or kg/ha      |ammonium mass  
+        real :: po4 = 0.        !kg or kg/ha      |phosphate mass 
       end type mineral_mass
 
       type organic_mineral_mass
-        real :: vol
+        real :: vol = 0.
         type (organic_mass) :: hum
         type (organic_mass) :: hum_act
         type (mineral_mass) :: min
       end type organic_mineral_mass
       
       type soil_profile_mass
-        character (len=16) :: name
+        character (len=16) :: name = ""
         type (organic_mineral_mass), dimension(:), allocatable :: sol       !soil matrix dimensioned by layer
         type (organic_mineral_mass), dimension(:), allocatable :: sw        !soil water dimensioned by layer
       end type soil_profile_mass
@@ -190,8 +190,8 @@
       !hru will point diretly to herds - managed in schedule_ops and ultimately can be managed in conditional subroutine
       !herds are different from soil and plant in that they can move from hru to hru
       type animal_herds
-        character(len=16) :: name                                           !           |herd name (small_dairy, )
-        integer :: num_tot                                                  !           |total number of animals in the herd
+        character(len=16) :: name = ""                                      !           |herd name (small_dairy, )
+        integer :: num_tot = 0                                              !           |total number of animals in the herd
         type (organic_mass) :: herd_mass                                    !kg         |total mass of herd
         character(len=16), dimension(:), allocatable :: typ                 !           |animal type (points to animal.hrd)
         integer, dimension(:), allocatable :: num                           !           |number of each type of animal
@@ -202,7 +202,7 @@
       
       !fertilizer object      
       type fertilizer_mass
-        character (len=16) :: name
+        character (len=16) :: name = ""
         type (mineral_mass) :: org       !soil matrix dimensioned by layer
         type (organic_mass) :: min       !soil water dimensioned by layer
       end type fertilizer_mass
@@ -230,7 +230,7 @@
       end type organic_mineral_hydrograph
       
       type spatial_object_hydrographs
-        character (len=16) :: name                                      !should match the object_connectivity object
+        character (len=16) :: name = ""                                 !should match the object_connectivity object
         !water and soluble components
         type (organic_mineral_hydrograph) :: hin                                 !inflow hydrograph for surface runon - sum of all inflow hyds
         type (organic_mineral_hydrograph) :: hin_sur                             !inflow hydrograph for surface flow - sum of all surface inflow hyds
@@ -265,10 +265,10 @@
       
       !recall organic-mineral inputs
       type recall_organic_mineral_inputs
-         character (len=16) :: name
+         character (len=16) :: name = ""
          integer :: num = 0                    !number of elements
-         integer :: typ                        !recall type - 1=day, 2=mon, 3=year
-         character(len=13) :: filename         !filename
+         integer :: typ = 0                    !recall type - 1=day, 2=mon, 3=year
+         character(len=13) :: filename = ""    !filename
          !hyd_output units are in cms and mg/L
          type (organic_mineral_hydrograph), dimension (:,:), allocatable :: hd_om     !export coefficients
       end type recall_organic_mineral_inputs
@@ -281,14 +281,14 @@
       type (organic_mineral_hydrograph), dimension(:,:), allocatable :: dr_om
       
       type routing_unit_elements_hydrographs
-        character (len=16) :: name                                   !should match the object_connectivity object
+        character (len=16) :: name = ""                              !should match the object_connectivity object
         type (organic_mineral_mass), dimension(:), allocatable :: hd
       end type routing_unit_elements_hydrographs
       !point to subbasin element objects - same as sub_elem
       type (routing_unit_elements_hydrographs), dimension(:), allocatable :: sub_e_hd
       
       type channel_surface_elements_hydrographs
-        character (len=16) :: name                                   !should match the channel_surface_elements object
+        character (len=16) :: name = ""                              !should match the channel_surface_elements object
         type (organic_mineral_mass), dimension(:), allocatable :: hd
       end type channel_surface_elements_hydrographs
       !point to channel-surface objects - same as ch_sur

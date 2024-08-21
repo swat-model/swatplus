@@ -7,17 +7,17 @@
       
       implicit none
    
-      integer :: i
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      integer :: iyr                  !none       |number of years
+      integer :: i = 0
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      integer :: iyr = 0              !none       |number of years
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: istep                !           |
-      integer :: iyr_prev             !none       |previous year
-      integer :: iyrs                 !           |
-      real :: solrad                  !MJ/m^2     |solar radiation for the day in HRU
+      integer :: istep = 0            !           |
+      integer :: iyr_prev = 0         !none       |previous year
+      integer :: iyrs = 0             !           |
+      real :: solrad = 0.             !MJ/m^2     |solar radiation for the day in HRU
        
       eof = 0
       imax = 0
@@ -80,7 +80,7 @@
         if (eof < 0) exit
        
         ! the precip time step has to be the same as time%step
-        allocate (slr(i)%ts(366,slr(i)%nbyr))
+        allocate (slr(i)%ts(366,slr(i)%nbyr), source = 0.)
         
         ! read and save start jd and yr
         read (108,*,iostat=eof) iyr, istep

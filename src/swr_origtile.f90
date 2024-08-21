@@ -1,4 +1,4 @@
-	subroutine swr_origtile(tile_above_btm)
+       subroutine swr_origtile(tile_above_btm)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine computes tile drainage using basic tile equations 
@@ -8,7 +8,7 @@
       
       implicit none
 
-      integer :: j                          !none       |HRU number
+      integer :: j = 0                      !none       |HRU number
       real, intent (in) :: tile_above_btm   !mm         |!height of tiles above bottom of soil profile
 
       j = ihru
@@ -26,5 +26,5 @@
         qtile = 0.
       end if
      
-	return
-	end subroutine swr_origtile
+      return
+      end subroutine swr_origtile

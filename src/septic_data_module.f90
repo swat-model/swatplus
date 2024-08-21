@@ -3,7 +3,7 @@
       implicit none
                           
       type septic_db
-          character(len=20) :: sepnm
+          character(len=20) :: sepnm = ""
           real :: qs = 0.               !! m3/d          |flow rate of the septic tank effluent per capita (sptq)
           real :: bodconcs = 0.         !! mg/l          |biological oxygen demand of the septic tank effluent
           real :: tssconcs = 0.         !! mg/l          |concentration of total suspended solid in the septic tank effluent
@@ -31,7 +31,7 @@
         real :: density = 0.    !!                 |number of septic systems per square kilometer
         real :: bd  = 0.        !!kg/m^3           |density of biomass 
         real :: bod_dc = 0.     !!m^3/day          |BOD decay rate coefficient
-        real :: bod_conv        !!                 |a conversion factor representing the proportion of mass
+        real :: bod_conv = 0.   !!                 |a conversion factor representing the proportion of mass
         !!                                           bacterial growth and mass BOD degraded in the STE.
         real :: fc1 = 0.        !!none             |Linear coefficient for calculation of field capacity in the biozone
         real :: fc2 = 0.        !!none             |Exponential coefficient for calculation of field capacity in the biozone  
