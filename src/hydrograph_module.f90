@@ -1095,8 +1095,7 @@
       end type output_checker_unit    
       type (output_checker_unit) :: chk_unit
         
-      type hru_exco_header_type
-        !character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
+      type hru_swift_header_base
         character (len=16) :: sed  =    "sed "        !! metric tons  |sediment
         character (len=16) :: orgn =    "orgn "        !! kg N         |organic N
         character (len=16) :: sedp =    "sedp "        !! kg P         |organic P
@@ -1105,10 +1104,9 @@
         !character (len=16) :: chla =    "chla "        !! kg           |chlorophyll-a
         character (len=16) :: nh3  =    "nh3 "        !! kg N         |NH3
         character (len=16) :: no2  =    "no2 "        !! kg N         |NO2
-      end type hru_exco_header_type
+      end type hru_swift_header_base
       
-      
-      type hru_exco_header_unit
+      type hru_swift_header_baseunit
         !character (len=16) :: unitflo    =  "m^3 "        !! m^3          |volume of water
         character (len=16) :: unitsed    =  "tons "        !! metric tons  |sediment
         character (len=16) :: unitorgn   =  "kgN "        !! kg N         |organic N
@@ -1118,15 +1116,28 @@
         !character (len=16) :: unitchla   =  "kg "        !! kg           |chlorophyll-a
         character (len=16) :: unitnh3    =  "kgN "        !! kg N         |NH3
         character (len=16) :: unitno2    =  "kgN "        !! kg N         |NO2
-      end type hru_exco_header_unit
+      end type hru_swift_header_baseunit
+      
+      type hru_swift_header_base2
+        character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
+        type(hru_swift_header_base) :: base
+      end type hru_swift_header_base2
+      
+      type hru_swift_header_baseunit2
+        character (len=16) :: unitflo    =  "m^3 "        !! m^3          |volume of water
+        type(hru_swift_header_baseunit) :: base
+      end type hru_swift_header_baseunit2
+      
+      type hru_swift_header
+        character(len=16) :: hd_type(5) = ["total_flow       ", "percolation      ", "surface_runoff   ", "lateral_flow     ", "tile_flow        "]
+        type (hru_swift_header_base) :: exco 
+        type (hru_swift_header_baseunit) :: exco_unit
+        type (hru_swift_header_base2) :: dr 
+        type (hru_swift_header_baseunit2) :: dr_unit
+      end type hru_swift_header
+      type (hru_swift_header) :: hru_swift_hdr
       
       
-      type hru_exco_header
-        character(len=16) :: hd_type(5) = ["total_flow ", " percolation ", " surface_runoff ", " lateral_flow ", " tile_flow "]
-        type (hru_exco_header_type) :: hyd_type
-        type (hru_exco_header_unit) :: hyd_unit
-      end type hru_exco_header
-      type (hru_exco_header) :: hru_exco_hdr
 
       
       interface operator (+)
