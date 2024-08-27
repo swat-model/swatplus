@@ -1,16 +1,16 @@
  demo                     
           12
-  OUTPUT NAMES - NUBZ
-  OUTPUT UNITS - NUBZ
-           1 hru0001         cosy_lum                                  2.5000000E-02 B                 null   null
-           2 hru0002         cosy_lum                                  2.5000000E-02 B                 null   null
-           3 hru0003         cosy_lum                                  2.5000000E-02 B                 null   null
-           4 hru0004         cosy_lum                                  2.5000000E-02 B                 null   null
-           5 hru0005         cosy_lum                                  2.5000000E-02 B                 null   null
-           6 hru0006         cosy_lum                                  2.5000000E-02 B                 null   null
-           7 hru0007         cosy_lum                                  2.5000000E-02 B                 null   null
-           8 hru0008         cosy_lum                                  2.5000000E-02 B                 null   null
-           9 hru0009         cosy_lum                                  2.5000000E-02 B                 null   null
-          10 hru0010         cosy_lum                                  2.5000000E-02 B                 null   null
-          11 hru0011         cosy_lum                                  2.5000000E-02 B                 null   null
-          12 hru0012         cosy_lum                                  2.5000000E-02 B                 null   null
+   iwst                                  name                   land_use                                       slope      hydgrp                                                                                                                                                                                                                              null          null
+    ---                                  ----                   --------                                         m/m      ------                                                                                                                                                                                                                              null          null
+       1                                 hru0001                 cosy_lum                                      0.2500E-01 B                           null            null
+       2                                 hru0002                 cosy_lum                                      0.2500E-01 B                           null            null
+       3                                 hru0003                 cosy_lum                                      0.2500E-01 B                           null            null
+       4                                 hru0004                 cosy_lum                                      0.2500E-01 B                           null            null
+       5                                 hru0005                 cosy_lum                                      0.2500E-01 B                           null            null
+       6                                 hru0006                 cosy_lum                                      0.2500E-01 B                           null            null
+       7                                 hru0007                 cosy_lum                                      0.2500E-01 B                           null            null
+       8                                 hru0008                 cosy_lum                                      0.2500E-01 B                           null            null
+       9                                 hru0009                 cosy_lum                                      0.2500E-01 B                           null            null
+      10                                 hru0010                 cosy_lum                                      0.2500E-01 B                           null            null
+      11                                 hru0011                 cosy_lum                                      0.2500E-01 B                           null            null
+      12                                 hru0012                 cosy_lum                                      0.2500E-01 B                           null            null
