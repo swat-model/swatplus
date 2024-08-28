@@ -1,0 +1,14 @@
+lsu_unit.ele
+          ID    NAME      OBJ_TYP  OBJ_TYP_NO    BSN_FRAC       RU_FRAC
+           1    hru0001      hru           1     0.20           0.0
+           2    hru0002      hru           2     0.20           0.0
+           3    hru0003      hru           3     0.20           0.0
+           4    hru0004      hru           4     0.20           0.0
+           5    hru0005      hru           5     0.10           0.0
+           6    hru0006      hru           6     0.10           0.0
+           7    hru0007      hru           7     0.20           0.0
+           8    hru0008      hru           8     0.20           0.0
+           9    hru0009      hru           9     0.20           0.0
+          10    hru0010      hru          10     0.20           0.0
+          11    hru0011      hru          11     0.10           0.0
+          12    hru0012      hru          12     0.10           0.0
