@@ -61,18 +61,21 @@ jobs:
           if [ "$RUNNER_OS" == "Linux" ]; then
             cmake -B build \
               -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
-              -D TAG=$RELEASE_VERSION
+              -D TAG=$RELEASE_VERSION \
+              -D CMAKE_BUILD_TYPE=Release
             e="build/swatplus-*"
           elif [ "$RUNNER_OS" == "Windows" ]; then
             cmake -B build -G "MinGW Makefiles" \
               -D CMAKE_Fortran_COMPILER="C:\Program Files (x86)\Intel\oneAPI\compiler\2024.1\bin\${{ env.FC }}.exe" \
-              -D TAG=$RELEASE_VERSION
+              -D TAG=$RELEASE_VERSION \
+              -D CMAKE_BUILD_TYPE=Release
             e="build/swatplus-*.exe"
           elif [ "$RUNNER_OS" == "macOS" ]; then
             cmake -B build \
               -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
               -D TAG=$RELEASE_VERSION \
-              -D CMAKE_APPLE_SILICON_PROCESSOR="x86_64"
+              -D CMAKE_APPLE_SILICON_PROCESSOR="x86_64" \
+              -D CMAKE_BUILD_TYPE=Release
             e="build/swatplus-*"
           else
             echo "$RUNNER_OS not supported."
@@ -82,21 +85,39 @@ jobs:
           # compile
           cmake --build build
 
+          exebase=`basename -s .exe build/swatplus-*`
+          exez="${exebase}.zip"
           exe=`ls $e`
+
           echo $exe
+          echo $exez
           echo $os
+
           echo "exe=$exe" >> $GITHUB_OUTPUT
+          echo "exez=$exez" >> $GITHUB_OUTPUT
           echo "os=$os" >> $GITHUB_OUTPUT
 
           ls -hl build/swatplus-*
           file build/swatplus-*
+
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            (cd build && zip ../$exez swatplus-*)
+          fi
+
         shell: bash
+
+      - name: zip
+        if: matrix.os == 'windows-latest'
+        uses: vimtor/action-zip@v1.2
+        with:
+          files: ${{ steps.build_exe.outputs.exe }}
+          dest: ${{ steps.build_exe.outputs.exez }}
 
       - name: upload
         uses: actions/upload-artifact@v2
         with:
           name: sp-${{ steps.build_exe.outputs.os }}
-          path: ${{ steps.build_exe.outputs.exe }}
+          path: ${{ steps.build_exe.outputs.exez }}
 
 
   release:
