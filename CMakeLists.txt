@@ -27,68 +27,80 @@ if(NOT TAG)
     endif()
 endif()
 
-string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} ARCH)
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(SWAT_OS "lin-${ARCH}")
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(SWAT_OS "win-${ARCH}")
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(SWAT_OS "mac-${ARCH}")
-else()
-    set(SWAT_OS "unknown")
-endif ()
-
-# SWAT Version number
-set(SWAT_VERSION ${TAG})
-set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}-${SWAT_OS}")
-
-# Enable this to 'TRUE' to see the fortran command on compile
-# set(CMAKE_VERBOSE_MAKEFILE FALSE)
 
 if (UNIX)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
-        # set(fdialect        "-fpe0 -free -diag-disable=10448")
-        set(fdialect        "-fpe0 -free -traceback -warn all")
-        set(fdebug          "-traceback -warn all")
-        set(frelease        "-O3")
+        set(fdialect        "-free -fpe0 -traceback -diag-disable=10448")
+        set(fdebug          "-warn all")
+        set(frelease        "-O")
+        set(FFC "ifo")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
-        set(fdialect        "-free")
-        set(fdebug          "-fpe0 -traceback -warn all")
-        set(frelease        "-O3")
+        set(fdialect        "-free -fpe0 -traceback")
+        set(fdebug          "-warn all -O0")
+        set(frelease        "-O")
+        set(FFC "ifx")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect "-fcheck=all -Wall -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
-        set(fdebug   "")
+        set(fdialect "-fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdebug   "-Wall")
         set(frelease "-O")
+        set(FFC "gcc")
         if(NOT APPLE)
             link_libraries("-static")
         endif()
     endif()
 elseif(WIN32)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
-        set(fdialect        "/free /Qdiag-disable:all /Qdiag-disable:remarks")
-        set(fdebug          "/traceback /warn:all")
-        set(frelease        "/O3")
+        set(fdialect        "/free /fpe0 /traceback /Qdiag-disable:all /Qdiag-disable:remarks")
+        set(fdebug          "/warn:all")
+        set(frelease        "/O")
+        set(FFC             "ifo")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
-        set(fdialect        "/free")
-        set(fdebug          "/traceback /warn:all")
-        set(frelease        "/O3")
+        set(fdialect        "/free /fpe0 /traceback")
+        set(fdebug          "/warn:all")
+        set(frelease        "/O")
+        set(FFC             "ifx")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect "-fcheck=all -Wall -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
-        set(fdebug   "")
-        set(frelease "-O")
+        set(fdialect        "-fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdebug          "-Wall ")
+        set(FFC             "gcc")
+        set(frelease        "-O")
     endif()
 endif()
 
+string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} ARCH)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(AR "${FFC}-lin_${ARCH}")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(AR "${FFC}-win_${ARCH}")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(AR "${FFC}-mac_${ARCH}")
+else()
+    set(AR "unknown")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(TY "-Rel")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(TY "-Dbg")
+else()
+    set(TY "")
+endif()
+
+# SWAT Version number
+set(SWAT_VERSION ${TAG})
+set(SWATPLUS_EXE "swatplus-${SWAT_VERSION}-${AR}${TY}")
+
+# Enable this to 'TRUE' to see the fortran command on compile
+set(CMAKE_VERBOSE_MAKEFILE FALSE)
 
 set(CMAKE_Fortran_FLAGS         "${CMAKE_Fortran_FLAGS} ${fdialect}")
 set(CMAKE_Fortran_FLAGS_DEBUG   "${CMAKE_Fortran_FLAGS_DEBUG} ${fdebug}")
 # set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} ${frelease}")
 set(CMAKE_Fortran_FLAGS_RELEASE "${frelease}")
-
 
 #############################################################################
 # Build
@@ -120,28 +132,26 @@ endif()
 file(GLOB sources src/*.f90)
 add_executable(${SWATPLUS_EXE} ${sources})
 
-# set_target_properties(${PROJECT} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}\\Data")
-
 #############################################################################
 # Install
-install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION .)
+install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION ${PROJECT_SOURCE_DIR})
 
 
 #############################################################################
 # Testing
 find_package(Python3 REQUIRED)
 
-set(check_py "${PROJECT_SOURCE_DIR}/test/check.py")
+set(spcheck "${PROJECT_SOURCE_DIR}/test/spcheck.py")
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
 set(test_dir "${PROJECT_BINARY_DIR}/data")
-set(ref_dir "${PROJECT_SOURCE_DIR}/data")
+set(ref_dir  "${PROJECT_SOURCE_DIR}/data")
 
 # error tolerances
 set(rerr "0.01")
 set(aerr "1e-8")
 
+add_test(Ames_sub1   ${Python3_EXECUTABLE} ${spcheck} ctest ${exe_path} ${ref_dir}/Ames_sub1 ${test_dir} --abserr ${aerr} --relerr ${rerr})
 # add_test(Ithaca_sub6 python3 ${check_py} ${exe_path} ${ref_dir}/Ithaca_sub6 ${test_dir} ${aerr} ${rerr})
-add_test(Ames_sub1   ${Python3_EXECUTABLE}  ${check_py} ${exe_path} ${ref_dir}/Ames_sub1   ${test_dir} ${aerr} ${rerr})
 
 
 #############################################################################
