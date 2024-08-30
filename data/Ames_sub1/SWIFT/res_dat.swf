@@ -1,4 +1,4 @@
  demo                     
            0
-  OUTPUT NAMES - NUBZ
-  OUTPUT UNITS - NUBZ
+         icha     name                    psa           pvol          esa           evol 
+         ----     ----                    frac          m3            frac          m3   
