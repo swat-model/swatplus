@@ -40,7 +40,7 @@
       303 format (I8,*(2x1A16,8xF16.4, 7F16.4,10x))                   ! format of hru_exco.swf 
       204 format (4xA8,*(A8,8x))                               ! format of hru_wet.swf headers
       205 format (7xA16, A16, 10x,*(A16))                           ! format of chan_dat.swf headers
-      305 format (I8,A16, A16,*(F16.4))                             ! format of chan_dat.swf
+      305 format (I8, 1x, A16, A16,*(F16.4))                             ! format of chan_dat.swf
       206 format (4xA8, 1xA8, 20x,*(A16))                           ! format of chan_dr.swf headers
       306 format (I8,4xA16, 10xA16,*(F16.4))                        ! format of chan_dr.swf
       207 format (A16,1x*(A16))                                     ! format of aqu_dr.swf headers
