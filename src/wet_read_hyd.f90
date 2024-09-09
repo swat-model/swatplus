@@ -9,13 +9,13 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ires                 !none       |counter 
-      integer :: dum1                 !none       |
+      integer :: ires = 0             !none       |counter 
+      integer :: dum1 = 0             !none       |
 
       eof = 0
       imax = 0
@@ -69,7 +69,7 @@
         inquire(file='gwflow.wetland',exist=i_exist)
         if(i_exist) then
           write(out_gw,*) '          found gwflow.wetland; use wetland specified bed thickness'
-		      open(in_wet_cell,file='gwflow.wetland')
+          open(in_wet_cell,file='gwflow.wetland')
           read(in_wet_cell,*) header
           read(in_wet_cell,*) header
           read(in_wet_cell,*) header

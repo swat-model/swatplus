@@ -12,17 +12,20 @@
       implicit none 
       
       integer, intent (in)  :: isol     !none       |soil (hru) number
-      integer :: nly, ly
-      integer :: isolt                  !counter    |soil plant initialization file pointer
-      integer :: isol_pl                !counter    |soil nutrient initialization pointer (nutrients.sol)
-      real :: wt1                       !kg/ha      |weight of the soil layer
-      real :: dep_frac                  !0-1        |fraction of surface concentration at depth
-      real :: frac_hum_active           !0-1        |fraction of humus in active pool - old SWAT
-      real :: frac_hum_microb           !0-1        |fraction of humus in microbial pool - CENTURY
-      real :: frac_hum_slow             !0-1        |fraction of humus in slow pool - CENTURY
-      real :: frac_hum_passive          !0-1        |fraction of humus in passive pool - CENTURY
-      real :: actp, solp, ssp    
-      real :: psp                       !              | 
+      integer :: nly = 0
+      integer :: ly = 0
+      integer :: isolt = 0              !counter    |soil plant initialization file pointer
+      integer :: isol_pl = 0            !counter    |soil nutrient initialization pointer (nutrients.sol)
+      real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
+      real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
+      real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
+      real :: frac_hum_microb = 0.      !0-1        |fraction of humus in microbial pool - CENTURY
+      real :: frac_hum_slow = 0.        !0-1        |fraction of humus in slow pool - CENTURY
+      real :: frac_hum_passive = 0.     !0-1        |fraction of humus in passive pool - CENTURY
+      real :: actp = 0.
+      real :: solp = 0.
+      real :: ssp = 0.
+      real :: psp = 0.                  !              | 
 
       nly = soil(ihru)%nly
 

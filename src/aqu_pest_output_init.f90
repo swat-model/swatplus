@@ -6,8 +6,8 @@
       
       implicit none      
 
-      integer :: ipest                  !none         |pesticide counter
-      integer :: iaq                    !none         |aquifer counter
+      integer :: ipest = 0              !none         |pesticide counter
+      integer :: iaq = 0                !none         |aquifer counter
       
       !! set initial aquifer pesticides at beggining of output for monthly, annual and average annual
       do iaq = 1, sp_ob%aqu

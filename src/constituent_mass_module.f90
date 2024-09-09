@@ -184,24 +184,24 @@
       
       !recall salinity inputs (rtb salt)
       type recall_salt_inputs
-         character (len=16) :: name
-         integer :: typ                        !recall type - 1=day, 2=mon, 3=year
-         character(len=30) :: filename         !filename
-         integer :: start_yr                   !start year of point source file
-         integer :: end_yr                     !end year of point source file
-         integer :: pts_type                   !1 = within watershed; 2 = from outside watershed
+         character (len=16) :: name = ""
+         integer :: typ = 0                    !recall type - 1=day, 2=mon, 3=year
+         character(len=30) :: filename = ""    !filename
+         integer :: start_yr = 0               !start year of point source file
+         integer :: end_yr = 0                 !end year of point source file
+         integer :: pts_type = 0               !1 = within watershed; 2 = from outside watershed
          type (constituent_mass), dimension (:,:), allocatable :: hd_salt
       end type recall_salt_inputs
       type (recall_salt_inputs), dimension(:),allocatable:: rec_salt
       
       !recall constituent inputs (rtb cs)
       type recall_cs_inputs
-         character (len=16) :: name
-         integer :: typ                        !recall type - 1=day, 2=mon, 3=year
-         character(len=30) :: filename         !filename
-         integer :: start_yr                   !start year of point source file
-         integer :: end_yr                     !end year of point source file
-         integer :: pts_type                   !1 = within watershed; 2 = from outside watershed
+         character (len=16) :: name = ""
+         integer :: typ = 0                    !recall type - 1=day, 2=mon, 3=year
+         character(len=30) :: filename = ""    !filename
+         integer :: start_yr = 0               !start year of point source file
+         integer :: end_yr = 0                 !end year of point source file
+         integer :: pts_type = 0               !1 = within watershed; 2 = from outside watershed
          type (constituent_mass), dimension (:,:), allocatable :: hd_cs
       end type recall_cs_inputs
       type (recall_cs_inputs), dimension(:),allocatable:: rec_cs
@@ -232,10 +232,10 @@
       
       !recall pesticide inputs
       type recall_pesticide_inputs
-         character (len=16) :: name
+         character (len=16) :: name = ""
          integer :: num = 0                    !number of elements
-         integer :: typ                        !recall type - 1=day, 2=mon, 3=year
-         character(len=13) :: filename         !filename
+         integer :: typ = 0                    !recall type - 1=day, 2=mon, 3=year
+         character(len=13) :: filename = ""    !filename
          !hyd_output units are in cms and mg/L
          type (constituent_mass), dimension (:,:), allocatable :: hd_pest
       end type recall_pesticide_inputs
@@ -243,7 +243,7 @@
       
       ! intial constituent soil-plant concentrations for hrus
       type cs_soil_init_concentrations
-        character (len=16) :: name                  !! name of the constituent - points to constituent database
+        character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: soil    !! ppm                  |amount of constituent in soil at start of simulation
         real, dimension (:), allocatable :: plt     !! ppm or #cfu/m^2      |amount of constituent on plant at start of simulation
       end type cs_soil_init_concentrations
@@ -256,7 +256,7 @@
       
       ! intial salt ion groundwater concentrations and mineral fractions for aquifers
       type salt_aqu_init_concentrations
-        character (len=16) :: name                  !! name of the constituent - points to constituent database
+        character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: conc    !! g/m3                 |salt ion concentration at start of simulation
         real, dimension (:), allocatable :: frac    !! fractions            |salt mineral fractions at start of simulation
       end type salt_aqu_init_concentrations
@@ -264,28 +264,28 @@
       
       ! intial constituent groundwater concentrations for aquifers
       type cs_aqu_init_concentrations
-        character (len=16) :: name                  !! name of the constituent - points to constituent database
+        character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: aqu     !! ppm                  |concentration, sorbed mass at start of simulation
       end type cs_aqu_init_concentrations
       type (cs_aqu_init_concentrations), dimension(:), allocatable:: cs_aqu_ini
       
       !initial salt ion water concentrations for channels
       type salt_cha_init_concentrations
-        character (len=16) :: name                  !! name of the constituent - points to salt ion database
+        character (len=16) :: name = ""             !! name of the constituent - points to salt ion database
         real, dimension (:), allocatable :: conc    !! g/m3                 |salt ion concentration at start of simulation
       end type salt_cha_init_concentrations
       type (salt_cha_init_concentrations), dimension(:), allocatable:: salt_cha_ini
       
       !initial constituent water concentrations for channels
       type cs_cha_init_concentrations
-        character (len=16) :: name                  !! name of the constituent - points to salt ion database
+        character (len=16) :: name = ""             !! name of the constituent - points to salt ion database
         real, dimension (:), allocatable :: conc    !! g/m3                 |constituent concentration at start of simulation
       end type cs_cha_init_concentrations
       type (cs_cha_init_concentrations), dimension(:), allocatable:: cs_cha_ini
       
       ! intial constituent water-benthic concentrations for reservoirs and channels
       type cs_water_init_concentrations
-        character (len=16) :: name                    !! name of the constituent - points to constituent database
+        character (len=16) :: name = ""               !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: water     !! ppm,fracitons        |amount of constituents (dissolved, salt minerals) in aquifer at start of simulation
         real, dimension (:), allocatable :: benthic   !! ppm or #cfu/m^2      |amount of constituent in benthic at start of simulation
         real, dimension (:), allocatable :: reservoir !! ppm                  |amount of constituent in reservoir water at start of simulation
@@ -296,7 +296,7 @@
 
       ! concentration in irrigation water (outside source)
       type cs_irrigation_concentrations
-        character (len=16) :: name                  !! name of the constituent - points to constituent database
+        character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: water   !! ppm                  |amount of constituent in water at start of simulation
       end type cs_irrigation_concentrations
       type (cs_irrigation_concentrations), dimension(:),allocatable:: salt_water_irr
@@ -304,8 +304,8 @@
       
       !daily output for constituents                
       !logical :: cs_obs_file                               !               |flag: file for channels with daily output
-      integer :: cs_obs_file                                !               |flag: file for channels with daily output      
-      integer :: cs_str_nobs                                !                |number of channels for daily output
+      integer :: cs_obs_file = 0                            !               |flag: file for channels with daily output      
+      integer :: cs_str_nobs = 0                            !                |number of channels for daily output
       integer, dimension (:), allocatable :: cs_str_obs     !                |list of channels for daily output
       
       
@@ -533,7 +533,7 @@
       type (output_rucsb_header) :: rucsb_hdr
       
      type constituents_header_in          
-        character (len=11) :: day      = "       jday "
+        character (len=11) :: day      = "      jday "
         character (len=12) :: mo       = "         mon"
         character (len=12) :: day_mo   = "         day"
         character (len=12) :: yrc      = "          yr"
@@ -551,7 +551,7 @@
       type (constituents_header_in) :: csin_hyd_hdr
           
       type constituents_header_out          
-        character (len=11) :: day      = "       jday "
+        character (len=11) :: day      = "      jday "
         character (len=12) :: mo       = "         mon"
         character (len=12) :: day_mo   = "         day"
         character (len=12) :: yrc      = "          yr"
@@ -589,12 +589,16 @@
         type (constituent_mass), intent (in) :: hydcs1
         type (constituent_mass), intent (in) :: hydcs2
         type (constituent_mass) :: hydcs3
-        integer :: ipest, ipath, ihmet, isalt, ics
-        allocate (hydcs3%pest(cs_db%num_pests))
-        allocate (hydcs3%path(cs_db%num_paths))
-        allocate (hydcs3%hmet(cs_db%num_metals))
-        allocate (hydcs3%salt(cs_db%num_salts))
-        allocate (hydcs3%cs(cs_db%num_cs))
+        integer :: ipest = 0
+        integer :: ipath = 0
+        integer :: ihmet = 0
+        integer :: isalt = 0
+        integer :: ics = 0
+        allocate (hydcs3%pest(cs_db%num_pests), source = 0.)
+        allocate (hydcs3%path(cs_db%num_paths), source = 0.)
+        allocate (hydcs3%salt(cs_db%num_salts), source = 0.)
+        allocate (hydcs3%cs(cs_db%num_cs), source = 0.)
+        allocate (hydcs3%hmet(cs_db%num_metals), source = 0.)
 
         do ipest = 1, cs_db%num_pests
           hydcs3%pest(ipest) =  hydcs2%pest(ipest) + hydcs1%pest(ipest)
@@ -618,12 +622,17 @@
         type (constituent_mass), intent (in) :: hydcs1
         type (constituent_mass) :: hydcs2
         real, intent (in) :: const
-        integer :: ipest, ipath, ihmet, isalt, ics
-        allocate (hydcs2%pest(cs_db%num_pests))
-        allocate (hydcs2%path(cs_db%num_paths))
-        allocate (hydcs2%hmet(cs_db%num_metals))
-        allocate (hydcs2%salt(cs_db%num_salts))
-        allocate (hydcs2%cs(cs_db%num_cs)) !rtb cs
+        integer :: ipest = 0
+        integer :: ipath = 0
+        integer :: ihmet = 0
+        integer :: isalt = 0
+        integer :: ics = 0
+        allocate (hydcs2%pest(cs_db%num_pests), source = 0.)
+        allocate (hydcs2%path(cs_db%num_paths), source = 0.)
+        allocate (hydcs2%salt(cs_db%num_salts), source = 0.)
+        allocate (hydcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
+
+        allocate (hydcs2%hmet(cs_db%num_metals), source = 0.)
 
         do ipest = 1, cs_db%num_pests
           hydcs2%pest(ipest) =  const * hydcs1%pest(ipest)

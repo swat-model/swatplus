@@ -7,7 +7,7 @@
       real, dimension(12) :: scon = 0.
         
       type swatdeg_hru_data
-        character(len=16) :: name
+        character(len=16) :: name = ""
         real :: dakm2 = 0.          !km^2          |drainage area
         real :: cn2 = 0.            !none          |condition II curve number             
         real :: cn3_swf = 0.        !none          |soil water factor for cn3 (used in calibration)
@@ -28,17 +28,17 @@
         real :: gwdeep = 0.         !mm            |initital deep aquifer flow
         real :: snow = 0.           !mm            |initial snow water equivalent
         real :: xlat = 0.           !              |latitude
-        character(len=16) :: text   !              |soil texture
+        character(len=16) :: text = ""!              |soil texture
                                     !              |1=sand 2=loamy_sand 3=sandy_loam 4=loam
                                     !              |5=silt_loam 6=silt 7=silty_clay 8=clay_loam
                                     !              |9=sandy_clay_loam 10=sandy_clay 
                                     !              |11=silty_clay 12=clay 
-        character(len=16) ::  tropical !           |(0)="non_trop" (1)="trop"
-        character(len=16) :: igrow1 !              |start of growing season for non-tropical (pl_grow_sum)
+        character(len=16) :: tropical = ""!           |(0)="non_trop" (1)="trop"
+        character(len=16) :: igrow1 = ""!              |start of growing season for non-tropical (pl_grow_sum)
                                     !              |start of monsoon initialization period for tropical 
-        character(len=16) :: igrow2 !              |end of growing season for non-tropical (pl_end_sum)
+        character(len=16) :: igrow2 = ""!              |end of growing season for non-tropical (pl_end_sum)
                                     !              |end of monsoon initialization period for tropical
-        character(len=16) :: plant  !              |plant type (as listed in plants.plt)
+        character(len=16) :: plant = ""!              |plant type (as listed in plants.plt)
         real :: stress = 0.         !frac          |plant stress - pest, root restriction, soil quality, nutrient, (non water, temp)
         character(len=16) :: ipet = "harg"  !      |potential ET method (0="harg"; 1="p_t")
         character(len=16) :: irr = "no_irr" !      |irrigation code 0="no_irr";  1="irr"
@@ -52,12 +52,12 @@
       type (swatdeg_hru_data), dimension (:), allocatable :: hlt_db
       
       type swatdeg_hru_dynamic
-        character(len=16) :: name
-        integer :: props
-        integer :: obj_no
-        character(len=16) :: lsu             !              |landscape unit - character
-        character(len=16) :: region          !              |region - character
-        character(len=16) :: plant           !              |plant type (as listed in plants.plt)
+        character(len=16) :: name = ""
+        integer :: props = 0
+        integer :: obj_no = 0
+        character(len=16) :: lsu = ""        !              |landscape unit - character
+        character(len=16) :: region = ""     !              |region - character
+        character(len=16) :: plant = ""      !              |plant type (as listed in plants.plt)
         !integer :: iplant = 1                !              |plant number xwalked from hlt_db()%plant and plants.plt
         integer :: iplant = 0                !              |plant number xwalked from hlt_db()%plant and plants.plt
         real :: km2 = 0.                     !km^2          |drainage area
@@ -81,7 +81,7 @@
         real :: awc = 0.                     !mm/mm        |available water capacity of soil 
         real :: g = 0.
         real :: hufh = 0.
-        real :: phu = 0.     
+        real :: phu = 0.
         real :: por = 0.
         real :: sc = 0.
         real :: sw = 0.                      !mm/mm         |initial soil water storage

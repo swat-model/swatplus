@@ -8,14 +8,14 @@
 
     implicit none
           
-    character (len=80) :: titldum   !           |title of file
-    character (len=80) :: header    !           |header of file
-    integer :: eof                  !           |end of file
-    integer :: imax                 !none       |determine max number for array (imax) and total number in file
-    integer :: iwgn                 !           |
+    character (len=80) :: titldum = ""!           |title of file
+    character (len=80) :: header = "" !           |header of file
+    integer :: eof = 0              !           |end of file
+    integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+    integer :: iwgn = 0             !           |
     logical :: i_exist              !none       |check to determine if file exists
     !integer :: iwst                 !none       |counter
-    integer :: i                    !none       |counter
+    integer :: i = 0                !none       |counter
     
     eof = 0
     imax = 0
@@ -44,10 +44,10 @@
             allocate (wst(imax))
             allocate (wst_n(imax))
             do iwst = 1, db_mx%wst
-              allocate (wst(iwst)%weat%ts(time%step))
-              allocate (wst(iwst)%weat%ts_next(time%step))
+              allocate (wst(iwst)%weat%ts(time%step), source = 0.)
+              allocate (wst(iwst)%weat%ts_next(time%step), source = 0.)
               wst(iwst)%weat%precip_prior_day = "dry"
-              allocate (wst(iwst)%tlag(w_temp%airlag_d))
+              allocate (wst(iwst)%tlag(w_temp%airlag_d), source = 0.)
               iwgn = wst(iwst)%wco%wgn
               wst(iwst)%tlag = (wgn(iwgn)%tmpmn(1) + wgn(iwgn)%tmpstdmx(1)) / 2.
             end do

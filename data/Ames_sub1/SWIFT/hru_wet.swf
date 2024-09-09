@@ -1,4 +1,4 @@
  demo                     
           12
-  OUTPUT NAMES - NUBZ
-  OUTPUT UNITS - NUBZ
+        ires    psa             pdep            esa             edep
+        ----    frac            mm              frac            mm  

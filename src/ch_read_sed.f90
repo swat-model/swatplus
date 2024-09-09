@@ -13,14 +13,14 @@
 
       implicit none
 
-      integer :: eof                   !end of file
-      integer :: imax                  !          |determine max number for array (imax) and total number in file
-      character (len=80) :: titldum    !title of file
-      character (len=80) :: header     !header of file
+      integer :: eof = 0               !end of file
+      integer :: imax = 0              !          |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = "" !title of file
+      character (len=80) :: header = ""  !header of file
       logical :: i_exist               !          |check to determine if file exists
-      real :: sumerod                  !units     |description
-      integer :: ich                   !none      |counter
-      integer :: mo                    !none      |counter
+      real :: sumerod = 0.             !units     |description
+      integer :: ich = 0               !none      |counter
+      integer :: mo = 0                !none      |counter
 
       eof = 0
       imax = 0

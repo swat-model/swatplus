@@ -7,15 +7,21 @@
       
       implicit none
       
-      character (len=80) :: titldum
-      character (len=80) :: header
-      integer :: eof,icount,igroup,irct,ishale,group
-      integer :: hru_dum,aqu_dum
+      character (len=80) :: titldum = ""
+      character (len=80) :: header = ""
+      integer :: eof = 0
+      integer :: icount = 0
+      integer :: igroup = 0
+      integer :: irct = 0
+      integer :: ishale = 0
+      integer :: group = 0
+      integer :: hru_dum = 0
+      integer :: aqu_dum = 0
       logical :: i_exist              !none          |check to determine if file exists
 
-      integer :: num_rct							!              |number of reaction parameters
-      integer :: num_groups           !						   |number of reaction groups
-      real    :: shale_fractions(500) !              |fraction of shale that covers an area's object
+      integer :: num_rct = 0          !              |number of reaction parameters
+      integer :: num_groups = 0       !              |number of reaction groups
+      real    :: shale_fractions(500) = 0.!              |fraction of shale that covers an area's object
       
       
       eof = 0
@@ -29,13 +35,13 @@
         read(107,*,iostat=eof) titldum
         
         !allocate arrays
-        allocate(cs_rct_soil(sp_ob%hru))
-        allocate(cs_rct_aqu(sp_ob%aqu))
+        allocate (cs_rct_soil(sp_ob%hru))
+        allocate (cs_rct_aqu(sp_ob%aqu))
         
         !read the chemical reaction values for soils and aquifers, for each reaction group
         read(107,*) header
         read(107,*) num_rct,num_groups
-        allocate(rct(num_rct,num_groups))
+        allocate (rct(num_rct,num_groups), source = 0.)
         do icount=1,num_rct
           read(107,*) (rct(icount,igroup),igroup=1,num_groups)
         enddo
@@ -43,7 +49,7 @@
         !read the parameters for each geologic unit
         read(107,*) header
         read(107,*) num_geol_shale
-        allocate(rct_shale(num_geol_shale,3))
+        allocate (rct_shale(num_geol_shale,3), source = 0.)
         do icount=1,num_geol_shale
           read(107,*) (rct_shale(icount,irct),irct=1,3)
         enddo
@@ -51,10 +57,10 @@
         !values for each HRU object
         read(107,*) header
         do icount=1,sp_ob%hru
-          allocate(cs_rct_soil(icount)%shale(num_geol_shale))
-          allocate(cs_rct_soil(icount)%sseratio(num_geol_shale))
-          allocate(cs_rct_soil(icount)%ko2a(num_geol_shale))
-          allocate(cs_rct_soil(icount)%kno3a(num_geol_shale))
+          allocate (cs_rct_soil(icount)%shale(num_geol_shale), source = 0.)
+          allocate (cs_rct_soil(icount)%sseratio(num_geol_shale), source = 0.)
+          allocate (cs_rct_soil(icount)%ko2a(num_geol_shale), source = 0.)
+          allocate (cs_rct_soil(icount)%kno3a(num_geol_shale), source = 0.)
           read(107,*) hru_dum,group,(shale_fractions(ishale),ishale=1,num_geol_shale)
           !store parameter values for the current HRU
           cs_rct_soil(icount)%se_ino3 = rct(1,group)
@@ -75,10 +81,10 @@
         if(sp_ob%aqu > 0) then
         read(107,*) header
         do icount=1,sp_ob%aqu
-          allocate(cs_rct_aqu(icount)%shale(num_geol_shale))
-          allocate(cs_rct_aqu(icount)%sseratio(num_geol_shale))
-          allocate(cs_rct_aqu(icount)%ko2a(num_geol_shale))
-          allocate(cs_rct_aqu(icount)%kno3a(num_geol_shale))  
+          allocate (cs_rct_aqu(icount)%shale(num_geol_shale), source = 0.)
+          allocate (cs_rct_aqu(icount)%sseratio(num_geol_shale), source = 0.)
+          allocate (cs_rct_aqu(icount)%ko2a(num_geol_shale), source = 0.)
+          allocate (cs_rct_aqu(icount)%kno3a(num_geol_shale), source = 0.)
           read(107,*) aqu_dum,group,(shale_fractions(ishale),ishale=1,num_geol_shale)
           !store parameter values for the current HRU
           cs_rct_aqu(icount)%se_ino3 = rct(1,group)

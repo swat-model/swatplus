@@ -2,21 +2,21 @@
     
       implicit none
       
-      character(len=80) :: prog
+      character(len=80) :: prog = ""
       
-      real :: ban_precip_aa
+      real :: ban_precip_aa = 0.
       
       type basin_inputs
-        character(len=25) :: name
+        character(len=25) :: name = ""
         real :: area_ls_ha = 0.
-        real :: area_tot_ha = 0. 
+        real :: area_tot_ha = 0.
       end type basin_inputs
       type (basin_inputs) :: bsn
       
       type basin_control_codes
         !character(len=16) :: update     !! pointer to basin updates in schedule.upd                                      
         character(len=16) :: petfile ='         pet.cli'    !! potential et filename
-        character(len=16) :: wwqfile     !! watershed stream water quality filename
+        character(len=16) :: wwqfile = ""  !! watershed stream water quality filename
         integer :: pet = 0       !! potential ET method code
                                  !!   0 = Priestley-Taylor 
                                  !!   1 = Penman-Monteith
@@ -78,9 +78,8 @@
                                  !!          roughness and rain intensity
                                  !!   0 = static stmaxd read from .bsn for the global value or .sdr
                                  !! for specific hrus 
-        integer :: i_fpwet = 0   !! 0 = new sediment and nutrient routing (no QUAL2E - simplified nutrients)
-                                 !! 1 = daily routing with QUAL2E
-                                 !! 2 = subdaily routing - with QUAL2E
+        integer :: qual2e = 0    !! 0 = channel routine using QUAL2E 
+                                 !! 1 = channel routing with simplified nutrient transformations
         integer :: gwflow = 0       !!   0 = gwflow module not active; 1 = gwflow module active
       end type basin_control_codes
       type (basin_control_codes) :: bsn_cc
@@ -171,18 +170,18 @@
         integer :: int_day = 1                          !!  interval between daily printing
         integer :: int_day_cur = 1                      !!  current day since last print
       ! AVE ANNUAL END YEARS
-        integer :: aa_numint                          !! number of print intervals for ave annual output
+        integer :: aa_numint = 0                      !! number of print intervals for ave annual output
         integer, dimension(:), allocatable :: aa_yrs  !! end years for ave annual output
       ! SPECIAL OUTPUTS
-        character(len=1) :: csvout   = "    n"         !!  code to print .csv files n=no print; y=print;
-        character(len=1) :: carbout  = "    n"         !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
-        character(len=1) :: cdfout   = "    n"         !!  code to print netcdf (cdf) files n=no print; y=print;
+        character(len=1) :: csvout   = "n"            !!  code to print .csv files n=no print; y=print;
+        character(len=1) :: carbout  = "n"            !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
+        character(len=1) :: cdfout   = "n"            !!  code to print netcdf (cdf) files n=no print; y=print;
       ! OTHER OUTPUTS
         !!   nbs   character(len=1) :: snutc  = "    n"         !!  not used - soils nutrients carbon output (default ave annual-d,m,y,a input)
-        character(len=1) :: crop_yld  = "    a"      !!  crop yields - a=average annual; y=yearly; b=both annual and yearly; n=no print
-        character(len=1) :: mgtout = "    n"         !!  management output file (mgt.out) (default ave annual-d,m,y,a input)
-        character(len=1) :: hydcon = "    n"         !!  hydrograph connect output file (hydcon.out)
-        character(len=1) :: fdcout = "    n"         !!  flow duration curve output n=no print; avann=print; NOT ACTIVE
+        character(len=1) :: crop_yld  = "a"      !!  crop yields - a=average annual; y=yearly; b=both annual and yearly; n=no print
+        character(len=1) :: mgtout = "n"         !!  management output file (mgt.out) (default ave annual-d,m,y,a input)
+        character(len=1) :: hydcon = "n"         !!  hydrograph connect output file (hydcon.out)
+        character(len=1) :: fdcout = "n"         !!  flow duration curve output n=no print; avann=print; NOT ACTIVE
       ! BASIN
         type(print_interval) :: wb_bsn          !!  water balance BASIN output
         type(print_interval) :: nb_bsn          !!  nutrient balance BASIN output
@@ -259,10 +258,10 @@
           character (len=12) :: mon =       "        mon"
           character (len=11) :: day =       "        day"
           character (len=15) :: crop =      " crop/fert/pest"
-          character (len=12) :: oper =      " operation"          
-          character (len=12) :: phub =      "phubase"  
-          character (len=11) :: phua =      "   phuplant"  
-          character (len=12) :: sw =        "  soil_water" 
+          character (len=12) :: oper =      " operation"
+          character (len=12) :: phub =      "phubase"
+          character (len=11) :: phua =      "   phuplant"
+          character (len=12) :: sw =        "  soil_water"
           character (len=17) :: bio =       "      plant_bioms"
           character (len=11) :: rsd =       "   surf_rsd"
           character (len=15) :: solno3 =    "       soil_no3"
@@ -272,9 +271,9 @@
           character (len=14) :: var2 =      "          var2"
           character (len=17) :: var3 =      "             var3"
           character (len=17) :: var4 =      "             var4"
-          character (len=16) :: var5 =      "            var5"    
-          character (len=16) :: var6 =      "            var6"    
-          character (len=16) :: var7 =      "           var7"    
+          character (len=16) :: var5 =      "            var5"
+          character (len=16) :: var6 =      "            var6"
+          character (len=16) :: var7 =      "           var7"
       end type mgt_header
       type (mgt_header) :: mgt_hdr
 
@@ -284,10 +283,10 @@
           character (len=12) :: mon =       "        --- "
           character (len=12) :: day =       "        --- "
           character (len=11) :: crop =      "      ---  "
-          character (len=13) :: oper =      "       ---   "          
-          character (len=9) :: phub =       "    deg_c"  
-          character (len=16) :: phua =      "           deg_c"  
-          character (len=12) :: sw =        "          mm" 
+          character (len=13) :: oper =      "       ---   "
+          character (len=9) :: phub =       "    deg_c"
+          character (len=16) :: phua =      "           deg_c"
+          character (len=12) :: sw =        "          mm"
           character (len=17) :: bio =       "            kg/ha"
           character (len=11) :: rsd =       "      kg/ha"
           character (len=15) :: solno3 =    "          kg/ha"
@@ -297,9 +296,9 @@
           character (len=15) :: var2 =      "          --- "
           character (len=16) :: var3 =      "            ---"
           character (len=16) :: var4 =      "             ---"
-          character (len=16) :: var5 =      "             ---"       
-          character (len=16) :: var6 =      "             ---"  
-          character (len=15) :: var7 =      "            ---"  
+          character (len=16) :: var5 =      "             ---"
+          character (len=16) :: var6 =      "             ---"
+          character (len=15) :: var7 =      "            ---"
       end type mgt_header_unit1
       type(mgt_header_unit1) :: mgt_hdr_unt1
   
@@ -397,10 +396,10 @@
     !  type(snutc_old_header) :: snutc_old_hdr
       
       type basin_yld_header                              
-          character (len=10) :: year =       "      year "                                                     
+          character (len=10) :: year =       "      year "
           character (len=16) :: plant_no =   "     plant_no"
           character (len=16) :: plant_name = "plant_name "
-          character (len=16) :: area_ha =    " harv_area(ha)   "  
+          character (len=16) :: area_ha =    " harv_area(ha)   "
           character (len=16) :: yield_t =    "  yld(t)         "
           character (len=16) :: yield_tha =  " yld(t/ha)      "
       end type basin_yld_header

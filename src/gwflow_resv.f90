@@ -11,24 +11,24 @@
       
       implicit none
 
-      integer, intent (in) :: res_id		 !       |reservoir number
-      integer :: k                       !       |cell counter (cells connected to the reservoir object)
-      integer :: jj                      !       |cell counter (cells connected to the reservoir cell)
-      integer :: s                       !       |solute counter
-      integer :: res_cell_id             !       |id of cell that is connected to the reservoir object
-      integer :: cell_id								 !       |id of cell that is connected to the reservoir cell
-      integer :: isalt                   !       |salt ion counter
-      integer :: ics                     !       |constituent counter
-      integer :: sol_index
-      real :: area_res_cell              !m2     |spatial area of the cell that is in connection with the reservoir
-      real :: area_cell                  !m2     |spatial area of the cell connected to the reservoir cell
-      real :: min_area									 !m2     |minimum of the two cell areas
-      real :: head_diff                  !m      |head difference between reservoir and aquifer
-      real :: Q                          !m3     |water volume exchange between cell and reservoir
-      real :: conn_length                !m      |length of connection between reservoir cell and adjacent cell
-      real :: res_volume                 !m3     |water volume in reservoir before groundwater exchange occurs
-      real :: resv_csol(100)             !g/m3   |solute concentration in reservoir water
-      real :: solmass(100)               !g      |solute mass transferred
+      integer, intent (in) :: res_id     !       |reservoir number
+      integer :: k = 0                   !       |cell counter (cells connected to the reservoir object)
+      integer :: jj = 0                  !       |cell counter (cells connected to the reservoir cell)
+      integer :: s = 0                   !       |solute counter
+      integer :: res_cell_id = 0         !       |id of cell that is connected to the reservoir object
+      integer :: cell_id = 0             !       |id of cell that is connected to the reservoir cell
+      integer :: isalt = 0               !       |salt ion counter
+      integer :: ics = 0                 !       |constituent counter
+      integer :: sol_index = 0
+      real :: area_res_cell = 0.         !m2     |spatial area of the cell that is in connection with the reservoir
+      real :: area_cell = 0.             !m2     |spatial area of the cell connected to the reservoir cell
+      real :: min_area = 0.              !m2     |minimum of the two cell areas
+      real :: head_diff = 0.             !m      |head difference between reservoir and aquifer
+      real :: Q = 0.                     !m3     |water volume exchange between cell and reservoir
+      real :: conn_length = 0.           !m      |length of connection between reservoir cell and adjacent cell
+      real :: res_volume = 0.            !m3     |water volume in reservoir before groundwater exchange occurs
+      real :: resv_csol(100) = 0.        !g/m3   |solute concentration in reservoir water
+      real :: solmass(100) = 0.          !g      |solute mass transferred
 
       
       

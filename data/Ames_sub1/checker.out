@@ -1,4 +1,4 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-08-27        MODULAR Rev 2024.61.0.1-33-g68b1328                    
                                         zmx       usle_k       sumfc       sumul      usle_p     usle_ls        esco        epco     cn3_swf       perco     latq_co   tiledrain 
  sname           hydgrp                 (mm)                    (mm)        (mm)                                                                                     0=notile;1=tile;
 soil_01         B                  2000.0000      0.0000    361.5000    616.1781      1.0000      0.3638      0.9500      1.0000      0.0000      0.5000      0.0100           0

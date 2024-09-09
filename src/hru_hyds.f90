@@ -19,21 +19,22 @@
       
       implicit none
 
-      integer :: j                   !none          |same as ihru (hru number)
-      real :: cnv_m3                 !              |
-      real :: cnv_kg                 !              |
-      integer :: iob                 !              |
-      integer :: ihyd                !none          |counter
-      integer :: ipest               !none          |counter
-      integer :: ipath               !none          |counter 
-      integer :: isalt               !none          |counter for salt ions (rtb salt)
-      integer :: ics                 !none          |counter for constituents (rtb cs)
-      integer :: istep               !none          |counter
-      integer :: istep_bak           !none          |counter
-      integer :: day_cur             !none          |counter
-      integer :: day_next            !none          |counter
-      integer :: tinc                !none          |
-      integer :: inext_step
+      integer :: j = 0               !none          |same as ihru (hru number)
+      real :: cnv_m3 = 0.            !              |
+      real :: cnv_kg = 0.            !              |
+      real :: cnv_ppm = 0.            !              |
+      integer :: iob = 0             !              |
+      integer :: ihyd = 0            !none          |counter
+      integer :: ipest = 0           !none          |counter
+      integer :: ipath = 0           !none          |counter 
+      integer :: isalt = 0           !none          |counter for salt ions (rtb salt)
+      integer :: ics = 0             !none          |counter for constituents (rtb cs)
+      integer :: istep = 0           !none          |counter
+      integer :: istep_bak = 0       !none          |counter
+      integer :: day_cur = 0         !none          |counter
+      integer :: day_next = 0        !none          |counter
+      integer :: tinc = 0            !none          |
+      integer :: inext_step = 0
       
       j = ihru
       cnv_m3 = hru(j)%area_ha * 10.
@@ -70,8 +71,13 @@
       ob(icmd)%hd(3)%chla = chl_a(j) *cnv_kg          !!chl_a
       ob(icmd)%hd(3)%nh3 = 0.                         !! NH3
       ob(icmd)%hd(3)%no2 = 0.                         !! NO2
-      ob(icmd)%hd(3)%cbod = cbodu(j) * cnv_kg         !!cbodu
-      ob(icmd)%hd(3)%dox = doxq(j) *cnv_kg            !!doxq & soxy
+      if (ob(icmd)%hd(3)%flo > 0.01) then
+        cnv_ppm = 1. / (1000. * ob(icmd)%hd(3)%flo)
+      else
+        cnv_ppm = 0.
+      end if
+      ob(icmd)%hd(3)%cbod = cbodu(j) * cnv_ppm        !!cbodu
+      ob(icmd)%hd(3)%dox = doxq(j) * cnv_ppm          !!doxq & soxy
 
       ob(icmd)%hd(3)%san = sanyld(j)                  !! detached sand
       ob(icmd)%hd(3)%sil = silyld(j)                  !! detached silt

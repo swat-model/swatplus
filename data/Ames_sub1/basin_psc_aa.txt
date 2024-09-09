@@ -1,3 +1,3 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-08-27        MODULAR Rev 2024.61.0.1-33-g68b1328                    
         jday         mon         day          yr name                            flo            sed           orgn           sedp            no3           solp           chla            nh3            no2           cbod            dox            san            sil            cla            sag            lag            grv           null
                                                                                m^3/s           tons            kgN            kgP            kgN            kgP             kg            kgN            kgN             kg             kg           tons           tons           tons           tons           tons           tons           degc

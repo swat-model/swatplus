@@ -13,15 +13,19 @@
       
       implicit none 
         
-      integer :: ihru            !none          !counter       
-      integer :: npmx            !none          |total number of pesticides     
-      integer :: ly              !none          |counter
-      integer :: ics             !none          |counter
-      integer :: ics_db          !              | 
-      integer :: isp_ini         !              |
-      integer :: ipl
-      real :: wt1                !              |
-      real :: hru_area_m2,water_volume,soil_volume,soil_mass,mass_sorbed
+      integer :: ihru = 0        !none          !counter       
+      integer :: npmx = 0        !none          |total number of pesticides     
+      integer :: ly = 0          !none          |counter
+      integer :: ics = 0         !none          |counter
+      integer :: ics_db = 0      !              | 
+      integer :: isp_ini = 0     !              |
+      integer :: ipl = 0
+      real :: wt1 = 0.           !              |
+      real :: hru_area_m2 = 0.
+      real :: water_volume = 0.
+      real :: soil_volume = 0.
+      real :: soil_mass = 0.
+      real :: mass_sorbed = 0.
         
         
       !! allocate hru cs
@@ -29,12 +33,12 @@
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
           do ly = 1, soil(ihru)%nly
-            allocate (cs_soil(ihru)%ly(ly)%cs(npmx))
-            allocate (cs_soil(ihru)%ly(ly)%csc(npmx))
-            allocate (cs_soil(ihru)%ly(ly)%cs_sorb(npmx))
-            allocate (cs_soil(ihru)%ly(ly)%csc_sorb(npmx))
+            allocate (cs_soil(ihru)%ly(ly)%cs(npmx), source = 0.)
+            allocate (cs_soil(ihru)%ly(ly)%csc(npmx), source = 0.)
+            allocate (cs_soil(ihru)%ly(ly)%cs_sorb(npmx), source = 0.)
+            allocate (cs_soil(ihru)%ly(ly)%csc_sorb(npmx), source = 0.)
           end do
-          allocate (cs_irr(ihru)%csc(npmx))
+          allocate (cs_irr(ihru)%csc(npmx), source = 0.)
         end if
 
         isp_ini = hru(ihru)%dbs%soil_plant_init

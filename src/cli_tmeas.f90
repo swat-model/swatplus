@@ -7,22 +7,22 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      integer :: i                    !none       |counter 
-      integer :: iyr                  !none       |number of years
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      integer :: i = 0                !none       |counter 
+      integer :: iyr = 0              !none       |number of years
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: istep                !           | 
-      integer :: mtmp                 !           |
-      real :: tempx                   !           |
-      real :: tempn                   !           |
-      integer :: iyr_prev             !none       |previous year
-      integer :: iyrs                 !           |
-      integer, dimension(12) :: num_tot           !total number of days in a month - to compute average monthly max/min
-      integer :: day_mo
-      integer :: mo
+      integer :: istep = 0            !           | 
+      integer :: mtmp = 0             !           |
+      real :: tempx = 0.              !           |
+      real :: tempn = 0.              !           |
+      integer :: iyr_prev = 0         !none       |previous year
+      integer :: iyrs = 0             !           |
+      integer, dimension(12) :: num_tot = 0       !total number of days in a month - to compute average monthly max/min
+      integer :: day_mo = 0
+      integer :: mo = 0
       
       mtmp = 0
       eof = 0
@@ -88,8 +88,8 @@
 
         if (eof < 0) exit
        
-        allocate (tmp(i)%ts(366,tmp(i)%nbyr))
-        allocate (tmp(i)%ts2(366,tmp(i)%nbyr))
+        allocate (tmp(i)%ts(366,tmp(i)%nbyr), source = 0.)
+        allocate (tmp(i)%ts2(366,tmp(i)%nbyr), source = 0.)
         
         ! read and save start jd and yr
         read (108,*,iostat=eof) iyr, istep

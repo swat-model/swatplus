@@ -35,20 +35,20 @@
       
         implicit none       
 
-        integer :: j                !none           |HRU number
-        real :: sedp_attach         !kg P/ha        |amount of phosphorus attached to sediment 
+        integer :: j = 0            !none           |HRU number
+        real :: sedp_attach = 0.    !kg P/ha        |amount of phosphorus attached to sediment 
                                     !               |in soil
-        real :: wt1                 !kg/ha          |weight of upper soil layer
-        real :: er                  !none           |enrichment ratio
-        real :: frac                !none           |fraction of organic P in soil
-        real :: sedp                !kg P/ha        |total amount of P removed in sediment erosion 
-        real :: sed_orgp            !kg P/ha        |total amount of P in organic pools
-        real :: sed_hump            !kg P/ha        |amount of P in humus pool
-        real :: sed_manp            !kg P/ha        |amount of P in manure soil pool
-        real :: sed_rsd_manp        !kg P/ha        |maount of P in residue manure pool
-        real :: fr_orgp             !kg P/ha        |fraction of organic phosphorus in soil (humus + manure in soil + manure in residue)
-        real :: fr_actmin           !kg P/ha        |fraction of active mineral phosphorus in soil
-        real :: fr_stamin           !kg P/ha        |fraction of stable mineral phosphorus in soil
+        real :: wt1 = 0.            !kg/ha          |weight of upper soil layer
+        real :: er = 0.             !none           |enrichment ratio
+        real :: frac = 0.           !none           |fraction of organic P in soil
+        real :: sedp = 0.           !kg P/ha        |total amount of P removed in sediment erosion 
+        real :: sed_orgp = 0.       !kg P/ha        |total amount of P in organic pools
+        real :: sed_hump = 0.       !kg P/ha        |amount of P in humus pool
+        real :: sed_manp = 0.       !kg P/ha        |amount of P in manure soil pool
+        real :: sed_rsd_manp = 0.   !kg P/ha        |maount of P in residue manure pool
+        real :: fr_orgp = 0.        !kg P/ha        |fraction of organic phosphorus in soil (humus + manure in soil + manure in residue)
+        real :: fr_actmin = 0.      !kg P/ha        |fraction of active mineral phosphorus in soil
+        real :: fr_stamin = 0.      !kg P/ha        |fraction of stable mineral phosphorus in soil
 
         j = ihru
 

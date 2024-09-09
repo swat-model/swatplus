@@ -11,10 +11,10 @@
       
       implicit none
       
-      integer :: ihru           !               |
-      integer :: mhru           !               |
-      integer :: isalt          !               |salt ion counter
-      integer :: ics            !               |constituent counter
+      integer :: ihru = 0       !               |
+      integer :: mhru = 0       !               |
+      integer :: isalt = 0      !               |salt ion counter
+      integer :: ics = 0        !               |constituent counter
       
       mhru = sp_ob%hru
      
@@ -56,7 +56,7 @@
       allocate (hscf_d(mhru))
       allocate (hscf_m(mhru))
       allocate (hscf_y(mhru))
-      allocate (hscf_a(mhru))  
+      allocate (hscf_a(mhru))
 !!!  new nut carb files
       allocate (hls_m(mhru))
       allocate (hls_y(mhru))

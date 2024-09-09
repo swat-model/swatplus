@@ -10,9 +10,21 @@
       
       implicit none
 
-      character(len=8) :: col_head_con(17)
-      integer  i,j,k,in_chan,in_con,cell_ID,channel,chan_zone,dum1,dum2,chan_cell
-      real     bed_elev,chan_length,dum3
+      character(len=8) :: col_head_con(17) = ""
+      integer :: i = 0
+      integer :: j = 0
+      integer :: k = 0
+      integer :: in_chan = 0
+      integer :: in_con = 0
+      integer :: cell_ID = 0
+      integer :: channel = 0
+      integer :: chan_zone = 0
+      integer :: dum1 = 0
+      integer :: dum2 = 0
+      integer :: chan_cell = 0
+      real :: bed_elev = 0.
+      real :: chan_length = 0.
+      real :: dum3 = 0.
 
       !message to record file
       write(out_gw,*) 'reading cell-channel connections in gwflow.chancells...'
@@ -27,11 +39,11 @@
       num_chancells = sp_ob%gwflow
       
       !allocate global arrays for channel cells
-      allocate(gw_chan_id(num_chancells))
-      allocate(gw_chan_chan(num_chancells))
-      allocate(gw_chan_len(num_chancells))
-      allocate(gw_chan_elev(num_chancells))
-      allocate(gw_chan_zone(num_chancells))
+      allocate (gw_chan_id(num_chancells), source = 0)
+      allocate (gw_chan_chan(num_chancells), source = 0)
+      allocate (gw_chan_len(num_chancells), source = 0.)
+      allocate (gw_chan_elev(num_chancells), source = 0.)
+      allocate (gw_chan_zone(num_chancells), source = 0)
       gw_chan_len = 0.
       
       !read in channel-cell connection information

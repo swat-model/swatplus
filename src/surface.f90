@@ -30,10 +30,10 @@
       
       implicit none
 
-      integer :: j                !none          |HRU number 
-      real :: ulu                 !              |
-      real :: hruirrday           !              |
-      integer :: irmmdt           !              |
+      integer :: j = 0            !none          |HRU number 
+      real :: ulu = 0.            !              |
+      real :: hruirrday = 0.      !              |
+      integer :: irmmdt = 0       !              |
 
       j = ihru
       ulu = hru(j)%luse%urb_lu

@@ -43,19 +43,19 @@
       
       implicit none
       
-      integer :: j           !none       |HRU number
-      integer :: j1          !none       |counter
-      integer :: ires        !none       |counter
-      real :: slug           !           | 
-      real :: sep_left       !           |
-      real :: por_air        !           |
-      real :: d              !           |
-      real :: yy             !           |
-      real :: xx             !           |
-      real :: wat            !mm H2O     |shallow water table depth below the soil surface to up to impervious layer
-      real :: sw_del         !           |
-      real :: wt_del         !           |
-      real :: sumqtile       !           | 
+      integer :: j = 0       !none       |HRU number
+      integer :: j1 = 0      !none       |counter
+      integer :: ires = 0    !none       |counter
+      real :: slug = 0.      !           | 
+      real :: sep_left = 0.  !           |
+      real :: por_air = 0.   !           |
+      real :: d = 0.         !           |
+      real :: yy = 0.        !           |
+      real :: xx = 0.        !           |
+      real :: wat = 0.       !mm H2O     |shallow water table depth below the soil surface to up to impervious layer
+      real :: sw_del = 0.    !           |
+      real :: wt_del = 0.    !           |
+      real :: sumqtile = 0.  !           | 
     
       j = ihru
       ires =  hru(j)%dbs%surf_stor !Jaehak 2022
@@ -187,7 +187,7 @@
               call swr_drains           !! compute tile flow using drainmod tile equations 
             else                        
               call swr_origtile(d)      !! compute tile flow using existing tile equations 
-	          if(qtile < 0.) qtile = 0.
+              if(qtile < 0.) qtile = 0.
             end if 
           end if
         end if

@@ -37,8 +37,8 @@
       
       implicit none
 
-      integer :: j           !none          |HRU number
-      integer :: k           !none          |counter
+      integer :: j = 0       !none          |HRU number
+      integer :: k = 0       !none          |counter
 
       j = ihru
 
@@ -66,5 +66,5 @@
 	    end do
 	  end if
      
-      return
-      end subroutine sq_surfst
+    return
+    end subroutine sq_surfst
