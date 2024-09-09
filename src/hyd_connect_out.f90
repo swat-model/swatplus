@@ -10,8 +10,8 @@
       
       implicit none
       
-      integer :: ii             !              |
-      integer :: i              !              | 
+      integer :: ii = 0         !              |
+      integer :: i = 0          !              | 
 
       ii = 0
       icmd = sp_ob1%objs

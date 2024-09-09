@@ -1,4 +1,4 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-08-27        MODULAR Rev 2024.61.0.1-33-g68b1328                    
         jday        mon        day         yr            unit              gis_id     name              meta_micr       str_micr         str_hs       co2_meta        co2_str        micr_hs        micr_hp        hs_micr        hs_hp          hp_micr       co2_micr         co2_hs         co2_hp
                                                                                                           kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha        kg C/ha
          366          12          31        2020           1                     1 hru0001           0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00

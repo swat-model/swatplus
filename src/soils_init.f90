@@ -14,14 +14,14 @@
       
       implicit none  
       
-      integer :: msoils           !none          !ending of loop
-      integer :: isol             !none          |counter
-      integer :: mlyr             !none          |max number of soil layers
-      integer :: j                !none          |counter
-      integer :: nly              !              |end of loop
-      integer :: ly               !none          |counter
-      real :: dep_new1            !mm            |depth of top of septic layer
-      real :: dep_new2            !mm            |depth of bottom of septic layer
+      integer :: msoils = 0       !none          !ending of loop
+      integer :: isol = 0         !none          |counter
+      integer :: mlyr = 0         !none          |max number of soil layers
+      integer :: j = 0            !none          |counter
+      integer :: nly = 0          !              |end of loop
+      integer :: ly = 0           !none          |counter
+      real :: dep_new1 = 0.       !mm            |depth of top of septic layer
+      real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
       
       !!Section 1
       !!this section sets, allocates, and initializes the original soil database
@@ -164,8 +164,8 @@
         !! allocate soil1 arrays - carbon/nutrients
         nly = soil(ihru)%nly
         !allocate (cs_soil(ihru)%ly(nly))
-        allocate (soil1(ihru)%sw(nly))
-        allocate (soil1(ihru)%cbn(nly))
+        allocate (soil1(ihru)%sw(nly), source = 0.)
+        allocate (soil1(ihru)%cbn(nly), source = 0.)
         allocate (soil1(ihru)%sed(nly))
         allocate (soil1(ihru)%mn(nly))
         allocate (soil1(ihru)%mp(nly))
@@ -182,8 +182,8 @@
         allocate (soil1(ihru)%man(nly))
         allocate (soil1(ihru)%water(nly))
 
-        allocate (soil1_init(ihru)%sw(nly))
-        allocate (soil1_init(ihru)%cbn(nly))
+        allocate (soil1_init(ihru)%sw(nly), source = 0.)
+        allocate (soil1_init(ihru)%cbn(nly), source = 0.)
         allocate (soil1_init(ihru)%sed(nly))
         allocate (soil1_init(ihru)%mn(nly))
         allocate (soil1_init(ihru)%mp(nly))

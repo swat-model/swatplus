@@ -6,19 +6,19 @@
       
       implicit none      
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      character (len=13) :: name      !           |
-      integer :: eof                  !           |end of file
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      character (len=13) :: name = "" !           |
+      integer :: eof = 0              !           |end of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: mcom                 !           |
-      integer :: icom                 !none       |counter
-      integer :: imax                 !none       |counter
-      integer :: numb                 !none       |end of loop
-      integer :: ii                   !none       |counter
-      integer :: mpcom                !none       |end of loop   
-      integer :: iplt                 !none       |counter
-      integer :: ipldb                !none       |counter
+      integer :: mcom = 0             !           |
+      integer :: icom = 0             !none       |counter
+      integer :: imax = 0             !none       |counter
+      integer :: numb = 0             !none       |end of loop
+      integer :: ii = 0               !none       |counter
+      integer :: mpcom = 0            !none       |end of loop   
+      integer :: iplt = 0             !none       |counter
+      integer :: ipldb = 0            !none       |counter
       
       
       mcom = 0

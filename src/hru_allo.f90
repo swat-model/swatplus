@@ -16,8 +16,8 @@
       
       implicit none
 
-      integer :: imax                 !none       |determine max number for array (imax) and total number in file
-      integer :: ii                   !none       |hru counter
+      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      integer :: ii = 0               !none       |hru counter
 
       imax = sp_ob%hru
       if (imax == 0) then
@@ -69,34 +69,34 @@
         
         !rtb salt - allocate wetland arrays
         if(cs_db%num_salts > 0) then
-          allocate(wetsalt_d(imax))
-          allocate(wetsalt_m(imax))
-          allocate(wetsalt_y(imax))
-          allocate(wetsalt_a(imax))
+          allocate (wetsalt_d(imax))
+          allocate (wetsalt_m(imax))
+          allocate (wetsalt_y(imax))
+          allocate (wetsalt_a(imax))
           do ii=1,imax
-            allocate(wetsalt_d(ii)%salt(cs_db%num_salts))
-            allocate(wetsalt_m(ii)%salt(cs_db%num_salts))
-            allocate(wetsalt_y(ii)%salt(cs_db%num_salts))
-            allocate(wetsalt_a(ii)%salt(cs_db%num_salts))  
-            allocate(wet_water(ii)%salt(cs_db%num_salts))
-            allocate(wet_water(ii)%saltc(cs_db%num_salts))
-					enddo
+            allocate (wetsalt_d(ii)%salt(cs_db%num_salts))
+            allocate (wetsalt_m(ii)%salt(cs_db%num_salts))
+            allocate (wetsalt_y(ii)%salt(cs_db%num_salts))
+            allocate (wetsalt_a(ii)%salt(cs_db%num_salts))
+            allocate (wet_water(ii)%salt(cs_db%num_salts))
+            allocate (wet_water(ii)%saltc(cs_db%num_salts), source = 0.)
+          enddo
         endif
         
         !rtb cs - allocate wetland arrays
         if(cs_db%num_cs > 0) then
-          allocate(wetcs_d(imax))
-          allocate(wetcs_m(imax))
-          allocate(wetcs_y(imax))
-          allocate(wetcs_a(imax))
+          allocate (wetcs_d(imax))
+          allocate (wetcs_m(imax))
+          allocate (wetcs_y(imax))
+          allocate (wetcs_a(imax))
           do ii=1,imax
             allocate (wetcs_d(ii)%cs(cs_db%num_cs))
             allocate (wetcs_m(ii)%cs(cs_db%num_cs))
             allocate (wetcs_y(ii)%cs(cs_db%num_cs))
-            allocate (wetcs_a(ii)%cs(cs_db%num_cs))  
+            allocate (wetcs_a(ii)%cs(cs_db%num_cs))
             allocate (wet_water(ii)%cs(cs_db%num_cs))
-            allocate (wet_water(ii)%csc(cs_db%num_cs))
-					enddo
+            allocate (wet_water(ii)%csc(cs_db%num_cs), source = 0.)
+          enddo
         endif
         
       endif

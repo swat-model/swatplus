@@ -1408,9 +1408,9 @@
 !!! CROP YIELDS - output file only written for yearly or annual timesteps; "b" = both files written;
       if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
         !! headers for yearly crop yields
-        open (4010,file="crop_yld_yr.txt")
+        open (4010,file="crop_yld_yr.txt", recl = 1500)
         write (4010,*) bsn%name, prog
-          write (4010,1000)
+        write (4010,1000)
         write (9000,*) "CROP                      crop_yld_yr.txt"
         if (pco%csvout == "y") then
             open (4011,file="crop_yld_yr.csv")
@@ -1422,9 +1422,9 @@
               
       !! headers for annual crop yields
       if (pco%crop_yld == "a" .or. pco%crop_yld == "b") then
-        open (4008,file="crop_yld_aa.txt")
+        open (4008,file="crop_yld_aa.txt", recl = 1500)
         write (4008,*) bsn%name, prog
-          write (4008,1000)
+        write (4008,1000)
         write (9000,*) "CROP                      crop_yld_aa.txt"
         if (pco%csvout == "y") then
             open (4009,file="crop_yld_aa.csv")

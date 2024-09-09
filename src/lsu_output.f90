@@ -9,13 +9,13 @@
       
       implicit none
       
-      integer :: ilsu           !none       |counter
-      integer :: ielem          !none       |counter
-      integer :: ihru           !none       |counter 
-      integer :: iob            !none       |counter 
-      real :: const             !           |  
-      real :: sw_init           !           |
-      real :: sno_init          !           |
+      integer :: ilsu = 0       !none       |counter
+      integer :: ielem = 0      !none       |counter
+      integer :: ihru = 0       !none       |counter 
+      integer :: iob = 0        !none       |counter 
+      real :: const = 0.        !           |  
+      real :: sw_init = 0.      !           |
+      real :: sno_init = 0.     !           |
           
       !! zero daily outputs before summing
       do ilsu = 1, db_mx%lsu_out

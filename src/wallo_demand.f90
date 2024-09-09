@@ -10,10 +10,10 @@
 
       integer, intent (in) :: iwallo            !water allocation object number
       integer, intent (in)  :: idmd             !water demand object number
-      integer :: j                  !none       |hru number
-      integer :: id                 !none       |flo_con decision table number
-      integer :: isrc               !none       |source object number
-      integer :: irec               !none       |recall database number
+      integer :: j = 0              !none       |hru number
+      integer :: id = 0             !none       |flo_con decision table number
+      integer :: isrc = 0           !none       |source object number
+      integer :: irec = 0           !none       |recall database number
 
       !! zero total demand for each object
       wallod_out(iwallo)%dmd(idmd)%dmd_tot = 0.

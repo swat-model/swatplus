@@ -43,20 +43,20 @@
       
       implicit none
 
-      integer :: j             !none          |HRU number
-      real :: soxy             !mg/L          |dissolved oxygen saturation concentration 
-      real :: tp               !kmoles P      |kilomoles of phosphorus in nutrient loading to
+      integer :: j = 0         !none          |HRU number
+      real :: soxy = 0.        !mg/L          |dissolved oxygen saturation concentration 
+      real :: tp = 0.          !kmoles P      |kilomoles of phosphorus in nutrient loading to
                                !              |main channel
-      real :: org_c            !kg            |organic carbon content of surface runoff on
+      real :: org_c = 0.       !kg            |organic carbon content of surface runoff on
                                !              |day in HRU
-      real :: wtmp             !deg K         |temperature of surface runoff
-      real :: ww               !none          |variable to hold intermediate calculation
+      real :: wtmp = 0.        !deg K         |temperature of surface runoff
+      real :: ww = 0.          !none          |variable to hold intermediate calculation
                                !              |result
-      real :: xx               !none          |variable to hold intermediate calculation
+      real :: xx = 0.          !none          |variable to hold intermediate calculation
                                !              |result
-      real :: yy               !none          |variable to hold intermediate calculation
+      real :: yy = 0.          !none          |variable to hold intermediate calculation
                                !              |result
-      real :: zz               !none          |variable to hold intermediate calculation
+      real :: zz = 0.          !none          |variable to hold intermediate calculation
                                !              |result
       
       j = ihru
@@ -75,7 +75,7 @@
  
           !! calculate organic carbon loading to main channel
           org_c = 0.
-          org_c = (soil1(j)%tot(1)%c / 100.) * enratio*sedyld(j) * 1000.
+          org_c = (soil1(j)%cbn(1) / 100.) * enratio * sedyld(j) * 1000.
           
           !!add by zhang
           !!========================
@@ -86,8 +86,8 @@
           !!========================
           
                   
-          !! calculate carbonaceous biological oxygen demand (CBOD)
-          cbodu(j) = cbodu(j) + 2.7 * org_c / (qdr(j) * hru(j)%km) !JAEHAK 2016
+          !! calculate carbonaceous biological oxygen demand (ppm or mg/L)
+          cbodu(j) = 2.7 * org_c / (qdr(j) * hru(j)%km) / 10000.  !JAEHAK 2016
 
           !! calculate dissolved oxygen saturation concentration
           !! QUAL2E equation III-29

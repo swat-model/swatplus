@@ -21,22 +21,30 @@
       implicit none
      
       real :: bypass = 1.             !              | 
-      integer :: j                    !none          |counter
-      real :: x1                      !              |
-      real :: wet_h                   !              |
-      real :: wet_h1                  !              | 
-      integer :: ised                 !none          |counter
-      integer :: irel                 !              |
-      integer :: icon                 !none          |counter: identifies parameter list in cs_res (rtb cs)
+      integer :: j = 0                !none          |counter
+      real :: x1 = 0.                 !              |
+      real :: wet_h = 0.              !              |
+      real :: wet_h1 = 0.             !              | 
+      integer :: ised = 0             !none          |counter
+      integer :: irel = 0             !              |
+      integer :: icon = 0             !none          |counter: identifies parameter list in cs_res (rtb cs)
       integer :: ires = 0
-      integer :: j1
-      integer :: ii                   !none          |sub daily time step counter
+      integer :: j1 = 0
+      integer :: ii = 0               !none          |sub daily time step counter
       real :: wet_fr = 0.
-      real :: pvol_m3
-      real :: evol_m3
-      real :: dep
-      real :: weir_hgt,wsa1,sedppm,no3ppm,seep_rto,qp_cms,dep_init
-      real :: volseep, volex, swst(20)
+      real :: pvol_m3 = 0.
+      real :: evol_m3 = 0.
+      real :: dep = 0.
+      real :: weir_hgt = 0.
+      real :: wsa1 = 0.
+      real :: sedppm = 0.
+      real :: no3ppm = 0.
+      real :: seep_rto = 0.
+      real :: qp_cms = 0.
+      real :: dep_init = 0.
+      real :: volseep = 0.
+      real :: volex = 0.
+      real :: swst(20) = 0.
       j = ihru
       ires = hru(j)%dbs%surf_stor
       ised = wet_dat(ires)%sed
@@ -105,7 +113,7 @@
               volseep = 0
             endif
           end do
-			
+            
           ! move excess water upward to calculate daily seepage rate Jaehak 2022
           volex = 0
           do j1 = soil(j)%nly, 1, -1

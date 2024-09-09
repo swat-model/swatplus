@@ -36,29 +36,29 @@
       
       implicit none
 
-      integer :: itime                      !none          |time step during day
-      integer :: pt                         !min           |time during day
-      integer :: k                          !none          |random number seed, counter
-      real :: vv                            !none          |random number between 0.0 and 1.0 that 
+      integer :: itime = 0                  !none          |time step during day
+      integer :: pt = 0                     !min           |time during day
+      integer :: k = 0                      !none          |random number seed, counter
+      real :: vv = 0.                       !none          |random number between 0.0 and 1.0 that 
                                             !              |represents time to peak rainfall rate
                                             !              |expressed as a fraction of storm duration
-      real ::  blm                          !none          |lowest random number value allowed
-      real :: qmn                           !none          |mean random number value
-      real :: uplm                          !none          |highest random number value
-      real :: dur                           !hours         |duration of storm during day
-      real :: pkrain                        !mm H2O        |volume of rain at time of peak rainfall
-      real :: rtp                           !min           |time of peak rainfall rate
-      real :: xk1                           !none          |1st constant in dimensionless exponential
+      real :: blm = 0.                      !none          |lowest random number value allowed
+      real :: qmn = 0.                      !none          |mean random number value
+      real :: uplm = 0.                     !none          |highest random number value
+      real :: dur = 0.                      !hours         |duration of storm during day
+      real :: pkrain = 0.                   !mm H2O        |volume of rain at time of peak rainfall
+      real :: rtp = 0.                      !min           |time of peak rainfall rate
+      real :: xk1 = 0.                      !none          |1st constant in dimensionless exponential
                                             !              |rainfall distribution
-      real :: xk2                           !none          |2nd constant in dimensionless exponential
+      real :: xk2 = 0.                      !none          |2nd constant in dimensionless exponential
                                             !              |rainfall distribution
-      real :: xkp1                          !hr            |1st constant in exponential rainfall
+      real :: xkp1 = 0.                     !hr            |1st constant in exponential rainfall
                                             !              |distribution
-      real :: xkp2                          !hr            |2nd constant in exponential rainfall
+      real :: xkp2 = 0.                     !hr            |2nd constant in exponential rainfall
                                             !              |distribution
-      real :: rx                            !mm H2O        |total rainfall at end of time step
-      real :: pkrr                          !mm/hr         |peak rainfall rate
-      real :: sumrain                       !mm H2O        |total amount of daily rainfall prior to
+      real :: rx = 0.                       !mm H2O        |total rainfall at end of time step
+      real :: pkrr = 0.                     !mm/hr         |peak rainfall rate
+      real :: sumrain = 0.                  !mm H2O        |total amount of daily rainfall prior to
                                             !              |time step
       real :: atri                          !none          |daily value generated for distribution                     
 

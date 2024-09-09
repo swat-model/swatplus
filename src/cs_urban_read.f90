@@ -7,15 +7,15 @@
       
       implicit none
       
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      character (len=16) :: urb_type   !           |urban land use type
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      character (len=16) :: urb_type = ""!           |urban land use type
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: eof                  !           |end of file
+      integer :: eof = 0              !           |end of file
       integer :: imax = 0.            !none       |determine max number for array (imax) and total number in file
-      integer :: itype                !           |counter
-      integer :: iu                   !none       |counter 
-      integer :: ics                  !none       |constituent ion counter
+      integer :: itype = 0            !           |counter
+      integer :: iu = 0               !none       |counter 
+      integer :: ics = 0              !none       |constituent ion counter
       
       
       !only proceed if there are constituents in the simulation
@@ -40,7 +40,7 @@
         enddo
 
         !allocate urban constituent arrays
-        allocate(cs_urban_conc(imax,cs_db%num_cs))
+        allocate (cs_urban_conc(imax,cs_db%num_cs), source = 0.)
         cs_urban_conc = 0.
         
         !loop through each land use type; verify match with types listed in urban.urb        

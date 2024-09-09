@@ -10,8 +10,8 @@
     
       implicit none
       
-      integer :: j              !none       |counter
-      integer :: ilum           !none       |counter
+      integer :: j = 0          !none       |counter
+      integer :: ilum = 0       !none       |counter
 
        !! set the object number for each hru-to point to weather station
       if (sp_ob%hru > 0) then
@@ -47,8 +47,7 @@
       write (4001,*) bsn%name, prog
       write (4001,*) ero_hdr
       write (4001,*) ero_hdr_units
-      
-      
+            
 !!!!! new checker.out file - always prints
       open (4000,file = "checker.out",recl=1200)
       write (4000,*) bsn%name, prog
@@ -69,6 +68,6 @@
       
 100   format(2a16,11f12.4,i12)
        
-	  return
+      return
       
       end subroutine proc_hru

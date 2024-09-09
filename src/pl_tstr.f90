@@ -35,10 +35,10 @@
       
       implicit none 
       
-      integer :: j             !none        |HRU number
-      integer :: idp           !            | 
-      real :: tgx              !            |
-      real :: rto              !none        |cloud cover factor
+      integer :: j = 0         !none        |HRU number
+      integer :: idp = 0       !            | 
+      real :: tgx = 0.         !            |
+      real :: rto = 0.         !none        |cloud cover factor
 
       j = ihru
 

@@ -9,12 +9,12 @@
         real :: surq = 0.            !! |kg/ha       |mass lost in surface runoff in HRU
         real :: sedm = 0.            !! |kg/ha       |mass lost in sediment runoff in HRU
         real :: latq = 0.            !! |kg/ha       |mass in lateral flow in HRU
-        real :: urbq = 0.            !! |kg/ha			 |mass in urban runoff
-        real :: wetq = 0.            !! |kg/ha			 |mass in wetland outflow
+        real :: urbq = 0.            !! |kg/ha       |mass in urban runoff
+        real :: wetq = 0.            !! |kg/ha       |mass in wetland outflow
         real :: tile = 0.            !! |kg/ha       |mass in tile flow in HRU
         real :: perc = 0.            !! |kg/ha       |mass leached past bottom of soil
         real :: gwup = 0.            !! |kg/ha       |mass from groundwater (to soil profile)
-        real :: wtsp = 0.            !! |kg/ha			 |mass in wetland seepage (to soil profile)
+        real :: wtsp = 0.            !! |kg/ha       |mass in wetland seepage (to soil profile)
         real :: irsw = 0.            !! |kg/ha       |mass applied on soil via surface water irrigation
         real :: irgw = 0.            !! |kg/ha       |mass applied on soil via groundwater irrigation
         real :: irwo = 0.            !! |kg/ha       |mass applied on soil via irrigation from without (wo) the watershed
@@ -24,7 +24,7 @@
         real :: uptk = 0.            !! |kg/ha       |mass taken up by crop roots
         real :: rctn = 0.            !! |kg/ha       |mass transferred by chemical reaction
         real :: sorb = 0.            !! |kg/ha       |mass transferred by sorption
-        real :: conc = 0.						 !! |mg/L        |concentration in soil water (averaged over all soil layers)
+        real :: conc = 0.            !! |mg/L        |concentration in soil water (averaged over all soil layers)
         real :: srbd = 0.            !! |kg/ha       |mass sorbed to soil
         
         !boron terms to add...
@@ -70,7 +70,7 @@
       
       !cs uptake
       real, dimension(:,:), allocatable :: cs_uptake_kg         !specified daily constituent mass taken up by crop roots (kg/ha)
-      integer :: cs_uptake_on                                   !flag for simulating constituent uptake
+      integer :: cs_uptake_on = 0                               !flag for simulating constituent uptake
       
       !urban constituent concentrations
       real, dimension(:,:), allocatable :: cs_urban_conc    !constituent conc in suspended solid load from imp areas (mg cs / kg sed)
@@ -79,7 +79,7 @@
       type output_csbal_header
          character (len=8) :: yrc =            "      yr"
          character (len=8) :: mon =            "      mo"
-         character (len=8) :: day =            "    jday"  
+         character (len=8) :: day =            "    jday"
          !soil profile balance - seo4
          character(len=16) :: latseo4 =        "    latq_seo4" !1
          character(len=16) :: surseo4 =        "    surq_seo4" !2

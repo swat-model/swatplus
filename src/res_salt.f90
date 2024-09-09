@@ -13,11 +13,16 @@
       implicit none      
       
       integer :: jres              !reservoir number (incoming)
-      integer :: isalt             !salt ion counter
-      integer :: icmd              !none  
-      real    :: salt_mass_beg,salt_conc_beg,salt_mass_end,salt_conc_end
-      real    :: salt_inflow,salt_outflow,salt_seep
-      real    :: mass_avail        !track available salt ion mass in the reservoir (kg)
+      integer :: isalt = 0         !salt ion counter
+      integer :: icmd = 0          !none  
+      real    :: salt_mass_beg = 0.
+      real    :: salt_conc_beg = 0.
+      real    :: salt_mass_end = 0.
+      real    :: salt_conc_end = 0.
+      real    :: salt_inflow = 0.
+      real    :: salt_outflow = 0.
+      real    :: salt_seep = 0.
+      real    :: mass_avail = 0.   !track available salt ion mass in the reservoir (kg)
       
       
       !object number

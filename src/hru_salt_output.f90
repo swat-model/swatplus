@@ -9,10 +9,10 @@
       implicit none
       
       integer, intent (in) :: ihru       !             |HRU counter
-      integer :: j                       !             |HRU number
-      real :: const                      !             |constant used for rate, days, etc
-      integer :: iob                     !             |
-      integer :: isalt                   !						 |salt ion counter
+      integer :: j = 0                   !             |HRU number
+      real :: const = 0.                 !             |constant used for rate, days, etc
+      integer :: iob = 0                 !             |
+      integer :: isalt = 0               !             |salt ion counter
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs salt mass loadings and concentrations from HRUs

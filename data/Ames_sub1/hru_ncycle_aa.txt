@@ -1,3 +1,3 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-08-27        MODULAR Rev 2024.61.0.1-33-g68b1328                    
   jday   mon   day    yr    unit  gis_id     name         lab_min_p        act_sta_p        act_nit_n        act_sta_n        org_lab_p         rsd_hs_c    rsd_nitrorg_n     rsd_laborg_p
                                                                kgha             kgha             kgha             kgha             kgha             kgha             kgha             kgha

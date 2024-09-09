@@ -6,17 +6,17 @@
       character(len=16), dimension (:), allocatable :: plants_bsn   !none      |plant names simulated in current run - final
      
       type plant_db
-        character(len=40) :: plantnm     !none              |crop name
-        character(len=18) :: typ         !none              |plant category
+        character(len=40) :: plantnm = ""  !none              |crop name
+        character(len=18) :: typ = ""    !none              |plant category
                                          !                  |warm_annual
                                          !                  |cold_annual
                                          !                  |warm_annual_tuber
                                          !                  |cold_annual_tuber
                                          !                  |perennial
-        character(len=18) :: trig        !none              |phenology trigger
+        character(len=18) :: trig = ""   !none              |phenology trigger
                                          !                  |moisture_gro
                                          !                  |temp_gro
-        real :: nfix_co                  !none              |n fixation coefficient (0.5 legume; 0 non-legume)
+        real :: nfix_co = 0.             !none              |n fixation coefficient (0.5 legume; 0 non-legume)
         integer :: days_mat = 110        !days              |days to maturity - if zero use hu for entire growing season
         real :: bio_e = 15.0             !(kg/ha/(MJ/m**2)  |biomass-energy ratio
         real :: hvsti = 0.76             !(kg/ha)/(kg/ha)   |harvest index: crop yield/aboveground biomass
@@ -134,7 +134,7 @@
         real :: bioms = 0.                  !kg/ha          |land cover/crop biomass
         real :: phuacc = 0.                 !frac           |frac of plant heat unit acc.
         real :: fr_yrmat = 0.05             !years          |fraction of current year of growth to years to maturity 
-        real :: pop                         !plants/m^2     |plant population 
+        real :: pop = 0.                    !plants/m^2     |plant population 
       end type plant_transplant_db
       type (plant_transplant_db), dimension(:), allocatable :: transpl
     

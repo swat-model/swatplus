@@ -59,20 +59,20 @@
       
       implicit none
       
-      real :: rchwtr     !m^3 H2O       |water stored in reach at beginning of day
-      real :: bury       !mg pst        |loss of pesticide from active sediment layer
+      real :: rchwtr = 0.  !m^3 H2O       |water stored in reach at beginning of day
+      real :: bury = 0.  !mg pst        |loss of pesticide from active sediment layer
                          !              |by burial
-      real :: difus      !mg pst        |diffusion of pesticide from sediment to reach
-      real :: reactb     !mg pst        |amount of pesticide in sediment that is lost
+      real :: difus = 0. !mg pst        |diffusion of pesticide from sediment to reach
+      real :: reactb = 0.  !mg pst        |amount of pesticide in sediment that is lost
                          !              |through reactions
                          !              |up by plant roots in the bank storage zone
-      real :: reactw     !mg pst        |amount of pesticide in reach that is lost
+      real :: reactw = 0.  !mg pst        |amount of pesticide in reach that is lost
                          !              |through reactions
-      real :: resuspst   !mg pst        |amount of pesticide moving from sediment to
+      real :: resuspst = 0.!mg pst        |amount of pesticide moving from sediment to
                          !              |reach due to resuspension
-      real :: setlpst    !mg pst        |amount of pesticide moving from water to
+      real :: setlpst = 0. !mg pst        |amount of pesticide moving from water to
                          !              |sediment due to settling
-      real :: volatpst   !mg pst        |amount of pesticide lost from reach by
+      real :: volatpst = 0.!mg pst        |amount of pesticide lost from reach by
                          !                volatilization
 
 !! initialize daily variables

@@ -86,9 +86,9 @@
       
       implicit none
  
-      integer :: j         !none          |HRU number
-      integer :: k         !none          |counter
-      real :: sedprev      !              | 
+      integer :: j = 0     !none          |HRU number
+      integer :: k = 0     !none          |counter
+      real :: sedprev = 0. !              | 
 
       j = ihru
 
@@ -159,7 +159,7 @@
         surf_bs(41,j) = surf_bs(41,j) + wetqsalt(j,6) !cl
         surf_bs(42,j) = surf_bs(42,j) + wetqsalt(j,7) !co3
         surf_bs(43,j) = surf_bs(43,j) + wetqsalt(j,8) !hco3
-			endif
+      endif
       
       !rtb cs
       if(cs_db%num_cs > 0) then
@@ -225,7 +225,7 @@
         wetqsalt(j,6) = surf_bs(41,j) * brt(j) !cl
         wetqsalt(j,7) = surf_bs(42,j) * brt(j) !co3
         wetqsalt(j,8) = surf_bs(43,j) * brt(j) !hco3
-			endif
+      endif
       
       !rtb cs
       if(cs_db%num_cs > 0) then
@@ -245,7 +245,7 @@
         wetqcs(j,1) = surf_bs(53,j) * brt(j) !seo4
         wetqcs(j,2) = surf_bs(54,j) * brt(j) !seo3
         wetqcs(j,3) = surf_bs(55,j) * brt(j) !boron
-			endif
+      endif
       
       surf_bs(2,j) = surf_bs(2,j) - sedyld(j)
       surf_bs(13,j) = surf_bs(13,j) - sanyld(j)
@@ -290,7 +290,7 @@
         surf_bs(41,j) = surf_bs(41,j) - wetqsalt(j,6) !cl
         surf_bs(42,j) = surf_bs(42,j) - wetqsalt(j,7) !co3
         surf_bs(43,j) = surf_bs(43,j) - wetqsalt(j,8) !hco3
-			endif
+      endif
       
       !rtb cs
       if(cs_db%num_cs > 0) then
@@ -310,7 +310,7 @@
         surf_bs(53,j) = surf_bs(53,j) - wetqcs(j,1) !seo4
         surf_bs(54,j) = surf_bs(54,j) - wetqcs(j,2) !seo3
         surf_bs(55,j) = surf_bs(55,j) - wetqcs(j,3) !boron
-			endif
+      endif
       
       return
       end subroutine stor_surfstor

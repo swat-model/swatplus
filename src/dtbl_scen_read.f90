@@ -11,16 +11,16 @@
       
       implicit none
                   
-      character (len=80) :: titldum   !           |title of file
-      character (len=80) :: header    !           |header of file
-      integer :: eof                  !           |end of file
-      integer :: i                    !none       |counter 
-      integer :: mdtbl                !none       |ending of loop
-      integer :: ic                   !none       |counter 
-      integer :: ial                  !none       |counter 
-      integer :: iac                  !none       !counter 
+      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: header = "" !           |header of file
+      integer :: eof = 0              !           |end of file
+      integer :: i = 0                !none       |counter 
+      integer :: mdtbl = 0            !none       |ending of loop
+      integer :: ic = 0               !none       |counter 
+      integer :: ial = 0              !none       |counter 
+      integer :: iac = 0              !none       !counter 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ilum                 !none       |counter      
+      integer :: ilum = 0             !none       |counter      
       
       mdtbl = 0
       eof = 0
@@ -28,7 +28,7 @@
       !! read all data from hydrol.dat
       inquire (file=in_cond%dtbl_scen, exist=i_exist)
       if (.not. i_exist .or. in_cond%dtbl_scen == "null") then
-        allocate (dtbl_scen(0:0)) 
+        allocate (dtbl_scen(0:0))
       else
         do
           open (107,file=in_cond%dtbl_scen)
@@ -49,8 +49,8 @@
             allocate (dtbl_scen(i)%alt(dtbl_scen(i)%conds,dtbl_scen(i)%alts))
             allocate (dtbl_scen(i)%act(dtbl_scen(i)%acts))
             allocate (dtbl_scen(i)%act_hit(dtbl_scen(i)%alts))
-            allocate (dtbl_scen(i)%act_typ(dtbl_scen(i)%acts))
-            allocate (dtbl_scen(i)%act_app(dtbl_scen(i)%acts))
+            allocate (dtbl_scen(i)%act_typ(dtbl_scen(i)%acts), source = 0)
+            allocate (dtbl_scen(i)%act_app(dtbl_scen(i)%acts), source = 0)
             allocate (dtbl_scen(i)%act_outcomes(dtbl_scen(i)%acts,dtbl_scen(i)%alts))
             
             !read conditions and condition alternatives

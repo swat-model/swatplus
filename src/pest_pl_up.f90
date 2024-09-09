@@ -13,12 +13,12 @@
       
       implicit none       
       
-      integer :: j        !none          |HRU number
-      integer :: k        !none          |pesticide number
-      integer :: ly       !none          |soil layer number
-      integer :: ipl      !none          |plant number
-      integer :: ipest_db !none          |pesticide number from pest.dat
-      real :: pest_up     !kg/ha         |amount of pesticide in soil   
+      integer :: j = 0    !none          |HRU number
+      integer :: k = 0    !none          |pesticide number
+      integer :: ly = 0   !none          |soil layer number
+      integer :: ipl = 0  !none          |plant number
+      integer :: ipest_db = 0!none          |pesticide number from pest.dat
+      real :: pest_up = 0.  !kg/ha         |amount of pesticide in soil   
 
       j = ihru
 
@@ -27,7 +27,7 @@
       do k = 1, cs_db%num_pests
         ipest_db = cs_db%pest_num(k)
         hpestb_d(j)%pest(k)%pl_uptake = 0.
-	    !! adjust foliar pesticide for wash off
+        !! adjust foliar pesticide for wash off
         do ipl = 1, pcom(j)%npl
           if (cs_pl(j)%pl_on(ipl)%pest(k) >= 0.0001) then
             if (ipest_db > 0) then

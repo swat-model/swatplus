@@ -11,14 +11,14 @@
       
       implicit none
       
-      character (len=80) :: titldum     !             |title of file
-      character (len=80) :: header      !             |header of file
-      integer :: i                      !             |counter
-      integer :: eof                    !             |end of file
-      integer :: imax                   !             |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum = ""  !             |title of file
+      character (len=80) :: header = "" !             |header of file
+      integer :: i = 0                  !             |counter
+      integer :: eof = 0                !             |end of file
+      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: ires                   !none         |counter
-      integer :: isalti                 !none         |counter
+      integer :: ires = 0               !none         |counter
+      integer :: isalti = 0             !none         |counter
       
       eof = 0
       imax = 0
@@ -48,7 +48,7 @@
         
         allocate (res_salt_data(0:imax))
         do isalti=1,imax
-          allocate(res_salt_data(isalti)%c_init(cs_db%num_salts))
+          allocate (res_salt_data(isalti)%c_init(cs_db%num_salts), source = 0.)
         end do
         rewind (105)
         read (105,*,iostat=eof) titldum

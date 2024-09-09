@@ -17,8 +17,8 @@
       implicit none
  
       integer, intent (in) :: iob   !           |object number
-      integer :: j                  !           |hru number
-      integer :: lyr                !           |tile soil layer 
+      integer :: j = 0              !           |hru number
+      integer :: lyr = 0            !           |tile soil layer 
 
       j = ihru
 

@@ -11,12 +11,12 @@
 
       implicit none
 
-      integer :: iop                      !none               !counter
-      real :: pltnfr                      !kg N/kg biomass    |nitrogen uptake parameter normal fraction
+      integer :: iop = 0                  !none               !counter
+      real :: pltnfr = 0.                 !kg N/kg biomass    |nitrogen uptake parameter normal fraction
                                           !                   |of N in crop biomass at emergence 
-      real :: pltpfr                      !kg P/kg biomass    |phosphorus uptake parameter normal
+      real :: pltpfr = 0.                 !kg P/kg biomass    |phosphorus uptake parameter normal
                                           !                   |fraction of P in crop biomass at emergence
-      real :: ranrns                      !mm                 |random roughness of a given tillage operation
+      real :: ranrns = 0.                 !mm                 |random roughness of a given tillage operation
       
       !! Green and Ampt storages for urban runoff
       urb_abstinit = 0.
@@ -51,7 +51,7 @@
       latno3 = 0.
       orgn_con = 0.
       orgp_con = 0.
-	  phubase = 0.
+      phubase = 0.
       pltnfr = 0.
       pltpfr = 0.
 !! drainmod tile equations   06/2006

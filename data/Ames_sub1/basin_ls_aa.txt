@@ -1,4 +1,4 @@
- demo                      SWAT+ 2024-07-08        MODULAR Rev 2024.unknown                               
+ demo                      SWAT+ 2024-08-27        MODULAR Rev 2024.61.0.1-33-g68b1328                    
    jday   mon   day    yr   unit  gis_id  name                 sedyld     sedorgn     sedorgp     surqno3     lat3no3    surqsolp        usle     sedminp     tileno3     lchlabp    tilelabp      satexn
                                                                   tha        kgha        kgha        kgha        kgha        kgha        tons        kgha        kgha        kgha        kgha        kgha
-   366    12    31  2020       1       1  demo                   0.181       0.000       0.009       0.000       0.000       0.000       0.000       0.000       0.000       0.000       0.000       0.000
+   366    12    31  2020       1       1  demo                   0.008       0.075       0.009       0.000       0.033       0.000       0.000       0.000       0.000       0.000       0.000       0.000

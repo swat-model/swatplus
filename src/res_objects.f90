@@ -5,10 +5,10 @@
       
       implicit none 
       
-      integer :: iob1            !none         |beginning of loop
-      integer :: iob2            !none         |ending of loop
-      integer :: ires            !none         |counter
-      integer :: i               !none         |counter
+      integer :: iob1 = 0        !none         |beginning of loop
+      integer :: iob2 = 0        !none         |ending of loop
+      integer :: ires = 0        !none         |counter
+      integer :: i = 0           !none         |counter
 
       !! set reservoir object numbers for reservoir objects
       iob1 = sp_ob1%res
