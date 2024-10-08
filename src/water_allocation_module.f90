@@ -110,7 +110,7 @@
         character(len=8) :: idmd     =   " unit   "
         character(len=16) :: dmd_typ  =  "dmd_typ         "
         character(len=16) :: dmd_num =   "    dmd_num     "
-        character(len=16) :: rcv_typ  =  "drcv_typ         "
+        character(len=17) :: rcv_typ  =  "drcv_typ         "
         character(len=16) :: rcv_num =   "    rcv_num     "
         character(len=12) :: src1_obj =  "   src1_obj "
         character(len=12) :: src1_typ =  " src1_typ   "
@@ -152,12 +152,12 @@
         character (len=15) :: src2_num =  "               "
         character (len=15) :: dmd2 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s2out =     "m^3            "        !! ha-m    |withdrawal from source 2       
-        character (len=10) :: s2un =      "m^3            "        !! ha-m    |unmet from source 2        
+        character (len=15) :: s2un =      "m^3            "        !! ha-m    |unmet from source 2        
         character (len=15) :: src3_typ =  "               "
         character (len=15) :: src3_num =  "               "
         character (len=15) :: dmd3 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s3out =     "m^3            "        !! ha-m    |withdrawal from source 3       
-        character (len=10) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
+        character (len=15) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
 
         end type wallo_header_units
       type (wallo_header_units) :: wallo_hdr_units 
