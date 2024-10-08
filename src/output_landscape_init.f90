@@ -477,8 +477,8 @@
             end if
         endif
     
-        open (4561,file = "hru_resc_stat.txt", recl = 1500)
         if (pco%nb_hru%a == "y") then
+          open (4561,file = "hru_resc_stat.txt", recl = 1500)
           write (4561,*)  bsn%name, prog
           write (4561,*) resc_hdr
           write (4561,*) resc_hdr_units

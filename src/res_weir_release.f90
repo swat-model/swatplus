@@ -31,11 +31,13 @@
       real :: wsa1 = 0.             !m2        |water surface area 
       real :: qout = 0.             !m3        |weir discharge during short time step
       real :: hgt_above = 0.        !m         |height of water above the above bottom of weir
+      real :: vol_above = 0.             !m3        |water volume above the bottom of weir !Jaehak 2024
       
       !! store initial values
       vol = wbody%flo
       nstep = 1
-      iweir = bsn_cc%cn
+      iweir = wet_ob(jres)%iweir
+      vol_above = 0 !water storage above weir height
       
       if (wet_hyd(ihyd)%name=='paddy') then
         !paddy
@@ -54,15 +56,17 @@
       !endif
       !write(*,'(10f10.1)') w%precip,vol/wsa1*1000,ht2%flo/wsa1*1000,hru(jres)%water_seep,soil(jres)%sw
       !! check if reservoir decision table has a weir discharge command
-      do iac = 1, dtbl_res(id)%acts
-        if (dtbl_res(id)%act(iac)%option == "weir") then
-          weir_flg = 1
-          exit
-        endif
-      end do
+     ! do iac = 1, dtbl_res(id)%acts
+     !   if (dtbl_res(id)%act(iac)%option == "weir") then
+     !     weir_flg = 1
+     !     exit
+     !   endif
+     ! end do
       
       do tstep = 1, nstep
           
+        !! calculate weir discharge from scheduled management
+        if (hgt_above > 0 .and. iweir > 0) then
           !emergency spillway discharge Jaehak 2023
           if (vol>evol_m3) then
             ht2%flo = ht2%flo + (wbody%flo - evol_m3) 
@@ -71,31 +75,36 @@
             res_h = vol / wsa1 !m
             hgt_above = max(0.,res_h - weir_hgt)  !m 
           endif
+          vol_above = hgt_above * wsa1 !m3
 
           if (nstep>1) then !revised by Jaehak 2023
             qout = res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
             qout = max(0.,86400. / nstep * qout) !m3
-            if (qout > vol) then
-              ht2%flo = ht2%flo + vol !weir discharge volume for the day, m3
-              vol = 0.
+            if (qout > vol_above) then
+              ht2%flo = ht2%flo + vol_above !weir discharge volume for the day, m3
+              vol = vol - vol_above
+              vol_above = 0.
             else
               ht2%flo = ht2%flo + qout 
               vol = vol - qout
+              vol_above = vol_above - qout
             end if
             res_h = vol / wsa1 !m
             hgt_above = max(0.,res_h - weir_hgt)  !m Jaehak 2022
-            if (vol==0.or.hgt_above==0) exit
+            if (vol_above<=0.001.or.hgt_above<=0.0001) exit
 
           else
             do ic = 1, 24
               qout = res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
               qout = 3600. * qout !m3
-              if (qout > vol) then
-                ht2%flo = ht2%flo + vol !weir discharge volume for the day, m3
-                vol = 0.
+              if (qout > vol_above) then
+                ht2%flo = ht2%flo + vol_above !weir discharge volume for the day, m3
+                vol = vol - vol_above
+                vol_above = 0.
               else
                 ht2%flo = ht2%flo + qout 
                 vol = vol - qout
+                vol_above = vol_above - qout
               end if
                           
               if (wsa1 > 1.e-6) then
@@ -104,9 +113,13 @@
                 res_h = 0.
               end if
               hgt_above = max(0.,res_h - weir_hgt)  !m Jaehak 2022
-              if (vol==0.or.hgt_above==0) exit
+              if (vol_above<=0.001.or.hgt_above<=0.0001) exit
             end do
           endif
+        else
+          ht2%flo = 0.
+        endif
+        wbody%flo = vol !m3
       end do  
 
       return

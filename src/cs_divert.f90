@@ -45,7 +45,7 @@
       
       !determine number of water sources
       nsource = wallo(iwallo)%dmd(idmd)%dmd_src_obs
-	    
+        
       !demand object type
       obj_type_dem = wallo(iwallo)%dmd(idmd)%rcv_ob
       

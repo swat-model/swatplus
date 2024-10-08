@@ -28,7 +28,7 @@
       type topography
            character(len=40) :: name = ""
            real :: elev = 0.         !!               |m             |elevation of HRU
-           real :: slope = 0.        !!	hru_slp(:)    |m/m           |average slope steepness in HRU
+           real :: slope = 0.        !! hru_slp(:)    |m/m           |average slope steepness in HRU
            real :: slope_len = 0.    !! slsubbsn(:)   |m             |average slope length for erosion
            real :: dr_den = 0.       !!               |km/km2        |drainage density
            real :: lat_len = 0.      !! slsoil(:)     |m             |slope length for lateral subsurface flow
@@ -100,7 +100,7 @@
           integer :: cn_lu = 0
           integer :: cons_prac = 0
           real :: usle_p = 0.           !! none     | USLE equation support practice (P) factor daily
-          character (len=16) :: urb_ro = ""!! none     | urban runoff model
+          character (len=40) :: urb_ro = ""!! none     | urban runoff model
                                         !!          | "usgs_reg", simulate using USGS regression eqs
                                         !!          | "buildup_washoff", simulate using build up/wash off alg 
           integer :: urb_lu = 0         !! none     | urban land type identification number
@@ -184,7 +184,7 @@
         integer :: vfsi = 0                 !! |none          |on/off flag for vegetative filter strip
         real :: vfsratio = 0.               !! |none          |contouring USLE P factor
         real :: vfscon = 0.                 !! |none          |fraction of the total runoff from the entire field
-        real :: vfsch = 0;                  !! |none          |fraction of flow entering the most concentrated 10% of the VFS.
+        real :: vfsch = 0.                  !! |none          |fraction of flow entering the most concentrated 10% of the VFS.
                                             !!                     which is fully channelized
         integer :: ngrwat = 0
         integer :: grwat_i = 0              !! |none          |On/off Flag for waterway simulation
@@ -215,7 +215,7 @@
         character(len=40) :: land_use_mgt_c = ""
         integer :: lum_group = 0
         character(len=40) :: lum_group_c = ""   !land use group for soft cal and output
-        character(len=40) :: region = ""
+        character(len=40) :: cal_group = ""
         integer :: plant_cov = 0
         integer :: mgt_ops = 0
         integer :: tiledrain = 0
@@ -251,7 +251,7 @@
         real :: wet_obank_in = 0.               !mm         |inflow from overbank into wetlands
         real :: precip_aa = 0.
         character(len=1) :: wet_fp = "n"
-        character(len=5) :: irr_src = "unlim"   !           |irrigation source, Jaehak 2022
+        character(len=40) :: irr_src = "unlim"   !           |irrigation source, Jaehak 2022
         real :: strsa = 0.
         real :: irr_hmax = 0                    !mm H2O     |target ponding depth during paddy irrigation Jaehak 2022
         real :: irr_hmin = 0                    !mm H2O     |threshold ponding depth to trigger paddy irrigation
@@ -489,15 +489,15 @@
 ! Modifications to Pesticide and Water routing routines by Balaji Narasimhan
 !Additional buffer and filter strip variables Mike White
 
-	real, dimension (:), allocatable :: ubnrunoff
-	real, dimension (:), allocatable :: ubntss
-	real, dimension (:,:), allocatable :: ovrlnd_dt
-	real, dimension (:,:), allocatable :: hhsurfq
-	real, dimension (:,:,:), allocatable :: hhsurf_bs
+    real, dimension (:), allocatable :: ubnrunoff
+    real, dimension (:), allocatable :: ubntss
+    real, dimension (:,:), allocatable :: ovrlnd_dt
+    real, dimension (:,:), allocatable :: hhsurfq
+    real, dimension (:,:,:), allocatable :: hhsurf_bs
 
 !! subdaily erosion modeling by Jaehak Jeong
-	real, dimension(:,:), allocatable:: hhsedy
-	real, dimension(:), allocatable:: init_abstrc
+    real, dimension(:,:), allocatable:: hhsedy
+    real, dimension(:), allocatable:: init_abstrc
 
       integer, dimension(:), allocatable :: tillage_switch
       real, dimension(:), allocatable :: tillage_depth

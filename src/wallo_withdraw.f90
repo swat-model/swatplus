@@ -24,7 +24,7 @@
       real :: avail = 0.            !m3         |water available to withdraw from an aquifer
       real :: extracted = 0.        !m3         |water extracted from the aquifer object (gwflow - rtb)
       real :: dmd_unmet = 0.        !m3         |demand that is unmet (gwflow - rtb)
-      real :: hru_demand = 0.   !m3	        |demand (copy to pass into gwflow subroutine - rtb)
+      real :: hru_demand = 0.   !m3         |demand (copy to pass into gwflow subroutine - rtb)
       real :: withdraw = 0.         !m3
       real :: unmet = 0.            !m3
       real :: total_dmd = 0.        !m3

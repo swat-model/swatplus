@@ -98,9 +98,9 @@
       end if 
 
       !calibrate channel sediment 
-      if (cal_codes%chsed == "y") then
-        call calsoft_chsed
-      end if
+      !if (cal_codes%chsed == "y") then
+      !  call calsoft_chsed
+      !end if
 
       if (cal_codes%chsed == "y") then
         do ireg = 1, db_mx%ch_reg
@@ -160,7 +160,7 @@
         end do
       end if      ! channel sediment parms
 
-  500 format (a16,f12.3,i12,f12.3,2(1x,a16,10f12.3),10f12.3)
+!*** tu Wunused-label:   500 format (a16,f12.3,i12,f12.3,2(1x,a16,10f12.3),10f12.3)
   503 format (2a16,f12.5,a)
       
       return

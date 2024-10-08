@@ -42,7 +42,7 @@
       205 format (7xA16, A16, 10x,*(A16))                           ! format of chan_dat.swf headers
       305 format (I8, 1x, A16, A16,*(F16.4))                             ! format of chan_dat.swf
       206 format (4xA8, 1xA8, 20x,*(A16))                           ! format of chan_dr.swf headers
-      306 format (I8,4xA16, 10xA16,*(F16.4))                        ! format of chan_dr.swf
+!*** tu Wunused-label:       306 format (I8,4xA16, 10xA16,*(F16.4))                        ! format of chan_dr.swf
       207 format (A16,1x*(A16))                                     ! format of aqu_dr.swf headers
       208 format (6xA8, 1xA8, 16x,*(A8,6x))                      ! format of res_dat.swf headers
       !209 format (6xA8, 1xA8, 16x,*(A8,6x))                        ! format of res_dr.swf headers

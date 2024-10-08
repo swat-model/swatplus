@@ -104,7 +104,7 @@
           end if
         
           !! compute soil water factor
-	      if (soil(j)%phys(1)%st < 0.) soil(j)%phys(1)%st = .0000001
+          if (soil(j)%phys(1)%st < 0.) soil(j)%phys(1)%st = .0000001
           sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
           sut = Max(.05, sut)
 
@@ -170,8 +170,8 @@
         if (soil(j)%phys(kk)%tmp > 0.) then
           !! compute soil water factor
           sut = 0.
-	      !! change for domain error 1/29/09 gsm check with Jeff !!!
-	      if (soil(j)%phys(kk)%st < 0.) soil(j)%phys(kk)%st = .0000001
+          !! change for domain error 1/29/09 gsm check with Jeff !!!
+          if (soil(j)%phys(kk)%st < 0.) soil(j)%phys(kk)%st = .0000001
           sut = .1 + .9 * Sqrt(soil(j)%phys(kk)%st / soil(j)%phys(kk)%fc)
           sut = Max(.05, sut)
 
@@ -269,13 +269,13 @@
 
           !!  compute denitrification
           wdn = 0.   
-	      if (i_sep(j) /= k .or. sep(isep)%opt  /= 1) then
-	        if (sut >= bsn_prm%sdnco) then
-	          wdn = soil1(j)%mn(k)%no3 * (1.-Exp(-bsn_prm%cdn * cdg * soil1(j)%cbn(k) / 100.))
-	        else
-	          wdn = 0.
-	        endif
-	        soil1(j)%mn(k)%no3 = max(0.0001,soil1(j)%mn(k)%no3 - wdn)
+          if (i_sep(j) /= k .or. sep(isep)%opt  /= 1) then
+            if (sut >= bsn_prm%sdnco) then
+              wdn = soil1(j)%mn(k)%no3 * (1.-Exp(-bsn_prm%cdn * cdg * soil1(j)%cbn(k) / 100.))
+            else
+              wdn = 0.
+            endif
+            soil1(j)%mn(k)%no3 = max(0.0001,soil1(j)%mn(k)%no3 - wdn)
           end if
           hnb_d(j)%denit = hnb_d(j)%denit + wdn
 
