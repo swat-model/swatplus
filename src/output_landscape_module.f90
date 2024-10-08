@@ -416,7 +416,7 @@
          character(len=17) :: no3atmo =    "    no3atmo      "
          character(len=17) :: nh4atmo =    "    nh4atmo      "
          character(len=17) :: nuptake =    "    nuptake      "
-         character(len=17) :: puptake =    "    puptake       "		 
+         character(len=17) :: puptake =    "    puptake       "      
          character(len=17) :: gwsoiln =    "    gwsoiln      "
          character(len=17) :: gwsoilp =    "    gwsoilp      "
       end type output_nutbal_header         

@@ -69,7 +69,7 @@
         !! compute fraction of surface runoff that is reaching the main channel
         if (time%step > 1) then
           brt(ihru) = 1.-Exp(-bsn_prm%surlag / (tconc(ihru) /               &
-              (time%dtm / 60.)))	!! urban modeling by J.Jeong
+              (time%dtm / 60.)))    !! urban modeling by J.Jeong
         else
           brt(ihru) = 1. - Exp(-bsn_prm%surlag / tconc(ihru))
         endif

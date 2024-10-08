@@ -77,9 +77,9 @@
       real :: sum_conc = 0.              !rtb salt
       real :: sum_mass = 0.              !rtb salt
       real :: sum_sorb = 0.              !rtb salt
-      real :: saltcon = 0. 		 !Jeong 2024
-      real :: qsurf = 0. 		 !Jeong 2024
-      real :: sedppm = 0. 		 !Jeong 2024
+      real :: saltcon = 0.       !Jeong 2024
+      real :: qsurf = 0.         !Jeong 2024
+      real :: sedppm = 0.        !Jeong 2024
       
       j = ihru
       
@@ -371,8 +371,8 @@
         !! compute biozone processes in septic HRUs
         !! if 1) current is septic hru and 2) soil temperature is above zero
         isep = iseptic(j)
-	    if (sep(isep)%opt /= 0. .and. time%yrc >= sep(isep)%yr) then
-	      if (soil(j)%phys(i_sep(j))%tmp > 0.) call sep_biozone     
+        if (sep(isep)%opt /= 0. .and. time%yrc >= sep(isep)%yr) then
+          if (soil(j)%phys(i_sep(j))%tmp > 0.) call sep_biozone     
         endif
 
         !! compute plant community partitions
@@ -571,12 +571,12 @@
 
         !! compute loadings from urban areas
         if (hru(j)%luse%urb_lu > 0) then
-	      if (time%step == 1) then
+          if (time%step == 1) then
             call hru_urban ! daily simulation
-	      else
+          else
             call hru_urbanhr ! subdaily simulation J.Jeong 4/20/2009
-	      endif
-	    endif	  
+          endif
+        endif     
 
         !! compute sediment loading in lateral flow and add to sedyld
         call swr_latsed
@@ -593,13 +593,13 @@
           if (filterw(j) > 0.) call smp_buffer
         end if
 
-	 !! compute reduction in pollutants due to in field grass waterway
+     !! compute reduction in pollutants due to in field grass waterway
          if (hru(j)%lumv%grwat_i == 1) then
           call smp_grass_wway
         end if
 
-	   !! compute reduction in pollutants due to in fixed BMP eff
-	   if (hru(j)%lumv%bmp_flag == 1) then
+       !! compute reduction in pollutants due to in fixed BMP eff
+       if (hru(j)%lumv%bmp_flag == 1) then
           call smp_bmpfixed
         end if
 

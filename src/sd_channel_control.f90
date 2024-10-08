@@ -234,7 +234,7 @@
             if(bsn_cc%gwflow.eq.1) then
               flood_freq(ich) = 1 !flag to indicate the water is in the floodplain
               call gwflow_fpln(ich)
-						endif
+                        endif
             
             sd_ch(ich)%overbank = "ob"
             rcharea = sd_ch_vel(ich)%area

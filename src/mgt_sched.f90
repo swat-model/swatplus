@@ -443,7 +443,7 @@
             endif
               
           case ("irrp")  !! continuous irrigation to maintain surface ponding in rice fields Jaehak 2022
-            hru(j)%irr_src = mgt%op_plant                   !irrigation source: cha; res; aqu; or unlim													
+            hru(j)%irr_src = mgt%op_plant                   !irrigation source: cha; res; aqu; or unlim                                                 
             hru(j)%irr_isc = mgt%op3                        !irrigation source object ID: cha; res; aqu; or unlim
             hru(j)%irr_hmax = irrop_db(mgt%op1)%amt_mm     !irrigation amount in irr.org, mm
             hru(j)%irr_hmin = hru(j)%irr_hmax * 0.9        !threshold ponding depth, mm

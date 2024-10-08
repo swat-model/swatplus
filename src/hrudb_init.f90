@@ -2,6 +2,7 @@
     
       use hydrograph_module, only : sp_ob, sp_ob1, ob
       use hru_module, only : hru, hru_db
+      use landuse_data_module
       
       implicit none
 
@@ -9,6 +10,8 @@
       integer :: ihru = 0             !none       |counter 
       integer :: iob = 0              !           |
       integer :: ihru_db = 0          !           | 
+      integer :: ilu = 0          !           | 
+
 
       !!assign database pointers for the hru
       imp = 0

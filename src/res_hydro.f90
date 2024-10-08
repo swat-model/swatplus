@@ -43,10 +43,10 @@
       nstep = 1
       wsa1 = wbody_wb%area_ha * 10000. !m2
       if (time%step>0) then  !Jaehak 2024
-	    nstep = time%step
-	  else
-	    nstep = 1
-	  end if
+        nstep = time%step
+      else
+        nstep = 1
+      end if
       
       do tstep = 1, nstep
 

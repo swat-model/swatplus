@@ -499,7 +499,7 @@
               gwsol_ss(i)%solute(2+m)%rcti = 0.
               gwsol_ss(i)%solute(2+m)%rcto = 0.
               gwsol_ss(i)%solute(2+m)%minl = 0.
-					  enddo
+                      enddo
           enddo
         endif
       endif

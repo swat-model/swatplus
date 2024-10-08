@@ -323,7 +323,7 @@
         gw_state(i)%xcrd = 0.
         gw_state(i)%ycrd = 0.
         gw_state(i)%area = 0.
-        gw_state(i)%init = 0.	
+        gw_state(i)%init = 0.   
         gw_state(i)%head = 0.
         gw_state(i)%hydc = 0.
         gw_state(i)%spyd = 0.
@@ -532,7 +532,7 @@
         gw_state(i)%xcrd = 0.
         gw_state(i)%ycrd = 0.
         gw_state(i)%area = 0.
-        gw_state(i)%init = 0.	
+        gw_state(i)%init = 0.   
         gw_state(i)%head = 0.
         gw_state(i)%hydc = 0.
         gw_state(i)%spyd = 0.
@@ -1929,7 +1929,7 @@
         write(out_gwbal,*) 'ppex:         mm   groundwater pumping specified by user'
         write(out_gwbal,*) 'tile:         mm   groundwater removed via tile drains'
         write(out_gwbal,*) 'resv:         mm   groundwater exchanged with reservoirs'
-        write(out_gwbal,*) 'wetl:         mm   groundwater outflow to wetlands'	
+        write(out_gwbal,*) 'wetl:         mm   groundwater outflow to wetlands' 
         write(out_gwbal,*) 'canl:         mm   canal seepage to groundwater'
         write(out_gwbal,*) 'fpln:         mm   floodplain exchange'
         write(out_gwbal,*) 'error:        --   water balance error for aquifer'

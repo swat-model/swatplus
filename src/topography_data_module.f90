@@ -4,7 +4,7 @@
      
       type topography_db
         character(len=16) :: name = "default"
-        real :: slope = .02       !!	hru_slp(:) |m/m           |average slope steepness in HRU
+        real :: slope = .02       !!    hru_slp(:) |m/m           |average slope steepness in HRU
         real :: slope_len = 50.   !! slsubbsn(:)   |m             |average slope length for erosion
         real :: lat_len = 50.     !! slsoil(:)     |m             |slope length for lateral subsurface flow
         real :: dis_stream = 100. !! dis_stream(:) |m             |average distance to stream

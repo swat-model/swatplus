@@ -22,18 +22,18 @@
       else
 
         !! compute concentrations
-	    if (wbody%flo > 0.) then
+        if (wbody%flo > 0.) then
           sed_ppm = 1000000. * wbody%sed / wbody%flo
           sed_ppm = Max(1.e-6, sed_ppm)
           sil_ppm = 1000000. * wbody%sil / wbody%flo
           sil_ppm = Max(1.e-6, sil_ppm)
           cla_ppm = 1000000. * wbody%cla / wbody%flo
           cla_ppm = Max(1.e-6, cla_ppm)
-	    else
+        else
           sed_ppm = 1.e-6
           sil_ppm = 1.e-6
           cla_ppm = 1.e-6
-	    endif
+        endif
         
         !! compute change in sediment concentration due to settling 
         if (sed_ppm > wbody_prm%sed%nsed) then

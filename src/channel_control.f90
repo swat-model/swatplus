@@ -186,16 +186,16 @@
 
 !!    Channel Deposition (Only new deposits during the current time step)
       if (ch(jrch)%depch >= ch(jrch)%depprch) then
-	    ch_d(jrch)%ch_dep = ch(jrch)%depch - ch(jrch)%depprch
-	  else
-	    ch_d(jrch)%ch_dep = 0.
-	  end if
+        ch_d(jrch)%ch_dep = ch(jrch)%depch - ch(jrch)%depprch
+      else
+        ch_d(jrch)%ch_dep = 0.
+      end if
 !!    Floodplain Deposition (Only new deposits during the current time step)
       if (ch(jrch)%depfp >= ch(jrch)%depprfp) then
-	    ch_d(jrch)%fp_dep = ch(jrch)%depfp - ch(jrch)%depprfp
-	  else
-	    ch_d(jrch)%fp_dep = 0.
-	  end if
+        ch_d(jrch)%fp_dep = ch(jrch)%depfp - ch(jrch)%depprfp
+      else
+        ch_d(jrch)%fp_dep = 0.
+      end if
 !!    Total suspended sediments (only silt and clay)
       if (ch_sed(jsed)%eqn == 0) then
         ch_d(jrch)%tot_ssed = sedrch

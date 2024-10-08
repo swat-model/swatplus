@@ -28,7 +28,7 @@
       type topography
            character(len=40) :: name = ""
            real :: elev = 0.         !!               |m             |elevation of HRU
-           real :: slope = 0.        !!	hru_slp(:)    |m/m           |average slope steepness in HRU
+           real :: slope = 0.        !! hru_slp(:)    |m/m           |average slope steepness in HRU
            real :: slope_len = 0.    !! slsubbsn(:)   |m             |average slope length for erosion
            real :: dr_den = 0.       !!               |km/km2        |drainage density
            real :: lat_len = 0.      !! slsoil(:)     |m             |slope length for lateral subsurface flow
@@ -489,15 +489,15 @@
 ! Modifications to Pesticide and Water routing routines by Balaji Narasimhan
 !Additional buffer and filter strip variables Mike White
 
-	real, dimension (:), allocatable :: ubnrunoff
-	real, dimension (:), allocatable :: ubntss
-	real, dimension (:,:), allocatable :: ovrlnd_dt
-	real, dimension (:,:), allocatable :: hhsurfq
-	real, dimension (:,:,:), allocatable :: hhsurf_bs
+    real, dimension (:), allocatable :: ubnrunoff
+    real, dimension (:), allocatable :: ubntss
+    real, dimension (:,:), allocatable :: ovrlnd_dt
+    real, dimension (:,:), allocatable :: hhsurfq
+    real, dimension (:,:,:), allocatable :: hhsurf_bs
 
 !! subdaily erosion modeling by Jaehak Jeong
-	real, dimension(:,:), allocatable:: hhsedy
-	real, dimension(:), allocatable:: init_abstrc
+    real, dimension(:,:), allocatable:: hhsedy
+    real, dimension(:), allocatable:: init_abstrc
 
       integer, dimension(:), allocatable :: tillage_switch
       real, dimension(:), allocatable :: tillage_depth

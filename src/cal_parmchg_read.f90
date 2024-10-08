@@ -128,9 +128,9 @@
               cal_upd(i)%num_elem = db_mx%pcpfiles
             case ("tmp")
               cal_upd(i)%num_elem = db_mx%tmpfiles
-			case ("gwf") !rtb - all gwflow cells
-			   cal_upd(i)%num_elem = ncell
-			case ("gwf_riv") !rtb - all channels
+            case ("gwf") !rtb - all gwflow cells
+               cal_upd(i)%num_elem = ncell
+            case ("gwf_riv") !rtb - all channels
                cal_upd(i)%num_elem = sp_ob%chandeg
             case ("gwf_sgl") !rtb - single value
                cal_upd(i)%num_elem = 1
