@@ -90,7 +90,7 @@
       
       exit
       end do 
-    end if	  
+    end if    
 
       !!read data for each element in all landscape cataloging units
       inquire (file=in_regs%ele_lsu, exist=i_exist)

@@ -26,8 +26,22 @@
         
       do iterall = 1, iter_all
 
-        ! calibrate harg_pet for potential ET
+        ! calibrate petco for actual ET
+        ! start with half the range
+        ls_prms(4)%neg = ls_prms(4)%neg / 2.
+        ls_prms(4)%pos = ls_prms(4)%pos / 2.
+        ls_prms(4)%lo = (1. - ls_prms(4)%lo) / 2. + ls_prms(4)%lo
+        ls_prms(4)%up = ls_prms(4)%up - (ls_prms(4)%up - 1.) / 2.
+        call calsoft_hyd_bfr_pet
+        ! calibrate esco for actual ET
         call calsoft_hyd_bfr_et
+        ! calibrate petco for actual ET
+        ! allow full range
+        ls_prms(4)%neg = 2. * ls_prms(4)%neg
+        ls_prms(4)%pos = 2. * ls_prms(4)%pos
+        ls_prms(4)%lo = ls_prms(4)%lo - (1. - ls_prms(4)%lo)
+        ls_prms(4)%up = ls_prms(4)%up + (ls_prms(4)%up - 1.)
+        call calsoft_hyd_bfr_pet
 
         ! calibrate cn3_swf for surface runoff
         call calsoft_hyd_bfr_surq

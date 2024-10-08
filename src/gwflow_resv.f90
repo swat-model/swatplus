@@ -59,10 +59,10 @@
               conn_length = sqrt(min_area)
               
               !exchange volume (m3/day) using Darcy's Law
-              head_diff = gw_resv_info(res_id)%elev(k) - gw_state(cell_id)%head	
+              head_diff = gw_resv_info(res_id)%elev(k) - gw_state(cell_id)%head 
               res_K = gw_resv_info(res_id)%hydc(k)
               res_thick = gw_resv_info(res_id)%thck(k)
-              Q = res_K * (head_diff / res_thick) * (res_thick * conn_length)	
+              Q = res_K * (head_diff / res_thick) * (res_thick * conn_length)   
               
               !check against available storage volumes (m3)
               if(Q > 0) then !reservoir --> aquifer
@@ -73,9 +73,9 @@
                 !if((Q*-1 == 1).ge.gw_state(cell_id)%stor) then
                 if (-Q .ge.gw_state(cell_id)%stor) then
                   !Q = gw_state(cell_id)%stor * (-1)
-                  Q = -gw_state(cell_id)%stor	
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q	
-                endif	
+                  Q = -gw_state(cell_id)%stor   
+                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q   
+                endif   
               endif
 
               !store for gwflow water balance calculations (in gwflow_simulate)

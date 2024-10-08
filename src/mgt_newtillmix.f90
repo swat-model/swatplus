@@ -124,8 +124,8 @@
 
           if (soil(jj)%phys(l)%d <= dtil) then
             !! msm = mass of soil mixed for the layer
-            !! msn = mass of soil not mixed for the layer		
-            sol_msm(l) = emix * sol_mass(l)	
+            !! msn = mass of soil not mixed for the layer       
+            sol_msm(l) = emix * sol_mass(l) 
             sol_msn(l) = sol_mass(l) - sol_msm(l)
             frac_dep(l) = soil(jj)%phys(l)%thick / dtil
           else if (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
@@ -165,21 +165,21 @@
             !!by zhang
             !!============== 
             if (bsn_cc%cswat == 2) then         
-	        smix(20+npmx+1) = smix(20+npmx+1) + soil1(jj)%str(l)%c * frac_mixed
-	        smix(20+npmx+2) = smix(20+npmx+2) + soil1(jj)%lig(l)%c * frac_mixed
-	        smix(20+npmx+3) = smix(20+npmx+3) + soil1(jj)%lig(l)%n* frac_mixed
-	        smix(20+npmx+4) = smix(20+npmx+4) + soil1(jj)%meta(l)%c * frac_mixed
-	        smix(20+npmx+5) = smix(20+npmx+5) + soil1(jj)%meta(l)%m * frac_mixed
-	        smix(20+npmx+6) = smix(20+npmx+6) + soil1(jj)%lig(l)%m * frac_mixed
-	        smix(20+npmx+7) = smix(20+npmx+7) + soil1(jj)%str(l)%m * frac_mixed  
-	        
-	        smix(20+npmx+8) = smix(20+npmx+8) + soil1(jj)%str(l)%n * frac_mixed
-	        smix(20+npmx+9) = smix(20+npmx+9) + soil1(jj)%meta(l)%n * frac_mixed
-	        smix(20+npmx+10) = smix(20+npmx+10) +soil1(jj)%microb(l)%n* frac_mixed
-	        smix(20+npmx+11) = smix(20+npmx+11) + soil1(jj)%hact(l)%n * frac_mixed
-	        smix(20+npmx+12) = smix(20+npmx+12) + soil1(jj)%hsta(l)%n * frac_mixed  
-	      end if
-            !!by zhang 	
+            smix(20+npmx+1) = smix(20+npmx+1) + soil1(jj)%str(l)%c * frac_mixed
+            smix(20+npmx+2) = smix(20+npmx+2) + soil1(jj)%lig(l)%c * frac_mixed
+            smix(20+npmx+3) = smix(20+npmx+3) + soil1(jj)%lig(l)%n* frac_mixed
+            smix(20+npmx+4) = smix(20+npmx+4) + soil1(jj)%meta(l)%c * frac_mixed
+            smix(20+npmx+5) = smix(20+npmx+5) + soil1(jj)%meta(l)%m * frac_mixed
+            smix(20+npmx+6) = smix(20+npmx+6) + soil1(jj)%lig(l)%m * frac_mixed
+            smix(20+npmx+7) = smix(20+npmx+7) + soil1(jj)%str(l)%m * frac_mixed  
+            
+            smix(20+npmx+8) = smix(20+npmx+8) + soil1(jj)%str(l)%n * frac_mixed
+            smix(20+npmx+9) = smix(20+npmx+9) + soil1(jj)%meta(l)%n * frac_mixed
+            smix(20+npmx+10) = smix(20+npmx+10) +soil1(jj)%microb(l)%n* frac_mixed
+            smix(20+npmx+11) = smix(20+npmx+11) + soil1(jj)%hact(l)%n * frac_mixed
+            smix(20+npmx+12) = smix(20+npmx+12) + soil1(jj)%hsta(l)%n * frac_mixed  
+          end if
+            !!by zhang  
             !!=============
         end do
      
@@ -189,7 +189,7 @@
           smix(19) = smix(19) / dtil
 
           do l = 1, soil(jj)%nly
-			
+            
             ! reconstitute each soil layer 
             frac_non_mixed = sol_msn(l) / sol_mass(l)
             
@@ -234,8 +234,8 @@
             !!by zhang 
             !!==============
 
-	  end do
-	
+      end do
+    
         if (bsn_cc%cswat == 1) then
             call mgt_tillfactor(jj,bmix,emix,dtil)
         end if

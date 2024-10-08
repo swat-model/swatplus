@@ -39,17 +39,17 @@
       mass_rct = 0.
       
       !no3
-      mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)	!g/day
+      mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)    !g/day
       
       !p
       sol_index = sol_index + 1
-      mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)	!g/day
+      mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)    !g/day
       
       !salt ions
       if (gwsol_salt == 1) then
         do isalt=1,cs_db%num_salts
           sol_index = sol_index + 1
-          mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)	!g/day
+          mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)    !g/day
         enddo
       endif
       
@@ -107,7 +107,7 @@
         
         !boron
         sol_index = sol_index + 1
-        mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)	!g/day
+        mass_rct(sol_index) = gwsol_state(cell_id)%solute(sol_index)%conc * gw_vol * gwsol_rctn(sol_index)  !g/day
         
       endif !if constituents are active
 
