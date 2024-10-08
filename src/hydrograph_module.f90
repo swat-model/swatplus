@@ -362,6 +362,8 @@
         real :: runoff = 0.                     !irrigation surface runoff  |mm
         real :: eff = 1.                        !irrigation efficiency as a fraction of irrigation. Jaehak 2022
         real :: frac_surq = 0.                  !fraction of irrigation lost in runoff flow. Jaehak 2022
+        real :: no3 = 0.                        !nitrate concentration in irrigation water  |kg   Jaehak 2023
+        real :: salt = 0.                       !salt concentration in irrigation water  |ppm       
         !hyd_output units are in mm and mg/L
         type (hyd_output) :: water              !irrigation water
       end type irrigation_water_transfer
@@ -681,7 +683,7 @@
       type (sol_header) :: sol_hdr
       
       type plant_header        
-        character (len=17) :: name =  "     name        "       !!none         |plant name 
+        character (len=15) :: name =  "     name        "       !!none         |plant name 
         character (len=15) :: growing =  "growing"              !!none         |plant growing             
         character (len=15) :: dormant =  "dormant"              !!none         |plant dormant
         character (len=15) :: lai =  "lai"                      !!none         |leaf area index 
@@ -785,6 +787,9 @@
         character (len=15) :: lag    =  "           tons"        !! tons         |detached large ag
         character (len=15) :: grv    =  "           tons"        !! tons         |gravel
         character (len=15) :: temp   =  "               "        !! deg c        |temperature
+        !Jaehak 2023
+        !character (len=15) :: salt   =  "             kg"        !! deg c        |temperature
+        !character (len=15) :: pest   =  "             mg"        !! deg c        |temperature
       end type hyd_header_units1
       type (hyd_header_units1) :: hyd_hdr_units1 
          
@@ -807,6 +812,9 @@
         character (len=15) :: lag    =  "           tons"        !! tons         |detached large ag
         character (len=15) :: grv    =  "           tons"        !! tons         |gravel
         character (len=15) :: temp   =  "               "        !! deg c        |temperature
+        !Jaehak 2023
+        !character (len=15) :: salt   =  "             kg"        !! deg c        |temperature
+        !character (len=15) :: pest   =  "             mg"        !! deg c        |temperature
       end type hyd_header_units3
       type (hyd_header_units3) :: hyd_hdr_units3 
 

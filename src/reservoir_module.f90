@@ -74,7 +74,7 @@
           character (len=6) :: mo     =   "   mon"
           character (len=6) :: day_mo =   "   day"
           character (len=6) :: yrc    =   "    yr"
-          character (len=9) :: j      =   "  resnum "
+          character (len=8) :: j      =   "  resnum "
           character (len=9) :: id     =   "  gis_id "
           character (len=16) :: name  =   " name           "
           character (len=13) :: flo   =   "        flo"     !! ha-m         |volume of water
@@ -166,7 +166,7 @@
           character (len=6) :: mo     = "      "
           character (len=6) :: day_mo = "      "
           character (len=6) :: yrc    = "      "
-          character (len=9) :: j      = "         "
+          character (len=8) :: j      = "         "
           character (len=9) :: id     = "         "
           character (len=16) :: name  = "               "
           character (len=13) :: flo   = "        ha-m"    !! ha-m         |volume of water

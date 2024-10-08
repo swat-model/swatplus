@@ -310,7 +310,9 @@
       end if        ! ht1%flo > 0.
       
       !rtb hydrograph separation
-      if (rttime > det) then      ! ht1 = incoming + storage
+      if (rttime > time%dtm / 60.) then      ! travel time > routing time step (hours)
+        !! Variable Storage Coefficent method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
+        scoef = 24. / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + 24.)
         !! travel time > timestep -- then all incoming is stored and frac of stored is routed
         hdsep2%flo_surq = scoef * ch_stor_hdsep(ich)%flo_surq
         hdsep2%flo_latq = scoef * ch_stor_hdsep(ich)%flo_latq

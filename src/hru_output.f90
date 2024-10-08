@@ -244,9 +244,7 @@
              if (pcom(j)%plcur(ipl)%harv_num_yr > 0) then 
                pl_mass(j)%yield_yr(ipl) = pl_mass(j)%yield_yr(ipl) / float(pcom(j)%plcur(ipl)%harv_num_yr)
              endif
-           if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
             write (4010,103) time%day, time%mo, time%day_mo, time%yrc, j, pcom(j)%pl(ipl), pl_mass(j)%yield_yr(ipl)
-           end if
             if (pco%csvout == "y") then
               write (4011,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, pcom(j)%pl(ipl), pl_mass(j)%yield_yr(ipl) 
             end if

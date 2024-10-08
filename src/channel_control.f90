@@ -95,25 +95,25 @@
       ch(jrch)%dep_chan = 0.
       sedrch = 0.
       rch_san = 0.
-      rch_cla = 0.
       rch_sil = 0.
+      rch_cla = 0.
       rch_sag = 0.
-      rch_gra = 0.
       rch_lag = 0.
+      rch_gra = 0.
       wtrin = 0.
-      algin = 0.
       chlin = 0.
+      algin = 0.
       orgnin = 0.
-      nitritin = 0.
       ammoin = 0.
+      nitritin = 0.
       nitratin = 0.
       orgpin = 0.
       dispin = 0.
       cbodin = 0.
       disoxin = 0.
+         cinn = 0.
 !! route water through reach
       rtwtr_d=0.
-      cinn = 0.
       rttlc_d=0.
       rtevp_d =0.
 

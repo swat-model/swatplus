@@ -44,8 +44,10 @@
       real :: washld = 0.             !tons          |wash load  
       real :: bedld = 0.              !tons          |bed load
       real :: dep = 0.                !tons          |deposition
-      real :: hc_sed = 0.             !tons          |headcut erosion
-      real :: chside = 0.             !none          |change in horizontal distance per unit
+      real :: sedp_dep = 0.                !kg            |Particulate P deposition MJW
+      real :: orgn_dep = 0.                !kg            |Particulate N deposition MJW
+      real :: hc_sed                  !tons          |headcut erosion
+      real :: chside                  !none          |change in horizontal distance per unit
                                       !              |change in vertical distance on channel side
                                       !              |slopes; always set to 2 (slope=1/2)
       real :: a = 0.                  !m^2           |cross-sectional area of channel
@@ -413,7 +415,7 @@
         !! Peters latest channel erosion model
         !!vel = 1.37 * (sd_ch(ich)%chs ** 0.31) * (12. * sd_ch(ich)%chw) ** 0.32      !annual ave for SWIFT
         !! mean daily to peak ratio developed from GARDAY - THE STUDY OF MOST PROBABLE MEAN DAILY BANKFULL RUNOFF VOLUMES 
-        !! IN SMALL WATERSHEDS DOMINATED BY CONVECTIVE/FRONTAL CHANNEL FORMING EVENTS AND THE CO-INCIDENT INNER BERM CHANNELS � PART I. 
+        !! IN SMALL WATERSHEDS DOMINATED BY CONVECTIVE/FRONTAL CHANNEL FORMING EVENTS AND THE CO-INCIDENT INNER BERM CHANNELS – PART I. 
         !! Another eq from Peter - Qmax=Qmean*(1+2.66*Drainage Area^-.3)
         pk_rto = 0.2 + 0.5 / 250. * ob(icmd)%area_ha
         pk_rto = amin1 (1., pk_rto)
@@ -473,7 +475,7 @@
           shear_btm = 9800. * rcurv%dep * sd_ch(ich)%chs   !! Pa = N/m^2 * m * m/m
             !! if bottom shear > d50 -> downcut - widen to maintain width depth ratio
             if (shear_btm > shear_btm_cr) then
-              ebtm_m = sd_ch(ich)%cherod * (shear_btm - shear_btm_cr)    !! cm = hr * cm/hr/Pa * Pa
+              !ebtm_m = sd_ch(ich)%cherod * (shear_btm - shear_btm_cr)    !! cm = hr * cm/hr/Pa * Pa
               !! calc mass of sediment eroded -> t = cm * m/100cm * width (m) * length (km) * 1000 m/km * bd (t/m3)
               ebtm_t = 10. * ebtm_m * sd_ch(ich)%chw * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
             end if
@@ -490,7 +492,10 @@
       !sd_ch(ich)%bankfull_flo = 1.0      !***jga
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       if (peakrate > bf_flow) then
-        dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
+        !dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
+        !! deposit Particulate P and N in the floodplain
+        !sedp_dep = sd_ch(ich)%chseq * ht1%sedp   !MJW 2024 May need to include a enrichment factor for transported sediment
+        !orgn_dep = sd_ch(ich)%chseq * ht1%orgn   !MJW 2024
       end if
       
       !! compute sediment leaving the channel - washload only
@@ -537,10 +542,13 @@
         !! reset sed to tons
         ht2%sed = sedout
         
-        !! add nutrients from bank erosion - t *ppm (1/1,000,000) * 1000. kg/t
-        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc * 1000.
-        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc * 1000.
-        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio * 1000.
+        !! subtract nutrients deposited in floodplain
+        ht2%sedp = ht2%sedp - sedp_dep   !MJW 2024
+        ht2%orgn = ht2%orgn - orgn_dep   !MJW 2024
+        !! add nutrients from bank erosion - t * mg/kg (ppm) * kg/1000 mg * 1000 kg/t = kg
+        ht2%orgn = ht2%orgn + ebank_t * sd_ch(ich)%n_conc
+        ht2%sedp = ht2%sedp + ebank_t * sd_ch(ich)%p_conc
+        ht2%solp = ht2%solp + ebank_t * sd_ch(ich)%p_bio
         
         !! route constituents
         call ch_rtpest

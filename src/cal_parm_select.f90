@@ -438,6 +438,9 @@
                          chg_typ, chg_val, absmin, absmax)
 
 !!     SWQ
+      case ("mumax")
+          ch_nut(ielem)%mumax = chg_par(ch_nut(ielem)%mumax,                &
+                         chg_typ, chg_val, absmin, absmax)
       case ("rs1")
           ch_nut(ielem)%rs1 = chg_par(ch_nut(ielem)%rs1,                &
                          chg_typ, chg_val, absmin, absmax)
@@ -611,20 +614,16 @@
             sd_ch(ielem)%chk = chg_par(sd_ch(ielem)%chk,                  &
                          chg_typ, chg_val, absmin, absmax)
         
-         case ("cherod")
-            sd_ch(ielem)%cherod = chg_par(sd_ch(ielem)%cherod,            &
+         case ("bank_exp")
+            sd_ch(ielem)%bank_exp = chg_par(sd_ch(ielem)%bank_exp,            &
                          chg_typ, chg_val, absmin, absmax)
         
          case ("cov")
             sd_ch(ielem)%cov = chg_par(sd_ch(ielem)%cov,                  &
                         chg_typ, chg_val, absmin, absmax)
             
-        ! case ("wd_rto")
-        !    sd_ch(ielem)%wd_rto = chg_par(sd_ch(ielem)%wd_rto,            &
-        !                 chg_typ, chg_val, absmin, absmax)
-        
-         case ("flood_sedfrac")
-            sd_ch(ielem)%chseq = chg_par(sd_ch(ielem)%chseq,              &
+         case ("vcr_coef")
+            sd_ch(ielem)%vcr_coef = chg_par(sd_ch(ielem)%vcr_coef,              &
                          chg_typ, chg_val, absmin, absmax)
         
          case ("d50")
@@ -712,8 +711,8 @@
             sd_ch(ielem)%arc_len_fr = chg_par(sd_ch(ielem)%arc_len_fr,            &
                          chg_typ, chg_val, absmin, absmax)
         
-         case ("part_size")
-            sd_ch(ielem)%part_size = chg_par(sd_ch(ielem)%part_size,            &
+         case ("bed_exp")
+            sd_ch(ielem)%bed_exp = chg_par(sd_ch(ielem)%bed_exp,            &
                          chg_typ, chg_val, absmin, absmax)
         
          case ("wash_bed_fr")
@@ -740,6 +739,11 @@
          case ("nsed")
            res_prm(ielem)%sed%nsed = chg_par(res_prm(ielem)%sed%nsed,           &
                          chg_typ, chg_val, absmin, absmax)
+         case ("res_d50")
+           res_prm(ielem)%sed%d50 = chg_par(res_prm(ielem)%sed%d50,           &
+                         chg_typ, chg_val, absmin, absmax)
+           !! d50 -micro meters
+           res_prm(ielem)%sed_stlr_co = exp(-0.184 * res_prm(ielem)%sed%d50)
            
          case ("sed_stlr")
            res_prm(ielem)%sed%sed_stlr = chg_par(res_prm(ielem)%sed%sed_stlr,           &

@@ -33,6 +33,7 @@
         type (conditions_var), dimension(:), allocatable :: cond        ! conditions
         character(len=25), dimension(:,:), allocatable :: alt           ! condition alternatives
         type (actions_var), dimension(:), allocatable :: act            ! actions
+        integer, dimension(:), allocatable :: lu_chg_mx                 ! max times lu change can occur
         character(len=1), dimension(:,:), allocatable :: act_outcomes   ! action outcomes ("y" to perform action; "n" to not perform)
         character(len=1), dimension(:), allocatable :: act_hit          ! "y" if all condition alternatives (rules) are met; "n" if not
         integer, dimension(:), allocatable :: act_typ                   ! pointer to action type (ie plant, fert type, tillage implement, release type, etc)

@@ -89,13 +89,13 @@
       ht2%no2 = wbody%no2 * ht2%flo / (wbody%flo + ht2%flo)
       
       !! remove nutrients leaving reservoir
-      wbody%no3 = wbody%no3 - ht2%no3
-      wbody%orgn = wbody%orgn - ht2%orgn
-      wbody%sedp = wbody%sedp - ht2%sedp
-      wbody%solp = wbody%solp - ht2%solp
-      wbody%chla = wbody%chla - ht2%chla
-      wbody%nh3 = wbody%nh3 - ht2%nh3
-      wbody%no2 = wbody%no2 - ht2%no2
+      wbody%no3 = max(0.,wbody%no3 - ht2%no3) !No less than zero, Jaehak 2024
+      wbody%orgn = max(0.,wbody%orgn - ht2%orgn)
+      wbody%sedp = max(0.,wbody%sedp - ht2%sedp)
+      wbody%solp = max(0.,wbody%solp - ht2%solp)
+      wbody%chla = max(0.,wbody%chla - ht2%chla)
+      wbody%nh3 = max(0.,wbody%nh3 - ht2%nh3)
+      wbody%no2 = max(0.,wbody%no2 - ht2%no2)
 
       return
       end subroutine res_nutrient

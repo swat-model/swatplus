@@ -98,9 +98,9 @@
       end if 
 
       !calibrate channel sediment 
-      if (cal_codes%chsed == "y") then
-        call calsoft_chsed
-      end if
+      !if (cal_codes%chsed == "y") then
+      !  call calsoft_chsed
+      !end if
 
       if (cal_codes%chsed == "y") then
         do ireg = 1, db_mx%ch_reg

@@ -155,12 +155,13 @@
                   harveff = mgt%op3
                   call mgt_harvresidue (j, harveff)
                 case ("tree")
+                  call mgt_harvbiomass (j, ipl, iharvop)
                 case ("tuber")
                   call mgt_harvtuber (j, ipl, iharvop)
                 case ("peanuts")
                   call mgt_harvtuber (j, ipl, iharvop)
                 case ("stripper")
-                  call mgt_harvgrain (j, ipl, iharvop)
+                  call mgt_harvbiomass (j, ipl, iharvop)
                 case ("picker")
                   call mgt_harvgrain (j, ipl, iharvop)
                 end select
@@ -436,19 +437,24 @@
 
             !! set weir height and adjust principal spillway storage and depth
             wet_ob(j)%weir_hgt = mgt%op3 / 1000. !weir height, m
-            wet_ob(j)%pvol = hru(j)%area_ha * wet_ob(j)%weir_hgt * 10.
+            wet_ob(j)%pvol = hru(j)%area_ha * wet_ob(j)%weir_hgt * 10000. !m3
             if (wet_ob(j)%evol < wet_ob(j)%pvol*1.1) then
               wet_ob(j)%evol = wet_ob(j)%pvol * 1.1   
             endif
               
           case ("irrp")  !! continuous irrigation to maintain surface ponding in rice fields Jaehak 2022
             hru(j)%irr_src = mgt%op_plant                   !irrigation source: cha; res; aqu; or unlim													
-            hru(j)%irr_hmin = irrop_db(mgt%op1)%dep_mm     !threshold ponding depth, mm
+            hru(j)%irr_isc = mgt%op3                        !irrigation source object ID: cha; res; aqu; or unlim
+            hru(j)%irr_hmax = irrop_db(mgt%op1)%amt_mm     !irrigation amount in irr.org, mm
+            hru(j)%irr_hmin = hru(j)%irr_hmax * 0.9        !threshold ponding depth, mm
             irrig(j)%eff = irrop_db(mgt%op1)%eff
             irrig(j)%frac_surq = irrop_db(mgt%op1)%surq
+            irrig(j)%salt = irrop_db(mgt%op1)%salt  !ppm salt  Jaehak 2023
+            irrig(j)%no3 = irrop_db(mgt%op1)%no3 !ppm  no3
             pcom(j)%days_irr = 1            ! reset days since last irrigation
             if (mgt%op3 < 0) then
               hru(j)%irr_hmax = irrop_db(mgt%op1)%amt_mm     !irrigation amount in irr.org, mm
+              if (hru(j)%irr_hmax>0) hru(j)%paddy_irr = 1 !paddy irrigation is on with manual scheduling
             else
               hru(j)%irr_hmax = mgt%op3       !target ponding depth, mm
               if (mgt%op3 > 0) then

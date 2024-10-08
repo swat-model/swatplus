@@ -68,7 +68,7 @@
       !! initialize water entering first soil layer
       !! ht1%flo is infiltration from overland flow routing
       if (ires==0) then
-        sepday = inflpcp + irrig(j)%applied + ht1%flo !mm
+        sepday = inflpcp + irrig(j)%applied + ht1%flo / (hru(j)%area_ha * 10.)
       else
         sepday = inflpcp + ht1%flo / (hru(j)%area_ha * 10.)
       endif

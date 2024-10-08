@@ -71,6 +71,8 @@
       integer :: imallo = 0
       integer :: idmd = 0
       integer :: irec = 0
+      integer :: iplt = 0
+      integer :: num_plts_cur = 0
       real :: hiad1 = 0.                   !         |
       real :: biomass = 0.                 !         |
       real :: frt_kg = 0.
@@ -398,12 +400,13 @@
                   harveff = d_tbl%act(iac)%const
                   call mgt_harvresidue (j, harveff)
                 case ("tree")
+                  call mgt_harvbiomass (j, ipl, iharvop)
                 case ("tuber")
                   call mgt_harvtuber (j, ipl, iharvop)
                 case ("peanuts")
                   call mgt_harvtuber (j, ipl, iharvop)
                 case ("stripper")
-                  call mgt_harvgrain (j, ipl, iharvop)
+                  call mgt_harvbiomass (j, ipl, iharvop)
                 case ("picker")
                   call mgt_harvgrain (j, ipl, iharvop)
                 end select
@@ -886,7 +889,10 @@
           case ("lu_change")
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
+            if (d_tbl%lu_chg_mx(iac) <= Int(d_tbl%act(iac)%const2)) then
+              d_tbl%lu_chg_mx(iac) = d_tbl%lu_chg_mx(iac) + 1
             ilu = d_tbl%act_typ(iac)
+              hru(j)%land_use_mgt = ilu
             hru(j)%dbs%land_use_mgt = ilu
             lu_prev = hru(j)%land_use_mgt_c
             hru(j)%land_use_mgt_c = d_tbl%act(iac)%file_pointer
@@ -902,6 +908,27 @@
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  "    LU_CHANGE ",        &
                     lu_prev, hru(j)%land_use_mgt_c, "   0   0"
                             
+              !! add new plants in simulation for yield output
+              do ipl = 1, pcom(j)%npl
+                if (basin_plants == 0) then
+                  plts_bsn(1) = pcom(j)%pl(ipl)
+                  basin_plants = 1
+                else
+                  num_plts_cur = basin_plants
+                  do iplt = 1, num_plts_cur
+                    if (pcom(j)%pl(ipl) == plts_bsn(iplt)) exit
+                    if (iplt == basin_plants) then
+                      plts_bsn(iplt+1) = pcom(j)%pl(ipl)
+                      bsn_crop_yld(iplt+1) = bsn_crop_yld_z
+                      bsn_crop_yld_aa(iplt+1) = bsn_crop_yld_z
+                      basin_plants = basin_plants + 1
+                      pcom(j)%plcur(ipl)%bsn_num = basin_plants
+                    end if
+                  end do
+                end if
+              end do
+              !pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
+            end if
           !land use change - contouring
           case ("p_factor")
             j = d_tbl%act(iac)%ob_num
@@ -1033,7 +1060,8 @@
               
             do istr = 1, db_mx%grassop_db
               if (d_tbl%act(iac)%file_pointer == grwaterway_db(istr)%name) then
-                istr1 = istr
+                !istr1 = istr
+                hru(j)%lumv%grwat_i = 1
                 exit
               end if
             end do
@@ -1045,6 +1073,13 @@
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " GRASSWW_INSTALL ",       &
               sdr(istr)%name, sdr(istr1)%name, "   0   0"
                                                          
+          !install grass waterways
+          case ("grassww_uninstall")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            hru(j)%lumv%grwat_i = 0
+            write (3612,*) j, time%yrc, time%mo, time%day_mo,  " GRASSWW_UNINSTALL ",       &
+              sdr(istr)%name, sdr(istr1)%name, "   0   0"
           !user defined bmp reductions
           case ("user_def_bmp")
             j = d_tbl%act(iac)%ob_num

@@ -112,6 +112,11 @@
                   if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
                     obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(3)
                   end if
+                  ! add to tile flow
+                  ob(icmd)%hin_til = ob(icmd)%hin_til + frac_in * ob(iob)%hd(5)
+                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                    obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(5)
+                  end if
                   ! add to lateral soil runon
                   ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(4)
                   if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then

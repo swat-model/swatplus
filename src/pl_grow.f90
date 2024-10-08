@@ -40,7 +40,7 @@
 
           call pl_seed_gro(j)
           
-          call pl_partition(j)
+          call pl_partition(j, 0)
 
         end if
         
