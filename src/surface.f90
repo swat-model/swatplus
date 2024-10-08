@@ -77,6 +77,6 @@
 
       if (qday < 0.) qday = 0.
 
-1010  format (2(i4,1x),a5,a4,1x,10f8.3)
+!*** tu Wunused-label: 1010  format (2(i4,1x),a5,a4,1x,10f8.3)
       return
       end subroutine surface

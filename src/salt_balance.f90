@@ -506,7 +506,7 @@
       
       
 7000  format(i8,i8,i8,35e16.8)
-7001  format(20e16.8)
+!*** tu Wunused-label: 7001  format(20e16.8)
 
       return
       end
