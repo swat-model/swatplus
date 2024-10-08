@@ -274,7 +274,7 @@
 102   format (4i6,2i8,2x,a,25f12.3)    !!!!!!!!!!   nbs chg
 103   format (4i6,i8,4x,a,5x,4f12.3)
 104   format (4i6,2i8,2x,a8,4f12.3,23f17.3)
-105   format (4i6,2i8,2x,a8,8f17.3)
-106   format (4i6,2i8,2x,a8,29f17.3)
+!*** tu Wunused-label: 105   format (4i6,2i8,2x,a8,8f17.3)
+!*** tu Wunused-label: 106   format (4i6,2i8,2x,a8,29f17.3)
        
       end subroutine hru_output

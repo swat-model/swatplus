@@ -305,6 +305,6 @@
     !! total live biomass in biozone(kg/ha)    
     biom(j) = biom(j) + rbiom(j)
        
-1000  format(3i5,50es15.4)
+!*** tu Wunused-label: 1000  format(3i5,50es15.4)
       return
       end subroutine sep_biozone
