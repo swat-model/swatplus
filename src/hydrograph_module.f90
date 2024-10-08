@@ -1137,7 +1137,7 @@
       end type hru_swift_header_baseunit2
       
       type hru_swift_header
-        character(len=16) :: hd_type(5) = ["total_flow       ", "percolation      ", "surface_runoff   ", "lateral_flow     ", "tile_flow        "]
+        character(len=17) :: hd_type(5) = ["total_flow       ", "percolation      ", "surface_runoff   ", "lateral_flow     ", "tile_flow        "]
         type (hru_swift_header_base) :: exco 
         type (hru_swift_header_baseunit) :: exco_unit
         type (hru_swift_header_base2) :: dr 

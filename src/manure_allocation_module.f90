@@ -110,12 +110,12 @@
         character (len=15) :: src2_num =  "               "
         character (len=15) :: dmd2 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s2out =     "m^3            "        !! ha-m    |withdrawal from source 2       
-        character (len=10) :: s2un =      "m^3            "        !! ha-m    |unmet from source 2        
+        character (len=15) :: s2un =      "m^3            "        !! ha-m    |unmet from source 2        
         character (len=15) :: src3_typ =  "               "
         character (len=15) :: src3_num =  "               "
         character (len=15) :: dmd3 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s3out =     "m^3            "        !! ha-m    |withdrawal from source 3       
-        character (len=10) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
+        character (len=15) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
         end type mallo_header_units
       type (mallo_header_units) :: mallo_hdr_units 
       
