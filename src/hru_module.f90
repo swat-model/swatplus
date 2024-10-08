@@ -100,7 +100,7 @@
           integer :: cn_lu = 0
           integer :: cons_prac = 0
           real :: usle_p = 0.           !! none     | USLE equation support practice (P) factor daily
-          character (len=16) :: urb_ro = ""!! none     | urban runoff model
+          character (len=40) :: urb_ro = ""!! none     | urban runoff model
                                         !!          | "usgs_reg", simulate using USGS regression eqs
                                         !!          | "buildup_washoff", simulate using build up/wash off alg 
           integer :: urb_lu = 0         !! none     | urban land type identification number
@@ -251,7 +251,7 @@
         real :: wet_obank_in = 0.               !mm         |inflow from overbank into wetlands
         real :: precip_aa = 0.
         character(len=1) :: wet_fp = "n"
-        character(len=5) :: irr_src = "unlim"   !           |irrigation source, Jaehak 2022
+        character(len=40) :: irr_src = "unlim"   !           |irrigation source, Jaehak 2022
         real :: strsa = 0.
         real :: irr_hmax = 0                    !mm H2O     |target ponding depth during paddy irrigation Jaehak 2022
         real :: irr_hmin = 0                    !mm H2O     |threshold ponding depth to trigger paddy irrigation
