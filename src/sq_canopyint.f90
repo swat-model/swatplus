@@ -87,7 +87,7 @@
             precip_eff = precip_eff - (canmxl - canstor(j))
             canstor(j) = canmxl
           endif
-       end if
+    end if     ! time%step > 1
 
       return
       end subroutine sq_canopyint

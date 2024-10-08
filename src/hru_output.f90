@@ -244,9 +244,7 @@
              if (pcom(j)%plcur(ipl)%harv_num_yr > 0) then 
                pl_mass(j)%yield_yr(ipl) = pl_mass(j)%yield_yr(ipl) / float(pcom(j)%plcur(ipl)%harv_num_yr)
              endif
-           if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
             write (4010,103) time%day, time%mo, time%day_mo, time%yrc, j, pcom(j)%pl(ipl), pl_mass(j)%yield_yr(ipl)
-           end if
             if (pco%csvout == "y") then
               write (4011,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, pcom(j)%pl(ipl), pl_mass(j)%yield_yr(ipl) 
             end if
@@ -276,7 +274,7 @@
 102   format (4i6,2i8,2x,a,25f12.3)    !!!!!!!!!!   nbs chg
 103   format (4i6,i8,4x,a,5x,4f12.3)
 104   format (4i6,2i8,2x,a8,4f12.3,23f17.3)
-105   format (4i6,2i8,2x,a8,8f17.3)
-106   format (4i6,2i8,2x,a8,29f17.3)
+!*** tu Wunused-label: 105   format (4i6,2i8,2x,a8,8f17.3)
+!*** tu Wunused-label: 106   format (4i6,2i8,2x,a8,29f17.3)
        
       end subroutine hru_output

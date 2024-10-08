@@ -98,8 +98,8 @@
       return
       
 100   format (4i6,2i8,2x,a,11e12.3)
-101   format (4i6,2i8,2x,a,11e12.3)
-102   format (4i6,2i8,2x,a,11e12.3)
-103   format (2i6,i8,4x,a,5x,11e12.3)
+!*** tu Wunused-label: 101   format (4i6,2i8,2x,a,11e12.3)
+!*** tu Wunused-label: 102   format (4i6,2i8,2x,a,11e12.3)
+!*** tu Wunused-label: 103   format (2i6,i8,4x,a,5x,11e12.3)
        
       end subroutine hru_pathogen_output

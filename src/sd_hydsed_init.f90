@@ -79,12 +79,11 @@
         sd_ch(i)%chn = sd_chd(idb)%chn
         if (sd_ch(i)%chn < .05) sd_ch(i)%chn = .05   !***jga
         sd_ch(i)%chk = sd_chd(idb)%chk      
-        sd_ch(i)%cherod = sd_chd(idb)%cherod
+        sd_ch(i)%bank_exp = sd_chd(idb)%bank_exp
         sd_ch(i)%cov = sd_chd(idb)%cov
         sd_ch(i)%sinu = sd_chd(idb)%sinu
         if (sd_ch(i)%sinu < 1.05) sd_ch(i)%sinu = 1.05
-        sd_ch(i)%chseq = sd_chd(idb)%chseq
-        if (sd_ch(i)%chseq < 1.e-6) sd_ch(i)%chseq = 0.5
+        sd_ch(i)%vcr_coef = sd_chd(idb)%vcr_coef
         sd_ch(i)%d50 = sd_chd(idb)%d50
         sd_ch(i)%ch_clay = sd_chd(idb)%ch_clay
         sd_ch(i)%carbon = sd_chd(idb)%carbon
@@ -111,7 +110,7 @@
         sd_ch(i)%n_dep_enr = sd_chd1(idb1)%n_dep_enr
         sd_ch(i)%p_dep_enr = sd_chd1(idb1)%p_dep_enr
         sd_ch(i)%arc_len_fr = sd_chd1(idb1)%arc_len_fr
-        sd_ch(i)%part_size = sd_chd1(idb1)%part_size
+        sd_ch(i)%bed_exp = sd_chd1(idb1)%bed_exp
         sd_ch(i)%wash_bed_fr = sd_chd1(idb1)%wash_bed_fr
           
         !! compute headcut parameters
@@ -165,8 +164,8 @@
       end do
         
       !! Compute storage time constant for reach (msk_co1 + msk_co2 = 1.)
-	  msk1 = bsn_prm%msk_co1 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
-	  msk2 = bsn_prm%msk_co2 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
+      msk1 = bsn_prm%msk_co1 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
+      msk2 = bsn_prm%msk_co2 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
       xkm = sd_ch(i)%stor_dis_bf * msk1 + sd_ch(i)%stor_dis_01bf * msk2
       
       !! Muskingum numerical stability -Jaehak Jeong, 2011
@@ -305,7 +304,7 @@
             ch_water(ich)%cs(ics) = (cs_cha_ini(ics_ini)%conc(ics)/1000.) * tot_stor(ich)%flo !kg
           enddo
         enddo
-			endif
+            endif
       
       return
       end subroutine sd_hydsed_init

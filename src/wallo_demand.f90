@@ -75,7 +75,11 @@
           j = wallo(iwallo)%dmd(idmd)%ob_num
           !! if there is demand, use amount from water allocation file
           if (irrig(j)%demand > 0.) then
+            if (hru(j)%irr_hmax > 0.) then
+              wallod_out(iwallo)%dmd(idmd)%dmd_tot = irrig(j)%demand !m3 Irrigation demand based on paddy/wetland target ponding depth Jaehak 2023
+            else
             wallod_out(iwallo)%dmd(idmd)%dmd_tot = wallo(iwallo)%dmd(idmd)%amount * hru(j)%area_ha * 10. !m3 = mm * ha * 10.
+            endif
           else
             wallod_out(iwallo)%dmd(idmd)%dmd_tot = 0.
           end if

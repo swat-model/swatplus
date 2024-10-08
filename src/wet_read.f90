@@ -132,6 +132,8 @@
                do ised = 1, db_mx%res_sed
                  if (res_sed(ised)%name == wet_dat_c(isstor)%sed) then
                    wet_prm(i)%sed = res_sed(ised)
+                   !! d50 -micro meters
+                   wet_prm(i)%sed_stlr_co = exp(-0.184 * wet_prm(i)%sed%d50)
                    wet_dat(isstor)%sed = ised
                    exit
                  end if
