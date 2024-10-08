@@ -25,7 +25,7 @@
       imax = 0
       mcal = 0
       mreg = 0
-	  
+      
       inquire (file=in_chg%water_balance_sft, exist=i_exist)
       if (.not. i_exist .or. in_chg%water_balance_sft == "null") then
         allocate (lscal(0:0))

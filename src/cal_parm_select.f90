@@ -34,7 +34,7 @@
       use hydrograph_module
       use pesticide_data_module
       use plant_module
-	    use gwflow_module
+        use gwflow_module
       
       implicit none
 
@@ -956,45 +956,45 @@
             hlt_db(ielem)%uslels = chg_par (hlt_db(ielem)%uslels, chg_typ, chg_val, absmin, absmax)
 
 
-		!!gwflow (rtb)
+        !!gwflow (rtb)
          case ("aquifer_K")
-				    if(bsn_cc%gwflow.eq.1) then
-				      gw_state(ielem)%hydc = chg_par(gw_state(ielem)%hydc, chg_typ, chg_val, absmin, absmax)		
-						endif
-						
-				 case ("aquifer_Sy")
-				    if(bsn_cc%gwflow.eq.1) then
-				      gw_state(ielem)%spyd = chg_par(gw_state(ielem)%spyd, chg_typ, chg_val, absmin, absmax)	
-				    endif
-							
-				 case ("aquifer_delay")
-				    if(bsn_cc%gwflow.eq.1) then
-				      gw_delay(ielem) = chg_par(gw_delay(ielem), chg_typ, chg_val, absmin, absmax)
+                    if(bsn_cc%gwflow.eq.1) then
+                      gw_state(ielem)%hydc = chg_par(gw_state(ielem)%hydc, chg_typ, chg_val, absmin, absmax)        
+                        endif
+                        
+                 case ("aquifer_Sy")
+                    if(bsn_cc%gwflow.eq.1) then
+                      gw_state(ielem)%spyd = chg_par(gw_state(ielem)%spyd, chg_typ, chg_val, absmin, absmax)    
+                    endif
+                            
+                 case ("aquifer_delay")
+                    if(bsn_cc%gwflow.eq.1) then
+                      gw_delay(ielem) = chg_par(gw_delay(ielem), chg_typ, chg_val, absmin, absmax)
             endif
-							
-				 case ("aquifer_exdp")
-				    if(bsn_cc%gwflow.eq.1) then
-				      gw_state(ielem)%exdp = chg_par(gw_state(ielem)%exdp, chg_typ, chg_val, absmin, absmax)		
-					  endif	
-							
-				 case ("stream_K")
-				    if(bsn_cc%gwflow.eq.1) then
-				      do icell=1,gw_chan_info(ielem)%ncon !loop through cells connected to channel
-						    gw_chan_info(ielem)%hydc(icell) = chg_par(gw_chan_info(ielem)%hydc(icell), chg_typ, chg_val, absmin, absmax)
-						  enddo
-				    endif
-							
-				 case ("stream_thk")
-				    if(bsn_cc%gwflow.eq.1) then
-				      do icell=1,gw_chan_info(ielem)%ncon !loop through cells connected to channel
-						    gw_chan_info(ielem)%thck(icell) = chg_par(gw_chan_info(ielem)%thck(icell), chg_typ, chg_val, absmin, absmax)
-						  enddo
-				    endif
-							
-				 case ("stream_bed")
-				    if(bsn_cc%gwflow.eq.1) then
-				      gw_bed_change = chg_par(gw_bed_change, chg_typ, chg_val, absmin, absmax)		
-				    endif
+                            
+                 case ("aquifer_exdp")
+                    if(bsn_cc%gwflow.eq.1) then
+                      gw_state(ielem)%exdp = chg_par(gw_state(ielem)%exdp, chg_typ, chg_val, absmin, absmax)        
+                      endif 
+                            
+                 case ("stream_K")
+                    if(bsn_cc%gwflow.eq.1) then
+                      do icell=1,gw_chan_info(ielem)%ncon !loop through cells connected to channel
+                            gw_chan_info(ielem)%hydc(icell) = chg_par(gw_chan_info(ielem)%hydc(icell), chg_typ, chg_val, absmin, absmax)
+                          enddo
+                    endif
+                            
+                 case ("stream_thk")
+                    if(bsn_cc%gwflow.eq.1) then
+                      do icell=1,gw_chan_info(ielem)%ncon !loop through cells connected to channel
+                            gw_chan_info(ielem)%thck(icell) = chg_par(gw_chan_info(ielem)%thck(icell), chg_typ, chg_val, absmin, absmax)
+                          enddo
+                    endif
+                            
+                 case ("stream_bed")
+                    if(bsn_cc%gwflow.eq.1) then
+                      gw_bed_change = chg_par(gw_bed_change, chg_typ, chg_val, absmin, absmax)      
+                    endif
 
         !! initial soil properties
         case ("lab_p")

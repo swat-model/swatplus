@@ -683,7 +683,7 @@
       type (sol_header) :: sol_hdr
       
       type plant_header        
-        character (len=15) :: name =  "     name        "       !!none         |plant name 
+        character (len=17) :: name =  "     name        "       !!none         |plant name 
         character (len=15) :: growing =  "growing"              !!none         |plant growing             
         character (len=15) :: dormant =  "dormant"              !!none         |plant dormant
         character (len=15) :: lai =  "lai"                      !!none         |leaf area index 
@@ -975,47 +975,47 @@
         character (len=11) :: min   =     "       min "
       end type output_flow_duration_header    
       type (output_flow_duration_header) :: fdc_hdr
-	  
+      
       type calibration_header          
         character (len=16) :: name        =   "     name      "
         character (len=12) :: ha          =   "     ha     "
         character (len=12) :: nbyr        =   "   nbyr     "
         character (len=12) :: prec        =   "   precip   "
-		character (len=16) :: meas        =   "     name      "
-		character (len=12) :: srr         =   "    srr     "
-		character (len=12) :: lfr         =   "    lfr     "
-		character (len=12) :: pcr         =   "    pcr     "
-		character (len=12) :: etr         =   "    etr     "
-		character (len=12) :: tfr         =   "    tfr     "
-		character (len=12) :: sed         =   "    sed     "
-		character (len=12) :: orgn        =   "   orgn     "
-		character (len=12) :: orgp        =   "   orgp     "
-		character (len=12) :: no3         =   "    no3     "
-		character (len=12) :: solp        =   "   solp     "
-		character (len=16) :: aa          =   "   name     "
-		character (len=12) :: srr_aa      =   "    srr     "
-		character (len=12) :: lfr_aa      =   "    lfr     "
-		character (len=12) :: pcr_aa      =   "    pcr     "
-		character (len=12) :: etr_aa      =   "    etr     "
-		character (len=12) :: tfr_aa      =   "    tfr     "
-		character (len=12) :: sed_aa      =   "    sed     "
-		character (len=12) :: orgn_aa     =   "   orgn     "
-		character (len=12) :: orgp_aa     =   "   orgp     "
-		character (len=12) :: no3_aa      =   "    no3     "
-		character (len=12) :: solp_aa     =   "   solp     "
-		character (len=12) :: cn_prm_aa   =   "     cn     "
-		character (len=12) :: esco        =   "   esco     "
-		character (len=12) :: lat_len     =   "lat_len     "
-		character (len=12) :: petco       =   "  petco     "
-		character (len=12) :: slope       =   "  slope     "
-		character (len=12) :: tconc       =   "  tconc     "
-		character (len=12) :: etco        =   "   etco     "
-		character (len=12) :: perco       =   "  perco     "
-		character (len=12) :: revapc      =   "  revapc    "
-		character (len=12) :: cn3_swf     =   " cn3_swf    "
+        character (len=16) :: meas        =   "     name      "
+        character (len=12) :: srr         =   "    srr     "
+        character (len=12) :: lfr         =   "    lfr     "
+        character (len=12) :: pcr         =   "    pcr     "
+        character (len=12) :: etr         =   "    etr     "
+        character (len=12) :: tfr         =   "    tfr     "
+        character (len=12) :: sed         =   "    sed     "
+        character (len=12) :: orgn        =   "   orgn     "
+        character (len=12) :: orgp        =   "   orgp     "
+        character (len=12) :: no3         =   "    no3     "
+        character (len=12) :: solp        =   "   solp     "
+        character (len=16) :: aa          =   "   name     "
+        character (len=12) :: srr_aa      =   "    srr     "
+        character (len=12) :: lfr_aa      =   "    lfr     "
+        character (len=12) :: pcr_aa      =   "    pcr     "
+        character (len=12) :: etr_aa      =   "    etr     "
+        character (len=12) :: tfr_aa      =   "    tfr     "
+        character (len=12) :: sed_aa      =   "    sed     "
+        character (len=12) :: orgn_aa     =   "   orgn     "
+        character (len=12) :: orgp_aa     =   "   orgp     "
+        character (len=12) :: no3_aa      =   "    no3     "
+        character (len=12) :: solp_aa     =   "   solp     "
+        character (len=12) :: cn_prm_aa   =   "     cn     "
+        character (len=12) :: esco        =   "   esco     "
+        character (len=12) :: lat_len     =   "lat_len     "
+        character (len=12) :: petco       =   "  petco     "
+        character (len=12) :: slope       =   "  slope     "
+        character (len=12) :: tconc       =   "  tconc     "
+        character (len=12) :: etco        =   "   etco     "
+        character (len=12) :: perco       =   "  perco     "
+        character (len=12) :: revapc      =   "  revapc    "
+        character (len=12) :: cn3_swf     =   " cn3_swf    "
       end type calibration_header    
-      type (calibration_header) :: calb_hdr	 
-	  
+      type (calibration_header) :: calb_hdr  
+      
       type calibration2_header         
         character (len=16) :: name     =   "       name "
         character (len=12) :: dakm2    =   "     da_km2 "
@@ -1050,7 +1050,7 @@
         character (len=12) :: uslep    =   "      uslep "
         character (len=12) :: uslels   =   "     uslels "
       end type calibration2_header    
-      type (calibration2_header) :: calb2_hdr	
+      type (calibration2_header) :: calb2_hdr   
       
       type calibration3_header         
         character (len=16) :: name     =   "       name "

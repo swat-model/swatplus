@@ -296,37 +296,29 @@
         end do
 
       !! allocate zero arrays for constituents
-      allocate (hin_csz%pest(cs_db%num_pests), source = 0)
-      allocate (hin_csz%path(cs_db%num_paths), source = 0)
-      allocate (hin_csz%hmet(cs_db%num_metals), source = 0)
-
-      allocate (hin_csz%salt(cs_db%num_salts), source = 0) !rtb salt
-
-      allocate (hin_csz%cs(cs_db%num_cs), source = 0) !rtb se 
-      allocate (hcs1%pest(cs_db%num_pests), source = 0)
-
-
-      allocate (hcs1%path(cs_db%num_paths), source = 0)
-      allocate (hcs1%hmet(cs_db%num_metals), source = 0)
-      allocate (hcs1%salt(cs_db%num_salts), source = 0) !rtb salt
-
-      allocate (hcs1%cs(cs_db%num_cs), source = 0) !rtb cs
-
-      allocate (hcs2%pest(cs_db%num_pests), source = 0)
-      allocate (hcs2%path(cs_db%num_paths), source = 0)
-      allocate (hcs2%hmet(cs_db%num_metals), source = 0)
-
-      allocate (hcs2%salt(cs_db%num_salts), source = 0) !rtb salt
-
+      allocate (hin_csz%pest(cs_db%num_pests), source = 0.)
+      allocate (hin_csz%path(cs_db%num_paths), source = 0.)
+      allocate (hin_csz%hmet(cs_db%num_metals), source = 0.)
+      allocate (hin_csz%salt(cs_db%num_salts), source = 0.) !rtb salt
+      allocate (hin_csz%cs(cs_db%num_cs), source = 0.) !rtb se 
           
+      allocate (hcs1%pest(cs_db%num_pests), source = 0.)
+      allocate (hcs1%path(cs_db%num_paths), source = 0.)
+      allocate (hcs1%hmet(cs_db%num_metals), source = 0.)
+      allocate (hcs1%salt(cs_db%num_salts), source = 0.) !rtb salt
+      allocate (hcs1%cs(cs_db%num_cs), source = 0.) !rtb cs
         
-      allocate (hcs2%cs(cs_db%num_cs), source = 0) !rtb cs
+      allocate (hcs2%pest(cs_db%num_pests), source = 0.)
+      allocate (hcs2%path(cs_db%num_paths), source = 0.)
+      allocate (hcs2%hmet(cs_db%num_metals), source = 0.)
+      allocate (hcs2%salt(cs_db%num_salts), source = 0.) !rtb salt
+      allocate (hcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
       
-      allocate (hcs3%pest(cs_db%num_pests), source = 0)
-      allocate (hcs3%path(cs_db%num_paths), source = 0)
-      allocate (hcs3%hmet(cs_db%num_metals), source = 0)
-      allocate (hcs3%salt(cs_db%num_salts), source = 0) !rtb salt
-      allocate (hcs3%cs(cs_db%num_cs), source = 0) !rtb cs
+      allocate (hcs3%pest(cs_db%num_pests), source = 0.)
+      allocate (hcs3%path(cs_db%num_paths), source = 0.)
+      allocate (hcs3%hmet(cs_db%num_metals), source = 0.)
+      allocate (hcs3%salt(cs_db%num_salts), source = 0.) !rtb salt
+      allocate (hcs3%cs(cs_db%num_cs), source = 0.) !rtb cs
 
       hin_csz%pest = 0.
       hin_csz%path = 0.

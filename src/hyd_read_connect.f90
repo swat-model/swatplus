@@ -73,7 +73,7 @@
               ob(i)%trans = hz
               ob(i)%hin_tot = hz
               ob(i)%hout_tot = hz
-									  
+                                      
               ob(i)%hd_aa(:) = hz
               if (cs_db%num_tot > 0) then
                 
@@ -100,7 +100,7 @@
                 end if
                 npaths = cs_db%num_paths
                 if (npaths > 0) then
-		  allocate (obcs(i)%hin(1)%path(npaths), source = 0.)
+          allocate (obcs(i)%hin(1)%path(npaths), source = 0.)
                   allocate (obcs(i)%hin_sur(1)%path(npaths), source = 0.)
                   allocate (obcs(i)%hin_lat(1)%path(npaths), source = 0.)
                   allocate (obcs(i)%hin_til(1)%path(npaths), source = 0.)
@@ -143,7 +143,7 @@
                 if (ncs > 0) then 
                   allocate (obcs(i)%hin(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin(1)%cs_sorb(ncs), source = 0.)
-                  allocate (obcs(i)%hin(1)%csc(ncs, source = 0.)
+                  allocate (obcs(i)%hin(1)%csc(ncs), source = 0.)
                   allocate (obcs(i)%hin(1)%csc_sorb(ncs), source = 0.)
                   allocate (obcs(i)%hin_sur(1)%cs(ncs), source = 0.)
                   allocate (obcs(i)%hin_sur(1)%cs_sorb(ncs), source = 0.)

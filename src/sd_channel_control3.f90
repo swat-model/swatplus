@@ -40,7 +40,7 @@
       real :: erode_bank_cut = 0.     !cm            |widening caused by downcutting (both sides)
       real :: ebtm_t = 0.             !tons          |bottom erosion
       real :: ebank_t = 0.            !tons          |bank erosion
-      real :: sedout = 0.             !mg		     |sediment out of waterway channel
+      real :: sedout = 0.             !mg            |sediment out of waterway channel
       real :: washld = 0.             !tons          |wash load  
       real :: bedld = 0.              !tons          |bed load
       real :: dep = 0.                !tons          |deposition

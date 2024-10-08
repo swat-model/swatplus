@@ -103,29 +103,29 @@
       type (water_allocation_output), dimension(:), allocatable :: walloa_out     !dimension by demand objects
       
       type wallo_header            
-		character(len=6) :: day      =	 "  jday"
-		character(len=6) :: mo       =	 "	 mon"
-		character(len=6) :: day_mo   =	 " day "
-		character(len=6) :: yrc      =	 " yr  "
-		character(len=8) :: idmd	 =	 " unit   "
-		character(len=16) :: dmd_typ  =  "dmd_typ         "
-		character(len=16) :: dmd_num =	 "    dmd_num     "
-		character(len=16) :: rcv_typ  =  "drcv_typ         "
-		character(len=16) :: rcv_num =	 "    rcv_num     "
+        character(len=6) :: day      =   "  jday"
+        character(len=6) :: mo       =   "   mon"
+        character(len=6) :: day_mo   =   " day "
+        character(len=6) :: yrc      =   " yr  "
+        character(len=8) :: idmd     =   " unit   "
+        character(len=16) :: dmd_typ  =  "dmd_typ         "
+        character(len=16) :: dmd_num =   "    dmd_num     "
+        character(len=16) :: rcv_typ  =  "drcv_typ         "
+        character(len=16) :: rcv_num =   "    rcv_num     "
         character(len=12) :: src1_obj =  "   src1_obj "
-		character(len=12) :: src1_typ =	 " src1_typ   "
-        character(len=12)  :: src1_num = " src1_num	  "
-        character(len=15) :: dmd1  =     "	  demand     "      !! ha-m     |demand - muni or irrigation       
+        character(len=12) :: src1_typ =  " src1_typ   "
+        character(len=12)  :: src1_num = " src1_num   "
+        character(len=15) :: dmd1  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
         character(len=15) :: s1out  =   "src1_withdraw  "       !! ha-m     |withdrawal from source 1
         character(len=12) :: s1un =    "  src1_unmet"          !! ha-m     |unmet from source 1 
-		character(len=12) :: src2_typ =	 " src2_typ   "
-        character(len=12)  :: src2_num = " src2_num	  "
-        character(len=15) :: dmd2  =     "	  demand     "      !! ha-m     |demand - muni or irrigation       
+        character(len=12) :: src2_typ =  " src2_typ   "
+        character(len=12)  :: src2_num = " src2_num   "
+        character(len=15) :: dmd2  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
         character(len=15) :: s2out  =   "src2_withdraw  "       !! ha-m     |withdrawal from source 2
         character(len=12) :: s2un =    "  src2_unmet"          !! ha-m     |unmet from source 2           
-		character(len=12) :: src3_typ =	 " src3_typ   "
-        character(len=12)  :: src3_num = " src3_num	  "
-        character(len=15) :: dmd3  =     "	  demand     "      !! ha-m     |demand - muni or irrigation       
+        character(len=12) :: src3_typ =  " src3_typ   "
+        character(len=12)  :: src3_num = " src3_num   "
+        character(len=15) :: dmd3  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
         character(len=15) :: s3out  =   "src3_withdraw  "       !! ha-m     |withdrawal from source 3
         character(len=12) :: s3un =    "  src3_unmet"          !! ha-m     |unmet from source 3      
 
@@ -133,30 +133,30 @@
       type (wallo_header) :: wallo_hdr
 
       type wallo_header_units         
-		character (len=8) :: day	  =  "	      "
-		character (len=8) :: mo       =  "	      "
-		character (len=8) :: day_mo   =  "	      "
-		character (len=8) :: yrc      =  "	      "
-		character (len=8) :: idmd	  =  "	      "
-		character (len=16) :: dmd_typ  =  "	               "
-		character (len=16) :: dmd_num  =  "                "
-		character (len=16) :: rcv_typ  =  "	               "
-		character (len=16) :: rcv_num  =  "                "
+        character (len=8) :: day      =  "        "
+        character (len=8) :: mo       =  "        "
+        character (len=8) :: day_mo   =  "        "
+        character (len=8) :: yrc      =  "        "
+        character (len=8) :: idmd     =  "        "
+        character (len=16) :: dmd_typ  =  "                "
+        character (len=16) :: dmd_num  =  "                "
+        character (len=16) :: rcv_typ  =  "                "
+        character (len=16) :: rcv_num  =  "                "
         character (len=12) :: src1_obj =  "            "
-		character (len=12) :: src1_typ =  "	           "
-		character (len=8) :: src1_num =  "        "
+        character (len=12) :: src1_typ =  "            "
+        character (len=8) :: src1_num =  "        "
         character (len=15) :: dmd1 =      "m^3            "            !! ha-m    |demand - muni or irrigation
-        character (len=15) :: s1out =	  "m^3            "            !! ha-m    |withdrawal from source 1       
+        character (len=15) :: s1out =     "m^3            "            !! ha-m    |withdrawal from source 1       
         character (len=9) :: s1un =      "m^3      "                   !! ha-m    |unmet from source 1 
-		character (len=15) :: src2_typ =  "               "
-		character (len=15) :: src2_num =  "               "
+        character (len=15) :: src2_typ =  "               "
+        character (len=15) :: src2_num =  "               "
         character (len=15) :: dmd2 =      "m^3            "        !! ha-m    |demand - muni or irrigation
-        character (len=15) :: s2out =	  "m^3            "        !! ha-m    |withdrawal from source 2       
+        character (len=15) :: s2out =     "m^3            "        !! ha-m    |withdrawal from source 2       
         character (len=10) :: s2un =      "m^3            "        !! ha-m    |unmet from source 2        
-		character (len=15) :: src3_typ =  "               "
-		character (len=15) :: src3_num =  "               "
+        character (len=15) :: src3_typ =  "               "
+        character (len=15) :: src3_num =  "               "
         character (len=15) :: dmd3 =      "m^3            "        !! ha-m    |demand - muni or irrigation
-        character (len=15) :: s3out =	  "m^3            "        !! ha-m    |withdrawal from source 3       
+        character (len=15) :: s3out =     "m^3            "        !! ha-m    |withdrawal from source 3       
         character (len=10) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
 
         end type wallo_header_units

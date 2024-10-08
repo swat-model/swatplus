@@ -79,7 +79,7 @@
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%drymo(imo),imo=1,atmodep_cont%num)
             enddo
           end if
-					
+                    
           !yearly values
           if (atmodep_cont%timestep == "yr") then
             read(5050,*) station_name !station name

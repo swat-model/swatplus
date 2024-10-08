@@ -164,8 +164,8 @@
       end do
         
       !! Compute storage time constant for reach (msk_co1 + msk_co2 = 1.)
-	  msk1 = bsn_prm%msk_co1 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
-	  msk2 = bsn_prm%msk_co2 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
+      msk1 = bsn_prm%msk_co1 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
+      msk2 = bsn_prm%msk_co2 / (bsn_prm%msk_co1 + bsn_prm%msk_co2)
       xkm = sd_ch(i)%stor_dis_bf * msk1 + sd_ch(i)%stor_dis_01bf * msk2
       
       !! Muskingum numerical stability -Jaehak Jeong, 2011
@@ -304,7 +304,7 @@
             ch_water(ich)%cs(ics) = (cs_cha_ini(ics_ini)%conc(ics)/1000.) * tot_stor(ich)%flo !kg
           enddo
         enddo
-			endif
+            endif
       
       return
       end subroutine sd_hydsed_init

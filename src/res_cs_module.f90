@@ -28,7 +28,7 @@
       type (res_cs_output), dimension(:), allocatable, save :: rescs_m
       type (res_cs_output), dimension(:), allocatable, save :: rescs_y
       type (res_cs_output), dimension(:), allocatable, save :: rescs_a
-			
+            
       !arrays for wetland mass balance output
       type (res_cs_output), dimension(:), allocatable, save :: wetcs_d
       type (res_cs_output), dimension(:), allocatable, save :: wetcs_m

@@ -682,7 +682,7 @@
               gwsol_ss(i)%solute(sol_index)%sorb = 0.
             enddo
             sol_index = sol_index + 1
-					enddo	!go to next constituent
+                    enddo   !go to next constituent
         endif
       endif
       

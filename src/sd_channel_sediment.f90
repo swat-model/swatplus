@@ -187,7 +187,7 @@
       chsd_d(ich)%hc_m = hc
       
       !! compute sediment leaving the channel - washload only - bottom deg is bedload
-	  sedout = ht1%sed - dep + hc_sed + erode_bank     !  + ebtm_t
+      sedout = ht1%sed - dep + hc_sed + erode_bank     !  + ebtm_t
       ht2%sed = sedout
       
 

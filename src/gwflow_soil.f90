@@ -18,7 +18,7 @@
       integer :: cell_id = 0             !       |cell in connection with the channel
       real :: hru_Q = 0.                 !m3     |volume transferred from cell to the soil profile
       real :: hru_soilz = 0.             !m      |thickness of HRU soil profile
-      real :: vadose_z = 0.    							 !m			 |thickness of cell vadose zone
+      real :: vadose_z = 0.                              !m          |thickness of cell vadose zone
       real :: poly_area = 0.             !m2     |area of cell within the HRU
       real :: solmass(100) = 0.          !g      |solute mass transferred from cell
       real :: water_depth(100) = 0.      !m      |depth of groundwater in each soil layer
