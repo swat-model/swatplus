@@ -23,7 +23,7 @@
             write (4814,'(*(G0.3,:,","))') sdch_hdr_units_sub
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_subday.csv"
           end if
-           end if		  
+           end if         
          end if
           
           open (2500,file="channel_sd_day.txt",recl = 1500)

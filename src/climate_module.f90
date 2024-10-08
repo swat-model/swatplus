@@ -120,7 +120,7 @@
         character (len=50) :: sgage = ""      !!  gage name for solar radiation
         character (len=50) :: hgage = ""      !!  gage name for relative humidity
         character (len=50) :: wgage = ""      !!  gage name for windspeed
-        character (len=50) :: petgage = ""    !!  name of pet gage ?
+        character (len=50) :: petgage = ""    !!  name of pet gage
         character (len=50) :: atmodep = ""    !!  atmospheric depostion data file locator
       end type weather_codes_station_char
 

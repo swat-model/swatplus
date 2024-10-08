@@ -81,7 +81,7 @@
               enddo
               if(rec_salt(irec)%pts_type.eq.1) then
                 do isalt=1,cs_db%num_salts
-								  recsaltb_d(irec)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
+                                  recsaltb_d(irec)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
                 enddo
               else
                 do isalt=1,cs_db%num_salts

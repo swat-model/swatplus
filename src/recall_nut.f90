@@ -84,7 +84,7 @@
       endif
  
       
-100   format(i8,i8,100e16.8)      
+!*** tu Wunused-label: 100   format(i8,i8,100e16.8)      
       
       return
       end subroutine recall_nut

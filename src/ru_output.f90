@@ -60,7 +60,7 @@
 
       return
       
-100   format (4i6,2i8,25f15.3)
-102   format (4i6,2i8,25f15.3)
+!*** tu Wunused-label: 100   format (4i6,2i8,25f15.3)
+!*** tu Wunused-label: 102   format (4i6,2i8,25f15.3)
        
       end subroutine ru_output

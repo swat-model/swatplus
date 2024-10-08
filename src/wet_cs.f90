@@ -87,11 +87,11 @@
           !constituent mass settling to bottom of wetland
           if(ics == 1) then
             v_settle = res_cs_data(icon)%v_seo4
-				  elseif(ics == 2) then
+                  elseif(ics == 2) then
             v_settle = res_cs_data(icon)%v_seo3
-				  elseif(ics == 3) then
+                  elseif(ics == 3) then
             v_settle = res_cs_data(icon)%v_born
-				  endif
+                  endif
           cs_settle = (cs_conc_beg/1000.) * v_settle * (wet_wat_d(ihru)%area_ha*10000.) !kg
           if(cs_settle > mass_avail) then
             cs_settle = mass_avail !take remaining

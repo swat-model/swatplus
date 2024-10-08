@@ -10,7 +10,7 @@
       
       implicit none
 
-      character(len=8) :: col_head_con(17) = ""
+      character(len=20) :: col_head_con(17) = ""
       integer :: i = 0
       integer :: j = 0
       integer :: k = 0

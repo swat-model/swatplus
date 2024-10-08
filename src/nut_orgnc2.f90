@@ -60,8 +60,8 @@
       
       latc_clyr = 0.        
       perc_clyr = 0.
-	wt1 = 0.  !! conversion factor
-      er = 0.	!! enrichment ratio
+    wt1 = 0.  !! conversion factor
+      er = 0.   !! enrichment ratio
         !! HRU calculations
         c_ly1 = rsd1(j)%tot_str%n + rsd1(j)%tot_meta%n + soil1(j)%hp(1)%n + soil1(j)%hs(1)%n
         !wt = sol_bd(1,j) * sol_z(1,j) * 10. (tons/ha)
@@ -79,17 +79,17 @@
         !! HRU calculations
         sedorgn(j) = .001 * conc * sedyld(j) / hru(j)%area_ha
 
-	!! update soil nitrogen pools only for HRU calculations
+    !! update soil nitrogen pools only for HRU calculations
       if (xx > 1.e-6) then
         xx1 = (1. - sedorgn(j) / xx)
         
         !!add by zhang to update soil nitrogen pools
         
-		rsd1(j)%tot_str%n = rsd1(j)%tot_str%n * xx1
-		rsd1(j)%tot_meta%n = rsd1(j)%tot_meta%n * xx1
-		soil1(j)%hp(1)%n = soil1(j)%hp(1)%n * xx1
-		soil1(j)%hs(1)%n = soil1(j)%hs(1)%n * xx1
-		!sol_BMN(1,j) = sol_BMN(1,j) * xx1
+        rsd1(j)%tot_str%n = rsd1(j)%tot_str%n * xx1
+        rsd1(j)%tot_meta%n = rsd1(j)%tot_meta%n * xx1
+        soil1(j)%hp(1)%n = soil1(j)%hp(1)%n * xx1
+        soil1(j)%hs(1)%n = soil1(j)%hs(1)%n * xx1
+        !sol_BMN(1,j) = sol_BMN(1,j) * xx1
       end if
       
       !return
@@ -111,10 +111,10 @@
       ! Not sure whether should consider enrichment ratio or not!
       YEW = MIN((sedyld(j)/hru(j)%area_ha+YW/hru(j)%area_ha)/(sol_mass/1000.),.9) !fraction of soil erosion of total soil mass
       X1=1.-YEW
-	  !YEW=MIN(ER*(YSD(NDRV)+YW)/WT(LD1),.9)
-	  !ER enrichment ratio
-	  !YSD water erosion
-	  !YW wind erosion
+      !YEW=MIN(ER*(YSD(NDRV)+YW)/WT(LD1),.9)
+      !ER enrichment ratio
+      !YSD water erosion
+      !YW wind erosion
       YOC=YEW*TOT
       soil1(j)%hs(1)%c = soil1(j)%hs(1)%c * X1
       soil1(j)%hp(1)%c = soil1(j)%hp(1)%c * X1
@@ -138,7 +138,7 @@
           XX=X1+DK
           !V=QD+Y4
           V = surfq(j) + soil(j)%ly(1)%prk + soil(j)%ly(1)%flat
-	      !QD surface runoff
+          !QD surface runoff
           X3=0.
           IF(V>1.E-10)THEN
               X3 = soil1(j)%microb(1)%c * (1.-EXP(-V/XX)) !loss of biomass C

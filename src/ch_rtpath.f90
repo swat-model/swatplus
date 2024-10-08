@@ -89,9 +89,9 @@
 
           !! new concentration
           netwtr = ob(icmd)%hin%flo  + rchwtr
-	
-  	      !! change made by CS while running region 4; date 2 jan 2006	
-	      if (path_tot < 1.e-6) path_tot = 0.0 
+    
+          !! change made by CS while running region 4; date 2 jan 2006  
+          if (path_tot < 1.e-6) path_tot = 0.0 
           if (netwtr >= 1.) then
             ch_water(jrch)%path(ipath) = path_tot / netwtr
           else
