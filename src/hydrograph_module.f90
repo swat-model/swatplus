@@ -1127,7 +1127,7 @@
       end type hru_swift_header_baseunit
       
       type hru_swift_header_base2
-        character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
+        character (len=17) :: flo  =    "flo "      !! ha-m         |volume of water
         type(hru_swift_header_base) :: base
       end type hru_swift_header_base2
       

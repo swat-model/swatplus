@@ -18,7 +18,7 @@
         character(len=25) :: ob = ""        ! object variable (ie res, hru, canal, etc)
         integer :: ob_num = 0               ! object number
         character(len=25) :: name = ""      ! name of action
-        character(len=25) :: option = ""    ! action option - specific to type of action (ie for reservoir, option to
+        character(len=40) :: option = ""    ! action option - specific to type of action (ie for reservoir, option to
                                             ! input rate, days of drawdown, weir equation pointer, etc
         real :: const = 0.                  ! constant used for rate, days, etc
         real :: const2 = 1                  ! additional constant used for rate, days, etc

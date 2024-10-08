@@ -12,7 +12,7 @@
       
       implicit none
            
-      character(len=16) :: chg_parm = ""                      !                |               
+      character(len=25) :: chg_parm = ""                      !                |               
       character(len=16) :: chg_typ = ""                       !variable        |type of change (absval, abschg, pctchg)
       character(len=1) :: cond_met = ""                       !                |       
       character(len=1) :: pl_find = ""                        !                |       

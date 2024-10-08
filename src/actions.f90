@@ -90,7 +90,7 @@
       real :: cn_prev = 0.
       real :: stor_m3 = 0.
       character(len=1) :: action = ""      !         |
-      character(len=25) :: lu_prev = ""    !         |
+      character(len=40) :: lu_prev = ""    !         |
 
       do iac = 1, d_tbl%acts
         action = "n"
