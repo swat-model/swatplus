@@ -1423,7 +1423,8 @@
       !! headers for annual crop yields
       if (pco%crop_yld == "a" .or. pco%crop_yld == "b") then
         open (4008,file="crop_yld_aa.txt", recl = 1500)
-        write (4008,*) bsn%name, prog
+        write (4008,*) bsn%name
+		write (4008,*) prog
         write (4008,1000)
         write (9000,*) "CROP                      crop_yld_aa.txt"
         if (pco%csvout == "y") then
