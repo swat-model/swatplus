@@ -31,6 +31,8 @@
       integer :: ires = 0
       integer :: j1 = 0
       integer :: ii = 0               !none          |sub daily time step counter
+      integer :: ihyd = 0             !none          |counter  !Jaehak 2024
+      integer :: isched = 0           !none          |counter  !Jaehak 2024
       real :: wet_fr = 0.
       real :: pvol_m3 = 0.
       real :: evol_m3 = 0.
@@ -47,9 +49,12 @@
       real :: swst(20) = 0.
       j = ihru
       ires = hru(j)%dbs%surf_stor
+      ihyd = wet_dat(ires)%hyd
       ised = wet_dat(ires)%sed
       irel = wet_dat(ires)%release
       wsa1 = hru(j)%area_ha * 10.
+      isched = hru(j)%mgt_ops
+      wet_wat_d(j)%area_ha = hru(j)%area_ha
       
       !! zero outgoing flow 
       ht2 = resz
@@ -73,7 +78,7 @@
       
       !! add irrigation water to the paddy/wetland storage 
       wet(j)%flo =  wet(j)%flo + irrig(j)%applied * wsa1 !m3
-      
+      wet(j)%no3 = wet(j)%no3 + irrig(j)%no3 * irrig(j)%applied * wsa1 * 0.001 !kg
       wet_wat_d(j)%area_ha = 0.
       if (wet(j)%flo > 0.) then  !paddy is assumed flat
         !! update wetland surface area - solve quadratic to find new depth
@@ -133,7 +138,11 @@
         hru(j)%water_seep = wet_wat_d(j)%seep / wsa1   !mm=m3/(10*ha)
       
         ! calculate dissolved nutrient infiltration Jaehak 2022
-        seep_rto = wet_wat_d(j)%seep / (wet_wat_d(j)%seep + wet(j)%flo)
+        if (wet_wat_d(j)%seep + wet(j)%flo > 0.01)then
+          seep_rto = wet_wat_d(j)%seep / (wet_wat_d(j)%seep + wet(j)%flo)
+        else 
+          seep_rto = 0.
+        endif
         soil1(j)%mn(1)%no3 = soil1(j)%mn(1)%no3 + wet(j)%no3 * seep_rto / hru(j)%area_ha !kg/ha
         soil1(j)%mn(1)%nh4 = soil1(j)%mn(1)%nh4 + wet(j)%nh3 * seep_rto / hru(j)%area_ha !kg/ha
         soil1(j)%mp(1)%act = soil1(j)%mp(1)%act + wet(j)%solp * seep_rto / hru(j)%area_ha !kg/ha
@@ -159,6 +168,8 @@
       !if (hru(j)%wet_fp == "n") then
         !! calc release from decision table
         d_tbl => dtbl_res(irel)
+        wbody => wet(j)
+        wbody_wb => wet_wat_d(j)
         pvol_m3 = wet_ob(j)%pvol
         evol_m3 = wet_ob(j)%evol
         !if (wet_ob(j)%area_ha > 1.e-6) then
@@ -193,21 +204,22 @@
           end do
         end if
  
-      !end if
       
       wet_ob(j)%depth = wet(j)%flo / wsa1 / 1000. !m                       
        
       !! compute sediment deposition
       call res_sediment
       
-      !!! subtract sediment leaving from reservoir
-      !wet(j)%sed = wet(j)%sed - ht2%sed
-      !wet(j)%sil = wet(j)%sil - ht2%sil
-      !wet(j)%cla = wet(j)%cla - ht2%cla
+      wet(j)%sed = wbody%sed !t
       
       !! perform reservoir nutrient balance
       call res_nutrient (j)
       
+      wet(j)%no3 = wbody%no3  
+      wet(j)%nh3 = wbody%nh3
+      wet(j)%orgn =wbody%orgn
+      wet(j)%sedp = wbody%sedp 
+      wet(j)%solp = wbody%solp 
       !! perform salt ion constituent balance
       call wet_salt(icmd,j)
       
@@ -236,10 +248,6 @@
       
 
   
-      !write(100100,'(3(I6,","),11(f10.1,","))') time%yrc,time%mo,time%day_mo,w%precip,irrig(j)%applied,hru(j)%water_seep,&
-      !  weir_hgt*1000,wet(j)%flo/wsa1,ht2%flo/wsa1,soil(j)%sw,wet(j)%sed*1000,ht2%sed*1000,no3ppm,ht2%no3    
-      !write(*,'(3(I6),11(f10.1))') time%yrc,time%mo,time%day_mo,w%precip,irrig(j)%applied,hru(j)%water_seep,&
-      !  weir_hgt*1000,wet(j)%flo/wsa1,ht2%flo/wsa1,soil(j)%sw,wet(j)%sed*1000,ht2%sed*1000,wet(j)%no3,ht2%no3    
       
       !! perform reservoir pesticide transformations
       !call res_pest (ires)
@@ -267,10 +275,8 @@
       
       !! set inflow and outflow variables for reservoir_output
       if (time%yrs > pco%nyskip) then
-        wet_in_d(j) = ht1 
+        wet_in_d(j) = wet_in_d(j) + ht1 
         wet_out_d(j) = ht2
-        !wet_in_d(j)%flo = wet(j)%flo / 10000.   !m^3 -> ha-m
-        !wet_out_d(j)%flo = wet(j)%flo / 10000.  !m^3 -> ha-m
       end if  
 
       return

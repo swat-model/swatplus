@@ -21,6 +21,8 @@
         hru(ihru)%area_ha = ob(iob)%area_ha
         hru(ihru)%km = ob(iob)%area_ha / 100.
         hru(ihru)%land_use_mgt_c = hru_db(ihru_db)%dbsc%land_use_mgt
+        ilu = hru(ihru)%dbs%land_use_mgt
+        hru(ihru)%cal_group = lum(ilu)%cal_group
       end do
 
       return

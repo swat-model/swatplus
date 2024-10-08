@@ -51,7 +51,7 @@
       end if
       
       !! root mass
-      pl_mass(j)%root(ipl)%m = pcom(j)%plg(ipl)%root_frac * pl_mass(j)%tot(ipl)%m
+      !pl_mass(j)%root(ipl)%m = pcom(j)%plg(ipl)%root_frac * pl_mass(j)%tot(ipl)%m
 
       return
       end subroutine pl_root_gro

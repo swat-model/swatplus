@@ -42,7 +42,7 @@
           
           db_mx%exco_om = imax
           
-          allocate (exco(0:imax))       !
+          allocate (exco(0:imax))       !! change to exco_om         
           allocate (exco_om_num(0:imax), source = 0)
           allocate (exco_om_name(0:imax))
           rewind (107)

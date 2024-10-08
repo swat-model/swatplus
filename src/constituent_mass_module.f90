@@ -596,9 +596,9 @@
         integer :: ics = 0
         allocate (hydcs3%pest(cs_db%num_pests), source = 0.)
         allocate (hydcs3%path(cs_db%num_paths), source = 0.)
+        allocate (hydcs3%hmet(cs_db%num_metals), source = 0.)
         allocate (hydcs3%salt(cs_db%num_salts), source = 0.)
         allocate (hydcs3%cs(cs_db%num_cs), source = 0.)
-        allocate (hydcs3%hmet(cs_db%num_metals), source = 0.)
 
         do ipest = 1, cs_db%num_pests
           hydcs3%pest(ipest) =  hydcs2%pest(ipest) + hydcs1%pest(ipest)
@@ -629,10 +629,10 @@
         integer :: ics = 0
         allocate (hydcs2%pest(cs_db%num_pests), source = 0.)
         allocate (hydcs2%path(cs_db%num_paths), source = 0.)
-        allocate (hydcs2%salt(cs_db%num_salts), source = 0.)
-        allocate (hydcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
-
         allocate (hydcs2%hmet(cs_db%num_metals), source = 0.)
+        allocate (hydcs2%salt(cs_db%num_salts), source = 0.)
+
+        allocate (hydcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
 
         do ipest = 1, cs_db%num_pests
           hydcs2%pest(ipest) =  const * hydcs1%pest(ipest)

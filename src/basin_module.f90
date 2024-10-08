@@ -21,32 +21,24 @@
                                  !!   0 = Priestley-Taylor 
                                  !!   1 = Penman-Monteith
                                  !!   2 = Hargreaves method
-                                 !!   3 = read in daily pot ET values
-        integer :: event = 0     !! event code
+        integer :: event = 0     !! not used
         integer :: crk = 0       !! crack flow code 
                                  !!   1 = compute flow in cracks
         integer :: swift_out = 0 !! write to SWIFT input file
                                  !!   0 = do not write
                                  !!   1 = write to swift_hru.inp
-        integer :: sed_det = 0   !! max half-hour rainfall frac calc
-                                 !!   0 = gen from triangular dist
-                                 !!   1 = use monthly mean frac
+        integer :: sed_det = 0   !! not used
         integer :: rte = 0       !! water routing method
                                  !!   0 variable storage method
                                  !!   1 Muskingum method
-        integer :: deg = 0       !! channel degradation code
-                                 !!   0 = do not compute
-                                 !!   1 = compute (downcutting and widening)
-        integer :: wq = 0        !! stream water quality code
-                                 !!   0 do not model
-                                 !!   1 model (QUAL2E)
+        integer :: deg = 0       !! not used
+        integer :: wq = 0        !! not used
         integer :: nostress = 0  !! redefined to the sequence number  -- changed to no nutrient stress
                                  !!   0 = all stresses applied
                                  !!   1 = turn off all plant stress
                                  !!   2 = turn off nutrient plant stress only
         integer :: cn = 0        !! not used
-        integer :: cfac = 0      !!  0 = C-factor calc using CMIN
-                                 !!  1 = for new C-factor from RUSLE (no min needed)      
+        integer :: cfac = 0      !! not used     
         integer :: cswat = 0     !! carbon code
                                  !!  = 0 Static soil carbon (old mineralization routines)
                                  !!  = 1 C-FARM one carbon pool model 
@@ -57,29 +49,20 @@
         integer :: uhyd = 1      !! Unit hydrograph method: 
                                  !!   0 = triangular UH
                                  !!   1 = gamma function UH
-        integer :: sed_ch = 0    !! Instream sediment model
-                                 !!   0 = Bagnold model
-                                 !!   1 = Brownlie model
-                                 !!   2 = Yang model
+        integer :: sed_ch = 0    !! not used
         integer :: tdrn = 0      !! tile drainage eq code
-                                 !!   1 = sim tile flow using subsurface drains (wt_shall)
-                                 !!   0 = sim tile flow using subsurface origtile (wt_shall,d)
-        integer :: wtdn = 0      !! water table depth algorithms code
-                                 !!   1 = sim wt_shall using subsurface new water table depth routine
-                                 !!   0 = sim wt_shall using subsurface orig water table depth routine
-        integer :: sol_p_model=0 !! 1 = new soil P model
+                                 !!   0 = tile flow using drawdown days equation
+                                 !!   1 = tile flow using drainmod equations
+        integer :: wtdn = 0      !! shallow water table depth algorithms code
+                                 !!   0 = depth using orig water table depth routine - fill to upper limit
+                                 !!   1 = depth using drainmod water table depth routine
+        integer :: sol_p_model=0 !! 0 = original soil P model in SWAT documentation
+                                 !! 1 = new soil P model in Vadas and White (2010)
         integer :: gampt = 0     !! 0 = curve number; 1 = Green and Ampt 
-        character(len=1) :: atmo = "a"   !! atmospheric deposition interval
-                                         !!   "m" = monthly
-                                         !!   "y" = yearly
-                                         !!   "a" = annual
-        integer :: smax = 0      !! max depressional storage selection code
-                                 !!   1 = dynamic stmaxd computed as a cunfction of random
-                                 !!          roughness and rain intensity
-                                 !!   0 = static stmaxd read from .bsn for the global value or .sdr
-                                 !! for specific hrus 
-        integer :: qual2e = 0    !! 0 = channel routine using QUAL2E 
-                                 !! 1 = channel routing with simplified nutrient transformations
+        character(len=1) :: atmo = "a"   !! not used
+        integer :: smax = 0      !! not used
+        integer :: qual2e = 0    !! 0 = instream nutrient routing using QUAL2E 
+                                 !! 1 = instream nutrient routing using QUAL2E - with simplified nutrient transformations
         integer :: gwflow = 0       !!   0 = gwflow module not active; 1 = gwflow module active
       end type basin_control_codes
       type (basin_control_codes) :: bsn_cc

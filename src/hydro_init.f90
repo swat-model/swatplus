@@ -88,7 +88,6 @@
       if (bsn_prm%ffcb <= 0.) then
        sffc = wgn_pms(iwgn)%pcp_an / (wgn_pms(iwgn)%pcp_an + Exp(9.043 -   &
                                      .002135 * wgn_pms(iwgn)%pcp_an))
-                         !!S-curve equation Jeff made up.
       else
         sffc = bsn_prm%ffcb
       end if

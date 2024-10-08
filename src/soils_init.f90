@@ -200,6 +200,7 @@
         allocate (soil1_init(ihru)%man(nly))
         allocate (soil1_init(ihru)%water(nly))
         
+        call soil_nutcarb_init(isol)       !! initialize soil nutrient/carbon parameters Jaehak 2024
       end do
 
       return

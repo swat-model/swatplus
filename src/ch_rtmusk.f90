@@ -161,6 +161,7 @@
 
             !! Variable Storage Coefficent method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
             scoef = dthr / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + dthr)
+            scoef = bsn_prm%scoef * 2. * dthr / (2.* ch_rcurv(jrch)%out1%ttime + dthr)   !***jga
             scoef = Min (scoef, 1.)
             outflo = scoef * tot_stor(jrch)%flo
           end if

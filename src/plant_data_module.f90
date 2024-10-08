@@ -3,7 +3,6 @@
       implicit none
       
       character(len=16), dimension (:), allocatable :: plts_bsn     !none      |plant names simulated in current run
-      character(len=16), dimension (:), allocatable :: plants_bsn   !none      |plant names simulated in current run - final
      
       type plant_db
         character(len=40) :: plantnm = ""  !none              |crop name

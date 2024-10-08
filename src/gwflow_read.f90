@@ -2427,7 +2427,7 @@
       write(out_hyd_sep,*) 'chan_satexsw:  channel flow contributed from saturation excess runoff' 
       write(out_hyd_sep,*) 'chan_tile:     channel flow contributed from tile drain flow' 
       write(out_hyd_sep,*)
-      hydsep_hdr = [character(len=16) :: "  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw",  &
+      hydsep_hdr = [character(len=10) :: "  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw",  &
             "chan_satexgw","chan_satexsw","chan_tile"]
       write(out_hyd_sep,121) (hydsep_hdr(j),j=1,10)      
       

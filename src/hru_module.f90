@@ -184,7 +184,7 @@
         integer :: vfsi = 0                 !! |none          |on/off flag for vegetative filter strip
         real :: vfsratio = 0.               !! |none          |contouring USLE P factor
         real :: vfscon = 0.                 !! |none          |fraction of the total runoff from the entire field
-        real :: vfsch = 0;                  !! |none          |fraction of flow entering the most concentrated 10% of the VFS.
+        real :: vfsch = 0.                  !! |none          |fraction of flow entering the most concentrated 10% of the VFS.
                                             !!                     which is fully channelized
         integer :: ngrwat = 0
         integer :: grwat_i = 0              !! |none          |On/off Flag for waterway simulation
@@ -215,7 +215,7 @@
         character(len=40) :: land_use_mgt_c = ""
         integer :: lum_group = 0
         character(len=40) :: lum_group_c = ""   !land use group for soft cal and output
-        character(len=40) :: region = ""
+        character(len=40) :: cal_group = ""
         integer :: plant_cov = 0
         integer :: mgt_ops = 0
         integer :: tiledrain = 0

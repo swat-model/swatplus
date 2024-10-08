@@ -9,6 +9,7 @@
       use aquifer_module
       use mgt_operations_module
       use hru_module, only : hru, ihru
+      use climate_module
       
       implicit none
       
@@ -24,7 +25,7 @@
       wsa1 = hru(j)%area_ha * 10.
       
       !! store initial values
-      irrig(j)%demand = max(0., hru(j)%irr_hmax - wet_ob(j)%depth*1000.) * wsa1 !m3
+      irrig(j)%demand = max(0., hru(j)%irr_hmax - wet_ob(j)%depth*1000. - w%precip) * wsa1 !m3
             
       rto = 0.
       if (.not. allocated(ob(j)%ru)) then 
@@ -89,7 +90,8 @@
           if (aqu_d(isrc)%stor > 0.001) then
             rto = min(0.99, irrig(j)%demand / aqu_d(isrc)%stor)            ! ratio of water removed from aquifer volume
           end if
-          irrig(j)%water%flo = rto * aqu_d(isrc)%flo                 ! organics in irrigation water
+      !    irrig(j)%water%flo = rto * aqu_d(isrc)%flo                 ! organics in irrigation water
+          irrig(j)%water%flo = rto * aqu_d(isrc)%stor                 ! organics in irrigation water  Jaehak 2024
           cs_irr(isrc) = rto * cs_aqu(isrc)                           ! constituents in irrigation water
           aqu_d(isrc)%stor = (1. - rto) * aqu_d(isrc)%stor                  ! remainder stays in aquifer
           cs_aqu(isrc) = (1. - rto) * cs_aqu(isrc)  

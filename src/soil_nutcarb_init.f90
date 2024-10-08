@@ -34,11 +34,19 @@
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
       !! set soil carbon
-      soil1(ihru)%cbn(1) = max(.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
+      soil1(ihru)%cbn(1) = max(0.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
       !! calculate percent carbon for lower layers using exponential decrease
+      !do ly = 2, nly
+        !dep_frac = Exp(-solt_db(isolt)%exp_co * soil(ihru)%phys(ly)%d)
+        !soil1(ihru)%cbn(ly) = soil1(ihru)%cbn(1) * dep_frac
+      !end do
+      !! use carbon content in the soils database
       do ly = 2, nly
-        dep_frac = Exp(-solt_db(isolt)%exp_co * soil(ihru)%phys(ly)%d)
-        soil1(ihru)%cbn(ly) = soil1(ihru)%cbn(1) * dep_frac
+        if (ly - 1 <= soildb(isol)%s%nly) then
+          soil1(ihru)%cbn(ly) = soildb(isol)%ly(ly-1)%cbn
+        else
+          soil1(ihru)%cbn(ly) = soildb(isol)%ly(soildb(isol)%s%nly)%cbn
+        end if
       end do
 
       !! calculate initial nutrient contents of layers, profile and
