@@ -92,6 +92,7 @@
       ht1%flo = ht1%flo + precip
       
       !! compute flood plain deposition
+      !sd_ch(ich)%bankfull_flo = 2.
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       florate_ob = peakrate - bf_flow
       if (florate_ob > 0.) then
@@ -151,9 +152,7 @@
       
       !! add sediment deposition to calculate mm of deposition over the flood plain later
       ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm + fp_dep%sed
-
       
-
       !! calc bank erosion
       cohesion = (-87.1 + (42.82 * sd_ch(ich)%ch_clay) - (0.261 * sd_ch(ich)%ch_clay ** 2.) &
                                      + (0.029 * sd_ch(ich)%ch_clay ** 3.))
@@ -162,6 +161,7 @@
       bd_fac = Max (0.001, 0.03924 * sd_ch(ich)%ch_bd * 1000. - 1000.)
       cohes_fac = 0.021 * cohesion + veg
       vel_cr = log10 (2200. * sd_ch(ich)%chd) * (0.0004 * (bd_fac + cohes_fac)) ** 0.5
+      !sd_ch(ich)%vcr_coef = 1.
       vel_cr = sd_ch(ich)%vcr_coef * vel_cr
       
       !! calculate radius of curvature
@@ -171,6 +171,7 @@
       vel_rch = 0.33 * vel_bend + 0.66 * vel
       b_exp = 12.3 / sqrt (sd_ch(ich)%ch_clay + 1.)
       b_exp = min (3.5, b_exp)
+      !sd_ch(ich)%bank_exp = 2.
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
         ebank_m = 0.0024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
@@ -181,7 +182,7 @@
 
       !! calc mass of sediment eroded -> t = bankcut (m) * depth (m) * lengthcut (m) * bd (t/m3)
       !! arc length = 0.33 * meander wavelength * sinuosity 
-      arc_len = 0.33 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
+      arc_len = 0.66 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
       prot_len = arc_len * sd_ch(ich)%arc_len_fr
       ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%arc_len_fr * prot_len * sd_ch(ich)%ch_bd
       bank_ero%sed = ebank_t
