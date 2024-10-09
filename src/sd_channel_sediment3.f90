@@ -52,6 +52,7 @@
       real :: precip = 0.
       real :: flovol_ob = 0.
       real :: wet_fill = 0.
+      !!
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
