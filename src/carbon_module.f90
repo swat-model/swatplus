@@ -231,7 +231,7 @@
       type (carbon_soil_gain_losses) :: bsc_a
       
       type carbon_residue_gain_losses
-        real :: plant_c = 0.            !kg C/ha            |carbon added to residue from leaf drop and kill 
+        real :: plant_c = 0.            !kg C/ha            |carbon added to residue from leaf drop and kill
         real :: res_decay_c = 0.        !kg C/ha            |carbon lost to soil from residue decay
         real :: harv_stov_c = 0.        !kg C/ha            |carbon removed during residue harvest  
         real :: emit_c = 0.             !kg C/ha            |CO2 production from burning residue carbon
