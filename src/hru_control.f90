@@ -351,18 +351,21 @@
           end if
         end if
        
+        !! compute residue decomposition
+        call rsd_decomp
+        
         !! compute nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
         end if
 
-      if (bsn_cc%cswat == 2) then
-        call cbn_zhang2
-      end if
+        if (bsn_cc%cswat == 2) then
+          call cbn_zhang2
+        end if
 
         call nut_nitvol
 
-      if (bsn_cc%sol_P_model == 1) then  
+        if (bsn_cc%sol_P_model == 1) then  
           call nut_pminrl2
         else
           call nut_pminrl

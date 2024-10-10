@@ -32,7 +32,7 @@
       logical :: i_exist
       
       ! SWIFT file formats
-      201 format (A8,12xA8,46X,*(A16,F2.0,A4,1xA16,F2.0,A4))        ! format of precip.swf headers
+      201 format (A8,12xA8,46X,*(A16,F5.1,A4,1xA16,F5.1,A4))        ! format of precip.swf headers
       301 format (I8,1xA64,F16.4,8xF16.4)                           ! format of precip.swf
       202 format (A8,30xA8,18X,A8,36xA8,4xA8,218x1A8,6x1A8)     ! format of hru_dat.swf headers
       302 format (1I8,1x2A48, G16.4 ,1x*(G16.4))                    ! format of hru_dat.swf

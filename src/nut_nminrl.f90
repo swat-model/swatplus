@@ -30,7 +30,6 @@
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
       use septic_data_module
-      use plant_data_module
       use basin_module
       use organic_mineral_mass_module
       use hru_module, only : rsdco_plcom, i_sep, ihru, ipl, isep 
@@ -74,89 +73,11 @@
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
-      hnb_d(j)%rsd_nitorg_n = 0.
-      hnb_d(j)%rsd_laborg_p = 0.
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.
       hnb_d(j)%act_sta_n = 0.
       hnb_d(j)%denit = 0.
 
-      !! mineralization can occur only if temp above 0 deg
-      if (soil(j)%phys(1)%tmp > 0.) then
-      !! compute residue decomp and mineralization of fresh organic n and p of flat residue
-        do ipl = 1, pcom(j)%npl        !! we need to decompose each plant
-          rmn1 = 0.
-          rmp = 0.
-          if (rsd1(j)%tot(ipl)%n > 1.e-4) then
-            cnr = rsd1(j)%tot(ipl)%c / rsd1(j)%tot(ipl)%n
-            if (cnr > 500.) cnr = 500.
-            cnrf = Exp(-.693 * (cnr - 25.) / 25.)
-          else
-            cnrf = 1.
-          end if
-            
-          if (rsd1(j)%tot(ipl)%p > 1.e-4) then
-            cpr = rsd1(j)%tot(ipl)%c / rsd1(j)%tot(ipl)%p
-            if (cpr > 5000.) cpr = 5000.
-            cprf = Exp(-.693 * (cpr - 200.) / 200.)
-          else
-            cprf = 1.
-          end if
-        
-          !! compute soil water factor
-          if (soil(j)%phys(1)%st < 0.) soil(j)%phys(1)%st = .0000001
-          sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
-          sut = Max(.05, sut)
-
-          !!compute soil temperature factor
-          xx = soil(j)%phys(1)%tmp
-          cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
-          cdg = Max(.1, cdg)
-
-          !! compute combined factor
-          xx = cdg * sut
-          if (xx < 0.) xx = 0.
-          if (xx > 1.e6) xx = 1.e6
-          csf = Sqrt(xx)
-          ca = Min(cnrf, cprf, 1.)
-          !! compute residue decomp and mineralization for each plant
-          if (pcom(j)%npl > 0) then
-            idp = pcom(j)%plcur(ipl)%idplt
-            decr = pldb(idp)%rsdco_pl * ca * csf
-          else
-            decr = 0.05 * ca * csf
-          end if
-          decr = Max(bsn_prm%decr_min, decr)
-          decr = Min(decr, 1.)
-          
-          !! mineralization of mass and carbon
-          rsd1(j)%tot(ipl)%m = Max(1.e-6, rsd1(j)%tot(ipl)%m)
-          rdc = decr * rsd1(j)%tot(ipl)%m
-          rsd1(j)%tot(ipl)%m = rsd1(j)%tot(ipl)%m - rdc
-          if (rsd1(j)%tot(ipl)%m < 0.) rsd1(j)%tot(ipl)%m = 0.
-          rsd1(j)%tot(ipl)%c = (1. - decr) * rsd1(j)%tot(ipl)%c
-          if (rsd1(j)%tot(ipl)%c < 0.) rsd1(j)%tot(ipl)%c = 0.
-          soil1(j)%hact(1)%c = soil1(j)%hact(1)%c + decr * rsd1(j)%tot(ipl)%c
-          
-          !! mineralization of residue n and p
-          rmn1 = decr * rsd1(j)%tot(ipl)%n 
-          rsd1(j)%tot(ipl)%n = Max(1.e-6, rsd1(j)%tot(ipl)%n)
-          rsd1(j)%tot(ipl)%n = rsd1(j)%tot(ipl)%n - rmn1
-          soil1(j)%mn(1)%no3 = soil1(j)%mn(1)%no3 + .8 * rmn1
-          soil1(j)%hact(1)%n = soil1(j)%hact(1)%n + .2 * rmn1
-          
-          rsd1(j)%tot(ipl)%p = Max(1.e-6, rsd1(j)%tot(ipl)%p)
-          rmp = decr * rsd1(j)%tot(ipl)%p
-          rsd1(j)%tot(ipl)%p = rsd1(j)%tot(ipl)%p - rmp
-          soil1(j)%mp(1)%lab = soil1(j)%mp(1)%lab + .8 * rmp
-          soil1(j)%hact(1)%p = soil1(j)%hact(1)%p + .2 * rmp
-          
-          hnb_d(j)%rsd_nitorg_n = hnb_d(j)%rsd_nitorg_n + .8 * rmn1
-          hnb_d(j)%rsd_laborg_p = hnb_d(j)%rsd_laborg_p + .8 * rmp
-          
-        end do      ! ipl = 1, pcom(j)%npl
-      end if
-          
       !! compute humus mineralization of organic soil pools 
       do k = 1, soil(j)%nly
 
@@ -252,20 +173,10 @@
             rmn1 = decr * (soil1(j)%str(k)%n + soil1(j)%lig(k)%n + soil1(j)%meta(k)%n)
             rmp = decr * (soil1(j)%str(k)%p + soil1(j)%lig(k)%p + soil1(j)%meta(k)%p)
 
-            soil1(j)%str(k)%n = soil1(j)%str(k)%n * (1. - decr)
-            soil1(j)%lig(k)%n = soil1(j)%lig(k)%n * (1. - decr)
-            soil1(j)%meta(k)%n = soil1(j)%meta(k)%n * (1. - decr)
-            soil1(j)%str(k)%p = soil1(j)%str(k)%p * (1. - decr)
-            soil1(j)%lig(k)%p = soil1(j)%lig(k)%p * (1. - decr)
-            soil1(j)%meta(k)%p = soil1(j)%meta(k)%p * (1. - decr)
-
-         !   soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * rmn1
-         !   soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * rmn1
-         !   soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * rmp
-         !   soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * rmp
-            
-         !   hnb_d(j)%rsd_nitorg_n = hnb_d(j)%rsd_nitorg_n + rmn1
-         !   hnb_d(j)%rsd_laborg_p = hnb_d(j)%rsd_laborg_p + rmp
+            soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * rmn1
+            soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * rmn1
+            soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * rmp
+            soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * rmp
 
           !!  compute denitrification
           wdn = 0.   

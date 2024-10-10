@@ -279,6 +279,14 @@
 
        j = ihru
         
+       !! calculate carbon loss in surface residue
+            !soil1(j)%str(k)%n = soil1(j)%str(k)%n * (1. - decr)
+            !soil1(j)%lig(k)%n = soil1(j)%lig(k)%n * (1. - decr)
+            !soil1(j)%meta(k)%n = soil1(j)%meta(k)%n * (1. - decr)
+            !soil1(j)%str(k)%p = soil1(j)%str(k)%p * (1. - decr)
+            !soil1(j)%lig(k)%p = soil1(j)%lig(k)%p * (1. - decr)
+            !soil1(j)%meta(k)%p = soil1(j)%meta(k)%p * (1. - decr)
+
       !calculate tillage factor using dssat
       if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
          tillage_factor(j) = 1.6
