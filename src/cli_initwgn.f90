@@ -115,6 +115,7 @@
       integer :: mo_ppet = 0                !              |
 
       !! variables needed for radiation calcs.
+      !test 2
       x1 = 0.0
       x2 = 0.0
       xx = wgn(iwgn)%lat / 57.296     !!convert degrees to radians (2pi/360=1/57.296)
