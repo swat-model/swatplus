@@ -120,7 +120,7 @@ jobs:
           dest: ${{ steps.build_exe.outputs.exez }}
 
       - name: upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: sp-${{ steps.build_exe.outputs.os }}
           path: ${{ steps.build_exe.outputs.exez }}
@@ -134,17 +134,17 @@ jobs:
 
     steps:
     - name: Download Linux
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: sp-Linux
 
     - name: Download Windows
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: sp-Windows
 
     - name: Download macOS
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: sp-macOS
 
