@@ -9,6 +9,11 @@ on:
       - '*.*.*'
 
   workflow_dispatch:
+    inputs:
+        branch:
+            description: 'tag, branch, or SHA to check out`
+            required: true
+            default: 'main'
 
 permissions:
   contents: write
@@ -18,7 +23,7 @@ permissions:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    if: endsWith(github.event.base_ref, 'main') == true
+    # if: endsWith(github.event.base_ref, 'main') == true
 
     strategy:
       fail-fast: false
@@ -38,7 +43,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        # with:
+        with:
+          ref: '${{ github.event.inputs.branch }}'
         #   fetch-tags: true
         #   fetch-depth: 0
 
