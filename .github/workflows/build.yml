@@ -27,14 +27,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: '${{ github.event.inputs.rev }}'
+       uses: actions/checkout@v4
+       with:
+         ref: '${{ github.event.inputs.rev }}'
         #   fetch-tags: true
         #   fetch-depth: 0
      - name: Get SWAT+ version
-        id: get_version
-        run: |
+       id: get_version
+       run: |
           V=`git describe --tags`
           echo $V
           echo $V >v.txt
