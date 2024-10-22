@@ -10,10 +10,10 @@ on:
 
   workflow_dispatch:
     inputs:
-        branch:
-            description: 'tag, branch, or SHA to check out`
-            required: true
-            default: 'main'
+      rev:
+        description: 'tag, branch, or SHA to check out'
+        required: true
+        default: 'main'
 
 permissions:
   contents: write
@@ -44,7 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: '${{ github.event.inputs.branch }}'
+          ref: '${{ github.event.inputs.rev }}'
         #   fetch-tags: true
         #   fetch-depth: 0
 
