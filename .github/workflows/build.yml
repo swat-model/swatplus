@@ -20,8 +20,11 @@ permissions:
   packages: write
   pull-requests: write
 
+
+
 jobs:
 
+# Get the version from tag
   version:
     name: Version
     runs-on: ubuntu-latest
@@ -47,8 +50,94 @@ jobs:
          name: release_tag
          path: v.txt
 
+##### Build swat with GNU
+  build-gnu:
+    runs-on: ${{ matrix.os }}
+    needs:
+      - version
+    #if: endsWith(github.event.base_ref, 'main') == true
 
-  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        toolchain:
+          - {compiler: gcc, version: 13}
+
+    steps:
+      - name: Install Compiler
+        uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build SWAT+
+        id: build_exe
+        run: |
+          echo ${{ env.FC }}
+          cmake --version
+
+          RELEASE_VERSION=${GITHUB_REF#refs/*/}
+          os="$RUNNER_OS"
+          e="build/swatplus-*"
+          gen="Unix"
+
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             e="build/swatplus-*.exe"
+             gen="MinGW"
+          fi
+
+          # generate
+          cmake -B build -G "${gen} Makefiles" \
+              -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
+              -D TAG=$RELEASE_VERSION \
+              -D CMAKE_BUILD_TYPE=Release
+
+          # build
+          cmake --build build --parallel 4
+
+          exebase=`basename -s .exe build/swatplus-*`
+          exez="${exebase}.zip"
+          exe=`ls $e`
+
+          echo $exe
+          echo $exez
+          echo $os
+
+          echo "exe=$exe" >> $GITHUB_OUTPUT
+          echo "exez=$exez" >> $GITHUB_OUTPUT
+          echo "os=$os" >> $GITHUB_OUTPUT
+
+          ls -hl build/swatplus-*
+          file build/swatplus-*
+
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            (cd build && zip ../$exez swatplus-*)
+          fi
+
+        shell: bash
+
+      - name: zip
+        if: matrix.os == 'windows-latest'
+        uses: vimtor/action-zip@v1.2
+        with:
+          files: ${{ steps.build_exe.outputs.exe }}
+          dest: ${{ steps.build_exe.outputs.exez }}
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: gnu-${{ steps.build_exe.outputs.os }}
+          path: ${{ steps.build_exe.outputs.exez }}
+
+
+##### Build with Intel (ifx. ifort)
+
+  build-intel:
     runs-on: ${{ matrix.os }}
     needs:
       - version
@@ -124,7 +213,7 @@ jobs:
           fi
 
           # compile
-          cmake --build build -j 4
+          cmake --build build --parallel 4
 
           exebase=`basename -s .exe build/swatplus-*`
           exez="${exebase}.zip"
@@ -157,59 +246,73 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: sp-${{ steps.build_exe.outputs.os }}
+          name: intel-${{ steps.build_exe.outputs.os }}
           path: ${{ steps.build_exe.outputs.exez }}
 
-
+##### Create a new release with all zip files
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs:
-      - build
+    needs: [ build-gnu, build-intel ]
 
     steps:
-      - name: Download Linux
-        uses: actions/download-artifact@v4
-        with:
-          name: sp-Linux
+    - name: Download GNU Linux
+      uses: actions/download-artifact@v4
+      with:
+        name: gnu-Linux
 
-      - name: Download Windows
-        uses: actions/download-artifact@v4
-        with:
-          name: sp-Windows
+    - name: Download GNU Windows
+      uses: actions/download-artifact@v4
+      with:
+        name: gnu-Windows
 
-      - name: Download macOS
-        uses: actions/download-artifact@v4
-        with:
-          name: sp-macOS
+    - name: Download GNU macOS
+      uses: actions/download-artifact@v4
+      with:
+        name: gnu-macOS
 
-      - name: Download version
-        uses: actions/download-artifact@v4
-        with:
-          name: release_tag
+    - name: Download Intel Linux
+      uses: actions/download-artifact@v4
+      with:
+        name: intel-Linux
 
-      - name: Read version
-        id: read_ver
-        run: |
-          RELEASE_VERSION=`cat v.txt`
-          echo "rv=$RELEASE_VERSION" >> $GITHUB_OUTPUT
+    - name: Download Intel Windows
+      uses: actions/download-artifact@v4
+      with:
+        name: intel-Windows
 
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          token: ${{ github.token }}
-          # tag_name:  ${{ github.event.release.tag_name }}
-          prerelease: false
-          draft: false
-          # name:  ${{ github.event.release.tag_name }}
-          name:  ${{ steps.read_ver.outputs.rv }}
-          files: swatplus-*
-          generate_release_notes: true
-          body: |
-              <details>
-              <summary>Autogenerated Changelog</summary>
-              ... changelog ...
-              </details>
+    - name: Download Intel macOS
+      uses: actions/download-artifact@v4
+      with:
+        name: intel-macOS
+
+    - name: Download version
+      uses: actions/download-artifact@v4
+      with:
+        name: release_tag
+
+    - name: Read version
+      id: read_ver
+      run: |
+        RELEASE_VERSION=`cat v.txt`
+        echo "rv=$RELEASE_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        token: ${{ github.token }}
+        # tag_name:  ${{ github.event.release.tag_name }}
+        prerelease: false
+        draft: false
+        # name:  ${{ github.event.release.tag_name }}
+        name:  ${{ steps.read_ver.outputs.rv }}
+        files: swatplus-*
+        generate_release_notes: true
+        body: |
+            <details>
+            <summary>Autogenerated Changelog</summary>
+            ... changelog ...
+            </details>
 
 
