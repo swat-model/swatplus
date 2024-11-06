@@ -362,6 +362,8 @@
         real :: runoff = 0.                     !irrigation surface runoff  |mm
         real :: eff = 1.                        !irrigation efficiency as a fraction of irrigation. Jaehak 2022
         real :: frac_surq = 0.                  !fraction of irrigation lost in runoff flow. Jaehak 2022
+        real :: no3 = 0.                        !nitrate concentration in irrigation water  |kg   Jaehak 2023
+        real :: salt = 0.                       !salt concentration in irrigation water  |ppm       
         !hyd_output units are in mm and mg/L
         type (hyd_output) :: water              !irrigation water
       end type irrigation_water_transfer
@@ -785,6 +787,9 @@
         character (len=15) :: lag    =  "           tons"        !! tons         |detached large ag
         character (len=15) :: grv    =  "           tons"        !! tons         |gravel
         character (len=15) :: temp   =  "               "        !! deg c        |temperature
+        !Jaehak 2023
+        !character (len=15) :: salt   =  "             kg"        !! deg c        |temperature
+        !character (len=15) :: pest   =  "             mg"        !! deg c        |temperature
       end type hyd_header_units1
       type (hyd_header_units1) :: hyd_hdr_units1 
          
@@ -807,6 +812,9 @@
         character (len=15) :: lag    =  "           tons"        !! tons         |detached large ag
         character (len=15) :: grv    =  "           tons"        !! tons         |gravel
         character (len=15) :: temp   =  "               "        !! deg c        |temperature
+        !Jaehak 2023
+        !character (len=15) :: salt   =  "             kg"        !! deg c        |temperature
+        !character (len=15) :: pest   =  "             mg"        !! deg c        |temperature
       end type hyd_header_units3
       type (hyd_header_units3) :: hyd_hdr_units3 
 
@@ -967,47 +975,47 @@
         character (len=11) :: min   =     "       min "
       end type output_flow_duration_header    
       type (output_flow_duration_header) :: fdc_hdr
-	  
+      
       type calibration_header          
         character (len=16) :: name        =   "     name      "
         character (len=12) :: ha          =   "     ha     "
         character (len=12) :: nbyr        =   "   nbyr     "
         character (len=12) :: prec        =   "   precip   "
-		character (len=16) :: meas        =   "     name      "
-		character (len=12) :: srr         =   "    srr     "
-		character (len=12) :: lfr         =   "    lfr     "
-		character (len=12) :: pcr         =   "    pcr     "
-		character (len=12) :: etr         =   "    etr     "
-		character (len=12) :: tfr         =   "    tfr     "
-		character (len=12) :: sed         =   "    sed     "
-		character (len=12) :: orgn        =   "   orgn     "
-		character (len=12) :: orgp        =   "   orgp     "
-		character (len=12) :: no3         =   "    no3     "
-		character (len=12) :: solp        =   "   solp     "
-		character (len=16) :: aa          =   "   name     "
-		character (len=12) :: srr_aa      =   "    srr     "
-		character (len=12) :: lfr_aa      =   "    lfr     "
-		character (len=12) :: pcr_aa      =   "    pcr     "
-		character (len=12) :: etr_aa      =   "    etr     "
-		character (len=12) :: tfr_aa      =   "    tfr     "
-		character (len=12) :: sed_aa      =   "    sed     "
-		character (len=12) :: orgn_aa     =   "   orgn     "
-		character (len=12) :: orgp_aa     =   "   orgp     "
-		character (len=12) :: no3_aa      =   "    no3     "
-		character (len=12) :: solp_aa     =   "   solp     "
-		character (len=12) :: cn_prm_aa   =   "     cn     "
-		character (len=12) :: esco        =   "   esco     "
-		character (len=12) :: lat_len     =   "lat_len     "
-		character (len=12) :: petco       =   "  petco     "
-		character (len=12) :: slope       =   "  slope     "
-		character (len=12) :: tconc       =   "  tconc     "
-		character (len=12) :: etco        =   "   etco     "
-		character (len=12) :: perco       =   "  perco     "
-		character (len=12) :: revapc      =   "  revapc    "
-		character (len=12) :: cn3_swf     =   " cn3_swf    "
+        character (len=16) :: meas        =   "     name      "
+        character (len=12) :: srr         =   "    srr     "
+        character (len=12) :: lfr         =   "    lfr     "
+        character (len=12) :: pcr         =   "    pcr     "
+        character (len=12) :: etr         =   "    etr     "
+        character (len=12) :: tfr         =   "    tfr     "
+        character (len=12) :: sed         =   "    sed     "
+        character (len=12) :: orgn        =   "   orgn     "
+        character (len=12) :: orgp        =   "   orgp     "
+        character (len=12) :: no3         =   "    no3     "
+        character (len=12) :: solp        =   "   solp     "
+        character (len=16) :: aa          =   "   name     "
+        character (len=12) :: srr_aa      =   "    srr     "
+        character (len=12) :: lfr_aa      =   "    lfr     "
+        character (len=12) :: pcr_aa      =   "    pcr     "
+        character (len=12) :: etr_aa      =   "    etr     "
+        character (len=12) :: tfr_aa      =   "    tfr     "
+        character (len=12) :: sed_aa      =   "    sed     "
+        character (len=12) :: orgn_aa     =   "   orgn     "
+        character (len=12) :: orgp_aa     =   "   orgp     "
+        character (len=12) :: no3_aa      =   "    no3     "
+        character (len=12) :: solp_aa     =   "   solp     "
+        character (len=12) :: cn_prm_aa   =   "     cn     "
+        character (len=12) :: esco        =   "   esco     "
+        character (len=12) :: lat_len     =   "lat_len     "
+        character (len=12) :: petco       =   "  petco     "
+        character (len=12) :: slope       =   "  slope     "
+        character (len=12) :: tconc       =   "  tconc     "
+        character (len=12) :: etco        =   "   etco     "
+        character (len=12) :: perco       =   "  perco     "
+        character (len=12) :: revapc      =   "  revapc    "
+        character (len=12) :: cn3_swf     =   " cn3_swf    "
       end type calibration_header    
-      type (calibration_header) :: calb_hdr	 
-	  
+      type (calibration_header) :: calb_hdr  
+      
       type calibration2_header         
         character (len=16) :: name     =   "       name "
         character (len=12) :: dakm2    =   "     da_km2 "
@@ -1042,7 +1050,7 @@
         character (len=12) :: uslep    =   "      uslep "
         character (len=12) :: uslels   =   "     uslels "
       end type calibration2_header    
-      type (calibration2_header) :: calb2_hdr	
+      type (calibration2_header) :: calb2_hdr   
       
       type calibration3_header         
         character (len=16) :: name     =   "       name "
@@ -1119,7 +1127,7 @@
       end type hru_swift_header_baseunit
       
       type hru_swift_header_base2
-        character (len=16) :: flo  =    "flo "      !! ha-m         |volume of water
+        character (len=17) :: flo  =    "flo "      !! ha-m         |volume of water
         type(hru_swift_header_base) :: base
       end type hru_swift_header_base2
       
@@ -1129,7 +1137,7 @@
       end type hru_swift_header_baseunit2
       
       type hru_swift_header
-        character(len=16) :: hd_type(5) = ["total_flow       ", "percolation      ", "surface_runoff   ", "lateral_flow     ", "tile_flow        "]
+        character(len=17) :: hd_type(5) = ["total_flow       ", "percolation      ", "surface_runoff   ", "lateral_flow     ", "tile_flow        "]
         type (hru_swift_header_base) :: exco 
         type (hru_swift_header_baseunit) :: exco_unit
         type (hru_swift_header_base2) :: dr 

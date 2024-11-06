@@ -32,7 +32,7 @@
       logical :: i_exist
       
       ! SWIFT file formats
-      201 format (A8,12xA8,46X,*(A16,F2.0,A4,1xA16,F2.0,A4))        ! format of precip.swf headers
+      201 format (A8,12xA8,46X,*(A16,F5.1,A4,1xA16,F5.1,A4))        ! format of precip.swf headers
       301 format (I8,1xA64,F16.4,8xF16.4)                           ! format of precip.swf
       202 format (A8,30xA8,18X,A8,36xA8,4xA8,218x1A8,6x1A8)     ! format of hru_dat.swf headers
       302 format (1I8,1x2A48, G16.4 ,1x*(G16.4))                    ! format of hru_dat.swf
@@ -42,7 +42,7 @@
       205 format (7xA16, A16, 10x,*(A16))                           ! format of chan_dat.swf headers
       305 format (I8, 1x, A16, A16,*(F16.4))                             ! format of chan_dat.swf
       206 format (4xA8, 1xA8, 20x,*(A16))                           ! format of chan_dr.swf headers
-      306 format (I8,4xA16, 10xA16,*(F16.4))                        ! format of chan_dr.swf
+!*** tu Wunused-label:       306 format (I8,4xA16, 10xA16,*(F16.4))                        ! format of chan_dr.swf
       207 format (A16,1x*(A16))                                     ! format of aqu_dr.swf headers
       208 format (6xA8, 1xA8, 16x,*(A8,6x))                      ! format of res_dat.swf headers
       !209 format (6xA8, 1xA8, 16x,*(A8,6x))                        ! format of res_dr.swf headers

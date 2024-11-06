@@ -323,7 +323,7 @@
         gw_state(i)%xcrd = 0.
         gw_state(i)%ycrd = 0.
         gw_state(i)%area = 0.
-        gw_state(i)%init = 0.	
+        gw_state(i)%init = 0.   
         gw_state(i)%head = 0.
         gw_state(i)%hydc = 0.
         gw_state(i)%spyd = 0.
@@ -532,7 +532,7 @@
         gw_state(i)%xcrd = 0.
         gw_state(i)%ycrd = 0.
         gw_state(i)%area = 0.
-        gw_state(i)%init = 0.	
+        gw_state(i)%init = 0.   
         gw_state(i)%head = 0.
         gw_state(i)%hydc = 0.
         gw_state(i)%spyd = 0.
@@ -1929,7 +1929,7 @@
         write(out_gwbal,*) 'ppex:         mm   groundwater pumping specified by user'
         write(out_gwbal,*) 'tile:         mm   groundwater removed via tile drains'
         write(out_gwbal,*) 'resv:         mm   groundwater exchanged with reservoirs'
-        write(out_gwbal,*) 'wetl:         mm   groundwater outflow to wetlands'	
+        write(out_gwbal,*) 'wetl:         mm   groundwater outflow to wetlands' 
         write(out_gwbal,*) 'canl:         mm   canal seepage to groundwater'
         write(out_gwbal,*) 'fpln:         mm   floodplain exchange'
         write(out_gwbal,*) 'error:        --   water balance error for aquifer'
@@ -2427,7 +2427,7 @@
       write(out_hyd_sep,*) 'chan_satexsw:  channel flow contributed from saturation excess runoff' 
       write(out_hyd_sep,*) 'chan_tile:     channel flow contributed from tile drain flow' 
       write(out_hyd_sep,*)
-      hydsep_hdr = [character(len=16) :: "  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw",  &
+      hydsep_hdr = [character(len=12) :: "  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw",  &
             "chan_satexgw","chan_satexsw","chan_tile"]
       write(out_hyd_sep,121) (hydsep_hdr(j),j=1,10)      
       
@@ -2440,14 +2440,14 @@
       return
       
        
-100   format(i6,i6,10(f10.2))
+!*** tu Wunused-label: 100   format(i6,i6,10(f10.2))
 !output files for all cells
 !101   format(<out_cols>(f12.4))
 !102   format(<out_cols>(i4))
 101   format(f12.4)
-102   format(i4)
+!*** tu Wunused-label: 102   format(i4)
     !other formats
-103   format(10000(i8))
+!*** tu Wunused-label: 103   format(10000(i8))
 111   format(1x,a, 5x,"Time",2x,i2,":",i2,":",i2)
 119   format(4x,a8,a8,a10,a16,a19,50(a13))
 120   format(a8,50(a13))

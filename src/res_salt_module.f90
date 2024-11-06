@@ -24,7 +24,7 @@
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_m
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_y
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_a
-			
+            
       !arrays for wetland mass balance output
       type (res_salt_output), dimension(:), allocatable, save :: wetsalt_d
       type (res_salt_output), dimension(:), allocatable, save :: wetsalt_m

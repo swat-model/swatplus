@@ -116,7 +116,7 @@
             allocate (walloy_out(iwro)%dmd(i)%src(num_objs))
             allocate (walloa_out(iwro)%dmd(i)%src(num_objs))
             
-            !! for hru irrigtion, need to xwalk with irrigation demand decision table
+            !! for hru irrigation, need to xwalk with irrigation demand decision table
             if (wallo(iwro)%dmd(i)%ob_typ == "hru") then
               !! xwalk with lum decision table
               do idb = 1, db_mx%dtbl_lum

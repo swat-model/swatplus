@@ -77,7 +77,7 @@
               read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%drymo(imo),imo=1,atmodep_cont%num)
             enddo 
           end if
-					
+                    
           !yearly values
           if (atmodep_cont%timestep == "yr") then
             read(5050,*) station_name !station name
