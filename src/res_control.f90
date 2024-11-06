@@ -76,8 +76,8 @@
           res_ob(jres)%prev_flo = ht2%flo
             
           call res_sediment
-	    else
-	      ictbl = res_dat(idat)%release                              !! Osvaldo
+        else
+          ictbl = res_dat(idat)%release                              !! Osvaldo
           call res_rel_conds (ictbl, res(jres)%flo, ht1%flo, 0.)
           
         endif 

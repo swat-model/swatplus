@@ -43,20 +43,20 @@
 
       !! Subtract reductions from sediment, nutrients, bacteria, NOT SURFACE RUNOFF to protect water balance
       !! Sediment
-	  sedyld(j) = sedyld(j) * (1. - hru(j)%lumv%bmp_sed)
+      sedyld(j) = sedyld(j) * (1. - hru(j)%lumv%bmp_sed)
 
       !! Particulate Phosphorus
-	  sedminpa(j) = sedminpa(j) * (1. - hru(j)%lumv%bmp_pp)
-	  sedminps(j) = sedminps(j) * (1. - hru(j)%lumv%bmp_pp)
-	  sedorgp(j) = sedorgp(j) * (1. - hru(j)%lumv%bmp_pp)
+      sedminpa(j) = sedminpa(j) * (1. - hru(j)%lumv%bmp_pp)
+      sedminps(j) = sedminps(j) * (1. - hru(j)%lumv%bmp_pp)
+      sedorgp(j) = sedorgp(j) * (1. - hru(j)%lumv%bmp_pp)
       !! Soluble Phosphorus
-	  surqsolp(j) = surqsolp(j) * (1. - hru(j)%lumv%bmp_sp)
+      surqsolp(j) = surqsolp(j) * (1. - hru(j)%lumv%bmp_sp)
 
-	  !! Particulate Nitrogen
-	  sedorgn(j) = sedorgn(j) * (1. - hru(j)%lumv%bmp_pn)
+      !! Particulate Nitrogen
+      sedorgn(j) = sedorgn(j) * (1. - hru(j)%lumv%bmp_pn)
       !! Soluble Nitrogen
       surqno3(j) = surqno3(j) * (1. - hru(j)%lumv%bmp_sn)
-	  latno3(j) = latno3(j) * (1. - hru(j)%lumv%bmp_sn)
+      latno3(j) = latno3(j) * (1. - hru(j)%lumv%bmp_sn)
 
       return
       end subroutine smp_bmpfixed

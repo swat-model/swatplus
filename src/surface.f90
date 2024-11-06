@@ -68,8 +68,8 @@
       if (qday > 1.e-6 .and. qp_cms > 1.e-6) then
         call ero_eiusle
 
-	!! calculate sediment erosion by rainfall and overland flow
-		call ero_ovrsed
+    !! calculate sediment erosion by rainfall and overland flow
+        call ero_ovrsed
       end if
 
       call ero_cfactor
@@ -77,6 +77,6 @@
 
       if (qday < 0.) qday = 0.
 
-1010  format (2(i4,1x),a5,a4,1x,10f8.3)
+!*** tu Wunused-label: 1010  format (2(i4,1x),a5,a4,1x,10f8.3)
       return
       end subroutine surface

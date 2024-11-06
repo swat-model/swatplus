@@ -115,7 +115,7 @@
           shear_bank_cr = 0.493 * 10. ** (.0182 * sd_ch(ich)%ch_clay)
           e_bank = 0.
           if (shear_bank_adj > shear_bank_cr) then
-            e_bank = ts_hr * sd_ch(ich)%cherod * (shear_bank_adj - shear_bank_cr)    !! cm = hr * cm/hr/Pa * Pa
+            !e_bank = ts_hr * sd_ch(ich)%cherod * (shear_bank_adj - shear_bank_cr)    !! cm = hr * cm/hr/Pa * Pa
             erode_bank = erode_bank + e_bank
             !! calc mass of sediment eroded -> t = cm * m/100cm * width (m) * length (km) * 1000 m/km * bd (t/m3)
             !! apply to only one side (perim_bank / 2.)
@@ -128,7 +128,7 @@
           if (sd_ch(ich)%chs > 0.000001) then       ! sd_ch(ich)%chseq) then
             !! if bottom shear > d50 -> downcut - widen to maintain width depth ratio
             if (shear_btm > shear_btm_cr) then
-              e_btm = ts_hr *  sd_ch(ich)%cherod * (shear_btm - shear_btm_cr)    !! cm = hr * cm/hr/Pa * Pa
+              !e_btm = ts_hr *  sd_ch(ich)%cherod * (shear_btm - shear_btm_cr)    !! cm = hr * cm/hr/Pa * Pa
               !! if downcutting - check width depth ratio to see if widens
               !if (sd_ch(ich)%chw / sd_ch(ich)%chd < sd_ch(ich)%wd_rto) then
               !  erode_bank_cut = e_btm * sd_ch(ich)%wd_rto
@@ -165,7 +165,7 @@
       !! compute flood plain deposition
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       if (peakrate > bf_flow) then
-        dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
+        !dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
       end if
       
       !! output channel morphology
@@ -187,7 +187,7 @@
       chsd_d(ich)%hc_m = hc
       
       !! compute sediment leaving the channel - washload only - bottom deg is bedload
-	  sedout = ht1%sed - dep + hc_sed + erode_bank     !  + ebtm_t
+      sedout = ht1%sed - dep + hc_sed + erode_bank     !  + ebtm_t
       ht2%sed = sedout
       
 

@@ -260,6 +260,6 @@
 102   format (1x,4i6,i7,a,2x,a,40f12.3)
 !103   format (4i6,i8,a,2x,a,6f12.3,29f17.3)
 103   format (4i6,i8,a,2x,a,4f12.3,23f17.3)
-104   format (4i6,i8,a,2x,a,6f12.3,29f17.3)
+!*** tu Wunused-label: 104   format (4i6,i8,a,2x,a,6f12.3,29f17.3)
        
       end subroutine lsu_output
