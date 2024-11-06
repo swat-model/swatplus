@@ -90,6 +90,6 @@
         
       return
         
-100   format (4i6,2i10,2x,a,63e15.4) 
+100   format (4i6,2i10,2x,a,64e15.4) 
        
       end subroutine wetland_output

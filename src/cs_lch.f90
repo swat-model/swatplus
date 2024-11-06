@@ -106,7 +106,7 @@
             ro_mass = surfq(j) * cosurfcs
             ro_mass = Min(ro_mass, cs_soil(j)%ly(jj)%cs(ics))
             cs_soil(j)%ly(jj)%cs(ics) = cs_soil(j)%ly(jj)%cs(ics) - ro_mass
-				surqcs(j,ics) = ro_mass
+                surqcs(j,ics) = ro_mass
           endif
           
           !Daniel 1/2012    
@@ -155,7 +155,7 @@
           hru_area_m2 = hru(j)%area_ha * 10000. !ha --> m2
           water_volume = (soil(j)%phys(jj)%st/1000.) * hru_area_m2
           if(cs_soil(j)%ly(jj)%cs(ics).lt.0) then
-			  cs_soil(j)%ly(jj)%cs(ics) = 0.
+              cs_soil(j)%ly(jj)%cs(ics) = 0.
           endif
           cs_mass_kg = cs_soil(j)%ly(jj)%cs(ics) * hru(j)%area_ha !kg
           !calculate concentration in mg/L

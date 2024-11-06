@@ -40,7 +40,7 @@
       real :: erode_bank_cut = 0.     !cm            |widening caused by downcutting (both sides)
       real :: ebtm_t = 0.             !tons          |bottom erosion
       real :: ebank_t = 0.            !tons          |bank erosion
-      real :: sedout = 0.             !mg		     |sediment out of waterway channel
+      real :: sedout = 0.             !mg            |sediment out of waterway channel
       real :: washld = 0.             !tons          |wash load  
       real :: bedld = 0.              !tons          |bed load
       real :: dep = 0.                !tons          |deposition
@@ -310,7 +310,9 @@
       end if        ! ht1%flo > 0.
       
       !rtb hydrograph separation
-      if (rttime > det) then      ! ht1 = incoming + storage
+      if (rttime > time%dtm / 60.) then      ! travel time > routing time step (hours)
+        !! Variable Storage Coefficent method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
+        scoef = 24. / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + 24.)
         !! travel time > timestep -- then all incoming is stored and frac of stored is routed
         hdsep2%flo_surq = scoef * ch_stor_hdsep(ich)%flo_surq
         hdsep2%flo_latq = scoef * ch_stor_hdsep(ich)%flo_latq

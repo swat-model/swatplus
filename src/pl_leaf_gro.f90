@@ -78,7 +78,6 @@
       real :: rto = 0.          !none               |ratio of current years of growth:years to maturity of perennial
       real :: sumlaiht = 0.     !                   |
       integer :: jpl = 0        !none               |counter
-      real :: tmp_calc
       
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
@@ -89,14 +88,9 @@
           ff = f - pcom(j)%plg(ipl)%laimxfr
           pcom(j)%plg(ipl)%laimxfr = f
           
-          tmp_calc = plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p        !Changed by fg to prevent underflow in gfortran
-          if (tmp_calc < -20.) then                                                         !Changed by fg to prevent underflow in gfortran
-            tmp_calc = -20.                                                                 !Changed by fg to prevent underflow in gfortran
-          endif
-          f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p + Exp(tmp_calc)) !Changed by fg to prevent underflow in gfortran          
               
-          !f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p +            &
-          !    Exp(plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p))
+          f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p +            &
+              Exp(plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p))
 
           !pcom(j)%plg(ipl)%laimxfr_p = amin1 (f_p, pcom(j)%plg(ipl)%laimxfr_p)
           !ff_p = f_p - pcom(j)%plg(ipl)%laimxfr_p

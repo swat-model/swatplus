@@ -336,6 +336,6 @@
 100   format (4i6,2a16,22f12.3)
 101   format (4i6,2a16,24f12.3)
 102   format (4i6,2a16,24f12.3)
-103   format (4i6,i8,4x,a,5x,f12.3)
+!*** tu Wunused-label: 103   format (4i6,i8,4x,a,5x,f12.3)
        
       end subroutine lsreg_output

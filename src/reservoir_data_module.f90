@@ -98,7 +98,7 @@
       type reservoir_sed_data
         character(len=25) :: name = ""
         real :: nsed = 0.           !kg/L       |normal amt of sed in res (read in as mg/L and convert to kg/L)
-        real :: d50 = 0.            !mm         |median particle size of suspended and benthic sediment
+        real :: d50 = 0.            !um         |median particle size of suspended and benthic sediment
         real :: carbon = 0.         !%          |organic carbon in suspended and benthic sediment
         real :: bd = 0.             !t/m^3      |bulk density of benthic sediment
         real :: sed_stlr = 0.       !none       |sediment settling rate
@@ -126,6 +126,7 @@
       type water_body_data_parameters
         type (reservoir_sed_data) :: sed
         type (reservoir_nut_data) :: nut
+        real :: sed_stlr_co = 0.                     !none       |
       end type water_body_data_parameters
       type (water_body_data_parameters), dimension(:), allocatable, target :: res_prm
       type (water_body_data_parameters), dimension(:), allocatable, target :: wet_prm

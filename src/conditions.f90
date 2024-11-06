@@ -191,7 +191,7 @@
           ipl = Max (Int(d_tbl%cond(ic)%lim_const), 1)
           do ialt = 1, d_tbl%alts
             if (d_tbl%alt(ic,ialt) == "=") then    !determine if growing (y) or not (n)
-              if (pcom(ob_num)%plcur(ipl)%gro /= d_tbl%cond(ic)%lim_var) then
+              if (pcom(ob_num)%plcur(ipl)%gro == "n") then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if
@@ -343,6 +343,12 @@
           ivar_tbl = int(d_tbl%cond(ic)%lim_const)
           call cond_integer (ic, ivar_cur, ivar_tbl)
                   
+        !sequential year of simulation
+        case ("year_start")
+          ivar_cur = time%yrc_start
+          ivar_tbl = int(d_tbl%cond(ic)%lim_const)
+          call cond_integer (ic, ivar_cur, ivar_tbl)
+                  
         !current years of maturity for perennial plants
         case ("cur_yrs_mat")
           ob_num = d_tbl%cond(ic)%ob_num
@@ -450,12 +456,12 @@
           
           do ialt = 1, d_tbl%alts
             if (d_tbl%alt(ic,ialt) == "=") then
-              if (hru(ob_num)%tiledrain /= Int(d_tbl%cond(ic)%lim_const)) then
+              if (hru(ob_num)%tiledrain == 0) then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if
             if (d_tbl%alt(ic,ialt) == "/") then
-              if (hru(ob_num)%tiledrain == Int(d_tbl%cond(ic)%lim_const)) then
+              if (hru(ob_num)%tiledrain == 1) then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if
@@ -643,6 +649,17 @@
             end if
           end do
                    
+        !calibration group in landuse.lum - ie: cropland, urban, forest, etc
+        case ("cal_group")
+          ob_num = d_tbl%cond(ic)%ob_num
+          if (ob_num == 0) ob_num = ob_cur
+          do ialt = 1, d_tbl%alts
+            if (d_tbl%alt(ic,ialt) == "=") then
+              if (hru(ob_num)%cal_group /= d_tbl%cond(ic)%lim_var) then
+                d_tbl%act_hit(ialt) = "n"
+              end if
+            end if
+          end do
         !tillage system - name of tillage decision table in lum.dtl
         case ("tillage")
           ob_num = d_tbl%cond(ic)%ob_num
@@ -663,7 +680,7 @@
           end do
                
         !plants - if plant is in the cummunity
-        case ("plant")
+        case ("plant_com")
           ob_num = d_tbl%cond(ic)%ob_num
           if (ob_num == 0) ob_num = ob_cur
           
@@ -692,7 +709,7 @@
           end do
           
         !channel management
-        case ("ch_use")
+        case ("ch_order")
           ob_num = d_tbl%cond(ic)%ob_num
           if (ob_num == 0) ob_num = ob_cur
           
@@ -724,6 +741,8 @@
               targ = targ_val + 10000. * d_tbl%cond(ic)%lim_const
             case ("-")
               targ = targ_val - 10000. * d_tbl%cond(ic)%lim_const   !convert ha-m to m3
+            case ("/")
+              targ = targ_val / d_tbl%cond(ic)%lim_const
             end select
           case ("evol")   !emergency storage volume
             targ_val = res_ob(ires)%evol
@@ -735,6 +754,8 @@
               targ = targ_val + 10000. * d_tbl%cond(ic)%lim_const
             case ("-")
               targ = targ_val - 10000. * d_tbl%cond(ic)%lim_const   !convert ha-m to m3
+            case ("/")
+              targ = targ_val / d_tbl%cond(ic)%lim_const
             end select
           end select
 
@@ -749,20 +770,15 @@
           iob = sp_ob1%res + ob_num - 1
           flo_m3 = ob(iob)%hin%flo / 86400. 
           call cond_real (ic, flo_m3, d_tbl%cond(ic)%lim_const, idtbl)         
-          
             
-        !impounded water depth -paddy average water depth of water
+        !impounded water depth -paddy average water depth
         case ("wet_depth")
           !determine target variable
           ires = d_tbl%cond(ic)%ob_num
           if (ires == 0) ires = ob_cur
           
-          !set limit constant if comparing to weir height
-          if (d_tbl%cond(ic)%lim_var == "hwater") then
-            targ = d_tbl%cond(ic)%lim_const/1000. !m
-          else
-            targ = wet_ob(ires)%weir_hgt
-          end if
+          !convert depth to m
+          targ = d_tbl%cond(ic)%lim_const/1000.
           
           !check alternatives
           call cond_real (ic, wet_ob(ires)%depth, targ, idtbl)
@@ -773,8 +789,8 @@
           ires = d_tbl%cond(ic)%ob_num
           if (ires == 0) ires = ob_cur
           
-          !set limit constant if comparing to weir height
-          targ = d_tbl%cond(ic)%lim_const/1000. !m
+          !convert depth to m
+          targ = d_tbl%cond(ic)%lim_const/1000.
           
           !check alternatives
           call cond_real (ic, wet_ob(ires)%weir_hgt, targ, idtbl)

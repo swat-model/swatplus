@@ -59,7 +59,7 @@
         read (113,*,iostat=eof) header
         if (eof < 0) exit
 
-      do ihru = 1, sp_ob%hru
+      do ihru = 1, imax
         read (113,*,iostat=eof) i
         if (eof < 0) exit
         backspace (113)

@@ -109,6 +109,7 @@
          do ihyd = 1, db_mx%res_hyd
            if (res_hyddb(ihyd)%name == res_dat_c(ires)%hyd) then
              res_hyd(ires) = res_hyddb(ihyd)
+             res_dat(ires)%hyd = ihyd
              exit
            end if
          end do
@@ -134,6 +135,9 @@
          do ised = 1, db_mx%res_sed
            if (res_sed(ised)%name == res_dat_c(ires)%sed) then
              res_prm(ires)%sed = res_sed(ised)
+             !! d50 - micro meters
+             res_prm(ires)%sed_stlr_co = exp(-0.184 * res_prm(ires)%sed%d50)
+             res_dat(ires)%sed = ised
              exit
            end if
          end do      
@@ -141,6 +145,7 @@
          do inut = 1, db_mx%res_nut
            if (res_nut(inut)%name == res_dat_c(ires)%nut) then
              res_prm(ires)%nut = res_nut(inut)
+             res_dat(ires)%nut = inut
              exit
            end if
          end do   

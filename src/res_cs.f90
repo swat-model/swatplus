@@ -24,7 +24,7 @@
       real    :: cs_conc = 0.      !concentration of constituent in reservoir water (g/m3 = mg/L)
       integer :: icmd = 0          !none  
       real    :: k_react = 0.      !1/day - first-order rate constant, affected by temperature 
-      real    :: v_settle = 0.     !m/day	- settling rate
+      real    :: v_settle = 0.     !m/day   - settling rate
       real    :: cs_mass_beg = 0.
       real    :: cs_conc_beg = 0.
       real    :: cs_mass_end = 0.
@@ -87,11 +87,11 @@
           !constituent mass settling to bottom of reservoir
           if(ics == 1) then
             v_settle = res_cs_data(icon)%v_seo4
-					elseif(ics == 2) then
+                    elseif(ics == 2) then
             v_settle = res_cs_data(icon)%v_seo3
-					elseif(ics == 3) then
+                    elseif(ics == 3) then
             v_settle = res_cs_data(icon)%v_born
-					endif
+                    endif
           cs_settle = (cs_conc_beg/1000.) * v_settle * (res_wat_d(jres)%area_ha*10000.) !kg
           if(cs_settle > mass_avail) then
             cs_settle = mass_avail !take remaining
