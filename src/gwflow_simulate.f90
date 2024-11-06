@@ -1555,7 +1555,7 @@
             write(out_gw_res,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_res,121) (gw_ss_sum(i)%resv,i=1,ncell)	  	
+          write(out_gw_res,121) (gw_ss_sum(i)%resv,i=1,ncell)       
         endif
         write(out_gw_res,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1582,7 +1582,7 @@
         endif
         !groundwater-wetland exchange
         if (gw_wet_flag == 1) then
-        write(out_gw_wet,*) 'Groundwater outflow to wetlands for:',time%yrc	
+        write(out_gw_wet,*) 'Groundwater outflow to wetlands for:',time%yrc 
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -1596,7 +1596,7 @@
             write(out_gw_wet,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_wet,121) (gw_ss_sum(i)%wetl,i=1,ncell)	 	
+          write(out_gw_wet,121) (gw_ss_sum(i)%wetl,i=1,ncell)       
         endif
         write(out_gw_wet,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1622,8 +1622,8 @@
         endif
         endif
         !groundwater-canal exchange
-        if (gw_canal_flag == 1) then	
-        write(out_gw_canal,*) 'Groundwater-Canal Exchange Volumes for:',time%yrc	
+        if (gw_canal_flag == 1) then    
+        write(out_gw_canal,*) 'Groundwater-Canal Exchange Volumes for:',time%yrc    
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -1637,7 +1637,7 @@
             write(out_gw_canal,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_canal,121) (gw_ss_sum(i)%canl,i=1,ncell)	 	
+          write(out_gw_canal,121) (gw_ss_sum(i)%canl,i=1,ncell)     
         endif
         write(out_gw_canal,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1664,7 +1664,7 @@
         endif
         !floodplain exchange
         if (gw_fp_flag == 1) then
-        write(out_gw_fp,*) 'Floodplain Exchange Volumes for:',time%yrc	
+        write(out_gw_fp,*) 'Floodplain Exchange Volumes for:',time%yrc  
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -1678,7 +1678,7 @@
             write(out_gw_fp,101) (grid_val(i,j),j=1,grid_ncol)
           enddo
         else
-          write(out_gw_fp,121) (gw_ss_sum(i)%fpln,i=1,ncell)		
+          write(out_gw_fp,121) (gw_ss_sum(i)%fpln,i=1,ncell)        
         endif
         write(out_gw_fp,*)
         if (gw_solute_flag == 1) then !solute mass flux
@@ -1884,7 +1884,7 @@
             if(gwflag_yr.eq.1) then
               write(out_solbal_yr+s,105) time%yrc, &
                                          sol_grid_chng_yr,sol_grid_rech_yr,sol_grid_gwsw_yr,sol_grid_swgw_yr,sol_grid_satx_yr, &
-														 		         sol_grid_soil_yr,sol_grid_advn_yr,sol_grid_disp_yr, &
+                                                                         sol_grid_soil_yr,sol_grid_advn_yr,sol_grid_disp_yr, &
                                          sol_grid_rcti_yr,sol_grid_rcto_yr,sol_grid_minl_yr,sol_grid_sorb_yr, &
                                          sol_grid_ppag_yr,sol_grid_ppex_yr,sol_grid_tile_yr,sol_grid_resv_yr,sol_grid_wetl_yr, &
                                          sol_grid_canl_yr,sol_grid_fpln_yr
@@ -2510,12 +2510,12 @@
 100   format(10000(f12.3))
 101   format(10000(e12.3))
 102   format(i8,i8,f10.3,e16.7,e16.7,1000(e13.4))
-103   format(i8,i8,i8,i8,i8,i8,i8,50(f15.3))
-104   format(10000(f12.2))
+!*** tu Wunused-label: 103   format(i8,i8,i8,i8,i8,i8,i8,50(f15.3))
+!*** tu Wunused-label: 104   format(10000(f12.2))
 105   format(i8,50(e13.4))
-106   format(i8,i8,i8,50(f12.3))
-108   format(i8,2x,50(e12.4))
-109   format(i8,i8,1000(e12.3))
+!*** tu Wunused-label: 106   format(i8,i8,i8,50(f12.3))
+!*** tu Wunused-label: 108   format(i8,2x,50(e12.4))
+!*** tu Wunused-label: 109   format(i8,i8,1000(e12.3))
 110   format(i8,f20.1,i8,f12.3,f12.3,f12.3)
 111   format(f20.1,f12.3,f12.3,i8)
 112   format(f15.1,50(e13.4))
@@ -2529,9 +2529,9 @@
 !121   format(<out_cols>(e12.3))
 120   format(f12.3)
 121   format(e12.3)
-125	  format(3x,i8,2x,i8,7x,f15.1,50(e13.4)) 
+125   format(3x,i8,2x,i8,7x,f15.1,50(e13.4)) 
       
 
       return
       end subroutine gwflow_simulate
-			
+            

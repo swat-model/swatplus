@@ -38,7 +38,7 @@
          if (eof < 0) exit 
        end do
 
-      end if	   
+      end if       
 
       close(107)
       return

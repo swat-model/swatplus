@@ -120,10 +120,10 @@
         vpd = 0.
         voltot = 0.
 
-	!! urban modeling by J.Jeong
-	  sedprev = 0.
-	  ubnrunoff = 0.
-	  irmmdt = 0.
+    !! urban modeling by J.Jeong
+      sedprev = 0.
+      ubnrunoff = 0.
+      irmmdt = 0.
         hhsedy = 0.
         ubntss = 0.
         wet_seep_day(j)%no3 = 0

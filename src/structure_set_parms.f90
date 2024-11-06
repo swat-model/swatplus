@@ -63,7 +63,7 @@
       case ("grassww")
         hru(j)%lumv%ngrwat = istr
         if (istr > 0)  then
-          hru(j)%lumv%grwat_i = grwaterway_db(istr)%grwat_i
+          hru(j)%lumv%grwat_i = 1
           hru(j)%lumv%grwat_n = grwaterway_db(istr)%grwat_n
           hru(j)%lumv%grwat_spcon = grwaterway_db(istr)%grwat_spcon
           hru(j)%lumv%grwat_d = grwaterway_db(istr)%grwat_d

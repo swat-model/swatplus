@@ -477,8 +477,8 @@
             end if
         endif
     
-        open (4561,file = "hru_resc_stat.txt", recl = 1500)
         if (pco%nb_hru%a == "y") then
+          open (4561,file = "hru_resc_stat.txt", recl = 1500)
           write (4561,*)  bsn%name, prog
           write (4561,*) resc_hdr
           write (4561,*) resc_hdr_units
@@ -1423,7 +1423,8 @@
       !! headers for annual crop yields
       if (pco%crop_yld == "a" .or. pco%crop_yld == "b") then
         open (4008,file="crop_yld_aa.txt", recl = 1500)
-        write (4008,*) bsn%name, prog
+        write (4008,*) bsn%name
+		write (4008,*) prog
         write (4008,1000)
         write (9000,*) "CROP                      crop_yld_aa.txt"
         if (pco%csvout == "y") then
