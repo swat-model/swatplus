@@ -108,6 +108,7 @@
       real :: conc_chng = 0.          !              |change in concentration (and mass) in channel sol and org N and P
       real :: inflo_rate = 0.
       real :: aqu_inflo = 0.          !m3            |aquifer inflow if using geomorphic baseflow
+      
       ich = isdch
       isd_db = sd_dat(ich)%hyd
       iwst = ob(icmd)%wst
@@ -115,12 +116,16 @@
       !rtb floodplain
       if(bsn_cc%gwflow.eq.1) flood_freq(ich) = 0
       
-      !! set ht1 to incoming hydrograph
       !! set ht1 to incoming daily hydrograph
       ht1 = ob(icmd)%hin
       
-      !! set outgoing flow and sediment - ht2
-      ht2 = hz
+      !! zero outgoing flow and sediment - ht2
+      ht2 = hz 
+      
+      !! zero daily in/out morphology and sediment budget output
+      ch_sed_bud(ich) = ch_sed_budz
+      ch_in_d = chaz
+      ch_out_d = chaz
       
       !! add water transfer
       if (ob(icmd)%trans%flo > 1.e-6) then
@@ -386,18 +391,14 @@
       end if
       
       if (ob(icmd)%hyd_flo(1,1) > 1.e-6) then
-      if (ht2%flo / ob(icmd)%hyd_flo(1,1) > 1.5) then
-        a = 1.
+        if (ht2%flo / ob(icmd)%hyd_flo(1,1) > 1.5) then
+          a = 1.
+        end if
       end if
-      end if
+      
       !! set outflow hyd to ht2 after diverting water
       ob(icmd)%hd(1) = ht2
       
-      !if (isdch == 780) then
-      !    !write (7778,*) isdch, ht1%flo, ht2%flo
-      !    write (7778,*) isdch, ht2%orgn, ht2%no3
-      !end if
-
       !channel salt updates
       if(cs_db%num_salts > 0) then
         do isalt=1,cs_db%num_salts
@@ -435,7 +436,7 @@
       ch_out_d(isdch)%flo = ob(icmd)%hd(1)%flo / 86400.      !m3 -> m3/s
       
       !! channel sediment budget for output
-      ch_sed_bud(ich)%in_sed = ht1%sed
+      ch_sed_bud(ich)%in_sed = ch_in_d(ich)%sed
       ch_sed_bud(ich)%out_sed = ht2%sed
       ch_sed_bud(ich)%fp_dep = fp_dep%sed
       ch_sed_bud(ich)%ch_dep = ch_dep%sed
@@ -445,8 +446,8 @@
       ch_sed_bud(isdch)%bank_ero = bank_ero%sed
 
       !! channel nutrient budget for output
-      ch_sed_bud(ich)%in_no3 = ht1%no3
-      ch_sed_bud(ich)%in_orgn = ht1%orgn
+      ch_sed_bud(ich)%in_no3 = ch_in_d(ich)%no3
+      ch_sed_bud(ich)%in_orgn = ch_in_d(ich)%orgn
       ch_sed_bud(ich)%out_no3 = ht2%no3
       ch_sed_bud(ich)%out_orgn = ht2%orgn
       ch_sed_bud(ich)%fp_no3 = fp_dep%no3
@@ -456,8 +457,8 @@
       ch_sed_bud(ich)%ch_orgn = ch_dep%orgn
       ch_sed_bud(ich)%bank_orgn = bank_ero%orgn
       ch_sed_bud(ich)%bed_orgn = bed_ero%orgn
-      ch_sed_bud(ich)%in_solp = ht1%solp
-      ch_sed_bud(ich)%in_orgp = ht1%sedp
+      ch_sed_bud(ich)%in_solp = ch_in_d(ich)%solp
+      ch_sed_bud(ich)%in_orgp = ch_in_d(ich)%sedp
       ch_sed_bud(ich)%out_solp = ht2%solp
       ch_sed_bud(ich)%out_orgp = ht2%sedp
       ch_sed_bud(ich)%fp_solp = fp_dep%solp
