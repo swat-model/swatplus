@@ -1,6 +1,9 @@
      module soil_module
     
+     use carbon_module, only: org_flux
+
      implicit none
+
 
        type soilayer
         real :: ec = 0.
@@ -50,7 +53,7 @@
       type (soil_physical_properties),dimension (:), allocatable:: phys1
 
       type soil_profile
-        character(len=20) :: snam = ""     !! NA            soil series name  
+        character(len=16) :: snam = ""     !! NA            soil series name  
         character(len=16) :: hydgrp = ""    !! NA            hydrologic soil group
         character(len=16) :: texture = ""
         integer :: nly  = 0                !! none          number of soil layers 

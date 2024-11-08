@@ -1,7 +1,7 @@
-      subroutine soil_nutcarb_write
+      subroutine soil_nutcarb_write(out_freq)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine writes daily HRU output to the output.hru file
+!!    this subroutine writes HRU output to the output.hru file
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name          |units         |definition
@@ -30,9 +30,12 @@
       use organic_mineral_mass_module
       use hydrograph_module
       use calibration_data_module
+      use carbon_module, only: org_flux_zero
+      use basin_module
       
       implicit none
       
+      character(len=1), intent(in) :: out_freq   ! Output freqency (d, m, y, a)
       integer :: ly = 0         !none        |counter
       real :: const = 0.        !none        |counter
       integer :: iihru = 0      !none        |counter
@@ -77,7 +80,33 @@
         write (4562,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             soil1(j)%tot_org%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_meta%c,               &
             soil_prof_man%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c
+
+        if (pco%csvout == "y") then
+          write (4565,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              soil1(j)%tot_org%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_meta%c,               &
+              soil_prof_man%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c
+        end if
       
+        !write organic flux pools for the soil profile
+        if (bsn_cc%cswat == 2) then
+          write (4567,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                        soil1(j)%org_flx_cum_tot 
+          if (pco%csvout == "y") then
+            write (4568,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                          soil1(j)%org_flx_cum_tot 
+          endif 
+        end if
+
+        ! Set the org_flux pools to zero if at the end of the calendar year
+        if (bsn_cc%cswat == 2) then
+          if (out_freq == "y") then
+            soil1(j)%org_flx_cum_tot = org_flux_zero
+            do ly = 1, soil(j)%nly
+              soil1(j)%org_flx_cum_lr(ly) = org_flux_zero
+            end do
+          end if
+        end if
+
       end do    !! hru loop
       
       !! summing hru output for the basin
