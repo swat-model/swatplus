@@ -889,11 +889,12 @@
           case ("lu_change")
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
-            if (d_tbl%lu_chg_mx(iac) <= Int(d_tbl%act(iac)%const2)) then
-              d_tbl%lu_chg_mx(iac) = d_tbl%lu_chg_mx(iac) + 1
+            !if (d_tbl%lu_chg_mx(iac) <= Int(d_tbl%act(iac)%const2)) then
+            d_tbl%lu_chg_mx(iac) = d_tbl%lu_chg_mx(iac) + 1
             ilu = d_tbl%act_typ(iac)
-              hru(j)%land_use_mgt = ilu
+            hru(j)%land_use_mgt = ilu
             hru(j)%dbs%land_use_mgt = ilu
+            hru(j)%dbsc%land_use_mgt
             lu_prev = hru(j)%land_use_mgt_c
             hru(j)%land_use_mgt_c = d_tbl%act(iac)%file_pointer
             isol = hru(j)%dbs%soil
@@ -928,7 +929,7 @@
                 end if
               end do
               !pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
-            end if
+            !end if
           !land use change - contouring
           case ("p_factor")
             j = d_tbl%act(iac)%ob_num
