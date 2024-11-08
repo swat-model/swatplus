@@ -12,7 +12,7 @@
        
       iob = sp_ob1%chandeg + ichan - 1
 
-      ch_sed_bud_m(ichan) = ch_sed_bud_m(ichan) + ch_sed_bud(ichan)
+      ch_sed_bud_m(ichan) = ch_sed_bud_m(ichan) + ch_sed_bud(ichan) 
       
 !!!!! daily print
        if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
@@ -54,6 +54,7 @@
              ch_sed_bud_y(ichan)
           end if
         end if
+        ch_sed_bud_y(ichan) = ch_sed_budz
       end if
 
 !!!!! average annual print

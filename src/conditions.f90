@@ -521,12 +521,12 @@
           !! update cumulative probability if new day
           if (time%day /= d_tbl%day_prev .and. d_tbl%days_prob > 0) then
             !! reset if first day of window
-            if (time%day == d_tbl%cond(ic)%ob_num) then
+            if (time%yrc == d_tbl%cond(ic)%ob_num .and. time%day == 1) then
               d_tbl%days_prob = d_tbl%cond(ic)%lim_const
               d_tbl%prob_cum = 0.
             end if
             d_tbl%day_prev = time%day
-            !! check if winow is over - days_prob are the number of days left in window
+            !! check if window is over - days_prob are the number of days left in window
             if (d_tbl%days_prob >= 1) then
               !! cumulative prob of uniform distribution on current day of the window
               d_tbl%prob_cum = 1. / float(d_tbl%days_prob)
@@ -643,7 +643,7 @@
           
           do ialt = 1, d_tbl%alts
             if (d_tbl%alt(ic,ialt) == "=") then
-              if (hru(ob_num)%dbsc%land_use_mgt /= d_tbl%cond(ic)%lim_var) then
+              if (hru(ob_num)%land_use_mgt_c /= d_tbl%cond(ic)%lim_var) then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if
