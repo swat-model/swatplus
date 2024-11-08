@@ -50,15 +50,6 @@
         soil1(j)%tot_org = soil_org_z
         soil_prof_hact = soil_org_z
         soil_prof_hsta = soil_org_z
-        soil_prof_hsta = soil_org_z
-        soil_prof_str =  soil_org_z
-        soil_prof_lig = soil_org_z
-        soil_prof_meta = soil_org_z
-        soil_prof_man = soil_org_z
-        soil_prof_hs = soil_org_z
-        soil_prof_hp = soil_org_z
-        soil_prof_microb = soil_org_z
-        soil_prof_water = soil_org_z
         do ly = 1, soil(j)%nly
           soil_prof_hact = soil_prof_hact + soil1(j)%hact(ly)
           soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
@@ -71,9 +62,7 @@
           soil_prof_microb = soil_prof_microb + soil1(j)%microb(ly)
           soil_prof_water = soil_prof_water + soil1(j)%water(ly)
         end do
-        ! soil1(j)%tot_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
-        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta + &
-                           soil_prof_str + soil_prof_lig
+        soil1(j)%tot_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
         
         !write all organic carbon for the plant community
         write (4560,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &

@@ -52,7 +52,9 @@
       real :: precip = 0.
       real :: flovol_ob = 0.
       real :: wet_fill = 0.
-          
+      real :: ave_rate = 0.
+      !!
+      
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
       
@@ -71,7 +73,8 @@
       if (ht1%flo > 1.e-6) then
       
       !! calculate peak daily flow
-      peakrate = sd_ch(ich)%pk_rto * ht1%flo / 86400.     !m3/s
+      pk_rto = sd_ch(ich)%pk_rto * (1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3))
+      peakrate = ht1%flo / 86400.     !m3/s
         
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, peakrate)
@@ -91,25 +94,25 @@
       ht1%flo = ht1%flo + precip
       
       !! compute flood plain deposition
-      !sd_ch(ich)%bankfull_flo = 2.
+      ave_rate = ht1%flo / 86400.     !m3/s
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
-      florate_ob = peakrate - bf_flow
+      florate_ob = ave_rate - bf_flow
       if (florate_ob > 0.) then
-        flo_time = 2. * ht1%flo / peakrate
+        flo_time = 2. * ht1%flo / ave_rate
         !! assume a triangular distribution
         if (flo_time < 86400.) then
           !! flow is over within the day
-          flovol_ob = ht1%flo * (((peakrate - bf_flow) / peakrate) ** 2)
+          flovol_ob = ht1%flo * (((ave_rate - bf_flow) / ave_rate) ** 2)
         else
           !! flow continues over the day - florate is the rate under the triangle
-          florate = 2. * ht1%flo - peakrate
-          flovol_ob = ht1%flo * (((peakrate - bf_flow) / (peakrate - florate)) ** 2)
+          florate = 2. * ht1%flo - ave_rate
+          flovol_ob = ht1%flo * (((ave_rate - bf_flow) / (ave_rate - florate)) ** 2)
         end if
         !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
         fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
         exp_co = 0.0007 * fp_m2 / florate_ob
-        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / peakrate) * (1. - exp(-exp_co))
+        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
         
@@ -170,7 +173,6 @@
       vel_rch = 0.33 * vel_bend + 0.66 * vel
       b_exp = 12.3 / sqrt (sd_ch(ich)%ch_clay + 1.)
       b_exp = min (3.5, b_exp)
-      !sd_ch(ich)%bank_exp = 2.
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
         ebank_m = 0.0024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
