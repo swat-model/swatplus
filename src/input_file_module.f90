@@ -20,7 +20,7 @@
        character(len=25) :: parms_bas = "parameters.bsn"
       end type input_basin
       type (input_basin) :: in_basin
-      	  	  
+              
 !! climate
       type input_cli
        character(len=25) :: weat_sta = "weather-sta.cli"
@@ -95,7 +95,7 @@
        character(len=25) :: hru_ez   = "hru-lte.hru"
       end type input_hru
       type (input_hru) :: in_hru
-	  
+      
 !! exco (recall constant)
       type input_exco
        character(len=25) :: exco = "exco.exc"
@@ -106,7 +106,7 @@
        character(len=25) :: salt = "exco_salt.exc"
       end type input_exco
       type (input_exco) :: in_exco
-	  
+      
 !! recall (daily, monthly and annual)
       type input_rec 
        character(len=25) :: recall_rec = "recall.rec"
@@ -116,11 +116,11 @@
 !! delivery ratio
       type input_delr
        character(len=25) :: del_ratio = "delratio.del"
-	   character(len=25) :: om = "dr_om.del"
-	   character(len=25) :: pest = "dr_pest.del"
-	   character(len=25) :: path = "dr_path.del"
-	   character(len=25) :: hmet = "dr_hmet.del"
-	   character(len=25) :: salt = "dr_salt.del"
+       character(len=25) :: om = "dr_om.del"
+       character(len=25) :: pest = "dr_pest.del"
+       character(len=25) :: path = "dr_path.del"
+       character(len=25) :: hmet = "dr_hmet.del"
+       character(len=25) :: salt = "dr_salt.del"
       end type input_delr
       type (input_delr) :: in_delr
 
@@ -178,9 +178,9 @@
        character(len=25) :: fert_frt = "fertilizer.frt"
        character(len=25) :: till_til = "tillage.til"
        character(len=25) :: pest = "pesticide.pes"
-	   character(len=25) :: pathcom_db = "pathogens.pth"
-	   character(len=25) :: hmetcom_db = "metals.mtl"
-	   character(len=25) :: saltcom_db = "salt.slt"
+       character(len=25) :: pathcom_db = "pathogens.pth"
+       character(len=25) :: hmetcom_db = "metals.mtl"
+       character(len=25) :: saltcom_db = "salt.slt"
        character(len=25) :: urban_urb = "urban.urb"
        character(len=25) :: septic_sep = "septic.sep"
        character(len=25) :: snow = "snow.sno"
@@ -224,17 +224,17 @@
       
 !! initial conditions
       type input_init
-	   character(len=25) :: plant = "plant.ini"
+       character(len=25) :: plant = "plant.ini"
        character(len=25) :: soil_plant_ini = "soil_plant.ini"
        character(len=25) :: om_water = "om_water.ini"
-	   character(len=25) :: pest_soil = "pest_hru.ini"
-	   character(len=25) :: pest_water = "pest_water.ini"
-	   character(len=25) :: path_soil = "path_hru.ini"
-	   character(len=25) :: path_water = "path_water.ini"
-	   character(len=25) :: hmet_soil = "hmet_hru.ini"
-	   character(len=25) :: hmet_water = "hmet_water.ini"
-	   character(len=25) :: salt_soil = "salt_hru.ini"
-	   character(len=25) :: salt_water = "salt_water.ini"
+       character(len=25) :: pest_soil = "pest_hru.ini"
+       character(len=25) :: pest_water = "pest_water.ini"
+       character(len=25) :: path_soil = "path_hru.ini"
+       character(len=25) :: path_water = "path_water.ini"
+       character(len=25) :: hmet_soil = "hmet_hru.ini"
+       character(len=25) :: hmet_water = "hmet_water.ini"
+       character(len=25) :: salt_soil = "salt_hru.ini"
+       character(len=25) :: salt_water = "salt_water.ini"
        end type input_init
       type (input_init) :: in_init
 

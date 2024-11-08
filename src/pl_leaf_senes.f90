@@ -76,10 +76,11 @@
           end if
           lai_drop = max (0., lai_drop)
           lai_drop = amin1 (1., lai_drop)
-          leaf_drop%m = lai_drop * pl_mass(j)%leaf(ipl)%m
-          leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
+          !! forest -- total tree n_conc = 1.75%; leaf  = 2.25%, falling leaf = 50%*2.25% = 1.12% --> 1.12/1.75 = 0.68
+          leaf_drop%m = pcom(j)%plcur(ipl)%leaf_tov * pl_mass(j)%leaf(ipl)%m
+          leaf_drop%n = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%n_fr
           leaf_drop%n = max (0., leaf_drop%n)
-          leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
+          leaf_drop%p = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%p_fr
           leaf_drop%p = max (0., leaf_drop%p)
         end if
       end if
@@ -109,10 +110,11 @@
         !pcom(j)%plg(ipl)%lai = max (pcom(j)%plg(ipl)%lai, pldb(idp)%alai_min)
         
         !! compute leaf biomass drop
+        !! forest -- total tree n_conc = 1.75%; leaf  = 2.25%, falling leaf = 50%*2.25% = 1.12% --> 1.12/1.75 = 0.68
         leaf_drop%m = pcom(j)%plcur(ipl)%leaf_tov * pl_mass(j)%leaf(ipl)%m
-        leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
+        leaf_drop%n = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%n_fr
         leaf_drop%n = max (0., leaf_drop%n)
-        leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
+        leaf_drop%p = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%p_fr
         leaf_drop%p = max (0., leaf_drop%p)
         
       end if

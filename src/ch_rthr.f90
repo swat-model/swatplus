@@ -3,7 +3,7 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    This subroutine routes flow at any required time step through the reach 
 !!    using a constant storage coefficient  
-!!	Routing method: Variable Storage routing   
+!!  Routing method: Variable Storage routing   
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name            |units         |definition
@@ -34,7 +34,7 @@
 
 !!    subroutine developed by A. Van Griensven,
 !!    Hydrology-Vrije Universiteit Brussel, Belgium
-!!	  Modified by Jeahak Jeong, Blackland Research, Temple, USA
+!!    Modified by Jeahak Jeong, Blackland Research, Temple, USA
 
       use basin_module
       use climate_module

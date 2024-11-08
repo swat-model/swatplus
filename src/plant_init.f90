@@ -78,6 +78,9 @@
             deallocate (pcom(j)%plstr) 
             deallocate (pcom(j)%plcur) 
             deallocate (rsd1(j)%tot)
+            deallocate (rsd1(j)%meta)
+            deallocate (rsd1(j)%str)
+            deallocate (rsd1(j)%lignin)
           end if
         
         pcom(j)%npl = pcomdb(icom)%plants_com
@@ -325,7 +328,7 @@
           if (pcom(j)%plcur(ipl)%gro == "y") then
             call pl_root_gro(j)
             call pl_seed_gro(j)
-            call pl_partition(j)
+            call pl_partition(j, 1)
           end if
 
         end do   ! ipl loop

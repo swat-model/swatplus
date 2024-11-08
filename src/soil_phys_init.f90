@@ -62,13 +62,13 @@
         if (sol(isol)%phys(j)%k <= 0.0) then 
           if (sol(isol)%s%hydgrp == "A") then
             sol(isol)%phys(j)%k = a
-	    else
+        else
           if (sol(isol)%s%hydgrp == "B") then
             sol(isol)%phys(j)%k = b
-	    else
+        else
           if (sol(isol)%s%hydgrp == "C") then
             sol(isol)%phys(j)%k = c
-	    else
+        else
           if (sol(isol)%s%hydgrp == "D") then
             sol(isol)%phys(j)%k = d          !Claire 12/2/09
           else 
@@ -131,15 +131,15 @@
        sol(isol)%s%det_lag = 1. - sol(isol)%s%det_san -                 &                
           sol(isol)%s%det_sil - sol(isol)%s%det_cla - sol(isol)%s%det_sag  !! Large Aggregate fraction
 
-!!	Error check. May happen for soils with more sand
+!!  Error check. May happen for soils with more sand
 !!    Soil not typical of mid-western USA
 !!    The fraction wont add upto 1.0
-	if (sol(isol)%s%det_lag < 0.) then
-	  sol(isol)%s%det_san = sol(isol)%s%det_san/(1 - sol(isol)%s%det_lag) 
-	  sol(isol)%s%det_sil = sol(isol)%s%det_sil/(1 - sol(isol)%s%det_lag) 
-	  sol(isol)%s%det_cla = sol(isol)%s%det_cla/(1 - sol(isol)%s%det_lag) 
-	  sol(isol)%s%det_sag = sol(isol)%s%det_sag/(1 - sol(isol)%s%det_lag) 
-	  sol(isol)%s%det_lag = 0.
+    if (sol(isol)%s%det_lag < 0.) then
+      sol(isol)%s%det_san = sol(isol)%s%det_san/(1 - sol(isol)%s%det_lag) 
+      sol(isol)%s%det_sil = sol(isol)%s%det_sil/(1 - sol(isol)%s%det_lag) 
+      sol(isol)%s%det_cla = sol(isol)%s%det_cla/(1 - sol(isol)%s%det_lag) 
+      sol(isol)%s%det_sag = sol(isol)%s%det_sag/(1 - sol(isol)%s%det_lag) 
+      sol(isol)%s%det_lag = 0.
       end if
 
 !!    initialize water/drainage coefs for each soil layer

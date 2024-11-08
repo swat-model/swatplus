@@ -499,14 +499,14 @@
               gwsol_ss(i)%solute(2+m)%rcti = 0.
               gwsol_ss(i)%solute(2+m)%rcto = 0.
               gwsol_ss(i)%solute(2+m)%minl = 0.
-					  enddo
+                      enddo
           enddo
         endif
       endif
       
       
 7000  format(i8,i8,i8,35e16.8)
-7001  format(20e16.8)
+!*** tu Wunused-label: 7001  format(20e16.8)
 
       return
       end

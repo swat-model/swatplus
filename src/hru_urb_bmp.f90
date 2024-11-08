@@ -14,12 +14,12 @@
     real :: sednppm = 0.  !              |
     real :: sedpppm = 0.  !              |
 
-	j = 0
-	j = ihru
+    j = 0
+    j = ihru
 
 !! convert to ppm -> (kg/ha)*100./mm = ppm
       if (qdr(j) > 0.1) then
-	  xx = 100. / qdr(j)
+      xx = 100. / qdr(j)
         sedppm = 1000. * xx * sedyld(j) / hru(j)%area_ha
         solnppm = xx * (surqno3(j) + latno3(j))
         solpppm = xx * surqsolp(j)
@@ -31,7 +31,7 @@
         endif
 
         if (solnppm > soln_con(j)) then
-	    surqno3(j) = soln_con(j) / xx
+        surqno3(j) = soln_con(j) / xx
           latno3(j) = soln_con(j) / xx
         endif
 
@@ -44,12 +44,12 @@
         endif
 
         if (sedpppm > orgp_con(j)) then 
-	    sedorgn(j)= orgp_con(j) / xx
+        sedorgn(j)= orgp_con(j) / xx
           sedminpa(j)= orgp_con(j) / xx
-	    sedminps(j)= orgp_con(j) / xx
+        sedminps(j)= orgp_con(j) / xx
         endif
 
-	endif
+    endif
 
       return
       end subroutine hru_urb_bmp

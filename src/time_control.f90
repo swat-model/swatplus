@@ -228,12 +228,17 @@
                 call conditions (j, id)
                 call actions (j, iob, id)
               end if
-              !! have to check every hru for land use change
+              !! check every hru for land use change
               if (upd_cond(iupd)%typ == "lu_change") then
                 do j = 1, sp_ob%hru
                   call conditions (j, id)
                   call actions (j, iob, id)
                 end do
+              end if
+              !! change the land use that is specified
+              if (upd_cond(iupd)%typ == "lu_change1") then
+                call conditions (j, id)
+                call actions (j, iob, id)
               end if
             !end if            
           end do
@@ -285,7 +290,7 @@
         if (sp_ob%hru > 0) then
         do iplt = 1, basin_plants
           crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
-          write (5100,*) time%yrc, iplt, plants_bsn(iplt), bsn_crop_yld(iplt)%area_ha,            &
+          write (5100,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld(iplt)%area_ha,            &
                                                 bsn_crop_yld(iplt)%yield, crop_yld_t_ha
           bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
           bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
@@ -294,7 +299,7 @@
             crop_yld_t_ha = bsn_crop_yld_aa(iplt)%yield / (bsn_crop_yld_aa(iplt)%area_ha + 1.e-6)
             bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha / time%yrs_prt
             bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield / time%yrs_prt
-            write (5101,*) time%yrc, iplt, plants_bsn(iplt), bsn_crop_yld_aa(iplt)%area_ha,   &
+            write (5101,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld_aa(iplt)%area_ha,   &
                                                 bsn_crop_yld_aa(iplt)%yield, crop_yld_t_ha
             bsn_crop_yld_aa(iplt) = bsn_crop_yld_z
           end if
