@@ -894,7 +894,7 @@
             ilu = d_tbl%act_typ(iac)
             hru(j)%land_use_mgt = ilu
             hru(j)%dbs%land_use_mgt = ilu
-            hru(j)%dbsc%land_use_mgt
+            !hru(j)%dbsc%land_use_mgt
             lu_prev = hru(j)%land_use_mgt_c
             hru(j)%land_use_mgt_c = d_tbl%act(iac)%file_pointer
             isol = hru(j)%dbs%soil
