@@ -24,10 +24,10 @@
         real :: chl = 0.            !km         |channel length
         real :: chn = 0.            !           |channel Manning's n
         real :: chk = 0.            !mm/h       |channel bottom conductivity
-        real :: cherod = 0.         !           |channel erodibility
+        real :: bank_exp = 0.       !           |bank erosion exponent
         real :: cov = 0.            !0-1        |channel cover factor
         real :: sinu = 0.           !none       |sinuousity - ratio of channel length and straight line length
-        real :: chseq = 0.          !m/m        |equilibrium channel slope
+        real :: vcr_coef = 0.       !           |critical velocity coefficient
         real :: d50 = 0.            !mm         |channel median sediment size
         real :: ch_clay = 0.        !%          |clay percent of bank and bed
         real :: carbon = 0.         !%          |carbon percent of bank and bed
@@ -54,7 +54,7 @@
         real :: n_dep_enr = 0.5     !           |enrichment of N in remaining water - deposition = 1/enrichment ratio
         real :: p_dep_enr = 0.5     !           |enrichment of P in remaining water - deposition = 1/enrichment ratio
         real :: arc_len_fr = 1.2    !frac       |fraction of arc length where bank erosion occurs
-        real :: part_size = 0.002   !mm         |particle size of channel washload
+        real :: bed_exp = 1.5       !           |bed erosion exponential coefficient
         real :: wash_bed_fr = 0.1   !frac       |fraction of bank erosion that is washload
       end type swatdeg_sednut_data
       type (swatdeg_sednut_data), dimension (:), allocatable :: sd_chd1
@@ -172,7 +172,7 @@
         real :: chk = 0.        !mm/h       |channel bottom conductivity
         real :: cov = 0.        !0-1        |channel cover factor
         real :: sinu = 0.       !none       |sinuousity - ratio of channel length and straight line length
-        real :: chseq = 0.      !m/m        |equilibrium channel slope
+        real :: vcr_coef = 0.        !m/m        |critical velocity coefficient
         real :: d50 = 0.
         real :: ch_clay = 0.
         real :: carbon = 0.
@@ -193,12 +193,12 @@
         real :: n_dep_enr = 0.5     !           |enrichment of N in remaining water - deposition = 1/enrichment ratio
         real :: p_dep_enr = 0.5     !           |enrichment of P in remaining water - deposition = 1/enrichment ratio
         real :: arc_len_fr = 1.2    !frac       |fraction of arc length where bank erosion occurs
-        real :: part_size = 0.002   !mm         |particle size of channel washload
+        real :: bed_exp = 1.5       !mm         |bed erosion exponent
         real :: wash_bed_fr = 0.2   !frac       |fraction of bank erosion that is washload
         real :: hc_kh = 0.
         real :: hc_hgt = 0.     !m          |headcut height
         real :: hc_ini = 0.
-        real :: cherod = 0.     !           |channel erodibility
+        real :: bank_exp = 0.       !           |bank erosion exponent
         real :: shear_bnk = 0.  !0-1        |bank shear coefficient - fraction of bottom shear
         real :: hc_erod = 0.    !           |headcut erodibility
         real :: hc_co = 0.      !m/m        |proportionality coefficient for head cut

@@ -31,15 +31,14 @@
         iweir = wet_ob(iihru)%iweir
         
         if (iprop > 0) then
-          ihyd = wet_dat(iprop)%hyd
-          !if (wet_hyd(ihyd)%k > 0.) then
-            hru(iihru)%wet_hc = wet_hyd(ihyd)%k  !mm/hr
+          !if (wet_hyd(iihru)%k > 0.) then
+            hru(iihru)%wet_hc = wet_hyd(iihru)%k  !mm/hr
           !else
           !  hru(iihru)%wet_hc = soil(iihru)%phys(1)%k
           !endif
           !! ha*mm*10. => m**3  - assume entire hru is wet and don't use fractional inputs (for simplicity)
-          wet_ob(iihru)%evol = hru(iihru)%area_ha * wet_hyd(iihru)%edep * 10.  ! * wet_hyd(ihyd)%esa
-          wet_ob(iihru)%pvol = hru(iihru)%area_ha * wet_hyd(iihru)%pdep * 10.  ! * wet_hyd(ihyd)%psa
+          wet_ob(iihru)%evol = hru(iihru)%area_ha * wet_hyd(iihru)%edep * 10.  ! * wet_hyd(iihru)%esa
+          wet_ob(iihru)%pvol = hru(iihru)%area_ha * wet_hyd(iihru)%pdep * 10.  ! * wet_hyd(iihru)%psa
           wet_ob(iihru)%psa = wet_hyd(iihru)%psa * hru(iihru)%area_ha 
           wet_ob(iihru)%esa = wet_hyd(iihru)%esa * hru(iihru)%area_ha 
           !! set initial weir height to principal depth - m
@@ -47,7 +46,7 @@
             wet_ob(iihru)%weir_hgt = res_weir(iweir)%h  !m weir height
             wet_ob(iihru)%weir_wid = res_weir(iweir)%w  !m, weir width
             !update pvol/evol according to weir height for paddy weir discharge. Jaehak 2023
-            wet_ob(iihru)%pvol = hru(iihru)%area_ha * wet_ob(iihru)%weir_hgt * 10.**4  ! m3
+            wet_ob(iihru)%pvol = hru(iihru)%area_ha * res_weir(iweir)%h * 10.**4  ! m3
             if (wet_ob(iihru)%evol < wet_ob(iihru)%pvol*1.2) then
               wet_ob(iihru)%evol = wet_ob(iihru)%pvol * 1.2   
             endif
@@ -111,16 +110,16 @@
           !! wetland on hru - solve quadratic to find new depth
           wet_wat_d(iihru)%area_ha = 0.
           if (wet(iihru)%flo > 0.) then
-            x1 = wet_hyd(ihyd)%bcoef ** 2 + 4. * wet_hyd(ihyd)%ccoef * (1. - wet(iihru)%flo / wet_ob(iihru)%pvol)
+            x1 = wet_hyd(iihru)%bcoef ** 2 + 4. * wet_hyd(iihru)%ccoef * (1. - wet(iihru)%flo / wet_ob(iihru)%pvol)
             if (x1 < 1.e-6) then
               wet_h = 0.
             else
-              wet_h1 = (-wet_hyd(ihyd)%bcoef - sqrt(x1)) / (2. * wet_hyd(ihyd)%ccoef)
-              wet_h = wet_h1 + wet_hyd(ihyd)%bcoef
+              wet_h1 = (-wet_hyd(iihru)%bcoef - sqrt(x1)) / (2. * wet_hyd(iihru)%ccoef)
+              wet_h = wet_h1 + wet_hyd(iihru)%bcoef
             end if
-            wet_fr = (1. + wet_hyd(ihyd)%acoef * wet_h)
+            wet_fr = (1. + wet_hyd(iihru)%acoef * wet_h)
             wet_fr = min(wet_fr,1.)
-            wet_wat_d(iihru)%area_ha = hru(iihru)%area_ha * wet_hyd(ihyd)%psa * wet_fr
+            wet_wat_d(iihru)%area_ha = hru(iihru)%area_ha * wet_hyd(iihru)%psa * wet_fr
           end if 
   
       end if

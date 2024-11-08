@@ -39,6 +39,7 @@
         character (len=16) :: name = ""
         real :: tot_mn = 0.                                         !       |total mineral n pool (no3+nh4) in soil profile
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
+        real :: salt = 0.                                                !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
@@ -93,7 +94,7 @@
         type (organic_mass), dimension(:), allocatable :: tot       !       |total mass surface residue litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: lignin                   !       |lignin pool-dimensioned by plant
+        type (organic_mass), dimension(:), allocatable :: lignin    !       |lignin pool-dimensioned by plant
         type (organic_mass) :: tot_com                              !kg/ha  |total
         type (organic_mass) :: tot_meta                             !       |
         type (organic_mass) :: tot_str                              !       |

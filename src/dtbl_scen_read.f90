@@ -51,6 +51,8 @@
             allocate (dtbl_scen(i)%act_hit(dtbl_scen(i)%alts))
             allocate (dtbl_scen(i)%act_typ(dtbl_scen(i)%acts), source = 0)
             allocate (dtbl_scen(i)%act_app(dtbl_scen(i)%acts), source = 0)
+            allocate (dtbl_scen(i)%lu_chg_mx(dtbl_scen(i)%acts), source = 0)
+
             allocate (dtbl_scen(i)%act_outcomes(dtbl_scen(i)%acts,dtbl_scen(i)%alts))
             
             !read conditions and condition alternatives

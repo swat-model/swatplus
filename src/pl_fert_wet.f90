@@ -67,18 +67,18 @@
         wet(j)%sedp = wet(j)%sedp + frt_kg * fertdb(ifrt)%forgp
       end if
       
-	  !  if (bsn_cc%cswat == 1) then
-	  !    soil1(j)%man(l)%c = soil1(j)%man(l)%c + xx * frt_kg *            &
-   !   		    fertdb(ifrt)%forgn * 10.
-	  !    soil1(j)%man(l)%n = soil1(j)%man(l)%n + xx * frt_kg *            &
-   !   		    fertdb(ifrt)%forgn
-	  !    soil1(j)%man(l)%p = soil1(j)%man(l)%p + xx * frt_kg *            &
-   !   		    fertdb(ifrt)%forgp
-	  !  end if
+      !  if (bsn_cc%cswat == 1) then
+      !    soil1(j)%man(l)%c = soil1(j)%man(l)%c + xx * frt_kg *            &
+   !            fertdb(ifrt)%forgn * 10.
+      !    soil1(j)%man(l)%n = soil1(j)%man(l)%n + xx * frt_kg *            &
+   !            fertdb(ifrt)%forgn
+      !    soil1(j)%man(l)%p = soil1(j)%man(l)%p + xx * frt_kg *            &
+   !            fertdb(ifrt)%forgp
+      !  end if
    !
    !     !!By Zhang for C/N cycling 
    !     !!===========================
-	  !  if (bsn_cc%cswat == 2) then
+      !  if (bsn_cc%cswat == 2) then
    !       soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx *           &
    !           frt_kg * fertdb(ifrt)%forgp
    !       soil1(j)%hsta(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * xx *  &
@@ -144,7 +144,7 @@
    !       
    !       !end if
    !   
-	  !end if
+      !end if
    !     !!By Zhang for C/N cycling 
    !     !!=========================== 
    !

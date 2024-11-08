@@ -34,11 +34,19 @@
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
       !! set soil carbon
-      soil1(ihru)%cbn(1) = max(.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
+      soil1(ihru)%cbn(1) = max(0.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
       !! calculate percent carbon for lower layers using exponential decrease
+      !do ly = 2, nly
+        !dep_frac = Exp(-solt_db(isolt)%exp_co * soil(ihru)%phys(ly)%d)
+        !soil1(ihru)%cbn(ly) = soil1(ihru)%cbn(1) * dep_frac
+      !end do
+      !! use carbon content in the soils database
       do ly = 2, nly
-        dep_frac = Exp(-solt_db(isolt)%exp_co * soil(ihru)%phys(ly)%d)
-        soil1(ihru)%cbn(ly) = soil1(ihru)%cbn(1) * dep_frac
+        if (ly - 1 <= soildb(isol)%s%nly) then
+          soil1(ihru)%cbn(ly) = soildb(isol)%ly(ly-1)%cbn
+        else
+          soil1(ihru)%cbn(ly) = soildb(isol)%ly(soildb(isol)%s%nly)%cbn
+        end if
       end do
 
       !! calculate initial nutrient contents of layers, profile and
@@ -67,15 +75,15 @@
         soil1(ihru)%mp(ly)%lab = soil1(ihru)%mp(ly)%lab * wt1   !! mg/kg => kg/ha
 
         !! set active mineral P pool based on dynamic PSP MJW
-	    if (bsn_cc%sol_P_model == 1) then 
-	      !! Allow Dynamic PSP Ratio
+        if (bsn_cc%sol_P_model == 1) then 
+          !! Allow Dynamic PSP Ratio
           !! convert to concentration
           solp = soil1(ihru)%mp(ly)%lab / wt1
-	      !! PSP = -0.045*log (% clay) + 0.001*(Solution P, mg kg-1) - 0.035*(% Organic C) + 0.43
-	      if (soil(ihru)%phys(ly)%clay > 0.) then
+          !! PSP = -0.045*log (% clay) + 0.001*(Solution P, mg kg-1) - 0.035*(% Organic C) + 0.43
+          if (soil(ihru)%phys(ly)%clay > 0.) then
             psp = -0.045 * log(soil(ihru)%phys(ly)%clay) + (0.001 * solp) 
             psp = psp - (0.035 * soil1(ihru)%cbn(ly)) + 0.43 
-          endif   		
+          endif         
           !! Limit PSP range
           if (psp < .10) then
             psp = 0.10
@@ -88,24 +96,24 @@
         soil1(ihru)%mp(ly)%act = soil1(ihru)%mp(ly)%lab * (1. - psp) / psp
 
         !! Set Stable pool based on dynamic coefficient
-	    if (bsn_cc%sol_P_model == 1) then  !! From White et al 2009 
+        if (bsn_cc%sol_P_model == 1) then  !! From White et al 2009 
             !! convert to concentration for ssp calculation
-	        actp = soil1(ihru)%mp(ly)%act / wt1
-		    solp = soil1(ihru)%mp(ly)%lab / wt1
+            actp = soil1(ihru)%mp(ly)%act / wt1
+            solp = soil1(ihru)%mp(ly)%lab / wt1
             !! estimate Total Mineral P in this soil based on data from sharpley 2004
-		    ssp = 25.044 * (actp + solp)** (-0.3833)
-		    !!limit SSP Range
-		    if (ssp > 7.) ssp = 7.
-		    if (ssp < 1.) ssp = 1.	      	  
-		    soil1(ihru)%mp(ly)%sta = ssp * (soil1(ihru)%mp(ly)%act + soil1(ihru)%mp(ly)%lab)
+            ssp = 25.044 * (actp + solp)** (-0.3833)
+            !!limit SSP Range
+            if (ssp > 7.) ssp = 7.
+            if (ssp < 1.) ssp = 1.            
+            soil1(ihru)%mp(ly)%sta = ssp * (soil1(ihru)%mp(ly)%act + soil1(ihru)%mp(ly)%lab)
          else
-	      !! the original code
-		  soil1(ihru)%mp(ly)%sta = 4. * soil1(ihru)%mp(ly)%act
-	   end if
+          !! the original code
+          soil1(ihru)%mp(ly)%sta = 4. * soil1(ihru)%mp(ly)%act
+       end if
       end do
 
       !! set initial organic pools - originally by Zhang
-	  do ly = 1, nly
+      do ly = 1, nly
 
         !initialize total soil organic pool - no litter
         !kg/ha = mm * t/m3 * m/1,000 mm * 1,000 kg/t * 10,000 m2/ha
@@ -184,7 +192,7 @@
         !soil1(ihru)%water(ly)%n = 
         !soil1(ihru)%water(ly)%p = 
 
-	  end do	
+      end do    
 
       return
       end subroutine soil_nutcarb_init

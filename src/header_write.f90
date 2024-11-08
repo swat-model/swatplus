@@ -45,14 +45,14 @@
 !!!!!! hru-lte-out.cal - hru lte soft calibration output including soft and predicted budgets and 
 !!!!!! calibration parameter adjustments
       !open (5003,file="hru-lte-out.cal", recl = 800)
-	  !write (9000,*) "LTE SOFT OUT CALIB  hru-lte-out.cal"
-	  !write (5003,*) calb_hdr
-	  
+      !write (9000,*) "LTE SOFT OUT CALIB  hru-lte-out.cal"
+      !write (5003,*) calb_hdr
+      
 !!!!!! hru-lte-new.cal - hru lte soft calibration output file.  The same format as hru-lte.hru and
 !!!!!! can be used as input (hru-lte.hru) in subsequent simulations 
       !open (5002,file="hru-lte-new.cal", recl = 800)
-	  !write (9000,*) "LTE SOFT CAL INPUT  hru-lte-new.cal"
-	  !write (5002,*) calb2_hdr
+      !write (9000,*) "LTE SOFT CAL INPUT  hru-lte-new.cal"
+      !write (5002,*) calb2_hdr
       
 !! BASIN AQUIFER OUTPUT
         if (pco%aqu_bsn%d == "y") then

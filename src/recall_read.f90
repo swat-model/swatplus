@@ -161,6 +161,8 @@
             case (2) !! monthly
               read (108,*,iostat=eof) jday, mo, day_mo, iyr, ob_typ, ob_name,    &
                                                       recall(i)%hd(mo1,iyrs)
+              write (10108,*) jday, mo, day_mo, iyr, ob_typ, ob_name,    &
+                                                      recall(i)%hd(mo1,iyrs)
             case (3) !! annual
               read (108,*,iostat=eof) jday, mo, day_mo, iyr, ob_typ, ob_name, ht1
               recall(i)%hd(1,iyrs) = ht1

@@ -146,7 +146,7 @@
       real, dimension (:), allocatable :: gw_delay          !           |
       real, dimension (:), allocatable :: gw_rech           !           |
       real, dimension (:), allocatable :: delay             !           |
-			
+            
       !gwet: variables for groundwater evapotranspiration -----------------------------------------
       integer :: gw_et_flag = 0                             !           |
       real, dimension (:), allocatable :: etremain          !           |
