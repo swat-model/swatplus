@@ -96,6 +96,7 @@
           write (4565,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
               soil1(j)%tot_org%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_meta%c,               &
               soil_prof_man%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c
+        end if
       
         !write organic flux pools for the soil profile
         if (bsn_cc%cswat == 2) then
