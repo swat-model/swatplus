@@ -134,7 +134,7 @@
         if (sep(isep)%opt /= 0) then 
           dep_new1 = 0.
           dep_new2 = 0.
-          if (sep(isep)%z + sep(isep)%thk > soil(ihru)%phys(nly)%d) then
+	      if (sep(isep)%z + sep(isep)%thk > soil(ihru)%phys(nly)%d) then
             i_sep(ihru) = nly + 1
             dep_new1 = sep(isep)%z - sep(isep)%thk
             dep_new2 = 0.
@@ -170,6 +170,8 @@
         allocate (soil1(ihru)%mn(nly))
         allocate (soil1(ihru)%mp(nly))
         allocate (soil1(ihru)%tot(nly))
+        allocate (soil1(ihru)%org_flx_lr(nly))
+        allocate (soil1(ihru)%org_flx_cum_lr(nly))
         allocate (soil1(ihru)%hact(nly))
         allocate (soil1(ihru)%hsta(nly))
         allocate (soil1(ihru)%rsd(nly))
@@ -200,7 +202,6 @@
         allocate (soil1_init(ihru)%man(nly))
         allocate (soil1_init(ihru)%water(nly))
         
-        call soil_nutcarb_init(isol)       !! initialize soil nutrient/carbon parameters Jaehak 2024
       end do
 
       return

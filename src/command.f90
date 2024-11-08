@@ -112,11 +112,6 @@
                   if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
                     obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(3)
                   end if
-                  ! add to tile flow
-                  ob(icmd)%hin_til = ob(icmd)%hin_til + frac_in * ob(iob)%hd(5)
-                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
-                    obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(5)
-                  end if
                   ! add to lateral soil runon
                   ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(4)
                   if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
@@ -480,20 +475,20 @@
         select case (pco%carbout)
         !! write carbon in soil, plant, and residue at end of the day
           case ("d")
-            call soil_nutcarb_write
+            call soil_nutcarb_write(pco%carbout)
           !! write carbon in soil, plant, and residue at end the month    
           case ("m")
             if (time%end_mo == 1) then
-              call soil_nutcarb_write
+              call soil_nutcarb_write(pco%carbout)
             end if 
           !! write carbon in soil, plant, and residue at end of year  
           case ("y")
             if (time%end_yr == 1) then
-              call soil_nutcarb_write
+              call soil_nutcarb_write(pco%carbout)
             end if
          !! write carbon in soil, plant, and residue at end the simulation  
           case ("a") 
-              call soil_nutcarb_write 
+              call soil_nutcarb_write(pco%carbout)
          end select 
         
         end do      ! hru loop  
@@ -623,7 +618,7 @@
       enddo
       
 102   format(i6,11x,i3,8x,i5,5x,1000(f16.4))
-!*** tu Wunused-label: 103   format(4i6,2i8,2x,a,35f12.3)      
+103   format(4i6,2i8,2x,a,35f12.3)      
 
       
       return

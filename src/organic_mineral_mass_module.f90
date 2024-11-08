@@ -1,5 +1,7 @@
       module organic_mineral_mass_module
     
+      use carbon_module, only: organic_flux
+
       implicit none 
 
       type organic_mass
@@ -39,7 +41,6 @@
         character (len=16) :: name = ""
         real :: tot_mn = 0.                                         !       |total mineral n pool (no3+nh4) in soil profile
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
-        real :: salt = 0.                                                !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
@@ -47,6 +48,9 @@
         type (mineral_nitrogen), dimension(:), allocatable :: mn    !       |mineral n pool dimensioned by layer
         type (mineral_phosphorus), dimension(:), allocatable :: mp  !       |mineral p humus pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
+        type (organic_flux)                            :: org_flx_cum_tot ! |cumulative organic flux for soil profile
+        type (organic_flux), dimension(:), allocatable :: org_flx_lr !      |organic flux by layer
+        type (organic_flux), dimension(:), allocatable :: org_flx_cum_lr !  |cumulative organic flux by layer
         type (organic_mass), dimension(:), allocatable :: hact      !       |active humus for old mineralization model dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: hsta      !       |stable humus for old mineralization model dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: hs        !       |slow humus dimensioned by layer
@@ -94,7 +98,7 @@
         type (organic_mass), dimension(:), allocatable :: tot       !       |total mass surface residue litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: lignin    !       |lignin pool-dimensioned by plant
+        type (organic_mass), dimension(:), allocatable :: lignin                   !       |lignin pool-dimensioned by plant
         type (organic_mass) :: tot_com                              !kg/ha  |total
         type (organic_mass) :: tot_meta                             !       |
         type (organic_mass) :: tot_str                              !       |
@@ -306,6 +310,10 @@
         module procedure om_add1
       end interface
       
+      interface operator (+)
+        module procedure org_flux_add1
+      end interface
+      
       interface operator (-)
         module procedure om_subtract
       end interface
@@ -357,6 +365,50 @@
         o_m3%n = o_m1%n + o_m2%n
         o_m3%p = o_m1%p + o_m2%p
       end function om_add1
+            
+      !! add org_flux
+      function org_flux_add1 (org_flux1, org_flux2) result (org_flux3)
+        type (organic_flux), intent (in) :: org_flux1
+        type (organic_flux), intent (in) :: org_flux2
+        type (organic_flux) :: org_flux3
+        org_flux3%cfmets1 = org_flux1%cfmets1 + org_flux2%cfmets1
+        org_flux3%cfstrs1 = org_flux1%cfstrs1 + org_flux2%cfstrs1
+        org_flux3%cfstrs2 = org_flux1%cfstrs2 + org_flux2%cfstrs2
+        org_flux3%efmets1 = org_flux1%efmets1 + org_flux2%efmets1
+        org_flux3%efstrs1 = org_flux1%efstrs1 + org_flux2%efstrs1
+        org_flux3%efstrs2 = org_flux1%efstrs2 + org_flux2%efstrs2
+        org_flux3%immmets1 = org_flux1%immmets1 + org_flux2%immmets1
+        org_flux3%immstrs1 = org_flux1%immstrs1 + org_flux2%immstrs1
+        org_flux3%immstrs2 = org_flux1%immstrs2 + org_flux2%immstrs2
+        org_flux3%mnrmets1 = org_flux1%mnrmets1 + org_flux2%mnrmets1
+        org_flux3%mnrstrs1 = org_flux1%mnrstrs1 + org_flux2%mnrstrs1
+        org_flux3%mnrstrs1 = org_flux1%mnrstrs2 + org_flux2%mnrstrs2
+        org_flux3%co2fmet = org_flux1%co2fmet + org_flux2%co2fmet
+        org_flux3%co2fstr = org_flux1%co2fstr + org_flux2%co2fstr
+        org_flux3%cfs1s2 = org_flux1%cfs1s2 + org_flux2%cfs1s2
+        org_flux3%cfs1s3 = org_flux1%cfs1s3 + org_flux2%cfs1s3
+        org_flux3%cfs2s1 = org_flux1%cfs2s1 + org_flux2%cfs2s1
+        org_flux3%cfs2s3 = org_flux1%cfs2s3 + org_flux2%cfs2s3
+        org_flux3%cfs3s1 = org_flux1%cfs3s1 + org_flux2%cfs3s1
+        org_flux3%efs1s2 = org_flux1%efs1s2 + org_flux2%efs1s2
+        org_flux3%efs1s3 = org_flux1%efs1s3 + org_flux2%efs1s3
+        org_flux3%efs2s1 = org_flux1%efs2s1 + org_flux2%efs2s1
+        org_flux3%efs2s3 = org_flux1%efs2s3 + org_flux2%efs2s3
+        org_flux3%efs3s1 = org_flux1%efs3s1 + org_flux2%efs3s1
+        org_flux3%imms1s2 = org_flux1%imms1s2 + org_flux2%imms1s2
+        org_flux3%imms1s3 = org_flux1%imms1s3 + org_flux2%imms1s3
+        org_flux3%imms2s1 = org_flux1%imms2s1 + org_flux2%imms2s1
+        org_flux3%imms2s3 = org_flux1%imms2s3 + org_flux2%imms2s3
+        org_flux3%imms3s1 = org_flux1%imms3s1 + org_flux2%imms3s1
+        org_flux3%mnrs1s2 = org_flux1%mnrs1s2 + org_flux2%mnrs1s2
+        org_flux3%mnrs1s3 = org_flux1%mnrs1s3 + org_flux2%mnrs1s3
+        org_flux3%mnrs2s1 = org_flux1%mnrs2s1 + org_flux2%mnrs2s1
+        org_flux3%mnrs2s3 = org_flux1%mnrs2s3 + org_flux2%mnrs2s3
+        org_flux3%mnrs3s1 = org_flux1%mnrs3s1 + org_flux2%mnrs3s1
+        org_flux3%co2fs1 = org_flux1%co2fs1 + org_flux2%co2fs1
+        org_flux3%co2fs2 = org_flux1%co2fs2 + org_flux2%co2fs2
+        org_flux3%co2fs3 = org_flux1%co2fs3 + org_flux2%co2fs3
+      end function org_flux_add1
             
       !! subtract organic mass
       function om_subtract (o_m1, o_m2) result (o_m3)
