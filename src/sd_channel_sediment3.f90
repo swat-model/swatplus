@@ -52,7 +52,7 @@
       real :: precip = 0.
       real :: flovol_ob = 0.
       real :: wet_fill = 0.
-      real :: ave_rate
+      real :: ave_rate = 0.
       !!
       
       ich = isdch
