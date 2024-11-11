@@ -46,7 +46,6 @@
       real :: rsd_sumfac = 0. !              |sum of residue cover factor by plant
       real :: grnd_sumfac = 0.!              |ground cover factor for each plant
       real :: grnd_covfact = 0.!              |sum of plant ground cover factor by plant
-      real :: bio_covfac = 0.
       real :: cover = 0.    !kg/ha         |soil cover - sum of residue and biomass
       j = ihru
 
@@ -101,21 +100,6 @@
         grnd_covfact = amin1 (1., grnd_covfact)
         grnd_covfact = max (0., grnd_covfact)
         c = Max(1.e-10, rsd_covfact * can_covfact * grnd_covfact)
-        
-        !! newer method using residue and biomass cover
-        !rsd_sumfac = 0.
-        !grnd_sumfac = 0.
-        !can_covfact = 10000.
-        !do ipl = 1, pcom(j)%npl
-        !  ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
-        !  grnd_sumfac = grnd_sumfac + ab_gr_t
-        !  rsd_sumfac = rsd_sumfac + (rsd1(j)%tot(ipl)%m +1.) / 1000.
-        !  can_covfact = amin1 (can_covfact, pcom(j)%plg(ipl)%cht)
-        !end do
-        !grnd_covfact = grnd_sumfac / (grnd_sumfac + exp(1.175 - 1.748 * grnd_sumfac))
-        !rsd_covfact = exp(-0.75 * rsd_sumfac)
-        !bio_covfac = 1. - grnd_covfact * exp(-0.1 * can_covfact)
-        !c = Max(1.e-10, rsd_covfact * bio_covfac)
         
         !! erosion output variables
         ero_output(j)%ero_d%c = c

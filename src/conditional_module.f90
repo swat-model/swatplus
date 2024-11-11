@@ -43,7 +43,7 @@
         real :: ha_lu = 0.                                              ! area of land_use in ha
         integer :: hru_lu_cur = 0                                       ! number of hru's in the land_use condition(s) that have currently been applied
         real :: hru_ha_cur = 0.                                         ! area of land_use in ha that has currently been applied
-        integer :: days_prob = 1                                        ! days since start of application window
+        integer :: days_prob = 0                                        ! days since start of application window
         integer :: day_prev = 0                                         ! to check if same day - don't increment day in application window
         real :: prob_cum  = 0.                                          ! cumulative probability of application on current day of window
         real :: frac_app  = 0.                                          ! fraction of time (during each window) the application occurs

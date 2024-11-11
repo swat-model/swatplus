@@ -115,7 +115,6 @@
       type (hyd_output), dimension(:), allocatable, save :: res_in_m
       type (hyd_output), dimension(:), allocatable, save :: res_in_y
       type (hyd_output), dimension(:), allocatable, save :: res_in_a
-      type (hyd_output), dimension(:), allocatable, save :: res_trap
       type (hyd_output) :: bres_in_d
       type (hyd_output) :: bres_in_m
       type (hyd_output) :: bres_in_y

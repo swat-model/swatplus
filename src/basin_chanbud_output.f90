@@ -56,6 +56,7 @@
             write (2134,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_y
           end if
         end if
+        
         bch_sed_bud_y = ch_sed_budz
       end if
 
