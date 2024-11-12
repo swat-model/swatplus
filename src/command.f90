@@ -112,6 +112,11 @@
                   if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
                     obcs(icmd)%hin_sur(1) = obcs(icmd)%hin_sur(1) + frac_in * obcs(iob)%hd(3)
                   end if
+                  ! add to tile flow
+                  ob(icmd)%hin_til = ob(icmd)%hin_til + frac_in * ob(iob)%hd(5)
+                  if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
+                    obcs(icmd)%hin_til(1) = obcs(icmd)%hin_til(1) + frac_in * obcs(iob)%hd(5)
+                  end if
                   ! add to lateral soil runon
                   ob(icmd)%hin_lat = ob(icmd)%hin_lat + frac_in * ob(iob)%hd(4)
                   if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
@@ -465,9 +470,11 @@
           !if ((time%yrc == 2007 .AND. time%day == 213) .OR. (time%yrc == 2010 .AND. time%day == 319)            &
           !                                              .OR.(time%yrc == 2011 .AND. time%day == 324)) then 
           if (ihru == 1) then
-            do nly = 1, soil(ihru)%nly
-              !soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
-            end do
+            if (bsn_cc%cswat /= 2) then
+              do nly = 1, soil(ihru)%nly
+                soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
+              end do
+            end if
             write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name,           &
                                                    (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
           end if
