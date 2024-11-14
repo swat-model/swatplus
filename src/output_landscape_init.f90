@@ -513,11 +513,13 @@
         if (pco%nb_hru%a == "y") then
           write (4567,*)  bsn%name, prog
           write (4567,*) soil_org_flux_hdr
+          write (4567,*) soil_org_flux_hdr_units
           write (9000,*) "HRU                       hru_cflux_stat.txt"
             if (pco%csvout == "y") then
               open (4568,file="hru_cflux_stat.csv", recl = 1500)
               write (4568,*)  bsn%name, prog
               write (4568,'(*(G0.3,:,","))') soil_org_flux_hdr
+              write (4568,'(*(G0.3,:,","))') soil_org_flux_hdr_units
               write (9000,*) "HRU                       hru_cflux_stat.csv"
             end if
         endif
