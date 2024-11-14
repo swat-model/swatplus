@@ -135,15 +135,9 @@
           
           !! apply decay to all carbon pools
           if (bsn_cc%cswat == 2) then
-            decomp = decr * rsd1(j)%meta(ipl)
-            rsd1(j)%meta(ipl) = rsd1(j)%meta(ipl) - decomp
-            soil1(j)%meta(ipl) = rsd1(j)%meta(ipl) + decomp
-            decomp = decr * rsd1(j)%str(ipl)
-            rsd1(j)%str(ipl) = rsd1(j)%str(ipl) - decomp
-            soil1(j)%str(ipl) = rsd1(j)%str(ipl) + decomp
-            decomp = decr * rsd1(j)%lignin(ipl)
-            rsd1(j)%lignin(ipl) = rsd1(j)%lignin(ipl) - decomp
-            soil1(j)%lig(ipl) = rsd1(j)%lignin(ipl) + decomp
+            rsd1(j)%meta(ipl) = (1. - decr) * rsd1(j)%meta(ipl)
+            rsd1(j)%str(ipl) = (1. - decr) * rsd1(j)%str(ipl)
+            rsd1(j)%lignin(ipl) = (1. - decr) * rsd1(j)%lignin(ipl)
           end if
       
           !! mineralization of residue n and p

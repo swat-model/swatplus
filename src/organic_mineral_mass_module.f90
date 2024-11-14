@@ -41,7 +41,6 @@
         character (len=16) :: name = ""
         real :: tot_mn = 0.                                         !       |total mineral n pool (no3+nh4) in soil profile
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
-        real :: salt = 0.                                                !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
@@ -93,14 +92,13 @@
       type (organic_mass) :: bsn_org_rsd                            !       |total residue organics in basin
       real :: bsn_mn = 0.                                           !       |total mineral n pool (no3+nh4) in soil profile
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in soil profile
-      type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
-      
+
       type residue_mass1        !surface residue
         character (len=16) :: name = ""
         type (organic_mass), dimension(:), allocatable :: tot       !       |total mass surface residue litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool-dimensioned by plant
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: lignin    !       |lignin pool-dimensioned by plant
+        type (organic_mass), dimension(:), allocatable :: lignin                   !       |lignin pool-dimensioned by plant
         type (organic_mass) :: tot_com                              !kg/ha  |total
         type (organic_mass) :: tot_meta                             !       |
         type (organic_mass) :: tot_str                              !       |
@@ -366,7 +364,8 @@
         o_m3%c = o_m1%c + o_m2%c
         o_m3%n = o_m1%n + o_m2%n
         o_m3%p = o_m1%p + o_m2%p
-	  end function om_add1
+      end function om_add1
+            
       !! add org_flux
       function org_flux_add1 (org_flux1, org_flux2) result (org_flux3)
         type (organic_flux), intent (in) :: org_flux1
@@ -410,7 +409,7 @@
         org_flux3%co2fs2 = org_flux1%co2fs2 + org_flux2%co2fs2
         org_flux3%co2fs3 = org_flux1%co2fs3 + org_flux2%co2fs3
       end function org_flux_add1
-	  
+            
       !! subtract organic mass
       function om_subtract (o_m1, o_m2) result (o_m3)
         type (organic_mass), intent (in) :: o_m1

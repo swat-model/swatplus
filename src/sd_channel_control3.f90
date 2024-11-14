@@ -124,8 +124,8 @@
       
       !! zero daily in/out morphology and sediment budget output
       ch_sed_bud(ich) = ch_sed_budz
-      !ch_in_d = chaz
-      !ch_out_d = chaz
+      ch_in_d = chaz
+      ch_out_d = chaz
       
       !! add water transfer
       if (ob(icmd)%trans%flo > 1.e-6) then
