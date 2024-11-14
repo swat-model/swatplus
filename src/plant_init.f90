@@ -119,11 +119,28 @@
           pcom(j)%plcur(ipl)%gro = pcomdb(icom)%pl(ipl)%igro
           pcom(j)%plcur(ipl)%idorm = "y"
           idp = pcomdb(icom)%pl(ipl)%db_num
+          
+          !! initialize fresh organic residue pools
           rsd1(j)%tot(ipl)%m = pcomdb(icom)%pl(ipl)%rsdin
-          !set fresh organic pools--assume cn ratio = 57 and cp ratio = 300
-          rsd1(j)%tot(ipl)%c = 0.43 * rsd1(j)%tot(ipl)%m
-          rsd1(j)%tot(ipl)%n = 0.43 * rsd1(j)%tot(ipl)%m / 57.
-          rsd1(j)%tot(ipl)%p = 0.43 * rsd1(j)%tot(ipl)%m / 300.
+          rsd1(j)%tot(ipl)%c = 0.42 * rsd1(j)%tot(ipl)%m
+
+          !! metabolic residue
+          rsd1(j)%meta(ipl)%m = 0.85 * rsd1(j)%tot(ipl)%m
+          rsd1(j)%meta(ipl)%c = 0.85 * rsd1(j)%tot(ipl)%c
+          rsd1(j)%meta(ipl)%n = rsd1(j)%meta(ipl)%c / 10.           !assume 10:1 C:N ratio (EPIC)
+          rsd1(j)%meta(ipl)%p = rsd1(j)%meta(ipl)%c / 100.   
+          
+          !! structural residue
+          rsd1(j)%str(ipl)%m = 0.15 * rsd1(j)%tot(ipl)%m
+          rsd1(j)%str(ipl)%c = 0.15 * rsd1(j)%tot(ipl)%c
+          rsd1(j)%str(ipl)%n = rsd1(j)%str(ipl)%c / 150.            !assume 150:1 C:N ratio (EPIC)
+          rsd1(j)%str(ipl)%p = rsd1(j)%str(ipl)%c / 1500.   
+          
+          !! lignin residue
+          rsd1(j)%lignin(ipl)%m = 0.8 * rsd1(j)%str(ipl)%m
+          rsd1(j)%lignin(ipl)%c = 0.8 * rsd1(j)%str(ipl)%c          !assume 80% Stuctural C is Lignin
+          rsd1(j)%lignin(ipl)%n = 0.2 * rsd1(j)%str(ipl)%n
+          rsd1(j)%lignin(ipl)%p = 0.02 * rsd1(j)%str(ipl)%p   
           
           ! set heat units to maturity
           ! first compute base0 units for entire year
