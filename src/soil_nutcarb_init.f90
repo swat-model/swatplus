@@ -150,48 +150,34 @@
  
         !initialize passive humus pool
         soil1(ihru)%hp(ly)%m = frac_hum_passive * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%hp(ly)%c = .42 * frac_hum_passive * soil1(ihru)%tot(ly)%c   !assume 42% C
-        soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                       !assume 10:1 C:N ratio
-        soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                       !assume 80:1 C:P ratio
+        soil1(ihru)%hp(ly)%c = frac_hum_passive * soil1(ihru)%tot(ly)%c
+        soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                           !assume 10:1 C:N ratio
+        soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                           !assume 80:1 C:P ratio
             
         !initialize slow humus pool
         soil1(ihru)%hs(ly)%m = frac_hum_slow * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%hs(ly)%c = .42 * frac_hum_slow * soil1(ihru)%tot(ly)%c  !assume 42% C
-        soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
-        soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
+        soil1(ihru)%hs(ly)%c = frac_hum_slow * soil1(ihru)%tot(ly)%c
+        soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                           !assume 10:1 C:N ratio
+        soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                           !assume 80:1 C:P ratio
             
         !initialize microbial pool
         soil1(ihru)%microb(ly)%m = frac_hum_microb * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%microb(ly)%c = .42 * frac_hum_microb * soil1(ihru)%tot(ly)%c    !assume 42% C
+        soil1(ihru)%microb(ly)%c = frac_hum_microb * soil1(ihru)%tot(ly)%c
         soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.                    !assume 8:1 C:N ratio
         soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.                   !assume 80:1 C:P ratio
 
-        !initialize metabolic litter pool
-        soil1(ihru)%meta(ly)%m = soil1(ihru)%tot(ly)%m / 1000.      !t/ha - kg/ha
-        soil1(ihru)%meta(ly)%c = .42 * soil1(ihru)%meta(ly)%c       !assume 42% C
-        soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 150.      !assume 150:1 C:N ratio
-        soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 1500.     !assume 1500:1 C:P ratio
+        !zero metabolic litter pool
+        soil1(ihru)%meta(ly) = plt_mass_z
+        
+        !zero structural litter pool
+        soil1(ihru)%str(ly) = plt_mass_z
             
-        !initialize structural litter pool
-        soil1(ihru)%str(ly)%m = soil1(ihru)%meta(ly)%m
-        soil1(ihru)%str(ly)%c = .42 * soil1(ihru)%str(ly)%c         !assume 42% C
-        soil1(ihru)%str(ly)%n = soil1(ihru)%lig(ly)%c / 150.        !assume 150:1 C:N ratio
-        soil1(ihru)%str(ly)%p = soil1(ihru)%lig(ly)%c / 1500.       !assume 1500:1 C:P ratio
-            
-        !initialize lignon litter pool
-        soil1(ihru)%lig(ly)%m = .8 * soil1(ihru)%str(ly)%m
-        soil1(ihru)%lig(ly)%c = .8 * soil1(ihru)%str(ly)%c
-        soil1(ihru)%lig(ly)%n = .2 * soil1(ihru)%str(ly)%c
-        soil1(ihru)%lig(ly)%p = .02 * soil1(ihru)%str(ly)%c
+        !zero lignon litter pool
+        soil1(ihru)%lig(ly) = plt_mass_z
                          
         soil1(ihru)%tot(ly)%c = soil1(ihru)%hs(ly)%c + soil1(ihru)%hp(ly)%c + soil1(ihru)%microb(ly)%c +      &
-                                     soil1(ihru)%meta(ly)%c + soil1(ihru)%str(ly)%c + soil1(ihru)%lig(ly)%c
-        !initialize water soluble pool
-        !soil1(ihru)%water(ly)%m = 
-        !soil1(ihru)%water(ly)%c = 
-        !soil1(ihru)%water(ly)%n = 
-        !soil1(ihru)%water(ly)%p = 
-
+                                     soil1(ihru)%meta(ly)%c + soil1(ihru)%str(ly)%c
+        
       end do    
 
       return
