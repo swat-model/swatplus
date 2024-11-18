@@ -938,6 +938,56 @@
         !  character(len=15)  :: microb_c      =    "       microb_c"
          end type output_soil_org_flux_header
       type (output_soil_org_flux_header) :: soil_org_flux_hdr
+
+     type output_soil_org_flux_header_units     
+         character (len=11) :: day       =    "           "
+         character (len=11) :: mo        =    "           "
+         character (len=11) :: day_mo    =    "           "
+         character (len=11) :: yrc       =    "           "
+         character (len=16) :: isd       =    "                "
+         character (len=22) :: id        =    "                      "
+         character (len=16) :: name      =    "                "
+         character(len=15)  :: cfmets1   =    "        kg_C/ha"
+         character(len=15)  :: cfstrs1   =    "        kg_C/ha"
+         character(len=15)  :: cfstrs2   =    "        kg_C/ha"
+         character(len=15)  :: efmets1   =    "        kg_N/ha"
+         character(len=15)  :: efstrs1   =    "        kg_N/ha"
+         character(len=15)  :: efstrs2   =    "        kg_N/ha"
+         character(len=15)  :: immmets1  =    "        kg_N/ha"
+         character(len=15)  :: immstrs1  =    "        kg_N/ha" 
+         character(len=15)  :: immstrs2  =    "        kg_N/ha" 
+         character(len=15)  :: mnrmets1  =    "        kg_N/ha" 
+         character(len=15)  :: mnrstrs1  =    "        kg_N/ha" 
+         character(len=15)  :: mnrstrs2  =    "        kg_N/ha"  
+         character(len=15)  :: co2fmet   =    "        kg_C/ha" 
+         character(len=15)  :: co2fstr   =    "        kg_C/ha" 
+         character(len=15)  :: cfs1s2    =    "        kg_C/ha"  
+         character(len=15)  :: cfs1s3    =    "        kg_C/ha"  
+         character(len=15)  :: cfs2s1    =    "        kg_C/ha"  
+         character(len=15)  :: cfs2s3    =    "        kg_C/ha"  
+         character(len=15)  :: cfs3s1    =    "        kg_C/ha"  
+         character(len=15)  :: efs1s2    =    "        kg_N/ha"  
+         character(len=15)  :: efs1s3    =    "        kg_N/ha"  
+         character(len=15)  :: efs2s1    =    "        kg_N/ha"  
+         character(len=15)  :: efs2s3    =    "        kg_N/ha"  
+         character(len=15)  :: efs3s1    =    "        kg_N/ha"  
+         character(len=15)  :: imms1s2   =    "        kg_N/ha" 
+         character(len=15)  :: imms1s3   =    "        kg_N/ha" 
+         character(len=15)  :: imms2s1   =    "        kg_N/ha" 
+         character(len=15)  :: imms2s3   =    "        kg_N/ha" 
+         character(len=15)  :: imms3s1   =    "        kg_N/ha" 
+         character(len=15)  :: mnrs1s2   =    "        kg_N/ha" 
+         character(len=15)  :: mnrs1s3   =    "        kg_N/ha" 
+         character(len=15)  :: mnrs2s1   =    "        kg_N/ha" 
+         character(len=15)  :: mnrs2s3   =    "        kg_N/ha" 
+         character(len=15)  :: mnrs3s1   =    "        kg_N/ha" 
+         character(len=15)  :: co2fs1    =    "        kg_C/ha" 
+         character(len=15)  :: co2fs2    =    "        kg_C/ha"  
+         character(len=15)  :: co2fs3    =    "        kg_C/ha" 
+         end type output_soil_org_flux_header_units
+      type (output_soil_org_flux_header_units) :: soil_org_flux_hdr_units
+      
+
       
 !!! NEW SOIL CARBON STAT OUTPUT
       
