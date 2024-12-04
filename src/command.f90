@@ -470,11 +470,9 @@
           !if ((time%yrc == 2007 .AND. time%day == 213) .OR. (time%yrc == 2010 .AND. time%day == 319)            &
           !                                              .OR.(time%yrc == 2011 .AND. time%day == 324)) then 
           if (ihru == 1) then
-            if (bsn_cc%cswat /= 2) then
-              do nly = 1, soil(ihru)%nly
-                soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
-              end do
-            end if
+            do nly = 1, soil(ihru)%nly
+              !soil1(ihru)%tot(nly)%c = soil1(ihru)%hact(nly)%c + soil1(ihru)%hsta(nly)%c + soil1(ihru)%microb(nly)%c
+            end do
             write (9999,*) time%day, time%mo, time%day_mo, time%yrc, ob(ihru)%typ, ob(ihru)%name,           &
                                                    (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
           end if
@@ -482,20 +480,20 @@
         select case (pco%carbout)
         !! write carbon in soil, plant, and residue at end of the day
           case ("d")
-            call soil_nutcarb_write(pco%carbout)
+            call soil_nutcarb_write
           !! write carbon in soil, plant, and residue at end the month    
           case ("m")
             if (time%end_mo == 1) then
-              call soil_nutcarb_write(pco%carbout)
+              call soil_nutcarb_write
             end if 
           !! write carbon in soil, plant, and residue at end of year  
           case ("y")
             if (time%end_yr == 1) then
-              call soil_nutcarb_write(pco%carbout)
+              call soil_nutcarb_write
             end if
          !! write carbon in soil, plant, and residue at end the simulation  
           case ("a") 
-              call soil_nutcarb_write(pco%carbout)
+              call soil_nutcarb_write 
          end select 
         
         end do      ! hru loop  
@@ -625,7 +623,7 @@
       enddo
       
 102   format(i6,11x,i3,8x,i5,5x,1000(f16.4))
-103   format(4i6,2i8,2x,a,35f12.3)      
+!*** tu Wunused-label: 103   format(4i6,2i8,2x,a,35f12.3)      
 
       
       return

@@ -21,9 +21,10 @@
       real :: n_frac = 0.           !none               |n fraction in remainder of plant
       real :: p_left = 0.           !none               |p left after seed is removed
       real :: p_frac = 0.           !none               |p fraction in remainder of plant
-      real :: mass_left = 0.             !none               |mass left after plant component is removed
-      real :: mass_act = 0.              !none               |actual mass in each plant component 
-      real :: mass_opt = 0.              !none               |optimal mass in each plant component
+      real :: mass_left = 0.        !none               |mass left after plant component is removed
+      real :: mass_act = 0.         !none               |actual mass in each plant component 
+      real :: mass_opt = 0.         !none               |optimal mass in each plant component 
+      real :: mass_add = 0.         !none               |added mass in each plant component
       real :: leaf_frac_veg = 0.    !none               |fraction veg mass (stem+leaf) that is leaf
       real :: leaf_mass_frac_veg = 0. !none               |fraction veg mass (stem+leaf) that is leaf
            
@@ -65,43 +66,40 @@
         mass_left = pl_mass_up%m
         mass_act = pl_mass(j)%root(ipl)%m
         mass_opt = root_frac * pl_mass(j)%tot(ipl)%m
-        if (mass_act > mass_opt) then
-          mass_left = mass_act - mass_opt
-          pl_mass(j)%root(ipl)%m = mass_opt
-        else
-          pl_mass(j)%root(ipl)%m = pl_mass(j)%root(ipl)%m + pl_mass_up%m
-          mass_left = 0.
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%root(ipl)%m = pl_mass(j)%root(ipl)%m + mass_add
+          mass_left = mass_left - mass_add
         end if
         !! next maintain harvest index on yield (seed/fruit) component
         mass_act = pl_mass(j)%seed(ipl)%m
         mass_opt = seed_mass_frac * pl_mass(j)%tot(ipl)%m
-        if (mass_act > mass_opt) then
-          mass_left = mass_act - mass_opt
-          pl_mass(j)%seed(ipl)%m = mass_opt
-        else
-          pl_mass(j)%seed(ipl)%m = pl_mass(j)%seed(ipl)%m + pl_mass_up%m
-          mass_left = 0.
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%seed(ipl)%m = pl_mass(j)%seed(ipl)%m + mass_add
+          mass_left = mass_left - mass_add
         end if
         !! next maintain leaf component
         mass_act = pl_mass(j)%leaf(ipl)%m
         mass_opt = leaf_mass_frac * pl_mass(j)%tot(ipl)%m
-        if (mass_act > mass_opt) then
-          mass_left = mass_act - mass_opt
-          pl_mass(j)%leaf(ipl)%m = mass_opt
-        else
-          pl_mass(j)%leaf(ipl)%m = pl_mass(j)%leaf(ipl)%m + pl_mass_up%m
-          mass_left = 0.
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%leaf(ipl)%m = pl_mass(j)%leaf(ipl)%m + mass_add
+          mass_left = mass_left - mass_add
         end if
         !! remainder goes to stem
         pl_mass(j)%stem(ipl)%m = pl_mass(j)%stem(ipl)%m + mass_left
         pl_mass(j)%ab_gr(ipl)%m = pl_mass(j)%stem(ipl)%m + pl_mass(j)%leaf(ipl)%m + pl_mass(j)%seed(ipl)%m
       else
         !! initialize at initial fractions
-      pl_mass(j)%ab_gr(ipl)%m = ab_gr_frac * pl_mass(j)%tot(ipl)%m
-      pl_mass(j)%root(ipl)%m = root_frac * pl_mass(j)%tot(ipl)%m
-      pl_mass(j)%leaf(ipl)%m = leaf_mass_frac * pl_mass(j)%ab_gr(ipl)%m
-      pl_mass(j)%seed(ipl)%m = seed_mass_frac * pl_mass(j)%ab_gr(ipl)%m
-      pl_mass(j)%stem(ipl)%m = stem_mass_frac * pl_mass(j)%ab_gr(ipl)%m
+        pl_mass(j)%ab_gr(ipl)%m = ab_gr_frac * pl_mass(j)%tot(ipl)%m
+        pl_mass(j)%root(ipl)%m = root_frac * pl_mass(j)%tot(ipl)%m
+        pl_mass(j)%leaf(ipl)%m = leaf_mass_frac * pl_mass(j)%ab_gr(ipl)%m
+        pl_mass(j)%seed(ipl)%m = seed_mass_frac * pl_mass(j)%ab_gr(ipl)%m
+        pl_mass(j)%stem(ipl)%m = stem_mass_frac * pl_mass(j)%ab_gr(ipl)%m
       end if
           
       !! partition carbon with constant fractions

@@ -1,7 +1,7 @@
-      subroutine soil_nutcarb_write(out_freq)
+      subroutine soil_nutcarb_write
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine writes HRU output to the output.hru file
+!!    this subroutine writes daily HRU output to the output.hru file
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name          |units         |definition
@@ -30,12 +30,9 @@
       use organic_mineral_mass_module
       use hydrograph_module
       use calibration_data_module
-      use carbon_module, only: org_flux_zero
-      use basin_module
       
       implicit none
       
-      character(len=1), intent(in) :: out_freq   ! Output freqency (d, m, y, a)
       integer :: ly = 0         !none        |counter
       real :: const = 0.        !none        |counter
       integer :: iihru = 0      !none        |counter
@@ -53,10 +50,14 @@
         soil1(j)%tot_org = soil_org_z
         soil_prof_hact = soil_org_z
         soil_prof_hsta = soil_org_z
-        soil_prof_hsta = soil_org_z
-        soil_prof_str =  soil_org_z
+        soil_prof_rsd = soil_org_z
+        soil_prof_str = soil_org_z
         soil_prof_lig = soil_org_z
         soil_prof_meta = soil_org_z
+        soil_prof_srsd = soil_org_z
+        soil_prof_sstr = soil_org_z
+        soil_prof_slig = soil_org_z
+        soil_prof_smeta = soil_org_z
         soil_prof_man = soil_org_z
         soil_prof_hs = soil_org_z
         soil_prof_hp = soil_org_z
@@ -65,60 +66,40 @@
         do ly = 1, soil(j)%nly
           soil_prof_hact = soil_prof_hact + soil1(j)%hact(ly)
           soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
-          soil_prof_str = soil_prof_str + soil1(j)%str(ly)
-          soil_prof_lig = soil_prof_lig + soil1(j)%lig(ly)
-          soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
+          if (ly == 1) then
+            soil_prof_srsd = soil_prof_srsd + soil1(j)%rsd(ly)
+            soil_prof_smeta = soil_prof_smeta + soil1(j)%meta(ly)
+            soil_prof_sstr = soil_prof_sstr + soil1(j)%str(ly)
+            soil_prof_slig = soil_prof_slig + soil1(j)%lig(ly)
+          else
+            soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
+            soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
+            soil_prof_str = soil_prof_str + soil1(j)%str(ly)
+            soil_prof_lig = soil_prof_lig + soil1(j)%lig(ly)
+          end if
           soil_prof_man = soil_prof_man + soil1(j)%man(ly)
           soil_prof_hs = soil_prof_hs + soil1(j)%hs(ly)
           soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
           soil_prof_microb = soil_prof_microb + soil1(j)%microb(ly)
           soil_prof_water = soil_prof_water + soil1(j)%water(ly)
         end do
-        ! This a test of push
-        ! soil1(j)%tot_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
-        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta + &
-                           soil_prof_str + soil_prof_lig
+        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb
         
         !write all organic carbon for the plant community
         write (4560,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
             pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
         
-        !write all organic carbon for the residue (all plants)
+        !write all organic carbon for the residue
         write (4561,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            rsd1(j)%tot_com%c, rsd1(j)%tot_meta%c, rsd1(j)%tot_str%c, rsd1(j)%tot_lignin%c
+            soil_prof_srsd%c, soil_prof_smeta%c, soil_prof_sstr%c, soil_prof_slig%c,              &
+            soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         
         !write all organic carbon for the soil profile
         write (4562,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%tot_org%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_meta%c,               &
-            soil_prof_man%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c
-
-        if (pco%csvout == "y") then
-          write (4565,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-              soil1(j)%tot_org%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_meta%c,               &
-              soil_prof_man%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c
-        end if
+            soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
+            soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
       
-        !write organic flux pools for the soil profile
-        if (bsn_cc%cswat == 2) then
-          write (4567,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                        soil1(j)%org_flx_cum_tot 
-          if (pco%csvout == "y") then
-            write (4568,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                          soil1(j)%org_flx_cum_tot 
-          endif 
-        end if
-
-        ! Set the org_flux pools to zero if at the end of the calendar year
-        if (bsn_cc%cswat == 2) then
-          if (out_freq == "y") then
-            soil1(j)%org_flx_cum_tot = org_flux_zero
-            do ly = 1, soil(j)%nly
-              soil1(j)%org_flx_cum_lr(ly) = org_flux_zero
-            end do
-          end if
-        end if
-
       end do    !! hru loop
       
       !! summing hru output for the basin
@@ -129,7 +110,7 @@
           if (lsu_elem(iihru)%obtyp == "hru") then
             bsn_org_soil = bsn_org_soil + const * soil1(iihru)%tot_org
             bsn_org_pl = bsn_org_pl + const * pl_mass(iihru)%tot_com
-            bsn_org_rsd = bsn_org_rsd + const * rsd1(iihru)%tot_com
+            bsn_org_rsd = bsn_org_rsd + const * soil1(iihru)%rsd(1)
             bsn_mn = bsn_mn + const * soil1(iihru)%tot_mn
             bsn_mp = bsn_mp + const * soil1(iihru)%tot_mp
           end if

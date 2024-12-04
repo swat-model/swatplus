@@ -19,7 +19,7 @@
         !!==============================================
         !! local variables
        !rnmn
-       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85ï¿½0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
+       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85–0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
        !abl     : carbon allocation from biomass to leaching; abl = (1-exp(-f/(0.01* sw+ 0.1*(kdbm)*db)) (williams, 1995)
        !abp     : allocation from biomass to passive humus; 0 (surface litter), 0.003 + 0.032*claf (all other layers) (parton et al., 1993, 1994)
        !almco2  : allocation from metabolic litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
@@ -42,7 +42,7 @@
        !cpn3    : potential n deficit resulting from the transformation of microbial biomass; calc as (pn5+pn6)-bmntp if bmntp < (pn5+pn6), otherwise = 0 (kg n ha-1 day-1)
        !cpn4    : potential n deficit resulting from the transformation of slow humus; calc as (pn7+pn8)-hsntp if hsntp < (pn7+pn8), otherwise = 0 (kg n ha-1 day-1)
        !cpn5    : potential n deficit resulting from the transformation of passive humus; calc as pn9-hpntp if hpntp < pn9, otherwise = 0 (kg n ha-1 day-1)
-       !cs      : combined factor controlling biological processes [cs = sqrt(cdgï¿½sut)* 0.8*ox*x1), cs < 10; cs = 10, cs>=10 (williams, 1995)]
+       !cs      : combined factor controlling biological processes [cs = sqrt(cdg×sut)* 0.8*ox*x1), cs < 10; cs = 10, cs>=10 (williams, 1995)]
        !dbp     : soil bulk density of plow layer (mg m-3) (not used)
        !hsctp   : potential transformation of c in slow humus (kg ha-1 day-1)
        !hsntp   : potential transformation of n in slow humus (kg ha-1 day-1)
@@ -52,7 +52,7 @@
                 !layers = 0.000012 day-1) (parton et al.,1993, 1994)
        !hsr     : rate of transformation of slow humus under optimal conditions (all layers
                 != 0.0005 day-1) (parton et al., 1993, 1994; vitousek et al., 1993)
-       !koc     : liquidï¿½solid partition coefficient for microbial biomass (10^3 m^3 mg-1)     
+       !koc     : liquid–solid partition coefficient for microbial biomass (10^3 m^3 mg-1)     
        !lmf     : fraction of the litter that is metabolic    
        !lmnf    : fraction of metabolic litter that is n (kg kg-1)  
        !lmr     : rate of transformation of metabolic litter under optimal conditions (surface =
@@ -180,16 +180,6 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
-
-       integer :: day
-       integer :: seq_year
-       integer :: cal_year
-       integer :: mon
-       
-       day = time%day
-       seq_year = time%yrs
-       cal_year = time%yrc
-       mon = time%mo
        
        !! initialize local variables
        deltawn = 0.
@@ -288,13 +278,16 @@
        dmdn = 0.
 
        j = ihru
+       hrc_d(j)%rsd_surfdecay_c = 0.
+       hrc_d(j)%rsd_rootdecay_c = 0.
+       
         
       !calculate tillage factor using dssat
       if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
          tillage_factor(j) = 1.6
       else
          tillage_factor(j) = 1.0
-      end if	
+      end if    
 
       !!calculate c/n dynamics for each soil layer
       !!===========================================
@@ -343,11 +336,11 @@
                 till_eff = 1.6
               else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
                 till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
-              end if		         
+              end if                 
             end if
           else
             till_eff = 1.0
-          end if	
+          end if    
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
           org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
@@ -387,16 +380,17 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_con%cs = org_con%cs * carbdb%microb_top_rate
             org_allo%abco2 = .55
             a1co2 = .55
+            carbdb%microb_top_rate = .0164
             carbdb%microb_rate = .0164
             carbdb%meta_rate = .0405
             carbdb%str_rate = .0107
             org_ratio%nchp = .1
             xbm = 1.
+            org_con%cs = org_con%cs * carbdb%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (rsd1(j)%tot_str%n + rsd1(j)%tot_meta%n) / (rsd1(j)%tot_com%c / 1000. + 1.e-5)
+            rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
               org_ratio%ncbm = .1
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
@@ -640,16 +634,16 @@
         !     update
               if (rnmn > 0.) then
                   soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
-	          min_n = soil1(j)%mn(k)%no3 + rnmn
-	            if (min_n < 0.) then
-	              rnmn = -soil1(j)%mn(k)%no3
-	              soil1(j)%mn(k)%no3 = 1.e-10
-	            else
-	              soil1(j)%mn(k)%no3 = min_n
+              min_n = soil1(j)%mn(k)%no3 + rnmn
+                if (min_n < 0.) then
+                  rnmn = -soil1(j)%mn(k)%no3
+                  soil1(j)%mn(k)%no3 = 1.e-10
+                else
+                  soil1(j)%mn(k)%no3 = min_n
                 end if   
               end if
               
-	          ! calculate p flows
+              ! calculate p flows
               ! compute humus mineralization on active organic p
               hmp_rate = 1.4 * (hsnta + hpnta) / (soil1(j)%hs(k)%n + soil1(j)%hp(k)%n + 1.e-6)
               
@@ -657,9 +651,9 @@
               hmp = hmp_rate * soil1(j)%hp(k)%p
               hmp = min(hmp, soil1(j)%hp(k)%p)
               soil1(j)%hp(k)%p = soil1(j)%hp(k)%p - hmp
-              soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + hmp	          
-	
-	          !! compute residue decomp and mineralization of 
+              soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + hmp           
+    
+              !! compute residue decomp and mineralization of 
               !! fresh organic n and p (upper two layers only)  
                 decr = (lscta + lmcta) / (soil1(j)%str(k)%c + soil1(j)%meta(k)%c + 1.e-6)
                 decr = min(1., decr)
@@ -667,12 +661,12 @@
 
                 soil1(j)%tot(k)%p = soil1(j)%tot(k)%p - rmp
                 soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * rmp
-                soil1(j)%hp(k)%p = soil1(j)%hp(k)%p + .2 * rmp	          
+                soil1(j)%hp(k)%p = soil1(j)%hp(k)%p + .2 * rmp            
 
               !!!=================================
               !!determine the final rate of the decomposition of each carbon pool and 
               !!allocation of c and nutrients to different som pools, as well as co2 emissions from different pools
-	          lscta = min(soil1(j)%str(k)%c, lscta)              
+              lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
@@ -785,7 +779,7 @@
               !!epic procedures (not used): calculating n supply - n demand 
                   !!df1 is the supply of n during structural litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into structural litter (0 as no other pools transformed into structural litter)  
-	              df1 = lsnta 
+                  df1 = lsnta 
                  
                   !!df2 is the supply of n during metabolic litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into metabolic litter (0 as no other pools transformed into structural litter)  
@@ -848,8 +842,15 @@
                 soil1(j)%meta(k)%m = soil1(j)%meta(k)%m - lmcta / rto
                 soil1(j)%meta(k)%c = soil1(j)%meta(k)%c - lmcta
               end if
-              !soil1(j)%meta(k)%c=max(1.e-10,soil1(j)%meta(k)%c-lmcta)
-              !soil1(j)%meta(k)%m=max(1.e-10,soil1(j)%meta(k)%m-lmcta/.42)              
+              
+              !! set residue decompostion for printing
+              if (k == 1) then
+                !! surface residue
+                hrc_d(j)%rsd_surfdecay_c = lmcta + lscta
+              else
+                !! subsurface and root residue
+                hrc_d(j)%rsd_rootdecay_c = lmcta + lscta
+              end if 
               
               soil1(j)%meta(k)%n = max(.001, soil1(j)%meta(k)%n - org_flux%efmets1 & !subtract n flow from met (metabolic litter) to s1 (microbial biomass)
                             - org_flux%mnrmets1)                    !subtract n immobilization during transformaiton from met (metabolic litter) to s1 (microbial biomass)
@@ -896,21 +897,12 @@
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
               
-              ! Save the the org_flux for each layer
-              soil1(j)%org_flx_lr(k) = org_flux     ! Org flux for current day for soil layer k
-              soil1(j)%org_flx_cum_lr(k) = soil1(j)%org_flx_cum_lr(k) + soil1(j)%org_flx_lr(k) !cumulative org flux for layer k
-
-              !total cumulative org flux soil profile
-              soil1(j)%org_flx_cum_tot = soil1(j)%org_flx_cum_tot + soil1(j)%org_flx_lr(k) 
-              
               !!update other vairables used in swat
               !!==================================
               !soil1(j)%tot(k)%m = soil1(j)%str(k)%m + soil1(j)%meta(k)%m
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 
-              soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c +      &
-                                       soil1(j)%meta(k)%c + soil1(j)%str(k)%c + soil1(j)%lig(k)%c
-              
-              
+              soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
+              soil1(j)%rsd(k)%c = soil1(j)%meta(k)%c + soil1(j)%str(k)%c
         end if  !soil temp and soil water > 0.
 
       end do      !soil layer loop
