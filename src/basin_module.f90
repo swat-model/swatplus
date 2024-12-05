@@ -27,7 +27,9 @@
         integer :: swift_out = 0 !! write to SWIFT input file
                                  !!   0 = do not write
                                  !!   1 = write to swift_hru.inp
-        integer :: sed_det = 0   !! not used
+        integer :: sed_det = 0   !! peak rate method
+                                 !!   0 = NRCS dimensionless hydrograph with PRF
+                                 !!   1 = half hour rainfall intensity method
         integer :: rte = 0       !! water routing method
                                  !!   0 variable storage method
                                  !!   1 Muskingum method
