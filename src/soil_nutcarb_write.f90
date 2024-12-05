@@ -53,10 +53,14 @@
         soil1(j)%tot_org = soil_org_z
         soil_prof_hact = soil_org_z
         soil_prof_hsta = soil_org_z
-        soil_prof_hsta = soil_org_z
-        soil_prof_str =  soil_org_z
+        soil_prof_rsd = soil_org_z
+        soil_prof_str = soil_org_z
         soil_prof_lig = soil_org_z
         soil_prof_meta = soil_org_z
+        soil_prof_srsd = soil_org_z
+        soil_prof_sstr = soil_org_z
+        soil_prof_slig = soil_org_z
+        soil_prof_smeta = soil_org_z
         soil_prof_man = soil_org_z
         soil_prof_hs = soil_org_z
         soil_prof_hp = soil_org_z
@@ -65,33 +69,39 @@
         do ly = 1, soil(j)%nly
           soil_prof_hact = soil_prof_hact + soil1(j)%hact(ly)
           soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
+          if (ly == 1) then
+            soil_prof_srsd = soil_prof_srsd + soil1(j)%rsd(ly)
+            soil_prof_smeta = soil_prof_smeta + soil1(j)%meta(ly)
+            soil_prof_sstr = soil_prof_sstr + soil1(j)%str(ly)
+            soil_prof_slig = soil_prof_slig + soil1(j)%lig(ly)
+          else
+            soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
+            soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
           soil_prof_str = soil_prof_str + soil1(j)%str(ly)
           soil_prof_lig = soil_prof_lig + soil1(j)%lig(ly)
-          soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
+          end if
           soil_prof_man = soil_prof_man + soil1(j)%man(ly)
           soil_prof_hs = soil_prof_hs + soil1(j)%hs(ly)
           soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
           soil_prof_microb = soil_prof_microb + soil1(j)%microb(ly)
           soil_prof_water = soil_prof_water + soil1(j)%water(ly)
         end do
-        ! This a test of push
-        ! soil1(j)%tot_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
-        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta + &
-                           soil_prof_str + soil_prof_lig
+        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb
         
         !write all organic carbon for the plant community
         write (4560,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
             pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
         
-        !write all organic carbon for the residue (all plants)
+        !write all organic carbon for the residue
         write (4561,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            rsd1(j)%tot_com%c, rsd1(j)%tot_meta%c, rsd1(j)%tot_str%c, rsd1(j)%tot_lignin%c
+            soil_prof_srsd%c, soil_prof_smeta%c, soil_prof_sstr%c, soil_prof_slig%c,              &
+            soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         
         !write all organic carbon for the soil profile
         write (4562,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%tot_org%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_meta%c,               &
-            soil_prof_man%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c
+            soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
+            soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
 
         if (pco%csvout == "y") then
           write (4565,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
