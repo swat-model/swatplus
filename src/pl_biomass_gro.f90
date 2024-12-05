@@ -143,7 +143,7 @@
                 
           !! increase in plant c
           if (bsn_cc%cswat == 2) then
-            hpc_d(j)%npp_c = hpc_d(j)%npp_c + bioday * pcom(j)%plstr(ipl)%reg * 0.42
+            hpc_d(j)%npp_c = hpc_d(j)%npp_c + pl_mass_up%c
           end if
 
           !! sum plant stresses
