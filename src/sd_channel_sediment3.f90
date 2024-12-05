@@ -52,7 +52,7 @@
       real :: precip = 0.
       real :: flovol_ob = 0.
       real :: wet_fill = 0.
-      real :: ave_rate = 0.
+      real :: ave_rate
       !!
       
       ich = isdch
@@ -74,14 +74,14 @@
       
       !! calculate peak daily flow
       pk_rto = sd_ch(ich)%pk_rto * (1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3))
-      peakrate = ht1%flo / 86400.     !m3/s
+      peakrate = pk_rto * ht1%flo / 86400.     !m3/s
         
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, peakrate)
       !! use peakrate as flow rate
       h_rad = rcurv%xsec_area / rcurv%wet_perim
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
-      !vel = peakrate / rcurv%xsec_area
+      vel = peakrate / rcurv%xsec_area
       rttime = sd_ch(ich)%chl / (3.6 * vel)
                 
       !! add precip to inflow - km * m * 1000 m/km * ha/10000 m2 = ha
@@ -108,10 +108,11 @@
           florate = 2. * ht1%flo - ave_rate
           flovol_ob = ht1%flo * (((ave_rate - bf_flow) / (ave_rate - florate)) ** 2)
         end if
+        flovol_ob = Min (0.8 * ht1%flo, flovol_ob)
         !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
         fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
-        exp_co = 0.0007 * fp_m2 / florate_ob
+        exp_co = 0.0003 * fp_m2 / florate_ob
         trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
@@ -122,6 +123,8 @@
         !! trap nitrate and sol P in flood plain - when not simulating flood plain interactions?
         fp_dep%no3 = 0.         !trap_eff * ht1%no3
         fp_dep%solp = 0.        !trap_eff * ht1%solp
+        
+        !fp_dep = chaz    !***jga
         ht1 = ht1 - fp_dep
         
         !! if flood plain link - fill wetlands to emergency
@@ -175,17 +178,28 @@
       b_exp = min (3.5, b_exp)
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
-        ebank_m = 0.0024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
+        ebank_m = 0.00024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
       else
         ebank_m = 0.
       end if
+      
+      !! write for Peter
+      !if (ich == 2133) then
+      !write () time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chw, sd_ch(ich)%chl,   &
+      !    sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
+      !    sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
+      !    bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m, "  0.24 ")
+      !end if
+      
       ch_morph(ich)%w_yr = ch_morph(ich)%w_yr + ebank_m
 
-      !! calc mass of sediment eroded -> t = bankcut (m) * depth (m) * lengthcut (m) * bd (t/m3)
+      !! mass of sediment eroded -> t = 1000 * bankcut (mm) * depth (m) * lengthcut (m) * bd (t/m3)
       !! arc length = 0.33 * meander wavelength * sinuosity 
-      arc_len = 0.66 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
+      !arc_len = 0.66 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
+      arc_len = 0.25 * sd_ch(ich)%chl
       prot_len = arc_len * sd_ch(ich)%arc_len_fr
-      ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%arc_len_fr * prot_len * sd_ch(ich)%ch_bd
+      !ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%arc_len_fr * prot_len * sd_ch(ich)%ch_bd
+      ebank_t = 1000. * ebank_m * sd_ch(ich)%chd * arc_len * sd_ch(ich)%ch_bd
       bank_ero%sed = ebank_t
       !! calculate associated nutrients
       bank_ero%orgn = bank_ero%sed * sd_ch(ich)%n_conc / 1000.
