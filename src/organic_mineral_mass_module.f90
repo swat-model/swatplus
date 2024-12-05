@@ -172,20 +172,6 @@
       type (organic_mass) :: abgr_drop                              !kg/ha      |above ground that dies at dormancy
       type (organic_mass) :: plt_mass_z
 
-      type organic_mineral_hydrograph1
-        real :: vol = 0.                    ! m^3           |volume of water
-        type (sediment) :: sed              !               |sediment
-        type (organic_mass) :: algae        !               |algae
-        type (organic_mass) :: biofilm      !               |biofilm
-        real :: chla = 0.                   ! kg            |chlorophyll-a
-        real :: cbod = 0.                   ! kg            |carbonaceous biological oxygen demand
-        real :: dox = 0.                    ! kg            |dissolved oxygen
-        real :: temp = 0.                   ! deg c         |temperature
-      end type organic_mineral_hydrograph1
-      
-      !!end of new stuff
-      
-      
       type mineral_mass
         real :: m = 0.          !kg or kg/ha      |total object mass
         real :: no3 = 0.        !kg or kg/ha      |nitrate mass
@@ -201,32 +187,6 @@
         type (mineral_mass) :: min
       end type organic_mineral_mass
       
-      type soil_profile_mass
-        character (len=16) :: name = ""
-        type (organic_mineral_mass), dimension(:), allocatable :: sol       !soil matrix dimensioned by layer
-        type (organic_mineral_mass), dimension(:), allocatable :: sw        !soil water dimensioned by layer
-      end type soil_profile_mass
-      !soil profile object - dimensioned to number of hrus, using the hru pointer
-      !type (soil_profile_mass), dimension(:), allocatable :: soil
-      
-      !type plant_community_mass
-      !  character (len=4) :: name                                !                 |same as plant_community object
-      !  !live biomass
-      !  type (organic_mass), dimension(:), allocatable :: tot    !kg/ha            |total biomass for individual plant in community
-      !  type (organic_mass), dimension(:), allocatable :: veg    !kg/ha            |vegetative mass for individual plant in community
-      !  type (organic_mass), dimension(:,:), allocatable :: root !kg/ha            |root mass for individual plant in community (by soil layer)
-      !  type (organic_mass), dimension(:), allocatable :: grain  !kg/ha            |grain mass for individual plant in community
-      !  type (organic_mass) :: tot_com                           !kg/ha            |total biomass for entire community
-      !  type (organic_mass) :: veg_com                           !kg/ha            |vegetative mass for entire community
-      !  type (organic_mass) :: root_com                          !kg/ha            |root mass for entire community
-      !  type (organic_mass) :: grain_com                         !kg/ha            |grain mass for entire community
-      !  !dead biomass - residue
-      !  type (organic_mass), dimension(:,:), allocatable :: rsd  !kg/ha            |flat residue for individual plant in community (by soil layer)
-      !  type (organic_mass), dimension(:), allocatable :: rsd_st !kg/ha            |standing residue for individual plant in community
-      !end type plant_community_mass
-      !plant community object - dimensioned to number of hrus, using the hru pointer
-      !type (plant_community_mass), dimension(:), allocatable :: plnt
-
       !hru will point diretly to herds - managed in schedule_ops and ultimately can be managed in conditional subroutine
       !herds are different from soil and plant in that they can move from hru to hru
       type animal_herds
