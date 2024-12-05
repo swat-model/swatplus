@@ -30,7 +30,7 @@
       j = ihru
 
       !! HRU calculations
-      xx = soil1(j)%tot(1)%n + rsd1(j)%tot(1)%n + rsd1(j)%man%n
+      xx = soil1(j)%hact(1)%n + soil1(j)%hsta(1)%n + soil1(j)%rsd(1)%n + soil1(j)%man(1)%n
       wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
       if (hru(j)%hyd%erorgn > .001) then
@@ -46,8 +46,10 @@
       if (xx > 1.e-6) then
         xx1 = (1. - sedorgn(j) / xx)
         soil1(j)%tot(1)%n = soil1(j)%tot(1)%n * xx1
-        rsd1(j)%tot(1)%n = rsd1(j)%tot(1)%n * xx1
-        rsd1(j)%man%n = rsd1(j)%man%n * xx1
+        soil1(j)%hact(1)%n = soil1(j)%hact(1)%n * xx1
+        soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n * xx1
+        soil1(j)%rsd(1)%n = soil1(j)%rsd(1)%n * xx1
+        soil1(j)%man(1)%n = soil1(j)%man(1)%n * xx1
       end if
 
       return

@@ -181,16 +181,6 @@
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
 
-       integer :: day
-       integer :: seq_year
-       integer :: cal_year
-       integer :: mon
-       
-       day = time%day
-       seq_year = time%yrs
-       cal_year = time%yrc
-       mon = time%mo
-       
        !! initialize local variables
        deltawn = 0.
        deltabmc = 0.   
@@ -288,6 +278,9 @@
        dmdn = 0.
 
        j = ihru
+       hrc_d(j)%rsd_surfdecay_c = 0.
+       hrc_d(j)%rsd_rootdecay_c = 0.
+       
         
       !calculate tillage factor using dssat
       if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
@@ -387,16 +380,17 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_con%cs = org_con%cs * carbdb%microb_top_rate
             org_allo%abco2 = .55
             a1co2 = .55
+            carbdb%microb_top_rate = .0164
             carbdb%microb_rate = .0164
             carbdb%meta_rate = .0405
             carbdb%str_rate = .0107
             org_ratio%nchp = .1
             xbm = 1.
+            org_con%cs = org_con%cs * carbdb%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (rsd1(j)%tot_str%n + rsd1(j)%tot_meta%n) / (rsd1(j)%tot_com%c / 1000. + 1.e-5)
+            rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
               org_ratio%ncbm = .1
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
@@ -848,8 +842,15 @@
                 soil1(j)%meta(k)%m = soil1(j)%meta(k)%m - lmcta / rto
                 soil1(j)%meta(k)%c = soil1(j)%meta(k)%c - lmcta
               end if
-              !soil1(j)%meta(k)%c=max(1.e-10,soil1(j)%meta(k)%c-lmcta)
-              !soil1(j)%meta(k)%m=max(1.e-10,soil1(j)%meta(k)%m-lmcta/.42)              
+              
+              !! set residue decompostion for printing
+              if (k == 1) then
+                !! surface residue
+                hrc_d(j)%rsd_surfdecay_c = lmcta + lscta
+              else
+                !! subsurface and root residue
+                hrc_d(j)%rsd_rootdecay_c = lmcta + lscta
+              end if 
               
               soil1(j)%meta(k)%n = max(.001, soil1(j)%meta(k)%n - org_flux%efmets1 & !subtract n flow from met (metabolic litter) to s1 (microbial biomass)
                             - org_flux%mnrmets1)                    !subtract n immobilization during transformaiton from met (metabolic litter) to s1 (microbial biomass)
@@ -907,10 +908,8 @@
               !!==================================
               !soil1(j)%tot(k)%m = soil1(j)%str(k)%m + soil1(j)%meta(k)%m
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 
-              soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c +      &
-                                       soil1(j)%meta(k)%c + soil1(j)%str(k)%c + soil1(j)%lig(k)%c
-              
-              
+              soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
+              soil1(j)%rsd(k)%c = soil1(j)%meta(k)%c + soil1(j)%str(k)%c
         end if  !soil temp and soil water > 0.
 
       end do      !soil layer loop

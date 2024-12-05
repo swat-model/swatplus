@@ -364,7 +364,7 @@
       
       do ich = 1, sp_ob%chandeg
         !! write channel morphology - downcutting and widening
-        ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / sd_ch(ich)%chw / time%yrs_prt
+        ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / 1000. / sd_ch(ich)%chw / time%yrs_prt
         ch_morph(ich)%d_yr = ch_morph(ich)%d_yr / sd_ch(ich)%chd / time%yrs_prt
         ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm / (3. * sd_ch(ich)%chw *           &
                                          sd_ch(ich)%chl * 1000.) / time%yrs_prt

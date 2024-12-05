@@ -1,16 +1,16 @@
       module carbon_module 
-	  
+      
       implicit none
-
+      
       type carbon_terrestrial_inputs
         real :: er_POC_para = 1.5       !           |POC enrichment ratio ! 0-10 ! 0.0-5.0  MOST SENSITIVE  
         real :: CFB_para = 0.42         !           |Carbon fraction of residue (0.42; from data of Pinck et al., 1950) 
-        real :: Sf_para_sur	= 0.05      !           |Fraction of mineral N sorbed to litter: 0.05 for surface litter, 0.1 for below ground litter
-        real :: Sf_para_sub	= 0.10      !           |Fraction of mineral N sorbed to litter: 0.05 for surface litter, 0.1 for belowg round litter
+        real :: Sf_para_sur = 0.05      !           |Fraction of mineral N sorbed to litter: 0.05 for surface litter, 0.1 for below ground litter
+        real :: Sf_para_sub = 0.10      !           |Fraction of mineral N sorbed to litter: 0.05 for surface litter, 0.1 for belowg round litter
         !Dissovled carbon
-        real :: ABL_para = 0.0          !           |Calculated - Carbon allocation from Microbial Biomass to Leaching			
+        real :: ABL_para = 0.0          !           |Calculated - Carbon allocation from Microbial Biomass to Leaching          
         real :: peroc_DIC_para = 0.95   !0-1        |DIC percolation coefficient  
-        real :: peroc_DOC_para	= 0.70  !0-1        |DOC percolation coefficient
+        real :: peroc_DOC_para  = 0.70  !0-1        |DOC percolation coefficient
         real :: part_DOC_para = 4000.   !           |organic carbon partition coefficient 1000 to 1200 ! 500-2000 !replacing KOC=Liquid-solid partition coefficient for Microbial Biomass (10^3 m3 Mg-1)
         real :: hlife_doc_para = 50. !days       |DOC half life in groundwater, calculating DOC decay in groundwater ! 0-100
         !Allocation of CO2 and Carbon transformation
@@ -18,10 +18,10 @@
         real :: ABCO2_para_sub = 0. !           |Calculated -Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 x (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
         real :: ABP_para_sur = 0.0      !           |Allocation from Biomass to passive Humus; 0 (surface Litter), 0.003 + 0.032 x SOL_CLAY (all other layers) (Parton et al., 1993, 1994)
         real :: ABP_para_sub = 0.0      !           |Calculated - Allocation from Biomass to passive Humus; 0 (surface Litter), 0.003 + 0.032 x SOL_CLAY (all other layers) (Parton et al., 1993, 1994)
-        real :: ALMCO2_para_sur	= 0.6 !           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ALMCO2_para_sub	= 0.55 !           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
+        real :: ALMCO2_para_sur = 0.6 !           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
+        real :: ALMCO2_para_sub = 0.55 !           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
         real :: ALSLNCO2_para_sur = 0.6 !           |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ALSLNCO2_para_sub =0.55 !	        |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
+        real :: ALSLNCO2_para_sub =0.55 !           |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
         real :: ASP_para_sur = 0.0     !           |Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 x CLAF (all other layers) (Parton et al., 1993, 1994)
         real :: ASP_para_sub = 0.0     !           |Calculated - Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 x CLAF (all other layers) (Parton et al., 1993, 1994)
         real :: ALSLCO2_para = 0.3     !           |Allocation from lignin of structural Litter to CO2; 0.3 (Parton et al., 1993, 1994)
@@ -62,7 +62,7 @@
       end type carbon_inputs
       type (carbon_inputs) :: carbdb 
       type (carbon_inputs) :: carbz  
-	  
+      
       type organic_allocations
           real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
           real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
@@ -76,7 +76,7 @@
       end type organic_allocations
       type (organic_allocations) :: org_allo 
       type (organic_allocations) :: org_alloz
-	    
+        
       type organic_controls
           real :: cdg = 0.           !                 |soil temperature control on biological processes
           real :: cs = 0.            !                 |combined factor controlling biological processes
@@ -87,7 +87,7 @@
           real :: xlslf = 0.         !                 |control on potential transformation of structural litter by lignin fraction
       end type organic_controls
       type (organic_controls) :: org_con                     
-	    
+        
       type organic_fractions
           real :: lmf = 0.      !frac               |fraction of the litter that is metabolic
           real :: lmnf = 0.     !kg kg-1            |fraction of metabolic litter that is N
@@ -104,7 +104,7 @@
           real :: nchs = 0.        !                  |n/c ration of slow humus
       end type organic_ratio
       type (organic_ratio) :: org_ratio                   
-	  
+      
       type organic_transformations
           real :: bmctp = 0.       !kg ha-1 day-1        |potential transformation of C in microbial biomass
           real :: bmntp = 0.       !kg ha-1 day-1        |potential transformation of N in microbial biomass
@@ -113,11 +113,11 @@
           real :: hpctp = 0.       !kg ha-1 day-1        |potential transformation of C in passive humus 
           real :: hpntp = 0.       !kg ha-1 day-1        |potential transformation of N in passive humus
           real :: lmctp = 0.       !kg ha-1 day-1        |potential transformation of C in metabolic litter
-          real :: lmntp = 0.       !kg ha-1 day-1        |potential transformation of N in metabolic litter	
+          real :: lmntp = 0.       !kg ha-1 day-1        |potential transformation of N in metabolic litter 
           real :: lsctp = 0.       !kg ha-1 day-1        |potential transformation of C in structural litter
           real :: lslctp = 0.      !kg ha-1 day-1        |potential transformation of C in lignin of structural litter
           real :: lslnctp = 0.     !kg ha-1 day-1        |potential transformation of C in nonlignin structural litter
-          real :: lsntp = 0.       !kg ha-1 day-1        |potential transformation of N in structural litter			  
+          real :: lsntp = 0.       !kg ha-1 day-1        |potential transformation of N in structural litter              
       end type organic_transformations
       type (organic_transformations) :: org_tran
       
@@ -161,8 +161,8 @@
           real :: co2fs3 = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S3 (Passive Humus) transformations  
       end type organic_flux
       type (organic_flux) :: org_flux
-      type (organic_flux) :: org_flux_zero
-
+	  type (organic_flux) :: org_flux_zero
+      
       type carbon_soil_transformations
           real :: meta_micr = 0.        !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
           real :: str_micr = 0.         !(kg C ha-1 day-1) |C transformed from Structural Litter to S1 (Microbial Biomass)  
@@ -207,7 +207,7 @@
         real :: perc_c = 0.             !kg C/ha            |total dissolved C transported with percolate
         real :: perc_doc = 0.           !kg C/ha            |dissolved organic C transported with percolate
         real :: perc_dic = 0.           !kg C/ha            |dissolved inorganic C transported with percolate
-        real :: res_decay_c = 0.        !kg C/ha            |carbon added to soil from residue decay
+        real :: rsd_decay_c = 0.        !kg C/ha            |carbon added to soil from residue decay
         real :: man_app_c = 0.          !kg C/ha            |amount of carbon applied to soil from manure
         real :: man_graz_c = 0.         !kg C/ha            |amount of carbon manure from grazing animals
         real :: rsp_c = 0.              !kg C/ha            |CO2 production from soil respiration summarized for the profile  
@@ -232,10 +232,12 @@
       type (carbon_soil_gain_losses) :: bsc_a
       
       type carbon_residue_gain_losses
-        real :: plant_c = 0.            !kg C/ha            |carbon added to residue from leaf drop and kill 
-        real :: res_decay_c = 0.        !kg C/ha            |carbon lost to soil from residue decay
-        real :: harv_stov_c = 0.        !kg C/ha            |carbon removed during residue harvest  
-        real :: emit_c = 0.             !kg C/ha            |CO2 production from burning residue carbon
+        real :: plant_surf_c = 0.       !kg C/ha            |carbon added to surface residue from leaf drop and kill
+        real :: plant_root_c = 0.       !kg C/ha            |carbon added to soil residue from root kill
+        real :: rsd_surfdecay_c = 0.    !kg C/ha            |carbon lost to soil from surface residue decay
+        real :: rsd_rootdecay_c = 0.    !kg C/ha            |carbon lost to soil from soil/root and incorporated residue decay
+        real :: harv_stov_c = 0.        !kg C/ha            |carbon removed during surface residue harvest  
+        real :: emit_c = 0.             !kg C/ha            |CO2 production from burning surface residue carbon
       end type carbon_residue_gain_losses
       type (carbon_residue_gain_losses) :: hrcz
       
@@ -257,7 +259,8 @@
       
       type carbon_plant_gain_losses
         real :: npp_c = 0.              !kg C/ha            |plant carbon growth from photosynthesis
-        real :: harv_c = 0.             !kg C/ha            |carbon removed during grain/biomass harvest
+        real :: harv_abgr_c = 0.        !kg C/ha            |carbon removed during grain/biomass harvest
+        real :: harv_root_c = 0.        !kg C/ha            |carbon removed during tuber (root) harvest
         real :: drop_c = 0.             !kg C/ha            |carbon added to residue from leaf drop and kill
         real :: grazeat_c = 0.          !kg C/ha            |amount of carbon ate by animals in grazing
         real :: emit_c = 0.             !kg C/ha            |CO2 production from burning residue carbon
@@ -401,7 +404,7 @@
         hru3%perc_c = hru1%perc_c + hru2%perc_c
         hru3%perc_doc = hru1%perc_doc + hru2%perc_doc
         hru3%perc_dic = hru1%perc_dic + hru2%perc_dic
-        hru3%res_decay_c = hru1%res_decay_c + hru2%res_decay_c
+        hru3%rsd_decay_c = hru1%rsd_decay_c + hru2%rsd_decay_c
         hru3%man_app_c = hru1%man_app_c + hru2%man_app_c
         hru3%man_graz_c = hru1%man_graz_c + hru2%man_graz_c
         hru3%rsp_c = hru1%rsp_c + hru2%rsp_c
@@ -422,7 +425,7 @@
         hru2%perc_c = hru1%perc_c * const
         hru2%perc_doc = hru1%perc_doc * const
         hru2%perc_dic = hru1%perc_dic * const
-        hru2%res_decay_c = hru1%res_decay_c * const
+        hru2%rsd_decay_c = hru1%rsd_decay_c * const
         hru2%man_app_c = hru1%man_app_c * const
         hru2%man_graz_c = hru1%man_graz_c * const
         hru2%rsp_c = hru1%rsp_c * const
@@ -443,7 +446,7 @@
         hru2%perc_c = hru1%perc_c / const
         hru2%perc_doc = hru1%perc_doc / const
         hru2%perc_dic = hru1%perc_dic / const
-        hru2%res_decay_c = hru1%res_decay_c / const
+        hru2%rsd_decay_c = hru1%rsd_decay_c / const
         hru2%man_app_c = hru1%man_app_c / const
         hru2%man_graz_c = hru1%man_graz_c / const
         hru2%rsp_c = hru1%rsp_c / const
@@ -454,8 +457,10 @@
         type (carbon_residue_gain_losses), intent (in) :: hru1
         type (carbon_residue_gain_losses), intent (in) :: hru2
         type (carbon_residue_gain_losses) :: hru3
-        hru3%plant_c = hru1%plant_c + hru2%plant_c
-        hru3%res_decay_c = hru1%res_decay_c + hru2%res_decay_c
+        hru3%plant_surf_c = hru1%plant_surf_c + hru2%plant_surf_c
+        hru3%plant_root_c = hru1%plant_root_c + hru2%plant_root_c
+        hru3%rsd_surfdecay_c = hru1%rsd_surfdecay_c + hru2%rsd_surfdecay_c
+        hru3%rsd_rootdecay_c = hru1%rsd_rootdecay_c + hru2%rsd_rootdecay_c
         hru3%harv_stov_c = hru1%harv_stov_c + hru2%harv_stov_c
         hru3%emit_c = hru1%emit_c + hru2%emit_c
        end function carbon_residue_gl__add
@@ -464,8 +469,10 @@
         type (carbon_residue_gain_losses), intent (in) :: hru1
         real, intent (in) :: const
         type (carbon_residue_gain_losses) :: hru2
-        hru2%plant_c = hru1%plant_c * const
-        hru2%res_decay_c = hru1%res_decay_c * const
+        hru2%plant_surf_c = hru1%plant_surf_c * const
+        hru2%plant_root_c = hru1%plant_root_c * const
+        hru2%rsd_surfdecay_c = hru1%rsd_surfdecay_c * const
+        hru2%rsd_rootdecay_c = hru1%rsd_rootdecay_c * const
         hru2%harv_stov_c = hru1%harv_stov_c * const
         hru2%emit_c = hru1%emit_c * const
       end function carbon_residue_gl_mult
@@ -474,8 +481,10 @@
         real, intent (in) :: const
         type (carbon_residue_gain_losses), intent (in) :: hru1
         type (carbon_residue_gain_losses) :: hru2
-        hru2%plant_c = hru1%plant_c / const
-        hru2%res_decay_c = hru1%res_decay_c / const
+        hru2%plant_surf_c = hru1%plant_surf_c / const
+        hru2%plant_surf_c = hru1%plant_surf_c / const
+        hru2%rsd_surfdecay_c = hru1%rsd_surfdecay_c / const
+        hru2%rsd_rootdecay_c = hru1%rsd_rootdecay_c / const
         hru2%harv_stov_c = hru1%harv_stov_c / const
         hru2%emit_c = hru1%emit_c * const
       end function carbon_residue_gl_div
@@ -485,7 +494,8 @@
         type (carbon_plant_gain_losses), intent (in) :: hru2
         type (carbon_plant_gain_losses) :: hru3
         hru3%npp_c = hru1%npp_c + hru2%npp_c
-        hru3%harv_c = hru1%harv_c + hru2%harv_c
+        hru3%harv_abgr_c = hru1%harv_abgr_c + hru2%harv_abgr_c
+        hru3%harv_root_c = hru1%harv_root_c + hru2%harv_root_c
         hru3%drop_c = hru1%drop_c + hru2%drop_c
         hru3%grazeat_c = hru1%grazeat_c + hru2%grazeat_c
         hru3%emit_c = hru1%emit_c + hru2%emit_c
@@ -496,7 +506,8 @@
         real, intent (in) :: const
         type (carbon_plant_gain_losses) :: hru2
         hru2%npp_c = hru1%npp_c * const
-        hru2%harv_c = hru1%harv_c * const
+        hru2%harv_abgr_c = hru1%harv_abgr_c * const
+        hru2%harv_root_c = hru1%harv_root_c * const
         hru2%drop_c = hru1%drop_c * const
         hru2%grazeat_c = hru1%grazeat_c * const
         hru2%emit_c = hru1%emit_c * const
@@ -507,7 +518,8 @@
         real, intent (in) :: const
         type (carbon_plant_gain_losses) :: hru2
         hru2%npp_c = hru1%npp_c / const
-        hru2%harv_c = hru1%harv_c / const
+        hru2%harv_abgr_c = hru1%harv_abgr_c / const
+        hru2%harv_root_c = hru1%harv_root_c / const
         hru2%drop_c = hru1%drop_c / const
         hru2%grazeat_c = hru1%grazeat_c / const
         hru2%emit_c = hru1%emit_c / const
