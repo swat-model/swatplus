@@ -49,7 +49,7 @@
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
       pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
       !! add plant carbon for printing
-      hpc_d(j)%harv_c = hpc_d(j)%harv_c + pl_yield%c
+      hpc_d(j)%harv_abgr_c = hpc_d(j)%harv_abgr_c + pl_yield%c
       
       !! add seed mass from harveff to slow humus pool of soil - to preserve balances
       harveff1 = 1. - harveff

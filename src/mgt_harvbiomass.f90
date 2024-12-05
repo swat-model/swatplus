@@ -44,10 +44,10 @@
       pl_yield = pl_yield + harv_stem
             
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
-      pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
+      pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * (1. - harveff) * pl_yield
       !! add plant carbon for printing
-      hrc_d(j)%plant_c = hrc_d(j)%plant_c + pl_yield%c
-      hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_yield%c
+      hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + pl_yield%c
+      hpc_d(j)%harv_abgr_c = hpc_d(j)%harv_abgr_c + pl_yield%c
       
       !! adjust foliar and internal pesticide for plant removal
       do k = 1, cs_db%num_pests
@@ -77,7 +77,7 @@
       !! add clippings (biomass left behind) to slow humus pool of soil
       clip = 1. - harveff
       harv_left = clip * pl_yield
-      rsd1(j)%tot(1) = harv_left + rsd1(j)%tot(1)
+      soil1(j)%rsd(1) = harv_left + soil1(j)%rsd(1)
 
       !! calculation for dead roots allocations, resetting phenology, updating other pools
       !! reset leaf area index and fraction of growing season

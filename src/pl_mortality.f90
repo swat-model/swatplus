@@ -35,7 +35,7 @@
         !! add dead material to residue
         rto1 = 1. - rto
         rto1 = max (0., rto1)
-        rsd1(j)%tot(ipl) = rsd1(j)%tot(ipl) + rto1 * pl_mass(j)%tot(ipl)
+        soil1(j)%rsd(1) = soil1(j)%rsd(1) + rto1 * pl_mass(j)%tot(ipl)
       end if
 
       return

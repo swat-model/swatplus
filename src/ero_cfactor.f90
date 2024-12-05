@@ -54,7 +54,7 @@
       !! HRU sediment calculations
       if (bsn_cc%cfac == 0) then
         !! old method using minimum c factor (average of each plant in community)
-        cover = pl_mass(j)%ab_gr_com%m + rsd1(j)%tot_com%m
+        cover = pl_mass(j)%ab_gr_com%m + soil1(j)%rsd(1)%m
         if (pcom(j)%npl > 0) then
           c = Exp((-.2231 - cvm_com(j)) * Exp(-.00115 * cover) + cvm_com(j))
         else
@@ -70,7 +70,7 @@
         grnd_sumfac = 0.
         do ipl = 1, pcom(j)%npl
           idp = pcom(j)%plcur(ipl)%idplt
-          rsd_sumfac = rsd_sumfac + pldb(idp)%rsd_pctcov * (rsd1(j)%tot(ipl)%m +1.) / 1000.
+          rsd_sumfac = rsd_sumfac + pldb(idp)%rsd_pctcov * (soil1(j)%rsd(1)%m +1.) / 1000.
           if (pl_mass(j)%ab_gr(ipl)%m > 1.e-6) then
             ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
             grnd_sumfac = grnd_sumfac + 100. * pldb(idp)%usle_c / ab_gr_t
@@ -109,7 +109,7 @@
         !do ipl = 1, pcom(j)%npl
         !  ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
         !  grnd_sumfac = grnd_sumfac + ab_gr_t
-        !  rsd_sumfac = rsd_sumfac + (rsd1(j)%tot(ipl)%m +1.) / 1000.
+        !  rsd_sumfac = rsd_sumfac + (soil1(j)%rsd(1)%m +1.) / 1000.
         !  can_covfact = amin1 (can_covfact, pcom(j)%plg(ipl)%cht)
         !end do
         !grnd_covfact = grnd_sumfac / (grnd_sumfac + exp(1.175 - 1.748 * grnd_sumfac))
@@ -119,7 +119,7 @@
         
         !! erosion output variables
         ero_output(j)%ero_d%c = c
-        ero_output(j)%ero_d%rsd_m = rsd1(j)%tot_com%m
+        ero_output(j)%ero_d%rsd_m = soil1(j)%rsd(1)%m
         ero_output(j)%ero_d%rsd_pctcov = rsd_pctcov
         ero_output(j)%ero_d%rsd_cfac = rsd_covfact
         ero_output(j)%ero_d%can_lai3 = can_frcov

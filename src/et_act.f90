@@ -124,7 +124,7 @@
         eaj = 0.
         es_max = 0.
         eos1 = 0.
-        cover = pl_mass(j)%ab_gr_com%m + rsd1(j)%tot_com%m
+        cover = pl_mass(j)%ab_gr_com%m + soil1(j)%rsd(1)%m
         if (hru(j)%sno_mm >= 0.5) then
           eaj = 0.5
         else

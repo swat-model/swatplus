@@ -29,13 +29,6 @@
       !! check for beginning of dormant season
       if (pcom(j)%plcur(ipl)%idorm == "n" .and. wst(iwst)%weat%daylength - dormhr(j) < wgn_pms(iwgn)%daylmn) then
 
-        !! beginning of temperature based perennial dormant period - leaf drop
-        !if (pldb(idp)%typ == "perennial") then
-        !  pcom(j)%plcur(ipl)%idorm = "y"
-        !  !! add leaf mass to residue pool
-        !  rsd1(j)%tot(1) = pl_mass(j)%leaf(ipl) + rsd1(j)%tot(1)
-        !end if
-
         !! beginning of temperature based perennial dormant period - above ground senescence
         if (pldb(idp)%typ == "perennial") then
           pcom(j)%plcur(ipl)%idorm = "y"
@@ -63,13 +56,13 @@
           pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop - leaf_drop
           pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - abgr_drop
           pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
-          rsd1(j)%tot(1) = rsd1(j)%tot(1) + abgr_drop + leaf_drop
+          soil1(j)%rsd(1) = soil1(j)%rsd(1) + abgr_drop + leaf_drop
           !! add all seed/fruit mass to residue poolpool
           abgr_drop = pl_mass(j)%seed(ipl)
           pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - abgr_drop
           pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop
           pl_mass(j)%seed(ipl) = plt_mass_z
-          rsd1(j)%tot(1) = rsd1(j)%tot(1) + abgr_drop
+          soil1(j)%rsd(1) = soil1(j)%rsd(1) + abgr_drop
         end if
 
         !! beginning of cool season annual dormant period

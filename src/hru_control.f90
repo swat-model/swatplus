@@ -351,14 +351,12 @@
           end if
         end if
        
-        !! compute residue decomposition
-        call rsd_decomp
-        
-        !! compute nitrogen and phosphorus mineralization
+        !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
         end if
 
+        !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 2) then
           call cbn_zhang2
         end if
@@ -471,12 +469,6 @@
           end if
         end do
         
-        !! compute total surface residue
-        rsd1(j)%tot_com = orgz
-        do ipl = 1, pcom(j)%npl
-          rsd1(j)%tot_com = rsd1(j)%tot_com + rsd1(j)%tot(ipl)
-        end do
-        
         !! compute actual ET for day in HRU
         etday = ep_day + es_day + canev
         es_day = es_day
@@ -506,20 +498,20 @@
             call pest_enrsb
             if (sedyld(j) > 0.) call pest_pesty
 
-      if (bsn_cc%cswat == 0) then
-      call nut_orgn
-        end if
-        if (bsn_cc%cswat == 1) then      
-        call nut_orgnc
-      end if
+            !! static carbon organic n in runoff
+            if (bsn_cc%cswat == 0) then
+              call nut_orgn
+            end if
+        
+            !! C-Farm (Armen) c and organic n in runoff
+            if (bsn_cc%cswat == 1) then
+              call nut_orgnc
+            end if
       
-      !! Add by zhang
-      !! ====================
-      if (bsn_cc%cswat == 2) then
-        call nut_orgnc2
-      end if
-      !! Add by zhang
-      !! ====================
+            !! SWAT-C Xuesong -- c and organic n in runoff
+            if (bsn_cc%cswat == 2) then
+              call nut_orgnc2
+            end if
 
             call nut_psed
           end if
@@ -631,12 +623,6 @@
           call hru_urb_bmp
         end if
       
-      ! update total residue on surface
-      rsd1(j)%tot_com = orgz
-      do ipl = 1, pcom(j)%npl
-        rsd1(j)%tot_com = rsd1(j)%tot_com + rsd1(j)%tot(ipl)
-      end do
-
       ! compute outflow objects (flow to channels, reservoirs, or landscape)
       ! if flow from hru is directly routed
       iob_out = iob
@@ -813,7 +799,7 @@
       ! output_plantweather
         hpw_d(j)%lai = pcom(j)%lai_sum
         hpw_d(j)%bioms = pl_mass(j)%tot_com%m
-        hpw_d(j)%residue = rsd1(j)%tot_com%m
+        hpw_d(j)%residue = soil1(j)%rsd(1)%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp
