@@ -119,16 +119,27 @@
         
       end if
           
+      !! update plant and residue masses
       if (leaf_drop%m > 0.) then
-        rsd1(j)%tot(ipl) = rsd1(j)%tot(ipl) + leaf_drop
-        rsd1(j)%tot(ipl)%m = Max(rsd1(j)%tot(ipl)%m, 0.)
-          
+        !! update individual masses
         pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
         pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - leaf_drop
         pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - leaf_drop
-        hrc_d(j)%plant_c = hrc_d(j)%plant_c + pl_mass(j)%ab_gr(ipl)%c
-        hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_mass(j)%ab_gr(ipl)%c
-
+        
+        soil1(j)%rsd(1) = soil1(j)%rsd(1) + leaf_drop
+        if (bsn_cc%cswat == 2) then
+          soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * leaf_drop
+          soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * leaf_drop
+          soil1(j)%lig(1) = soil1(j)%lig(1) + 0.12 * leaf_drop
+        end if
+        
+        !! update total community masses
+        pl_mass(j)%tot_com = pl_mass(j)%tot_com - leaf_drop
+        pl_mass(j)%ab_gr_com = pl_mass(j)%ab_gr_com - leaf_drop
+        pl_mass(j)%leaf_com = pl_mass(j)%leaf_com - leaf_drop
+        
+        hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + leaf_drop%c
+        hpc_d(j)%drop_c = hpc_d(j)%drop_c + leaf_drop%c
       end if
       
       return

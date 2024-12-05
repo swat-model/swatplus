@@ -28,7 +28,6 @@
         allocate (soil1_init(0:0))
         allocate (pl_mass(0:0))
         allocate (pcom(0:0))
-        allocate (rsd1(0:0))
         allocate (cs_soil(0:0))
         allocate (cs_pl(0:0))
         allocate (cs_irr(0:0))
@@ -63,7 +62,6 @@
         allocate (wet_wat_m(imax))
         allocate (wet_wat_y(imax))
         allocate (wet_wat_a(imax))
-        allocate (rsd1(0:imax))
         allocate (wet_seep_day(imax))
         allocate (wet_water(imax))
         

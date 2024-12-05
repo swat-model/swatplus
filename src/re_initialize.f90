@@ -20,7 +20,6 @@
         hru = hru_init
         soil = soil_init
         soil1 = soil1_init
-        rsd1 = rsd1_init
         pcom = pcom_init
         pl_mass = pl_mass_init
         wet = wet_om_init

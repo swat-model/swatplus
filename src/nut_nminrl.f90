@@ -90,9 +90,6 @@
         !! mineralization can occur only if temp above 0 deg
         if (soil(j)%phys(kk)%tmp > 0.) then
           !! compute soil water factor
-          sut = 0.
-          !! change for domain error 1/29/09 gsm check with Jeff !!!
-          if (soil(j)%phys(kk)%st < 0.) soil(j)%phys(kk)%st = .0000001
           sut = .1 + .9 * Sqrt(soil(j)%phys(kk)%st / soil(j)%phys(kk)%fc)
           sut = Max(.05, sut)
 
@@ -170,13 +167,12 @@
             end if
             decr = Max(bsn_prm%decr_min, decr)
             decr = Min(decr, 1.)
-            rmn1 = decr * (soil1(j)%str(k)%n + soil1(j)%lig(k)%n + soil1(j)%meta(k)%n)
-            rmp = decr * (soil1(j)%str(k)%p + soil1(j)%lig(k)%p + soil1(j)%meta(k)%p)
-
-            soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * rmn1
-            soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * rmn1
-            soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * rmp
-            soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * rmp
+            decomp = decr * soil1(j)%rsd(k)
+            soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
+            soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * decomp%n
+            soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * decomp%n
+            soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * decomp%p
+            soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * decomp%p
 
           !!  compute denitrification
           wdn = 0.   
