@@ -336,6 +336,8 @@
         character (len=12) :: wet_evap   =  "    wet_evap"
         character (len=12) :: wet_oflo   =  "    wet_oflo"
         character (len=12) :: wet_stor   =  "    wet_stor"
+        character (len=16) :: plt_cov    =  "   plant_cov    "
+        character (len=30) :: mgt_ops    =  "   mgt_ops      "
       end type output_waterbal_header      
       type (output_waterbal_header) :: wb_hdr
       
@@ -413,12 +415,14 @@
          character(len=17) :: org_lab_p     =    "     org_lab_p   "
          character(len=17) :: rsd_nitorg_n  =    "     rsd_nitorg_n"
          character(len=17) :: rsd_laborg_p  =    "     rsd_laborg_p"
-         character(len=17) :: no3atmo =    "    no3atmo      "
-         character(len=17) :: nh4atmo =    "    nh4atmo      "
-         character(len=17) :: puptake =    "    puptake      "
-         character(len=17) :: nuptake =    "    nuptake      "
-         character(len=17) :: gwsoiln =    "    gwsoiln      "
-         character(len=17) :: gwsoilp =    "    gwsoilp      "
+         character(len=17) :: no3atmo =    "    no3atmo       " 
+         character(len=17) :: nh4atmo =    "    nh4atmo       "
+         character(len=17) :: nuptake =    "    nuptake       " 
+         character(len=17) :: puptake =    "    puptake       "		 
+         character(len=17) :: gwsoiln =    "    gwsoiln       "
+         character(len=17) :: gwsoilp =    "    gwsoilp       "
+        character (len=16) :: plt_cov =    "plant_cov         "
+        character (len=30) :: mgt_ops =    "mgt_ops      "
       end type output_nutbal_header         
       type (output_nutbal_header) :: nb_hdr
       
@@ -472,6 +476,8 @@
         character (len=12)  :: lchlabp  =  "     lchlabp"
         character (len=12)  :: tilelabp =  "    tilelabp"
         character (len=12)  :: satexn   =  "      satexn"
+        character (len=16)  :: plt_cov  =  "    plant_cov    "
+        character (len=30)  :: mgt_ops  =  "    mgt_ops      "
       end type output_losses_header      
       type (output_losses_header) :: ls_hdr
       
@@ -658,7 +664,7 @@
          character (len=21) :: id            =    "              gis_id "
          character (len=16) :: name          =    "    name        "
          character(len=15)  :: plant_c       =    "        plant_c"
-         character(len=15)  :: res_decay_c   =    "    res_decay_c"
+         character(len=15)  :: rsd_decay_c   =    "    rsd_decay_c"         
          character(len=15)  :: harv_stov_c   =    "    harv_stov_c"
          character(len=15)  :: emit_c        =    "         emit_c"
          end type output_rescarb_header       
@@ -673,7 +679,7 @@
          character (len=21) :: id           =  "                "
          character (len=16) :: name         =  "           "
          character(len=15) :: plant_c       =    "        kg C/ha"
-         character(len=15) :: res_decay_c   =    "        kg C/ha"
+         character(len=15) :: rsd_decay_c   =    "        kg C/ha"         
          character(len=15) :: harv_stov_c   =    "        kg C/ha"
          character(len=15) :: emit_c        =    "        kg C/ha"
       end type output_rescarb_header_units         
@@ -779,7 +785,7 @@
          character (len=16) :: isd           =    "            unit"
          character (len=21) :: id            =    "              gis_id "
          character (len=16) :: name          =    "    name        "
-         character(len=15)  :: tot_c     =    "      meta_micr"
+         character(len=15)  :: tot_c     =    "        total_c"
          character(len=15)  :: ab_gr_c   =    "        ab_gr_c"
          character(len=15)  :: leaf_c    =    "         leaf_c"
          character(len=15)  :: stem_c    =    "         stem_c"
@@ -851,15 +857,15 @@
          character (len=11) :: yrc           =    "         yr"
          character (len=16) :: isd           =    "            unit"
          character (len=21) :: id            =    "              gis_id "
-         character (len=16) :: name          =    "    name        "
+         character (len=16) :: name          =    " name        "         
          character(len=15)  :: tot_org_c     =    "      tot_org_c"
-         character(len=15)  :: str_c         =    "          str_c"
-         character(len=15)  :: lig_c         =    "          lib_c"
-         character(len=15)  :: meta_c        =    "         meta_c"
-         character(len=15)  :: man_c         =    "          man_c"
-         character(len=15)  :: humus_low_c   =    "    humus_low_c"
+         character(len=15)  :: humus_slow_c  =    "   humus_slow_c"
          character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
          character(len=15)  :: microb_c      =    "       microb_c"
+         character(len=15)  :: meta_c        =    "         meta_c"
+         character(len=15)  :: str_c         =    "          str_c"         
+         character(len=15)  :: lig_c         =    "          lig_c"  
+         character(len=15)  :: man_c         =    "          man_c"
          end type output_soilc_header       
       type (output_soilc_header) :: soilc_hdr
       
@@ -870,15 +876,15 @@
          character (len=11) :: yrc          =    "           "
          character (len=16)  :: isd         =  "           "
          character (len=21) :: id           =  "                "
-         character (len=16) :: name         =  "           "
-         character(len=15)  :: tot_org_c      =    "          kg/ha"
+         character (len=16) :: name         =  "       "         
+         character(len=15)  :: tot_org_c    =    "          kg/ha"
+         character(len=15)  :: humus_slow_c  =    "          kg/ha"         
+         character(len=15)  :: humus_pass_c  =    "          kg/ha"  
+         character(len=15)  :: microb_c      =    "          kg/ha" 
+         character(len=15)  :: meta_c        =    "          kg/ha"
          character(len=15)  :: str_c         =    "          kg/ha"
          character(len=15)  :: lig_c         =    "          kg/ha"
-         character(len=15)  :: meta_c        =    "          kg/ha"
          character(len=15)  :: man_c         =    "          kg/ha"
-         character(len=15)  :: humus_low_c   =    "          kg/ha"
-         character(len=15)  :: humus_pass_c  =    "          kg/ha"
-         character(len=15)  :: microb_c      =    "          kg/ha"
         end type output_soilc_header_units         
       type (output_soilc_header_units) :: soilc_hdr_units
 
@@ -1129,6 +1135,8 @@
         character (len=12) :: bm_max    =  "      bm_max"
         character (len=12) :: bm_grow   =  "     bm_grow"
         character (len=12) :: c_gro     =  "       c_gro"
+        character (len=16) :: plt_cov   =  "   plant_cov    "
+        character (len=30) :: mgt_ops   =  "   mgt_ops      "
       end type output_plantweather_header 
       type (output_plantweather_header) :: pw_hdr
       
