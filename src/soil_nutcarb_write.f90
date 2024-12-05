@@ -139,7 +139,7 @@
           if (lsu_elem(iihru)%obtyp == "hru") then
             bsn_org_soil = bsn_org_soil + const * soil1(iihru)%tot_org
             bsn_org_pl = bsn_org_pl + const * pl_mass(iihru)%tot_com
-            bsn_org_rsd = bsn_org_rsd + const * rsd1(iihru)%tot_com
+            bsn_org_rsd = bsn_org_rsd + const * soil1(iihru)%rsd(1)
             bsn_mn = bsn_mn + const * soil1(iihru)%tot_mn
             bsn_mp = bsn_mp + const * soil1(iihru)%tot_mp
           end if
