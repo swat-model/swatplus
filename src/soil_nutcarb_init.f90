@@ -121,64 +121,54 @@
         soil1(ihru)%tot(ly)%c = soil1(ihru)%tot(ly)%m * soil1(ihru)%cbn(ly) / 100.
         soil1(ihru)%tot(ly)%n = soil1(ihru)%tot(ly)%c / 10.     !assume 10:1 C:N ratio
         soil1(ihru)%tot(ly)%p = soil1(ihru)%tot(ly)%c / 100.    !assume 100:1 C:P ratio
-               
-        !set active humus fraction for original SWAT model
-        if (solt_db(isolt)%fr_hum_act < 1.e-9) solt_db(isolt)%fr_hum_act = .02
-        frac_hum_active = solt_db(isolt)%fr_hum_act
+           
+        if (bsn_cc%cswat == 0) then
+          !set active humus fraction for original SWAT model
+          if (solt_db(isolt)%fr_hum_act < 1.e-9) solt_db(isolt)%fr_hum_act = .02
+          frac_hum_active = solt_db(isolt)%fr_hum_act
         
-        !initialize oringinal SWAT active and stable organic pools (from EPIC)
-        !initialize active humus pool
-        soil1(ihru)%hact(ly)%m = frac_hum_active * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%hact(ly)%c = frac_hum_active * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%hact(ly)%n = soil1(ihru)%hact(ly)%c / solt_db(isolt)%hum_c_n
-        soil1(ihru)%hact(ly)%p = soil1(ihru)%hact(ly)%c / solt_db(isolt)%hum_c_p
+          !initialize oringinal SWAT active and stable organic pools (from EPIC)
+          !initialize active humus pool
+          soil1(ihru)%hact(ly)%m = frac_hum_active * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hact(ly)%c = frac_hum_active * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hact(ly)%n = soil1(ihru)%hact(ly)%c / solt_db(isolt)%hum_c_n
+          soil1(ihru)%hact(ly)%p = soil1(ihru)%hact(ly)%c / solt_db(isolt)%hum_c_p
             
-        !initialize stable humus pool
-        soil1(ihru)%hsta(ly)%m = (1. - frac_hum_active) * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%hsta(ly)%c = (1. - frac_hum_active) * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%hsta(ly)%n = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_n
-        soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
+          !initialize stable humus pool
+          soil1(ihru)%hsta(ly)%m = (1. - frac_hum_active) * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hsta(ly)%c = (1. - frac_hum_active) * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hsta(ly)%n = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_n
+          soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
+        end if
         
-        !set root and incorporated residue pool to zero
-        soil1(ihru)%rsd(ly) = orgz
+        if (bsn_cc%cswat == 2) then
+          !initialize CENTURY organic pools
+          !set soil humus fractions for CENTURY from DSSAT
+          frac_hum_microb = 0.02
+          frac_hum_slow = 0.54
+          frac_hum_passive = 0.44
  
-        !initialize CENTURY organic pools
-        !set soil humus fractions for CENTURY from DSSAT
-        frac_hum_microb = 0.02
-        frac_hum_slow = 0.54
-        frac_hum_passive = 0.44
- 
-        !initialize passive humus pool
-        soil1(ihru)%hp(ly)%m = frac_hum_passive * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%hp(ly)%c = frac_hum_passive * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                           !assume 10:1 C:N ratio
-        soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                           !assume 80:1 C:P ratio
+          !initialize passive humus pool
+          soil1(ihru)%hp(ly)%m = frac_hum_passive * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hp(ly)%c = frac_hum_passive * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                       !assume 10:1 C:N ratio
+          soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                       !assume 80:1 C:P ratio
             
-        !initialize slow humus pool
-        soil1(ihru)%hs(ly)%m = frac_hum_slow * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%hs(ly)%c = frac_hum_slow * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                           !assume 10:1 C:N ratio
-        soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                           !assume 80:1 C:P ratio
+          !initialize slow humus pool
+          soil1(ihru)%hs(ly)%m = frac_hum_slow * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hs(ly)%c = frac_hum_slow * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                       !assume 10:1 C:N ratio
+          soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                       !assume 80:1 C:P ratio
             
-        !initialize microbial pool
-        soil1(ihru)%microb(ly)%m = frac_hum_microb * soil1(ihru)%tot(ly)%m
-        soil1(ihru)%microb(ly)%c = frac_hum_microb * soil1(ihru)%tot(ly)%c
-        soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.                    !assume 8:1 C:N ratio
-        soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.                   !assume 80:1 C:P ratio
+          !initialize microbial pool
+          soil1(ihru)%microb(ly)%m = frac_hum_microb * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%microb(ly)%c = frac_hum_microb * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.                !assume 8:1 C:N ratio
+          soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.               !assume 80:1 C:P ratio
 
-        !zero metabolic litter pool
-        soil1(ihru)%meta(ly) = plt_mass_z
-        
-        !zero structural litter pool
-        soil1(ihru)%str(ly) = plt_mass_z
-            
-        !zero lignon litter pool
-        soil1(ihru)%lig(ly) = plt_mass_z
-                         
-        soil1(ihru)%tot(ly)%c = soil1(ihru)%hs(ly)%c + soil1(ihru)%hp(ly)%c + soil1(ihru)%microb(ly)%c +      &
-                                     soil1(ihru)%meta(ly)%c + soil1(ihru)%str(ly)%c
-        
-      end do    
+          soil1(ihru)%tot(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+        end if
+      end do   !! ens soil layer loop 
 
       return
       end subroutine soil_nutcarb_init

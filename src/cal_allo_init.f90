@@ -26,7 +26,6 @@
 
       allocate (hru_init(0:sp_ob%hru))
       allocate (soil_init(0:sp_ob%hru))
-      allocate (rsd1_init(0:sp_ob%hru))
       allocate (pl_mass_init(0:sp_ob%hru))
       allocate (pcom_init(0:sp_ob%hru))
 
@@ -56,8 +55,6 @@
           pcom_init(iihru)%dtbl(iauto)%days_act = 0
         end do
              
-        allocate (rsd1_init(iihru)%tot(nplt))
-             
         nly1 = soil(iihru)%nly + 1                                                                                                         
         allocate (soil_init(iihru)%ly(nly1))
         !allocate (soil_init(iihru)%ly(nly1)%rs(nplt))    !bac and pest not allocated
@@ -72,7 +69,6 @@
         hru_init = hru
         soil_init = soil
         soil1_init = soil1
-        rsd1_init = rsd1
         pcom_init = pcom
         pl_mass_init = pl_mass
         wet = wet_om_init
