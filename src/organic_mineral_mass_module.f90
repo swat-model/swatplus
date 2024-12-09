@@ -127,22 +127,6 @@
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter
       type (organic_mass) :: rsd_str                                !       |temporary storage for initial structural litter
       
-      type residue_mass1        !surface residue
-        character (len=16) :: name = ""
-        type (organic_mass), dimension(:), allocatable :: tot       !       |total mass surface residue litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: lignin    !       |lignin pool-dimensioned by plant
-        type (organic_mass) :: tot_com                              !kg/ha  |total
-        type (organic_mass) :: tot_meta                             !       |
-        type (organic_mass) :: tot_str                              !       |
-        type (organic_mass) :: tot_lignin                           !       |
-        type (organic_mass) :: man                                  !       |
-      end type residue_mass1
-      !soil profile object - dimensioned to number of hrus, using the hru pointer
-      type (residue_mass1), dimension(:), allocatable :: rsd1
-      type (residue_mass1), dimension(:), allocatable :: rsd1_init
-
       type plant_community_mass
        character(len=4) :: name = ""
        type (organic_mass), dimension(:), allocatable :: tot        !kg/ha      |total biomass for individual plant in community
