@@ -28,7 +28,6 @@
             "displayName": "gfortran debug version",
             "description": "Builds a gfortran debug executable for swatplus",
             "binaryDir": "build/debug",
-            "generator": "Ninja",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
