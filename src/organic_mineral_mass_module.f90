@@ -5,10 +5,10 @@
       implicit none 
 
       type organic_mass
-        real :: m = 0.              !kg or kg/ha      |total object mass
-        real :: c = 0.              !kg or kg/ha      |carbon mass
-        real :: n = 0.              !kg or kg/ha      |organic nitrogen mass
-        real :: p = 0.              !kg or kg/ha      |organic phosphorus mass
+        real :: m = 0.              !kg/ha      |total object mass
+        real :: c = 0.              !kg/ha      |carbon mass
+        real :: n = 0.              !kg/ha      |organic nitrogen mass
+        real :: p = 0.              !kg/ha      |organic phosphorus mass
       end type organic_mass
       type (organic_mass) :: orgz
 
@@ -170,6 +170,8 @@
       type (organic_mass) :: graz_plant, graz_seed, graz_leaf, graz_stem
       type (organic_mass) :: leaf_drop                              !kg/ha      |organic mass of falling leaves
       type (organic_mass) :: abgr_drop                              !kg/ha      |above ground that dies at dormancy
+      type (organic_mass) :: stem_drop                              !kg/ha      |stem that dies at dormancy
+      type (organic_mass) :: seed_drop                              !kg/ha      |seed that dies at dormancy
       type (organic_mass) :: plt_mass_z
 
       type mineral_mass
