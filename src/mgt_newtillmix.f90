@@ -78,6 +78,10 @@
       frac_non_mixed = 0.
       emix = 0.
       dtil = 0.
+      mix_clay = 0.
+      mix_silt = 0.
+      mix_sand = 0.
+      
       if (bmix > 1.e-6) then
         !! biological mixing
         emix = bmix !bmix MJW (rev 412)

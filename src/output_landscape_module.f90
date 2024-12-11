@@ -815,7 +815,7 @@
       
 !! NEW RESIDUE CARBON STAT OUTPUT
       
-     type output_resc_header     
+     type output_rsdc_header     
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -823,15 +823,19 @@
          character (len=16) :: isd           =    "            unit"
          character (len=21) :: id            =    "              gis_id "
          character (len=16) :: name          =    "    name        "
-         character(len=15)  :: tot_c    =    "          tot_c"
-         character(len=15)  :: meta_c   =    "         meta_c"
-         character(len=15)  :: str_c    =    "          str_c"
-         character(len=15)  :: lig_c    =    "          lig_c"
+         character(len=15)  :: tot_surf_c    =    "     tot_surf_c"
+         character(len=15)  :: meta_surf_c   =    "     meta_surf_c"         
+         character(len=15)  :: str_surf_c    =    "     str_surf_c"  
+         character(len=15)  :: lig_surf_c    =    "     lig_surf_c"      
+         character(len=15)  :: tot_soil_c    =    "     tot_soil_c"
+         character(len=15)  :: meta_soil_c   =    "     meta_soil_c"         
+         character(len=15)  :: str_soil_c    =    "     str_soil_c"  
+         character(len=15)  :: lig_soil_c    =    "     lig_soil_c"
 
-         end type output_resc_header       
-      type (output_resc_header) :: resc_hdr
+         end type output_rsdc_header       
+      type (output_rsdc_header) :: rsdc_hdr
       
-      type output_resc_header_units      
+      type output_rsdc_header_units      
          character (len=11) :: day          =    "           "
          character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "
@@ -843,8 +847,12 @@
          character(len=15)  :: meta_c    =    "          kg/ha"
          character(len=15)  :: str_c     =    "          kg/ha"
          character(len=15)  :: lig_c     =    "          kg/ha"
-        end type output_resc_header_units         
-      type (output_resc_header_units) :: resc_hdr_units
+         character(len=15)  :: tot_soil_c     =    "          kg/ha"
+         character(len=15)  :: meta_soil_c    =    "          kg/ha"         
+         character(len=15)  :: str_soil_c     =    "          kg/ha"  
+         character(len=15)  :: lig_soil_c     =    "          kg/ha"
+        end type output_rsdc_header_units         
+      type (output_rsdc_header_units) :: rsdc_hdr_units
 
 !!! NEW RESIDUE CARBON STAT OUTPUT
       
