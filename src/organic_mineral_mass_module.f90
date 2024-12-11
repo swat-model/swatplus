@@ -5,10 +5,10 @@
       implicit none 
 
       type organic_mass
-        real :: m = 0.              !kg or kg/ha      |total object mass
-        real :: c = 0.              !kg or kg/ha      |carbon mass
-        real :: n = 0.              !kg or kg/ha      |organic nitrogen mass
-        real :: p = 0.              !kg or kg/ha      |organic phosphorus mass
+        real :: m = 0.              !kg/ha      |total object mass
+        real :: c = 0.              !kg/ha      |carbon mass
+        real :: n = 0.              !kg/ha      |organic nitrogen mass
+        real :: p = 0.              !kg/ha      |organic phosphorus mass
       end type organic_mass
       type (organic_mass) :: orgz
 
@@ -127,22 +127,6 @@
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter
       type (organic_mass) :: rsd_str                                !       |temporary storage for initial structural litter
       
-      type residue_mass1        !surface residue
-        character (len=16) :: name = ""
-        type (organic_mass), dimension(:), allocatable :: tot       !       |total mass surface residue litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool-dimensioned by plant
-        type (organic_mass), dimension(:), allocatable :: lignin    !       |lignin pool-dimensioned by plant
-        type (organic_mass) :: tot_com                              !kg/ha  |total
-        type (organic_mass) :: tot_meta                             !       |
-        type (organic_mass) :: tot_str                              !       |
-        type (organic_mass) :: tot_lignin                           !       |
-        type (organic_mass) :: man                                  !       |
-      end type residue_mass1
-      !soil profile object - dimensioned to number of hrus, using the hru pointer
-      type (residue_mass1), dimension(:), allocatable :: rsd1
-      type (residue_mass1), dimension(:), allocatable :: rsd1_init
-
       type plant_community_mass
        character(len=4) :: name = ""
        type (organic_mass), dimension(:), allocatable :: tot        !kg/ha      |total biomass for individual plant in community
@@ -170,6 +154,8 @@
       type (organic_mass) :: graz_plant, graz_seed, graz_leaf, graz_stem
       type (organic_mass) :: leaf_drop                              !kg/ha      |organic mass of falling leaves
       type (organic_mass) :: abgr_drop                              !kg/ha      |above ground that dies at dormancy
+      type (organic_mass) :: stem_drop                              !kg/ha      |stem that dies at dormancy
+      type (organic_mass) :: seed_drop                              !kg/ha      |seed that dies at dormancy
       type (organic_mass) :: plt_mass_z
 
       type mineral_mass
