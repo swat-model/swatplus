@@ -6,11 +6,13 @@
       use plant_module
       use carbon_module
       use organic_mineral_mass_module
+      use soil_module
       
       implicit none 
       
       integer :: j = 0          !none               |HRU number
       integer :: idp = 0        !                   |
+      integer :: ly = 0         !                   |soil layer number
       real :: bm_dieoff = 0.
       real :: rto = 0.
       real :: rto1 = 0.
@@ -35,7 +37,27 @@
         !! add dead material to residue
         rto1 = 1. - rto
         rto1 = max (0., rto1)
-        soil1(j)%rsd(1) = soil1(j)%rsd(1) + rto1 * pl_mass(j)%tot(ipl)
+        
+      !! add above ground biomass to surface residue pools
+        soil1(j)%rsd(1) = soil1(j)%rsd(1) + rto1 * pl_mass(j)%ab_gr(ipl)
+        if (bsn_cc%cswat == 2) then
+          soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * rto1 * pl_mass(j)%ab_gr(ipl)
+          soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * rto1 * pl_mass(j)%ab_gr(ipl)
+          soil1(j)%lig(1) = soil1(j)%lig(1) + 0.12 * rto1 * pl_mass(j)%ab_gr(ipl)
+        end if
+        
+        !! add dead roots to soil residue pools
+        if (bsn_cc%cswat == 2) then
+          do ly = 1, soil(j)%nly
+            soil1(j)%rsd(ly) = soil1(j)%rsd(ly) + soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+            if (bsn_cc%cswat == 2) then
+              soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * rto1 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+              soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * rto1 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+              soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * rto1 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
+            end if
+          end do
+        end if
+      
       end if
 
       return
