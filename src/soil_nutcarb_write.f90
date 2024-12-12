@@ -86,7 +86,7 @@
           soil_prof_microb = soil_prof_microb + soil1(j)%microb(ly)
           soil_prof_water = soil_prof_water + soil1(j)%water(ly)
         end do
-        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb
+        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta
         
         !write all organic carbon for the plant community
         write (4560,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
