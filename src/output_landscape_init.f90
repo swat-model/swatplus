@@ -436,7 +436,6 @@
             end if
         endif
         
-        if (bsn_cc%cswat == 2) then
           if (pco%nb_hru%a == "y") then
             open (4553,file="hru_scf_aa.txt", recl = 1500)
             write (4553,*)  bsn%name, prog
@@ -451,7 +450,6 @@
                 write (9000,*) "HRU                       hru_scf_aa.csv"
               end if
           endif
-        end if
         
  !!!NEW SOIL TRANSFORMATIONS CARBON OUTPUT     
        
@@ -479,18 +477,18 @@
             end if
         endif
     
-        open (4561,file = "hru_resc_stat.txt", recl = 1500)
         if (pco%nb_hru%a == "y") then
+          open (4561,file = "hru_rsdc_stat.txt", recl = 1500)
           write (4561,*)  bsn%name, prog
-          write (4561,*) resc_hdr
-          write (4561,*) resc_hdr_units
-          write (9000,*) "HRU                       hru_resc_stat.txt"
+          write (4561,*) rsdc_hdr
+          write (4561,*) rsdc_hdr_units
+          write (9000,*) "HRU                       hru_rsdc_stat.txt"
             if (pco%csvout == "y") then
-              open (4564,file="hru_resc_stat.csv", recl = 1500)
+              open (4564,file="hru_rsdc_stat.csv", recl = 1500)
               write (4564,*)  bsn%name, prog
-              write (4564,'(*(G0.3,:,","))') resc_hdr
-              write (4564,'(*(G0.3,:,","))') resc_hdr_units
-              write (9000,*) "HRU                       hru_resc_stat.csv"
+              write (4564,'(*(G0.3,:,","))') rsdc_hdr
+              write (4564,'(*(G0.3,:,","))') rsdc_hdr_units
+              write (9000,*) "HRU                       hru_rsdc_stat.csv"
             end if
         endif
         

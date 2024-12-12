@@ -16,6 +16,7 @@
       integer :: idp = 0            !              |
       integer :: iob = 0            !              |
       integer :: iwgn = 0           !              |
+      integer :: ly = 0             !              |soil layer number
       real :: rto = 0.              !              |
       real :: lai_init = 0.         !
       real :: lai_drop = 0.
@@ -34,7 +35,7 @@
           pcom(j)%plcur(ipl)%idorm = "y"
           !! add dead stem mass to residue pool
           rto = pldb(idp)%bm_dieoff
-          abgr_drop = rto * pl_mass(j)%stem(ipl)
+          stem_drop = rto * pl_mass(j)%stem(ipl)
           !! drop lai to minimum if not already
           lai_init = pcom(j)%plg(ipl)%lai
           pcom(j)%plg(ipl)%lai = pldb(idp)%alai_min
@@ -51,18 +52,24 @@
           leaf_drop%n = max (0., leaf_drop%n)
           leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
           leaf_drop%p = max (0., leaf_drop%p)
+          !! add all seed/fruit mass to residue pool
+          seed_drop = pl_mass(j)%seed(ipl)
+          abgr_drop = stem_drop + leaf_drop + seed_drop
 
-          pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - abgr_drop - leaf_drop
-          pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop - leaf_drop
-          pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - abgr_drop
-          pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
-          soil1(j)%rsd(1) = soil1(j)%rsd(1) + abgr_drop + leaf_drop
-          !! add all seed/fruit mass to residue poolpool
-          abgr_drop = pl_mass(j)%seed(ipl)
+          !! add all seed/fruit mass to residue pool
           pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - abgr_drop
           pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop
+          pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - stem_drop
+          pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
           pl_mass(j)%seed(ipl) = plt_mass_z
+          
           soil1(j)%rsd(1) = soil1(j)%rsd(1) + abgr_drop
+          if (bsn_cc%cswat == 2) then
+            soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * abgr_drop
+            soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * abgr_drop
+            soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * abgr_drop  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
+          end if
+          
         end if
 
         !! beginning of cool season annual dormant period
