@@ -35,13 +35,13 @@
           
       !! add dead roots to soil residue pools
       do ly = 2, soil(j)%nly
-          soil1(j)%rsd(ly) = soil1(j)%rsd(ly) + soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-          if (bsn_cc%cswat == 2) then
-            soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-            soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-            soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
-          end if
-        end do
+        soil1(j)%rsd(ly) = soil1(j)%rsd(ly) + soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+        if (bsn_cc%cswat == 2) then
+          soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+          soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+          soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
+        end if
+      end do
       
       !! sum total community masses
       pl_mass(j)%tot_com = pl_mass(j)%tot_com - pl_mass(j)%tot(ipl)
