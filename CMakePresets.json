@@ -24,10 +24,56 @@
             }
         },
         {
-            "name": "gfortran_debug",
+            "name": "gfortran_debug_windows",
             "displayName": "gfortran debug version",
-            "description": "Builds a gfortran debug executable for swatplus",
+            "description": "Builds a gfortran debug executable for swatplus for windows",
             "binaryDir": "build/debug",
+            "generator": "Ninja",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "architecture": {
+                "value": "x86",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x86",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "build/debug",
+                "CMAKE_Fortran_COMPILER": "gfortran"
+            }
+        },
+        {
+            "name": "gfortran_debug_linux",
+            "displayName": "gfortran debug version",
+            "description": "Builds a gfortran debug executable for swatplus for linux",
+            "binaryDir": "build/debug",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "build/debug",
+                "CMAKE_Fortran_COMPILER": "gfortran"
+            }
+        },
+        {
+            "name": "gfortran_debug_macbook",
+            "displayName": "gfortran debug version",
+            "description": "Builds a gfortran debug executable for swatplus for macbook",
+            "binaryDir": "build/debug",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_INSTALL_PREFIX": "build/debug",
