@@ -190,7 +190,7 @@
             !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
             !end do
 
-      end do
+          end do
     
         if (bsn_cc%cswat == 1) then
             call mgt_tillfactor(jj,bmix,emix,dtil)

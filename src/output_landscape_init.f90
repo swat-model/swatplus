@@ -436,20 +436,20 @@
             end if
         endif
         
-          if (pco%nb_hru%a == "y") then
-            open (4553,file="hru_scf_aa.txt", recl = 1500)
-            write (4553,*)  bsn%name, prog
-            write (4553,*) hscf_hdr
-            write (4553,*) hscf_hdr_units
-            write (9000,*) "HRU                       hru_scf_aa.txt"
-              if (pco%csvout == "y") then
-                open (4557,file="hru_scf_aa.csv", recl = 1500)
-                write (4557,*)  bsn%name, prog
-                write (4557,'(*(G0.3,:,","))') hscf_hdr
-                write (4557,'(*(G0.3,:,","))') hscf_hdr_units
-                write (9000,*) "HRU                       hru_scf_aa.csv"
-              end if
-          endif
+        if (pco%nb_hru%a == "y") then
+          open (4553,file="hru_scf_aa.txt", recl = 1500)
+          write (4553,*)  bsn%name, prog
+          write (4553,*) hscf_hdr
+          write (4553,*) hscf_hdr_units
+          write (9000,*) "HRU                       hru_scf_aa.txt"
+            if (pco%csvout == "y") then
+              open (4557,file="hru_scf_aa.csv", recl = 1500)
+              write (4557,*)  bsn%name, prog
+              write (4557,'(*(G0.3,:,","))') hscf_hdr
+              write (4557,'(*(G0.3,:,","))') hscf_hdr_units
+              write (9000,*) "HRU                       hru_scf_aa.csv"
+            end if
+        endif
         
  !!!NEW SOIL TRANSFORMATIONS CARBON OUTPUT     
        

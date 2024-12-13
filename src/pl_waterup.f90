@@ -131,7 +131,7 @@
             sum = epmax(ipl) * (1. - Exp(-uptake%water_dis * gx / pcom(j)%plg(ipl)%root_dep)) / uptake%water_norm
           end if
 
-          pcom(j)%plcur(ipl)%epco = 0.9
+          !pcom(j)%plcur(ipl)%epco = 0.9
           !! let second layer compensate - 10 mm layer causes problems wehn root depth is shallow
           if (k == 2) then
             wuse = sum      !epco is always 1.0 for second layer
