@@ -195,8 +195,10 @@
       !fertilizer object should be used as database input from fert.dat
       type (fertilizer_mass), dimension(:), allocatable :: fert         !dimension to number of fertilzers in database
       
+      type (organic_mass) :: org_frt  !dimension to number of manures in database
+      
       !manure object should be used as database input from manure.dat
-      type (organic_mineral_mass), dimension(:), allocatable :: manure  !dimension to number of manures in database
+      type (organic_mass), dimension(:), allocatable :: manure  !dimension to number of manures in database
       
       type organic_mineral_hydrograph
         real :: flo = 0.               !! m^3          |volume of water
@@ -309,7 +311,7 @@
                    
       interface operator (+)
         module procedure pmin_add
-        end interface 
+      end interface 
                   
       interface operator (*)
         module procedure nmin_mult_const
@@ -317,7 +319,7 @@
                   
       interface operator (+)
         module procedure nmin_add
-        end interface 
+      end interface 
 
       interface operator (*)
         module procedure pmin_mult_const
