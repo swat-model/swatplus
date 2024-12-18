@@ -136,6 +136,9 @@
                case("hru_pw")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%pw_hru
+               case("hru_cb")
+                  backspace (107)
+                  read (107,*,iostat=eof) name, pco%cb_hru
                case("hru-lte_wb")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%wb_sd
