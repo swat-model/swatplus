@@ -72,8 +72,10 @@
         call ero_ovrsed
       end if
 
-      call ero_cfactor
-      if (surfq(j) > 1.e-6 .and. qp_cms > 1.e-6) call ero_ysed
+      if (surfq(j) > 1.e-6 .and. qp_cms > 1.e-6) then
+        call ero_cfactor
+        call ero_ysed
+      end if
 
       if (qday < 0.) qday = 0.
 
