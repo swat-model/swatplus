@@ -77,8 +77,8 @@
           else
             soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
             soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
-          soil_prof_str = soil_prof_str + soil1(j)%str(ly)
-          soil_prof_lig = soil_prof_lig + soil1(j)%lig(ly)
+            soil_prof_str = soil_prof_str + soil1(j)%str(ly)
+            soil_prof_lig = soil_prof_lig + soil1(j)%lig(ly)
           end if
           soil_prof_man = soil_prof_man + soil1(j)%man(ly)
           soil_prof_hs = soil_prof_hs + soil1(j)%hs(ly)
