@@ -95,27 +95,25 @@
       if (bsn_cc%cswat == 2) then
         soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx *           &
             frt_kg * fertdb(ifrt)%forgp
-        soil1(j)%hsta(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * xx *  &
+        soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * xx *      &
             frt_kg * fertdb(ifrt)%forgp
         
-        !!Allocate organic fertilizer to Slow (SWAT_active) N pool;
-          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * xx *  &
+        !!allocate organic fertilizer to Slow N pool;
+          soil1(j)%hs(l)%n = soil1(j)%hs(l)%n + (1. - rtof) * xx *    &
                         frt_kg * fertdb(ifrt)%forgn
         
-          !orgc_f is the fraction of organic carbon in fertilizer
-          !for most fertilziers this value is set to 0.
-          orgc_f = 0.0
+          !orgc_f is the fraction of organic carbon in fertilizer - assume 0.42
+          orgc_f = 0.42 * frt_kg
           !X1 is fertlizer applied to layer (kg/ha)
           !xx is fraction of fertilizer applied to layer
           X1 = xx * frt_kg 
           !X8: organic carbon applied (kg C/ha)
           X8 = X1 * orgc_f
           !RLN is calculated as a function of C:N ration in fertilizer          
-          RLN = .175 *(orgc_f)/(fertdb(ifrt)%fminn + fertdb(ifrt)%forgn  & 
-                                                               + 1.e-5)
+          RLN = .175 * orgc_f / (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn + 1.e-5)
           
           !X10 is the fraction of carbon in fertilizer that is allocated to metabolic litter C pool
-          X10 = .85-.018*RLN
+          X10 = .85 - .018 * RLN
           if (X10<0.01) then
             X10 = 0.01
           else
@@ -137,10 +135,10 @@
           
           soil1(j)%meta(l)%n = soil1(j)%meta(l)%n + ZZ
            
-          !!remaining organic N is llocated to structural litter N pool
+          !! remaining organic N is llocated to structural litter N pool
           soil1(j)%str(l)%n = soil1(j)%str(l)%n + X1 * fertdb(ifrt)%forgn - ZZ
           !XZ is the amount of organic carbon allocated to structural litter C pool   
-          XZ = X1 *orgc_f-XXX
+          XZ = X1 * orgc_f - XXX
           soil1(j)%str(l)%c = soil1(j)%str(l)%c + XZ
           
           !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in strucutral litter pool
@@ -153,11 +151,9 @@
           soil1(j)%str(l)%m = soil1(j)%str(l)%m + YZ
           !assuming lignin fraction of the organic fertilizer allocated into structure litter SOM pool to be 0.175;
           !update lignin weight in structural litter.
-          soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ*.175
-          soil1(j)%tot(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
+          soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ * .175
+          soil1(j)%rsd(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
           
-          !end if
-      
       end if
         !!By Zhang for C/N cycling 
         !!=========================== 
