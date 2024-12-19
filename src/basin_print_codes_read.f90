@@ -56,7 +56,7 @@
          do while (eof >= 0)
             read (107,*,iostat=eof) name
             if (eof < 0) exit
-            print*,name
+            if (name == "") cycle
             select case(name) 
                case("basin_wb")
                   backspace (107)
