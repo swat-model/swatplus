@@ -41,6 +41,18 @@
       integer :: iihru = 0      !none        |counter
       integer :: j = 0          !none        |counter
       integer :: iob = 0
+      character (len=6) :: freq_label
+
+      select case(out_freq)
+        case ("d")
+          freq_label = "day"
+        case ("m")
+          freq_label = "mon"
+        case ("y")
+          freq_label = "year"
+        case ("a")
+          freq_label = "av_ann"
+      end select
            
       !! basin output - zero daily basin outputs before summing
       bsn_org_soil = soil_org_z
@@ -89,45 +101,45 @@
         soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta
         
         !write all organic carbon for the plant community file = "hru_plc_stat.txt"
-        write (4560,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+        write (4560,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
             pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
         ! file = "hru_plc_stat.csv"
         if (pco%csvout == "y") then
-            write (4563,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+            write (4563,'(*(G0.3,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
             pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
         end if
           
         !write all organic carbon for the residue file = "hru_rsdc_stat.txt"
-        write (4561,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+        write (4561,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             soil_prof_srsd%c, soil_prof_smeta%c, soil_prof_sstr%c, soil_prof_slig%c,              &
             soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         ! file = "hru_rsdc_stat.csv"
         if (pco%csvout == "y") then
-          write (4564,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+          write (4564,'(*(G0.3,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             soil_prof_srsd%c, soil_prof_smeta%c, soil_prof_sstr%c, soil_prof_slig%c,              &
             soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         end if
 
         !write all organic carbon for the soil profile, file = "hru_soilc_stat.txt"
-        write (4562,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+        write (4562,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
             soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
         !file = "hru_soilc_stat.csv"
         if (pco%csvout == "y") then
-          write (4565,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+          write (4565,'(*(G0.3,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
             soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
             soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
         end if
       
         !write organic flux pools for the soil profile file = "hru_cflux_stat.txt"
         if (bsn_cc%cswat == 2) then
-          write (4567,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+          write (4567,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                         soil1(j)%org_flx_cum_tot 
           !file = "hru_cflux_stat.csv"
           if (pco%csvout == "y") then
-            write (4568,'(*(G0.3,:,","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+            write (4568,'(*(G0.3,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                           soil1(j)%org_flx_cum_tot 
           endif 
         end if

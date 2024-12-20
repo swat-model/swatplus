@@ -479,15 +479,10 @@
                                                    (soil1(ihru)%tot(ly)%c/1000, ly = 1, soil(ihru)%nly)
           end if
                                                         
-        if (pco%cb_hru%d == "y") then
-            call soil_nutcarb_write("d")
-        elseif (pco%cb_hru%m == "y" .and. time%end_mo == 1) then
-            call soil_nutcarb_write("m")
-        elseif (pco%cb_hru%y == "y" .and. time%end_yr == 1) then
-            call soil_nutcarb_write("y") 
-        ! elseif (pco%cb_hru%a == "y") then
-        !     call soil_nutcarb_write("a")
-        endif
+        if (pco%cb_hru%d == "y") call soil_nutcarb_write("d")
+        if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write("m")
+        if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write("y") 
+        ! if (pco%cb_hru%a == "y" .and. time%end_yr == 1) call soil_nutcarb_write("a")
 
         ! select case (pco%carbout)
         ! !! write carbon in soil, plant, and residue at end of the day
