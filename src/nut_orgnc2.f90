@@ -164,7 +164,7 @@
           end if
           sol_thick = 0.
           sol_thick = soil(j)%phys(k)%d-soil(j)%phys(k-1)%d
-          soil1(j)%tot(1)%c = soil1(j)%str(k)%c + soil1(j)%meta(k)%c + soil1(j)%hp(k)%c + soil1(j)%hs(k)%c 
+          soil1(j)%tot(1)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c 
           Y1 = soil1(j)%microb(k)%c + VBC
           VBC=0.
           IF(Y1>=.01)THEN
