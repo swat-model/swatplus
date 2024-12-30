@@ -115,7 +115,7 @@
             case ("cha")
               cal_upd(i)%num_elem = sp_ob%chan
             case ("swq")
-              cal_upd(i)%num_elem = sp_ob%chan
+              cal_upd(i)%num_elem = db_mx%ch_nut
             case ("res")
               cal_upd(i)%num_elem = sp_ob%res
             case ("sdc")
