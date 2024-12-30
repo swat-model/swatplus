@@ -413,7 +413,7 @@
     do while (idone == 0)
         do i = 1, sp_ob%objs
         
-        if (iord > 1000) then        
+        if (iord > 5000) then        
           open (9002,file="looping.con",recl = 8000)
           write (9002, *) "LOOPING.CON CHECKING INFINITE LOOPS"
           do iob = 1, sp_ob%objs

@@ -39,12 +39,12 @@
         real :: satex = 0.            !mm H2O        |saturation excess flow developed from high water table !rtb gwflow
         real :: satex_chan = 0.       !mm H2O        |saturation excess flow reaching main channel !rtb gwflow
         real :: delsw = 0.            !mm H2O        |change in soil water volume !rtb gwflow
-        real :: lagsurf = 0.          !mm H2O        |surface runoff in transit to channel
-        real :: laglatq = 0.          !mm H2O       |lateral flow in transit to channel
-        real :: lagsatex = 0.         !mm H2O       |saturation excess flow in transit to channel
-        real :: wet_evap = 0.         !mm H2O       |evaporation from wetland surface
-        real :: wet_out = 0.          !mm H2O       |outflow (spill) from wetland
-        real :: wet_stor = 0.         !mm H2O       |volume stored in wetland at end of time period
+        real :: lagsurf = 0.		  !mm H2O        |surface runoff in transit to channel
+        real :: laglatq = 0.          !mm H2O	     |lateral flow in transit to channel
+        real :: lagsatex = 0.         !mm H2O	     |saturation excess flow in transit to channel
+        real :: wet_evap = 0.         !mm H2O	     |evaporation from wetland surface
+        real :: wet_out = 0.          !mm H2O	     |outflow (spill) from wetland
+        real :: wet_stor = 0.         !mm H2O	     |volume stored in wetland at end of time period
       end type output_waterbal
        
       type (output_waterbal), pointer :: h
