@@ -6,9 +6,10 @@
       
       implicit none 
 
-      integer :: ic = 0               !none       |counter
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
+      integer :: ic = 0                   !none       |plant counter
+      character (len=80) :: titldum = ""  !           |title of file
+      character (len=80) :: header = ""   !           |header of file
+      character (len=80) :: plclass = ""  !           |plant class - row crop, close grown, grass, tree, etc
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       integer :: mpl = 0              !           | 
@@ -23,6 +24,7 @@
       if (.not. i_exist .or. in_parmdb%plants_plt == " null") then
         allocate (pldb(0:0))
         allocate (plcp(0:0))
+        allocate (pl_class(0:0))
       else
       do
         open (104,file=in_parmdb%plants_plt)
@@ -37,6 +39,7 @@
           end do
         allocate (pldb(0:imax))
         allocate (plcp(0:imax))
+        allocate (pl_class(0:imax))
         
         rewind (104)
         read (104,*,iostat=eof) titldum
@@ -44,8 +47,17 @@
         read (104,*,iostat=eof) header
         if (eof < 0) exit
         
+        read (104,*,iostat=eof) plclass
+        if (plclass /= "nam1") then
+          backspace (105)
+        end if
+          
         do ic = 1, imax
-          read (104,*,iostat=eof) pldb(ic)
+          if (plclass /= "nam1") then
+            read (104,*,iostat=eof) pldb(ic)
+          else
+            read (104,*,iostat=eof) pldb(ic), pl_class(ic)
+          end if
           if (eof < 0) exit
           pldb(ic)%mat_yrs = Max (1, pldb(ic)%mat_yrs)
         end do

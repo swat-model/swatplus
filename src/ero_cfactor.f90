@@ -103,23 +103,24 @@
         
         !! newer method using residue and biomass cover
         rsd_sumfac = (soil1(j)%rsd(1)%m +1.) / 1000.
-        grnd_covfact = 0.
+        grnd_sumfac = 0.
         can_covfact = 10000.
         do ipl = 1, pcom(j)%npl
           idp = pcom(j)%plcur(ipl)%idplt
           ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
-          !grnd_sumfac = grnd_sumfac + ab_gr_t
-          grnd_covfact = grnd_covfact + pldb(idp)%usle_c * ab_gr_t / (ab_gr_t + exp(1.175 - 1.748 * ab_gr_t))
+          grnd_sumfac = grnd_sumfac + ab_gr_t
+          !! grnd_covfact = grnd_covfact + pldb(idp)%usle_c * ab_gr_t / (ab_gr_t + exp(1.175 - 1.748 * ab_gr_t))
           can_covfact = amin1 (can_covfact, pcom(j)%plg(ipl)%cht)
         end do
         !grnd_covfact = grnd_sumfac / (grnd_sumfac + exp(1.175 - 1.748 * grnd_sumfac))
-        rsd_covfact = exp(-0.75 * rsd_sumfac)
+        rsd_covfact = exp(-bsn_prm%rsd_covco * rsd_sumfac)
         
         can_frcov = amin1 (1., pcom(j)%lai_sum / 3.)
         can_covfact = 1. - can_frcov * Exp(-.328 * pcom(j)%cht_mx)
         
-        bio_covfac = 1. - grnd_covfact * exp(-0.1 * can_covfact)
-        c = Max(1.e-10, rsd_covfact * grnd_covfact * bio_covfac)
+        grnd_covfact = exp(-pldb(idp)%usle_c * grnd_sumfac)
+        !! bio_covfac = 1. - grnd_covfact * exp(-0.1 * can_covfact)
+        c = Max(1.e-10, rsd_covfact * grnd_covfact)  ! * can_covfact)
         
         !! erosion output variables
         ero_output(j)%ero_d%c = c
