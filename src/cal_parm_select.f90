@@ -34,7 +34,8 @@
       use hydrograph_module
       use pesticide_data_module
       use plant_module
-        use gwflow_module
+      use plant_data_module
+      use gwflow_module
       
       implicit none
 
@@ -80,12 +81,16 @@
         hru(ielem)%lumv%usle_p = chg_par (hru(ielem)%lumv%usle_p,         &
                           chg_typ, chg_val, absmin, absmax)
         
+      case ("usle_c")
+        pldb(ielem)%usle_c = chg_par (pldb(ielem)%usle_c,         &
+                          chg_typ, chg_val, absmin, absmax)
+        
       case ("ovn")
         hru(ielem)%luse%ovn = chg_par (hru(ielem)%luse%ovn,               &
                           chg_typ, chg_val, absmin, absmax)
         
       case ("elev")
-        hru(ielem)%topo%elev = chg_par (hru(ielem)%topo%elev,             &
+        hru(ielem)%topo%elev = chg_par (hru(ielem)%topo%elev,             & 
                           chg_typ, chg_val, absmin, absmax)
         
       case ("slope")
@@ -429,8 +434,8 @@
         bsn_prm%n_updis = chg_par(bsn_prm%n_updis,                      &
                          chg_typ, chg_val, absmin, absmax)
         
-      case ("p_updis")
-        bsn_prm%p_updis = chg_par(bsn_prm%p_updis,                      &
+      case ("rsd_covco")
+        bsn_prm%rsd_covco = chg_par(bsn_prm%rsd_covco,                      &
                          chg_typ, chg_val, absmin, absmax)
         
       case ("dorm_hr")

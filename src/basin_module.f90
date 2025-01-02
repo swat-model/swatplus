@@ -111,7 +111,7 @@
         real :: tlaps = 6.5         !! deg C/km     |temperature lapse rate: deg C per km of elevation difference
         real :: nfixmx = 20.0       !! max daily n-fixation (kg/ha)
         real :: decr_min = 0.01     !! minimum daily residue decay
-        real :: rsd_covco = 0.30    !! residue cover factor for computing frac of cover         
+        real :: rsd_covco = 0.75    !! residue cover factor for computing frac of cover         
         real :: urb_init_abst = 1.  !! maximum initial abstraction for urban areas when using Green and Ampt
         real :: petco_pmpt = 100.0  !! PET adjustment (%) for Penman-Montieth and Preiestly-Taylor methods
         real :: uhalpha = 1.0       !! alpha coeff for est unit hydrograph using gamma func
