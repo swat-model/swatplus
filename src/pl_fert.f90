@@ -19,7 +19,7 @@
       
       implicit none 
       
-      real, parameter :: rtof=0.5         !none          |weighting factor used to partition the 
+      real :: rtof             !none          |weighting factor used to partition the 
                                           !              |organic N & P concentration of septic effluent
                                           !              |between the fresh organic and the stable organic pools
       integer :: j = 0                    !none          |hru counter
@@ -36,6 +36,7 @@
       
       j = ihru
       
+      rtof = 0.5
       !! calculate c:n ratio for manure applications for SWAT-C
       if (bsn_cc%cswat == 2) then
         org_frt%m = frt_kg
