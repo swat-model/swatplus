@@ -7,6 +7,7 @@
       use hru_module, only : hru
       use soil_module
       use plant_module
+      use plant_data_module
       use time_module
       use climate_module, only : pcp, tmp
       
@@ -74,6 +75,10 @@
                   if (pl_find == "n") cond_met = "n"
                   exit
               end do
+            case ("pl_class")
+              if (cal_upd(ichg_par)%cond(ic)%targc /= pl_class(ielem)) then
+                cond_met = "n"
+              end if
             case ("landuse")    !for hru
               if (cal_upd(ichg_par)%cond(ic)%targc /= hru(ielem)%land_use_mgt_c) then 
                 cond_met = "n"
