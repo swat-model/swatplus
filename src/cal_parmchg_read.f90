@@ -102,6 +102,8 @@
               cal_upd(i)%num_elem = db_mx%dtbl_res
             case ("plt")
               cal_upd(i)%num_elem = sp_ob%hru
+            case ("pl_class")
+              cal_upd(i)%num_elem = db_mx%plantparm
             case ("lyr")
               cal_upd(i)%num_elem = sp_ob%hru
             case ("sol")
