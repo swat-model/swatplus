@@ -37,7 +37,7 @@
          !if (bsn_prm%dorm_hr < 1.e-6) bsn_prm%dorm_hr = -1.        !! time threshold used to define dormant (hrs)
          if (bsn_prm%nfixmx < 1.e-6) bsn_prm%nfixmx = 20.0        !! max daily n-fixation (kg/ha)
          if (bsn_prm%decr_min < 1.e-6) bsn_prm%decr_min = 0.01    !! 
-         if (bsn_prm%rsd_covco < 1.e-6) bsn_prm%rsd_covco = 0.30  !! residue cover factor for computing frac of cover         
+         if (bsn_prm%rsd_covco < 1.e-6) bsn_prm%rsd_covco = 0.75  !! residue cover factor for computing C factor equation         
          if (bsn_prm%urb_init_abst < 1.e-6) bsn_prm%urb_init_abst = 0.  !! PET adjustment (%) for Penman-Montieth and Preiestly-Taylor methods
          if (bsn_prm%petco_pmpt < 0.5 .and. bsn_prm%petco_pmpt > 0.) bsn_prm%petco_pmpt = 0.0   !! reservoir sediment settling coeff
          bsn_prm%petco_pmpt = (100. + bsn_prm%petco_pmpt) / 100.    !! convert to fraction

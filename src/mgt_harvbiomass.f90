@@ -40,11 +40,10 @@
       harv_seed = hi_tot * pl_mass(j)%seed(ipl)
       harv_leaf = hi_tot * pl_mass(j)%leaf(ipl)
       harv_stem = hi_tot * pl_mass(j)%stem(ipl)
-      pl_yield = harv_seed + harv_leaf
-      pl_yield = pl_yield + harv_stem
+      pl_yield = harv_seed + harv_leaf + harv_stem
             
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
-      pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * (1. - harveff) * pl_yield
+      pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
       !! add plant carbon for printing
       hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + pl_yield%c
       hpc_d(j)%harv_abgr_c = hpc_d(j)%harv_abgr_c + pl_yield%c

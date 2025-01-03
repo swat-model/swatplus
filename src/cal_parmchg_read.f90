@@ -102,6 +102,8 @@
               cal_upd(i)%num_elem = db_mx%dtbl_res
             case ("plt")
               cal_upd(i)%num_elem = sp_ob%hru
+            case ("pl_class")
+              cal_upd(i)%num_elem = db_mx%plantparm
             case ("lyr")
               cal_upd(i)%num_elem = sp_ob%hru
             case ("sol")
@@ -115,7 +117,7 @@
             case ("cha")
               cal_upd(i)%num_elem = sp_ob%chan
             case ("swq")
-              cal_upd(i)%num_elem = sp_ob%chan
+              cal_upd(i)%num_elem = db_mx%ch_nut
             case ("res")
               cal_upd(i)%num_elem = sp_ob%res
             case ("sdc")

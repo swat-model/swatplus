@@ -47,7 +47,7 @@
           end if
           lai_drop = max (0., lai_drop)
           lai_drop = amin1 (1., lai_drop)
-          leaf_drop%m = lai_drop * pl_mass(j)%leaf(ipl)%m
+          leaf_drop%m = rto * lai_drop * pl_mass(j)%leaf(ipl)%m
           leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
           leaf_drop%n = max (0., leaf_drop%n)
           leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
