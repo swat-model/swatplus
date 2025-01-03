@@ -49,7 +49,7 @@
         
         read (104,*,iostat=eof) plclass
         if (plclass /= "nam1") then
-          backspace (105)
+          backspace (104)
         end if
           
         do ic = 1, imax
