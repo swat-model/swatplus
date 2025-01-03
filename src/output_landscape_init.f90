@@ -522,6 +522,21 @@
             end if
         endif
         
+        if (pco%cb_hru%d == "y" .or.pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y") then
+        open (4570,file = "hru_soilcarb_mb_stat.txt", recl = 1500)
+          write (4570,*)  bsn%name, prog
+          write (4570,*) soil_mb_hdr
+          write (4570,*) soil_mb_units
+          write (9000,*) "HRU                       hru_soilcarb_mb_stat.txt"
+            if (pco%csvout == "y") then
+              open (4571,file="hru_soil_carb_mb_stat.csv", recl = 1500)
+              write (4571,*)  bsn%name, prog
+              write (4571,'(*(G0.3,:,","))') soil_mb_hdr
+              write (4571,'(*(G0.3,:,","))') soil_mb_units
+              write (9000,*) "HRU                       hru_soilcarb_mb_stat.csv"
+            end if
+        endif
+
  !!! NEW SOILC_STAT/RESC_STAT/PLC_STAT CARBON OUTPUT FILES
         
  !! NEW BASIN CARBON ALL OUTPUT FILE
