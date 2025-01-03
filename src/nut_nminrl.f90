@@ -32,7 +32,7 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : rsdco_plcom, i_sep, ihru, ipl, isep 
+      use hru_module, only : rsdco_plcom, i_sep, ihru, isep 
       use soil_module
       use plant_module
       use output_landscape_module, only : hnb_d
@@ -43,7 +43,7 @@
       integer :: k = 0      !none          |counter (soil layer)
       integer :: kk = 0     !none          |soil layer used to compute soil water and
                             !              |soil temperature factors
-      integer :: idp = 0
+      !integer :: idp = 0
       real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
                             !              |to nitrate(80%) and active organic(20%)
                             !              |pools in layer
@@ -62,7 +62,7 @@
       real :: cprf = 0.     !              |carbon phosphorus ratio factor
       real :: ca = 0.       !              |
       real :: decr = 0.     !              |
-      real :: rdc = 0.      !              |
+      !real :: rdc = 0.      !              |
       real :: wdn = 0.      !kg N/ha       |amount of nitrogen lost from nitrate pool in
                             !              |layer due to denitrification
       real :: cdg = 0.      !none          |soil temperature factor
@@ -77,6 +77,8 @@
       hnb_d(j)%org_lab_p = 0.
       hnb_d(j)%act_sta_n = 0.
       hnb_d(j)%denit = 0.
+      hnb_d(j)%rsd_nitorg_n = 0.
+      hnb_d(j)%rsd_laborg_p = 0.
 
       !! compute humus mineralization of organic soil pools 
       do k = 1, soil(j)%nly
@@ -147,33 +149,36 @@
             cnrf = 1.
           end if
             
-            if (soil1(j)%rsd(k)%p > 1.e-4) then
-              cpr = soil1(j)%rsd(k)%c / soil1(j)%rsd(k)%p
-              if (cpr > 5000.) cpr = 5000.
-              cprf = Exp(-.693 * (cpr - 200.) / 200.)
-            else
-              cprf = 1.
-            end if
+          if (soil1(j)%rsd(k)%p > 1.e-4) then
+            cpr = soil1(j)%rsd(k)%c / soil1(j)%rsd(k)%p
+            if (cpr > 5000.) cpr = 5000.
+            cprf = Exp(-.693 * (cpr - 200.) / 200.)
+          else
+            cprf = 1.
+          end if
 
-            ca = Min(cnrf, cprf, 1.)
+          ca = Min(cnrf, cprf, 1.)
             
-            !! compute root and incorporated residue decomposition
-            !! all plant residue in soil is mixed - don't track individual plant residue in soil
+          !! compute root and incorporated residue decomposition
+          !! all plant residue in soil is mixed - don't track individual plant residue in soil
               
-            if (pcom(j)%npl > 0) then
-              decr = rsdco_plcom(j) / pcom(j)%npl * ca * csf
-            else
-              decr = 0.05
-            end if
-            decr = Max(bsn_prm%decr_min, decr)
-            decr = Min(decr, 1.)
-            decomp = decr * soil1(j)%rsd(k)
-            soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
-            soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * decomp%n
-            soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * decomp%n
-            soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * decomp%p
-            soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * decomp%p
+          if (pcom(j)%npl > 0) then
+            decr = rsdco_plcom(j) / pcom(j)%npl * ca * csf
+          else
+            decr = 0.05
+          end if
+          decr = Max(bsn_prm%decr_min, decr)
+          decr = Min(decr, 1.)
+          decomp = decr * soil1(j)%rsd(k)
+          soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
+          soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * decomp%n
+          soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * decomp%n
+          soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * decomp%p
+          soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * decomp%p
 
+          hnb_d(j)%rsd_nitorg_n = hnb_d(j)%rsd_nitorg_n + .8 * decomp%n
+          hnb_d(j)%rsd_laborg_p = hnb_d(j)%rsd_laborg_p + .8 * decomp%p
+            
           !!  compute denitrification
           wdn = 0.   
           if (i_sep(j) /= k .or. sep(isep)%opt  /= 1) then

@@ -292,13 +292,8 @@
       !!calculate c/n dynamics for each soil layer
       !!===========================================
       do k = 1, soil(j)%nly
-        if (k == 1) then
-          !10 cm / 1000 = 0.01m; 1 ha = 10000 m2; ton/m3; * 1000 --> final unit is kg/ha; rock fraction is considered
-          sol_mass = (10) / 1000.* 10000. * soil(j)%phys(k)%bd * 1000. * (1. - soil(j)%phys(k)%rock / 100.)            
-        else
-          sol_mass = (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d) / 1000. * 10000. * soil(j)%phys(k)%bd * 1000. * &
-                    (1- soil(j)%phys(k)%rock / 100.)
-        end if        
+        !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
+        sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
          
         ! if k = 1, then using temperature, soil moisture in layer 2 to calculate decomposition factor
         if (k == 1) then
