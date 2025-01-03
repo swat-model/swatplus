@@ -51,14 +51,14 @@
       phosk = amin1 (phosk, 1.)
       phosk = max (phosk, 0.)
 
-      !! remove nutrients from reservoir by settling
+      !! remove nutrients from reservoir by settling - exclude soluble nutrients
       !! other part of equation 29.1.3 in SWAT manual
-      wbody%solp = wbody%solp * (1. - phosk)
+      !wbody%solp = wbody%solp * (1. - phosk)
       wbody%sedp = wbody%sedp * (1. - phosk)
       wbody%orgn = wbody%orgn * (1. - nitrok)
-      wbody%no3 = wbody%no3 * (1. - nitrok)
-      wbody%nh3 = wbody%nh3 * (1. - nitrok)
-      wbody%no2 = wbody%no2 * (1. - nitrok)
+      !wbody%no3 = wbody%no3 * (1. - nitrok)
+      !wbody%nh3 = wbody%nh3 * (1. - nitrok)
+      !wbody%no2 = wbody%no2 * (1. - nitrok)
 
       !! calculate chlorophyll-a and water clarity
       chlaco = 0.
