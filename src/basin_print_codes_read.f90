@@ -190,10 +190,10 @@
                case("channel_salt")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%salt_chn
-               case("salt_res")
+               case("res_salt")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%salt_res
-               case("salt_wet")
+               case("wetland_salt")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%salt_wet
                !! constituent outputs !rtb cs
@@ -209,13 +209,13 @@
                case("aqu_cs")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%cs_aqu
-               case("chn_cs")
+               case("channel_cs")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%cs_chn
                case("res_cs")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%cs_res
-               case("wet_cs")
+               case("wetland_cs")
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%cs_wet
                case default
