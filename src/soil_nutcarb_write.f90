@@ -49,7 +49,7 @@
         
       !! sum the output for the entire soil profile
       do j = 1, sp_ob%hru
-        iob = sp_ob1%hru + j - 1   !!!!!! added for new output write  !!nbs
+        iob = sp_ob1%hru + j - 1
         soil1(j)%tot_org = soil_org_z
         soil_prof_hact = soil_org_z
         soil_prof_hsta = soil_org_z
