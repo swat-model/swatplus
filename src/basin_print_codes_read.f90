@@ -194,6 +194,7 @@
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%salt_res
                case("wetland_salt")
+
                   backspace (107)
                   read (107,*,iostat=eof) name, pco%salt_wet
                !! constituent outputs !rtb cs
