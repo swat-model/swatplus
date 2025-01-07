@@ -16,7 +16,7 @@
       use organic_mineral_mass_module
       use hru_module, only : ihru, fertn, fertp, fertnh3, fertno3, fertorgn, fertorgp, fertp,  &
         fertsolp  
-      
+
       implicit none 
       
       real :: rtof             !none          |weighting factor used to partition the 
@@ -33,19 +33,35 @@
       real :: c_n_rto                     !              |carbon nitrogen ratio
       real :: meta_fr                     !              |fraction of metabolic applied to layer
       real :: pool_fr                     !              |fraction of structural or lignin applied to layer
-      
+      logical :: manure_flag
+
+      manure_flag = .false.
+      org_frt%m = 0.
+      org_frt%c = 0.
+      org_frt%n = 0.
+      org_frt%p = 0.
+      c_n_rto = 0.
+      meta_fr = 0.
+
       j = ihru
       
       rtof = 0.5
       !! calculate c:n ratio for manure applications for SWAT-C
       if (bsn_cc%cswat == 2) then
-        org_frt%m = frt_kg
-        org_frt%c = 0.42 * frt_kg
-        org_frt%n = fertdb(ifrt)%forgn * frt_kg
-        org_frt%p = fertdb(ifrt)%forgp * frt_kg
-        c_n_rto = .175 * org_frt%c / (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn + 1.e-5)
-        !! meta_fr is the fraction of fertilizer that is allocated to metabolic litter pool
-        meta_fr = .85 - .018 * c_n_rto
+        if (fertdb(ifrt)%forgn > 0. .or. fertdb(ifrt)%forgp > 0. ) then
+          manure_flag = .true.
+        endif
+        
+        if (manure_flag) then
+          org_frt%m = frt_kg
+          org_frt%c = 0.42 * frt_kg
+          org_frt%n = fertdb(ifrt)%forgn * frt_kg
+          org_frt%p = fertdb(ifrt)%forgp * frt_kg
+          c_n_rto = .175 * org_frt%c / (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn + 1.e-5)
+          !! meta_fr is the fraction of fertilizer that is allocated to metabolic litter pool
+          meta_fr = .85 - .018 * c_n_rto
+        endif
+
         if (meta_fr < 0.01) then
           meta_fr = 0.01
         else
@@ -114,7 +130,7 @@
           soil1(j)%str(l) = soil1(j)%str(l) + pool_fr * org_frt
           
           !! add lignin manure pool
-          soil1(j)%str(l) = soil1(j)%str(l) + 0.8 * soil1(j)%str(l)
+          ! soil1(j)%str(l) = soil1(j)%str(l) + 0.8 * soil1(j)%str(l)
           
           !! total residue pool is metabolic + structural
           soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
