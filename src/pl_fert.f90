@@ -113,7 +113,7 @@
         end if
 
         !! for SWAT-C add to slow humus pool and fresh residue pools
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .and. manure_flag) then
           
           !! add 1-rtof to slow humus pool
           pool_fr = (1. - rtof) * fr_ly
