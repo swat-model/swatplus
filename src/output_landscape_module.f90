@@ -778,7 +778,7 @@
 !! NEW PLANT CARBON STAT OUTPUT
       
      type output_plc_header     
-         character (len=6) ::  freq          =    "      "
+         character (len=6) ::  freq          =    "  freq"
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -796,7 +796,7 @@
       type (output_plc_header) :: plc_hdr
       
       type output_plc_header_units      
-         character (len=6) ::  freq         =    "  freq"
+         character (len=6) ::  freq         =    "      "
          character (len=11) :: day          =    "           "
          character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "
@@ -818,7 +818,7 @@
 !! NEW RESIDUE CARBON STAT OUTPUT
       
      type output_rsdc_header     
-         character (len=6) ::  freq          =    "      "
+         character (len=6) ::  freq          =    "  freq"
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -839,7 +839,7 @@
       type (output_rsdc_header) :: rsdc_hdr
       
       type output_rsdc_header_units      
-         character (len=6) ::  freq         =    "  freq"
+         character (len=6) ::  freq         =    "      "
          character (len=11) :: day          =    "           "
          character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "
@@ -863,7 +863,7 @@
 !! NEW SOIL CARBON STAT OUTPUT
       
      type output_soilc_header     
-         character (len=6) ::  freq          =    "      "
+         character (len=6) ::  freq          =    "  freq"
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -883,7 +883,7 @@
       type (output_soilc_header) :: soilc_hdr
       
       type output_soilc_header_units      
-         character (len=6) ::  freq         =    "  freq"
+         character (len=6) ::  freq         =    "      "
          character (len=11) :: day          =    "           "
          character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "
@@ -903,7 +903,7 @@
       type (output_soilc_header_units) :: soilc_hdr_units
 
      type output_soil_org_flux_header     
-         character (len=6) ::  freq          =    "      "
+         character (len=6) ::  freq      =    "  freq"
          character (len=11) :: day       =    "       jday"
          character (len=11) :: mo        =    "        mon"
          character (len=11) :: day_mo    =    "        day"
@@ -961,7 +961,7 @@
       type (output_soil_org_flux_header) :: soil_org_flux_hdr
 
      type output_soil_org_flux_header_units     
-         character (len=6) ::  freq      =    "  freq"
+         character (len=6) ::  freq      =    "      "
          character (len=11) :: day       =    "           "
          character (len=11) :: mo        =    "           "
          character (len=11) :: day_mo    =    "           "
@@ -1011,7 +1011,7 @@
       
       ! output soil_carb_mb_stat header
       type output_soil_carb_mb_hdr     
-         character (len=6) ::  freq          =    "      "
+         character (len=6) ::  freq          =    "  freq"
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -1068,7 +1068,7 @@
       type (output_soil_carb_mb_hdr) :: soil_mb_hdr
       
       type output_soil_carb_mb_units
-         character (len=6) ::  freq         =    "  freq"
+         character (len=6) ::  freq         =    "      "
          character (len=11) :: day          =    "           "
          character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "

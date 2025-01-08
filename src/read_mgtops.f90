@@ -99,8 +99,7 @@
         case ("fert")
           !xwalk fert name with fertilizer data base
           do idb = 1, db_mx%fertparm
-            ! if (sched(isched)%mgt_ops(iop)%op_char == fertdb(idb)%fertnm) then
-            if (sched(isched)%mgt_ops(iop)%op_plant == fertdb(idb)%fertnm) then
+            if (sched(isched)%mgt_ops(iop)%op_char == fertdb(idb)%fertnm) then
               sched(isched)%mgt_ops(iop)%op1 = idb
               exit
             endif
