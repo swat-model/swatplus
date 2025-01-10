@@ -6,7 +6,7 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
-        use time_module
+        use time_module, only : time
         
         implicit none
         
@@ -180,6 +180,7 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
+
 
        !! initialize local variables
        deltawn = 0.
@@ -375,31 +376,52 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_allo%abco2 = .55
+            ! set nitrogen carbon ratios for lower layers
+            org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
             a1co2 = .55
-            carbdb%microb_top_rate = .0164
-            carbdb%microb_rate = .0164
-            carbdb%meta_rate = .0405
-            carbdb%str_rate = .0107
-            org_ratio%nchp = .1
-            xbm = 1.
-            org_con%cs = org_con%cs * carbdb%microb_top_rate
-            ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
-            if (rsdn_pct > 2.) then
-              org_ratio%ncbm = .1
-              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            end if
-            if (rsdn_pct > .01 .and. rsdn_pct <= 2.) then
-              org_ratio%ncbm = 1. / (20.05 - 5.0251 * rsdn_pct)
-              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            carbdb%microb_rate = .02
+            carbdb%meta_rate = .0507
+            carbdb%str_rate = .0132
+            xbm = .25 + .0075 * soil(j)%phys(k)%sand
+             min_n_ppm = 1000. * sol_min_n / (sol_mass / 1000)
+            if (min_n_ppm > 7.15) then
+              org_ratio%ncbm = .33
+              org_ratio%nchs = .083
+              org_ratio%nchp = .143       
             else
-              org_ratio%ncbm = .05
-              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            end if    
+              org_ratio%ncbm = 1. / (15. - 1.678 * min_n_ppm)
+              org_ratio%nchs = 1. / (20. - 1.119 * min_n_ppm)
+              org_ratio%nchp = 1. / (10. - .42 * min_n_ppm)
+            end if
+            org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            
+            ! Commented out as Temp change to same decomp parameters as lower layers
+            ! What is commented out are the original surface layer deccomp parameters 
+            ! org_allo%abco2 = .55
+            ! a1co2 = .55
+            ! carbdb%microb_top_rate = .0164
+            ! carbdb%microb_rate = .0164
+            ! carbdb%meta_rate = .0405
+            ! carbdb%str_rate = .0107
+            ! org_ratio%nchp = .1
+            ! xbm = 1.
+            ! org_con%cs = org_con%cs * carbdb%microb_top_rate
+            ! ! compute n/c ratios - relative nitrogen content in residue
+            ! rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
+            ! if (rsdn_pct > 2.) then
+            !   org_ratio%ncbm = .1
+            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            ! end if
+            ! if (rsdn_pct > .01 .and. rsdn_pct <= 2.) then
+            !   org_ratio%ncbm = 1. / (20.05 - 5.0251 * rsdn_pct)
+            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            ! else
+            !   org_ratio%ncbm = .05
+            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            ! end if    
           else
             ! set nitrogen carbon ratios for lower layers
             org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
