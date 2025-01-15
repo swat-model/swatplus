@@ -322,21 +322,30 @@
  
           !compute tillage factor (till_eff) from armen
           till_eff = 1.0
-          
-          !calculate tillage factor using dssat
-          if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
-            if (k == 1) then
-              till_eff = 1.6
-            else
-              if (soil(j)%phys(k)%d .le. tillage_depth(j)) then
-                till_eff = 1.6
-              else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
-                till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
-              end if		         
-            end if
-          else
-            till_eff = 1.0
-          end if	
+
+          select case(3)
+
+            case(1)
+              !calculate tillage factor using dssat
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+                if (k == 1) then
+                  till_eff = 1.6
+                else
+                  if (soil(j)%phys(k)%d .le. tillage_depth(j)) then
+                    till_eff = 1.6
+                  else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
+                    till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
+                  end if		         
+                end if
+              else
+                till_eff = 1.0
+              end if	
+
+            case(3)  
+              !from Armen    ----having modi
+              till_eff = 1. + soil(j)%ly(k)%tillagef 
+
+          end select
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
           org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
