@@ -323,7 +323,7 @@
           !compute tillage factor (till_eff) from armen
           till_eff = 1.0
 
-          select case(3)
+          select case (bsn_cc%idc_till)
 
             case(1)
               !calculate tillage factor using dssat
@@ -340,10 +340,16 @@
               else
                 till_eff = 1.0
               end if	
+            
+            case(2)
+              ! place holder for epic method to compute till_eff
 
-            case(3)  
-              !from Armen    ----having modi
+            case(3)
+              ! Kamanian method    ----having modi
               till_eff = 1. + soil(j)%ly(k)%tillagef 
+
+            case(4)
+              ! place holder for dndc method
 
           end select
 
