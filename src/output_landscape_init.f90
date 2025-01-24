@@ -463,7 +463,7 @@
     
         !! write carbon in soil, plant, and residue
         open (4560,file = "hru_plc_stat.txt", recl = 1500)
-        if (pco%nb_hru%a == "y") then
+        if (pco%cb_hru%d == "y" .or. pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y") then
           write (4560,*)  bsn%name, prog
           write (4560,*) plc_hdr
           write (4560,*) plc_hdr_units
@@ -477,7 +477,7 @@
             end if
         endif
     
-        if (pco%nb_hru%a == "y") then
+        if (pco%cb_hru%d == "y" .or. pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y") then
           open (4561,file = "hru_rsdc_stat.txt", recl = 1500)
           write (4561,*)  bsn%name, prog
           write (4561,*) rsdc_hdr
@@ -492,8 +492,8 @@
             end if
         endif
         
+        if (pco%cb_hru%d == "y" .or. pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y") then
         open (4562,file = "hru_soilc_stat.txt", recl = 1500)
-        if (pco%nb_hru%a == "y") then
           write (4562,*)  bsn%name, prog
           write (4562,*) soilc_hdr
           write (4562,*) soilc_hdr_units
@@ -507,8 +507,8 @@
             end if
         endif
 
+        if (pco%cb_hru%d == "y" .or.pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y") then
         open (4567,file = "hru_cflux_stat.txt", recl = 1500)
-        if (pco%nb_hru%a == "y") then
           write (4567,*)  bsn%name, prog
           write (4567,*) soil_org_flux_hdr
           write (4567,*) soil_org_flux_hdr_units
@@ -522,6 +522,21 @@
             end if
         endif
         
+        if (pco%cb_hru%d == "y" .or.pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y") then
+        open (4570,file = "hru_soilcarb_mb_stat.txt", recl = 1500)
+          write (4570,*)  bsn%name, prog
+          write (4570,*) soil_mb_hdr
+          write (4570,*) soil_mb_units
+          write (9000,*) "HRU                       hru_soilcarb_mb_stat.txt"
+            if (pco%csvout == "y") then
+              open (4571,file="hru_soil_carb_mb_stat.csv", recl = 1500)
+              write (4571,*)  bsn%name, prog
+              write (4571,'(*(G0.3,:,","))') soil_mb_hdr
+              write (4571,'(*(G0.3,:,","))') soil_mb_units
+              write (9000,*) "HRU                       hru_soilcarb_mb_stat.csv"
+            end if
+        endif
+
  !!! NEW SOILC_STAT/RESC_STAT/PLC_STAT CARBON OUTPUT FILES
         
  !! NEW BASIN CARBON ALL OUTPUT FILE

@@ -6,7 +6,7 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
-        use time_module
+        use time_module, only : time
         
         implicit none
         
@@ -181,6 +181,7 @@
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
 
+
        !! initialize local variables
        deltawn = 0.
        deltabmc = 0.   
@@ -321,21 +322,36 @@
  
           !compute tillage factor (till_eff) from armen
           till_eff = 1.0
-          
-          !calculate tillage factor using dssat
-          if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
-            if (k == 1) then
-              till_eff = 1.6
-            else
-              if (soil(j)%phys(k)%d .le. tillage_depth(j)) then
-                till_eff = 1.6
-              else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
-                till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
-              end if		         
-            end if
-          else
-            till_eff = 1.0
-          end if	
+
+          select case (bsn_cc%idc_till)
+
+            case(1)
+              !calculate tillage factor using dssat
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+                if (k == 1) then
+                  till_eff = 1.6
+                else
+                  if (soil(j)%phys(k)%d .le. tillage_depth(j)) then
+                    till_eff = 1.6
+                  else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
+                    till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
+                  end if		         
+                end if
+              else
+                till_eff = 1.0
+              end if	
+            
+            case(2)
+              ! place holder for epic method to compute till_eff
+
+            case(3)
+              ! Kamanian method    ----having modi
+              till_eff = 1. + soil(j)%ly(k)%tillagef 
+
+            case(4)
+              ! place holder for dndc method
+
+          end select
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
           org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
@@ -375,31 +391,52 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_allo%abco2 = .55
+            ! set nitrogen carbon ratios for lower layers
+            org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
             a1co2 = .55
-            carbdb%microb_top_rate = .0164
-            carbdb%microb_rate = .0164
-            carbdb%meta_rate = .0405
-            carbdb%str_rate = .0107
-            org_ratio%nchp = .1
-            xbm = 1.
-            org_con%cs = org_con%cs * carbdb%microb_top_rate
-            ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
-            if (rsdn_pct > 2.) then
-              org_ratio%ncbm = .1
-              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            end if
-            if (rsdn_pct > .01 .and. rsdn_pct <= 2.) then
-              org_ratio%ncbm = 1. / (20.05 - 5.0251 * rsdn_pct)
-              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            carbdb%microb_rate = .02
+            carbdb%meta_rate = .0507
+            carbdb%str_rate = .0132
+            xbm = .25 + .0075 * soil(j)%phys(k)%sand
+             min_n_ppm = 1000. * sol_min_n / (sol_mass / 1000)
+            if (min_n_ppm > 7.15) then
+              org_ratio%ncbm = .33
+              org_ratio%nchs = .083
+              org_ratio%nchp = .143       
             else
-              org_ratio%ncbm = .05
-              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            end if    
+              org_ratio%ncbm = 1. / (15. - 1.678 * min_n_ppm)
+              org_ratio%nchs = 1. / (20. - 1.119 * min_n_ppm)
+              org_ratio%nchp = 1. / (10. - .42 * min_n_ppm)
+            end if
+            org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            
+            ! Commented out as Temp change to same decomp parameters as lower layers
+            ! What is commented out are the original surface layer deccomp parameters 
+            ! org_allo%abco2 = .55
+            ! a1co2 = .55
+            ! carbdb%microb_top_rate = .0164
+            ! carbdb%microb_rate = .0164
+            ! carbdb%meta_rate = .0405
+            ! carbdb%str_rate = .0107
+            ! org_ratio%nchp = .1
+            ! xbm = 1.
+            ! org_con%cs = org_con%cs * carbdb%microb_top_rate
+            ! ! compute n/c ratios - relative nitrogen content in residue
+            ! rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
+            ! if (rsdn_pct > 2.) then
+            !   org_ratio%ncbm = .1
+            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            ! end if
+            ! if (rsdn_pct > .01 .and. rsdn_pct <= 2.) then
+            !   org_ratio%ncbm = 1. / (20.05 - 5.0251 * rsdn_pct)
+            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            ! else
+            !   org_ratio%ncbm = .05
+            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            ! end if    
           else
             ! set nitrogen carbon ratios for lower layers
             org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand

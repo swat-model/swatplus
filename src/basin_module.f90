@@ -62,10 +62,15 @@
                                  !! 1 = new soil P model in Vadas and White (2010)
         integer :: gampt = 0     !! 0 = curve number; 1 = Green and Ampt 
         character(len=1) :: atmo = "a"   !! not used
-        integer :: smax = 0      !! not used
+        integer :: smax = 0      !! not used"
         integer :: qual2e = 0    !! 0 = instream nutrient routing using QUAL2E 
                                  !! 1 = instream nutrient routing using QUAL2E - with simplified nutrient transformations
-        integer :: gwflow = 0       !!   0 = gwflow module not active; 1 = gwflow module active
+        integer :: gwflow = 0    !!   0 = gwflow module not active; 1 = gwflow module active
+        integer :: idc_till = 3  !! 1 = Use dssat tillage method to use if cswat = 2 
+                                 !! 2 = Use epic tillage method to use if cswat = 2
+                                 !! 3 = Use Kamanian tillage method to use if cswat = 2
+                                 !! 4 = Use dndc tillage method to use if cswat = 2
+
       end type basin_control_codes
       type (basin_control_codes) :: bsn_cc
 
@@ -197,6 +202,7 @@
         type(print_interval) :: nb_hru          !!  nutrient balance HRU output
         type(print_interval) :: ls_hru          !!  losses HRU output
         type(print_interval) :: pw_hru          !!  plant weather HRU output
+        type(print_interval) :: cb_hru          !!  plant weather HRU output
         ! HRU-LTE
         type(print_interval) :: wb_sd           !!  water balance SWAT-DEG output 
         type(print_interval) :: nb_sd           !!  nutrient balance SWAT-DEG output
