@@ -32,6 +32,7 @@
       use soil_module
       use constituent_mass_module
       use plant_module
+      use time_module, only : time
       
       implicit none
 
@@ -192,7 +193,7 @@
 
           end do
     
-        if (bsn_cc%cswat == 1) then
+        if (bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
             call mgt_tillfactor(jj,bmix,emix,dtil)
         end if
       end if
