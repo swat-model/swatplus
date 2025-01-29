@@ -65,6 +65,8 @@
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
         real :: salt = 0.                                           !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
+        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile excluding surface layer
+        type (organic_mass) :: surf_org                             !       |soil surface layer soil soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
         type (sediment), dimension(:), allocatable :: sed           !       |sediment dimensioned by layer
@@ -103,12 +105,12 @@
       type (organic_mass) :: soil_prof_hs                           !       |total slow humus pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_hp                           !       |total passive humus pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_microb                       !       |total microbial pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_seq_hs                       !       |sequestered slow humus pool for profile summed up by layer excluding layer 1
+      type (organic_mass) :: soil_prof_seq_hp                       !       |sequestered passive humus pool for profile summed up by layer excluding layer 1
+      type (organic_mass) :: soil_prof_seq_microb                   !       |sequestered microbial pool for profile summed up by layer excluding layer 1
       type (organic_mass) :: soil_prof_str                          !       |total structural pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_lig                          !       |total lignin pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)
-      type (organic_mass) :: soil_prof_sstr                         !       |total structural pool for surface (summed by lower layers)
-      type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for suface (summed by lower layers)
-      type (organic_mass) :: soil_prof_smeta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_man                          !       |total manure pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_water                        !       |total dissolved pool for profile (summed by layer)
       type (organic_mass) :: soil_org_z                             !       |used to zero organic objects
