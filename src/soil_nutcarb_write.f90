@@ -63,42 +63,48 @@
       do j = 1, sp_ob%hru
         iob = sp_ob1%hru + j - 1
         soil1(j)%tot_org = soil_org_z
+        soil1(j)%seq_org = soil_org_z
+        soil1(j)%surf_org = soil_org_z
         soil_prof_hact = soil_org_z
         soil_prof_hsta = soil_org_z
         soil_prof_rsd = soil_org_z
         soil_prof_str = soil_org_z
         soil_prof_lig = soil_org_z
         soil_prof_meta = soil_org_z
-        soil_prof_srsd = soil_org_z
-        soil_prof_sstr = soil_org_z
-        soil_prof_slig = soil_org_z
-        soil_prof_smeta = soil_org_z
         soil_prof_man = soil_org_z
+        soil_prof_seq_hs = soil_org_z
+        soil_prof_seq_hp = soil_org_z
+        soil_prof_seq_microb = soil_org_z
         soil_prof_hs = soil_org_z
         soil_prof_hp = soil_org_z
         soil_prof_microb = soil_org_z
         soil_prof_water = soil_org_z
         do ly = 1, soil(j)%nly
+          if (ly /= 1) then
+            soil_prof_seq_hs = soil_prof_seq_hs + soil1(j)%hs(ly)
+            soil_prof_seq_hp = soil_prof_seq_hp + soil1(j)%hp(ly)
+            soil_prof_seq_microb = soil_prof_seq_microb + soil1(j)%microb(ly)
+          end if
+          soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
           soil_prof_hact = soil_prof_hact + soil1(j)%hact(ly)
           soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
-          if (ly == 1) then
-            soil_prof_srsd = soil_prof_srsd + soil1(j)%rsd(ly)
-            soil_prof_smeta = soil_prof_smeta + soil1(j)%meta(ly)
-            soil_prof_sstr = soil_prof_sstr + soil1(j)%str(ly)
-            soil_prof_slig = soil_prof_slig + soil1(j)%lig(ly)
-          else
-            soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
-            soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
-            soil_prof_str = soil_prof_str + soil1(j)%str(ly)
-            soil_prof_lig = soil_prof_lig + soil1(j)%lig(ly)
-          end if
           soil_prof_man = soil_prof_man + soil1(j)%man(ly)
           soil_prof_hs = soil_prof_hs + soil1(j)%hs(ly)
           soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
           soil_prof_microb = soil_prof_microb + soil1(j)%microb(ly)
           soil_prof_water = soil_prof_water + soil1(j)%water(ly)
         end do
-        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta
+
+        ! Total org all layers
+        soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta &
+                           + soil_prof_str + soil_prof_water + soil_prof_man
+
+        ! Sequestered org for soil layers greater than 1
+        soil1(j)%seq_org = soil_prof_seq_hs + soil_prof_seq_hp + soil_prof_seq_microb
+        
+        ! Surface org, just layer 1 excluding residue
+        soil1(j)%surf_org = soil1(j)%meta(1) + soil1(j)%str(1) + soil1(j)%microb(1) &
+                            + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
         
         !write all organic carbon for the plant community file = "hru_plc_stat.txt"
         write (4560,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
@@ -113,12 +119,12 @@
           
         !write all organic carbon for the residue file = "hru_rsdc_stat.txt"
         write (4561,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil_prof_srsd%c, soil_prof_smeta%c, soil_prof_sstr%c, soil_prof_slig%c,              &
+            soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
             soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         ! file = "hru_rsdc_stat.csv"
         if (pco%csvout == "y") then
           write (4564,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil_prof_srsd%c, soil_prof_smeta%c, soil_prof_sstr%c, soil_prof_slig%c,              &
+            soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
             soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         end if
 
