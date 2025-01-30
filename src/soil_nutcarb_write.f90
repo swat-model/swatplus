@@ -128,15 +128,24 @@
             soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
         end if
 
-        !write all organic carbon for the soil profile, file = "hru_soilc_stat.txt"
+        !write sequestered carbon for the soil profile (except layer1), file = "hru_soilc_stat.txt"
+        ! write (4562,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+        !     soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
+        !     soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
+        ! !file = "hru_soilc_stat.csv"
+        ! if (pco%csvout == "y") then
+        !   write (4565,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+        !     soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
+        !     soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
+        ! end if
+      
+        !write sequestered carbon for the soil profile (except layer1), file = "hru_soilc_stat.txt"
         write (4562,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
-            soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
+            soil1(j)%seq_org%c, soil_prof_seq_hs%c, soil_prof_seq_hp%c, soil_prof_seq_microb%c
         !file = "hru_soilc_stat.csv"
         if (pco%csvout == "y") then
           write (4565,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
-            soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
+            soil1(j)%seq_org%c, soil_prof_seq_hs%c, soil_prof_seq_hp%c, soil_prof_seq_microb%c
         end if
       
         !write organic flux pools for the soil profile file = "hru_cflux_stat.txt"
