@@ -15,7 +15,7 @@
 !!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
 !!    name        |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    frad(:,:)   |none          |fraction of solar radiation occuring during 
+!!    frad(:,:)   |none          |fraction of solar radiation occurring during 
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 !!    ~ ~ ~ LOCAL DEFINITIONS ~ ~ ~
@@ -93,7 +93,7 @@
       yc = wgn_pms(iwgn)%latcos * Cos(sd)
       wst(iwst)%weat%solradmx = 30. * dd * (h * ys + yc * Sin(h))
 
-      !! Calculate fraction of radiation recieved during each hour in day
+      !! Calculate fraction of radiation received during each hour in day
       !! this calculation assumes solar noon (when the angle between the
       !! observer on the earth to the sun and a line normal to the earth"s
       !! at that position is at a minimum) falls at 12 noon in day.

@@ -1,7 +1,7 @@
       subroutine sep_biozone
         
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    This subroutine conducts biophysical processes occuring 
+!!    This subroutine conducts biophysical processes occurring 
 !!    in the biozone layer of a septic HRU.
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~

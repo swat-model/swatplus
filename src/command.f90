@@ -104,7 +104,7 @@
               !! if incoming object is not an hru or ru, send total hyd to surface runoff
               if (ob(icmd)%obtyp_in(in) == "hru" .or. ob(icmd)%obtyp_in(in) == "ru" .or.          &
                                                        ob(icmd)%obtyp_in(in) == "hru_lte") then
-                ! recieving hru, needs %hin_sur and %hin_lat and %hin_til to route separately in hru_control
+                ! receiving hru, needs %hin_sur and %hin_lat and %hin_til to route separately in hru_control
                 if (ob(icmd)%htyp_in(in) == "tot") then
                   ! if total hyd coming in from hru or ru -> add both surface and lateral flows
                   ! add to surface runon

@@ -21,7 +21,7 @@
 
       !call channel_allo
           
-      !! intialize stream-aquifer interactions for geomorphic baseflow
+      !! initialize stream-aquifer interactions for geomorphic baseflow
       !! aquifer to channel flow
       call aqu2d_init
       

@@ -182,7 +182,7 @@
       end if
       sd_ch(i)%msk%nsteps = time%step * sd_ch(i)%msk%substeps
               
-        !! intial inflow-outflow
+        !! initial inflow-outflow
         if (sd_ch(i)%msk%nsteps > 0) then
           sd_ch(i)%in1_vol = rcurv%flo_rate / (86400. / sd_ch(i)%msk%nsteps)
           sd_ch(i)%out1_vol = rcurv%flo_rate / (86400. / sd_ch(i)%msk%nsteps)
@@ -213,7 +213,7 @@
           iom_ini = sd_init(ich_ini)%org_min
           tot_stor(ich) = om_init_water(iom_ini)
                     
-          !! intialize rating curves - inflow and outflow at current time step
+          !! initialize rating curves - inflow and outflow at current time step
           flow_dep = om_init_water(iom_ini)%flo * sd_ch(ich)%chd
           icha = ich
           call rcurv_interp_dep (icha, flow_dep)

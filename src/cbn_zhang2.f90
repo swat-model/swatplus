@@ -759,7 +759,7 @@
               !!!=================================
               !!transformation processes from lignin structural (str) and metabolic (met) and  pools to s2 (slow humus)
 
-                      !!str (structrual litter) to s2 (slow humus)
+                      !!str (structural litter) to s2 (slow humus)
                       org_flux%cfstrs2 = .7 * lslcta              
                       call nut_np_flow (&
                              soil1(j)%str(k)%c, soil1(j)%str(k)%n,       & !input
@@ -875,7 +875,7 @@
                 soil1(j)%meta(k)%c = soil1(j)%meta(k)%c - lmcta
               end if
               
-              !! set residue decompostion for printing
+              !! set residue decomposition for printing
               if (k == 1) then
                 !! surface residue
                 hrc_d(j)%rsd_surfdecay_c = lmcta + lscta
@@ -889,8 +889,8 @@
 
               soil1(j)%str(k)%n = max(.001, soil1(j)%str(k)%n - org_flux%efstrs1 & !subtract n flow from str (structural litter) to s1 (microbial biomass)
                             - org_flux%efstrs2                     &!subtract n flow from str (structural litter) to s2 (slow humus)
-                            - org_flux%mnrstrs1                    &!subtract mineralization during tansformation from str (structural litter) to s1 (microbial biomass)
-                            - org_flux%mnrstrs2)                    !subtract mineralization during tansformation from str (structural litter) to s2 (slow humus)
+                            - org_flux%mnrstrs1                    &!subtract mineralization during transformation from str (structural litter) to s1 (microbial biomass)
+                            - org_flux%mnrstrs2)                    !subtract mineralization during transformation from str (structural litter) to s2 (slow humus)
 
               soil1(j)%microb(k)%n = soil1(j)%microb(k)%n + org_flux%efmets1         & !add n flow from met (metabolic litter) to s1 (microbial biomass)
                     + org_flux%efstrs1                            & !add n flow from str (structural litter) to s1 (microbial biomass)
@@ -898,8 +898,8 @@
                     - org_flux%efs1s3                             & !subtract n flow from s1 (microbial biomass) to s3 (passive humus)
                     + org_flux%efs2s1                             & !add n flow from s2 (slow humus) to  s1 (microbial biomass)
                     + org_flux%efs3s1                             & !add n flow from s3 (passive humus) to s1 (microbial biomass)                  
-                    - org_flux%mnrs1s2                            & !subtract mineralization during tansformation from s1 (microbial biomass) to s2 (slow humus)
-                    - org_flux%mnrs1s3                            & !subtract mineralization during tansformation from s1 (microbial biomass) to s3 (passive humus)                   
+                    - org_flux%mnrs1s2                            & !subtract mineralization during transformation from s1 (microbial biomass) to s2 (slow humus)
+                    - org_flux%mnrs1s3                            & !subtract mineralization during transformation from s1 (microbial biomass) to s3 (passive humus)                   
                     + org_flux%immmets1                           & !add immobilization during transformaiton from met (metabolic litter) to s1 (microbial biomass)
                     + org_flux%immstrs1                           & !add immobilization during transformaiton from str (structural litter) to s1 (microbial biomass)
                     + org_flux%imms2s1                            & !add immobilization during transformaiton from s2 (slow humus) to  s1 (microbial biomass)
@@ -909,17 +909,17 @@
                     org_flux%efs1s2                               & !add n flow from s1 (microbial biomass) to s2 (slow humus)
                     - org_flux%efs2s1                             & !subtract n flow from s2 (slow humus) to  s1 (microbial biomass)
                     - org_flux%efs2s3                             & ! subtract n flow from s2 (slow humus) to  s3 (passive humus)                  
-                    - org_flux%mnrs2s1                            & !subtract mineralization during tansformation from s2 (slow humus) to  s1 (microbial biomass)
-                    - org_flux%mnrs2s3                            & !subtract mineralization during tansformation from s2 (slow humus) to  s3 (passive humus)                   
-                    + org_flux%immstrs2                           & !add immobilization during tansformation from str (structural litter) to s2 (slow humus)
-                    + org_flux%imms1s2                              !add immobilization during tansformation from s1 (microbial biomass) to s2 (slow humus)
+                    - org_flux%mnrs2s1                            & !subtract mineralization during transformation from s2 (slow humus) to  s1 (microbial biomass)
+                    - org_flux%mnrs2s3                            & !subtract mineralization during transformation from s2 (slow humus) to  s3 (passive humus)                   
+                    + org_flux%immstrs2                           & !add immobilization during transformation from str (structural litter) to s2 (slow humus)
+                    + org_flux%imms1s2                              !add immobilization during transformation from s1 (microbial biomass) to s2 (slow humus)
               
               soil1(j)%hp(k)%n = soil1(j)%hp(k)%n + org_flux%efs1s3 +        & !add n flow from s1 (microbial biomass) to s3 (passive humus)
                     org_flux%efs2s3                               & !add n flow from s2 (slow humus) to s3 (passive humus)                   
                     - org_flux%efs3s1                             & !subtract n flow from s3 (passive humus) to s1 (microbial biomass)
                     - org_flux%mnrs3s1                            & !subtract mineralization.
-                    + org_flux%imms1s3                            & !add immobilization during tansformation from s1 (microbial biomass) to s3 (passive humus)
-                    + org_flux%imms2s3                              !add immobilization during tansformation from s2 (slow humus) to s3 (passive humus)
+                    + org_flux%imms1s3                            & !add immobilization during transformation from s1 (microbial biomass) to s3 (passive humus)
+                    + org_flux%imms2s3                              !add immobilization during transformation from s2 (slow humus) to s3 (passive humus)
               
               !!update soil respiration
               !!===============================
@@ -936,7 +936,7 @@
               !total cumulative org flux soil profile
               soil1(j)%org_flx_cum_tot = soil1(j)%org_flx_cum_tot + soil1(j)%org_flx_lr(k) 
               
-              !!update other vairables used in swat
+              !!update other variables used in swat
               !!==================================
               !soil1(j)%tot(k)%m = soil1(j)%str(k)%m + soil1(j)%meta(k)%m
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 

@@ -54,7 +54,7 @@
           soil(isol)%det_sil - soil(isol)%det_cla - soil(isol)%det_sag  !! Large Aggregate fraction
 
       !! Error check. May happen for soils with more sand
-      !! Soil not typical of mid-western USA The fraction wont add upto 1.0
+      !! Soil not typical of mid-western USA The fraction won't add upto 1.0
       if (soil(isol)%det_lag < 0.) then
         soil(isol)%det_san = soil(isol)%det_san/(1 - soil(isol)%det_lag) 
         soil(isol)%det_sil = soil(isol)%det_sil/(1 - soil(isol)%det_lag) 
