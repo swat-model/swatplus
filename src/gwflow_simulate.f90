@@ -355,7 +355,7 @@
           !only proceed if the cell is active
           if(gw_state(i)%stat > 0) then
             
-            !if the cell is interior (not a boundry cell)
+            !if the cell is interior (not a boundary cell)
             if(gw_state(i)%stat == 1) then
               
               !loop through the cells connected to the current cell

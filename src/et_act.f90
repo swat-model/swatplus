@@ -65,7 +65,7 @@
                                  !              |plant cover    
       real :: pet = 0.           !mm H2O        |amount of PET remaining after water stored
                                  !              |in canopy is evaporated
-      real :: esleft = 0.        !mm H2O        |potenial soil evap that is still available
+      real :: esleft = 0.        !mm H2O        |potential soil evap that is still available
       real :: evzp = 0.          !              |
       real :: eosl = 0.          !mm H2O        |maximum amount of evaporation that can occur
                                  !              |from soil profile

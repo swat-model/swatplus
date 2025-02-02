@@ -101,7 +101,7 @@
         sedin = sedyld(j)
       
         !! Calculate sediment losses in sheetflow at waterway sides
-        !! calculate area of sheeflow in m^2 assumne *:1 side slope 8.06 = (8^2+1^2)^.5
+        !! calculate area of sheeflow in m^2 assume *:1 side slope 8.06 = (8^2+1^2)^.5
         sf_area = (hru(j)%lumv%grwat_d - rchdep) * 8.06 * hru(j)%lumv%grwat_l * 1000.
         !! limit area of sheet flow to 10% of hru area
         sf_area =  Min(0.1 * hru(j)%area_ha * 10000., sf_area)

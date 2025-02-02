@@ -8,7 +8,7 @@
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    pup1(:)   |none           |1st shape parameter for plant P uptake
 !!                                |equation
-!!    pup2(:)   |none           |2st shape parameter for plant P uptake
+!!    pup2(:)   |none           |2nd shape parameter for plant P uptake
 !!                                |equation
 !!    ihru        |none           |HRU number
 !!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
