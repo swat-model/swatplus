@@ -153,6 +153,7 @@
       END IF
 
       soil1(j)%microb(1)%c = soil1(j)%microb(1)%c - YBC 
+      soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c + soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
       hsc_d(j)%surq_c = QBC * (surfq(j) / (surfq(j) + soil(j)%ly(1)%flat + 1.e-6))
        
       soil(j)%ly(1)%latc = QBC*(soil(j)%ly(1)%flat/(surfq(j)+soil(j)%ly(1)%flat+1.e-6))
@@ -160,12 +161,12 @@
       hsc_d(j)%sed_c = YOC + YBC
       
       do k = 2, soil(j)%nly
-          if (soil(j)%ly(k)%prk > 0 .and. k == soil(j)%nly) then
-          end if
+          ! if (soil(j)%ly(k)%prk > 0 .and. k == soil(j)%nly) then   ! commented out by FG because it doesn't do anything.
+          ! end if
           sol_thick = 0.
           sol_thick = soil(j)%phys(k)%d-soil(j)%phys(k-1)%d
           ! soil1(j)%tot(1)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c 
-          soil1(j)%tot(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c 
+          ! soil1(j)%tot(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c  ! commented out by FG because is not needed here.
           Y1 = soil1(j)%microb(k)%c + VBC
           VBC=0.
           IF(Y1>=.01)THEN
@@ -176,11 +177,14 @@
           soil(j)%ly(k)%percc = VBC-soil(j)%ly(k)%latc
           soil1(j)%microb(k)%c = Y1 - VBC
 
-        !! calculate nitrate in percolate and lateral flow
-        if (k == soil(j)%nly) then
-          hsc_d(j)%perc_c = soil(j)%ly(k)%percc
-        end if
-        latc_clyr = latc_clyr + soil(j)%ly(k)%latc
+          !! calculate nitrate in percolate and lateral flow
+          if (k == soil(j)%nly) then
+            hsc_d(j)%perc_c = soil(j)%ly(k)%percc
+          end if
+          latc_clyr = latc_clyr + soil(j)%ly(k)%latc
+
+          soil1(j)%tot(k)%c = soil1(j)%str(k)%c + soil1(j)%meta(k)%c + soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
+
       end do
      
       hsc_d(j)%latq_c = latc_clyr
