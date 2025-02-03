@@ -296,6 +296,7 @@
       do k = 1, soil(j)%nly
         !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
         sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
+      
          
         ! if k = 1, then using temperature, soil moisture in layer 2 to calculate decomposition factor
         if (k == 1) then
@@ -324,7 +325,8 @@
           !compute tillage factor (till_eff) from armen
           till_eff = 1.0
 
-          select case (bsn_cc%idc_till)
+          ! select case (bsn_cc%idc_till)
+          select case (3)
 
             case(1)
               !calculate tillage factor using dssat
@@ -346,8 +348,12 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-              ! Kamanian method    ----having modi
-              till_eff = 1. + soil(j)%ly(k)%tillagef 
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+                ! Kamanian method    ----having modi
+                till_eff = 1. + soil(j)%ly(k)%tillagef 
+              else
+                till_eff = 1.0
+              endif
 
             case(4)
               ! place holder for dndc method
@@ -380,6 +386,7 @@
           soil1(j)%mn(k)%no3 = max(0.0001,soil1(j)%mn(k)%no3 - wdn)
           hnb_d(j)%denit = hnb_d(j)%denit + wdn
           sol_min_n = soil1(j)%mn(k)%no3 + soil1(j)%mn(k)%nh4
+          ! print*, "1. in cbn_zhang2", k, soil1(j)%mn(k)%no3
               
           !lignin content in structural litter (fraction)          
           rlr = min(0.8, soil1(j)%lig(k)%m / (soil1(j)%str(k)%m + 1.e-5))  
@@ -645,14 +652,15 @@
               
         !     update
               if (rnmn > 0.) then
-                  soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
-	          min_n = soil1(j)%mn(k)%no3 + rnmn
-	            if (min_n < 0.) then
-	              rnmn = -soil1(j)%mn(k)%no3
-	              soil1(j)%mn(k)%no3 = 1.e-10
-	            else
-	              soil1(j)%mn(k)%no3 = min_n
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
+                min_n = soil1(j)%mn(k)%no3 + rnmn
+                if (min_n < 0.) then
+                  rnmn = -soil1(j)%mn(k)%no3
+                  soil1(j)%mn(k)%no3 = 1.e-10
+                else
+                  soil1(j)%mn(k)%no3 = min_n
                 end if   
+                ! print*, "2. in cbn_zhang2", k, soil1(j)%mn(k)%no3, rnmn
               end if
               
 	          ! calculate p flows
