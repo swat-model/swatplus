@@ -140,6 +140,7 @@
         percnlyr = co * soil(j)%ly(jj)%prk
         percnlyr = Min(percnlyr, soil1(j)%mn(jj)%no3)
         soil1(j)%mn(jj)%no3 = max(0.0001,soil1(j)%mn(jj)%no3 - percnlyr)
+        ! print*, "in nut_nlch", jj, soil1(j)%mn(jj)%no3, percnlyr
         
         !! last layer leaches from soil profile
         if (jj == soil(j)%nly) then
