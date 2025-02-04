@@ -459,13 +459,13 @@
         open (4548,file = "hru_cbn_lyr.txt", recl = 1500)
         write (4548,*)  bsn%name, prog
         write (4548,*)                                     &
-  "Freq          jday         mon         day        year        unit hru     name               total soil carbon (kg/ha) by layer "
+          "freq          jday         mon         day        year        unit hru     name               total soil carbon (Mg/ha) by layer "
         write (9000,*) "HRU                       hru_cbn_lyr.txt"
         if (pco%csvout == "y") then
           open (4549,file="hru_cbn_lyr.csv", recl = 1500)
           write (4549,*)  bsn%name, prog
           write (4549,*)                  &
-  "Freq,jday,mon,day,year,unit,hru,name,total soil carbon (kg/ha) by layer"
+          "freq,jday,mon,day,year,unit,hru,name,total soil carbon (Mg/ha) by layer"
           write (9000,*) "HRU                       hru_cbn_lyr.csv"
         end if
     
