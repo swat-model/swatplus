@@ -325,8 +325,7 @@
           !compute tillage factor (till_eff) from armen
           till_eff = 1.0
 
-          ! select case (bsn_cc%idc_till)
-          select case (3)
+          select case (bsn_cc%idc_till)
 
             case(1)
               !calculate tillage factor using dssat
