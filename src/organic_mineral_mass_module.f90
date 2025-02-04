@@ -76,7 +76,7 @@
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue-all plants in one pool by layer - layer 1 = surface residue
         !! humus pools for old mineralization model (static carbon)
-        type (organic_flux)                            :: org_flx_cum_tot ! |cumulative organic flux for soil profile
+        type (organic_flux)                            :: org_flx_tot ! |total organic flux for soil profile
         type (organic_flux), dimension(:), allocatable :: org_flx_lr !      |organic flux by layer
         type (organic_flux), dimension(:), allocatable :: org_flx_cum_lr !  |cumulative organic flux by layer
         type (organic_mass), dimension(:), allocatable :: hact      !       |active humus for old mineralization model dimensioned by layer

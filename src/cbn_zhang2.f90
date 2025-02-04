@@ -293,6 +293,7 @@
 
       !!calculate c/n dynamics for each soil layer
       !!===========================================
+      soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
         !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
         sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
@@ -916,12 +917,9 @@
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
               
-              ! Save the the org_flux for each layer
-              soil1(j)%org_flx_lr(k) = org_flux     ! Org flux for current day for soil layer k
-              soil1(j)%org_flx_cum_lr(k) = soil1(j)%org_flx_cum_lr(k) + soil1(j)%org_flx_lr(k) !cumulative org flux for layer k
-
-              !total cumulative org flux soil profile
-              soil1(j)%org_flx_cum_tot = soil1(j)%org_flx_cum_tot + soil1(j)%org_flx_lr(k) 
+              ! Save the the org_flux for each layer and a total per day
+              soil1(j)%org_flx_lr(k) = org_flux     
+              soil1(j)%org_flx_tot = soil1(j)%org_flx_tot + soil1(j)%org_flx_lr(k) 
               
               !!update other vairables used in swat
               !!==================================
