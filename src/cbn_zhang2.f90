@@ -325,8 +325,7 @@
           !compute tillage factor (till_eff) from armen
           till_eff = 1.0
 
-          ! select case (bsn_cc%idc_till)
-          select case (3)
+          select case (bsn_cc%idc_till)
 
             case(1)
               !calculate tillage factor using dssat
@@ -929,7 +928,6 @@
               !soil1(j)%tot(k)%m = soil1(j)%str(k)%m + soil1(j)%meta(k)%m
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 
               ! soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
-              ! soil1(j)%rsd(k)%c = soil1(j)%meta(k)%c + soil1(j)%str(k)%c
               soil1(j)%tot(k)%c = soil1(j)%str(k)%c + soil1(j)%meta(k)%c + soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
         end if  !soil temp and soil water > 0.
 

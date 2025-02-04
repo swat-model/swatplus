@@ -456,10 +456,18 @@
 !!! NEW SOILC_STAT/RESC_STAT/PLC_STAT CARBON OUTPUT FILES
 
         !! write carbon in soil by layer
-        open (9999,file = "hru_cbn_lyr.txt", recl = 1500)
-          write (9999,*)  bsn%name, prog
-          write (9999,*)                                     &
-    "        jday        mon          day       year hru     name               total soil carbon (kg/ha) by layer "
+        open (4548,file = "hru_cbn_lyr.txt", recl = 1500)
+        write (4548,*)  bsn%name, prog
+        write (4548,*)                                     &
+          "freq          jday         mon         day        year        unit hru     name               total soil carbon (Mg/ha) by layer "
+        write (9000,*) "HRU                       hru_cbn_lyr.txt"
+        if (pco%csvout == "y") then
+          open (4549,file="hru_cbn_lyr.csv", recl = 1500)
+          write (4549,*)  bsn%name, prog
+          write (4549,*)                  &
+          "freq,jday,mon,day,year,unit,hru,name,total soil carbon (Mg/ha) by layer"
+          write (9000,*) "HRU                       hru_cbn_lyr.csv"
+        end if
     
         !! write carbon in soil, plant, and residue
         open (4560,file = "hru_plc_stat.txt", recl = 1500)
