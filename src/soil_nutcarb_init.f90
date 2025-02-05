@@ -167,6 +167,12 @@
           soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.               !assume 80:1 C:P ratio
 
           soil1(ihru)%tot(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+          if (ly == 1) then
+            soil1(ihru)%seq(ly)%c = 0.0
+          else
+            soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+          endif
+
         end if
       end do   !! ens soil layer loop 
 
