@@ -65,7 +65,7 @@
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
         real :: salt = 0.                                           !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
-        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile excluding surface layer
+        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile wich does not include the surface layer
         type (organic_mass) :: surf_org                             !       |soil surface layer soil soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
@@ -74,6 +74,7 @@
         type (mineral_phosphorus), dimension(:), allocatable :: mp  !       |mineral p humus pool dimensioned by layer
         !! tot and rsd used for both carbon methods
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
         type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue-all plants in one pool by layer - layer 1 = surface residue
         !! humus pools for old mineralization model (static carbon)
         type (organic_flux)                            :: org_flx_tot ! |total organic flux for soil profile
