@@ -151,7 +151,6 @@
         end if
 
         !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
-        ! if (ihru == 1) then
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
             soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
@@ -163,16 +162,32 @@
           write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
-        ! end if
+
+        !write total carbon by soil layer, file = "hru_seq_lyr.txt"
+        if (bsn_cc%cswat /= 2) then
+          do ly = 1, soil(j)%nly
+            if (ly == 1 ) then
+              soil1(j)%seq(ly)%c = 0.0
+            else
+              soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
+            endif
+          end do
+        end if
+        write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
+                                                (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
+        if (pco%csvout == "y") then
+          write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
+                                                (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
+        end if
       
-        !write organic flux pools for the soil profile file = "hru_cflux_stat.txt"
+        !write organic flux pools for the soil profile file = "hru_cflux_stat.txt" make this non-cumulative
         if (bsn_cc%cswat == 2) then
           write (4567,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                        soil1(j)%org_flx_cum_tot 
+                        soil1(j)%org_flx_tot 
           !file = "hru_cflux_stat.csv"
           if (pco%csvout == "y") then
             write (4568,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                          soil1(j)%org_flx_cum_tot 
+                          soil1(j)%org_flx_tot 
           endif 
         end if
 
@@ -181,25 +196,23 @@
           write (4570,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                         soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
                         soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c,                  &
-                        soil1(j)%org_flx_cum_tot 
+                        soil1(j)%org_flx_tot 
           !file = "hru_soilcarb_mb_stat.csv"
           if (pco%csvout == "y") then
             write (4571,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                         soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
                         soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c,                  &
-                        soil1(j)%org_flx_cum_tot 
+                        soil1(j)%org_flx_tot 
           endif 
         end if
 
         ! Set the org_flux pools to zero if at the end of the calendar year
-        if (bsn_cc%cswat == 2) then
-          if (out_freq == "y") then
-            soil1(j)%org_flx_cum_tot = org_flux_zero
-            do ly = 1, soil(j)%nly
-              soil1(j)%org_flx_cum_lr(ly) = org_flux_zero
-            end do
-          end if
-        end if
+        ! if (bsn_cc%cswat == 2) then
+        !   do ly = 1, soil(j)%nly
+        !       soil1(j)%org_flx_cum_lr(ly) = org_flux_zero
+        !     end do
+        !   end if
+        ! end if
       end do    !! hru loop
       
       !! summing hru output for the basin
