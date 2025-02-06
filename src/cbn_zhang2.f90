@@ -96,7 +96,7 @@
        !prmt_51 !coef adjusts microbial activity function in top soil layer (0.1_1.)
        
        integer :: j = 0          !                     |number of hru
-       integer :: k = 0          !none                 |counter
+       integer :: k = 0          !none                 |counte
        integer :: kk = 0         !                     |
        integer :: lmnta = 0      !                     |      
        integer :: min_n_ppm = 0  !                     |
@@ -284,17 +284,20 @@
        
         
       !calculate tillage factor using dssat
-      if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
-         tillage_factor(j) = 1.6
-      else
-         tillage_factor(j) = 1.0
-      end if	
+      ! The following is commented out because it is not used. FG
+      ! if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+      !    tillage_factor(j) = 1.6
+      ! else
+      !    tillage_factor(j) = 1.0
+      ! end if	
 
       !!calculate c/n dynamics for each soil layer
       !!===========================================
+      soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
         !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
         sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
+      
          
         ! if k = 1, then using temperature, soil moisture in layer 2 to calculate decomposition factor
         if (k == 1) then
@@ -345,8 +348,12 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-              ! Kamanian method    ----having modi
-              till_eff = 1. + soil(j)%ly(k)%tillagef 
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+                ! Kamanian method    ----having modi
+                till_eff = 1. + soil(j)%ly(k)%tillagef 
+              else
+                till_eff = 1.0
+              endif
 
             case(4)
               ! place holder for dndc method
@@ -379,6 +386,7 @@
           soil1(j)%mn(k)%no3 = max(0.0001,soil1(j)%mn(k)%no3 - wdn)
           hnb_d(j)%denit = hnb_d(j)%denit + wdn
           sol_min_n = soil1(j)%mn(k)%no3 + soil1(j)%mn(k)%nh4
+          ! print*, "1. in cbn_zhang2", k, soil1(j)%mn(k)%no3
               
           !lignin content in structural litter (fraction)          
           rlr = min(0.8, soil1(j)%lig(k)%m / (soil1(j)%str(k)%m + 1.e-5))  
@@ -391,52 +399,31 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            ! set nitrogen carbon ratios for lower layers
-            org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
+            org_allo%abco2 = .55
             a1co2 = .55
-            carbdb%microb_rate = .02
-            carbdb%meta_rate = .0507
-            carbdb%str_rate = .0132
-            xbm = .25 + .0075 * soil(j)%phys(k)%sand
-             min_n_ppm = 1000. * sol_min_n / (sol_mass / 1000)
-            if (min_n_ppm > 7.15) then
-              org_ratio%ncbm = .33
-              org_ratio%nchs = .083
-              org_ratio%nchp = .143       
-            else
-              org_ratio%ncbm = 1. / (15. - 1.678 * min_n_ppm)
-              org_ratio%nchs = 1. / (20. - 1.119 * min_n_ppm)
-              org_ratio%nchp = 1. / (10. - .42 * min_n_ppm)
+            carbdb%microb_top_rate = .0164
+            carbdb%microb_rate = .0164
+            carbdb%meta_rate = .0405
+            carbdb%str_rate = .0107
+            org_ratio%nchp = .1
+            xbm = 1.
+            org_con%cs = org_con%cs * carbdb%microb_top_rate
+            ! compute n/c ratios - relative nitrogen content in residue
+            rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
+            if (rsdn_pct > 2.) then
+              org_ratio%ncbm = .1
+              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
             end if
-            org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            
-            ! Commented out as Temp change to same decomp parameters as lower layers
-            ! What is commented out are the original surface layer deccomp parameters 
-            ! org_allo%abco2 = .55
-            ! a1co2 = .55
-            ! carbdb%microb_top_rate = .0164
-            ! carbdb%microb_rate = .0164
-            ! carbdb%meta_rate = .0405
-            ! carbdb%str_rate = .0107
-            ! org_ratio%nchp = .1
-            ! xbm = 1.
-            ! org_con%cs = org_con%cs * carbdb%microb_top_rate
-            ! ! compute n/c ratios - relative nitrogen content in residue
-            ! rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
-            ! if (rsdn_pct > 2.) then
-            !   org_ratio%ncbm = .1
-            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            ! end if
-            ! if (rsdn_pct > .01 .and. rsdn_pct <= 2.) then
-            !   org_ratio%ncbm = 1. / (20.05 - 5.0251 * rsdn_pct)
-            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            ! else
-            !   org_ratio%ncbm = .05
-            !   org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
-            !   org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
-            ! end if    
+            if (rsdn_pct > .01 .and. rsdn_pct <= 2.) then
+              org_ratio%ncbm = 1. / (20.05 - 5.0251 * rsdn_pct)
+              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            else
+              org_ratio%ncbm = .05
+              org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
+              org_allo%abp = .003 + .00032 * soil(j)%phys(k)%clay
+            end if    
           else
             ! set nitrogen carbon ratios for lower layers
             org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
@@ -665,14 +652,15 @@
               
         !     update
               if (rnmn > 0.) then
-                  soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
-	          min_n = soil1(j)%mn(k)%no3 + rnmn
-	            if (min_n < 0.) then
-	              rnmn = -soil1(j)%mn(k)%no3
-	              soil1(j)%mn(k)%no3 = 1.e-10
-	            else
-	              soil1(j)%mn(k)%no3 = min_n
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
+                min_n = soil1(j)%mn(k)%no3 + rnmn
+                if (min_n < 0.) then
+                  rnmn = -soil1(j)%mn(k)%no3
+                  soil1(j)%mn(k)%no3 = 1.e-10
+                else
+                  soil1(j)%mn(k)%no3 = min_n
                 end if   
+                ! print*, "2. in cbn_zhang2", k, soil1(j)%mn(k)%no3, rnmn
               end if
               
 	          ! calculate p flows
@@ -879,9 +867,11 @@
               if (k == 1) then
                 !! surface residue
                 hrc_d(j)%rsd_surfdecay_c = lmcta + lscta
+                ! soil1(j)%rsd(1)%c = soil1(j)%rsd(1)%c - hrc_d(j)%rsd_surfdecay_c
               else
                 !! subsurface and root residue
                 hrc_d(j)%rsd_rootdecay_c = lmcta + lscta
+                ! soil1(j)%rsd(k)%c = soil1(j)%rsd(k)%c - hrc_d(j)%rsd_rootdecay_c
               end if 
               
               soil1(j)%meta(k)%n = max(.001, soil1(j)%meta(k)%n - org_flux%efmets1 & !subtract n flow from met (metabolic litter) to s1 (microbial biomass)
@@ -929,19 +919,22 @@
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
               
-              ! Save the the org_flux for each layer
-              soil1(j)%org_flx_lr(k) = org_flux     ! Org flux for current day for soil layer k
-              soil1(j)%org_flx_cum_lr(k) = soil1(j)%org_flx_cum_lr(k) + soil1(j)%org_flx_lr(k) !cumulative org flux for layer k
-
-              !total cumulative org flux soil profile
-              soil1(j)%org_flx_cum_tot = soil1(j)%org_flx_cum_tot + soil1(j)%org_flx_lr(k) 
+              ! Save the the org_flux for each layer and a total per day
+              soil1(j)%org_flx_lr(k) = org_flux     
+              soil1(j)%org_flx_tot = soil1(j)%org_flx_tot + soil1(j)%org_flx_lr(k) 
               
               !!update other variables used in swat
               !!==================================
               !soil1(j)%tot(k)%m = soil1(j)%str(k)%m + soil1(j)%meta(k)%m
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 
-              soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
-              soil1(j)%rsd(k)%c = soil1(j)%meta(k)%c + soil1(j)%str(k)%c
+              ! soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
+              soil1(j)%tot(k)%c = soil1(j)%str(k)%c + soil1(j)%meta(k)%c + soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
+              if (k == 1 ) then
+                soil1(j)%seq(k)%c = 0.0
+              else
+                soil1(j)%seq(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
+              endif
+
         end if  !soil temp and soil water > 0.
 
       end do      !soil layer loop

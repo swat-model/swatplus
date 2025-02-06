@@ -65,6 +65,8 @@
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
         real :: salt = 0.                                           !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
+        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile wich does not include the surface layer
+        type (organic_mass) :: surf_org                             !       |soil surface layer soil soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon
         type (sediment), dimension(:), allocatable :: sed           !       |sediment dimensioned by layer
@@ -72,9 +74,10 @@
         type (mineral_phosphorus), dimension(:), allocatable :: mp  !       |mineral p humus pool dimensioned by layer
         !! tot and rsd used for both carbon methods
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
         type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue-all plants in one pool by layer - layer 1 = surface residue
         !! humus pools for old mineralization model (static carbon)
-        type (organic_flux)                            :: org_flx_cum_tot ! |cumulative organic flux for soil profile
+        type (organic_flux)                            :: org_flx_tot ! |total organic flux for soil profile
         type (organic_flux), dimension(:), allocatable :: org_flx_lr !      |organic flux by layer
         type (organic_flux), dimension(:), allocatable :: org_flx_cum_lr !  |cumulative organic flux by layer
         type (organic_mass), dimension(:), allocatable :: hact      !       |active humus for old mineralization model dimensioned by layer
@@ -103,6 +106,9 @@
       type (organic_mass) :: soil_prof_hs                           !       |total slow humus pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_hp                           !       |total passive humus pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_microb                       !       |total microbial pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_seq_hs                       !       |sequestered slow humus pool for profile summed up by layer excluding layer 1
+      type (organic_mass) :: soil_prof_seq_hp                       !       |sequestered passive humus pool for profile summed up by layer excluding layer 1
+      type (organic_mass) :: soil_prof_seq_microb                   !       |sequestered microbial pool for profile summed up by layer excluding layer 1
       type (organic_mass) :: soil_prof_str                          !       |total structural pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_lig                          !       |total lignin pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)

@@ -169,6 +169,7 @@
             frac_non_mixed = sol_msn(l) / sol_mass(l)
             
             soil1(jj)%mn(l) = frac_non_mixed * soil1(jj)%mn(l) + frac_dep(l) * mix_mn
+            ! print*, "in mgt_newtill_mix", l, soil1(jj)%mn(l)%no3
             soil1(jj)%mp(l) = frac_non_mixed * soil1(jj)%mp(l) + frac_dep(l) * mix_mp
             soil1(jj)%tot(l) = frac_non_mixed * soil1(jj)%tot(l) + frac_dep(l) * mix_org%tot
             soil1(jj)%rsd(l) = frac_non_mixed * soil1(jj)%rsd(l) + frac_dep(l) * mix_org%rsd
