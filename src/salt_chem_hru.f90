@@ -71,6 +71,7 @@
           K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,&                 
           error1ST,error2ND,error3RD,errorTotal
       
+      SkipedIEX = 0.
       
       !hru ID
       j = ihru
