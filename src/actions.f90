@@ -128,7 +128,7 @@
               hru(j)%irr_hmax = d_tbl%act(iac)%const !mm target ponding depth
               hru(j)%irr_hmin = d_tbl%act(iac)%const2 !mm threshold ponding depth for irrigation
               
-              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !mm irrigation by wro already happend for today Jaehak 2023
+              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !mm irrigation by wro already happened for today Jaehak 2023
 
               if (wet_ob(j)%depth*1000.<hru(j)%irr_hmin) then
                 irrig(j)%demand = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
@@ -755,7 +755,7 @@
                 
             end select
             
-            ! set inflow hydrograph fraction of recieving objects - used for dtbl flow fractions
+            ! set inflow hydrograph fraction of receiving objects - used for dtbl flow fractions
             ! set first object hyd fractin as defined in decision table
             inhyd = dtbl_flo(idtbl)%act(iac)%ob_num
             ihyd_in = ob(ob_num)%rcvob_inhyd(inhyd)
@@ -781,7 +781,7 @@
               else
                 frac = d_tbl%act(iac)%const / hwb_d(j)%qtile
               end if
-              ! set inflow hydrograph fraction of recieving objects - used for dtbl flow fractions
+              ! set inflow hydrograph fraction of receiving objects - used for dtbl flow fractions
               ! set first object hyd fractin as defined in decision table
               inhyd = dtbl_flo(idtbl)%act(iac)%ob_num
               ihyd_in = ob(ob_num)%rcvob_inhyd(inhyd)
@@ -1006,7 +1006,7 @@
               end if
             end do
             
-            !! set parameters for structural land use/managment
+            !! set parameters for structural land use/management
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("tiledrain       ", istr1, j)
             end if
@@ -1027,7 +1027,7 @@
               end if
             end do
                   
-            !! set parameters for structural land use/managment
+            !! set parameters for structural land use/management
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("septic          ", istr1, j)
             end if
@@ -1046,7 +1046,7 @@
               end if
             end do
             
-            !! set parameters for structural land use/managment
+            !! set parameters for structural land use/management
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("fstrip         ", istr1, j)
             end if
@@ -1066,7 +1066,7 @@
               end if
             end do
             
-            !! set parameters for structural land use/managment
+            !! set parameters for structural land use/management
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("grassww         ", istr1, j)
             end if
@@ -1092,7 +1092,7 @@
               end if
             end do
             
-            !! set parameters for structural land use/managment
+            !! set parameters for structural land use/management
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("user_def        ", istr1, j)
             end if

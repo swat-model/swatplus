@@ -206,7 +206,7 @@
           rwb_y(ireg)%lum(ilum)%sw_300 = rwb_y(ireg)%lum(ilum)%sw_300 / 12.
           constwb = 1. / (10. * region(ireg)%lum_ha(ilum))              !10.*mm*ha=m3
           constnb = 1. / (region(ireg)%lum_ha(ilum))                    !kg/ha*ha=kg
-          constpw = region(ireg)%area_ha / region(ireg)%lum_ha(ilum)    !weighted ave fro non-dimensional and weather
+          constpw = region(ireg)%area_ha / region(ireg)%lum_ha(ilum)    !weighted ave for non-dimensional and weather
           ilum_db = region(ireg)%lum_num(ilum)                          !lum database number
           region(ireg)%lum_ha_tot(ilum_db) = region(ireg)%lum_ha_tot(ilum_db) + region(ireg)%lum_ha(ilum)
           rwb_a(ireg)%lum(ilum_db) = rwb_a(ireg)%lum(ilum_db) + rwb_y(ireg)%lum(ilum) / constwb

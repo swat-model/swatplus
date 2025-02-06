@@ -1,7 +1,7 @@
       function chg_par (val_cur, chg_typ, chg_val, absmin, absmax)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this function computes new paramter value based on 
+!!    this function computes new parameter value based on 
 !!    user defined change
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~

@@ -153,7 +153,7 @@
         character(len=16) :: name = "default"
         real :: init_val = 0.                       !! xwalk lum()%name with lscal()%lum()%name
         character(len=16) :: chg_typ = ""           !! type of change (absval,abschg,pctchg)
-        real :: neg = 0.                !! negative limit per interation
+        real :: neg = 0.                !! negative limit per iteration
         real :: pos = 0.                !! positive limit per iteration
         real :: lo = 0.                 !! ultimate lower limit of parameter
         real :: up = 0.                 !! ultimate upper limit of parameter
