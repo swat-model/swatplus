@@ -778,7 +778,7 @@
 !! NEW PLANT CARBON STAT OUTPUT
       
      type output_plc_header     
-         character (len=6) ::  freq          =    "  freq"
+         character (len=6) ::  freq          =    "freq  "
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -818,14 +818,15 @@
 !! NEW RESIDUE CARBON STAT OUTPUT
       
      type output_rsdc_header     
-         character (len=6) ::  freq          =    "  freq"
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
-         character (len=11) :: day_mo        =    "        day"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=16) :: isd           =    "            unit"
-         character (len=21) :: id            =    "              gis_id "
-         character (len=14) :: name          =    "    name      "
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
          character(len=15)  :: tot_surf_c    =    "     res_surf_c"
          character(len=15)  :: meta_surf_c   =    "    meta_surf_c"         
          character(len=15)  :: str_surf_c    =    "     str_surf_c"  
@@ -839,13 +840,14 @@
       
       type output_rsdc_header_units      
          character (len=6) ::  freq         =  "      "
-         character (len=11) :: day          =  "           "
-         character (len=11) :: mo           =  "           "
-         character (len=11) :: day_mo       =  "           "
-         character (len=11) :: yrc          =  "           "
-         character (len=16)  :: isd         =  "           "
-         character (len=21) :: id           =  "                "
-         character (len=14) :: name         =  "          "
+         character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: day          =  "            "
+         character (len=12) :: mo           =  "            "
+         character (len=12) :: day_mo       =  "            "
+         character (len=12) :: yrc          =  "            "
+         character (len=12)  :: isd         =  "            "
+         character (len=22) :: id           =  "                      "
+         character (len=13) :: name         =  "             "
          character(len=15)  :: tot_c        =  "          kg/ha"
          character(len=15)  :: meta_c       =  "          kg/ha"
          character(len=15)  :: str_c        =  "          kg/ha"
@@ -863,6 +865,7 @@
       
      type output_soilc_header     
          character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -883,6 +886,7 @@
       
       type output_soilc_header_units      
          character (len=6) ::  freq         = "      "
+         character (len=12) :: soil_lyr     = "            "
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -902,14 +906,15 @@
       type (output_soilc_header_units) :: soilc_hdr_units
 
      type output_soil_org_flux_header     
-         character (len=6) ::  freq      =    "  freq"
-         character (len=11) :: day       =    "       jday"
-         character (len=11) :: mo        =    "        mon"
-         character (len=11) :: day_mo    =    "        day"
-         character (len=11) :: yrc       =    "         yr"
-         character (len=16) :: isd       =    "            unit"
-         character (len=22) :: id        =    "               gis_id "
-         character (len=16) :: name      =    " name           "
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=23) :: id            =    "                gis_id "
+         character (len=15) :: name          =    "name           "         
          character(len=15)  :: cfmets1   =    "        cfmets1"
          character(len=15)  :: cfstrs1   =    "        cfstrs1"
          character(len=15)  :: cfstrs2   =    "        cfstrs2"
@@ -960,14 +965,15 @@
       type (output_soil_org_flux_header) :: soil_org_flux_hdr
 
      type output_soil_org_flux_header_units     
-         character (len=6) ::  freq      =    "      "
-         character (len=11) :: day       =    "           "
-         character (len=11) :: mo        =    "           "
-         character (len=11) :: day_mo    =    "           "
-         character (len=11) :: yrc       =    "           "
-         character (len=16) :: isd       =    "                "
-         character (len=22) :: id        =    "                      "
-         character (len=16) :: name      =    "                "
+         character (len=6)  :: freq         = "      "
+         character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: day          = "            "
+         character (len=12) :: mo           = "            "
+         character (len=12) :: day_mo       = "            "
+         character (len=12) :: yrc          = "            "
+         character (len=12) :: isd          = "            "
+         character (len=23) :: id           = "                       "
+         character (len=15) :: name         = "                "         
          character(len=15)  :: cfmets1   =    "        kg_C/ha"
          character(len=15)  :: cfstrs1   =    "        kg_C/ha"
          character(len=15)  :: cfstrs2   =    "        kg_C/ha"
@@ -1010,14 +1016,15 @@
       
       ! output soil_carb_mb_stat header
       type output_soil_carb_mb_hdr     
-         character (len=6) ::  freq          =    "  freq"
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
-         character (len=11) :: day_mo        =    "        day"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=16) :: isd           =    "            unit"
-         character (len=21) :: id            =    "              gis_id "
-         character (len=16) :: name          =    " name        "         
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=23) :: id            =    "                gis_id "
+         character (len=15) :: name          =    "name           "         
          character(len=15)  :: tot_org_c     =    "      tot_org_c"
          character(len=15)  :: humus_slow_c  =    "   humus_slow_c"
          character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
@@ -1067,14 +1074,15 @@
       type (output_soil_carb_mb_hdr) :: soil_mb_hdr
       
       type output_soil_carb_mb_units
-         character (len=6) ::  freq         =    "      "
-         character (len=11) :: day          =    "           "
-         character (len=11) :: mo           =    "           "
-         character (len=11) :: day_mo       =    "           "
-         character (len=11) :: yrc          =    "           "
-         character (len=16)  :: isd         =  "           "
-         character (len=21) :: id           =  "                "
-         character (len=16) :: name         =  "       "         
+         character (len=6)  :: freq         = "      "
+         character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: day          = "            "
+         character (len=12) :: mo           = "            "
+         character (len=12) :: day_mo       = "            "
+         character (len=12) :: yrc          = "            "
+         character (len=12) :: isd          = "            "
+         character (len=23) :: id           = "                       "
+         character (len=15) :: name         = "                "         
          character(len=15)  :: tot_org_c    =    "          kg/ha"
          character(len=15)  :: humus_slow_c  =    "          kg/ha"         
          character(len=15)  :: humus_pass_c  =    "          kg/ha"  

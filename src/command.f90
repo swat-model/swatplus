@@ -481,9 +481,12 @@
           !                                          (soil1(ihru)%tot(ly)%c/1000.0, ly = 1, soil(ihru)%nly)
           ! end if
                                                         
-        if (pco%cb_hru%d == "y") call soil_nutcarb_write("d")
-        if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write("m")
-        if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write("y") 
+        if (pco%cb_hru%d == "y") call soil_nutcarb_write(" d")
+        if (pco%cb_hru%d == "l") call soil_nutcarb_write("dl")
+        if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write(" m")
+        if (pco%cb_hru%m == "l" .and. time%end_mo == 1) call soil_nutcarb_write("ml")
+        if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write(" y") 
+        if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write("yl") 
         ! if (pco%cb_hru%a == "y" .and. time%end_yr == 1) call soil_nutcarb_write("a")
 
         ! select case (pco%carbout)
