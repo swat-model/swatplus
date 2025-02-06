@@ -33,7 +33,8 @@
     real :: xx1 = 0.                  !               | 
     real :: xx2 = 0.                  !               | 
     real :: csdr = 0.                 !               | 
-      
+    
+    j = jj
     emix = emix - bmix ! this is to avoid affecting tillage factor with biological mixing
     
     if (emix > 0.) then

@@ -33,6 +33,7 @@
       no3_conc = ht1%no3
       sed_conc = ht1%sed
       tp_conc = ht1%sedp + ht1%solp
+      nd_overb = 0.
       
       !! loop for channel increment
       do while (istop == 0)
