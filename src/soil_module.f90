@@ -41,7 +41,7 @@
         real :: crdep = 0.          !! mm           ! maximum or potential crack volume
         real :: awc = 0.            !! mm H20/mm    | soil available water capacity of soil layer
         real :: fc = 0.             !! mm H2O       | amount of water available to plants in soil layer at field capacity (fc - wp),Index:(layer,HRU)
-        real :: hk = 0.             !! none         ! beta coefficent to calculate hydraulic conductivity
+        real :: hk = 0.             !! none         ! beta coefficient to calculate hydraulic conductivity
         real :: por = 0.            !! none         ! total porosity of soil layer expressed as a fraction of the total volume, Index:(layer,HRU)
         real :: st = 0.             !! mm H2O       ! amount of water stored in the soil layer on any given day (less wp water)
         real :: tmp = 0.            !! deg C        ! daily average temperature of second soil layer

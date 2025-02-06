@@ -8,7 +8,7 @@
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    bio_p1(:)   |none           |1st shape parameter for plant P uptake
 !!                                |equation
-!!    bio_p2(:)   |none           |2st shape parameter for plant P uptake
+!!    bio_p2(:)   |none           |2nd shape parameter for plant P uptake
 !!                                |equation
 !!    ihru        |none           |HRU number
 !!                                |fraction of P in crop biomass at maturity

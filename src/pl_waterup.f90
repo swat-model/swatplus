@@ -132,7 +132,7 @@
           end if
 
           !pcom(j)%plcur(ipl)%epco = 0.9
-          !! let second layer compensate - 10 mm layer causes problems wehn root depth is shallow
+          !! let second layer compensate - 10 mm layer causes problems when root depth is shallow
           if (k == 2) then
             wuse = sum      !epco is always 1.0 for second layer
           else

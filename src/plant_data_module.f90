@@ -47,7 +47,7 @@
         real :: gsi = 0.002              !m/s               |maximum stomatal conductance
         real :: vpdfr = 4.               !kPa               |vapor pressure deficit at which GMAXFR is valid
         real :: gmaxfr = 0.75            !none              |fraction of max stomatal conductance that is 
-                                         !                    achieved at the vapor pressue deficit defined by VPDFR
+                                         !                    achieved at the vapor pressure deficit defined by VPDFR
         real :: wavp = 8.                !none              |rate of decline in radiation use efficiency
         real :: co2hi = 660.             !uL CO2/L air      |CO2 concentration higher than the ambient corresponding
                                          !                    to the 2nd point on radiation use efficiency curve             
@@ -95,7 +95,7 @@
         real :: pup1 = 0.        !none      |1st shape parameter for plant P uptake equation
         real :: pup2 = 0.        !none      |2nd shape parameter for plant P uptake equation
         real :: gmaxfr = 0.      !none      |fraction of max stomatal conductance that is 
-                                 !            achieved at the vapor pressue deficit defined by VPDFR
+                                 !            achieved at the vapor pressure deficit defined by VPDFR
         real :: vpdfr = 0.       !kPa       |vapor pressure deficit at which GMAXFR is valid
         real :: cvm = 0.         !frac      |fraction of the maximum leaf area index corresponding
                                  !            to the second point of the optimal leaf area dev curve

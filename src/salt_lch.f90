@@ -123,7 +123,7 @@
           cosalt = Max(vsalt / vv, 0.)
 
           !! calculate salt ion mass in surface runoff
-          cosurfsalt = bsn_prm%nperco * cosalt
+          cosurfsalt = hru(j)%nut%nperco * cosalt
           if (jj == 1) then
             ro_mass = surfq(j) * cosurfsalt
             ro_mass = Min(ro_mass, cs_soil(j)%ly(jj)%salt(isalt))

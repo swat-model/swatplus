@@ -2,7 +2,7 @@
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine predicts daily snom melt when the average air
-!!    temperature exceeds 0 degrees Celcius
+!!    temperature exceeds 0 degrees Celsius
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name         |units         |definition
