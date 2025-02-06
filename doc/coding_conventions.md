@@ -46,7 +46,7 @@ Below are some references for more background information on this topic.
 * Program against a standard (e.g., ANSI C, C++, Java, FORTRAN 77/90/95) -
 * Make sure your code compiles under different compilers and platforms.
 * Use preprocessor directives for adaptation to different architectures/compilers/OS.
-* Make I/O specific components seperate from computatonal components.
+* Make I/O specific components separate from computatonal components.
 * Avoid static allocation of data (compile time allocation).
 * Be most specific with your data types.
 * Avoid using custom data types for argument types.-->
@@ -169,7 +169,7 @@ Below are some references for more background information on this topic.
 
 ### Recommended
 
-* Use of arrays is encouraged as well as intrinsinc functions to manipulate them.
+* Use of arrays is encouraged as well as intrinsic functions to manipulate them.
 * Use of assumed shapes is fine in passing vectors/arrays to functions/arrays.
 
 ### Encouraged
@@ -282,7 +282,7 @@ Below are some references for more background information on this topic.
 * DO non-integer Control
 * Hollerith Constants
 * ``PAUSE``
-* multple ``RETURN``
+* multiple ``RETURN``
 * Alternate RETURN
 
 ### Recommended

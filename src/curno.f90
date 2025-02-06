@@ -2,9 +2,9 @@
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the curve numbers for moisture conditions
-!!    I and III and calculates coefficents and shape parameters for the 
+!!    I and III and calculates coefficients and shape parameters for the 
 !!    water retention curve
-!!    the coefficents and shape parameters are calculated by one of two methods:
+!!    the coefficients and shape parameters are calculated by one of two methods:
 !!    the default method is to make them a function of soil water, the 
 !!    alternative method (labeled new) is to make them a function of 
 !!    accumulated PET, precipitation and surface runoff.

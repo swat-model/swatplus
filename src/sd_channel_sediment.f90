@@ -132,7 +132,7 @@
               !! if downcutting - check width depth ratio to see if widens
               !if (sd_ch(ich)%chw / sd_ch(ich)%chd < sd_ch(ich)%wd_rto) then
               !  erode_bank_cut = e_btm * sd_ch(ich)%wd_rto
-                !! appy to both bank sides
+                !! apply to both bank sides
               !  deg_bank = deg_bank + 10. * erode_bank_cut * perim_bank * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
               !end if
               erode_btm = erode_btm + e_btm

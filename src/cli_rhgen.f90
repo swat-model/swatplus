@@ -42,7 +42,7 @@
       integer :: iwgn             !              |
       
 
-      !! Climate Paramenters required for Penman-Monteith
+      !! Climate Parameters required for Penman-Monteith
       
       !! convert dewpoint to relative humidity (idewpt == 0)
       if (wgn_pms(iwgn)%idewpt == 0) then

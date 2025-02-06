@@ -129,12 +129,12 @@
    !       XZ = X1 *orgc_f-XXX
    !       soil1(j)%str(l)%c = soil1(j)%str(l)%c + XZ
    !       
-   !       !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in strucutral litter pool
+   !       !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in structural litter pool
    !       soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + XZ * .175
    !       !non-lignin part of the structural litter C is also updated;
    !       soil1(j)%lig(l)%n = soil1(j)%lig(l)%n + XZ * (1.-.175) 
    !       
-   !       !YZ is the amount of fertilizer (including C and N) allocated into strucutre litter SOM pool
+   !       !YZ is the amount of fertilizer (including C and N) allocated into structure litter SOM pool
    !       YZ = X1 - YY
    !       soil1(j)%str(l)%m = soil1(j)%str(l)%m + YZ
    !       !assuming lignin fraction of the organic fertilizer allocated into structure litter SOM pool to be 0.175;
