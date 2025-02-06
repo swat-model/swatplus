@@ -3,6 +3,7 @@
       use hydrograph_module, only : sp_ob, sp_ob1, ob
       use hru_module, only : hru, hru_db
       use landuse_data_module
+      use basin_module
       
       implicit none
 
@@ -26,6 +27,12 @@
         hru(ihru)%land_use_mgt_c = hru_db(ihru_db)%dbsc%land_use_mgt
         ilu = hru(ihru)%dbs%land_use_mgt
         hru(ihru)%cal_group = lum(ilu)%cal_group
+        hru(ihru)%nut%phoskd = bsn_prm%phoskd
+        hru(ihru)%nut%pperco = bsn_prm%pperco
+        hru(ihru)%nut%psp = bsn_prm%psp
+        hru(ihru)%nut%nperco = bsn_prm%nperco
+        hru(ihru)%nut%cmn = bsn_prm%cmn
+        hru(ihru)%nut%nperco_lchtile = bsn_prm%nperco_lchtile
       end do
 
       return
