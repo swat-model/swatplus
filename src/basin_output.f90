@@ -129,8 +129,8 @@
             end if 
           end if
           if (pco%pw_bsn%m == "y") then
-            bpw_m%nplnt = bpw_d%nplnt
-            bpw_m%nplnt = bpw_d%pplnt
+            !bpw_m%nplnt = bpw_d%nplnt
+            !bpw_m%nplnt = bpw_d%pplnt
             write (2081,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bpw_m
             if (pco%csvout == "y") then 
               write (2085,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bpw_m
@@ -181,8 +181,8 @@
              end if 
            end if
            if (pco%pw_bsn%y == "y") then
-             bpw_y%nplnt = bpw_d%nplnt
-             bpw_y%nplnt = bpw_d%pplnt
+             !bpw_y%nplnt = bpw_d%nplnt
+             !bpw_y%nplnt = bpw_d%pplnt
              write (2082,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bpw_y
              if (pco%csvout == "y") then 
                write (2086,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bpw_y
@@ -237,8 +237,8 @@
       if (time%end_sim == 1 .and. pco%pw_bsn%a == "y") then     
         bpw_a = bpw_a / time%yrs_prt
         bpw_a = bpw_a // time%days_prt
-        bpw_a%nplnt = bpw_d%nplnt
-        bpw_a%nplnt = bpw_d%pplnt
+        !bpw_a%nplnt = bpw_d%nplnt
+        !bpw_a%nplnt = bpw_d%pplnt
         write (2083,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bpw_a
         if (pco%csvout == "y") then 
           write (2087,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "        1", bsn%name, bpw_a

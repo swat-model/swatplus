@@ -336,8 +336,26 @@
       case ("ph")
            soil(ielem)%ly(ly)%ph = chg_par(soil(ielem)%ly(ly)%ph,        &
                          chg_typ, chg_val, absmin, absmax)
+      case ("cmn_h")
+        hru(ielem)%nut%cmn = chg_par(hru(ielem)%nut%cmn,           &
+                         chg_typ, chg_val, absmin, absmax)
         
+      case ("nperco_h")
+        hru(ielem)%nut%nperco = chg_par(hru(ielem)%nut%nperco,                  &
+                         chg_typ, chg_val, absmin, absmax)
        
+      case ("pperco_h")
+        hru(ielem)%nut%pperco = chg_par(hru(ielem)%nut%pperco,                  &
+                         chg_typ, chg_val, absmin, absmax)
+      case ("phoskd_h")
+        hru(ielem)%nut%phoskd = chg_par(hru(ielem)%nut%phoskd,                  &
+                         chg_typ, chg_val, absmin, absmax)
+      case ("psp_h")
+        hru(ielem)%nut%psp = chg_par(hru(ielem)%nut%psp,                        &
+                         chg_typ, chg_val, absmin, absmax)
+      case ("nperco_lchtile_h")
+        hru(ielem)%nut%nperco_lchtile = chg_par(hru(ielem)%nut%nperco_lchtile,  &
+                         chg_typ, chg_val, absmin, absmax)                      
        !! BSN
       case ("plaps")
         bsn_prm%plaps = chg_par(bsn_prm%plaps,                         &
@@ -750,6 +768,12 @@
            !! d50 -micro meters
            res_prm(ielem)%sed_stlr_co = exp(-0.184 * res_prm(ielem)%sed%d50)
            
+         case ("soln_stl_fr")
+           res_prm(ielem)%soln_stl_fr = chg_par(res_prm(ielem)%soln_stl_fr,           &
+                         chg_typ, chg_val, absmin, absmax)
+         case ("solp_stl_fr")
+           res_prm(ielem)%solp_stl_fr = chg_par(res_prm(ielem)%solp_stl_fr,           &
+                         chg_typ, chg_val, absmin, absmax)
          case ("sed_stlr")
            res_prm(ielem)%sed%sed_stlr = chg_par(res_prm(ielem)%sed%sed_stlr,           &
                          chg_typ, chg_val, absmin, absmax)

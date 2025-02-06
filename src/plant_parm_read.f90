@@ -3,6 +3,7 @@
       use input_file_module
       use maximum_data_module
       use plant_data_module
+      use basin_module
       
       implicit none 
 
@@ -47,13 +48,9 @@
         read (104,*,iostat=eof) header
         if (eof < 0) exit
         
-        read (104,*,iostat=eof) plclass
-        if (plclass /= "nam1") then
-          backspace (104)
-        end if
           
         do ic = 1, imax
-          if (plclass /= "nam1") then
+          if (bsn_cc%nam1 /= 0) then
             read (104,*,iostat=eof) pldb(ic)
           else
             read (104,*,iostat=eof) pldb(ic), pl_class(ic)

@@ -11,7 +11,7 @@
 
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru
+      use hru_module, only : hru, ihru
       use soil_module
       use output_landscape_module, only : hnb_d
       
@@ -31,7 +31,7 @@
       hnb_d(j)%lab_min_p = 0.
       hnb_d(j)%act_sta_p = 0.
 
-      rto = bsn_prm%psp / (1. - bsn_prm%psp)
+      rto = hru(j)%nut%psp / (1. - hru(j)%nut%psp)
 
       do l = 1, soil(j)%nly
         rmp1 = (soil1(j)%mp(l)%lab - soil1(j)%mp(l)%act * rto)

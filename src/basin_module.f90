@@ -21,7 +21,7 @@
                                  !!   0 = Priestley-Taylor 
                                  !!   1 = Penman-Monteith
                                  !!   2 = Hargreaves method
-        integer :: event = 0     !! not used
+        integer :: nam1 = 0      !! not used
         integer :: crk = 0       !! crack flow code 
                                  !!   1 = compute flow in cracks
         integer :: swift_out = 0 !! write to SWIFT input file
@@ -62,7 +62,7 @@
                                  !! 1 = new soil P model in Vadas and White (2010)
         integer :: gampt = 0     !! 0 = curve number; 1 = Green and Ampt 
         character(len=1) :: atmo = "a"   !! not used
-        integer :: smax = 0      !! not used"
+        integer :: smax = 0      !! not used
         integer :: qual2e = 0    !! 0 = instream nutrient routing using QUAL2E 
                                  !! 1 = instream nutrient routing using QUAL2E - with simplified nutrient transformations
         integer :: gwflow = 0    !!   0 = gwflow module not active; 1 = gwflow module active
