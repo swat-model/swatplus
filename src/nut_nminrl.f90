@@ -32,7 +32,7 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : rsdco_plcom, i_sep, ihru, isep 
+      use hru_module, only : hru, rsdco_plcom, i_sep, ihru, isep 
       use soil_module
       use plant_module
       use output_landscape_module, only : hnb_d
@@ -118,7 +118,7 @@
           hnb_d(j)%act_sta_n = hnb_d(j)%act_sta_n + rwn
 
           !! compute humus mineralization on active organic n
-          hmn = bsn_prm%cmn * csf * soil1(j)%hact(k)%n
+          hmn = hru(j)%nut%cmn * csf * soil1(j)%hact(k)%n
           hmn = Min(hmn, soil1(j)%hact(k)%n)
           !! compute humus mineralization on active organic p
           xx = soil1(j)%hsta(k)%n + soil1(j)%hact(k)%n
