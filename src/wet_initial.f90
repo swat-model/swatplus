@@ -100,6 +100,8 @@
                   !! d50 -micro meters
                   wet_prm(iihru)%sed_stlr_co = exp(-0.184 * wet_prm(iihru)%sed%d50)
                   wet_dat(isstor)%sed = ised
+                  wet_prm(iihru)%soln_stl_fr = 0.2
+                  wet_prm(iihru)%solp_stl_fr = 0.2
                   exit
                 end if
               end do      
