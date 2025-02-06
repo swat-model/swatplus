@@ -74,6 +74,7 @@
       outflo = 0.
       outflo_sum = 0.
       hyd_rad = 0.
+      vol = 0.
       
       !! volume at start of day
       rcurv = ch_rcurv(jrch)%out2

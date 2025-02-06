@@ -12,7 +12,8 @@
       logical :: i_exist              !none       |check to determine if file exists
       
       eof = 0
-      
+      imax = 0
+
       inquire (file='basins_carbon.tes', exist=i_exist)
       if (.not. i_exist) then
         write (9001,*) "file not found (basins_carbon.tes)"
