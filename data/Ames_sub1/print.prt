@@ -7,7 +7,7 @@ csvout        dbout         cdfout
 n             y             n             
 crop_yld      mgtout        hydcon        fdcout        
 b             y             n             n             
-objects                  daily       monthly        yearly         avann  
+objects                  daily       monthly        yearly         avann
 basin_wb                     n             n             n             y  
 basin_nb                     n             n             n             y  
 basin_ls                     n             n             n             y  
@@ -34,6 +34,7 @@ hru_wb                       n             n             n             y
 hru_nb                       n             n             n             y  
 hru_ls                       n             n             n             y  
 hru_pw                       n             n             n             y  
+hru_cb                       n             n             n             y  
 hru-lte_wb                   n             n             n             y  
 hru-lte_nb                   n             n             n             y  
 hru-lte_ls                   n             n             n             y  
