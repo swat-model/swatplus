@@ -109,7 +109,7 @@ def read_output(fname, spec_dict, write_csv = False):
                 output_file_name = fname + ".csv"
                 df.to_csv(output_file_name, sep=output_seperator, index = False)
     else:
-        print("Swat+ output filename not found in read specificaiton dictionary.")
+        print("Swat+ output filename not found in read specification dictionary.")
         exit(1)
     return df
 

@@ -35,7 +35,7 @@
       
       implicit none
       
-      character(len=2), intent(in) :: out_freq   ! Output freqency (d, m, y, a)
+      character(len=2), intent(in) :: out_freq   ! Output frequency (d, m, y, a)
       integer :: ly = 0         !none        |counter
       real :: const = 0.        !none        |counter
       integer :: iihru = 0      !none        |counter

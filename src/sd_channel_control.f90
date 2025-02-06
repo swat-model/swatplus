@@ -190,7 +190,7 @@
         end if
       end if
       
-      !if gwflow is active, calulate aquifer interactions (ht1 is updated)
+      !if gwflow is active, calculate aquifer interactions (ht1 is updated)
       if(bsn_cc%gwflow.eq.1) then
         call gwflow_gwsw(ich) !channel <--> groundwater
         call gwflow_canl(ich) !channel --> canal seepage
@@ -239,7 +239,7 @@
             sd_ch(ich)%overbank = "ob"
             rcharea = sd_ch_vel(ich)%area
             rchdep = sd_ch(ich)%chd
-            !calculate hydraulic radius at hydrograph time increments for degredation
+            !calculate hydraulic radius at hydrograph time increments for degradation
             flo_rt = 0.
             rchdep = 0.
             valint = 1. / float(maxint)

@@ -160,7 +160,7 @@
         character(len=16) :: name = ""
         real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
         real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
-        real :: sur_lat = 1.        ! none          |coefficient influencing suface and lateral flow temperature contributions
+        real :: sur_lat = 1.        ! none          |coefficient influencing surface and lateral flow temperature contributions
         real :: bulk_co = .0025     ! 1/hour        |bulk coefficient of heat transfer
         real :: air_lag = 6.        ! days          |average air temperature lag
       end type channel_temperature_data

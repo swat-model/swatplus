@@ -6,7 +6,7 @@
        implicit none
       
          if (bsn_prm%evlai < 1.e-6) bsn_prm%evlai = 3.0           !! leaf area index at which no evap occurs
-         if (bsn_prm%ffcb < 1.e-6) bsn_prm%ffcb = 0.              !! intial soil water cont expressed as a fraction of fc 
+         if (bsn_prm%ffcb < 1.e-6) bsn_prm%ffcb = 0.              !! initial soil water cont expressed as a fraction of fc 
          if (bsn_prm%surlag < 1.e-6) bsn_prm%surlag = 4.0         !! surface runoff lag time (days)
          if (bsn_prm%adj_pkr < 1.e-6) bsn_prm%adj_pkr = 1.0       !! peak rate adjustment factor in the subbasin
          if (bsn_prm%prf < 1.e-6) bsn_prm%prf = 1.0               !! peak rate adjustment factor for sediment routing in the channel
@@ -29,7 +29,7 @@
          if (bsn_prm%nperco_lchtile < 1.e-6) bsn_prm%nperco_lchtile = 0.50        !! n concentration coeff for tile flow and 
                                                                   !! leach from bottom layer
          if (bsn_prm%evrch < 1.e-6) bsn_prm%evrch = 0.60          !! reach evaporation adjustment factor
-         if (bsn_prm%cdn < 1.e-6) bsn_prm%cdn = 1.40              !! denitrification expoential rate coefficient        
+         if (bsn_prm%cdn < 1.e-6) bsn_prm%cdn = 1.40              !! denitrification exponential rate coefficient        
          if (bsn_prm%sdnco < 1.e-6) bsn_prm%sdnco = 1.30          !! denitrification threshold frac of field cap
          if (bsn_prm%bact_swf < 1.e-6) bsn_prm%bact_swf = 0.15    !! frac of manure containing active colony forming units
          if (bsn_prm%tb_adj < 1.e-6) bsn_prm%tb_adj = 0.          !! adjustment factor for subdaily unit hydrograph basetime
@@ -42,7 +42,7 @@
          if (bsn_prm%petco_pmpt < 0.5 .and. bsn_prm%petco_pmpt > 0.) bsn_prm%petco_pmpt = 0.0   !! reservoir sediment settling coeff
          bsn_prm%petco_pmpt = (100. + bsn_prm%petco_pmpt) / 100.    !! convert to fraction
          if (bsn_prm%uhalpha < 1.e-6) bsn_prm%uhalpha = 1.0       !! alpha coeff for est unit hydrograph using gamma func
-         if (bsn_prm%eros_spl < 1.e-6) bsn_prm%eros_spl = 0.      !! coeff of splash erosion varing 0.9-3.1 
+         if (bsn_prm%eros_spl < 1.e-6) bsn_prm%eros_spl = 0.      !! coeff of splash erosion varying 0.9-3.1 
          if (bsn_prm%rill_mult < 1.e-6) bsn_prm%rill_mult = 0.    !! 
          if (bsn_prm%eros_expo < 1.e-6) bsn_prm%eros_expo = 0.    !!
          if (bsn_prm%c_factor < 1.e-6) bsn_prm%c_factor = 0.      !!

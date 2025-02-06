@@ -156,7 +156,7 @@
         wet_seep_day(j)%solp = wet(j)%solp * seep_rto
         wet_seep_day(j)%sedp = wet(j)%sedp * seep_rto
         
-        ! substract the seepage amount from the ponding water
+        ! subtract the seepage amount from the ponding water
         wet(j)%no3 = wet(j)%no3 - wet_seep_day(j)%no3 
         wet(j)%nh3 = wet(j)%nh3 - wet_seep_day(j)%nh3 
         wet(j)%orgn = wet(j)%orgn - wet_seep_day(j)%orgn

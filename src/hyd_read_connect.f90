@@ -218,7 +218,7 @@
               read (107,*,iostat=eof) ob(i)%num, ob(i)%name, ob(i)%gis_id, ob(i)%area_ha, ob(i)%lat, ob(i)%long, &
                 ob(i)%elev, ob(i)%props, ob(i)%wst_c, ob(i)%constit, ob(i)%props2, ob(i)%ruleset, ob(i)%src_tot
               
-              !! intialize area to calcluate drainage areas in hyd_connect
+              !! initialize area to calculate drainage areas in hyd_connect
               if (ob(i)%typ == "hru" .or. ob(i)%typ == "ru" .or. ob(i)%typ == "recall") then
                 ob(i)%area_ha_calc = ob(i)%area_ha
               else

@@ -154,7 +154,7 @@
           !! the potential for initial dabstraction from paved surface increases based on evaporation
           urb_abstinit(j) = min(bsn_prm%urb_init_abst, urb_abstinit(j) + pet_day / time%step)
         end if
-        !runoff from pervious area
+        !runoff from previous area
         hhqday(j,k) = hhqday(j,k) * (1. - urbdb(ulu)%fcimp) 
            
         !runoff from impervious area with initial abstraction
