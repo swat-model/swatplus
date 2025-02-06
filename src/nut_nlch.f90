@@ -90,7 +90,7 @@
 
         !! calculate nitrate in surface runoff
         if (jj == 1) then
-          surqno3(j) = surfq(j) * bsn_prm%nperco * co
+          surqno3(j) = surfq(j) * hru(j)%nut%nperco * co
           surqno3(j) = Min(surqno3(j), soil1(j)%mn(jj)%no3)
           soil1(j)%mn(jj)%no3 = max(0.0001,soil1(j)%mn(jj)%no3 - surqno3(j))
         endif
@@ -111,7 +111,7 @@
           ww = -vv / ((1. - soil(j)%anion_excl) * ul_sum)
           vno3 = no3_sum * (1. - Exp(ww))
           co = Max(vno3 / vv, 0.)     !kg/ha/mm (if * 100 = ppm)
-          tileno3(j) = co * bsn_prm%nperco_lchtile  * qtile
+          tileno3(j) = co * hru(j)%nut%nperco_lchtile  * qtile
           !! subtract tile no3 from soil layers
           tileno3_left = tileno3(j)
           do jlo = jj, soil(j)%nly
