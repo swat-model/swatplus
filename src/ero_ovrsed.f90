@@ -11,7 +11,7 @@
 !!    hru_km(:)   |km2           |area of HRU in square kilometers
 !!    rwst(:)%weat%ts(:)  |mm H2O        |precipitation for the time step during the
 !!                               |day in HRU
-!!    eros_spl    |none          |coefficient of splash erosion varing 0.9-3.1
+!!    eros_spl    |none          |coefficient of splash erosion varying 0.9-3.1
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 !!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
