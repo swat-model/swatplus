@@ -790,7 +790,7 @@
       ! CEC = Cation Exchange Capacity in meq/100g soil
       !Assumption for CEC: constant for a given soil, independent of of pH, ion type and concentration
       !Sel_K1 through Sel_K6 stands for selectivity coefficient of exchange reaction
-      !XCAINI and others stands for inital ion which attached to the soil particle
+      !XCAINI and others stands for initial ion which attached to the soil particle
       subroutine cationexchange
       
       use organic_mineral_mass_module

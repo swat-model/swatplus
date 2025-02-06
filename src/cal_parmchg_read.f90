@@ -1,7 +1,7 @@
       subroutine cal_parmchg_read
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this function computes new paramter value based on 
+!!    this function computes new parameter value based on 
 !!    user defined change
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
@@ -28,7 +28,8 @@
       !integer, dimension (:), allocatable :: elem_cnt1   !           |  
       character (len=80) :: titldum = ""                  !           |title of file
       character (len=80) :: header = ""                   !           |header of file
-      integer :: eof = 0                                  !           |end of file
+      character (len=10) :: range = ""                    !           |real conditional variable range
+      integer :: eof = 0                                  !           |end of file  
       integer :: imax = 0                                 !none       |determine max number for array (imax) and total number in file
       integer :: nspu = 0                                 !           |
       logical :: i_exist                                  !none       |check to determine if file exists
@@ -88,7 +89,14 @@
           if (nconds > 0) then
             allocate (cal_upd(i)%cond(nconds))
             do icond = 1, nconds
-              read (107,*,iostat=eof) cal_upd(i)%cond(icond)
+              read (107,*,iostat=eof) range
+              backspace (107)
+              if (range == "range") then
+                read (107,*,iostat=eof) range, cal_upd(i)%cond(icond)%var,   &
+                    cal_upd(i)%val1, cal_upd(i)%val2
+              else
+                read (107,*,iostat=eof) cal_upd(i)%cond(icond)
+              end if 
             end do
           end if
         
@@ -101,8 +109,6 @@
             case ("rdt")
               cal_upd(i)%num_elem = db_mx%dtbl_res
             case ("plt")
-              cal_upd(i)%num_elem = sp_ob%hru
-            case ("pl_class")
               cal_upd(i)%num_elem = db_mx%plantparm
             case ("lyr")
               cal_upd(i)%num_elem = sp_ob%hru

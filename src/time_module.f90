@@ -37,7 +37,7 @@
         real :: days_prt = 0.         !! number of days for average annual printing for entire time period
         real :: yrs_prt = 0.          !! number of years for average annual printing for entire time period
         real :: yrs_prt_int = 0.      !! number of years for average annual printing for printing interval- pco%aa_yrs()
-        integer :: num_leap = 0       !! number of leap years in sumulation for average annual printing
+        integer :: num_leap = 0       !! number of leap years in simulation for average annual printing
         integer :: prt_int_cur = 1    !! current average annual print interval
         integer :: yrc_tot = 0
       end type time_current

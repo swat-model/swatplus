@@ -138,6 +138,8 @@
              !! d50 - micro meters
              res_prm(ires)%sed_stlr_co = exp(-0.184 * res_prm(ires)%sed%d50)
              res_dat(ires)%sed = ised
+             res_prm(ires)%soln_stl_fr = 0.2
+             res_prm(ires)%solp_stl_fr = 0.2
              exit
            end if
          end do      

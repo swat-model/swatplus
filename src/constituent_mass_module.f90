@@ -241,7 +241,7 @@
       end type recall_pesticide_inputs
       type (recall_pesticide_inputs), dimension(:),allocatable:: rec_pest
       
-      ! intial constituent soil-plant concentrations for hrus
+      ! initial constituent soil-plant concentrations for hrus
       type cs_soil_init_concentrations
         character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: soil    !! ppm                  |amount of constituent in soil at start of simulation
@@ -254,7 +254,7 @@
       type (cs_soil_init_concentrations), dimension(:), allocatable:: salt_soil_ini
       type (cs_soil_init_concentrations), dimension(:), allocatable:: cs_soil_ini !rtb cs
       
-      ! intial salt ion groundwater concentrations and mineral fractions for aquifers
+      ! initial salt ion groundwater concentrations and mineral fractions for aquifers
       type salt_aqu_init_concentrations
         character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: conc    !! g/m3                 |salt ion concentration at start of simulation
@@ -262,7 +262,7 @@
       end type salt_aqu_init_concentrations
       type (salt_aqu_init_concentrations), dimension(:), allocatable:: salt_aqu_ini
       
-      ! intial constituent groundwater concentrations for aquifers
+      ! initial constituent groundwater concentrations for aquifers
       type cs_aqu_init_concentrations
         character (len=16) :: name = ""             !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: aqu     !! ppm                  |concentration, sorbed mass at start of simulation
@@ -283,7 +283,7 @@
       end type cs_cha_init_concentrations
       type (cs_cha_init_concentrations), dimension(:), allocatable:: cs_cha_ini
       
-      ! intial constituent water-benthic concentrations for reservoirs and channels
+      ! initial constituent water-benthic concentrations for reservoirs and channels
       type cs_water_init_concentrations
         character (len=16) :: name = ""               !! name of the constituent - points to constituent database
         real, dimension (:), allocatable :: water     !! ppm,fracitons        |amount of constituents (dissolved, salt minerals) in aquifer at start of simulation

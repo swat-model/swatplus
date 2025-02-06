@@ -1,7 +1,7 @@
       subroutine cal_cond_read
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this function computes new paramter value based on 
+!!    this function computes new parameter value based on 
 !!    user defined change
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
