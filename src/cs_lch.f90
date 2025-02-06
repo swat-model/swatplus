@@ -100,7 +100,7 @@
           cocs = Max(vcs / vv, 0.)
 
           !! calculate constituent mass in surface runoff
-          cosurfcs = bsn_prm%nperco * cocs
+          cosurfcs = hru(j)%nut%nperco * cocs
           if (jj == 1) then
             !surface runoff
             ro_mass = surfq(j) * cosurfcs
