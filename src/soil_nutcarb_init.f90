@@ -91,7 +91,7 @@
             psp = 0.7
           end if
         else
-          psp = bsn_prm%psp
+          psp = hru(ihru)%nut%psp
         end if
         soil1(ihru)%mp(ly)%act = soil1(ihru)%mp(ly)%lab * (1. - psp) / psp
 
