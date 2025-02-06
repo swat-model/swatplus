@@ -23,6 +23,8 @@
         integer :: num_db = 0           !! crosswalk number of parameter, structure or land use to get database array number
         character(len=16) :: chg_typ = "" !! type of change (absval,abschg,pctchg)
         real :: val = 0.                !! value of change
+        real :: val1 = 0.               !! lower bound of numerical condition
+        real :: val2 = 0.               !! upper bound of numerical condition
         integer :: conds = 0            !! number of conditions
         integer :: lyr1 = 0             !! first layer in range for soil variables (0 assumes all layers are modified)
         integer :: lyr2 = 0             !! last layer in range for soil variables (0 assumes through last layer)
