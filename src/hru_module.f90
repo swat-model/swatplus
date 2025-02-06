@@ -203,6 +203,14 @@
         real :: bmp_bac = 0.                !! |%             | Bacteria removal by BMP
       end type land_use_mgt_variables
      
+      type nutrient_parameters
+          real :: phoskd = 0.               !! |kg/m3         |
+          real :: pperco = 0.               !! |kg/m3         |
+          real :: psp = 0.                  !! |kg/m3         |
+          real :: nperco = 0.               !! |kg/m3         |
+          real :: cmn = 0.                  !! |kg/m3         |
+          real :: nperco_lchtile = 0.       !! |kg/m3         |
+      end type nutrient_parameters
       type hydrologic_response_unit
         character(len=40) :: name = ""
         integer :: obj_no = 0
@@ -235,6 +243,7 @@
         type (land_use_mgt_variables) :: lumv
         type (subsurface_drainage_parameters) :: sdr
         type (snow_parameters) :: sno
+        type (nutrient_parameters) :: nut
         real :: snocov1 = 0.
         real :: snocov2 = 0.
         integer :: cur_op = 1
