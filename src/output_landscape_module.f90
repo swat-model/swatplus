@@ -1144,8 +1144,8 @@
          character(len=15)  :: residue_c     =    "      residue_c"
          character(len=15)  :: str_c         =    "   structural_c"  
          character(len=15)  :: meta_c        =    "    metabolic_c"         
-         character(len=15)  :: hp_c          =    "           hp_c"         
          character(len=15)  :: hs_c          =    "           hs_c"         
+         character(len=15)  :: hp_c          =    "           hp_c"         
          character(len=15)  :: microb_c      =    "    microbial_c"         
          character(len=15)  :: lig_c         =    "       lignin_c"      
          character(len=15)  :: water_c       =    "        water_c"
@@ -1166,14 +1166,14 @@
          character(len=15)  :: residue_c    =  "          kg/ha"
          character(len=15)  :: str_c        =  "          kg/ha"  
          character(len=15)  :: meta_c       =  "          kg/ha"         
-         character(len=15)  :: hp_c         =  "          kg/ha"         
          character(len=15)  :: hs_c         =  "          kg/ha"         
+         character(len=15)  :: hp_c         =  "          kg/ha"         
          character(len=15)  :: microb_c     =  "          kg/ha"         
          character(len=15)  :: lig_c        =  "          kg/ha"      
          character(len=15)  :: water_c      =  "          kg/ha"
          character(len=15)  :: manure_c     =  "          kg/ha"  
         end type output_cpool_header_units         
-      type (output_cpool_header_units) :: cpool_hdr_units
+      type (output_cpool_header_units) :: cpool_units
 
 !!! NEW SOIL CARBON STAT OUTPUT
       
