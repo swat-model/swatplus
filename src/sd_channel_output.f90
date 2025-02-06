@@ -99,7 +99,7 @@
 !!!!! average annual print
       if (time%end_sim == 1) then
         !ch_stor_a(ichan) = ch_stor_a(ichan) / time%yrs_prt      !! all storage variables (averaged) must be divided by years
-        ch_in_a(ichan) = ch_in_a(ichan) / time%yrs_prt          !! all inflow and outflow varaibles (summed) are divided by years
+        ch_in_a(ichan) = ch_in_a(ichan) / time%yrs_prt          !! all inflow and outflow variables (summed) are divided by years
         ch_out_a(ichan) = ch_out_a(ichan) / time%yrs_prt
         ch_wat_a(ichan) = ch_wat_a(ichan) / time%yrs_prt        !! all summed variables divided by years
         ch_wat_a(ichan) = ch_wat_a(ichan) // time%yrs_prt       !! all averaged variables divided by years

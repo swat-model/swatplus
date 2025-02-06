@@ -107,7 +107,7 @@
       type (organic_mass) :: soil_prof_lig                          !       |total lignin pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_sstr                         !       |total structural pool for surface (summed by lower layers)
-      type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for suface (summed by lower layers)
+      type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for surface (summed by lower layers)
       type (organic_mass) :: soil_prof_smeta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_man                          !       |total manure pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_water                        !       |total dissolved pool for profile (summed by layer)
@@ -173,7 +173,7 @@
         type (mineral_mass) :: min
       end type organic_mineral_mass
       
-      !hru will point diretly to herds - managed in schedule_ops and ultimately can be managed in conditional subroutine
+      !hru will point directly to herds - managed in schedule_ops and ultimately can be managed in conditional subroutine
       !herds are different from soil and plant in that they can move from hru to hru
       type animal_herds
         character(len=16) :: name = ""                                      !           |herd name (small_dairy, )

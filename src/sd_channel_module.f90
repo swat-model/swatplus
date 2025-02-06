@@ -2,7 +2,7 @@
     
       implicit none
 
-      integer :: maxint = 0                       !number of intervals in hydrograph for degredation
+      integer :: maxint = 0                       !number of intervals in hydrograph for degradation
       real :: wtemp = 0.                        !stream water temperature C
       real :: peakrate = 0.
       real :: sed_reduc_t = 0.

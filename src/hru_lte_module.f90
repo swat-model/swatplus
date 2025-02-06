@@ -25,7 +25,7 @@
         real :: sw = 0.             !frac          |initial soil water (frac of awc)
         real :: gw = 0.             !mm            |initial shallow aquifer storage
         real :: gwflow = 0.         !mm            |initial shallow aquifer flow
-        real :: gwdeep = 0.         !mm            |initital deep aquifer flow
+        real :: gwdeep = 0.         !mm            |initial deep aquifer flow
         real :: snow = 0.           !mm            |initial snow water equivalent
         real :: xlat = 0.           !              |latitude
         character(len=16) :: text = ""!              |soil texture

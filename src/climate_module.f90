@@ -4,7 +4,7 @@
       
       integer :: ppet_ndays = 30                                !none          |number of days for precip/pet sum
       integer :: ppet_mce = 0                                   !none          |current element in precip/pet linked list
-      real, dimension (:,:), allocatable :: frad                !none          |fraction of solar radiation occuring 
+      real, dimension (:,:), allocatable :: frad                !none          |fraction of solar radiation occurring 
                                                                 !              |during hour in day in HRU
       real, dimension (:,:), allocatable :: wgncur              !none          |parameter to predict the impact of precip on
                                                                 !              |other weather attributes
@@ -48,7 +48,7 @@
         real, dimension (12) :: pr_wdays = 0.   !! none          |proportion of wet days in a month
         real, dimension (12) :: pcpmean = 0.    !! mm/day        |average amount of precipitation falling in one day for the month
         real :: daylmn = 0.                     !!               |minimum day length
-        real :: daylth = 0.                     !!               |day length threshhold to trigger dormancy
+        real :: daylth = 0.                     !!               |day length threshold to trigger dormancy
         real :: latsin = 0.                     !!               |sine of latitude
         real :: latcos = 0.                     !!               |cosine of latitude
         real :: phutot = 0.                     !!               |total base zero heat units for year
@@ -104,7 +104,7 @@
       type weather_codes_station
         integer :: wgn = 1        !!  weather generator station number
         integer :: pgage = 0      !!  gage number for rainfall (sim if generating)
-        integer :: tgage = 0      !!  gage number fo temperature (sim if generating)
+        integer :: tgage = 0      !!  gage number for temperature (sim if generating)
         integer :: sgage = 0      !!  gage number for solar radiation (sim if generating) 
         integer :: hgage = 0      !!  gage number for relative humidity (sim if generating)
         integer :: wgage = 0      !!  gage number for windspeed (sim if generating)

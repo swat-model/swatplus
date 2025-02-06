@@ -214,7 +214,7 @@
           end do
         end do
       
-      !! determine number of recieving units and set object numbers for outflow hyds
+      !! determine number of receiving units and set object numbers for outflow hyds
         do i = 1, sp_ob%objs
           do ii = 1, ob(i)%src_tot
             iob_out = ob(i)%obtyp_out(ii)          !object type out
@@ -364,7 +364,7 @@
             do ich = 1, sp_ob%chan
               kk = sp_ob1%chan + ich - 1
               rcv_sum(kk) = rcv_sum(kk) + 1                   ! setting sequential inflow number
-              jj = rcv_sum(kk)                                ! jj=seqential receiving number
+              jj = rcv_sum(kk)                                ! jj=sequential receiving number
               ob(kk)%obj_in(jj) = i                           ! source object number (for receiving unit)
               ob(kk)%obtyp_in(jj) = ob(i)%typ
               ob(kk)%htyp_in(jj) = ob(i)%htyp_out(ii)
@@ -374,7 +374,7 @@
           else
             kk = ob(i)%obj_out(ii)                          ! kk=object number of outflow object
             rcv_sum(kk) = rcv_sum(kk) + 1                   ! setting sequential receiving hyd number
-            jj = rcv_sum(kk)                                ! jj=seqential receiving number
+            jj = rcv_sum(kk)                                ! jj=sequential receiving number
             ob(kk)%obj_in(jj) = i                           ! source object number (for receiving unit)
             ob(kk)%obtyp_in(jj) = ob(i)%typ
             ob(kk)%obtypno_in(jj) = ob(i)%num
@@ -484,7 +484,7 @@
                 !! modflow - for all inflow objects
                 if (ob(i)%typ == "modflow") then
                   iobtyp = ob(i)%obtyp_out(ii)
-                  !! add recieving for all channels from modflow
+                  !! add receiving for all channels from modflow
                   if (iobtyp == "cha") then
                     ob1 = sp_ob1%chan
                     ob2 = sp_ob1%chan + sp_ob%chan - 1

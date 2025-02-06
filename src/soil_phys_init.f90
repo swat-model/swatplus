@@ -133,7 +133,7 @@
 
 !!  Error check. May happen for soils with more sand
 !!    Soil not typical of mid-western USA
-!!    The fraction wont add upto 1.0
+!!    The fraction won't add upto 1.0
     if (sol(isol)%s%det_lag < 0.) then
       sol(isol)%s%det_san = sol(isol)%s%det_san/(1 - sol(isol)%s%det_lag) 
       sol(isol)%s%det_sil = sol(isol)%s%det_sil/(1 - sol(isol)%s%det_lag) 
