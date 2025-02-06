@@ -1,7 +1,7 @@
       subroutine wet_fp_init
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine routes computes the intial storage in flood plain wetlands
+!!    this subroutine routes computes the initial storage in flood plain wetlands
 
       use sd_channel_module
       use hydrograph_module

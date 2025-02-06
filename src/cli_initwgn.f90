@@ -90,7 +90,7 @@
       real :: sum = 0.                      !none          |variable to hold summation results
       real :: summm_p = 0.                  !mm            |sum of precipitation over year
       real :: summm_pet = 0.                !mm            |sum of potential ET over year
-      real :: summn_t = 0.                  !deg C         |sum of mimimum temp values over year
+      real :: summn_t = 0.                  !deg C         |sum of minimum temp values over year
       real :: summx_t = 0.                  !deg C         |sum of maximum temp values over year
       real :: rnm2 = 0.                     !none          |random number between 0.0 and 1.0
       real :: r6 = 0.                       !none          |variable to hold calculation result

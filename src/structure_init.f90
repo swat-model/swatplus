@@ -12,7 +12,7 @@
       do j = 1, sp_ob%hru
         ilum = hru(j)%land_use_mgt
            
-        !! set parameters for structural land use/managment
+        !! set parameters for structural land use/management
         if (lum(ilum)%tiledrain /= "null") then
           call structure_set_parms("tiledrain       ", lum_str(ilum)%tiledrain, j)
         end if

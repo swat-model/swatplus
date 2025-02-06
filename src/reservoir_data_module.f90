@@ -127,6 +127,8 @@
         type (reservoir_sed_data) :: sed
         type (reservoir_nut_data) :: nut
         real :: sed_stlr_co = 0.                     !none       |
+        real :: soln_stl_fr = 0.            !none       |
+        real :: solp_stl_fr = 0.            !none       |
       end type water_body_data_parameters
       type (water_body_data_parameters), dimension(:), allocatable, target :: res_prm
       type (water_body_data_parameters), dimension(:), allocatable, target :: wet_prm

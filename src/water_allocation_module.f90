@@ -56,7 +56,7 @@
         integer :: trt_num = 0                  !treatment database number when treating the withdrawn water
         integer :: dmd_src_obs = 0              !number of source objects available for the demand object
         real :: unmet_m3 = 0.                   !m3     |unmet demand for the object
-        real :: withdr_tot = 0.                 !m3     |total withdrawal of demand object from all souces
+        real :: withdr_tot = 0.                 !m3     |total withdrawal of demand object from all sources
         real :: irr_eff = 0.                    !irrigation in-field efficiency
         real :: surq = 0.                       !surface runoff ratio
         type (hyd_output) :: hd

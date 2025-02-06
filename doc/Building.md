@@ -97,7 +97,7 @@ Building the swat model is supported for various platforms and compilers as desc
 
 ### Installing
 
-Finally, you can install the `swatplus` executable by using the `--install` CMake option. Specify the installation directory that will receive a copy of the SWAT+ executable, generated in `build`. The `--prefix` option takes as an argument the base of the binary directory. Not using `--prefix` will copy `swatplus` into the system default binary directory. You don't have to use this step if you want to mange moving the swat executable yourself.
+Finally, you can install the `swatplus` executable by using the `--install` CMake option. Specify the installation directory that will receive a copy of the SWAT+ executable, generated in `build`. The `--prefix` option takes as an argument the base of the binary directory. Not using `--prefix` will copy `swatplus` into the system default binary directory. You don't have to use this step if you want to manage moving the swat executable yourself.
 
 ```bash
 $ cmake --install build --prefix ~/bin
