@@ -29,6 +29,8 @@
       integer :: ipath_db = 0!          |pathogen type from pathogens.pth data input file
       integer :: j = 0     !          |
       integer :: ipl = 0   !none      |plant number
+
+      j = 0
       
       !! add pathogens - #cfu/g * t(manure)/ha * 1.e6 g/t * ha/10,000 m^2 = 100.  **should be conc in manure
       gc = (1.99532 - erfc(1.333 * pcom(j)%lai_sum - 2.)) / 2.1
