@@ -135,7 +135,7 @@
               end if
               
             case (11)    !!!! DUMMY OBJ FOR CARBON
-                !!!! check for specfic days
+                !!!! check for specific days
                 if ((time%yrc == 2007 .AND. time%day == 213) .OR. (time%yrc == 2010 .AND. time%day == 319) &
                     .OR.(time%yrc == 2011 .AND. time%day == 324)) then
                    write (iunit+itot,*) '---', '    jday                    m           d           yr'
@@ -145,7 +145,7 @@
                         write (iunit+itot,*)time%day, time%mo, time%day_mo, time%yrc
                 end if
                 do j = 1, sp_ob%hru
-                    soil_prof_microb%c = soil_org_z%c !!!! zero out microb accumalated for each hru
+                    soil_prof_microb%c = soil_org_z%c !!!! zero out microb accumulated for each hru
                         write (iunit+itot,*) ob(j)%name, "  hact         hsta         microb(ly)        tot%C     Mgc/ha", &
                                 "           hact         hsta         microb(acc)        SOM%C         Mgc/ha"      
                         do nly = 1, soil(iob)%nly

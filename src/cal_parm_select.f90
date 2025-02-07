@@ -1,7 +1,7 @@
       subroutine cal_parm_select (ielem, ly, chg_parm, chg_typ, chg_val, absmin, absmax, num_db)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine finds the current paramter value based on 
+!!    this subroutine finds the current parameter value based on 
 !!    user defined change
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~

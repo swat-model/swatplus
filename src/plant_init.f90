@@ -144,7 +144,7 @@
           
             !! lignin residue
             soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
-            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Stuctural C is lig
+            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
             soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + 0.2 * rsd_str%n
             soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + 0.02 * rsd_str%p
             
@@ -332,7 +332,7 @@
           rsdco_plcom(j) = rsdco_plcom(j) + pldb(idp)%rsdco_pl
           pcom(j)%plcur(ipl)%idplt = pcomdb(icom)%pl(ipl)%db_num
           
-          !! set intial n and p contents in total plant
+          !! set initial n and p contents in total plant
           pcom(j)%plm(ipl)%n_fr = (pldb(idp)%pltnfr1- pldb(idp)%pltnfr3) *              &
              (1.- matur_frac /(matur_frac + Exp(plcp(idp)%nup1 - plcp(idp)%nup2 *       &
              matur_frac))) + pldb(idp)%pltnfr3

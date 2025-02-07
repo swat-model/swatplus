@@ -10,7 +10,7 @@
       implicit none 
       
       integer, intent (in) :: j     !none               |HRU number
-      integer, intent (in) :: init  !none               |init=1 to intialize and transplant; init=0 during simulation
+      integer, intent (in) :: init  !none               |init=1 to initialize and transplant; init=0 during simulation
       integer :: idp = 0            !                   |
       real :: root_frac = 0.        !none               |root mass fraction
       real :: ab_gr_frac = 0.       !none               |above ground mass fraction

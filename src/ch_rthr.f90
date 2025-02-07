@@ -117,7 +117,7 @@
           
         end do
 
-        !! flood routing using variable storage coeffiecient
+        !! flood routing using variable storage coefficient
         if (rcurv%flo_rate > 0.) then
           !! interpolated travel time
           ttime = rcurv%ttime

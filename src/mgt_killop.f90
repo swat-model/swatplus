@@ -27,20 +27,20 @@
       
       !! add above ground biomass to surface residue pools
       soil1(j)%rsd(1) = soil1(j)%rsd(1) + pl_mass(j)%ab_gr(ipl)
-      if (bsn_cc%cswat == 2) then
-        soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * pl_mass(j)%ab_gr(ipl)
-        soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * pl_mass(j)%ab_gr(ipl)
-        soil1(j)%lig(1) = soil1(j)%lig(1) + 0.12 * pl_mass(j)%ab_gr(ipl)
-      end if
+      ! if (bsn_cc%cswat == 2) then
+      !   soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * pl_mass(j)%ab_gr(ipl)
+      !   soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * pl_mass(j)%ab_gr(ipl)
+      !   soil1(j)%lig(1) = soil1(j)%lig(1) + 0.12 * pl_mass(j)%ab_gr(ipl)
+      ! end if
           
       !! add dead roots to soil residue pools
       do ly = 2, soil(j)%nly
         soil1(j)%rsd(ly) = soil1(j)%rsd(ly) + soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-        if (bsn_cc%cswat == 2) then
-          soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-          soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-          soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
-        end if
+        ! if (bsn_cc%cswat == 2) then
+        !   soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+        !   soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
+        !   soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
+        ! end if
       end do
       
       !! sum total community masses

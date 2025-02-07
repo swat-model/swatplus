@@ -61,7 +61,7 @@
       
       j = ihru
 
-        !! calculcate water temperature
+        !! calculate water temperature
         !! Stefan and Preudhomme. 1993.  Stream temperature estimation
         !!from air temperature.  Water Res. Bull. p. 27-45
         !! SWAT manual 2.3.13

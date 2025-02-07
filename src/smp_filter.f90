@@ -54,9 +54,9 @@
     real :: sed_remove2 = 0.  !%               |sediment removal for for vfs section 2
     real :: sed_remove = 0.   !%               |Average sediment removal for for entire vfs 
     real :: remove1 = 0.      !%               |Generic removal for for vfs section 1 
-                              !                |(recycled for constituants)
+                              !                |(recycled for constituents)
     real :: remove2 = 0.      !%               |Generic removal for for vfs section 2 
-                              !                |(recycled for constituants)
+                              !                |(recycled for constituents)
     real :: sedtrap = 0.      !                | 
     real :: xrem = 0.         !                ! 
     real :: vfs_ratio1 = 0.   !                !
