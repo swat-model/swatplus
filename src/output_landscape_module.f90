@@ -1131,6 +1131,49 @@
         end type output_soil_carb_mb_units
       type (output_soil_carb_mb_units) :: soil_mb_units
 
+     type output_cpool_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: residue_c     =    "      residue_c"
+         character(len=15)  :: str_c         =    "   structural_c"  
+         character(len=15)  :: meta_c        =    "    metabolic_c"         
+         character(len=15)  :: hs_c          =    "           hs_c"         
+         character(len=15)  :: hp_c          =    "           hp_c"         
+         character(len=15)  :: microb_c      =    "    microbial_c"         
+         character(len=15)  :: lig_c         =    "       lignin_c"      
+         character(len=15)  :: water_c       =    "        water_c"
+         character(len=15)  :: manure_c      =    "       manure_c"  
+         end type output_cpool_header       
+      type (output_cpool_header) :: cpool_hdr
+      
+      type output_cpool_header_units      
+         character (len=6) ::  freq         =  "      "
+         character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: day          =  "            "
+         character (len=12) :: mo           =  "            "
+         character (len=12) :: day_mo       =  "            "
+         character (len=12) :: yrc          =  "            "
+         character (len=12)  :: isd         =  "            "
+         character (len=22) :: id           =  "                      "
+         character (len=13) :: name         =  "             "
+         character(len=15)  :: residue_c    =  "          kg/ha"
+         character(len=15)  :: str_c        =  "          kg/ha"  
+         character(len=15)  :: meta_c       =  "          kg/ha"         
+         character(len=15)  :: hs_c         =  "          kg/ha"         
+         character(len=15)  :: hp_c         =  "          kg/ha"         
+         character(len=15)  :: microb_c     =  "          kg/ha"         
+         character(len=15)  :: lig_c        =  "          kg/ha"      
+         character(len=15)  :: water_c      =  "          kg/ha"
+         character(len=15)  :: manure_c     =  "          kg/ha"  
+        end type output_cpool_header_units         
+      type (output_cpool_header_units) :: cpool_units
 
 !!! NEW SOIL CARBON STAT OUTPUT
       
