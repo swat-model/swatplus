@@ -109,7 +109,7 @@
       tcov = bcv * soil(j)%phys(2)%tmp + (1. - bcv) * tbare
 
 !!    taking average of bare soil and covered soil as in APEX
-!!    previously using minumum causing soil temp to decrease
+!!    previously using minimum causing soil temp to decrease
 !!    in summer due to high biomass
 
       tmp_srf = 0.5 * (tbare + tcov)  ! following Jimmy"s code

@@ -122,9 +122,9 @@
       type (organic_transformations) :: org_tran
       
       type organic_flux
-          real :: cfmets1 = 0.           !(kg C ha-1 day-1) |C transfromed from Metabolic Litter to S1 (Microbial Biomass) 
-          real :: cfstrs1 = 0.           !(kg C ha-1 day-1) |C transfromed from Structural Litter to S1 (Microbial Biomass)  
-          real :: cfstrs2 = 0.           !(kg C ha-1 day-1) |C transfromed from Structural Litter to S2 (Slow Humus) 
+          real :: cfmets1 = 0.           !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
+          real :: cfstrs1 = 0.           !(kg C ha-1 day-1) |C transformed from Structural Litter to S1 (Microbial Biomass)  
+          real :: cfstrs2 = 0.           !(kg C ha-1 day-1) |C transformed from Structural Litter to S2 (Slow Humus) 
           real :: efmets1 = 0.           !(kg N ha-1 day-1) |N transformed from Metabolic Litter to S1 (Microbial Biomass) 
           real :: efstrs1 = 0.           !(kg N ha-1 day-1) |N transformed from Structural Litter to S1 (Microbial Biomass) 
           real :: efstrs2 = 0.           !(kg N ha-1 day-1) |N transformed from Structural Litter to S2 (Slow Humus)  
@@ -145,7 +145,7 @@
           real :: efs1s3 = 0.            !(kg N ha-1 day-1) |N transformed from from S1 (Microbial Biomass) to S3 (Passive Humus) 
           real :: efs2s1 = 0.            !(kg N ha-1 day-1) |N transformed from from S2 (Slow Humus) to S1 (Microbial Biomass) 
           real :: efs2s3 = 0.            !(kg N ha-1 day-1) |N transformed from from S2 (Slow Humus) to S3 (Passive Humus) 
-          real :: efs3s1 = 0.            !(kg N ha-1 day-1) |N transfromed from from  S3 (Passive Humus) to S1 (Microbial Biomass) 
+          real :: efs3s1 = 0.            !(kg N ha-1 day-1) |N transformed from from  S3 (Passive Humus) to S1 (Microbial Biomass) 
           real :: imms1s2 = 0.           !(kg N ha-1 day-1) |N immibolization resulting from transforming S1 (Microbial Biomass) to S2 (Slow Humus)   
           real :: imms1s3 = 0.           !(kg N ha-1 day-1) |N immibolization resulting from transforming S1 (Microbial Biomass) to S3 (Passive Humus)  
           real :: imms2s1 = 0.           !(kg N ha-1 day-1) |N immibolization resulting from transforming S2 (Slow Humus) to S1 (Microbial Biomass) 

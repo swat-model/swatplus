@@ -187,7 +187,7 @@
         end if
       end if
       
-      !if gwflow is active, calulate aquifer interactions (ht1 is updated)
+      !if gwflow is active, calculate aquifer interactions (ht1 is updated)
       if(bsn_cc%gwflow.eq.1) then
         call gwflow_gwsw(ich) !channel <--> groundwater
         call gwflow_canl(ich) !channel --> canal seepage
@@ -316,7 +316,7 @@
       
       !rtb hydrograph separation
       if (rttime > time%dtm / 60.) then      ! travel time > routing time step (hours)
-        !! Variable Storage Coefficent method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
+        !! Variable Storage Coefficient method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
         scoef = 24. / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + 24.)
         !! travel time > timestep -- then all incoming is stored and frac of stored is routed
         hdsep2%flo_surq = scoef * ch_stor_hdsep(ich)%flo_surq

@@ -3,7 +3,7 @@
       implicit none
 
       !! databases used by all spatial modules
-      call plant_parm_read                          !! read the plant paramter database
+      call plant_parm_read                          !! read the plant parameter database
       call plantparm_init                           !! initialize plant parameters
       call plant_transplant_read                    !! read plant transplant data
       call till_parm_read                           !! read the tillage database

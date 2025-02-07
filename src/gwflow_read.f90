@@ -1666,7 +1666,7 @@
 
       
       !read in connection information between SWAT+ objects (LSUs or HRUs) and grid cells  ------------------------------------------------
-      !if LSU-cell connection is active (i.e., file is provided), it supercedes HRU-cell connection
+      !if LSU-cell connection is active (i.e., file is provided), it supersedes HRU-cell connection
       write(out_gw,*)
       write(out_gw,*) '     read and prepare connection (HRU-cell or LSU-cell)'
       if (lsu_cells_link == 1) then

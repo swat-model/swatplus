@@ -329,7 +329,7 @@
       real :: grazn = 0.
       real :: grazp = 0.
       real :: sdti = 0.
-      real :: voltot = 0.            !!mm            |total volumne of cracks expressed as depth per area unit
+      real :: voltot = 0.            !!mm            |total volume of cracks expressed as depth per area unit
       real :: volcrmin = 0.          !!mm            |minimum crack volume allowed in any soil layer
       real :: canev = 0.
       real :: usle = 0.

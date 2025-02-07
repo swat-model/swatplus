@@ -89,7 +89,7 @@
            rndseed(j,1) = rndseed10
         end do
        
-        !! shuffle random number for conditional probablility
+        !! shuffle random number for conditional probability
         !! assign random number for decision table conditional
         rndseed_cond = rndseed10
       

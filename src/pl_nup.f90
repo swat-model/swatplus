@@ -81,6 +81,7 @@
         !uno3l = Min(unmx, soil1(j)%mn(l)%no3)
         nplnt(j) = nplnt(j) + uno3l 
         soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 - uno3l
+        ! print*, "in pl_nup.f90", l, soil1(j)%mn(l)%no3, uno3l 
       end do
       if (nplnt(j) < 0.) nplnt(j) = 0.
 

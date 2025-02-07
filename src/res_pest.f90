@@ -30,7 +30,7 @@
       real :: mol_wt_rto = 0.   !ratio      |molecular weight ratio of duaghter to parent pesticide
       integer :: ipest_db = 0   !none       |pesticide number from pesticide data base
       integer :: ipseq = 0      !none       |sequential basin pesticide number
-      integer :: ipdb = 0       !none       |seqential pesticide number of daughter pesticide
+      integer :: ipdb = 0       !none       |sequential pesticide number of daughter pesticide
       integer :: imeta = 0      !none       |pesticide metabolite counter
       integer :: jres               !none          |reservoir number  
       integer :: ipst = 0           !none          |counter
