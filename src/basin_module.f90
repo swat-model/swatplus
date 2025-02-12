@@ -140,6 +140,7 @@
         character(len=1) :: m = "n"
         character(len=1) :: y = "n"
         character(len=1) :: a = "n"
+        logical :: already_read_in
       end type print_interval
       
       type basin_print_codes
@@ -395,5 +396,17 @@
           character (len=16) :: yield_tha =  " yld(t/ha)      "
       end type basin_yld_header
       type (basin_yld_header) :: bsn_yld_hdr
+
+      contains
+
+      function print_prt_error(name) result (r)
+         character (len=16), intent (in) :: name
+         integer :: r
+         r = 1
+         write(*, fmt="(a,a,a)", advance="no") "Error: ", name, "print object is duplicated in the input file print.prt.  Aborting"
+         print*; print*
+         error stop
+      end function
+
       
       end module basin_module
