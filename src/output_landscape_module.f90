@@ -476,6 +476,7 @@
         character (len=12)  :: lchlabp  =  "     lchlabp"
         character (len=12)  :: tilelabp =  "    tilelabp"
         character (len=12)  :: satexn   =  "      satexn"
+        character (len=12)  :: percn    =  "       percn"
         character (len=16)  :: plt_cov  =  "    plant_cov    "
         character (len=30)  :: mgt_ops  =  "    mgt_ops      "
       end type output_losses_header      
@@ -501,6 +502,7 @@
         character (len=12)  :: lchlabp   =  "        kgha"
         character (len=12)  :: tilelabp  =  "        kgha"
         character (len=12)  :: satexn    =  "        kgha"
+        character (len=12)  :: percn     =  "        kgha"
       end type output_losses_header_units      
       type (output_losses_header_units) :: ls_hdr_units
    

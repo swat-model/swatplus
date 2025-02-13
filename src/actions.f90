@@ -151,14 +151,14 @@
               
                 !set organics and constituents from irr.ops ! irrig(j)%water =  cs_irr(j) = 
                 if (pco%mgtout == "y") then
-                  write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "IRRIGATE", phubase(j),  &
+                  write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIGATE", phubase(j),  &
                       pcom(j)%plcur(ipl)%phuacc, soil(j)%sw,pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
                       sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied
                 end if
               else
                 !! set demand for irrigation from channel, reservoir or aquifer
                 if (pco%mgtout == "y") then
-                  write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "IRRIG_DMD", phubase(j), &
+                  write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIG_DMD", phubase(j), &
                       pcom(j)%plcur(ipl)%phuacc, soil(j)%sw,pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
                       sol_sumno3(j), sol_sumsolp(j), irrop_db(irrop)%amt_mm
                 end if
@@ -246,7 +246,8 @@
             end select
                   
             if (pco%mgtout == "y") then
-              write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "IRRIGATE", phubase(j),  &
+              ! write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "IRRIGATE", phubase(j),  &
+              write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIGATE", phubase(j),  &
                   pcom(j)%plcur(ipl)%phuacc, soil(j)%sw,pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
                   sol_sumno3(j), sol_sumsolp(j), irrig(j)%demand
             end if
@@ -1121,7 +1122,7 @@
               end do
                         
               if (pco%mgtout == "y") then
-                write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "    BURN", phubase(j),    &
+                write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "    BURN", phubase(j),    &
                     pcom(j)%plcur(ipl)%phuacc, soil(j)%sw,pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m,   &
                     sol_sumno3(j), sol_sumsolp(j)
               end if
@@ -1141,7 +1142,7 @@
             
             if (pco%mgtout == "y") then
               ipl = 1
-              write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "    CNUP", phubase(j),    &
+              write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "    CNUP", phubase(j),    &
                 pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m,       &
                 sol_sumno3(j), sol_sumsolp(j), cn_prev, cn2(j)
             end if
