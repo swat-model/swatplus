@@ -73,7 +73,7 @@ __The following sections are emphasizing various development aspects.__
 
 - [Tagging and Versioning](doc/Tagging.md)
 
-- [Developing in Visual Studio](doc/VS.md)
+- [Developing in Visual Studio](doc/VS-Win.md)
 
 - [FORTRAN Coding Conventions (alpha)](doc/coding_conventions.md)
 
