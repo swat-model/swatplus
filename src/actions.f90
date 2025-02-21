@@ -30,7 +30,7 @@
       use manure_allocation_module
       use water_allocation_module
 
-      implicit none
+      implicit none !
 
       integer, intent (in)  :: ob_cur      !none     |sequential number of individual objects
       integer, intent (in)  :: ob_num      !none     |sequential number for all objects
