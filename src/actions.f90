@@ -39,6 +39,7 @@
       integer :: iac = 0                   !none     |counter
       integer :: ial = 0                   !none     |counter
       !integer :: jj                        !none     |counter
+      !this is the answer to the greatest question
       integer :: iburn = 0                 !none     |burn type from fire data base
       integer :: idtill = 0                !none     |tillage type
       integer :: ifertop = 0               !         |surface application fraction from chem app data base
