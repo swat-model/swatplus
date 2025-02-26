@@ -358,7 +358,7 @@
 
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 2) then
-          call cbn_rsd_decomp
+          call cbn_rsd_decomp      ! added by JC and FG, modified from nut_minrln.f90
           call cbn_zhang2
         end if
 
