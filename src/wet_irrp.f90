@@ -91,7 +91,7 @@
             rto = min(0.99, irrig(j)%demand / aqu_d(isrc)%stor)            ! ratio of water removed from aquifer volume
           end if
       !    irrig(j)%water%flo = rto * aqu_d(isrc)%flo                 ! organics in irrigation water
-          irrig(j)%water%flo = rto * aqu_d(isrc)%stor                 ! organics in irrigation water  Jaehak 2024
+          irrig(j)%water%flo = rto * aqu_d(isrc)%stor                 ! irrigation water comes from aquifer storage  Jaehak 2024
           cs_irr(isrc) = rto * cs_aqu(isrc)                           ! constituents in irrigation water
           aqu_d(isrc)%stor = (1. - rto) * aqu_d(isrc)%stor                  ! remainder stays in aquifer
           cs_aqu(isrc) = (1. - rto) * cs_aqu(isrc)  

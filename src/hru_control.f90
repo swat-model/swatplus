@@ -351,14 +351,15 @@
           end if
         end if
        
-        !! compute residue decomposition and nitrogen and phosphorus mineralization
+        !! compute residue decomposition
+        call rsd_decomp
+        
+        !! compute nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
         end if
 
-        !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 2) then
-          call cbn_rsd_decomp
           call cbn_zhang2
         end if
 
@@ -470,6 +471,12 @@
           end if
         end do
         
+        !! compute total surface residue
+        rsd1(j)%tot_com = orgz
+        do ipl = 1, pcom(j)%npl
+          rsd1(j)%tot_com = rsd1(j)%tot_com + rsd1(j)%tot(ipl)
+        end do
+        
         !! compute actual ET for day in HRU
         etday = ep_day + es_day + canev
         es_day = es_day
@@ -499,20 +506,20 @@
             call pest_enrsb
             if (sedyld(j) > 0.) call pest_pesty
 
-            !! static carbon organic n in runoff
-            if (bsn_cc%cswat == 0) then
-              call nut_orgn
-            end if
-        
-            !! C-Farm (Armen) c and organic n in runoff
-            if (bsn_cc%cswat == 1) then
-              call nut_orgnc
-            end if
+      if (bsn_cc%cswat == 0) then
+      call nut_orgn
+        end if
+        if (bsn_cc%cswat == 1) then      
+        call nut_orgnc
+      end if
       
-            !! SWAT-C Xuesong -- c and organic n in runoff
-            if (bsn_cc%cswat == 2) then
-              call nut_orgnc2
-            end if
+      !! Add by zhang
+      !! ====================
+      if (bsn_cc%cswat == 2) then
+        call nut_orgnc2
+      end if
+      !! Add by zhang
+      !! ====================
 
             call nut_psed
           end if
@@ -529,13 +536,11 @@
           else
             sedppm=0.
           end if
-          if (wet_dat_c(ires)%hyd.eq.'paddy') then !.and.time%yrs > pco%nyskip) then
-            if (wet_ob(j)%depth > 100.) then
+          if (wet_dat_c(ires)%hyd.eq.'paddy'.and.time%yrs > pco%nyskip) then
            write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
             pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
-            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon 
+            wet(j)%no3,ht2%no3,pcom(j)%lai_sum 
             end if
-          end if
         end if
 
         !! compute phosphorus movement
@@ -590,12 +595,12 @@
         end if
 
      !! compute reduction in pollutants due to in field grass waterway
-         if (hru(j)%lumv%grwat_i == 1) then
+        if (hru(j)%lumv%grwat_i == 1) then
           call smp_grass_wway
         end if
 
        !! compute reduction in pollutants due to in fixed BMP eff
-       if (hru(j)%lumv%bmp_flag == 1) then
+        if (hru(j)%lumv%bmp_flag == 1) then
           call smp_bmpfixed
         end if
 
@@ -624,6 +629,12 @@
           call hru_urb_bmp
         end if
       
+      ! update total residue on surface
+      rsd1(j)%tot_com = orgz
+      do ipl = 1, pcom(j)%npl
+        rsd1(j)%tot_com = rsd1(j)%tot_com + rsd1(j)%tot(ipl)
+      end do
+
       ! compute outflow objects (flow to channels, reservoirs, or landscape)
       ! if flow from hru is directly routed
       iob_out = iob
@@ -800,7 +811,7 @@
       ! output_plantweather
         hpw_d(j)%lai = pcom(j)%lai_sum
         hpw_d(j)%bioms = pl_mass(j)%tot_com%m
-        hpw_d(j)%residue = soil1(j)%rsd(1)%m
+        hpw_d(j)%residue = rsd1(j)%tot_com%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp

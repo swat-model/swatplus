@@ -17,9 +17,9 @@
       call basin_read_objs
       call time_read
       
-      !if (time%step > 0) then
+      if (time%step > 0) then
         time%dtm = 1440. / time%step
-      !end if
+      end if
       
       call readcio_read
              

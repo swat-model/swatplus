@@ -48,20 +48,6 @@
       endif
       
       hgt_above = max(0., dep - weir_hgt)  !m ponding depth above weir crest  
-      !sto_max = wsa1 * weir_hgt !m3
-      
-      !if (vol > sto_max) then
-      !  ht2%flo = vol - sto_max
-      !  vol = sto_max
-      !endif
-      !write(*,'(10f10.1)') w%precip,vol/wsa1*1000,ht2%flo/wsa1*1000,hru(jres)%water_seep,soil(jres)%sw
-      !! check if reservoir decision table has a weir discharge command
-     ! do iac = 1, dtbl_res(id)%acts
-     !   if (dtbl_res(id)%act(iac)%option == "weir") then
-     !     weir_flg = 1
-     !     exit
-     !   endif
-     ! end do
       
       do tstep = 1, nstep
           

@@ -78,15 +78,15 @@
               !! move water and nutrient upward and add to wetland storage Jaehak 2022
               !! this is not actual upward movement of water and nutrient, but a process computationally 
               !! rebalancing water and mass balance in the soil profile
-              wet(j)%flo = wet(j)%flo + ul_excess * 10. * hru(ihru)%area_ha   !m3=mm*10*ha)
+              wet(j)%flo = wet(j)%flo + ul_excess * 10. * hru(j)%area_ha   !m3=mm*10*ha)
               wet_ob(j)%depth = wet(j)%flo / hru(j)%area_ha / 10000. !m
               
               !! add ratio of nutrients to be reallocated to ponding water
               if (hru(j)%water_seep > 1.e-6) then
-                rto = ul_excess / hru(j)%water_seep           
+                rto = ul_excess / hru(j)%water_seep     !the ratio of additional runoff water and infiltration water      
                 rto = amin1 (1., rto)
-                hru(j)%water_seep = rto * hru(j)%water_seep     !updated infiltration volume of the standing water
-                !! subtract the fraction of nutrient in the top soil layer
+                hru(j)%water_seep = (1.-rto) * hru(j)%water_seep     !updated infiltration volume of the standing water Jaehak 2025
+                !! substract the fraction of nutrient in the top soil layer
                 soil1(j)%mn(1)%no3 = soil1(j)%mn(1)%no3 - wet_seep_day(j)%no3 * rto / hru(j)%area_ha !kg/ha
                 soil1(j)%mn(1)%nh4 = soil1(j)%mn(1)%nh4 - wet_seep_day(j)%nh3 * rto / hru(j)%area_ha !kg/ha
                 soil1(j)%mp(1)%act = soil1(j)%mp(1)%act - wet_seep_day(j)%solp * rto / hru(j)%area_ha !kg/ha
