@@ -145,7 +145,7 @@
                                                 (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
 
-        !write total carbon by soil layer, file = "hru_seq_lyr.txt"
+        !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
             if (ly == 1 ) then
