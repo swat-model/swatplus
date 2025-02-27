@@ -1,0 +1,1 @@
+Skipping hmd import. File does not exist: C:\SWAT\SWAT_input_DB\Climate_Imsil\rh.txt

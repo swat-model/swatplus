@@ -7,9 +7,6 @@
  HRU                       hru_rescarb_aa.txt
  HRU                       hru_plcarb_aa.txt
  HRU                       hru_scf_aa.txt
- HRU                       hru_plc_stat.txt
- HRU                       hru_resc_stat.txt
- HRU                       hru_soilc_stat.txt
  BASIN                     basin_carbon_all.txt
  HRU                       hru_nut_carb_gl_aa.txt
  HRU                       hru_ls_aa.txt
