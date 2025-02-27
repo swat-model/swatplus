@@ -486,8 +486,12 @@
                      pco%cs_wet%already_read_in = .true.
                   endif
                case default
-                  print*, "Warning: The output object ", name, "in the input file print.prt is not a valid object."
-                  print*, "         and cannot be processed."
+                  write(*, fmt="(a,a,a)", advance="yes") "Error: The output object ", name, "in the input file print.prt is not a valid object."
+                  write(*, fmt="(a)") "       and cannot be processed"
+                  !print*, "Error: The output object ", name, "in the input file print.prt is not a valid object."
+                  !print*, "         and cannot be processed."
+                  print*
+                  error stop
             end select
          end do
          if (eof < 0) exit
