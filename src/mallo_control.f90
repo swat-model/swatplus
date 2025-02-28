@@ -20,6 +20,9 @@
       integer :: ifertop = 0                !number in chem_app file
       real :: frt_kg = 0.                   !m3     |demand
 
+      isrc = 0
+      frt_kg = 0.
+
       !! zero demand, withdrawal, and unmet for entire allocation object
       mallo(imallo)%tot = malloz
       

@@ -132,59 +132,6 @@
             pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
         end if
           
-        !write all organic carbon for the residue file = "hru_rsdc_stat.txt/csv"
-        if (layer_output) then
-          do ly = 1, soil(j)%nly
-            write (4561,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
-                soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
-          enddo
-        endif
-        write (4561,*) freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
-            soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
-        if (pco%csvout == "y") then
-          do ly = 1, soil(j)%nly
-            write (4564,'(*(G0.7,:,","))') freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
-                soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
-          enddo
-          write (4564,'(*(G0.7,:,","))') freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
-            soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
-        end if
-
-        !write sequestered carbon for the soil profile (except layer1), file = "hru_soilc_stat.txt"
-        ! write (4562,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-        !     soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
-        !     soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
-        ! !file = "hru_soilc_stat.csv"
-        ! if (pco%csvout == "y") then
-        !   write (4565,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-        !     soil1(j)%tot_org%c, soil_prof_hs%c, soil_prof_hp%c, soil_prof_microb%c,               &
-        !     soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c
-        ! end if
-      
-        !write sequestered carbon for the soil profile (except layer1), file = "hru_soilc_stat.txt/csv"
-        if (layer_output) then
-          do ly = 1, soil(j)%nly
-            write (4562,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                soil1(j)%seq(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, soil1(j)%microb(ly)%c 
-          enddo
-        endif
-        write (4562,*) freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%seq_org%c, soil_prof_seq_hs%c, soil_prof_seq_hp%c, soil_prof_seq_microb%c
-        if (pco%csvout == "y") then
-          if (layer_output) then
-            do ly = 1, soil(j)%nly
-              write (4565, '(*(G0.7,:,","))') freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                  soil1(j)%seq(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, soil1(j)%microb(ly)%c 
-            enddo
-          endif
-          write (4565,'(*(G0.7,:,","))') freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-            soil1(j)%seq_org%c, soil_prof_seq_hs%c, soil_prof_seq_hp%c, soil_prof_seq_microb%c
-        end if
-
         !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
@@ -198,7 +145,7 @@
                                                 (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
 
-        !write total carbon by soil layer, file = "hru_seq_lyr.txt"
+        !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
             if (ly == 1 ) then
@@ -214,9 +161,53 @@
           write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
-      
-        !write organic flux pools for the soil profile file = "hru_cflux_stat.txt" make this non-cumulative
+        
+        !write the cswat == 2 related files. 
         if (bsn_cc%cswat == 2) then
+          !write all organic carbon for the residue file = "hru_rsdc_stat.txt/csv"
+          if (layer_output) then
+            do ly = 1, soil(j)%nly
+              write (4561,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                  soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+                  soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
+            enddo
+          endif
+          write (4561,*) freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+              soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
+          if (pco%csvout == "y") then
+            do ly = 1, soil(j)%nly
+              write (4564,'(*(G0.7,:,","))') freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                  soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+                  soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
+            enddo
+            write (4564,'(*(G0.7,:,","))') freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+              soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
+          end if
+
+          !write sequestered carbon for the soil profile (except layer1), file = "hru_soilc_stat.txt/csv"
+          if (layer_output) then
+            do ly = 1, soil(j)%nly
+              write (4562,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                  soil1(j)%seq(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, soil1(j)%microb(ly)%c 
+            enddo
+          endif
+          write (4562,*) freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              soil1(j)%seq_org%c, soil_prof_seq_hs%c, soil_prof_seq_hp%c, soil_prof_seq_microb%c
+          if (pco%csvout == "y") then
+            if (layer_output) then
+              do ly = 1, soil(j)%nly
+                write (4565, '(*(G0.7,:,","))') freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                    soil1(j)%seq(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, soil1(j)%microb(ly)%c 
+              enddo
+            endif
+            write (4565,'(*(G0.7,:,","))') freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              soil1(j)%seq_org%c, soil_prof_seq_hs%c, soil_prof_seq_hp%c, soil_prof_seq_microb%c
+          end if
+
+      
+          !write organic flux pools for the soil profile file = "hru_cflux_stat.txt" make this non-cumulative
           if (layer_output) then
             do ly = 1, soil(j)%nly
               write (4567,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
@@ -235,10 +226,8 @@
             write (4568,'(*(G0.7,:,","))') freq_label, -1,time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                             soil1(j)%org_flx_tot 
           endif 
-        end if
 
-        !write soil carb mass balance for the soil profile file = "hru_soilcarb_mb_stat.txt/csv"
-        if (bsn_cc%cswat == 2) then
+          !write soil carb mass balance for the soil profile file = "hru_soilcarb_mb_stat.txt/csv"
           if (layer_output) then
             do ly = 1, soil(j)%nly
               write (4570,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
@@ -265,15 +254,32 @@
                         soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c, soil_prof_man%c,                  &
                         soil1(j)%org_flx_tot 
           endif 
+
+          !write carbon pool for the soil profile file = "hru_cpool_stat.txt/csv"
+          if (layer_output) then
+            do ly = 1, soil(j)%nly
+              write (4572,*) freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                            soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
+                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c
+            enddo
+          endif
+          write (4572,*) freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                        soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
+                        soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c
+          if (pco%csvout == "y") then
+            if (layer_output) then
+              do ly = 1, soil(j)%nly
+                write (4573,'(*(G0.7,:,","))'), freq_label, ly, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                              soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
+                              soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c
+              enddo
+            endif
+            write (4573,'(*(G0.7,:,","))') freq_label, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                          soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
+                          soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c
+          endif 
         end if
 
-        ! Set the org_flux pools to zero if at the end of the calendar year
-        ! if (bsn_cc%cswat == 2) then
-        !   do ly = 1, soil(j)%nly
-        !       soil1(j)%org_flx_cum_lr(ly) = org_flux_zero
-        !     end do
-        !   end if
-        ! end if
       end do    !! hru loop
       
       !! summing hru output for the basin

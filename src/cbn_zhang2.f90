@@ -349,7 +349,7 @@
 
             case(3)
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
-                ! Kamanian method    ----having modi
+                ! Kemanian method    ----having modi
                 till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
                 till_eff = 1.0

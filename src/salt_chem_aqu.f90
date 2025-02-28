@@ -56,6 +56,8 @@
       real :: mass_before = 0.
       real :: mass_after = 0.
       double precision IonStr,IS_temp,K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,error1ST,error2ND,error3RD,errorTotal
+
+      SkipedIEX = 0.
       
       !aquifer ID
       iaq = ob(icmd)%num
