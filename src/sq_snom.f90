@@ -44,6 +44,8 @@
       real :: snocov = 0.   !none       |fraction of HRU area covered with snow
       real :: snotmp = 0.   !deg C      |temperature of snow pack
 
+      snotmp = 0.
+
       j = ihru
 
         !! estimate snow pack temperature

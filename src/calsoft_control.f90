@@ -21,6 +21,7 @@
       integer :: idb = 0     !          |   
       integer :: iord = 0    !none      |counter 
       
+      icvmax = 0
       nyskip = pco%nyskip
       pco = pco_init
       pco%wb_bsn%a = "y"

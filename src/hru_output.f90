@@ -23,6 +23,7 @@
       real :: const = 0.
       real :: sw_init = 0.
       real :: sno_init = 0.
+      real :: percn_aa = 0.
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs HRU variables on daily, monthly and annual time steps
@@ -66,10 +67,10 @@
           end if
           if (pco%ls_hru%d == "y") then
             write (2030,108) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hls_d(j),         &
-                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops      !! losses day
+                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops, hpw_d(j)%percn       !! losses day
             if (pco%csvout == "y") then
                 write (2034,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                                                    hls_d(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops  
+                                                                    hls_d(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops, hpw_d(j)%percn   
             end if
           end if
           if (pco%pw_hru%d == "y") then
@@ -117,10 +118,10 @@
            
            if (pco%ls_hru%m == "y") then
              write (2031,108) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hls_m(j),        &
-                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops           !! losses mon
+                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops, hpw_m(j)%percn            !! losses mon
              if (pco%csvout == "y") then 
                  write (2035,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                                                          hls_m(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops 
+                                                                          hls_m(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops, hpw_m(j)%percn  
              end if
            end if
            
@@ -183,10 +184,10 @@
            
            if (pco%ls_hru%y == "y") then
              write (2032,108) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hls_y(j),          &
-                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops           !! losses yr
+                                                                           lum(ilu)%plant_cov, lum(ilu)%mgt_ops, hpw_y(j)%percn            !! losses yr
              if (pco%csvout == "y") then
                  write (2036,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name,   &
-                                                                          hls_y(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops 
+                                                                          hls_y(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops, hpw_y(j)%percn  
              end if
            end if
            
@@ -248,11 +249,12 @@
         
          if (time%end_sim == 1 .and. pco%ls_hru%a == "y") then
            hls_a(j) = hls_a(j) / time%yrs_prt 
+           percn_aa = hpw_a(j)%percn / time%yrs_prt
            write (2033,107) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hls_a(j),        &
-                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops      !! losses ann
+                                                                          lum(ilu)%plant_cov, lum(ilu)%mgt_ops, percn_aa       !! losses ann
              if (pco%csvout == "y") then 
                write (2037,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                                                        hls_a(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops
+                                                                        hls_a(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops, percn_aa 
              end if
              hls_a(j) = hlsz
          end if
@@ -309,7 +311,7 @@
 102   format (4i6,2i8,2x,a,25f12.3,3x,a16,a30)
 103   format (4i6,i8,4x,a,5x,4f12.3)
 104   format (4i6,2i8,2x,a8,4f12.3,15f17.3,7x,a16,a30)
-107   format (4i6,2i8,2x,a,12f12.3,3x,a16,a30)
-108   format (4i6,2i8,2x,a,12f12.3,3x,a16,a30)
+107   format (4i6,2i8,2x,a,12f12.3,3x,a16,a30,f12.3)
+108   format (4i6,2i8,2x,a,12f12.3,3x,a16,a30,f12.3)
        
       end subroutine hru_output

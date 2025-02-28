@@ -19,6 +19,7 @@
       integer :: iobtypno = 0
 
       tot_ha = 0
+      i = 0
       
       do ics = 1, db_mx%ch_surf
         

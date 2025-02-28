@@ -39,6 +39,8 @@
       
       eof = 0
       imax = 0
+      istep = 0
+      idaystep = 0
 
       !read all recall files
       inquire (file=in_rec%recall_rec, exist=i_exist)
