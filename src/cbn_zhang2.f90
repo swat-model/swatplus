@@ -180,7 +180,9 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
+       logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
+       ufc = carbdb%carbon_coef_file
 
        !! initialize local variables
        deltawn = 0.
@@ -201,7 +203,7 @@
        org_frac%lsf = 0.
        org_frac%lslf = 0.
        org_con%xlslf = 0.
-       carbdb%str_rate = 0.
+       ! carbdb%str_rate = 0.
        org_tran%lsctp = 0.
        lscta = 0.
        lslcta = 0.
@@ -218,16 +220,16 @@
        org_tran%lslctp = 0.
        org_tran%lslnctp = 0.
        org_tran%lsntp= 0.
-       carbdb%meta_rate= 0.
+       ! carbdb%meta_rate= 0.
        org_tran%lmctp = 0.
        org_tran%lmntp = 0.
-       carbdb%microb_rate = 0.
+       ! carbdb%microb_rate = 0.
        org_con%xbmt = 0.
        org_tran%bmctp = 0.
-       carbdb%hs_rate = 0.
+       ! carbdb%hs_rate = 0.
        org_tran%hsctp = 0.
        org_tran%hsntp = 0.
-       carbdb%hp_rate = 0.
+       ! carbdb%hp_rate = 0.
        org_tran%hpctp = 0.
        org_tran%hpntp = 0.
        org_ratio%nchp = 0.
@@ -392,19 +394,19 @@
           rlr = min(0.8, soil1(j)%lig(k)%m / (soil1(j)%str(k)%m + 1.e-5))  
 
           !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
-          carbdb%hs_rate = 5.4799998e-04
+          if (.not. ufc) carbdb%hs_rate = 5.4799998e-04
           
           !carbdb%hp_rate=prmt(48) !century passive humus transformation rate d^-1(0.0000082_0.000015) original value = 0.000012 
-          carbdb%hp_rate = 1.2000000e-05
+          if (.not. ufc) carbdb%hp_rate = 1.2000000e-05
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
             org_allo%abco2 = .55
             a1co2 = .55
-            carbdb%microb_top_rate = .0164
-            carbdb%microb_rate = .0164
-            carbdb%meta_rate = .0405
-            carbdb%str_rate = .0107
+            if (.not. ufc) carbdb%microb_top_rate = .0164
+            if (.not. ufc) carbdb%microb_rate = .0164
+            if (.not. ufc) carbdb%meta_rate = .0405
+            if (.not. ufc) carbdb%str_rate = .0107
             org_ratio%nchp = .1
             xbm = 1.
             org_con%cs = org_con%cs * carbdb%microb_top_rate
@@ -428,9 +430,9 @@
             ! set nitrogen carbon ratios for lower layers
             org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
             a1co2 = .55
-            carbdb%microb_rate = .02
-            carbdb%meta_rate = .0507
-            carbdb%str_rate = .0132
+            if (.not. ufc) carbdb%microb_rate = .02
+            if (.not. ufc) carbdb%meta_rate = .0507
+            if (.not. ufc) carbdb%str_rate = .0132
             xbm = .25 + .0075 * soil(j)%phys(k)%sand
              min_n_ppm = 1000. * sol_min_n / (sol_mass / 1000)
             if (min_n_ppm > 7.15) then
@@ -446,7 +448,7 @@
           end if          
 
           !coef in century eq allocating slow to passive humus(0.001_0.05) original value = 0.003,
-              carbdb%hs_hp = 5.0000001e-02
+              if (.not. ufc) carbdb%hs_hp = 5.0000001e-02
               org_allo%asp = max(.001, carbdb%hs_hp - .00009 * soil(j)%phys(k)%clay)
               
         !     potential transformations structural litter

@@ -59,6 +59,7 @@
           real :: microb_koc = 0.       !10^3 m^3 Mg-1  |liquid-solid partition coefficient for microbial biomass
           real :: min_n_frac = 0.       !               |fraction of mineral n sorbed to litter
           real :: c_org_frac = 0.       !               |carbon fraction of organic materials      
+          logical :: carbon_coef_file = .false. !       !set to true if carbon_coef.cbn file exits.
       end type carbon_inputs
       type (carbon_inputs) :: carbdb 
       type (carbon_inputs) :: carbz  
