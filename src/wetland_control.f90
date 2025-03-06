@@ -79,7 +79,7 @@
       !! add irrigation water to the paddy/wetland storage 
       wet(j)%flo =  wet(j)%flo + irrig(j)%applied * wsa1 !m3
       wet(j)%no3 = wet(j)%no3 + irrig(j)%no3 * irrig(j)%applied * wsa1 * 0.001 !kg
-      wet_wat_d(j)%area_ha = 0.
+      !wet_wat_d(j)%area_ha = 0.
       if (wet(j)%flo > 0.) then  !paddy is assumed flat
         !! update wetland surface area - solve quadratic to find new depth
         x1 = wet_hyd(j)%bcoef ** 2 + 4. * wet_hyd(j)%ccoef * (1. - wet(j)%flo / (wet_ob(j)%pvol + 1.e-9))
@@ -93,7 +93,8 @@
         wet_fr = min(wet_fr,1.)
         wet_fr = max(wet_fr,0.01)
         
-        wet_wat_d(j)%area_ha = hru(j)%area_ha * wet_fr
+        !wetland water surface area, not applicable to paddies Jaehak 2025
+		    if (wet_dat_c(ires)%hyd.ne.'paddy') wet_wat_d(j)%area_ha = hru(j)%area_ha * wet_fr
 
         !calculate seepage and groundwater interactions
         if(bsn_cc%gwflow == 1) then !rtb gwflow
@@ -101,7 +102,7 @@
         else !original seepage calculations
           !! infiltration of the standing water to the topsoil layer. 
           !! Any excess infiltration volume estimated here is reverted (back to waterbody) in swr_satexcess.
-          wet_wat_d(j)%seep = min(wet(j)%flo, hru(j)%wet_hc * 24. * wsa1) !m3   
+          wet_wat_d(j)%seep = min(wet(j)%flo, hru(j)%wet_hc * 24. * wet_wat_d(j)%area_ha * 10.) !m3   
         end if !check for gwflow
         
         ! check potential percolation rate to refine daily seepage rate Jaehak 2022
@@ -134,7 +135,7 @@
         endif               
                 
         wet(j)%flo = wet(j)%flo - wet_wat_d(j)%seep
-        wet_wat_d(j)%area_ha = hru(j)%area_ha 
+        !wet_wat_d(j)%area_ha = hru(j)%area_ha 
         hru(j)%water_seep = wet_wat_d(j)%seep / wsa1   !mm=m3/(10*ha)
       
         ! calculate dissolved nutrient infiltration Jaehak 2022
@@ -156,7 +157,7 @@
         wet_seep_day(j)%solp = wet(j)%solp * seep_rto
         wet_seep_day(j)%sedp = wet(j)%sedp * seep_rto
         
-        ! subtract the seepage amount from the ponding water
+        ! substract the seepage amount from the ponding water
         wet(j)%no3 = wet(j)%no3 - wet_seep_day(j)%no3 
         wet(j)%nh3 = wet(j)%nh3 - wet_seep_day(j)%nh3 
         wet(j)%orgn = wet(j)%orgn - wet_seep_day(j)%orgn
@@ -166,23 +167,23 @@
         
       !! if not a floodplain wetland
       !if (hru(j)%wet_fp == "n") then
-        !! calc release from decision table
-        d_tbl => dtbl_res(irel)
-        wbody => wet(j)
-        wbody_wb => wet_wat_d(j)
-        pvol_m3 = wet_ob(j)%pvol
-        evol_m3 = wet_ob(j)%evol
-        !if (wet_ob(j)%area_ha > 1.e-6) then
-        if (hru(j)%area_ha > 1.e-6) then
-          !dep = wbody%flo / wet_ob(j)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
-          dep = wet(j)%flo / wsa1 / 1000.    !m 
-        else
-          dep = 0.
-        end if
-        weir_hgt = wet_ob(j)%weir_hgt   !m
-        wet_ob(j)%depth = dep           !m
+		  !! calc release from decision table
+		  d_tbl => dtbl_res(irel)
+		  wbody => wet(j)
+		  wbody_wb => wet_wat_d(j)
+		  pvol_m3 = wet_ob(j)%pvol
+		  evol_m3 = wet_ob(j)%evol
+		  !if (wet_ob(j)%area_ha > 1.e-6) then
+		  if (hru(j)%area_ha > 1.e-6) then
+		    !dep = wbody%flo / wet_ob(j)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
+		    dep = wet(j)%flo / wsa1 / 1000.    !m 
+		  else
+		    dep = 0.
+		  end if
+		  weir_hgt = wet_ob(j)%weir_hgt   !m
+		  wet_ob(j)%depth = dep           !m
 
-        !! weir discharge (ht2) by decision tables
+       !! weir discharge (ht2) by decision tables
         call conditions (j, irel)
         call res_hydro (j, irel, pvol_m3, evol_m3)
         
@@ -192,9 +193,15 @@
         else
           dep = 0.
         end if
+        !! weir discharge by manual operation Jaehak 2025
+        if (sched(isched)%num_autos == 0.and.dep>0.01) then
+          call res_weir_release (j, irel, ihyd, evol_m3, dep, weir_hgt)
+          wet(j)%flo = wbody%flo
+        endif
         
+      !endif
         !! subtract outflow from storage
-        wet(j)%flo =  wet(j)%flo - ht2%flo
+        !wet(j)%flo =  wet(j)%flo - ht2%flo
         surfq(j) = ht2%flo / wsa1 !mm
         
         if (time%step > 1) then
