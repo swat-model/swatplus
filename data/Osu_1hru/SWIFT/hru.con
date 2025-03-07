@@ -1,0 +1,3 @@
+hru.con: written by SWAT+ editor v2.2.0 on 2023-03-22 04:25 for SWAT+ rev.60.5.4
+      id  name                gis_id          area           lat           lon          elev       hru               wst       cst      ovfl      rule   out_tot
+       1  hru0001                  1           10       35.65311     127.36763     350.96629         1    s35610n127290e         0         0         0         0

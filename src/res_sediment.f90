@@ -19,21 +19,20 @@
       if (wbody%flo < 1.e-6) then
         ! reservoir is empty
         wbody = hz
+        wbody%sed = 0. !Jaehak 2025
+        ht2%sed = 0.
+        sed_ppm = 1.e-6
+        sil_ppm = 1.e-6
+        cla_ppm = 1.e-6
       else
 
         !! compute concentrations
-        if (wbody%flo > 0.) then
-          sed_ppm = 1000000. * wbody%sed / wbody%flo
-          sed_ppm = Max(1.e-6, sed_ppm)
-          sil_ppm = 1000000. * wbody%sil / wbody%flo
-          sil_ppm = Max(1.e-6, sil_ppm)
-          cla_ppm = 1000000. * wbody%cla / wbody%flo
-          cla_ppm = Max(1.e-6, cla_ppm)
-        else
-          sed_ppm = 1.e-6
-          sil_ppm = 1.e-6
-          cla_ppm = 1.e-6
-        endif
+        sed_ppm = 1000000. * wbody%sed / wbody%flo
+        sed_ppm = Max(1.e-6, sed_ppm)
+        sil_ppm = 1000000. * wbody%sil / wbody%flo
+        sil_ppm = Max(1.e-6, sil_ppm)
+        cla_ppm = 1000000. * wbody%cla / wbody%flo
+        cla_ppm = Max(1.e-6, cla_ppm)
         
         !! compute change in sediment concentration due to settling 
         if (sed_ppm > wbody_prm%sed%nsed) then
@@ -55,8 +54,8 @@
         end if
 
         !! compute sediment leaving reservoir - ppm -> t
-        ht2%sed = sed_ppm * ht2%flo / 1000000.
-        wbody%sed = wbody%sed - ht2%sed
+        !ht2%sed = sed_ppm * ht2%flo / 1000000.
+        !wbody%sed = wbody%sed - ht2%sed
 
       end if
 

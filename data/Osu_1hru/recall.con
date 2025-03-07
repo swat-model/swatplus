@@ -1,0 +1,3 @@
+recall.con (2-stage)
+      NUMB    NAME    GIS_ID    AREA_HA      LAT     LONG       ELEV    RECALL     WST   CONSTIT  OVERFLOW  RULESET OUT_TOT OBTYP_OUT1 HTYPNO_OUT1  HTYP_OUT1  FRAC_OUT1 
+         1  inflow      1        0.000    31.734   -83.720     0.000      1    wea1         0         0        0       1         sdc          1        tot     1.0000

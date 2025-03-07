@@ -1,0 +1,16 @@
+  hru-new.cal developed from soft data calibration
+    13
+ NAME           CHG_TYP                  VAL   CONDS  LYR1  LYR2   YEAR1  YEAR2   DAY1   DAY2  OBJ_TOT
+cn2         pctchg                  7.714000E+00  0           0           0           0           0           0           0           0           0
+petco       pctchg                 -5.273950E+01  0           0           0           0           0           0           0           0           0
+latq_co     pctchg                 -3.732030E+01  0           0           0           0           0           0           0           0           0
+alpha       pctchg                  6.859000E+00  0           0           0           0           0           0           0           0           0
+epco        pctchg                  6.534100E+01  0           0           0           0           0           0           0           0           0
+awc         pctchg                 -6.256550E+01  0           0           0           0           0           0           0           0           0
+esco        pctchg                  3.305500E+01  0           0           0           0           0           0           0           0           0
+perco       pctchg                  1.434000E+00  0           0           0           0           0           0           0           0           0
+cn3_swf     pctchg                 -7.710000E-02  0           0           0           0           0           0           0           0           0
+canmx       pctchg                 -6.680230E+01  0           0           0           0           0           0           0           0           0
+lat_len     pctchg                 -6.241200E+00  0           0           0           0           0           0           0           0           0
+revap_co    pctchg                 -5.854530E+01  0           0           0           0           0           0           0           0           0
+surlag      pctchg                 -2.125720E+01  0           0           0           0           0           0           0           0           0
