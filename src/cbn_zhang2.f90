@@ -241,8 +241,8 @@
        org_allo%almco2 = 0.
        org_allo%abco2 = 0.
        a1co2 = 0.
-       org_allo%apco2= 0.
-       org_allo%asco2 = 0.
+       ! org_allo%apco2= 0.
+       ! org_allo%asco2 = 0.
        org_allo%abp = 0.
        org_allo%asp = 0.
        a1 = 0.
@@ -402,7 +402,7 @@
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
             org_allo%abco2 = .55
-            a1co2 = .55
+            if (.not. ufc) org_allo%a1co2 = .55
             if (.not. ufc) carbdb%microb_top_rate = .0164
             if (.not. ufc) carbdb%microb_rate = .0164
             if (.not. ufc) carbdb%meta_rate = .0405
@@ -429,7 +429,7 @@
           else
             ! set nitrogen carbon ratios for lower layers
             org_allo%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
-            a1co2 = .55
+            if (.not. ufc) org_allo%a1co2 = .55
             if (.not. ufc) carbdb%microb_rate = .02
             if (.not. ufc) carbdb%meta_rate = .0507
             if (.not. ufc) carbdb%str_rate = .0132
@@ -479,9 +479,11 @@
               org_tran%hpntp = soil1(j)%hp(k)%n * org_con%x1
               
         !     estimate n demand
-              a1 = 1.- a1co2
-              asx = 1. - org_allo%asco2 - org_allo%asp
-              apx=1. - org_allo%apco2            
+              a1 = 1.- org_allo%a1co2
+              ! asx = 1. - org_allo%asco2 - org_allo%asp
+              asx = 1. - org_allo%a1co2 - org_allo%asp
+              ! apx=1. - org_allo%apco2            
+              apx=1. - org_allo%a1co2            
               pn1 = org_tran%lslnctp*a1 * org_ratio%ncbm                  !structural litter to biomass
               pn2 = .7 * org_tran%lslctp * org_ratio%nchs                 !structural litter to slow
               pn3 = org_tran%lmctp * a1 * org_ratio%ncbm                  !metabolic litter to biomass
@@ -692,20 +694,22 @@
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
-              org_flux%co2fstr = a1co2 * lslncta
+              org_flux%co2fstr = org_allo%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
               org_flux%cfstrs2 = .7 * lslcta
               
               lmcta = min(soil1(j)%meta(k)%c, lmcta)
-              org_flux%co2fmet = a1co2 * lmcta
+              org_flux%co2fmet = org_allo%a1co2 * lmcta
               
               
               org_flux%cfmets1 = a1 * lmcta
               
               org_flux%co2fs1 = org_allo%abco2 * bmcta
-              org_flux%co2fs2 = org_allo%asco2 * hscta
-              org_flux%co2fs3 = org_allo%apco2 * hpcta
+              ! org_flux%co2fs2 = org_allo%asco2 * hscta
+              org_flux%co2fs2 = org_allo%a1co2 * hscta
+              ! org_flux%co2fs3 = org_allo%apco2 * hpcta
+              org_flux%co2fs3 = a1co2 * hpcta
               
               !!!=================================
               !!transformation processes from passive (s3), slow (s2), metabolic (met), and non-lignin structural (str) pools to microbial pool
@@ -916,8 +920,10 @@
               !!update soil respiration
               !!===============================
               !!soil rspc for layer k
-              rspc = .3 * lslcta + a1co2 * (lslncta + lmcta) + org_allo%abco2 * bmcta + org_allo%asco2 * hscta + &
-                org_allo%apco2 * hpcta
+              ! rspc = .3 * lslcta + a1co2 * (lslncta + lmcta) + org_allo%abco2 * bmcta + org_allo%asco2 * hscta + &
+              !   org_allo%apco2 * hpcta
+              rspc = .3 * lslcta + a1co2 * (lslncta + lmcta) + org_allo%abco2 * bmcta + org_allo%a1co2 * hscta + &
+                org_allo%a1co2 * hpcta
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
               

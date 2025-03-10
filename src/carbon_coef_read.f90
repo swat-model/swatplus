@@ -18,7 +18,8 @@ subroutine carbon_coef_read
           read (107,*,iostat=eof) titldum
           read (107,*,iostat=eof) header
           read (107,*,iostat=eof) carbdb%hp_rate, carbdb%hs_rate, carbdb%microb_rate, &
-                carbdb%meta_rate, carbdb%str_rate, carbdb%microb_top_rate, carbdb%hs_hp
+                carbdb%meta_rate, carbdb%str_rate, carbdb%microb_top_rate, carbdb%hs_hp, &
+                org_allo%a1co2
           carbdb%carbon_coef_file = .true.
         endif
     endif
