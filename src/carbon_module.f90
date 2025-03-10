@@ -74,6 +74,7 @@
           real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
           real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
           real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
+          real :: a1co2 =  0.     !               |Fraction of decomposed metabolic and passive pools to CO2
       end type organic_allocations
       type (organic_allocations) :: org_allo 
       type (organic_allocations) :: org_alloz
