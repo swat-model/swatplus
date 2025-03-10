@@ -401,7 +401,7 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_allo%abco2 = .55
+            ! org_allo%abco2 = .55
             if (.not. ufc) org_allo%a1co2 = .55
             if (.not. ufc) carbdb%microb_top_rate = .0164
             if (.not. ufc) carbdb%microb_rate = .0164
