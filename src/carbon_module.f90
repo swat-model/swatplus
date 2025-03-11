@@ -59,10 +59,10 @@
           real :: microb_koc = 0.       !10^3 m^3 Mg-1  |liquid-solid partition coefficient for microbial biomass
           real :: min_n_frac = 0.       !               |fraction of mineral n sorbed to litter
           real :: c_org_frac = 0.       !               |carbon fraction of organic materials      
-          logical :: carbon_coef_file = .false. !       !set to true if carbon_coef.cbn file exits.
       end type carbon_inputs
-      type (carbon_inputs) :: carbdb 
+      type (carbon_inputs), dimension(2) :: carbdb 
       type (carbon_inputs) :: carbz  
+      logical :: carbon_coef_file = .false. !           !set to true if carbon_coef.cbn file exits.
       
       type organic_allocations
           real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
@@ -76,7 +76,7 @@
           real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
           real :: a1co2 =  0.     !               |Fraction of decomposed metabolic and passive pools to CO2
       end type organic_allocations
-      type (organic_allocations) :: org_allo 
+      type (organic_allocations), dimension(2) :: org_allo 
       type (organic_allocations) :: org_alloz
         
       type organic_controls
