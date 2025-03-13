@@ -76,7 +76,7 @@
       real :: hiad1 = 0.                   !         |
       real :: biomass = 0.                 !         |
       real :: frt_kg = 0.
-      real :: harveff = 0.
+      real :: harveff = 0. !
       real :: wur = 0.                     !         |
       real :: frac = 0.                    !         |
       real :: rto = 0.                     !         |
