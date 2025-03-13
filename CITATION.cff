@@ -1,0 +1,131 @@
+# This CITATION.cff file is for the SWAT+ Github repository
+
+cff-version: 1.2.0
+title: Soil and Water Assessment Tool Plus (SWAT+)
+message: >-
+  Please cite SWAT+ using the metadata from
+  "preferred-citation".
+date-released: 2024-08-28
+type: software
+authors:
+  - given-names: Jeffrey G.
+    family-names: Arnold
+    affiliation: >-
+      Grassland Soil and Water Research Laboratory, USDA
+      Agricultural Research Service (ARS)
+  - given-names: Natalja
+    family-names: Čerkasova
+    email: natalja.cerkasova@gmail.com
+    affiliation: >-
+      Blackland Research & Extension Center, Texas A&M
+      Agrilife Research, USA; Klaipeda University, Marine
+      Research Institute, Lithuania
+    orcid: 'https://orcid.org/0000-0003-2894-3935'
+  - given-names: Michael J.
+    family-names: White
+    email: mike.white2@usda.gov
+    affiliation: >-
+      Grassland Soil and Water Research Laboratory, USDA
+      Agricultural Research Service (ARS)
+    orcid: 'https://orcid.org/0000-0002-1641-0077'
+  - given-names: Ryan
+    family-names: Bailey
+    email: ryant.bailey@colostate.edu
+    affiliation: Colorado State University, Fort Collins, Colorado, USA
+    orcid: 'https://orcid.org/0000-0002-6539-1474'
+  - given-names: Kelly
+    family-names: Thorp
+    email: kelly.thorp@usda.gov
+    affiliation: >-
+      Grassland Soil and Water Research Laboratory, USDA
+      Agricultural Research Service (ARS)
+    orcid: 'https://orcid.org/0000-0001-9168-875X'
+  - given-names: Jaehak
+    family-names: Jeong
+    email: jaehak.jeong@ag.tamu.edu
+    affiliation: >-
+      Blackland Research & Extension Center, Texas A&M
+      Agrilife Research, Temple, USA
+  - given-names: Xuesong
+    family-names: Zhang
+    affiliation: USDA-ARS Hydrology and Remote Sensing Laboratory
+    email: Xuesong.Zhang@usda.gov
+    orcid: 'https://orcid.org/0000-0003-4711-7751'
+  - given-names: Taci
+    family-names: Ugraskan
+    email: taci.ugraskan@usda.gov
+    affiliation: USDA-ARS Grassland Soil and Water Research Laboratory
+  - given-names: Ann
+    family-names: Griensven
+    name-particle: van
+    email: ann.van.griensven@vub.be
+    orcid: 'https://orcid.org/0000-0002-2105-6287'
+    affiliation: >-
+      Vrije Universiteit Brussel, IHE-Delft Institute for
+      Water Education
+  - given-names: Hendrik
+    family-names: Rathjens
+    affiliation: Stone Environmental Inc.
+    orcid: 'https://orcid.org/0000-0002-7152-9767'
+  - given-names: Cibin
+    family-names: Raj
+    email: craj@psu.edu
+    affiliation: >-
+      Penn State University, Department of Agricultural and
+      Biological Engineering
+    orcid: 'https://orcid.org/0000-0001-5374-8504'
+  - given-names: Ximing
+    family-names: Cai
+    email: xmcai@illinois.edu
+    affiliation: >-
+      Civil and Environmental Engineering, University of
+      Illinois at Urbana-Champaign
+    orcid: 'https://orcid.org/0000-0002-7342-4512'
+  - given-names: William F.
+    family-names: Geter
+    email: Frank.Geter@colostate.edu
+    affiliation: >-
+      Department of Civil and Environmental Engineering,
+      Colorado State University, Fort Collins, USA
+  - given-names: Olaf
+    family-names: David
+    email: odavid@colostate.edu
+    affiliation: >-
+      Department of Civil and Environmental Engineering,
+      Colorado State University, Fort Collins, USA
+  - given-names: Jack R.
+    family-names: Carlson
+    email: Jack.Carlson@colostate.edu
+    affiliation: >-
+      Department of Civil and Environmental Engineering,
+      Colorado State University, Fort Collins, USA
+  - given-names: Kieu N.
+    family-names: Le
+    email: kle@fieldtomarket.org
+    affiliation: >-
+      Field to Market: The Alliance for Sustainable
+      Agriculture
+    orcid: 'https://orcid.org/0000-0002-1662-4796'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.14983534
+    description: Current release
+repository-code: 'https://github.com/swat-model/swatplus'
+url: 'https://swatplus.gitbook.io/docs'
+abstract: >-
+  The Soil and Water Assessment Tool Plus (SWAT+) is a public domain
+  model jointly developed by the USDA Agricultural Research Service (USDA-ARS),
+  Texas A&M AgriLife Research(part of The Texas A&M University System),
+  Colorado State University, USDA-ARS Hydrology and Remote Sensing Laboratory,
+  and other entities. SWAT+ is a small watershed to river basin-scale model used
+  to simulate the quality and quantity of surface and ground water and predict 
+  the environmental impact of land use, land management practices, and climate change.
+  SWAT is widely used in assessing soil erosion prevention and control,
+  non-point source pollution control and regional management in watersheds.
+keywords:
+  - SWAT+
+  - Soil and Water Assessment Tool
+  - Environmental Model
+  - Watershed model
+  - Hydrological Model
+license: LGPL-2.1
