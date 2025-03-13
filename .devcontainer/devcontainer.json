@@ -1,0 +1,37 @@
+// .devcontainer/devcontainer.json
+{
+	"name": "Intel Fortran Dev Container",
+	// 1. Build our custom Dockerfile
+	"build": {
+	  "dockerfile": "Dockerfile"
+	},
+	"postCreateCommand": "mkdir -p /workspaces/data_test && cp -r /workspaces/*/data/Ames_sub1 /workspaces/data_test/",
+	// 2. VS Code customizations
+	"customizations": {
+	  "vscode": {
+		// 2A. Install relevant extensions automatically
+		"extensions": [
+		  "ms-vscode.cmake-tools",
+		  "fortran-lang.linter-gfortran",
+		  "ms-vscode.cpptools",
+		  "mhutchie.git-graph",
+		  "GitHub.remotehub"
+		],
+		// 2B. VS Code settings for CMake + ifx
+		"settings": {
+		  "cmake.cmakePath": "/usr/bin/cmake",
+		  "cmake.configureSettings": {
+			// If you want to always use ifx in your CMake configs
+			"CMAKE_Fortran_COMPILER": "ifx"
+		  },
+		  "cmake.environment": {
+			// Additional environment variables for Fortran
+			"FC": "ifx",
+			// Not strictly needed if your Dockerfile sets PATH/LD_LIBRARY_PATH
+			"PATH": "/opt/intel/oneapi/compiler/2025.0/bin:${env:PATH}",
+			"LD_LIBRARY_PATH": "/opt/intel/oneapi/compiler/2025.0/lib:${env:LD_LIBRARY_PATH}"
+		  }
+		}
+	  }
+	}
+  }
