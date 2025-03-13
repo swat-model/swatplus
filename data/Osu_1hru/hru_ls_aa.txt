@@ -1,0 +1,4 @@
+ Osu                       SWAT+ 2025-03-13        MODULAR Rev 2025.61.0.2.10-143-ge95f1d9                
+   jday   mon   day    yr   unit  gis_id  name                 sedyld     sedorgn     sedorgp     surqno3     lat3no3    surqsolp        usle     sedminp     tileno3     lchlabp    tilelabp      satexn    plant_cov       mgt_ops                          percn
+                                                                  tha        kgha        kgha        kgha        kgha        kgha        tons        kgha        kgha        kgha        kgha        kgha                                                      kgha
+   365    12    31  2023       1       1  hru0001                0.412       3.136       0.383       0.008       0.019       0.421       0.000       0.055       0.000       1.758       0.000       0.000   rice140_comm    rice140_rot                          9.657
