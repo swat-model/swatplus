@@ -1,0 +1,4 @@
+ Osu                       SWAT+ 2025-03-13        MODULAR Rev 2025.61.0.2.10-143-ge95f1d9                
+        jday        mon        day         yr            unit              gis_id     name                plant_c    rsd_decay_c    harv_stov_c         emit_c
+                                                                                                          kg C/ha        kg C/ha        kg C/ha        kg C/ha
+         365          12          31        2023           1                     1 hru0001           0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00

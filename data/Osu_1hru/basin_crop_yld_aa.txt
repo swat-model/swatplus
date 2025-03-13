@@ -1,0 +1,2 @@
+ Osu                       SWAT+ 2025-03-13        MODULAR Rev 2025.61.0.2.10-143-ge95f1d9                
+       year      plant_no   plant_name       harv_area(ha)     yld(t)          yld(t/ha)      
