@@ -931,7 +931,7 @@
               !!update soil respiration
               !!===============================
               !!soil rspc for layer k
-              rspc = .3 * lslcta + a1co2 * (lslncta + lmcta) + org_allo(cf_lyr)%abco2 * bmcta + org_allo(cf_lyr)%asco2 * hscta + &
+              rspc = .3 * lslcta + org_allo(cf_lyr)%a1co2 * (lslncta + lmcta) + org_allo(cf_lyr)%abco2 * bmcta + org_allo(cf_lyr)%asco2 * hscta + &
                 org_allo(cf_lyr)%apco2 * hpcta
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
