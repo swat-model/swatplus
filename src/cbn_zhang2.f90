@@ -196,14 +196,15 @@
        wc = 0.
        sat = 0.
        void = 0.
-       org_con%sut = 0.
-       org_con%cdg = 0.
-       org_con%ox = 0.
-       org_con%cs = 0.
+      !  org_con%sut = 0.
+      !  org_con%cdg = 0.
+      !  org_con%ox = 0.
+      !  org_con%cs = 0.
+      !  org_con%till_eff = 0.
        org_frac%lmf = 0.
        org_frac%lsf = 0.
        org_frac%lslf = 0.
-       org_con%xlslf = 0.
+       ! org_con%xlslf = 0.
        ! carbdb%str_rate = 0.
        org_tran%lsctp = 0.
        lscta = 0.
@@ -298,6 +299,15 @@
       !!===========================================
       soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
+        org_con = org_con_zero
+        soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
+        soil1(j)%org_con_lr(k)%ox = org_con%ox    
+        soil1(j)%org_con_lr(k)%cs = org_con%cs     
+        soil1(j)%org_con_lr(k)%sut = org_con%sut   
+        soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
+        
+        soil1(j)%org_flx_lr(k) = org_flux_zero   
+
         !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
         sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
       
@@ -329,7 +339,7 @@
           org_con%sut = max(.05, org_con%sut)
  
           !compute tillage factor (till_eff) from armen
-          till_eff = 1.0
+          org_con%till_eff = 1.0
 
           select case (bsn_cc%idc_till)
 
@@ -337,16 +347,16 @@
               !calculate tillage factor using dssat
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
                 if (k == 1) then
-                  till_eff = 1.6
+                  org_con%till_eff = 1.6
                 else
                   if (soil(j)%phys(k)%d .le. tillage_depth(j)) then
-                    till_eff = 1.6
+                    org_con%till_eff = 1.6
                   else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
-                    till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
+                    org_con%till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
                   end if		         
                 end if
               else
-                till_eff = 1.0
+                org_con%till_eff = 1.0
               end if	
             
             case(2)
@@ -355,9 +365,9 @@
             case(3)
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
                 ! Kemanian method    ----having modi
-                till_eff = 1. + soil(j)%ly(k)%tillagef 
+                org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
-                till_eff = 1.0
+                org_con%till_eff = 1.0
               endif
 
             case(4)
@@ -374,7 +384,7 @@
              soil(j)%phys(kk-1)%d) / 2) + exp(18.40961 - 0.023683632 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2))) 
           
           !! compute combined factor
-          org_con%cs = min(10., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * till_eff) 
+          org_con%cs = min(10., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * org_con%till_eff) 
           
           !! call denitrification (to use void and cdg factor)
           !wdn = 0.
@@ -935,6 +945,13 @@
                 org_allo(cf_lyr)%apco2 * hpcta
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
+
+              ! Save the org_con values by soil layer
+              soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
+              soil1(j)%org_con_lr(k)%ox = org_con%ox    
+              soil1(j)%org_con_lr(k)%cs = org_con%cs     
+              soil1(j)%org_con_lr(k)%sut = org_con%sut   
+              soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
               
               ! Save the the org_flux for each layer and a total per day
               soil1(j)%org_flx_lr(k) = org_flux     

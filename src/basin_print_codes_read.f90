@@ -276,6 +276,14 @@
                      read (107,*,iostat=eof) name, pco%cb_hru%d, pco%cb_hru%m, pco%cb_hru%y, pco%cb_hru%a  
                      pco%cb_hru%already_read_in = .true.
                   endif
+               case("hru_cb_vars")
+                  if (pco%cb_vars_hru%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%cb_vars_hru%d, pco%cb_vars_hru%m, pco%cb_vars_hru%y, pco%cb_vars_hru%a  
+                     pco%cb_hru%already_read_in = .true.
+                  endif
                case("hru-lte_wb")
                   if (pco%wb_sd%already_read_in) then
                      result = print_prt_error(name)
