@@ -566,6 +566,24 @@
           endif
         endif
 
+        !! write carbon variables headers to hru_carbvars
+        if (bsn_cc%cswat == 2) then
+          if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
+            open (4574,file = "hru_carbvars.txt", recl = 1500)
+            write (4574,*)  bsn%name, prog
+            write (4574,*) carbvars_hdr
+            write (4574,*) carbvars_units
+            write (9000,*) "HRU                       hru_carbvars.txt"
+            if (pco%csvout == "y") then
+              open (4575,file="hru_carbvars.csv", recl = 1500)
+              write (4575,*)  bsn%name, prog
+              write (4575,'(*(G0.3,:,","))') carbvars_hdr
+              write (4575,'(*(G0.3,:,","))') carbvars_units
+              write (9000,*) "HRU                       hru_carvvars.csv"
+            end if
+          endif
+        endif
+
         
  !! NEW BASIN CARBON ALL OUTPUT FILE
         

@@ -84,11 +84,13 @@
           real :: cs = 0.            !                 |combined factor controlling biological processes
           real :: ox = 0.            !                 |oxygen control on biological processes 
           real :: sut = 0.           !                 |soil water control on biological processes
+          real :: till_eff           !                 |tillage effect
           real :: x1 = 0.            !                 |tillage control on residue decomposition
           real :: xbmt = 0.          !                 |control on transformation of microbial biomass by soil texture and structure
           real :: xlslf = 0.         !                 |control on potential transformation of structural litter by lignin fraction
       end type organic_controls
-      type (organic_controls) :: org_con                     
+      type (organic_controls) :: org_con
+      type (organic_controls) :: org_con_zero
         
       type organic_fractions
           real :: lmf = 0.      !frac               |fraction of the litter that is metabolic
@@ -163,7 +165,7 @@
           real :: co2fs3 = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S3 (Passive Humus) transformations  
       end type organic_flux
       type (organic_flux) :: org_flux
-	  type (organic_flux) :: org_flux_zero
+	    type (organic_flux) :: org_flux_zero
       
       type carbon_soil_transformations
           real :: meta_micr = 0.        !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 

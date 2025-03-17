@@ -1179,6 +1179,41 @@
         end type output_cpool_header_units         
       type (output_cpool_header_units) :: cpool_units
 
+     type output_carb_vars_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: sut           =    "            sut"
+         character(len=15)  :: till_eff      =    "       till_eff"  
+         character(len=15)  :: cdg           =    "            cdg"         
+         character(len=15)  :: ox            =    "             ox"         
+         character(len=15)  :: cs            =    "             cs"         
+         end type output_carb_vars_header
+      type (output_carb_vars_header) :: carbvars_hdr
+      
+      type output_carbvars_units      
+         character (len=6) ::  freq         =  "      "
+         character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: day          =  "            "
+         character (len=12) :: mo           =  "            "
+         character (len=12) :: day_mo       =  "            "
+         character (len=12) :: yrc          =  "            "
+         character (len=12)  :: isd         =  "            "
+         character (len=22) :: id           =  "                      "
+         character (len=13) :: name         =  "             "
+         character(len=15)  :: sut          =  "               "
+         character(len=15)  :: till_eff     =  "               "  
+         character(len=15)  :: cdg          =  "               "         
+         character(len=15)  :: ox           =  "               "         
+         character(len=15)  :: cs           =  "               "         
+        end type output_carbvars_units
+      type (output_carbvars_units) :: carbvars_units
 !!! NEW SOIL CARBON STAT OUTPUT
       
 !!! NEW BASIN CARBON OUTPUT
