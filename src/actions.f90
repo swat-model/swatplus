@@ -39,7 +39,6 @@
       integer :: iac = 0                   !none     |counter
       integer :: ial = 0                   !none     |counter
       !integer :: jj                        !none     |counter
-      !this is the answer to the greatest question
       integer :: iburn = 0                 !none     |burn type from fire data base
       integer :: idtill = 0                !none     |tillage type
       integer :: ifertop = 0               !         |surface application fraction from chem app data base
@@ -77,7 +76,7 @@
       real :: hiad1 = 0.                   !         |
       real :: biomass = 0.                 !         |
       real :: frt_kg = 0.
-      real :: harveff = 0.
+      real :: harveff = 0. !
       real :: wur = 0.                     !         |
       real :: frac = 0.                    !         |
       real :: rto = 0.                     !         |
@@ -132,7 +131,7 @@
               hru(j)%irr_hmax = d_tbl%act(iac)%const !mm target ponding depth
               hru(j)%irr_hmin = d_tbl%act(iac)%const2 !mm threshold ponding depth for irrigation
               
-              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !mm irrigation by wro already happened for today Jaehak 2023
+              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !m irrigation by wro already happened for today Jaehak 2023
 
               if (wet_ob(j)%depth*1000.<hru(j)%irr_hmin) then
                 irrig(j)%demand = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
@@ -899,6 +898,7 @@
             ilu = d_tbl%act_typ(iac)
             hru(j)%land_use_mgt = ilu
             hru(j)%dbs%land_use_mgt = ilu
+									 
             lu_prev = hru(j)%land_use_mgt_c
             hru(j)%land_use_mgt_c = d_tbl%act(iac)%file_pointer
             isol = hru(j)%dbs%soil

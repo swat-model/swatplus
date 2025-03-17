@@ -1,0 +1,3 @@
+wetland.       wet: written by SWAT+ edi############for SWAT+ rev.60.5.4
+     id                name        init         hyd         rel         sed         nut        WEIR
+       1          paddy0001    initwet2       paddy        weir     sedwet1     nutwet1       weir1
