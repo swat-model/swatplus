@@ -17,9 +17,14 @@ subroutine carbon_coef_read
           open (107,file='carbon_coef.cbn',recl = 1500)
           read (107,*,iostat=eof) titldum
           read (107,*,iostat=eof) header
-          read (107,*,iostat=eof) carbdb%hp_rate, carbdb%hs_rate, carbdb%microb_rate, &
-                carbdb%meta_rate, carbdb%str_rate, carbdb%microb_top_rate, carbdb%hs_hp
-          carbdb%carbon_coef_file = .true.
+          read (107,*,iostat=eof) carbdb(1)%hp_rate, carbdb(1)%hs_rate, carbdb(1)%microb_rate, &
+                carbdb(1)%meta_rate, carbdb(1)%str_rate, carbdb(1)%microb_top_rate, carbdb(1)%hs_hp, &
+                org_allo(1)%a1co2
+          read (107,*,iostat=eof) carbdb(2)%hp_rate, carbdb(2)%hs_rate, carbdb(2)%microb_rate, &
+                carbdb(2)%meta_rate, carbdb(2)%str_rate, carbdb(2)%microb_top_rate, carbdb(2)%hs_hp, &
+                org_allo(2)%a1co2
+          close (107)
+          carbon_coef_file = .true.
         endif
     endif
     return
