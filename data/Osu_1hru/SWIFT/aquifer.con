@@ -1,0 +1,3 @@
+aquifer.con: written by SWAT+ editor v2.2.0 on 2023-03-22 04:25 for SWAT+ rev.60.5.4
+      id  name                gis_id          area           lat           lon          elev       aqu               wst       cst      ovfl      rule   out_tot       obj_typ    obj_id       hyd_typ          frac
+       1  aqu001                   1      10.00000      35.64206     127.38513     322.26395         1    s35610n127290e         0         0         0         1          sdc         1           tot       1.00000
