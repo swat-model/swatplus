@@ -68,13 +68,13 @@
           real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
           ! real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
           real :: abp = 0.        !               |Fraction of decomposed microbial biomass allocated to passive humus
+          real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
           ! real :: almco2 = 0.     !               |Fraction of decomposed metabolic litter allocated to CO2
           ! real :: alslco2 = 0.    !               |Fraction of decomposed lignin of structural litter allocated to CO2
           ! real :: alslnco2 = 0.   !               |Fraction of decomposed lignin of structural litter allocated to CO2
-          real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
-          real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
-          real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
           real :: a1co2 =  0.     !               |Fraction of decomposed metabolic and passive pools to CO2
+          real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
+          real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
       end type organic_allocations
       type (organic_allocations), dimension(2) :: org_allo 
       type (organic_allocations) :: org_alloz
@@ -86,8 +86,8 @@
           real :: sut = 0.           !                 |soil water control on biological processes
           real :: till_eff           !                 |tillage effect
           real :: x1 = 0.            !                 |tillage control on residue decomposition
-          real :: xbmt = 0.          !                 |control on transformation of microbial biomass by soil texture and structure
-          real :: xlslf = 0.         !                 |control on potential transformation of structural litter by lignin fraction
+          ! real :: xbmt = 0.          !                 |control on transformation of microbial biomass by soil texture and structure
+          ! real :: xlslf = 0.         !                 |control on potential transformation of structural litter by lignin fraction
       end type organic_controls
       type (organic_controls) :: org_con
       type (organic_controls) :: org_con_zero
