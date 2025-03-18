@@ -1,0 +1,8 @@
+irr.ops: written by SWAT+ editor v2.2.0 on 2023-03-22 04:25 for SWAT+ rev.60.5.4
+name                    amt_mm      eff_frac     sumq_frac       dep_sub      salt_ppm       no3_ppm       po4_ppm  description
+sprinkler_med         25.00000       0.85000       0.00000       0.00000     100.00000      20.00000       1.00000  
+sprinkler_high        40.00000       0.80000       0.00000       0.00000     100.00000      20.00000       1.00000  
+drip                  25.00000       0.90000       0.00000     100.00000     100.00000      20.00000       1.00000  
+furrow                50.00000       0.70000       0.20000       0.00000     100.00000      20.00000       1.00000  
+ponding90             90             1             0.0          60           0               0             0
+ponding_off            0       	     1             0.1           0           0        	     0             0

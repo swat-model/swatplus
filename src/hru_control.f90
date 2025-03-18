@@ -351,6 +351,9 @@
           end if
         end if
        
+										
+					   
+		
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
@@ -470,6 +473,7 @@
           end if
         end do
         
+		
         !! compute actual ET for day in HRU
         etday = ep_day + es_day + canev
         es_day = es_day
@@ -510,10 +514,10 @@
             end if
       
             !! SWAT-C Xuesong -- c and organic n in runoff
+							 
             if (bsn_cc%cswat == 2) then
               call nut_orgnc2
             end if
-
             call nut_psed
           end if
         end if
@@ -529,13 +533,11 @@
           else
             sedppm=0.
           end if
-          if (wet_dat_c(ires)%hyd.eq.'paddy') then !.and.time%yrs > pco%nyskip) then
-            if (wet_ob(j)%depth > 100.) then
-           write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
-            pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
-            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon 
-            end if
-          end if
+          !if (wet_dat_c(ires)%hyd.eq.'paddy'.and.time%yrs > pco%nyskip) then
+          ! write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
+          !  pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
+          !  wet(j)%no3,ht2%no3,pcom(j)%lai_sum 
+          !end if
         end if
 
         !! compute phosphorus movement
