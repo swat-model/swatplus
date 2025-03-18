@@ -582,7 +582,7 @@
           endif
         endif
 
-        !! write org_allo variables headers to hru_carbvars
+        !! write org_allo variable headers to hru_org_allo_vars
         if (bsn_cc%cswat == 2) then
           if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
             open (4576,file = "hru_org_allo_vars.txt", recl = 1500)
@@ -594,6 +594,22 @@
               write (4577,*)  bsn%name, prog
               write (4577,'(*(G0.3,:,","))') org_allow_hdr
               write (9000,*) "HRU                       hru_org_allo_vars.csv"
+            end if
+          endif
+        endif
+
+        !! write org_ratio variable headers to hru_org_ratio_vars
+        if (bsn_cc%cswat == 2) then
+          if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
+            open (4578,file = "hru_org_ratio_vars.txt", recl = 1500)
+            write (4578,*)  bsn%name, prog
+            write (4578,*)  org_ratio_hdr
+            write (9000,*) "HRU                       hru_org_ratio_vars.txt"
+            if (pco%csvout == "y") then
+              open (4579,file="hru_org_ratio_vars.csv", recl = 1500)
+              write (4579,*)  bsn%name, prog
+              write (4579,'(*(G0.3,:,","))') org_ratio_hdr
+              write (9000,*) "HRU                       hru_org_ratio_vars.csv"
             end if
           endif
         endif
