@@ -48,7 +48,7 @@
         do while (icmd /= 0)
             iob = iob + 1
           cmd_next(iob) = icmd
-          write (7777,*) icmd, ob(icmd)%name, ob(icmd)%typ,               &  
+          write (7777,*) icmd, ob(icmd)%name, ob(icmd)%typ,               &   
            ob(icmd)%props, ob(icmd)%props2, ob(icmd)%src_tot,           &
            ob(icmd)%rcv_tot !, (ob(icmd)%obj_out,ob(icmd)%obtyp_out(i),   &
            !ob(icmd)%obtypno_out(i), ob(icmd)%htyp_out(i), i = 1,        &
@@ -124,6 +124,11 @@
       
       ! save initial time settings for soft calibration runs
       time_init = time
+      !if (bsn_cc%uhyd==1)then
+ 
+	  !open(100100,file="paddy_test.csv") !temporary output for paddy Jaehak 2022 
+      !write(100100,'(4a7,20a21)')"Year,","Mon,","Day,","HRU,","Precip,","Irrig,","Seep,","PET,","ET,","WeirH,","Wtrdep,","WeirQ,","SW,","Sedcon,","SedYld,","NO3Con,","NO3Yld,","LAI,","SALT" 
+      !end if
 
       !! simulate watershed processes
       if (time%step < 0) then
