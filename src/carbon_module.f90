@@ -66,11 +66,11 @@
       
       type organic_allocations
           real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
-          real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
+          ! real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
           real :: abp = 0.        !               |Fraction of decomposed microbial biomass allocated to passive humus
-          real :: almco2 = 0.     !               |Fraction of decomposed metabolic litter allocated to CO2
-          real :: alslco2 = 0.    !               |Fraction of decomposed lignin of structural litter allocated to CO2
-          real :: alslnco2 = 0.   !               |Fraction of decomposed lignin of structural litter allocated to CO2
+          ! real :: almco2 = 0.     !               |Fraction of decomposed metabolic litter allocated to CO2
+          ! real :: alslco2 = 0.    !               |Fraction of decomposed lignin of structural litter allocated to CO2
+          ! real :: alslnco2 = 0.   !               |Fraction of decomposed lignin of structural litter allocated to CO2
           real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
           real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
           real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
@@ -108,6 +108,7 @@
           real :: nchs = 0.        !                  |n/c ration of slow humus
       end type organic_ratio
       type (organic_ratio) :: org_ratio                   
+      type (organic_ratio) :: org_ratio_zero                   
       
       type organic_transformations
           real :: bmctp = 0.       !kg ha-1 day-1        |potential transformation of C in microbial biomass
