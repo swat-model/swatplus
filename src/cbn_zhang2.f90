@@ -226,7 +226,7 @@
        org_tran%lmctp = 0.
        org_tran%lmntp = 0.
        ! carbdb%microb_rate = 0.
-       org_con%xbmt = 0.
+       ! org_con%xbmt = 0.
        org_tran%bmctp = 0.
        ! carbdb%hs_rate = 0.
        org_tran%hsctp = 0.
@@ -238,15 +238,6 @@
        nf = 0.
        org_ratio%ncbm = 0.
        org_ratio%nchs = 0.
-      !  org_allo%alslco2 = 0.
-      !  org_allo%alslnco2 = 0.
-      !  org_allo%almco2 = 0.
-      !  org_allo%abco2 = 0.
-       a1co2 = 0.
-       ! org_allo%apco2= 0.
-       ! org_allo%asco2 = 0.
-      !  org_allo%abp = 0.
-      !  org_allo%asp = 0.
        a1 = 0.
        asx = 0.
        apx = 0.
@@ -300,11 +291,13 @@
       soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
         org_con = org_con_zero
-        soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
-        soil1(j)%org_con_lr(k)%ox = org_con%ox    
-        soil1(j)%org_con_lr(k)%cs = org_con%cs     
-        soil1(j)%org_con_lr(k)%sut = org_con%sut   
-        soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
+        soil1(j)%org_con_lr(k) = org_con_zero    
+
+        ! soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
+        ! soil1(j)%org_con_lr(k)%ox = org_con%ox    
+        ! soil1(j)%org_con_lr(k)%cs = org_con%cs     
+        ! soil1(j)%org_con_lr(k)%sut = org_con%sut   
+        ! soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
         
         soil1(j)%org_flx_lr(k) = org_flux_zero   
 
@@ -321,6 +314,12 @@
           cf_lyr = 2
         end if
           
+        org_allo(cf_lyr)%abco2 = 0.
+        org_allo(cf_lyr)%abp = 0.
+        org_allo(cf_lyr)%asp = 0.
+        soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)   
+
+      
         !! mineralization can occur only if temp above 0 deg
         !check sol_st soil water content in each soil ayer mm h2o
         if (soil(j)%phys(k)%tmp > 0. .and. soil(j)%phys(k)%st > 0.) then
@@ -952,6 +951,14 @@
               soil1(j)%org_con_lr(k)%cs = org_con%cs     
               soil1(j)%org_con_lr(k)%sut = org_con%sut   
               soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
+              
+              ! Save the org_allo values by soil layer
+              soil1(j)%org_allo_lr(k)%abco2 = org_allo(cf_lyr)%abco2    
+              soil1(j)%org_allo_lr(k)%abp = org_allo(cf_lyr)%abp    
+              soil1(j)%org_allo_lr(k)%asp = org_allo(cf_lyr)%asp     
+              soil1(j)%org_allo_lr(k)%a1co2 = org_allo(cf_lyr)%a1co2
+              soil1(j)%org_allo_lr(k)%asco2 = org_allo(cf_lyr)%asco2
+              soil1(j)%org_allo_lr(k)%apco2 = org_allo(cf_lyr)%apco2
               
               ! Save the the org_flux for each layer and a total per day
               soil1(j)%org_flx_lr(k) = org_flux     

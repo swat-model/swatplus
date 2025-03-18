@@ -172,6 +172,7 @@
         allocate (soil1(ihru)%tot(nly))
         allocate (soil1(ihru)%seq(nly))
         allocate (soil1(ihru)%org_con_lr(nly))
+        allocate (soil1(ihru)%org_allo_lr(nly))
         allocate (soil1(ihru)%org_flx_lr(nly))
         allocate (soil1(ihru)%org_flx_cum_lr(nly))
         allocate (soil1(ihru)%hact(nly))
