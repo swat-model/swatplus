@@ -1207,6 +1207,22 @@
       end type output_org_allo_header     
       type (output_org_allo_header) :: org_allow_hdr
       
+     type output_org_ratio_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: ncbm          =    "           ncbm"
+         character(len=15)  :: nchp          =    "           nchp"  
+         character(len=15)  :: nchs          =    "           nchs"  
+      end type output_org_ratio_header
+      type (output_org_ratio_header) :: org_allow_hdr
+      
 
 !!! NEW SOIL CARBON STAT OUTPUT
       
