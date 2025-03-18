@@ -956,16 +956,7 @@
          character(len=15)  :: co2fs1    =    "         co2fs1" 
          character(len=15)  :: co2fs2    =    "         co2fs2"  
          character(len=15)  :: co2fs3    =    "         co2fs3" 
-
-        !  character(len=15)  :: tot_org_c     =    "      tot_org_c"
-        !  character(len=15)  :: str_c         =    "          str_c"
-        !  character(len=15)  :: lig_c         =    "          lib_c"
-        !  character(len=15)  :: meta_c        =    "         meta_c"
-        !  character(len=15)  :: man_c         =    "          man_c"
-        !  character(len=15)  :: humus_low_c   =    "    humus_low_c"
-        !  character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
-        !  character(len=15)  :: microb_c      =    "       microb_c"
-         end type output_soil_org_flux_header
+      end type output_soil_org_flux_header
       type (output_soil_org_flux_header) :: soil_org_flux_hdr
 
      type output_soil_org_flux_header_units     
@@ -1197,23 +1188,26 @@
          end type output_carb_vars_header
       type (output_carb_vars_header) :: carbvars_hdr
       
-      type output_carbvars_units      
-         character (len=6) ::  freq         =  "      "
-         character (len=12) :: soil_lyr     =  "            "
-         character (len=12) :: day          =  "            "
-         character (len=12) :: mo           =  "            "
-         character (len=12) :: day_mo       =  "            "
-         character (len=12) :: yrc          =  "            "
-         character (len=12)  :: isd         =  "            "
-         character (len=22) :: id           =  "                      "
-         character (len=13) :: name         =  "             "
-         character(len=15)  :: sut          =  "               "
-         character(len=15)  :: till_eff     =  "               "  
-         character(len=15)  :: cdg          =  "               "         
-         character(len=15)  :: ox           =  "               "         
-         character(len=15)  :: cs           =  "               "         
-        end type output_carbvars_units
-      type (output_carbvars_units) :: carbvars_units
+     type output_org_allo_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: abco2         =    "          abco2"
+         character(len=15)  :: abpt          =    "            abp"  
+         character(len=15)  :: asp           =    "            asp"         
+         character(len=15)  :: a1co2         =    "          a1co2"         
+         character(len=15)  :: asco2         =    "          asco2"         
+         character(len=15)  :: apco2         =    "          apco2"         
+      end type output_org_allo_header     
+      type (output_org_allo_header) :: org_allow_hdr
+      
+
 !!! NEW SOIL CARBON STAT OUTPUT
       
 !!! NEW BASIN CARBON OUTPUT
