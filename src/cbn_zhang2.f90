@@ -234,10 +234,10 @@
        ! carbdb%hp_rate = 0.
        org_tran%hpctp = 0.
        org_tran%hpntp = 0.
-       org_ratio%nchp = 0.
+       ! org_ratio%nchp = 0.
        nf = 0.
-       org_ratio%ncbm = 0.
-       org_ratio%nchs = 0.
+       ! org_ratio%ncbm = 0.
+       ! org_ratio%nchs = 0.
        a1 = 0.
        asx = 0.
        apx = 0.
@@ -294,6 +294,8 @@
         ! Initialize org_con values to zero
         org_con = org_con_zero
         soil1(j)%org_con_lr(k) = org_con    
+        org_ratio = org_ratio_zero
+        soil1(j)%org_ratio_lr(k) = org_ratio   
 
         ! soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
         ! soil1(j)%org_con_lr(k)%ox = org_con%ox    
@@ -949,19 +951,24 @@
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
 
               ! Save the org_con values by soil layer
-              soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
-              soil1(j)%org_con_lr(k)%ox = org_con%ox    
-              soil1(j)%org_con_lr(k)%cs = org_con%cs     
-              soil1(j)%org_con_lr(k)%sut = org_con%sut   
-              soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
+              soil1(j)%org_con_lr(k) = org_con     
+              ! soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
+              ! soil1(j)%org_con_lr(k)%ox = org_con%ox    
+              ! soil1(j)%org_con_lr(k)%cs = org_con%cs     
+              ! soil1(j)%org_con_lr(k)%sut = org_con%sut   
+              ! soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
               
               ! Save the org_allo values by soil layer
-              soil1(j)%org_allo_lr(k)%abco2 = org_allo(cf_lyr)%abco2    
-              soil1(j)%org_allo_lr(k)%abp = org_allo(cf_lyr)%abp    
-              soil1(j)%org_allo_lr(k)%asp = org_allo(cf_lyr)%asp     
-              soil1(j)%org_allo_lr(k)%a1co2 = org_allo(cf_lyr)%a1co2
-              soil1(j)%org_allo_lr(k)%asco2 = org_allo(cf_lyr)%asco2
-              soil1(j)%org_allo_lr(k)%apco2 = org_allo(cf_lyr)%apco2
+              soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)    
+              ! soil1(j)%org_allo_lr(k)%abco2 = org_allo(cf_lyr)%abco2    
+              ! soil1(j)%org_allo_lr(k)%abp = org_allo(cf_lyr)%abp    
+              ! soil1(j)%org_allo_lr(k)%asp = org_allo(cf_lyr)%asp     
+              ! soil1(j)%org_allo_lr(k)%a1co2 = org_allo(cf_lyr)%a1co2
+              ! soil1(j)%org_allo_lr(k)%asco2 = org_allo(cf_lyr)%asco2
+              ! soil1(j)%org_allo_lr(k)%apco2 = org_allo(cf_lyr)%apco2
+
+              ! Save org_ratio values by soil_layer
+              soil1(j)%org_ratio_lr(k) = org_ratio    
               
               ! Save the the org_flux for each layer and a total per day
               soil1(j)%org_flx_lr(k) = org_flux     

@@ -102,7 +102,7 @@
       type (organic_fractions) :: org_frac                    
       
       type organic_ratio
-          real :: cnr = 0.         !                  |c/n ratio of standing dead
+          ! real :: cnr = 0.         !                  |c/n ratio of standing dead
           real :: ncbm = 0.        !                  |n/c ratio of biomass           
           real :: nchp = 0.        !                  |n/c ratio of passive humus
           real :: nchs = 0.        !                  |n/c ration of slow humus

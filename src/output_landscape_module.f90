@@ -1221,7 +1221,7 @@
          character(len=15)  :: nchp          =    "           nchp"  
          character(len=15)  :: nchs          =    "           nchs"  
       end type output_org_ratio_header
-      type (output_org_ratio_header) :: org_allow_hdr
+      type (output_org_ratio_header) :: org_ratio_hdr
       
 
 !!! NEW SOIL CARBON STAT OUTPUT
