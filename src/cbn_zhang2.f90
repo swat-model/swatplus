@@ -290,8 +290,10 @@
       !!===========================================
       soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
+
+        ! Initialize org_con values to zero
         org_con = org_con_zero
-        soil1(j)%org_con_lr(k) = org_con_zero    
+        soil1(j)%org_con_lr(k) = org_con    
 
         ! soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
         ! soil1(j)%org_con_lr(k)%ox = org_con%ox    
@@ -313,7 +315,8 @@
           kk = k
           cf_lyr = 2
         end if
-          
+        
+        ! Initialize org_allo variables to zero except for a1co2, asco2, and apco2 because they are input values.
         org_allo(cf_lyr)%abco2 = 0.
         org_allo(cf_lyr)%abp = 0.
         org_allo(cf_lyr)%asp = 0.

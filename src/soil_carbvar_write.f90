@@ -53,18 +53,18 @@
             end do
         end if
 
-        ! Carbon variable output file = hru_carbvar.(txt/csv)
+        ! Carbon organinic allocation variable output file = hru_org_allo_vars.(txt/csv)
         if (bsn_cc%cswat == 2) then
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
                     write (4576,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
-                                    soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs
+                                    soil1(j)%org_allo_lr(k)%abco2, soil1(j)%org_allo_lr(k)%abp, soil1(j)%org_allo_lr(k)%asp, &
+                                    soil1(j)%org_allo_lr(k)%a1co2, soil1(j)%org_allo_lr(k)%asco2, soil1(j)%org_allo_lr(k)%apco2
                     if (pco%csvout == "y") then
-                    write (4576,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
-                                    soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs
+                    write (4577,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                                    soil1(j)%org_allo_lr(k)%abco2, soil1(j)%org_allo_lr(k)%abp, soil1(j)%org_allo_lr(k)%asp, &
+                                    soil1(j)%org_allo_lr(k)%a1co2, soil1(j)%org_allo_lr(k)%asco2, soil1(j)%org_allo_lr(k)%apco2
                     end if
                 end do
             end do
