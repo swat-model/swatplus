@@ -1223,6 +1223,56 @@
       end type output_org_ratio_header
       type (output_org_ratio_header) :: org_ratio_hdr
       
+     type output_org_trans_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: bmctp         =    "          bmctp"
+         character(len=15)  :: bmntp         =    "          bmntp"  
+         character(len=15)  :: hsctp         =    "          hsctp"         
+         character(len=15)  :: hsntp         =    "          hsntp"         
+         character(len=15)  :: hpctp         =    "          hpctp"         
+         character(len=15)  :: hpntp         =    "          hpntp"         
+         character(len=15)  :: lmctp         =    "          lmctp"      
+         character(len=15)  :: lmntp         =    "          lmntp"
+         character(len=15)  :: lsctp         =    "          lsctp"  
+         character(len=15)  :: lslctp        =    "         lslctp"  
+         character(len=15)  :: lslnctp       =    "        lslnctp"  
+         character(len=15)  :: lsntp         =    "          lsntp"  
+      end type output_org_trans_header
+      type (output_org_trans_header) :: org_trans_hdr
+      
+      type output_org_trans_header_units      
+         character (len=6) ::  freq         =  "      "
+         character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: day          =  "            "
+         character (len=12) :: mo           =  "            "
+         character (len=12) :: day_mo       =  "            "
+         character (len=12) :: yrc          =  "            "
+         character (len=12)  :: isd         =  "            "
+         character (len=22) :: id           =  "                      "
+         character (len=13) :: name         =  "             "
+         character(len=15)  :: bmctp        =  "          kg/ha"
+         character(len=15)  :: bmntp        =  "          kg/ha"  
+         character(len=15)  :: hsctp        =  "          kg/ha"         
+         character(len=15)  :: hsntp        =  "          kg/ha"         
+         character(len=15)  :: hpctp        =  "          kg/ha"         
+         character(len=15)  :: hpntp        =  "          kg/ha"         
+         character(len=15)  :: lmctp        =  "          kg/ha"      
+         character(len=15)  :: lmntp        =  "          kg/ha"
+         character(len=15)  :: lsctp        =  "          kg/ha"  
+         character(len=15)  :: lslctp       =  "          kg/ha"  
+         character(len=15)  :: lslnctp      =  "          kg/ha"  
+         character(len=15)  :: lsntp        =  "          kg/ha"  
+        end type output_org_trans_header_units
+      type (output_org_trans_header_units) :: org_trans_units
+
 
 !!! NEW SOIL CARBON STAT OUTPUT
       

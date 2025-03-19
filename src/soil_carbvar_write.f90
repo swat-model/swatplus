@@ -58,13 +58,9 @@
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
-                    write (4576,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_allo_lr(k)%abco2, soil1(j)%org_allo_lr(k)%abp, soil1(j)%org_allo_lr(k)%asp, &
-                                    soil1(j)%org_allo_lr(k)%a1co2, soil1(j)%org_allo_lr(k)%asco2, soil1(j)%org_allo_lr(k)%apco2
+                    write (4576,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
                     if (pco%csvout == "y") then
-                    write (4577,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_allo_lr(k)%abco2, soil1(j)%org_allo_lr(k)%abp, soil1(j)%org_allo_lr(k)%asp, &
-                                    soil1(j)%org_allo_lr(k)%a1co2, soil1(j)%org_allo_lr(k)%asco2, soil1(j)%org_allo_lr(k)%apco2
+                    write (4577,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
                     end if
                 end do
             end do
@@ -75,16 +71,26 @@
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
-                    write (4578,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_ratio_lr(k)%ncbm, soil1(j)%org_ratio_lr(k)%nchp, soil1(j)%org_ratio_lr(k)%nchs
+                    write (4578,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
                     if (pco%csvout == "y") then
-                    write (4579,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_ratio_lr(k)%ncbm, soil1(j)%org_ratio_lr(k)%nchp, soil1(j)%org_ratio_lr(k)%nchs
+                    write (4579,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
                     end if
                 end do
             end do
         end if
 
+        ! Potential organinic transformation values file = hru_org_tran_vars.(txt/csv)
+        if (bsn_cc%cswat == 2) then
+            do j = 1, sp_ob%hru
+                iob = sp_ob1%hru + j - 1
+                do k = 1, soil(j)%nly
+                    write (4580,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
+                    if (pco%csvout == "y") then
+                    write (4581,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
+                    end if
+                end do
+            end do
+        end if
       return
       end subroutine
     

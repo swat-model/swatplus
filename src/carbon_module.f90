@@ -80,10 +80,10 @@
       type (organic_allocations) :: org_alloz
         
       type organic_controls
+          real :: sut = 0.           !                 |soil water control on biological processes
           real :: cdg = 0.           !                 |soil temperature control on biological processes
           real :: cs = 0.            !                 |combined factor controlling biological processes
           real :: ox = 0.            !                 |oxygen control on biological processes 
-          real :: sut = 0.           !                 |soil water control on biological processes
           real :: till_eff           !                 |tillage effect
           real :: x1 = 0.            !                 |tillage control on residue decomposition
           ! real :: xbmt = 0.          !                 |control on transformation of microbial biomass by soil texture and structure
@@ -125,6 +125,7 @@
           real :: lsntp = 0.       !kg ha-1 day-1        |potential transformation of N in structural litter              
       end type organic_transformations
       type (organic_transformations) :: org_tran
+      type (organic_transformations) :: org_tran_zero
       
       type organic_flux
           real :: cfmets1 = 0.           !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
