@@ -86,8 +86,11 @@
           real :: ox = 0.            !                 |oxygen control on biological processes 
           real :: till_eff           !                 |tillage effect
           real :: x1 = 0.            !                 |tillage control on residue decomposition
-          ! real :: xbmt = 0.          !                 |control on transformation of microbial biomass by soil texture and structure
-          ! real :: xlslf = 0.         !                 |control on potential transformation of structural litter by lignin fraction
+          real :: no3 = 0.           !                 |no3 as adjusted in cbn_zhang2
+          real :: nh4 = 0.           !                 |nh4 as adjusted in cbn_zhang2
+          real :: resp               !                 |co2 respiration
+          ! real :: xbmt = 0.          !               |control on transformation of microbial biomass by soil texture and structure
+          ! real :: xlslf = 0.         !               |control on potential transformation of structural litter by lignin fraction
       end type organic_controls
       type (organic_controls) :: org_con
       type (organic_controls) :: org_con_zero

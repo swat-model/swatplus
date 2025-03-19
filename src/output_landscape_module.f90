@@ -1185,6 +1185,9 @@
          character(len=15)  :: cdg           =    "            cdg"         
          character(len=15)  :: ox            =    "             ox"         
          character(len=15)  :: cs            =    "             cs"         
+         character(len=15)  :: no3           =    "            no3"         
+         character(len=15)  :: nh4           =    "            nh4"         
+         character(len=15)  :: resp          =    "       co2_resp"         
          end type output_carb_vars_header
       type (output_carb_vars_header) :: carbvars_hdr
       
