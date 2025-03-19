@@ -196,16 +196,9 @@
        wc = 0.
        sat = 0.
        void = 0.
-      !  org_con%sut = 0.
-      !  org_con%cdg = 0.
-      !  org_con%ox = 0.
-      !  org_con%cs = 0.
-      !  org_con%till_eff = 0.
        org_frac%lmf = 0.
        org_frac%lsf = 0.
        org_frac%lslf = 0.
-       ! org_con%xlslf = 0.
-       ! carbdb%str_rate = 0.
        org_tran%lsctp = 0.
        lscta = 0.
        lslcta = 0.
@@ -219,25 +212,7 @@
        hsnta = 0. 
        hpcta = 0.
        hpnta = 0.
-       org_tran%lslctp = 0.
-       org_tran%lslnctp = 0.
-       org_tran%lsntp= 0.
-       ! carbdb%meta_rate= 0.
-       org_tran%lmctp = 0.
-       org_tran%lmntp = 0.
-       ! carbdb%microb_rate = 0.
-       ! org_con%xbmt = 0.
-       org_tran%bmctp = 0.
-       ! carbdb%hs_rate = 0.
-       org_tran%hsctp = 0.
-       org_tran%hsntp = 0.
-       ! carbdb%hp_rate = 0.
-       org_tran%hpctp = 0.
-       org_tran%hpntp = 0.
-       ! org_ratio%nchp = 0.
        nf = 0.
-       ! org_ratio%ncbm = 0.
-       ! org_ratio%nchs = 0.
        a1 = 0.
        asx = 0.
        apx = 0.
@@ -291,19 +266,18 @@
       soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
 
-        ! Initialize org_con values to zero
+        ! Initialize org_con, org_ratio, org_flux, org_tran values to zero
         org_con = org_con_zero
         soil1(j)%org_con_lr(k) = org_con    
+        
         org_ratio = org_ratio_zero
         soil1(j)%org_ratio_lr(k) = org_ratio   
 
-        ! soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
-        ! soil1(j)%org_con_lr(k)%ox = org_con%ox    
-        ! soil1(j)%org_con_lr(k)%cs = org_con%cs     
-        ! soil1(j)%org_con_lr(k)%sut = org_con%sut   
-        ! soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
-        
-        soil1(j)%org_flx_lr(k) = org_flux_zero   
+        org_flux = org_flux_zero
+        soil1(j)%org_flx_lr(k) = org_flux  
+
+        org_tran = org_tran_zero
+        soil1(j)%org_tran_lr(k) = org_tran  
 
         !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
         sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
@@ -318,7 +292,7 @@
           cf_lyr = 2
         end if
         
-        ! Initialize org_allo variables to zero except for a1co2, asco2, and apco2 because they are input values.
+        ! Initialize org_allo variables to zero except for a1co2, asco2, and apco2 because they are input values and don't change.
         org_allo(cf_lyr)%abco2 = 0.
         org_allo(cf_lyr)%abp = 0.
         org_allo(cf_lyr)%asp = 0.
@@ -717,7 +691,7 @@
               !!!=================================
               !!determine the final rate of the decomposition of each carbon pool and 
               !!allocation of c and nutrients to different som pools, as well as co2 emissions from different pools
-	          lscta = min(soil1(j)%str(k)%c, lscta)              
+	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
@@ -830,7 +804,7 @@
               !!epic procedures (not used): calculating n supply - n demand 
                   !!df1 is the supply of n during structural litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into structural litter (0 as no other pools transformed into structural litter)  
-	              df1 = lsnta 
+	                df1 = lsnta 
                  
                   !!df2 is the supply of n during metabolic litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into metabolic litter (0 as no other pools transformed into structural litter)  
@@ -946,29 +920,15 @@
               !!===============================
               !!soil rspc for layer k
               rspc = .3 * lslcta + org_allo(cf_lyr)%a1co2 * (lslncta + lmcta) + org_allo(cf_lyr)%abco2 * bmcta + org_allo(cf_lyr)%asco2 * hscta + &
-                org_allo(cf_lyr)%apco2 * hpcta
+                     org_allo(cf_lyr)%apco2 * hpcta
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
 
-              ! Save the org_con values by soil layer
+              ! Save the org_con, org_allo, org_ratio, org_tran values by soil layer
               soil1(j)%org_con_lr(k) = org_con     
-              ! soil1(j)%org_con_lr(k)%cdg = org_con%cdg     
-              ! soil1(j)%org_con_lr(k)%ox = org_con%ox    
-              ! soil1(j)%org_con_lr(k)%cs = org_con%cs     
-              ! soil1(j)%org_con_lr(k)%sut = org_con%sut   
-              ! soil1(j)%org_con_lr(k)%till_eff = org_con%till_eff  
-              
-              ! Save the org_allo values by soil layer
               soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)    
-              ! soil1(j)%org_allo_lr(k)%abco2 = org_allo(cf_lyr)%abco2    
-              ! soil1(j)%org_allo_lr(k)%abp = org_allo(cf_lyr)%abp    
-              ! soil1(j)%org_allo_lr(k)%asp = org_allo(cf_lyr)%asp     
-              ! soil1(j)%org_allo_lr(k)%a1co2 = org_allo(cf_lyr)%a1co2
-              ! soil1(j)%org_allo_lr(k)%asco2 = org_allo(cf_lyr)%asco2
-              ! soil1(j)%org_allo_lr(k)%apco2 = org_allo(cf_lyr)%apco2
-
-              ! Save org_ratio values by soil_layer
               soil1(j)%org_ratio_lr(k) = org_ratio    
+              soil1(j)%org_tran_lr(k) = org_tran  
               
               ! Save the the org_flux for each layer and a total per day
               soil1(j)%org_flx_lr(k) = org_flux     
