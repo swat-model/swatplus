@@ -924,6 +924,11 @@
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
 
+              ! Save the modified no3 and nh4 and rspc
+              org_con%no3 = soil1(j)%mn(k)%no3
+              org_con%nh4 = soil1(j)%mn(k)%nh4
+              org_con%resp = rspc
+
               ! Save the org_con, org_allo, org_ratio, org_tran values by soil layer
               soil1(j)%org_con_lr(k) = org_con     
               soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)    

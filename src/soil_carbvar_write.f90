@@ -43,11 +43,13 @@
                 do k = 1, soil(j)%nly
                     write (4574,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                                     soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
-                                    soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs
+                                    soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, soil1(j)%org_con_lr(k)%no3, &
+                                    soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp 
                     if (pco%csvout == "y") then
                     write (4575,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                                     soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
-                                    soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs
+                                    soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, soil1(j)%org_con_lr(k)%no3, &
+                                    soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp 
                     end if
                 end do
             end do
