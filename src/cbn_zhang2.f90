@@ -196,15 +196,9 @@
        wc = 0.
        sat = 0.
        void = 0.
-       org_con%sut = 0.
-       org_con%cdg = 0.
-       org_con%ox = 0.
-       org_con%cs = 0.
        org_frac%lmf = 0.
        org_frac%lsf = 0.
        org_frac%lslf = 0.
-       org_con%xlslf = 0.
-       ! carbdb%str_rate = 0.
        org_tran%lsctp = 0.
        lscta = 0.
        lslcta = 0.
@@ -218,34 +212,7 @@
        hsnta = 0. 
        hpcta = 0.
        hpnta = 0.
-       org_tran%lslctp = 0.
-       org_tran%lslnctp = 0.
-       org_tran%lsntp= 0.
-       ! carbdb%meta_rate= 0.
-       org_tran%lmctp = 0.
-       org_tran%lmntp = 0.
-       ! carbdb%microb_rate = 0.
-       org_con%xbmt = 0.
-       org_tran%bmctp = 0.
-       ! carbdb%hs_rate = 0.
-       org_tran%hsctp = 0.
-       org_tran%hsntp = 0.
-       ! carbdb%hp_rate = 0.
-       org_tran%hpctp = 0.
-       org_tran%hpntp = 0.
-       org_ratio%nchp = 0.
        nf = 0.
-       org_ratio%ncbm = 0.
-       org_ratio%nchs = 0.
-      !  org_allo%alslco2 = 0.
-      !  org_allo%alslnco2 = 0.
-      !  org_allo%almco2 = 0.
-      !  org_allo%abco2 = 0.
-       a1co2 = 0.
-       ! org_allo%apco2= 0.
-       ! org_allo%asco2 = 0.
-      !  org_allo%abp = 0.
-      !  org_allo%asp = 0.
        a1 = 0.
        asx = 0.
        apx = 0.
@@ -298,6 +265,20 @@
       !!===========================================
       soil1(j)%org_flx_tot = org_flux_zero
       do k = 1, soil(j)%nly
+
+        ! Initialize org_con, org_ratio, org_flux, org_tran values to zero
+        org_con = org_con_zero
+        soil1(j)%org_con_lr(k) = org_con    
+        
+        org_ratio = org_ratio_zero
+        soil1(j)%org_ratio_lr(k) = org_ratio   
+
+        org_flux = org_flux_zero
+        soil1(j)%org_flx_lr(k) = org_flux  
+
+        org_tran = org_tran_zero
+        soil1(j)%org_tran_lr(k) = org_tran  
+
         !! mm / 1000 * 10000 m2 / ha * ton/m3 * 1000 kg/ha -> kg/ha; rock fraction is considered
         sol_mass = 10000. * soil(j)%phys(k)%thick * soil(j)%phys(k)%bd * (1 - soil(j)%phys(k)%rock / 100.)
       
@@ -310,7 +291,14 @@
           kk = k
           cf_lyr = 2
         end if
-          
+        
+        ! Initialize org_allo variables to zero except for a1co2, asco2, and apco2 because they are input values and don't change.
+        org_allo(cf_lyr)%abco2 = 0.
+        org_allo(cf_lyr)%abp = 0.
+        org_allo(cf_lyr)%asp = 0.
+        soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)   
+
+      
         !! mineralization can occur only if temp above 0 deg
         !check sol_st soil water content in each soil ayer mm h2o
         if (soil(j)%phys(k)%tmp > 0. .and. soil(j)%phys(k)%st > 0.) then
@@ -329,7 +317,7 @@
           org_con%sut = max(.05, org_con%sut)
  
           !compute tillage factor (till_eff) from armen
-          till_eff = 1.0
+          org_con%till_eff = 1.0
 
           select case (bsn_cc%idc_till)
 
@@ -337,16 +325,16 @@
               !calculate tillage factor using dssat
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
                 if (k == 1) then
-                  till_eff = 1.6
+                  org_con%till_eff = 1.6
                 else
                   if (soil(j)%phys(k)%d .le. tillage_depth(j)) then
-                    till_eff = 1.6
+                    org_con%till_eff = 1.6
                   else if (soil(j)%phys(k-1)%d .lt. tillage_depth(j)) then
-                    till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
+                    org_con%till_eff = 1.0 + 0.6 * (tillage_depth(j) - soil(j)%phys(k-1)%d) / (soil(j)%phys(k)%d - soil(j)%phys(k-1)%d)
                   end if		         
                 end if
               else
-                till_eff = 1.0
+                org_con%till_eff = 1.0
               end if	
             
             case(2)
@@ -355,9 +343,9 @@
             case(3)
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
                 ! Kemanian method    ----having modi
-                till_eff = 1. + soil(j)%ly(k)%tillagef 
+                org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
-                till_eff = 1.0
+                org_con%till_eff = 1.0
               endif
 
             case(4)
@@ -374,7 +362,7 @@
              soil(j)%phys(kk-1)%d) / 2) + exp(18.40961 - 0.023683632 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2))) 
           
           !! compute combined factor
-          org_con%cs = min(10., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * till_eff) 
+          org_con%cs = min(10., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * org_con%till_eff) 
           
           !! call denitrification (to use void and cdg factor)
           !wdn = 0.
@@ -703,7 +691,7 @@
               !!!=================================
               !!determine the final rate of the decomposition of each carbon pool and 
               !!allocation of c and nutrients to different som pools, as well as co2 emissions from different pools
-	          lscta = min(soil1(j)%str(k)%c, lscta)              
+	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
@@ -816,7 +804,7 @@
               !!epic procedures (not used): calculating n supply - n demand 
                   !!df1 is the supply of n during structural litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into structural litter (0 as no other pools transformed into structural litter)  
-	              df1 = lsnta 
+	                df1 = lsnta 
                  
                   !!df2 is the supply of n during metabolic litter decomposition (lsnta) - demand of n to meet the transformaitons of other pools
                   !! c pools into metabolic litter (0 as no other pools transformed into structural litter)  
@@ -932,9 +920,20 @@
               !!===============================
               !!soil rspc for layer k
               rspc = .3 * lslcta + org_allo(cf_lyr)%a1co2 * (lslncta + lmcta) + org_allo(cf_lyr)%abco2 * bmcta + org_allo(cf_lyr)%asco2 * hscta + &
-                org_allo(cf_lyr)%apco2 * hpcta
+                     org_allo(cf_lyr)%apco2 * hpcta
               !!rspc_da is accounting variable summarizing co2 emissions from all soil layers
               hsc_d(j)%rsp_c = hsc_d(j)%rsp_c +  rspc 
+
+              ! Save the modified no3 and nh4 and rspc
+              org_con%no3 = soil1(j)%mn(k)%no3
+              org_con%nh4 = soil1(j)%mn(k)%nh4
+              org_con%resp = rspc
+
+              ! Save the org_con, org_allo, org_ratio, org_tran values by soil layer
+              soil1(j)%org_con_lr(k) = org_con     
+              soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)    
+              soil1(j)%org_ratio_lr(k) = org_ratio    
+              soil1(j)%org_tran_lr(k) = org_tran  
               
               ! Save the the org_flux for each layer and a total per day
               soil1(j)%org_flx_lr(k) = org_flux     

@@ -1,0 +1,3 @@
+hru-data.hru: writteby SWAT+ editor v2.2on 2023-03-22 04:25     for SWAT+ rev.6               0.5.4
+     id        name                topo               hydro                soil              lu_mgt     soil_plant_init           surf_stor                snow               field
+       1    hru0001         topohru0001             hyd0001           PadHOEGOG         rice140_lum          soilplant1           paddy0001             snow001                null

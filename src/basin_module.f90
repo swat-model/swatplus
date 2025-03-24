@@ -203,7 +203,8 @@
         type(print_interval) :: nb_hru          !!  nutrient balance HRU output
         type(print_interval) :: ls_hru          !!  losses HRU output
         type(print_interval) :: pw_hru          !!  plant weather HRU output
-        type(print_interval) :: cb_hru          !!  plant weather HRU output
+        type(print_interval) :: cb_hru          !!  carbon output
+        type(print_interval) :: cb_vars_hru     !!  carbon variable output
         ! HRU-LTE
         type(print_interval) :: wb_sd           !!  water balance SWAT-DEG output 
         type(print_interval) :: nb_sd           !!  nutrient balance SWAT-DEG output

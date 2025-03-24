@@ -1,0 +1,54 @@
+res_rel.dtl: written by SWAT+ editor v2.2.0 on 2023-03-22 04:25 for SWAT+ rev.60.5.4
+5
+
+ NAME                  CONDS       ALTS       ACTS
+weir                     	 2         2         2  
+var                        obj   obj_num           lim_var            lim_op     lim_const      						alt1   alt2  
+vol_wet                    hru         0              evol                 *       1.00000         						>       -  
+wet_depth                  hru         0             weirh                 *       1.00000         						-       >   
+act_typ                    obj   obj_num              name            option         const        const2       fp  		outcome           
+release                    hru         0        above_emer              days       1.00000       0.00000      evol  	y   	n   
+release                    hru         0        below_emer              weir      10.00000       0.00000      weir1  	n   	y   
+																				 
+name                     conds      alts             acts  
+paddy_auto_rel               2         2                2  
+var                        obj   obj_num           lim_var            lim_op     lim_const      						alt1   alt2  
+wet_depth                  hru         0          weir_hgt                 -       0.00000         						>       -  
+wet_depth                  hru         0              null                 -       2.00000         						>       >  
+act_typ                    obj   obj_num              name            option         const        const2       fp  		outcome           
+release                    hru         0        above_emer              days       1.00000       0.00000      null  	y   	n    
+release                    hru         0        below_emer              weir      10.00000       0.00000      weir1  	y   	n   
+
+name                     conds      alts      acts  
+flood_season                 5         5         5  
+var                        obj   obj_num           lim_var            lim_op     lim_const      alt1      alt2      alt3      alt4      alt5  
+vol                        res         0              pvol                 *       1.00000         <         >         -         >         -  
+vol                        res         0              pvol                 *       1.30000         -         <         >         -         -  
+vol                        res         0              evol                 *       1.00000         -         -         <         <         >  
+month                     null         0              null                 -       5.00000         -         >         >         <         -  
+month                     null         0              null                 -       9.00000         -         <         <         >         -  
+act_typ                    obj   obj_num              name            option         const        const2                fp  outcome           
+release                    res         0   below_principal              days    1000.00000       0.00000              null  y   n   n   n   n   
+release                    res         0     non_flood<1.3              days     365.00000       0.00000              pvol  n   y   n   n   n   
+release                    res         0     non_flood>1.3              days     100.00000       0.00000              pvol  n   n   y   n   n   
+release                    res         0             flood              days      25.00000       0.00000              pvol  n   n   n   y   n   
+release                    res         0    over_emergency              days      15.00000       0.00000              evol  n   n   n   n   y   
+
+name                     conds      alts      acts  
+drawdown_days                2         2         2  
+var                        obj   obj_num           lim_var            lim_op     lim_const      alt1      alt2  
+vol                        res         0              pvol                 *       1.00000         >         -  
+vol                        res         0              evol                 *       1.00000         <         >  
+act_typ                    obj   obj_num              name            option         const        const2                fp  outcome           
+release                    res         0         over_prin              days      15.00000       0.00000              pvol  y   n   
+release                    res         0    over_emergency              days       5.00000       0.00000              evol  n   y   
+
+name                     conds      alts      acts  
+wetland                      2         2         2  
+var                        obj   obj_num           lim_var            lim_op     lim_const      alt1      alt2  
+vol_wet                    hru         0              pvol                 *       1.00000         >         -  
+vol_wet                    hru         0              evol                 *       1.00000         <         >  
+act_typ                    obj   obj_num              name            option         const        const2                fp  outcome           
+release                    hru         0        below_emer              days      10.00000       0.00000              null  y   n   
+release                    hru         0        above_emer              days       2.00000       0.00000              null  n   y   
+
