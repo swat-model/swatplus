@@ -1,0 +1,11 @@
+ SWIFT file.cio
+ BASIN         object.cnt                 object_prt.swf  null                     
+ CLIMATE         precip.swf
+ CONNECT       hru.con                  rout_unit.con            aquifer.con              chandeg.con              null                     recall.con               null                     
+ CHANNEL         chan_dat.swf  chan_dr.swf
+ RESERVOIR       res_dat.swf  res_dr.swf
+ ROUT_UNIT     rout_unit.def            rout_unit.ele            
+ HRU             hru_dat.swf  hru_exco.swf  hru_wet.swf  hru_bmp.swf  hru_dr.swf
+ RECALL          recall.swf
+ AQUIFER         aqu_dr.swf
+ LS_UNIT       ls_unit.def              ls_unit.ele              

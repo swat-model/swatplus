@@ -1,7 +1,7 @@
       module organic_mineral_mass_module
     
-      use carbon_module, only: organic_flux
-
+      use carbon_module, only: organic_flux, organic_controls, organic_allocations, organic_transformations
+      use carbon_module
       implicit none 
 
       type organic_mass
@@ -77,8 +77,12 @@
         type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
         type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue-all plants in one pool by layer - layer 1 = surface residue
         !! humus pools for old mineralization model (static carbon)
-        type (organic_flux)                            :: org_flx_tot ! |total organic flux for soil profile
-        type (organic_flux), dimension(:), allocatable :: org_flx_lr !      |organic flux by layer
+        type (organic_controls),    dimension(:), allocatable :: org_con_lr  !      |organic contral variables by layer
+        type (organic_allocations), dimension(:), allocatable :: org_allo_lr !      |organic allocation variables by layer
+        type (organic_ratio), dimension(:), allocatable :: org_ratio_lr      !      |organic nitrogen carbon ratios layer
+        type (organic_transformations), dimension(:), allocatable :: org_tran_lr !  |portential organic transformations layer
+        type (organic_flux)                            :: org_flx_tot !      |total organic flux for soil profile
+        type (organic_flux), dimension(:), allocatable :: org_flx_lr  !      |organic flux by layer
         type (organic_flux), dimension(:), allocatable :: org_flx_cum_lr !  |cumulative organic flux by layer
         type (organic_mass), dimension(:), allocatable :: hact      !       |active humus for old mineralization model dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: hsta      !       |stable humus for old mineralization model dimensioned by layer

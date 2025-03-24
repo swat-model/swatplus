@@ -35,6 +35,7 @@ hru_nb                       n             n             n             y
 hru_ls                       n             n             n             y  
 hru_pw                       n             n             n             y  
 hru_cb                       n             n             n             y  
+hru_cb_vars                  n             n             n             y  
 hru-lte_wb                   n             n             n             y  
 hru-lte_nb                   n             n             n             y  
 hru-lte_ls                   n             n             n             y  

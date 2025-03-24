@@ -956,16 +956,7 @@
          character(len=15)  :: co2fs1    =    "         co2fs1" 
          character(len=15)  :: co2fs2    =    "         co2fs2"  
          character(len=15)  :: co2fs3    =    "         co2fs3" 
-
-        !  character(len=15)  :: tot_org_c     =    "      tot_org_c"
-        !  character(len=15)  :: str_c         =    "          str_c"
-        !  character(len=15)  :: lig_c         =    "          lib_c"
-        !  character(len=15)  :: meta_c        =    "         meta_c"
-        !  character(len=15)  :: man_c         =    "          man_c"
-        !  character(len=15)  :: humus_low_c   =    "    humus_low_c"
-        !  character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
-        !  character(len=15)  :: microb_c      =    "       microb_c"
-         end type output_soil_org_flux_header
+      end type output_soil_org_flux_header
       type (output_soil_org_flux_header) :: soil_org_flux_hdr
 
      type output_soil_org_flux_header_units     
@@ -1178,6 +1169,113 @@
          character(len=15)  :: manure_c     =  "          kg/ha"  
         end type output_cpool_header_units         
       type (output_cpool_header_units) :: cpool_units
+
+     type output_carb_vars_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: sut           =    "            sut"
+         character(len=15)  :: till_eff      =    "       till_eff"  
+         character(len=15)  :: cdg           =    "            cdg"         
+         character(len=15)  :: ox            =    "             ox"         
+         character(len=15)  :: cs            =    "             cs"         
+         character(len=15)  :: no3           =    "            no3"         
+         character(len=15)  :: nh4           =    "            nh4"         
+         character(len=15)  :: resp          =    "       co2_resp"         
+         end type output_carb_vars_header
+      type (output_carb_vars_header) :: carbvars_hdr
+      
+     type output_org_allo_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: abco2         =    "          abco2"
+         character(len=15)  :: abpt          =    "            abp"  
+         character(len=15)  :: asp           =    "            asp"         
+         character(len=15)  :: a1co2         =    "          a1co2"         
+         character(len=15)  :: asco2         =    "          asco2"         
+         character(len=15)  :: apco2         =    "          apco2"         
+      end type output_org_allo_header     
+      type (output_org_allo_header) :: org_allow_hdr
+      
+     type output_org_ratio_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: ncbm          =    "           ncbm"
+         character(len=15)  :: nchp          =    "           nchp"  
+         character(len=15)  :: nchs          =    "           nchs"  
+      end type output_org_ratio_header
+      type (output_org_ratio_header) :: org_ratio_hdr
+      
+     type output_org_trans_header     
+         character (len=6) ::  freq          =    "freq  "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: bmctp         =    "          bmctp"
+         character(len=15)  :: bmntp         =    "          bmntp"  
+         character(len=15)  :: hsctp         =    "          hsctp"         
+         character(len=15)  :: hsntp         =    "          hsntp"         
+         character(len=15)  :: hpctp         =    "          hpctp"         
+         character(len=15)  :: hpntp         =    "          hpntp"         
+         character(len=15)  :: lmctp         =    "          lmctp"      
+         character(len=15)  :: lmntp         =    "          lmntp"
+         character(len=15)  :: lsctp         =    "          lsctp"  
+         character(len=15)  :: lslctp        =    "         lslctp"  
+         character(len=15)  :: lslnctp       =    "        lslnctp"  
+         character(len=15)  :: lsntp         =    "          lsntp"  
+      end type output_org_trans_header
+      type (output_org_trans_header) :: org_trans_hdr
+      
+      type output_org_trans_header_units      
+         character (len=6) ::  freq         =  "      "
+         character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: day          =  "            "
+         character (len=12) :: mo           =  "            "
+         character (len=12) :: day_mo       =  "            "
+         character (len=12) :: yrc          =  "            "
+         character (len=12)  :: isd         =  "            "
+         character (len=22) :: id           =  "                      "
+         character (len=13) :: name         =  "             "
+         character(len=15)  :: bmctp        =  "          kg/ha"
+         character(len=15)  :: bmntp        =  "          kg/ha"  
+         character(len=15)  :: hsctp        =  "          kg/ha"         
+         character(len=15)  :: hsntp        =  "          kg/ha"         
+         character(len=15)  :: hpctp        =  "          kg/ha"         
+         character(len=15)  :: hpntp        =  "          kg/ha"         
+         character(len=15)  :: lmctp        =  "          kg/ha"      
+         character(len=15)  :: lmntp        =  "          kg/ha"
+         character(len=15)  :: lsctp        =  "          kg/ha"  
+         character(len=15)  :: lslctp       =  "          kg/ha"  
+         character(len=15)  :: lslnctp      =  "          kg/ha"  
+         character(len=15)  :: lsntp        =  "          kg/ha"  
+        end type output_org_trans_header_units
+      type (output_org_trans_header_units) :: org_trans_units
+
 
 !!! NEW SOIL CARBON STAT OUTPUT
       
