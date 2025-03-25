@@ -328,7 +328,9 @@
           end if
         
           !! compute biological mixing at the end of every year
-          if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
+          if (bsn_cc%cswat /= 2) then                                       !! fg added this because so that cbn_zhang2 can handle bio mixing directly
+            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
+          end if
 
           !! update sequence number for year in rotation to that of
           !! the next year and reset sequence numbers for operations

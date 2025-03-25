@@ -1,6 +1,6 @@
         subroutine cbn_zhang2
     
-        use hru_module, only : ihru, tillage_days, tillage_depth, tillage_factor, tillage_switch
+        use hru_module, only : ihru, tillage_days, tillage_depth, tillage_factor, tillage_switch, hru
         use soil_module
         use basin_module
         use organic_mineral_mass_module
@@ -102,7 +102,9 @@
        integer :: min_n_ppm = 0  !                     |
        integer :: lslncat = 0    !                     |
        integer :: min_n = 0      !                     |
-       integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
+       integer :: cf_lyr         !                     |hich layer of coefs to use in carbon_coef.cbn
+       integer :: bmix_depth     !mm                   !depth of biological
+       integer :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
        real :: fc = 0.           !mm H2O               |amount of water available to plants in soil layer at field capacity (fc - wp),Index:(layer,HRU)
@@ -247,6 +249,8 @@
        cpn5 = 0.
        wmin = 0.
        dmdn = 0.
+       bmix_depth = 50    
+       soil_lyr_thickness = 0
 
        j = ihru
        hrc_d(j)%rsd_surfdecay_c = 0.
@@ -345,7 +349,23 @@
                 ! Kemanian method    ----having modi
                 org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
-                org_con%till_eff = 1.0
+                ! Changed by fg to always have some bio mixing
+                if (soil(j)%phys(k)%d <= bmix_depth) then            
+                  org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                else
+
+                  if (k == 1) then
+                    soil_lyr_thickness = soil(j)%phys(k)%d - 0.
+                  else
+                    soil_lyr_thickness = soil(j)%phys(k)%d - soil(j)%phys(k-1)%d
+                  end if
+
+                  if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
+                    org_con%till_eff = 1.0 + (hru(j)%hyd%biomix * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                  else
+                    org_con%till_eff = 1.0
+                  end if
+                end if
               endif
 
             case(4)
