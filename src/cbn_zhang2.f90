@@ -99,9 +99,9 @@
        integer :: k = 0          !none                 |counte
        integer :: kk = 0         !                     |
        integer :: lmnta = 0      !                     |      
-       integer :: min_n_ppm = 0  !                     |
+       real :: min_n_ppm = 0  !                     |
        integer :: lslncat = 0    !                     |
-       integer :: min_n = 0      !                     |
+       real :: min_n = 0      !                     |
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
        real :: fc = 0.           !mm H2O               |amount of water available to plants in soil layer at field capacity (fc - wp),Index:(layer,HRU)

@@ -114,8 +114,8 @@
         real :: nsetlr2 = 0.        !frac       |nit mass loss rate for remainder of year
         real :: psetlr1 = 0.        !frac       |phos mass loss rate for mid-year period
         real :: psetlr2 = 0.        !frac       |phos mass loss rate for remainder of year
-        real :: chlar = 1.          !none       |chlorophyll-a production coeff for res
-        real :: seccir = 1.0        !none       |water clarity coeff for res
+        real :: nsolr = 1.          !none       |loss rate for souble n - no3, nh3, no2
+        real :: psolr = 1.          !none       |loss rate for soluble p
         real :: theta_n = 1.        !none       |temperature adjustment for nitrogen loss (settling)
         real :: theta_p = 1.        !none       |temperature adjustment for phosphorus loss (settling)
         real :: conc_nmin = .1      !ppm        |minimum nitrogen concentration for settling
@@ -126,7 +126,7 @@
       type water_body_data_parameters
         type (reservoir_sed_data) :: sed
         type (reservoir_nut_data) :: nut
-        real :: sed_stlr_co = 0.                     !none       |
+        real :: sed_stlr_co = 0.            !none       |
         real :: soln_stl_fr = 0.            !none       |
         real :: solp_stl_fr = 0.            !none       |
       end type water_body_data_parameters

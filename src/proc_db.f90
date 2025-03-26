@@ -30,6 +30,7 @@
       call scen_read_grwway
       call scen_read_filtstrip
       call scen_read_bmpuser
+      call sat_buff_read
 
       !! read the plant community database
       call readpcom

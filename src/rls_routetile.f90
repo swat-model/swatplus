@@ -25,9 +25,11 @@
 
       !! add tile inflow and nitrate to soil layer the tile is in
       !! if exceeds saturation, it will be redistributed in swr_satexcess
-      lyr = hru(j)%lumv%ldrain
-      soil(j)%phys(lyr)%st = soil(j)%phys(lyr)%st + ob(iob)%hin_til%flo * (1. - tile_fr_surf)
-      soil1(j)%mn(lyr)%no3 = soil1(j)%mn(lyr)%no3 + ob(iob)%hin_til%no3 * (1. - tile_fr_surf)
+      lyr = hru(j)%sb%sb_db%lyr
+      soil(j)%phys(lyr)%st = soil(j)%phys(lyr)%st + hru(j)%sb%inflo * (1. - tile_fr_surf)
+      soil1(j)%mn(lyr)%no3 = soil1(j)%mn(lyr)%no3 + hru(j)%sb%no3 * (1. - tile_fr_surf)
+      hru(j)%sb%inflo = 0.
+      hru(j)%sb%no3 = 0.
 
       return
       end subroutine rls_routetile

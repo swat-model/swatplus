@@ -253,11 +253,11 @@
                       
       !! SOL  
       case ("anion_excl")
-        soil(isol)%anion_excl = chg_par(soil(isol)%anion_excl,         &
+        soil(ielem)%anion_excl = chg_par(soil(ielem)%anion_excl,         &
                          chg_typ, chg_val, absmin, absmax)
          
       case ("crk")
-         soil(isol)%crk = chg_par(soil(isol)%crk,                      &
+         soil(ielem)%crk = chg_par(soil(ielem)%crk,                      &
                          chg_typ, chg_val, absmin, absmax)
          
       case ("z")
@@ -530,37 +530,6 @@
         
         case ("bc4")
           ch_nut(ielem)%bc4 = chg_par(ch_nut(ielem)%bc4,                &
-                         chg_typ, chg_val, absmin, absmax)
-        case ("rch_dox")
-          ch(ielem)%rch_dox = chg_par(ch(ielem)%rch_dox,                &
-                         chg_typ, chg_val, absmin, absmax)
-        
-        case ("rch_cbod")
-          ch(ielem)%rch_cbod = chg_par(ch(ielem)%rch_cbod,              &
-                         chg_typ, chg_val, absmin, absmax)
-        
-        case ("algae")
-          ch(ielem)%algae = chg_par(ch(ielem)%algae,                    &
-                         chg_typ, chg_val, absmin, absmax)
-        
-        case ("organicn")
-          ch(ielem)%organicn = chg_par(ch(ielem)%organicn,              &
-                         chg_typ, chg_val, absmin, absmax)
-        
-        case ("ammonian")
-          ch(ielem)%ammonian = chg_par(ch(ielem)%ammonian,              &
-                         chg_typ, chg_val, absmin, absmax) 
-        
-        case ("nitriten")
-          ch(ielem)%nitriten = chg_par(ch(ielem)%nitriten,              &
-                         chg_typ, chg_val, absmin, absmax)
-        
-        case ("organicp")
-          ch(ielem)%organicp = chg_par(ch(ielem)%organicp,              &
-                         chg_typ, chg_val, absmin, absmax) 
-        
-        case ("disolvp")
-          ch(ielem)%disolvp = chg_par(ch(ielem)%disolvp,                &
                          chg_typ, chg_val, absmin, absmax)
           
 !!     PST
@@ -838,12 +807,12 @@
             res_prm(ielem)%nut%nsetlr2 = chg_par(res_prm(ielem)%nut%nsetlr2,    &
                          chg_typ, chg_val, absmin, absmax)
         
-         case ("chlar")
-            res_prm(ielem)%nut%chlar = chg_par(res_prm(ielem)%nut%chlar,        &
+         case ("nsolr")
+            res_prm(ielem)%nut%nsolr = chg_par(res_prm(ielem)%nut%nsolr,        &
                          chg_typ, chg_val, absmin, absmax)
         
-         case ("seccir")
-            res_prm(ielem)%nut%seccir = chg_par(res_prm(ielem)%nut%seccir,      &
+         case ("psolr")
+            res_prm(ielem)%nut%psolr = chg_par(res_prm(ielem)%nut%psolr,      &
                          chg_typ, chg_val, absmin, absmax)
             
       !! res decision tables

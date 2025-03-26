@@ -72,6 +72,8 @@
       real  :: tile_fr_surf = 0.    !m3             |fraction of tile flow that is overland
       integer :: ifrt = 0
       integer :: idp = 0
+      integer :: hru_rcv
+      real :: rto
       real :: sw_volume_begin = 0.
       real :: soil_prof_labp = 0.
       real :: sum_conc = 0.              !rtb salt
@@ -196,6 +198,7 @@
         !! increment days since last plant and harvest
         pcom(j)%days_plant = pcom(j)%days_plant + 1
         pcom(j)%days_harv = pcom(j)%days_harv + 1
+        pcom(j)%days_kill = pcom(j)%days_kill + 1
         pcom(j)%days_irr = pcom(j)%days_irr + 1
           
         !! update base zero total heat units
@@ -256,10 +259,10 @@
           call rls_routesoil (icmd)
         end if
           
-        !!add tile flow to tile (subirrigation and saturated buffer)
-        !if (ob(icmd)%hin_til%flo > 1.e-6 .and. tile_fr_surf > 1.e-6) then
-        !  call rls_routetile (icmd, tile_fr_surf)
-        !end if
+        !! add tile flow to tile (saturated buffer)
+        if (hru(j)%sb%sb_db%hru_rcv == j) then
+          call rls_routetile (icmd, tile_fr_surf)
+        end if
         
         !!add aquifer flow to bottom soil layer and redistribute upwards
         if (ob(icmd)%hin_aqu%flo > 0) then
@@ -351,12 +354,10 @@
           end if
         end if
        
-										
-					   
-		
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
+          call nut_nitvol
         end if
 
         !! compute residue decomposition and nitrogen and phosphorus mineralization
@@ -473,7 +474,6 @@
           end if
         end do
         
-		
         !! compute actual ET for day in HRU
         etday = ep_day + es_day + canev
         es_day = es_day
@@ -514,7 +514,6 @@
             end if
       
             !! SWAT-C Xuesong -- c and organic n in runoff
-							 
             if (bsn_cc%cswat == 2) then
               call nut_orgnc2
             end if
@@ -533,11 +532,13 @@
           else
             sedppm=0.
           end if
-          !if (wet_dat_c(ires)%hyd.eq.'paddy'.and.time%yrs > pco%nyskip) then
-          ! write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
-          !  pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
-          !  wet(j)%no3,ht2%no3,pcom(j)%lai_sum 
-          !end if
+          if (wet_dat_c(ires)%hyd.eq.'paddy') then !.and.time%yrs > pco%nyskip) then
+            if (wet_ob(j)%depth > 100.) then
+           write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
+            pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
+            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon 
+            end if
+          end if
         end if
 
         !! compute phosphorus movement
@@ -611,6 +612,24 @@
         
         !! calculate amount of surface runoff during day (qday) and store the remainder
         call sq_surfst
+
+        !! check if hru is a source for a saturated buffer
+        if (hru(j)%sb%sb_db%hru_src == j) then
+          !! use decision table
+          id = hru(j)%sb%dtbl
+          d_tbl => dtbl_flo(id)
+          call conditions (j, id)
+          call actions (j, iob, id)
+          
+          !! set amount of tile flow to send to buffer hru
+          hru_rcv = hru(j)%sb%sb_db%hru_rcv
+          !! convert to mm of the receiving hru and adjust for fraction of incoming hru
+          rto =  hru(hru_rcv)%area_ha / hru(j)%area_ha
+          hru(hru_rcv)%sb%inflo = rto * hru(j)%sb%sb_db%frac_src * hru(hru_rcv)%sb%inflo 
+          qtile = (1. - hru(j)%sb%sb_db%frac_src) * hru(hru_rcv)%sb%inflo 
+          hru(hru_rcv)%sb%no3 = hru(j)%sb%sb_db%frac_src * tileno3(j) 
+          tileno3(j) = (1. - hru(j)%sb%sb_db%frac_src) * tileno3(j)
+        end if
         !qday =  surfq(j)
 
         !! compute water yield for HRU

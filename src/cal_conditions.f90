@@ -81,30 +81,13 @@
                 if (cal_upd(ichg_par)%cond(ic)%targc == pcom(ielem)%pl(ipl)) then
                   pl_find = "y"
                 end if
-                  if (pl_find == "n") cond_met = "n"
-                  exit
-              end do
-            case ("pl_class")
-                
-              do ipl = 1, pcom(ielem)%npl
-                icom = pcom(ielem)%pcomdb
-                if (cal_upd(ichg_par)%cond(ic)%targc /= lum(icom)%cal_group) then 
-                  cond_met = "n"
-                end if
+                if (pl_find == "n") cond_met = "n"
                 exit
               end do
-              
-              !do ipl = 1, pcom(ielem)%npl
-                !icom = pcom(ielem)%pcomdb
-                !idp = pcomdb(icom)%pl(ipl)%db_num
-                !pl_find = "n"
-                !if (cal_upd(ichg_par)%cond(ic)%targc == pl_class(idp)) then
-                  !pl_find = "y"
-                !end if
-                !if (pl_find == "n") cond_met = "n"
-                !exit
-              !end do
-              
+            case ("pl_class")
+              if (cal_upd(ichg_par)%cond(ic)%targc /= pl_class(ielem)) then 
+                cond_met = "n"
+              end if
             case ("landuse")    !for hru
               if (cal_upd(ichg_par)%cond(ic)%targc /= hru(ielem)%land_use_mgt_c) then 
                 cond_met = "n"
