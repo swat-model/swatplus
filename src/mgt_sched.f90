@@ -208,6 +208,7 @@
               do ipl = 1, pcom(j)%npl
                 biomass = pl_mass(j)%tot(ipl)%m
                 if (mgt%op_char == pcomdb(icom)%pl(ipl)%cpnm .or. mgt%op_char == "all") then
+                  pcom(j)%days_kill = 1       !reset days since last kill   
                   call mgt_killop (j, ipl)
   
                   idp = pcom(j)%plcur(ipl)%idplt
@@ -228,7 +229,8 @@
             do ipl = 1, pcom(j)%npl
               biomass = pl_mass(j)%tot(ipl)%m
               if (mgt%op_char == pcomdb(icom)%pl(ipl)%cpnm .or. mgt%op_char == "all") then
-                pcom(j)%days_harv = 1       !reset days since last harvest   
+                pcom(j)%days_harv = 1       !reset days since last harvest
+                pcom(j)%days_kill = 1       !reset days since last kill       
                   
                 !check minimum biomass for harvest
                 if (biomass > harvop_db(iharvop)%bm_min) then

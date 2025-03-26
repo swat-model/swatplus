@@ -140,43 +140,6 @@
       type (streetsweep_operation), dimension(:), allocatable :: sweepop_db
       type (streetsweep_operation) :: sweepop
       
-      type management_ops1
-        character(len=40) :: name = ""
-        character(len=40) :: op = ""
-        !! operation code 4-digit char name
-        !!  1 pcom - establish plant community  
-        !!  2 plnt - plant  
-        !!  3 harv - harvest only  
-        !!  4 kill - Kill  
-        !!  5 hvkl - Harvest and kill   
-        !!  6 till - Tillage
-        !!  7 irrm - Irrigation manual
-        !!  8 irra - Irrigation auto
-        !!  9 rel     ??  REMOVE?
-        !! 10 fert - Fertilizer
-        !! 11 frta - Fertilizer auto
-        !! 12 frtc - Fertilizer continuous 
-        !! 13 pest - Pesticide application 
-        !! 14 pstc - Pesticide continuous
-        !! 15 graz - Grazing  
-        !! 16 burn - Burn  
-        !! 17 swep - Street Sweep  
-        !! 18 prtp - Print plant vars
-        !! 19 mons - ?? REMOVE ??
-        !! 20 skip - Skip to end of the year
-        integer :: mon = 0
-        integer :: day = 0
-        integer :: jday = 0
-        integer :: year = 0
-        real :: husc = 0.
-        character(len=40) :: op_char = ""
-        character (len=40) :: op_plant = ""
-        integer :: op1 = 0
-        integer :: op2 = 0              !! |none          |plant number in community for hu scheduling
-        real :: op3 = 0                 !! |none          |application amount (mm or kg/ha)
-        integer :: op4 = 0              !! |none          |
-      end type management_ops1
-      
       type management_ops
         character(len=40) :: name = ""
         character(len=40) :: op = ""

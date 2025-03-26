@@ -106,9 +106,10 @@
        character(len=40), dimension(:), allocatable :: pl       !! N/A              |plant name
        integer :: pcomdb = 0            !! current plant community database number
        integer :: rot_yr = 1            !! rotation year
-       integer :: days_plant = 0        !!               |days since last planting - for conditional scheduling planting
-       integer :: days_harv = 0         !!               |days since last harvest - for conditional scheduling planting
-       integer :: days_irr = 0          !!               |days since last irrigation - for conditional scheduling planting
+       integer :: days_plant = -366     !!               |days since last planting - for conditional scheduling after planting
+       integer :: days_harv = -366      !!               |days since last harvest - for conditional scheduling after harvest
+       integer :: days_kill = -366      !!               |days since last kill - for conditional scheduling after kill
+       integer :: days_irr = -366       !!               |days since last irrigation - for conditional scheduling after irrigation
        character(len=40) :: last_kill = ""!!               |name of last plant killed
        real :: cht_mx = 0.              !! m             |height of tallest plant in community for pet calculation
        real :: lai_sum = 0.             !! m/m           |sum of lai for each plant
