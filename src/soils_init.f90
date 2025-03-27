@@ -153,6 +153,8 @@
             if (eof < 0) exit
             mlyr = mlyr + 1
           end do 
+
+          sol(isol)%s%nly = mlyr    !Adjust number of layers
           
           tot_soil_depth = Min(tot_soil_depth, ccd)
           allocate (sol(isol)%ly(mlyr))
