@@ -365,6 +365,7 @@
                   else
                     org_con%till_eff = 1.0
                   end if
+                  
                 end if
               endif
 
@@ -374,7 +375,7 @@
           end select
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
-          org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
+          ! org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
           org_con%cdg = fcgd(soil(j)%phys(k)%tmp)
 
           !!compute oxygen (ox)
