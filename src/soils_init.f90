@@ -121,7 +121,7 @@
           ! Populate temporary data structure to do weighted averages from.
           prev_depth = 0
           do j = 1, soildb(isol)%s%nly
-            do i = 1, tot_soil_depth
+            do i = prev_depth + 1, tot_soil_depth
               if (i <= soildb(isol)%ly(j)%z .and. i > prev_depth ) then
                 sol_mm_db(1)%phys(i)%d = i
                 sol_mm_db(1)%phys(i)%bd = soildb(isol)%ly(j)%bd
@@ -136,6 +136,8 @@
                 sol_mm_db(1)%ly(i)%ec = soildb(isol)%ly(j)%ec
                 sol_mm_db(1)%ly(i)%cal = soildb(isol)%ly(j)%cal
                 sol_mm_db(1)%ly(i)%ph = soildb(isol)%ly(j)%ph
+              else 
+                exit
               end if
             end do
             prev_depth = soildb(isol)%ly(j)%z               
@@ -151,9 +153,16 @@
           do 
             read (107,*,iostat=eof) ccd
             if (eof < 0) exit
-            mlyr = mlyr + 1
+            if (ccd <= tot_soil_depth) then
+              mlyr = mlyr + 1
+            else if (ccd > tot_soil_depth) then
+              ccd = tot_soil_depth
+              mlyr = mlyr + 1
+              exit
+            endif  
           end do 
 
+          tot_soil_depth = Min(tot_soil_depth, ccd)
           sol(isol)%s%nly = mlyr    !Adjust number of layers
           
           tot_soil_depth = Min(tot_soil_depth, ccd)
@@ -169,11 +178,13 @@
           do i = 1, mlyr
             read (107,*,iostat=eof) ccd
 
-            if (ccd > tot_soil_depth) then
-              sol(isol)%phys(i)%d = tot_soil_depth
-            else 
-              sol(isol)%phys(i)%d = ccd
-            endif
+            ! if (ccd > tot_soil_depth) then
+            !   sol(isol)%phys(i)%d = tot_soil_depth
+            ! else 
+            !   sol(isol)%phys(i)%d = ccd
+            ! endif
+
+            sol(isol)%phys(i)%d = ccd
 
             sum = 0.0
             n = 0
