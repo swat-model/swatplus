@@ -60,33 +60,40 @@
           real :: min_n_frac = 0.       !               |fraction of mineral n sorbed to litter
           real :: c_org_frac = 0.       !               |carbon fraction of organic materials      
       end type carbon_inputs
-      type (carbon_inputs) :: carbdb 
+      type (carbon_inputs), dimension(2) :: carbdb 
       type (carbon_inputs) :: carbz  
+      logical :: carbon_coef_file = .false. !           !set to true if carbon_coef.cbn file exits.
       
       type organic_allocations
           real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
-          real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
+          ! real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
           real :: abp = 0.        !               |Fraction of decomposed microbial biomass allocated to passive humus
-          real :: almco2 = 0.     !               |Fraction of decomposed metabolic litter allocated to CO2
-          real :: alslco2 = 0.    !               |Fraction of decomposed lignin of structural litter allocated to CO2
-          real :: alslnco2 = 0.   !               |Fraction of decomposed lignin of structural litter allocated to CO2
-          real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
-          real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
           real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
+          ! real :: almco2 = 0.     !               |Fraction of decomposed metabolic litter allocated to CO2
+          ! real :: alslco2 = 0.    !               |Fraction of decomposed lignin of structural litter allocated to CO2
+          ! real :: alslnco2 = 0.   !               |Fraction of decomposed lignin of structural litter allocated to CO2
+          real :: a1co2 =  0.     !               |Fraction of decomposed metabolic and passive pools to CO2
+          real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
+          real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
       end type organic_allocations
-      type (organic_allocations) :: org_allo 
+      type (organic_allocations), dimension(2) :: org_allo 
       type (organic_allocations) :: org_alloz
         
       type organic_controls
+          real :: sut = 0.           !                 |soil water control on biological processes
           real :: cdg = 0.           !                 |soil temperature control on biological processes
           real :: cs = 0.            !                 |combined factor controlling biological processes
           real :: ox = 0.            !                 |oxygen control on biological processes 
-          real :: sut = 0.           !                 |soil water control on biological processes
+          real :: till_eff           !                 |tillage effect
           real :: x1 = 0.            !                 |tillage control on residue decomposition
-          real :: xbmt = 0.          !                 |control on transformation of microbial biomass by soil texture and structure
-          real :: xlslf = 0.         !                 |control on potential transformation of structural litter by lignin fraction
+          real :: no3 = 0.           !                 |no3 as adjusted in cbn_zhang2
+          real :: nh4 = 0.           !                 |nh4 as adjusted in cbn_zhang2
+          real :: resp               !                 |co2 respiration
+          ! real :: xbmt = 0.          !               |control on transformation of microbial biomass by soil texture and structure
+          ! real :: xlslf = 0.         !               |control on potential transformation of structural litter by lignin fraction
       end type organic_controls
-      type (organic_controls) :: org_con                     
+      type (organic_controls) :: org_con
+      type (organic_controls) :: org_con_zero
         
       type organic_fractions
           real :: lmf = 0.      !frac               |fraction of the litter that is metabolic
@@ -98,12 +105,13 @@
       type (organic_fractions) :: org_frac                    
       
       type organic_ratio
-          real :: cnr = 0.         !                  |c/n ratio of standing dead
+          ! real :: cnr = 0.         !                  |c/n ratio of standing dead
           real :: ncbm = 0.        !                  |n/c ratio of biomass           
           real :: nchp = 0.        !                  |n/c ratio of passive humus
           real :: nchs = 0.        !                  |n/c ration of slow humus
       end type organic_ratio
       type (organic_ratio) :: org_ratio                   
+      type (organic_ratio) :: org_ratio_zero                   
       
       type organic_transformations
           real :: bmctp = 0.       !kg ha-1 day-1        |potential transformation of C in microbial biomass
@@ -120,6 +128,7 @@
           real :: lsntp = 0.       !kg ha-1 day-1        |potential transformation of N in structural litter              
       end type organic_transformations
       type (organic_transformations) :: org_tran
+      type (organic_transformations) :: org_tran_zero
       
       type organic_flux
           real :: cfmets1 = 0.           !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
@@ -161,7 +170,7 @@
           real :: co2fs3 = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S3 (Passive Humus) transformations  
       end type organic_flux
       type (organic_flux) :: org_flux
-	  type (organic_flux) :: org_flux_zero
+	    type (organic_flux) :: org_flux_zero
       
       type carbon_soil_transformations
           real :: meta_micr = 0.        !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 

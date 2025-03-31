@@ -17,11 +17,24 @@
       integer :: msoils = 0       !none          !ending of loop
       integer :: isol = 0         !none          |counter
       integer :: mlyr = 0         !none          |max number of soil layers
+      integer :: i = 0            !none          |counter
       integer :: j = 0            !none          |counter
       integer :: nly = 0          !              |end of loop
       integer :: ly = 0           !none          |counter
+      integer :: ccd = 0          !mm            |current custom depth in millimeters
+      integer :: pcd = 0          !mm            |previous custom depth in millimeters
+      integer :: prev_depth = 0   !mm            |previous custom depth in millimeters
+      integer :: tot_soil_depth = 0 !mm          |total soil profile depth in millimeters 
+      integer :: eof = 0          !              |end of file
+      integer :: n = 0            !              |count to use to compute an average
       real :: dep_new1 = 0.       !mm            |depth of top of septic layer
       real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
+      real :: sum = 0.            !              |temporary sum to do and average with 
+      logical :: i_exist          !none          |check to determine if a file exists
+      character (len=500) :: header = "" !       |header of file
+      character (len=80) :: titldum = "" !       |title of file
+      character (len=16) :: units = ""  !        |name
+      type (soil_hru_database), dimension(:), allocatable :: sol_mm_db
       
       !!Section 1
       !!this section sets, allocates, and initializes the original soil database
@@ -30,69 +43,276 @@
        
       do isol = 1, msoils
         sol(isol)%s%snam = soildb(isol)%s%snam
-        if (soildb(isol)%ly(1)%z > 19.5) then
-          sol(isol)%s%nly = soildb(isol)%s%nly + 1    !add 10 mm layer
-        else
-          sol(isol)%s%nly = soildb(isol)%s%nly
-        end if
         sol(isol)%s%hydgrp = soildb(isol)%s%hydgrp
         sol(isol)%s%zmx = soildb(isol)%s%zmx                      
         sol(isol)%s%anion_excl = soildb(isol)%s%anion_excl
         sol(isol)%s%crk = soildb(isol)%s%crk                  
         sol(isol)%s%texture = soildb(isol)%s%texture
-        mlyr = sol(isol)%s%nly
-        allocate (sol(isol)%ly(mlyr))
-        allocate (sol(isol)%phys(mlyr))
-        
-        !!set first 10 mm layer
-        sol(isol)%phys(1)%d = 10.
-        sol(isol)%phys(1)%bd = soildb(isol)%ly(1)%bd
-        sol(isol)%phys(1)%awc = soildb(isol)%ly(1)%awc
-        sol(isol)%phys(1)%k = soildb(isol)%ly(1)%k
-        
-        sol(isol)%phys(1)%clay = soildb(isol)%ly(1)%clay
-        sol(isol)%phys(1)%silt = soildb(isol)%ly(1)%silt
-        sol(isol)%phys(1)%sand = soildb(isol)%ly(1)%sand
-        sol(isol)%phys(1)%rock = soildb(isol)%ly(1)%rock
-        sol(isol)%ly(1)%alb = soildb(isol)%ly(1)%alb
-        sol(isol)%ly(1)%usle_k = soildb(isol)%ly(1)%usle_k
-        sol(isol)%ly(1)%ec = soildb(isol)%ly(1)%ec
-        sol(isol)%ly(1)%cal = soildb(isol)%ly(1)%cal
-        sol(isol)%ly(1)%ph = soildb(isol)%ly(1)%ph
-        !!set remaining layers
-        if (soildb(isol)%ly(1)%z > 19.5) then
-          do j = 2, mlyr
-            sol(isol)%phys(j)%d = soildb(isol)%ly(j-1)%z
-            sol(isol)%phys(j)%bd = soildb(isol)%ly(j-1)%bd
-            sol(isol)%phys(j)%awc = soildb(isol)%ly(j-1)%awc
-            sol(isol)%phys(j)%k = soildb(isol)%ly(j-1)%k
-            sol(isol)%phys(j)%clay = soildb(isol)%ly(j-1)%clay
-            sol(isol)%phys(j)%silt = soildb(isol)%ly(j-1)%silt
-            sol(isol)%phys(j)%sand = soildb(isol)%ly(j-1)%sand
-            sol(isol)%phys(j)%rock = soildb(isol)%ly(j-1)%rock
-            sol(isol)%ly(j)%alb = soildb(isol)%ly(j-1)%alb
-            sol(isol)%ly(j)%usle_k = soildb(isol)%ly(j-1)%usle_k
-            sol(isol)%ly(j)%ec = soildb(isol)%ly(j-1)%ec
-            sol(isol)%ly(j)%cal = soildb(isol)%ly(j-1)%cal
-            sol(isol)%ly(j)%ph = soildb(isol)%ly(j-1)%ph
+
+        inquire (file="soil_lyr_depths.sol",exist=i_exist)
+        if (.not. i_exist) then
+          if (soildb(isol)%ly(1)%z > 19.5) then
+            sol(isol)%s%nly = soildb(isol)%s%nly + 1    !add 10 mm layer
+          else
+            sol(isol)%s%nly = soildb(isol)%s%nly
+          end if
+          mlyr = sol(isol)%s%nly
+          allocate (sol(isol)%ly(mlyr))
+          allocate (sol(isol)%phys(mlyr))
+
+          !!set first 10 mm layer
+          sol(isol)%phys(1)%d = 10.
+          sol(isol)%phys(1)%bd = soildb(isol)%ly(1)%bd
+          sol(isol)%phys(1)%awc = soildb(isol)%ly(1)%awc
+          sol(isol)%phys(1)%k = soildb(isol)%ly(1)%k
+          
+          sol(isol)%phys(1)%clay = soildb(isol)%ly(1)%clay
+          sol(isol)%phys(1)%silt = soildb(isol)%ly(1)%silt
+          sol(isol)%phys(1)%sand = soildb(isol)%ly(1)%sand
+          sol(isol)%phys(1)%rock = soildb(isol)%ly(1)%rock
+          sol(isol)%ly(1)%alb = soildb(isol)%ly(1)%alb
+          sol(isol)%ly(1)%usle_k = soildb(isol)%ly(1)%usle_k
+          sol(isol)%ly(1)%ec = soildb(isol)%ly(1)%ec
+          sol(isol)%ly(1)%cal = soildb(isol)%ly(1)%cal
+          sol(isol)%ly(1)%ph = soildb(isol)%ly(1)%ph
+          !!set remaining layers
+          if (soildb(isol)%ly(1)%z > 19.5) then
+            do j = 2, mlyr
+              sol(isol)%phys(j)%d = soildb(isol)%ly(j-1)%z
+              sol(isol)%phys(j)%bd = soildb(isol)%ly(j-1)%bd
+              sol(isol)%phys(j)%awc = soildb(isol)%ly(j-1)%awc
+              sol(isol)%phys(j)%k = soildb(isol)%ly(j-1)%k
+              sol(isol)%phys(j)%clay = soildb(isol)%ly(j-1)%clay
+              sol(isol)%phys(j)%silt = soildb(isol)%ly(j-1)%silt
+              sol(isol)%phys(j)%sand = soildb(isol)%ly(j-1)%sand
+              sol(isol)%phys(j)%rock = soildb(isol)%ly(j-1)%rock
+              sol(isol)%ly(j)%alb = soildb(isol)%ly(j-1)%alb
+              sol(isol)%ly(j)%usle_k = soildb(isol)%ly(j-1)%usle_k
+              sol(isol)%ly(j)%ec = soildb(isol)%ly(j-1)%ec
+              sol(isol)%ly(j)%cal = soildb(isol)%ly(j-1)%cal
+              sol(isol)%ly(j)%ph = soildb(isol)%ly(j-1)%ph
+            end do
+          else
+            !!1st layer < 20 mm so dont add 10 mm  layer
+            do j = 2, mlyr
+              sol(isol)%phys(j)%d = soildb(isol)%ly(j)%z
+              sol(isol)%phys(j)%bd = soildb(isol)%ly(j)%bd
+              sol(isol)%phys(j)%awc = soildb(isol)%ly(j)%awc
+              sol(isol)%phys(j)%k = soildb(isol)%ly(j)%k
+              sol(isol)%phys(j)%clay = soildb(isol)%ly(j)%clay
+              sol(isol)%phys(j)%silt = soildb(isol)%ly(j)%silt
+              sol(isol)%phys(j)%sand = soildb(isol)%ly(j)%sand
+              sol(isol)%phys(j)%rock = soildb(isol)%ly(j)%rock
+              sol(isol)%ly(j)%alb = soildb(isol)%ly(j)%alb
+              sol(isol)%ly(j)%usle_k = soildb(isol)%ly(j)%usle_k
+              sol(isol)%ly(j)%ec = soildb(isol)%ly(j)%ec
+              sol(isol)%ly(j)%cal = soildb(isol)%ly(j)%cal
+              sol(isol)%ly(j)%ph = soildb(isol)%ly(j)%ph
+            end do
+          end if
+        else              !this part reads in custom depths and calculates the weighted average values 
+
+          ! Allocate a temporary data structure to do weighted averages from.
+          tot_soil_depth = soildb(isol)%ly(soildb(isol)%s%nly)%z
+          allocate (sol_mm_db(1))
+          allocate (sol_mm_db(1)%phys(tot_soil_depth))
+          allocate (sol_mm_db(1)%ly(tot_soil_depth))
+
+          ! Populate temporary data structure to do weighted averages from.
+          prev_depth = 0
+          do j = 1, soildb(isol)%s%nly
+            do i = prev_depth + 1, tot_soil_depth
+              if (i <= soildb(isol)%ly(j)%z .and. i > prev_depth ) then
+                sol_mm_db(1)%phys(i)%d = i
+                sol_mm_db(1)%phys(i)%bd = soildb(isol)%ly(j)%bd
+                sol_mm_db(1)%phys(i)%awc = soildb(isol)%ly(j)%awc
+                sol_mm_db(1)%phys(i)%k = soildb(isol)%ly(j)%k
+                sol_mm_db(1)%phys(i)%clay = soildb(isol)%ly(j)%clay
+                sol_mm_db(1)%phys(i)%silt = soildb(isol)%ly(j)%silt
+                sol_mm_db(1)%phys(i)%sand = soildb(isol)%ly(j)%sand
+                sol_mm_db(1)%phys(i)%rock = soildb(isol)%ly(j)%rock
+                sol_mm_db(1)%ly(i)%alb = soildb(isol)%ly(j)%alb
+                sol_mm_db(1)%ly(i)%usle_k = soildb(isol)%ly(j)%usle_k
+                sol_mm_db(1)%ly(i)%ec = soildb(isol)%ly(j)%ec
+                sol_mm_db(1)%ly(i)%cal = soildb(isol)%ly(j)%cal
+                sol_mm_db(1)%ly(i)%ph = soildb(isol)%ly(j)%ph
+              else 
+                exit
+              end if
+            end do
+            prev_depth = soildb(isol)%ly(j)%z               
           end do
-        else
-          !!1st layer < 20 mm so dont add 10 mm  layer
-          do j = 2, mlyr
-            sol(isol)%phys(j)%d = soildb(isol)%ly(j)%z
-            sol(isol)%phys(j)%bd = soildb(isol)%ly(j)%bd
-            sol(isol)%phys(j)%awc = soildb(isol)%ly(j)%awc
-            sol(isol)%phys(j)%k = soildb(isol)%ly(j)%k
-            sol(isol)%phys(j)%clay = soildb(isol)%ly(j)%clay
-            sol(isol)%phys(j)%silt = soildb(isol)%ly(j)%silt
-            sol(isol)%phys(j)%sand = soildb(isol)%ly(j)%sand
-            sol(isol)%phys(j)%rock = soildb(isol)%ly(j)%rock
-            sol(isol)%ly(1)%alb = soildb(isol)%ly(j)%alb
-            sol(isol)%ly(1)%usle_k = soildb(isol)%ly(j)%usle_k
-            sol(isol)%ly(j)%ec = soildb(isol)%ly(j)%ec
-            sol(isol)%ly(j)%cal = soildb(isol)%ly(j)%cal
-            sol(isol)%ly(j)%ph = soildb(isol)%ly(j)%ph
+
+          open (107,file="soil_lyr_depths.sol")
+          read (107,*,iostat=eof) titldum
+          if (eof < 0) exit
+          read (107,*,iostat=eof) header
+          if (eof < 0) exit
+          read (107,*,iostat=eof) units
+          if (eof < 0) exit
+          do 
+            read (107,*,iostat=eof) ccd
+            if (eof < 0) exit
+            if (ccd <= tot_soil_depth) then
+              mlyr = mlyr + 1
+            else if (ccd > tot_soil_depth) then
+              ccd = tot_soil_depth
+              mlyr = mlyr + 1
+              exit
+            endif  
+          end do 
+
+          tot_soil_depth = Min(tot_soil_depth, ccd)
+          sol(isol)%s%nly = mlyr    !Adjust number of layers
+          
+          tot_soil_depth = Min(tot_soil_depth, ccd)
+          allocate (sol(isol)%ly(mlyr))
+          allocate (sol(isol)%phys(mlyr))
+          sol(isol)%phys(mlyr)%d = tot_soil_depth
+          rewind (107)  
+          read (107,*,iostat=eof) titldum
+          read (107,*,iostat=eof) header
+          read (107,*,iostat=eof) units
+
+          pcd = 1
+          do i = 1, mlyr
+            read (107,*,iostat=eof) ccd
+
+            ! if (ccd > tot_soil_depth) then
+            !   sol(isol)%phys(i)%d = tot_soil_depth
+            ! else 
+            !   sol(isol)%phys(i)%d = ccd
+            ! endif
+
+            sol(isol)%phys(i)%d = ccd
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%bd 
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%bd = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%awc
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%awc = sum/n
+
+            
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%k
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%k = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%clay
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%clay = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%silt
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%silt = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%sand
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%sand = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%phys(j)%rock
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%rock = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%ly(j)%alb
+                n = n + 1
+              end if
+            end do
+            sol(isol)%ly(i)%alb = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%ly(j)%usle_k
+                n = n + 1
+              end if
+            end do
+            sol(isol)%ly(i)%usle_k = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%ly(j)%ec
+                n = n + 1
+              end if
+            end do
+            sol(isol)%ly(i)%ec = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%ly(j)%cal
+                n = n + 1
+              end if
+            end do
+            sol(isol)%ly(i)%cal = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%ly(j)%ph
+                n = n + 1
+              end if
+            end do
+            sol(isol)%ly(i)%ph = sum/n
+
+            pcd = ccd + 1
           end do
+          deallocate (sol_mm_db(1)%phys)
+          deallocate (sol_mm_db(1)%ly)
+          deallocate (sol_mm_db)
+          close (107)
         end if
       end do
            
@@ -171,6 +391,10 @@
         allocate (soil1(ihru)%mp(nly))
         allocate (soil1(ihru)%tot(nly))
         allocate (soil1(ihru)%seq(nly))
+        allocate (soil1(ihru)%org_con_lr(nly))
+        allocate (soil1(ihru)%org_allo_lr(nly))
+        allocate (soil1(ihru)%org_ratio_lr(nly))
+        allocate (soil1(ihru)%org_tran_lr(nly))
         allocate (soil1(ihru)%org_flx_lr(nly))
         allocate (soil1(ihru)%org_flx_cum_lr(nly))
         allocate (soil1(ihru)%hact(nly))
@@ -207,4 +431,5 @@
       end do
 
       return
+      
       end subroutine soils_init
