@@ -12,6 +12,7 @@
       integer :: eof = 0               !              |end of file
       logical :: i_exist               !              |check to determine if file exists
       integer :: ii = 0                !none          |counter
+      integer :: result
        
       eof = 0
 
