@@ -427,7 +427,11 @@
             if (.not. ufc) org_allo(cf_lyr)%apco2 = .55
             org_ratio%nchp = .1
             xbm = 1.
-            ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
+            ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate, This was commented out by FG and JC because 
+            ! org_con%cs should not be reduced by the microb_top_rate for the surface layer  and instead the surface layer
+            ! should use the microb_top_rate in computing the potential microbial biomass transformation
+            ! later in code.
+
             ! compute n/c ratios - relative nitrogen content in residue
             rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
