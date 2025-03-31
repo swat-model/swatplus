@@ -11,13 +11,19 @@
       integer, intent (in) :: iob
       real :: nitrok = 0.        !              |
       real :: phosk = 0.         !              |
+      real :: nitrosolk = 0.     !              |
+      real :: phossolk = 0.      !              |
       real :: tpco = 0.          !              |
       real :: chlaco = 0.        !              |
       integer :: iwst = 0        !none          |weather station number
       real :: nsetlr = 0.        !              |
       real :: psetlr = 0.        !              |
+      real :: nsolr = 0.         !              |
+      real :: psolr = 0.         !              |
       real :: conc_n = 0.        !              |
       real :: conc_p = 0.        !              |
+      real :: conc_soln = 0.     !              |
+      real :: conc_solp = 0.     !              |
       real :: theta              !              |
       
 
@@ -36,10 +42,14 @@
         nsetlr = wbody_prm%nut%nsetlr2
         psetlr = wbody_prm%nut%psetlr2
       endif
+      nsolr = wbody_prm%nut%nsolr
+      psolr = wbody_prm%nut%psolr
 
       !! n and p concentrations kg/m3 * kg/1000 t * 1000000 ppp = 1000
-      conc_n = 1000. * (wbody%orgn + wbody%no3 + wbody%nh3 + wbody%no2) / wbody%flo
-      conc_p = 1000. * (wbody%sedp + wbody%solp) / wbody%flo
+      conc_n = 1000. * wbody%orgn / wbody%flo
+      conc_p = 1000. * wbody%sedp / wbody%flo
+      conc_soln = 1000. * (wbody%no3 + wbody%nh3 + wbody%no2) / wbody%flo
+      conc_solp = 1000. * wbody%solp / wbody%flo
       
       !! new inputs thetn, thetap, conc_pmin, conc_nmin
       !! Ikenberry wetland eqs modified - not function of area - fraction of difference in concentrations
@@ -50,6 +60,12 @@
       phosk = (conc_p - wbody_prm%nut%conc_pmin) * Theta(psetlr, wbody_prm%nut%theta_p, wst(iwst)%weat%tave)
       phosk = amin1 (phosk, 1.)
       phosk = max (phosk, 0.)
+      nitrosolk = (conc_soln - wbody_prm%nut%conc_nmin) * Theta(nsolr, wbody_prm%nut%theta_n, wst(iwst)%weat%tave)
+      nitrosolk = amin1 (nitrosolk, 1.)
+      nitrosolk = max (nitrosolk, 0.)
+      phossolk = (conc_solp - wbody_prm%nut%conc_pmin) * Theta(psolr, wbody_prm%nut%theta_p, wst(iwst)%weat%tave)
+      phossolk = amin1 (phossolk, 1.)
+      phossolk = max (phossolk, 0.)
 
       !! remove nutrients from reservoir by settling - exclude soluble nutrients
       !! other part of equation 29.1.3 in SWAT manual
@@ -66,8 +82,8 @@
       tpco = 1.e+6 * (wbody%solp + wbody%sedp) / (wbody%flo + ht2%flo)
       if (tpco > 1.e-4) then
         !! equation 29.1.6 in SWAT manual
-        chlaco = wbody_prm%nut%chlar * 0.551 * (tpco**0.76)
-        wbody%chla = chlaco * (wbody%flo + ht2%flo) * 1.e-6
+        !chlaco = wbody_prm%nut%chlar * 0.551 * (tpco**0.76)
+        wbody%chla = (wbody%flo + ht2%flo) * 1.e-6
       endif
       
       !! check nutrient masses greater than zero
