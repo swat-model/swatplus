@@ -563,6 +563,68 @@
               write (4573,'(*(G0.3,:,","))') cpool_units
               write (9000,*) "HRU                       hru_cpool_stat.csv"
             end if
+
+            open (4580,file = "hru_org_trans_stat.txt", recl = 1500)
+            write (4580,*)  bsn%name, prog
+            write (4580,*) org_trans_hdr
+            write (4580,*) org_trans_units
+            write (9000,*) "HRU                       hru_org_trans_stat.txt"
+            if (pco%csvout == "y") then
+              open (4581,file="hru_org_trans_stat.csv", recl = 1500)
+              write (4581,*)  bsn%name, prog
+              write (4581,'(*(G0.3,:,","))') org_trans_hdr
+              write (4581,'(*(G0.3,:,","))') org_trans_units
+              write (9000,*) "HRU                       hru_org_trans_stat.csv"
+            end if
+
+          endif
+        endif
+
+        !! write carbon variables headers to hru_carbvars
+        if (bsn_cc%cswat == 2) then
+          if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
+            open (4574,file = "hru_carbvars.txt", recl = 1500)
+            write (4574,*)  bsn%name, prog
+            write (4574,*) carbvars_hdr
+            write (9000,*) "HRU                       hru_carbvars.txt"
+            if (pco%csvout == "y") then
+              open (4575,file="hru_carbvars.csv", recl = 1500)
+              write (4575,*)  bsn%name, prog
+              write (4575,'(*(G0.3,:,","))') carbvars_hdr
+              write (9000,*) "HRU                       hru_carbvars.csv"
+            end if
+          endif
+        endif
+
+        !! write org_allo variable headers to hru_org_allo_vars
+        if (bsn_cc%cswat == 2) then
+          if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
+            open (4576,file = "hru_org_allo_vars.txt", recl = 1500)
+            write (4576,*)  bsn%name, prog
+            write (4576,*)  org_allow_hdr
+            write (9000,*) "HRU                       hru_org_allo_vars.txt"
+            if (pco%csvout == "y") then
+              open (4577,file="hru_org_allo_vars.csv", recl = 1500)
+              write (4577,*)  bsn%name, prog
+              write (4577,'(*(G0.3,:,","))') org_allow_hdr
+              write (9000,*) "HRU                       hru_org_allo_vars.csv"
+            end if
+          endif
+        endif
+
+        !! write org_ratio variable headers to hru_org_ratio_vars
+        if (bsn_cc%cswat == 2) then
+          if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
+            open (4578,file = "hru_org_ratio_vars.txt", recl = 1500)
+            write (4578,*)  bsn%name, prog
+            write (4578,*)  org_ratio_hdr
+            write (9000,*) "HRU                       hru_org_ratio_vars.txt"
+            if (pco%csvout == "y") then
+              open (4579,file="hru_org_ratio_vars.csv", recl = 1500)
+              write (4579,*)  bsn%name, prog
+              write (4579,'(*(G0.3,:,","))') org_ratio_hdr
+              write (9000,*) "HRU                       hru_org_ratio_vars.csv"
+            end if
           endif
         endif
 

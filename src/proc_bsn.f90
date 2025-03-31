@@ -27,7 +27,8 @@
       call basin_prm_default
       call basin_print_codes_read
       call co2_read
+      call carbon_coef_read
    
-         return
+      return
       
       end subroutine proc_bsn
