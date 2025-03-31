@@ -1173,6 +1173,7 @@
      type output_carb_vars_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1188,6 +1189,7 @@
          character(len=15)  :: no3           =    "            no3"         
          character(len=15)  :: nh4           =    "            nh4"         
          character(len=15)  :: resp          =    "       co2_resp"         
+         character(len=15)  :: soil_tmp      =    "      soil_temp"         
          end type output_carb_vars_header
       type (output_carb_vars_header) :: carbvars_hdr
       
