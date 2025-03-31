@@ -99,9 +99,9 @@
        integer :: k = 0          !none                 |counte
        integer :: kk = 0         !                     |
        integer :: lmnta = 0      !                     |      
-       integer :: min_n_ppm = 0  !                     |
+       real :: min_n_ppm = 0  !                     |
        integer :: lslncat = 0    !                     |
-       integer :: min_n = 0      !                     |
+       real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |hich layer of coefs to use in carbon_coef.cbn
        integer :: bmix_depth     !mm                   !depth of biological
        integer :: soil_lyr_thickness !mm
@@ -310,7 +310,7 @@
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
           sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
-          void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
+          ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
           if (wc - soil(j)%phys(k)%wpmm < 0.) then
             org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
@@ -365,6 +365,7 @@
                   else
                     org_con%till_eff = 1.0
                   end if
+                  
                 end if
               endif
 
@@ -374,7 +375,7 @@
           end select
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
-          org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
+          ! org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
           org_con%cdg = fcgd(soil(j)%phys(k)%tmp)
 
           !!compute oxygen (ox)
@@ -426,7 +427,7 @@
             if (.not. ufc) org_allo(cf_lyr)%apco2 = .55
             org_ratio%nchp = .1
             xbm = 1.
-            org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
+            ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
             rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
@@ -487,7 +488,11 @@
               org_tran%lmntp = soil1(j)%meta(k)%n * org_con%x1
               
         !     potential transformations microbial biomass
-              org_con%x1 = carbdb(cf_lyr)%microb_rate * org_con%cs * xbm
+              if (k == 1) then
+                org_con%x1 = carbdb(cf_lyr)%microb_top_rate * org_con%cs * xbm
+              else
+                org_con%x1 = carbdb(cf_lyr)%microb_rate * org_con%cs * xbm
+              end if
               org_tran%bmctp = soil1(j)%microb(k)%c * org_con%x1
               org_tran%bmntp = soil1(j)%microb(k)%n * org_con%x1
               
@@ -497,6 +502,8 @@
               org_tran%hsntp = soil1(j)%hs(k)%n * org_con%x1
               
         !     potential transformations passive humus
+              ! Note for surface layer (k==1), hp(k)%c and hp(k)%n are zero because
+              ! there is no passive pool for the surface layer.
               org_con%x1 = org_con%cs * carbdb(cf_lyr)%hp_rate
               org_tran%hpctp = soil1(j)%hp(k)%c * org_con%x1
               org_tran%hpntp = soil1(j)%hp(k)%n * org_con%x1

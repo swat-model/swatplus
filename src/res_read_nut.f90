@@ -66,6 +66,8 @@
         res_nut(ires)%psetlr2 = res_nut(ires)%psetlr2 / 365.
         res_nut(ires)%nsetlr1 = res_nut(ires)%nsetlr1 / 365.
         res_nut(ires)%nsetlr2 = res_nut(ires)%nsetlr2 / 365.
+        res_nut(ires)%nsolr = res_nut(ires)%nsolr / 365.
+        res_nut(ires)%psolr = res_nut(ires)%psolr / 365.
       end do
 
       return
