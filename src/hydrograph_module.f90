@@ -171,10 +171,10 @@
       type (hyd_output) :: chomz
 
       type object_output
-        character (len=3) :: name = ""
-        character (len=3) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
+        character (len=10) :: name = ""
+        character (len=10) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
         integer :: obtypno = 0         !! object type number: 1=hru, 2=hru_lte, 3=channel
-        character (len=6) :: hydtyp = "" !! hydrograph type: tot,rhg,sur,lat,til
+        character (len=20) :: hydtyp = "" !! hydrograph type: tot,rhg,sur,lat,til
         integer :: objno = 0           !! object number
         integer :: hydno = 0           !! code computes from hydtyp
         character (len=26) :: filename = ""!! file with hydrograph output from the object
@@ -1279,7 +1279,7 @@
         hyd3%lag = hyd1%lag + hyd2%lag
         hyd3%grv = hyd1%grv + hyd2%grv
         if (hyd1%flo + hyd2%flo > 1.e-6) then
-          hyd3%temp = (hyd1%flo * hyd2%temp + hyd2%flo + hyd2%temp) / (hyd1%flo + hyd2%flo)
+          hyd3%temp = (hyd1%flo * hyd1%temp + hyd2%flo * hyd2%temp) / (hyd1%flo + hyd2%flo)
         else
           hyd3%temp = 0.
         end if

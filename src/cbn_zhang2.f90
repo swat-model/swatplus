@@ -99,9 +99,9 @@
        integer :: k = 0          !none                 |counte
        integer :: kk = 0         !                     |
        integer :: lmnta = 0      !                     |      
-       integer :: min_n_ppm = 0  !                     |
+       real :: min_n_ppm = 0  !                     |
        integer :: lslncat = 0    !                     |
-       integer :: min_n = 0      !                     |
+       real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |hich layer of coefs to use in carbon_coef.cbn
        integer :: bmix_depth     !mm                   !depth of biological
        integer :: soil_lyr_thickness !mm
