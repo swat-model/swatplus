@@ -48,9 +48,8 @@
         read (104,*,iostat=eof) header
         if (eof < 0) exit
         
-          
         do ic = 1, imax
-          if (bsn_cc%nam1 /= 0) then
+          if (bsn_cc%nam1 == 0) then
             read (104,*,iostat=eof) pldb(ic)
           else
             read (104,*,iostat=eof) pldb(ic), pl_class(ic)
@@ -67,4 +66,5 @@
       
       close (104)
       return
+
       end subroutine plant_parm_read
