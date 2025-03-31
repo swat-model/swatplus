@@ -94,6 +94,23 @@
         real :: latksat = 0.  !! !na            |multiplication factor to determine lat sat hyd conductivity for profile
       end type subsurface_drainage_parameters
       type (subsurface_drainage_parameters), dimension (:), allocatable :: sdr
+      
+      type saturated_buffer_parameters
+        character(len=40) :: name = "null"
+        integer :: hru_src = 0                   !!     |source of tile inflow
+        real :: frac_src = 0.                    !!     |fration of source hru contributing to tile flow
+        character(len=40) :: flocon_dtbl = " "   !!     |decision table to control flow into buffer hru
+        integer :: hru_rcv = 0                   !!     |receiving (buffer) hru
+        integer :: lyr = 0                       !!     |soil layer for incoming tile flow (0 = surface)
+      end type saturated_buffer_parameters
+      type (saturated_buffer_parameters), dimension (:), allocatable :: satbuff_db
+      
+      type saturated_buffer
+        type (saturated_buffer_parameters) :: sb_db
+        integer :: dtbl = 0
+        real :: inflo = 0.
+        real :: no3 = 0.
+      end type saturated_buffer
               
       type landuse
           character(len=40) :: name = ""
@@ -244,6 +261,7 @@
         type (subsurface_drainage_parameters) :: sdr
         type (snow_parameters) :: sno
         type (nutrient_parameters) :: nut
+        type (saturated_buffer) :: sb
         real :: snocov1 = 0.
         real :: snocov2 = 0.
         integer :: cur_op = 1

@@ -4,7 +4,7 @@
       use time_module
       use aquifer_module
       use hru_module, only : hru, cn2, fertno3, fertnh3, fertorgn, fertorgp, fertsolp,   &
-        ihru, ipl, isol,  phubase, sol_sumno3, sol_sumsolp
+        ihru, ipl, isol,  phubase, sol_sumno3, sol_sumsolp, qtile
       use soil_module
       use plant_module
       use plant_data_module
@@ -73,10 +73,11 @@
       integer :: irec = 0
       integer :: iplt = 0
       integer :: num_plts_cur = 0
+      integer :: hru_rcv
       real :: hiad1 = 0.                   !         |
       real :: biomass = 0.                 !         |
       real :: frt_kg = 0.
-      real :: harveff = 0. !
+      real :: harveff = 0.
       real :: wur = 0.                     !         |
       real :: frac = 0.                    !         |
       real :: rto = 0.                     !         |
@@ -91,9 +92,6 @@
       real :: stor_m3 = 0.
       character(len=1) :: action = ""      !         |
       character(len=40) :: lu_prev = ""    !         |
-
-      yield = 0.
-      sumpst = 0.
 
       do iac = 1, d_tbl%acts
         action = "n"
@@ -131,7 +129,7 @@
               hru(j)%irr_hmax = d_tbl%act(iac)%const !mm target ponding depth
               hru(j)%irr_hmin = d_tbl%act(iac)%const2 !mm threshold ponding depth for irrigation
               
-              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !m irrigation by wro already happened for today Jaehak 2023
+              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !mm irrigation by wro already happend for today Jaehak 2023
 
               if (wet_ob(j)%depth*1000.<hru(j)%irr_hmin) then
                 irrig(j)%demand = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
@@ -246,7 +244,6 @@
             end select
                   
             if (pco%mgtout == "y") then
-              ! write (2612, *) j, time%yrc, time%mo, time%day_mo, "        ", "IRRIGATE", phubase(j),  &
               write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIGATE", phubase(j),  &
                   pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
                   sol_sumno3(j), sol_sumsolp(j), irrig(j)%demand
@@ -321,6 +318,9 @@
           case ("plant")
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
+            
+            if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
+                
             icom = pcom(j)%pcomdb
             pcom(j)%days_plant = 1       !reset days since last planting
             !! check for generic plant-harv and set crops
@@ -333,8 +333,6 @@
               d_tbl%act(iac)%option = sched(isched)%auto_crop(pcom(j)%rot_yr)
             end if
             
-            if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
-                
               do ipl = 1, pcom(j)%npl
                 
                 idp = pcomdb(icom)%pl(ipl)%db_num
@@ -461,6 +459,7 @@
             
             if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
               icom = pcom(j)%pcomdb
+              pcom(j)%days_kill = 1       !reset days since last kill
               do ipl = 1, pcom(j)%npl
                 biomass = pl_mass(j)%tot(ipl)%m
                 if (d_tbl%act(iac)%option == pcomdb(icom)%pl(ipl)%cpnm .or. d_tbl%act(iac)%option == "all") then
@@ -577,6 +576,34 @@
             if (d_tbl%act(iac)%const < 1) d_tbl%act(iac)%const = 1
             pcom(j)%rot_yr = d_tbl%act(iac)%const
               
+          !reset days since last harvest
+          case ("harv_reset")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            if (d_tbl%act(iac)%const < 1) d_tbl%act(iac)%const = 1
+            pcom(j)%days_harv = d_tbl%act(iac)%const
+            
+          !reset days since last harvest
+          case ("kill_reset")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            if (d_tbl%act(iac)%const < 1) d_tbl%act(iac)%const = 1
+            pcom(j)%days_kill = d_tbl%act(iac)%const
+            
+          !reset days since last planting
+          case ("plant_reset")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            if (d_tbl%act(iac)%const < 1) d_tbl%act(iac)%const = 1
+            pcom(j)%days_plant = d_tbl%act(iac)%const
+            
+          !reset days since last irrigation
+          case ("irr_reset")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            if (d_tbl%act(iac)%const < 1) d_tbl%act(iac)%const = 1
+            pcom(j)%days_irr = d_tbl%act(iac)%const
+            
           !apply pesticide
           case ("pest_apply")
             j = d_tbl%act(iac)%ob_num
@@ -656,22 +683,14 @@
               hlt(j)%aet = 0.
               hlt(j)%pet = 0.
 
-          !drainage water management
-          case ("drain_control") !! set drain depth for drainage water management
+          !! drainage water management
+          case ("tiledep_control") !! set drain depth for drainage water management
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
             
             if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
-             istr = hru(j)%tiledrain
+              istr = hru(j)%tiledrain
               hru(j)%lumv%sdr_dep = d_tbl%act(iac)%const
-              !if (hru(j)%lumv%sdr_dep > 0) then
-              !  do jj = 1, soil(j)%nly
-              !    if (hru(j)%lumv%sdr_dep < soil(j)%phys(jj)%d) hru(j)%lumv%ldrain = jj
-              !    if (hru(j)%lumv%sdr_dep < soil(j)%phys(jj)%d) exit
-              !  end do
-              !else
-              !  hru(j)%lumv%ldrain = 0
-              !end if
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
               
               if (pco%mgtout == "y") then
@@ -682,38 +701,33 @@
             end if
                                    
           ! set the amount of water to be diverted
-          case ("divert") 
-            ! ob_num is set in wallo_demand
+          case ("tileflo_contol") 
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            
+            !! set amount of tile flow to send to buffer hru
+            hru_rcv = hru(j)%sb%sb_db%hru_rcv
+          
+            ! option to set tile flow directed toward the saturated buffer hru
             select case (d_tbl%act(iac)%option)
                 
-            case ("flo_cms")    !! flow diversion demand to m3
-              trans_m3 = d_tbl%act(iac)%const * 86400.
+            case ("flo_mm")    !! set tile flow diverted - can't be more than actual flow
+              hru(hru_rcv)%sb%inflo = Min (qtile, d_tbl%act(iac)%const)
 
-            case ("min_cms")    !! minimum flow rate (m3/s)
-              if (ob(ob_num)%hd(1)%flo / 86400. < d_tbl%act(iac)%const + .0001) then
-                !! below min - all flow to downstream channel (first outflow hydrograph in connect file)
-                trans_m3 = 0.
-              else
-                !! above min flow 
-                trans_m3 = ob(ob_num)%hd(1)%flo - d_tbl%act(iac)%const * 86400.
-              end if
+            case ("min_mm")    !! divert at least the minimum flow rate
+              hru(hru_rcv)%sb%inflo = Max (qtile, d_tbl%act(iac)%const)
+              
+            case ("max_mm")    !! divert the maximum flow rate - can't be more than actual flow
+              hru(hru_rcv)%sb%inflo = Min (qtile, d_tbl%act(iac)%const)
               
             case ("all_flo")    !! all flow diverted
-              trans_m3 = ob(ob_num)%hd(1)%flo
+              hru(hru_rcv)%sb%inflo = qtile
 
-            case ("min_frac")   !! minimum - constant fraction 
-              trans_m3 = d_tbl%act(iac)%const * ob(ob_num)%hd(1)%flo
-              
-            case ("recall")
-              irec = d_tbl%act_typ(iac)
-              select case (recall(irec)%typ)
-              case (1)    !daily
-                trans_m3 = recall(irec)%hd(time%day,time%yrs)%flo
-              case (2)    !monthly
-                trans_m3 = recall(irec)%hd(time%mo,time%yrs)%flo
-              case (3)    !annual
-                trans_m3 = recall(irec)%hd(1,time%yrs)%flo
-              end select
+            case ("zero_flo")    !! all flow diverted
+              hru(hru_rcv)%sb%inflo = 0.
+
+            case ("frac")   !! minimum - constant fraction 
+              hru(hru_rcv)%sb%inflo = d_tbl%act(iac)%const * qtile
                 
             end select
                             
@@ -733,77 +747,6 @@
                 dmd_m3 = d_tbl%act(iac)%const * res_ob(j)%evol - res(j)%flo
                 dmd_m3 = Max (0., dmd_m3)
               end if
-            end select
-                                                                        
-          !flow control for water allocation - needs to be modified***
-          case ("flow_control") !! set flow fractions in con file
-            ! ob_num is the object number of the current channel
-            select case (d_tbl%act(iac)%option)
-                
-            case ("min_cms")    !! minimum flow rate (m3/s) left in first outflow channel in connect file
-              if (ob(ob_num)%hd(1)%flo / 86400. < d_tbl%act(iac)%const + .0001) then
-                !! below min - all flow to downstream channel (first outflow hydrograph in connect file)
-                frac = 1.
-              else
-                !! above min flow - set first channel fraction to min and divert the rest to the second channel
-                frac = d_tbl%act(iac)%const / (ob(ob_num)%hd(1)%flo / 86400.)
-              end if
-              
-            case ("all_flo")    !! all flow to first outflow channel in connect file
-              frac = 1.
-
-            case ("min_frac")   !! minimum or constant fraction 
-              frac = d_tbl%act(iac)%const
-              
-            case ("demand")
-                
-            end select
-            
-            ! set inflow hydrograph fraction of receiving objects - used for dtbl flow fractions
-            ! set first object hyd fractin as defined in decision table
-            inhyd = dtbl_flo(idtbl)%act(iac)%ob_num
-            ihyd_in = ob(ob_num)%rcvob_inhyd(inhyd)
-            iob_out = ob(ob_num)%obj_out(inhyd)
-            ob(iob_out)%frac_in(ihyd_in) = frac
-              
-            ! set second hydrograph fraction
-            if (inhyd < ob(ob_num)%src_tot .and. dtbl_flo(idtbl)%act(iac)%typ /= "irrigate_direct") then
-              inhyd = inhyd + 1
-              ihyd_in = ob(ob_num)%rcvob_inhyd(inhyd)
-              iob_out = ob(ob_num)%obj_out(inhyd)
-              ob(iob_out)%frac_in(ihyd_in) = 1. - frac
-            end if
-                                       
-          !tile flow control for saturated buffers
-          case ("tile_control") !! set flow fractions to buffer tile and direct to channel
-            icon = d_tbl%act(iac)%ob_num
-            if (j == 0) j = ob_cur
-            select case (d_tbl%act(iac)%option)
-            case ("min_flo")    
-              if (hwb_d(j)%qtile < d_tbl%act(iac)%const) then
-                frac = 1.
-              else
-                frac = d_tbl%act(iac)%const / hwb_d(j)%qtile
-              end if
-              ! set inflow hydrograph fraction of receiving objects - used for dtbl flow fractions
-              ! set first object hyd fractin as defined in decision table
-              inhyd = dtbl_flo(idtbl)%act(iac)%ob_num
-              ihyd_in = ob(ob_num)%rcvob_inhyd(inhyd)
-              iob_out = ob(ob_num)%obj_out(inhyd)
-              ob(iob_out)%frac_in(ihyd_in) = frac
-              
-              ! set second hydrograph fraction
-              if (inhyd < ob(ob_num)%src_tot .and. dtbl_flo(idtbl)%act(iac)%typ /= "irrigate_direct") then
-                inhyd = inhyd + 1
-                ihyd_in = ob(ob_num)%rcvob_inhyd(inhyd)
-                iob_out = ob(ob_num)%obj_out(inhyd)
-                ob(iob_out)%frac_in(ihyd_in) = 1. - frac
-              end if
-
-            case ("linear")
-
-            case ("power")
-                
             end select
             
           !turn off hru impounded water - rice paddy or wetland
