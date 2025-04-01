@@ -138,7 +138,7 @@
         real :: act_sta_n = 0.          !kg N/ha        |nitrogen moving from active organic pool to stable pool
         real :: org_lab_p = 0.          !kg P/ha        |phosphorus moving from the organic pool to labile pool
         real :: rsd_hs_c = 0.           !kg C/ha        |amt of carbon moving from the fresh org (residue) to soil slow humus 
-        real :: rsd_nitorg_n = 0.       !kg P/ha        |phosphorus moving from the organic pool to labile pool
+        real :: rsd_nitorg_n = 0.       !kg P/ha        |nitrogen moving from the fresh organic pool (residue) to nitrate
         real :: rsd_laborg_p = 0.       !kg P/ha        |phosphorus moving from the fresh organic pool (residue) to the labile (80%)
                                                         !   and org (20%) pools
       end type output_nutcarb_cycling
