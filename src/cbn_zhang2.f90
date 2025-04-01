@@ -309,7 +309,7 @@
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
-          sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
+          ! sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
           if (wc - soil(j)%phys(k)%wpmm < 0.) then
