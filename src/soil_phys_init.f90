@@ -62,20 +62,14 @@
         if (sol(isol)%phys(j)%k <= 0.0) then 
           if (sol(isol)%s%hydgrp == "A") then
             sol(isol)%phys(j)%k = a
-        else
-          if (sol(isol)%s%hydgrp == "B") then
+          else if (sol(isol)%s%hydgrp == "B") then
             sol(isol)%phys(j)%k = b
-        else
-          if (sol(isol)%s%hydgrp == "C") then
+          else if (sol(isol)%s%hydgrp == "C") then
             sol(isol)%phys(j)%k = c
-        else
-          if (sol(isol)%s%hydgrp == "D") then
+          else if (sol(isol)%s%hydgrp == "D") then
             sol(isol)%phys(j)%k = d          !Claire 12/2/09
           else 
-           sol(isol)%phys(j)%k = nota
-          endif
-          endif
-          endif
+            sol(isol)%phys(j)%k = nota
           endif
         endif
 
