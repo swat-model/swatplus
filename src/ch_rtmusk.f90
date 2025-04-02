@@ -126,6 +126,13 @@
         
         !! add inflow to total storage
         if (ht1%flo > 1.e-6) then
+          if (sd_ch(jrch)%msk%nsteps > 1) then
+            !! subdaily inflow
+            inflo = ob(icmd)%tsin(irtstep) / sd_ch(jrch)%msk%substeps
+          else
+            inflo = ht1%flo
+          end if
+          
           !! subdaily inflow
           inflo = ob(icmd)%tsin(irtstep) / sd_ch(jrch)%msk%substeps
           rto = inflo / ht1%flo
