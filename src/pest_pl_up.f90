@@ -1,7 +1,7 @@
       subroutine pest_pl_up
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine calculates the amount of pesticide washed off the plant
+!!    this subroutine calculates the amount of pesticide plant uptake
 !!    foliage and onto the soil
 
       use pesticide_data_module
