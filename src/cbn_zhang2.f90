@@ -689,7 +689,7 @@
         !     update
               if (rnmn > 0.) then
                 soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn     
-                min_n = soil1(j)%mn(k)%no3 + rnmn
+                min_n = soil1(j)%mn(k)%no3 - rnmn
                 if (min_n < 0.) then
                   rnmn = -soil1(j)%mn(k)%no3
                   soil1(j)%mn(k)%no3 = 1.e-10
@@ -910,6 +910,14 @@
                 ! soil1(j)%rsd(k)%c = soil1(j)%rsd(k)%c - hrc_d(j)%rsd_rootdecay_c
               end if 
               
+                soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 - (org_flux%immmets1 + org_flux%immstrs1 + org_flux%immstrs2 +    &
+                            org_flux%imms1s2 + org_flux%imms1s3 + org_flux%imms2s1 + org_flux%imms2s3 + org_flux%imms3s1)
+      
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + org_flux%mnrmets1 + org_flux%mnrstrs1 + org_flux%mnrstrs2 +     &
+                             org_flux%mnrs1s2 + org_flux%mnrs1s3 + org_flux%mnrs2s1 + org_flux%mnrs2s3 + org_flux%mnrs3s1
+                !hnb_d(j)%immob =
+                !hnb_d(j)%minrl =
+                
               soil1(j)%meta(k)%n = max(.001, soil1(j)%meta(k)%n - org_flux%efmets1 & !subtract n flow from met (metabolic litter) to s1 (microbial biomass)
                             - org_flux%mnrmets1)                    !subtract n immobilization during transformaiton from met (metabolic litter) to s1 (microbial biomass)
 
