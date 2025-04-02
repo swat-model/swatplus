@@ -15,7 +15,6 @@
           brec_d = brec_d + rec_d(irec)
         end do
         
-        brec_d = brec_d / bsn%area_tot_ha
         brec_m = brec_m + brec_d
         
         !! daily print - BASIN RECALL
