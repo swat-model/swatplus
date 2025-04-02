@@ -159,6 +159,10 @@
       ht1%temp = 5.0 + 0.75 * wst(iwst)%weat%tave
       wtemp = 5.0 + 0.75 * wst(iwst)%weat%tave
 
+      if (sd_ch(ich)%msk%nsteps == 1) then
+        ob(icmd)%tsin(1) = ht1%flo
+      end if
+            
       !! if connected to aquifer - add flow
       if (sd_ch(ich)%aqu_link > 0) then
         iaq = sd_ch(ich)%aqu_link
