@@ -1,28 +1,12 @@
       subroutine soil_nutcarb_write(out_freq)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine writes HRU output to the output.hru file
-
+!!    this subroutine writes soil carbon output.
+!!
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name          |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    gw_q(:)       |mm H2O        |groundwater contribution to streamflow from
-!!                                 |HRU on current day
-!!    hru_ha(:)     |ha            |area of HRU in hectares
-!!    hru_km(:)     |km^2          |area of HRU in square kilometers
-!!    ihru          |none          |HRU number
-!!    rchrg(:)      |mm H2O        |amount of water recharging both aquifers on
-!!                                 |current day in HRU
-!!    surfq(:)      |mm H2O        |surface runoff generated on day in HRU
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-!!    ~ ~ ~ LOCAL DEFINITIONS ~ ~ ~
-!!    name        |units         |definition
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    ii          |none          |counter
-!!    j           |none          |HRU number
-!!    sb          |none          |subbasin number
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    out_freq      |              |output frequency (d=daily, m=monthly, y=yearly, a=average annual)
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
@@ -30,7 +14,7 @@
       use organic_mineral_mass_module
       use hydrograph_module
       use calibration_data_module
-      use carbon_module, only: org_flux_zero
+      use carbon_module
       use basin_module
       
       implicit none

@@ -488,25 +488,10 @@
         if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write(" y") 
         if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write("yl") 
         ! if (pco%cb_hru%a == "y" .and. time%end_yr == 1) call soil_nutcarb_write("a")
+        if (pco%cb_vars_hru%d == "y") call soil_carbvar_write("d")
+        if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write("m")
+        if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write("y") 
 
-        ! select case (pco%carbout)
-        ! !! write carbon in soil, plant, and residue at end of the day
-        !   case ("d")
-        !     call soil_nutcarb_write(pco%carbout)
-        !   !! write carbon in soil, plant, and residue at end the month    
-        !   case ("m")
-        !     if (time%end_mo == 1) then
-        !       call soil_nutcarb_write(pco%carbout)
-        !     end if 
-        !   !! write carbon in soil, plant, and residue at end of year  
-        !   case ("y")
-        !     if (time%end_yr == 1) then
-        !       call soil_nutcarb_write(pco%carbout)
-        !     end if
-        !  !! write carbon in soil, plant, and residue at end the simulation  
-        !   case ("a") 
-        !       call soil_nutcarb_write(pco%carbout)
-        !  end select 
         
         end do      ! hru loop  
         
