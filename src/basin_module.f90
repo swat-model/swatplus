@@ -140,7 +140,7 @@
         character(len=1) :: m = "n"
         character(len=1) :: y = "n"
         character(len=1) :: a = "n"
-        logical :: already_read_in
+        !logical :: already_read_in
       end type print_interval
       
       type basin_print_codes
