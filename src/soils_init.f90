@@ -165,7 +165,6 @@
           tot_soil_depth = Min(tot_soil_depth, ccd)
           sol(isol)%s%nly = mlyr    !Adjust number of layers
           
-          tot_soil_depth = Min(tot_soil_depth, ccd)
           allocate (sol(isol)%ly(mlyr))
           allocate (sol(isol)%phys(mlyr))
           sol(isol)%phys(mlyr)%d = tot_soil_depth
