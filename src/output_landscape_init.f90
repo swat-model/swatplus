@@ -544,7 +544,7 @@
             write (4570,*) soil_mb_units
             write (9000,*) "HRU                       hru_soilcarb_mb_stat.txt"
             if (pco%csvout == "y") then
-              open (4571,file="hru_soil_carb_mb_stat.csv", recl = 1500)
+              open (4571,file="hru_soilcarb_mb_stat.csv", recl = 1500)
               write (4571,*)  bsn%name, prog
               write (4571,'(*(G0.3,:,","))') soil_mb_hdr
               write (4571,'(*(G0.3,:,","))') soil_mb_units
@@ -564,17 +564,17 @@
               write (9000,*) "HRU                       hru_cpool_stat.csv"
             end if
 
-            open (4580,file = "hru_org_trans_stat.txt", recl = 1500)
+            open (4580,file = "hru_org_trans_vars.txt", recl = 1500)
             write (4580,*)  bsn%name, prog
             write (4580,*) org_trans_hdr
             write (4580,*) org_trans_units
-            write (9000,*) "HRU                       hru_org_trans_stat.txt"
+            write (9000,*) "HRU                       hru_org_trans_vars.txt"
             if (pco%csvout == "y") then
-              open (4581,file="hru_org_trans_stat.csv", recl = 1500)
+              open (4581,file="hru_org_trans_vars.csv", recl = 1500)
               write (4581,*)  bsn%name, prog
               write (4581,'(*(G0.3,:,","))') org_trans_hdr
               write (4581,'(*(G0.3,:,","))') org_trans_units
-              write (9000,*) "HRU                       hru_org_trans_stat.csv"
+              write (9000,*) "HRU                       hru_org_trans_vars.csv"
             end if
 
           endif

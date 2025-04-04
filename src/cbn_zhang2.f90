@@ -6,7 +6,8 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
-        use time_module, only : time
+        use tillage_data_module
+        use time_module, only : time   ! this only used for debugging purposes in with an IDE with conditional breakpoints.
         
         implicit none
         
@@ -102,8 +103,7 @@
        real :: min_n_ppm = 0  !                     |
        integer :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
-       integer :: cf_lyr         !                     |hich layer of coefs to use in carbon_coef.cbn
-       integer :: bmix_depth     !mm                   !depth of biological
+       integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        integer :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
@@ -182,7 +182,9 @@
        real :: rmp = 0.          !kg P/ha              |amount of phosphorus moving from fresh organic
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
-       real :: xx = 0.           !varies    |variable to hold calculation results
+       real :: xx = 0.           !varies               |variable to hold calculation results
+      !  real :: bmix_eff          !                     |biological mixing efficiency
+      !  real :: bmix_depth        !mm                   !depth of biological
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -249,8 +251,12 @@
        cpn5 = 0.
        wmin = 0.
        dmdn = 0.
-       bmix_depth = 50    
        soil_lyr_thickness = 0
+
+      !  if (bmix_idtill == 0) then
+      !   bmix_eff = .2        
+      !   bmix_depth = 50.
+      !  endif
 
        j = ihru
        hrc_d(j)%rsd_surfdecay_c = 0.
@@ -309,7 +315,7 @@
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
-          sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
+          ! sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
           if (wc - soil(j)%phys(k)%wpmm < 0.) then
@@ -351,7 +357,8 @@
               else
                 ! Changed by fg to always have some bio mixing
                 if (soil(j)%phys(k)%d <= bmix_depth) then            
-                  org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                  ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                  org_con%till_eff = 1.0 + bmix_eff
                 else
 
                   if (k == 1) then
@@ -361,7 +368,7 @@
                   end if
 
                   if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (hru(j)%hyd%biomix * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    org_con%till_eff = 1.0 + (bmix_eff * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
                   else
                     org_con%till_eff = 1.0
                   end if
