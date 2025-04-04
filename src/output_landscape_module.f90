@@ -824,6 +824,7 @@
      type output_rsdc_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -845,6 +846,7 @@
       type output_rsdc_header_units      
          character (len=6) ::  freq         =  "      "
          character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
          character (len=12) :: day          =  "            "
          character (len=12) :: mo           =  "            "
          character (len=12) :: day_mo       =  "            "
@@ -870,6 +872,7 @@
      type output_soilc_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -891,6 +894,7 @@
       type output_soilc_header_units      
          character (len=6) ::  freq         = "      "
          character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: soil_depth   = "          mm"
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -912,6 +916,7 @@
      type output_soil_org_flux_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -962,6 +967,7 @@
      type output_soil_org_flux_header_units     
          character (len=6)  :: freq         = "      "
          character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: soil_depth   = "          mm"
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -1013,6 +1019,7 @@
       type output_soil_carb_mb_hdr     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1071,6 +1078,7 @@
       type output_soil_carb_mb_units
          character (len=6)  :: freq         = "      "
          character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: soil_depth   = "          mm"
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -1129,6 +1137,7 @@
      type output_cpool_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1151,6 +1160,7 @@
       type output_cpool_header_units      
          character (len=6) ::  freq         =  "      "
          character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
          character (len=12) :: day          =  "            "
          character (len=12) :: mo           =  "            "
          character (len=12) :: day_mo       =  "            "
@@ -1196,6 +1206,7 @@
      type output_org_allo_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1215,6 +1226,7 @@
      type output_org_ratio_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1231,6 +1243,7 @@
      type output_org_trans_header     
          character (len=6) ::  freq          =    "freq  "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1256,6 +1269,7 @@
       type output_org_trans_header_units      
          character (len=6) ::  freq         =  "      "
          character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
          character (len=12) :: day          =  "            "
          character (len=12) :: mo           =  "            "
          character (len=12) :: day_mo       =  "            "
