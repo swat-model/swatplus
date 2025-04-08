@@ -732,7 +732,7 @@
 	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
-              org_flux%co2fstr = .3 * lslcta
+              ! org_flux%co2fstr = .3 * lslcta
               org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
