@@ -41,7 +41,7 @@
      !! read database output
         read (107,*,iostat=eof) header
         if (eof < 0) exit
-        read (107,*,iostat=eof) pco%csvout, pco%use_obj_labels, pco%cdfout
+        read (107,*,iostat=eof) pco%csvout, pco%carbout, pco%cdfout
         if (eof < 0) exit
         
      !! read other output
@@ -54,129 +54,7 @@
      !! basin
         read (107,*,iostat=eof) header
         if (eof < 0) exit
-        if (pco%use_obj_labels == "n") then
-          read (107,*,iostat=eof) name, pco%wb_bsn%d, pco%wb_bsn%m, pco%wb_bsn%y, pco%wb_bsn%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%nb_bsn%d, pco%nb_bsn%m, pco%nb_bsn%y, pco%nb_bsn%a
-          if (eof < 0) exit       
-          read (107,*,iostat=eof) name, pco%ls_bsn%d, pco%ls_bsn%m, pco%ls_bsn%y, pco%ls_bsn%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%pw_bsn%d, pco%pw_bsn%m, pco%pw_bsn%y, pco%pw_bsn%a
-          if (eof < 0) exit        
-          read (107,*,iostat=eof) name, pco%aqu_bsn%d, pco%aqu_bsn%m, pco%aqu_bsn%y, pco%aqu_bsn%a
-          if (eof < 0) exit            
-          read (107,*,iostat=eof) name, pco%res_bsn%d, pco%res_bsn%m, pco%res_bsn%y, pco%res_bsn%a
-          if (eof < 0) exit        
-          read (107,*,iostat=eof) name, pco%chan_bsn%d, pco%chan_bsn%m, pco%chan_bsn%y, pco%chan_bsn%a
-          if (eof < 0) exit            
-          read (107,*,iostat=eof) name, pco%sd_chan_bsn%d, pco%sd_chan_bsn%m, pco%sd_chan_bsn%y, pco%sd_chan_bsn%a
-          if (eof < 0) exit 
-          read (107,*,iostat=eof) name, pco%recall_bsn%d, pco%recall_bsn%m, pco%recall_bsn%y, pco%recall_bsn%a
-          if (eof < 0) exit            
-        ! region
-          read (107,*,iostat=eof) name, pco%wb_reg%d, pco%wb_reg%m, pco%wb_reg%y, pco%wb_reg%a
-          if (eof < 0) exit     
-          read (107,*,iostat=eof) name, pco%nb_reg%d, pco%nb_reg%m, pco%nb_reg%y, pco%nb_reg%a
-          if (eof < 0) exit       
-          read (107,*,iostat=eof) name, pco%ls_reg%d, pco%ls_reg%m, pco%ls_reg%y, pco%ls_reg%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%pw_reg%d, pco%pw_reg%m, pco%pw_reg%y, pco%pw_reg%a
-          if (eof < 0) exit        
-          read (107,*,iostat=eof) name, pco%aqu_reg%d, pco%aqu_reg%m, pco%aqu_reg%y, pco%aqu_reg%a
-          if (eof < 0) exit            
-          read (107,*,iostat=eof) name, pco%res_reg%d, pco%res_reg%m, pco%res_reg%y, pco%res_reg%a
-          if (eof < 0) exit                           
-          read (107,*,iostat=eof) name, pco%sd_chan_reg%d, pco%sd_chan_reg%m, pco%sd_chan_reg%y, pco%sd_chan_reg%a
-          if (eof < 0) exit 
-          read (107,*,iostat=eof) name, pco%recall_reg%d, pco%recall_reg%m, pco%recall_reg%y, pco%recall_reg%a
-          if (eof < 0) exit 
-          read (107,*,iostat=eof) name, pco%water_allo%d, pco%water_allo%m, pco%water_allo%y, pco%water_allo%a
-          if (eof < 0) exit   
-        ! lsu
-          read (107,*,iostat=eof) name, pco%wb_lsu%d, pco%wb_lsu%m, pco%wb_lsu%y, pco%wb_lsu%a
-          if (eof < 0) exit     
-          read (107,*,iostat=eof) name, pco%nb_lsu%d, pco%nb_lsu%m, pco%nb_lsu%y, pco%nb_lsu%a
-          if (eof < 0) exit       
-          read (107,*,iostat=eof) name, pco%ls_lsu%d, pco%ls_lsu%m, pco%ls_lsu%y, pco%ls_lsu%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%pw_lsu%d, pco%pw_lsu%m, pco%pw_lsu%y, pco%pw_lsu%a
-          if (eof < 0) exit                
-        ! hru
-          read (107,*,iostat=eof) name, pco%wb_hru%d, pco%wb_hru%m, pco%wb_hru%y, pco%wb_hru%a
-          if (eof < 0) exit     
-          read (107,*,iostat=eof) name, pco%nb_hru%d, pco%nb_hru%m, pco%nb_hru%y, pco%nb_hru%a
-          if (eof < 0) exit       
-          read (107,*,iostat=eof) name, pco%ls_hru%d, pco%ls_hru%m, pco%ls_hru%y, pco%ls_hru%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%pw_hru%d, pco%pw_hru%m, pco%pw_hru%y, pco%pw_hru%a
-          if (eof < 0) exit 
-          
-        ! hru-lte
-          read (107,*,iostat=eof) name, pco%wb_sd%d, pco%wb_sd%m, pco%wb_sd%y, pco%wb_sd%a
-          if (eof < 0) exit     
-          read (107,*,iostat=eof) name, pco%nb_sd%d, pco%nb_sd%m, pco%nb_sd%y, pco%nb_sd%a
-          if (eof < 0) exit       
-          read (107,*,iostat=eof) name, pco%ls_sd%d, pco%ls_sd%m, pco%ls_sd%y, pco%ls_sd%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%pw_sd%d, pco%pw_sd%m, pco%pw_sd%y, pco%pw_sd%a
-          if (eof < 0) exit                   
-        ! channel
-          read (107,*,iostat=eof) name, pco%chan%d, pco%chan%m, pco%chan%y, pco%chan%a
-          if (eof < 0) exit             
-        ! channel-lte
-          read (107,*,iostat=eof) name, pco%sd_chan%d, pco%sd_chan%m, pco%sd_chan%y, pco%sd_chan%a
-          if (eof < 0) exit          
-        ! aquifer
-          read (107,*,iostat=eof) name, pco%aqu%d, pco%aqu%m, pco%aqu%y, pco%aqu%a
-          if (eof < 0) exit
-        ! reservoir
-          read (107,*,iostat=eof) name, pco%res%d, pco%res%m, pco%res%y, pco%res%a
-          if (eof < 0) exit
-        ! recall
-          read (107,*,iostat=eof) name, pco%recall%d, pco%recall%m, pco%recall%y, pco%recall%a
-          if (eof < 0) exit        
-        ! hydin and hydout
-          read (107,*,iostat=eof) name, pco%hyd%d, pco%hyd%m, pco%hyd%y, pco%hyd%a
-          if (eof < 0) exit
-        ! routing units
-          read (107,*,iostat=eof) name, pco%ru%d, pco%ru%m, pco%ru%y, pco%ru%a
-          if (eof < 0) exit 
-        ! all pesticide outputs
-          read (107,*,iostat=eof) name, pco%pest%d, pco%pest%m, pco%pest%y, pco%pest%a
-          if (eof < 0) exit  
-          !! salt outputs !rtb salt
-          read (107,*,iostat=eof) name, pco%salt_basin%d, pco%salt_basin%m, pco%salt_basin%y, pco%salt_basin%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%salt_hru%d, pco%salt_hru%m, pco%salt_hru%y, pco%salt_hru%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%salt_ru%d, pco%salt_ru%m, pco%salt_ru%y, pco%salt_ru%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%salt_aqu%d, pco%salt_aqu%m, pco%salt_aqu%y, pco%salt_aqu%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%salt_chn%d, pco%salt_chn%m, pco%salt_chn%y, pco%salt_chn%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%salt_res%d, pco%salt_res%m, pco%salt_res%y, pco%salt_res%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%salt_wet%d, pco%salt_wet%m, pco%salt_wet%y, pco%salt_wet%a
-          if (eof < 0) exit
-          !! constituent outputs !rtb cs
-          read (107,*,iostat=eof) name, pco%cs_basin%d, pco%cs_basin%m, pco%cs_basin%y, pco%cs_basin%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%cs_hru%d, pco%cs_hru%m, pco%cs_hru%y, pco%cs_hru%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%cs_ru%d, pco%cs_ru%m, pco%cs_ru%y, pco%cs_ru%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%cs_aqu%d, pco%cs_aqu%m, pco%cs_aqu%y, pco%cs_aqu%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%cs_chn%d, pco%cs_chn%m, pco%cs_chn%y, pco%cs_chn%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%cs_res%d, pco%cs_res%m, pco%cs_res%y, pco%cs_res%a
-          if (eof < 0) exit
-          read (107,*,iostat=eof) name, pco%cs_wet%d, pco%cs_wet%m, pco%cs_wet%y, pco%cs_wet%a
-          if (eof < 0) exit
-          exit
-        else
-          do while (eof >= 0)
+        do while (eof >= 0)
             read (107,*,iostat=eof) name
             if (eof < 0) exit
             if (name == "") cycle
@@ -622,8 +500,8 @@
                   print*
                   error stop
             end select
-          end do
-        end if
+         end do
+         if (eof < 0) exit
       end do
       end if
       close (107)
