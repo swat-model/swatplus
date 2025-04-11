@@ -150,6 +150,7 @@
           if (eof < 0) exit
           read (107,*,iostat=eof) units
           if (eof < 0) exit
+          mlyr = 0
           do 
             read (107,*,iostat=eof) ccd
             if (eof < 0) exit
@@ -165,7 +166,6 @@
           tot_soil_depth = Min(tot_soil_depth, ccd)
           sol(isol)%s%nly = mlyr    !Adjust number of layers
           
-          tot_soil_depth = Min(tot_soil_depth, ccd)
           allocate (sol(isol)%ly(mlyr))
           allocate (sol(isol)%phys(mlyr))
           sol(isol)%phys(mlyr)%d = tot_soil_depth

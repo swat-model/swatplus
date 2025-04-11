@@ -41,15 +41,15 @@
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
-                    write (4574,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                    write (4574,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                                     soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
                                     soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, soil1(j)%org_con_lr(k)%no3, &
-                                    soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp 
+                                    soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp 
                     if (pco%csvout == "y") then
-                    write (4575,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                    write (4575,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                                     soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
                                     soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, soil1(j)%org_con_lr(k)%no3, &
-                                    soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp 
+                                    soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp
                     end if
                 end do
             end do
@@ -60,9 +60,9 @@
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
-                    write (4576,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
+                    write (4576,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
                     if (pco%csvout == "y") then
-                    write (4577,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
+                    write (4577,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
                     end if
                 end do
             end do
@@ -73,9 +73,9 @@
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
-                    write (4578,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
+                    write (4578,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
                     if (pco%csvout == "y") then
-                    write (4579,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
+                    write (4579,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
                     end if
                 end do
             end do
@@ -86,9 +86,9 @@
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
-                    write (4580,*) freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
+                    write (4580,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
                     if (pco%csvout == "y") then
-                    write (4581,'(*(G0.7,:,","))') freq_label, k, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
+                    write (4581,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
                     end if
                 end do
             end do
