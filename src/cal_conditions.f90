@@ -45,6 +45,7 @@
       integer :: icom = 0
          
       do ichg_par = 1, db_mx%cal_upd
+          !print *, "debug ", ichg_par
         do ispu = 1, cal_upd(ichg_par)%num_elem
           ielem = cal_upd(ichg_par)%num(ispu)
           chg_parm = cal_upd(ichg_par)%name
