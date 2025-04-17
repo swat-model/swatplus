@@ -57,6 +57,9 @@
       real :: mix_clay
       real :: mix_silt
       real :: mix_sand
+      real :: mix_sw
+      real :: mix_rock
+      real :: mix_bd
 
       npmx = cs_db%num_pests
 
@@ -74,6 +77,12 @@
       mix_org%meta = orgz
       mix_org%man = orgz
       mix_org%water = orgz
+      mix_clay = 0.
+      mix_silt = 0.
+      mix_sand = 0.
+      mix_rock = 0.
+      mix_sw = 0.
+      mix_bd = 0.
     
       frac_mixed = 0.
       frac_non_mixed = 0.
@@ -142,6 +151,13 @@
           !! calculate the mass each mixed element
           frac_mixed = sol_msm(l) / sol_mass(l)
           
+          mix_sw = mix_sw + frac_mixed * soil(jj)%phys(l)%st
+          mix_bd = mix_bd + frac_mixed * soil(jj)%phys(l)%bd
+          mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock
+          mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand
+          mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt
+          mix_clay = mix_clay + frac_mixed * soil(jj)%phys(l)%clay
+          
           mix_mn = mix_mn + frac_mixed * soil1(jj)%mn(l)
           mix_mp = mix_mp + frac_mixed * soil1(jj)%mp(l)
           mix_org%tot = mix_org%tot + frac_mixed * soil1(jj)%tot(l)
@@ -158,13 +174,7 @@
           mix_org%water = mix_org%water + frac_mixed * soil1(jj)%water(l)
         end do
      
-          !! sand, silt and clay are % so divide by tillage depth
-          mix_clay = mix_clay / dtil
-          mix_silt = mix_silt / dtil
-          mix_sand = mix_sand / dtil
-
           do l = 1, soil(jj)%nly
-            
             ! reconstitute each soil layer 
             frac_non_mixed = sol_msn(l) / sol_mass(l)
             
@@ -187,6 +197,9 @@
             soil(jj)%phys(l)%clay = frac_non_mixed * soil(jj)%phys(l)%clay + frac_mixed * mix_clay
             soil(jj)%phys(l)%silt = frac_non_mixed * soil(jj)%phys(l)%silt + frac_mixed * mix_silt
             soil(jj)%phys(l)%sand = frac_non_mixed * soil(jj)%phys(l)%sand + frac_mixed * mix_sand
+            soil(jj)%phys(l)%st = frac_non_mixed * soil(jj)%phys(l)%st + frac_mixed * mix_sw
+            soil(jj)%phys(l)%bd = frac_non_mixed * soil(jj)%phys(l)%bd + frac_mixed * mix_bd
+            soil(jj)%phys(l)%rock = frac_non_mixed * soil(jj)%phys(l)%rock + frac_mixed * mix_rock
 
             !do k = 1, npmx
             !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)

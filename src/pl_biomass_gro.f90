@@ -12,6 +12,7 @@
       use constituent_mass_module !rtb salt
       use salt_module, only : salt_uptake_on
       use salt_data_module, only : salt_effect
+      use output_landscape_module
       
       implicit none 
       
@@ -140,6 +141,8 @@
 
           pl_mass_up%m = bioday * pcom(j)%plstr(ipl)%reg
           pl_mass_up%c = 0.42 * bioday * pcom(j)%plstr(ipl)%reg
+          hpw_d(j)%bm_grow = pl_mass_up%m
+          hpw_d(j)%c_gro = pl_mass_up%c
                 
           !! increase in plant c
           if (bsn_cc%cswat == 2) then

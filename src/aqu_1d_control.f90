@@ -25,7 +25,7 @@
       integer :: ipest = 0      !none       |counter
       integer :: ipest_db = 0   !none       |pesticide number from pesticide data base
       integer :: ipseq = 0      !none       |sequential basin pesticide number
-      integer :: ipdb = 0       !none       |sequential pesticide number of daughter pesticide
+      integer :: ipdb = 0       !none       |seqential pesticide number of daughter pesticide
       integer :: imeta = 0      !none       |pesticide metabolite counter
       real :: mol_wt_rto = 0.   !ratio      |molecular weight ratio of duaghter to parent pesticide
       real :: stor_init = 0.    !           |
@@ -93,7 +93,7 @@
       aqu_d(iaq)%dep_wt = aqu_dat(iaq)%dep_bot - (aqu_d(iaq)%stor / (1000. * aqu_dat(iaq)%spyld))
       aqu_d(iaq)%dep_wt = max (0., aqu_d(iaq)%dep_wt)
 
-      !! compute flow and subtract from storage
+      !! compute flow and substract from storage
       if (aqu_d(iaq)%dep_wt <= aqu_dat(iaq)%flo_min) then
         aqu_d(iaq)%flo = aqu_d(iaq)%flo * aqu_prm(iaq)%alpha_e + aqu_d(iaq)%rchrg * (1. - aqu_prm(iaq)%alpha_e)
         aqu_d(iaq)%flo = Max (0., aqu_d(iaq)%flo)
@@ -295,7 +295,7 @@
         
         !! compute pesticide decay in the aquifer
         aqupst_d(iaq)%pest(ipest)%react = 0.
-        if (cs_aqu(iaq)%pest(ipest) > 1.e-12) then
+        if (cs_aqu(iaq)%pest(ipest) > 0.) then
           aqupst_d(iaq)%pest(ipest)%react = cs_aqu(iaq)%pest(ipest) * (1. - pestcp(ipest_db)%decay_s)
           cs_aqu(iaq)%pest(ipest) =  cs_aqu(iaq)%pest(ipest) * pestcp(ipest_db)%decay_s
           !! add decay to daughter pesticides
