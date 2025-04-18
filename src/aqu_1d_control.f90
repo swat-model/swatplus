@@ -295,7 +295,7 @@
         
         !! compute pesticide decay in the aquifer
         aqupst_d(iaq)%pest(ipest)%react = 0.
-        if (cs_aqu(iaq)%pest(ipest) > 1.e-12) then
+        if (cs_aqu(iaq)%pest(ipest) > 0.) then
           aqupst_d(iaq)%pest(ipest)%react = cs_aqu(iaq)%pest(ipest) * (1. - pestcp(ipest_db)%decay_s)
           cs_aqu(iaq)%pest(ipest) =  cs_aqu(iaq)%pest(ipest) * pestcp(ipest_db)%decay_s
           !! add decay to daughter pesticides
