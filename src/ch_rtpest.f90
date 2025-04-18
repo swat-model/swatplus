@@ -17,7 +17,7 @@
       integer :: ipest = 0      !none                   |pesticide counter - sequential
       integer :: jpst = 0       !none                   |pesticide counter from data base
       integer :: ipseq = 0      !none                   |sequential basin pesticide number
-      integer :: ipdb = 0       !none                   |seqential pesticide number of daughter pesticide
+      integer :: ipdb = 0       !none                   |sequential pesticide number of daughter pesticide
       integer :: imeta = 0      !none                   |pesticide metabolite counter
       real :: mol_wt_rto = 0.   !ratio                  |molecular weight ratio of duaghter to parent pesticide
       real :: pstin = 0.        !mg pst                 |total pesticide transported into reach during time step
