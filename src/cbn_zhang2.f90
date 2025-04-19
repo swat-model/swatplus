@@ -6,8 +6,7 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
-        use tillage_data_module
-        use time_module, only : time   ! this only used for debugging purposes in with an IDE with conditional breakpoints.
+        use time_module, only : time
         
         implicit none
         
@@ -99,12 +98,13 @@
        integer :: j = 0          !                     |number of hru
        integer :: k = 0          !none                 |counte
        integer :: kk = 0         !                     |
-       integer :: lmnta = 0      !                     |      
+       real :: lmnta = 0      !                     |      
        real :: min_n_ppm = 0  !                     |
-       integer :: lslncat = 0    !                     |
+       real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
-       integer :: soil_lyr_thickness !mm
+       real :: bmix_depth     !mm                   !depth of biological
+       real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
        real :: fc = 0.           !mm H2O               |amount of water available to plants in soil layer at field capacity (fc - wp),Index:(layer,HRU)
@@ -182,9 +182,7 @@
        real :: rmp = 0.          !kg P/ha              |amount of phosphorus moving from fresh organic
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
-       real :: xx = 0.           !varies               |variable to hold calculation results
-      !  real :: bmix_eff          !                     |biological mixing efficiency
-      !  real :: bmix_depth        !mm                   !depth of biological
+       real :: xx = 0.           !varies    |variable to hold calculation results
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -251,12 +249,8 @@
        cpn5 = 0.
        wmin = 0.
        dmdn = 0.
+       bmix_depth = 50    
        soil_lyr_thickness = 0
-
-      !  if (bmix_idtill == 0) then
-      !   bmix_eff = .2        
-      !   bmix_depth = 50.
-      !  endif
 
        j = ihru
        hrc_d(j)%rsd_surfdecay_c = 0.
@@ -315,7 +309,7 @@
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
-          ! sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
+          sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
           if (wc - soil(j)%phys(k)%wpmm < 0.) then
@@ -357,8 +351,7 @@
               else
                 ! Changed by fg to always have some bio mixing
                 if (soil(j)%phys(k)%d <= bmix_depth) then            
-                  ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
-                  org_con%till_eff = 1.0 + bmix_eff
+                  org_con%till_eff = 1.0 + hru(j)%hyd%biomix
                 else
 
                   if (k == 1) then
@@ -368,7 +361,7 @@
                   end if
 
                   if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (bmix_eff * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    org_con%till_eff = 1.0 + (hru(j)%hyd%biomix * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
                   else
                     org_con%till_eff = 1.0
                   end if
@@ -434,11 +427,7 @@
             if (.not. ufc) org_allo(cf_lyr)%apco2 = .55
             org_ratio%nchp = .1
             xbm = 1.
-            ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate, This was commented out by FG and JC because 
-            ! org_con%cs should not be reduced by the microb_top_rate for the surface layer  and instead the surface layer
-            ! should use the microb_top_rate in computing the potential microbial biomass transformation
-            ! later in code.
-
+            ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
             rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
@@ -732,7 +721,7 @@
 	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
-              ! org_flux%co2fstr = .3 * lslcta
+              org_flux%co2fstr = .3 * lslcta
               org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
