@@ -17,6 +17,7 @@
 
       !! zero total demand for each object
       wallod_out(iwallo)%dmd(idmd)%dmd_tot = 0.
+      trans_m3 = 0.
       
       !! compute total demand from each demand object
       select case (wallo(iwallo)%dmd(idmd)%ob_typ)
