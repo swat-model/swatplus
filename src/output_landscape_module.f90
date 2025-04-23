@@ -1822,6 +1822,10 @@
         hru3%rhum = hru1%rhum + hru2%rhum
         hru3%solrad = hru1%solrad + hru2%solrad
         hru3%phubase0 = hru1%phubase0 + hru2%phubase0
+        hru3%lai_max = hru1%lai_max + hru2%lai_max
+        hru3%bm_max = hru1%bm_max + hru2%bm_max
+        hru3%bm_grow = hru1%bm_grow + hru2%bm_grow
+        hru3%c_gro = hru1%c_gro + hru2%c_gro
       end function hruout_plantweather_add
 
       function hruout_waterbal_div (hru1,const) result (hru2)
@@ -2071,6 +2075,10 @@
         hru2%wndspd = hru1%wndspd
         hru2%rhum = hru1%rhum
         hru2%phubase0 = hru1%phubase0
+        hru2%lai_max = hru1%lai_max
+        hru2%bm_max = hru1%bm_max
+        hru2%bm_grow = hru1%bm_grow
+        hru2%c_gro = hru1%c_gro
       end function hruout_plantweather_div
                   
       function hruout_plantweather_ave (hru1,const) result (hru2)
@@ -2098,6 +2106,10 @@
         hru2%rhum = hru1%rhum / const
         hru2%solrad = hru1%solrad / const
         hru2%phubase0 = hru1%phubase0 / const
+        hru2%lai_max = hru1%lai_max / const
+        hru2%bm_max = hru1%bm_max / const
+        hru2%bm_grow = hru1%bm_grow / const
+        hru2%c_gro = hru1%c_gro / const
       end function hruout_plantweather_ave
                           
       function hruout_plantweather_mult (hru1,const) result (hru2)
@@ -2125,6 +2137,10 @@
         hru2%wndspd = hru1%wndspd * const
         hru2%rhum = hru1%rhum * const
         hru2%phubase0 = hru1%phubase0 * const
+        hru2%lai_max = hru1%lai_max * const
+        hru2%bm_max = hru1%bm_max * const
+        hru2%bm_grow = hru1%bm_grow * const
+        hru2%c_gro = hru1%c_gro * const
       end function hruout_plantweather_mult
                           
                             
