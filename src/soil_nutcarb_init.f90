@@ -34,20 +34,28 @@
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
       !! set soil carbon
-      soil1(ihru)%cbn(1) = max(0.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
+      ! soil1(ihru)%cbn(1) = max(0.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
       !! calculate percent carbon for lower layers using exponential decrease
       !do ly = 2, nly
         !dep_frac = Exp(-solt_db(isolt)%exp_co * soil(ihru)%phys(ly)%d)
         !soil1(ihru)%cbn(ly) = soil1(ihru)%cbn(1) * dep_frac
       !end do
       !! use carbon content in the soils database
-      do ly = 2, nly
-        if (ly - 1 <= soildb(isol)%s%nly) then
-          soil1(ihru)%cbn(ly) = soildb(isol)%ly(ly-1)%cbn
+      ! do ly = 2, nly
+      !   if (ly - 1 <= soildb(isol)%s%nly) then
+      !     soil1(ihru)%cbn(ly) = soildb(isol)%ly(ly-1)%cbn
+      !   else
+      !     soil1(ihru)%cbn(ly) = soildb(isol)%ly(soildb(isol)%s%nly)%cbn
+      !   end if
+      ! end do
+
+      do ly = 1, nly
+        if (ly == 1) then
+          soil1(ihru)%cbn(ly) = max(0.001, soil(isol)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
         else
-          soil1(ihru)%cbn(ly) = soildb(isol)%ly(soildb(isol)%s%nly)%cbn
-        end if
-      end do
+          soil1(ihru)%cbn(ly) = soil(isol)%phys(ly)%cbn    
+        endif
+      enddo
 
       !! calculate initial nutrient contents of layers, profile and
       !! average in soil for the entire watershed
