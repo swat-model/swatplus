@@ -48,10 +48,10 @@
       real :: dtil = 0.                !mm             |depth of mixing
       real :: frac_mixed = 0.          !               |
       real :: frac_non_mixed = 0.      !               |
-      real :: sol_mass(5)    !              |mass of the soil layer
-      real :: sol_msm(5)     !              |sol_mass mixed
-      real :: sol_msn(5)     !              |sol_mass not mixed 
-      real :: frac_dep(5)    !              |fraction of soil layer in tillage depth
+      real :: sol_mass(15)    !              |mass of the soil layer
+      real :: sol_msm(15)     !              |sol_mass mixed
+      real :: sol_msn(15)     !              |sol_mass not mixed 
+      real :: frac_dep(15)    !              |fraction of soil layer in tillage depth
       real :: frac1 = 0.
       real :: frac2 = 0.
       real :: mix_clay
