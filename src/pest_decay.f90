@@ -14,12 +14,12 @@
       implicit none 
       
       integer :: j = 0           !none     |hru number
-      integer :: k = 0           !none     |seqential pesticide number being simulated
+      integer :: k = 0           !none     |sequential pesticide number being simulated
       integer :: ipl = 0         !none     |plant number
       integer :: ipest_db = 0    !none     |pesticide number from pesticide data base
       integer :: l = 0           !none     |layer number
       integer :: ipseq = 0       !none     |sequential basin pesticide number
-      integer :: ipdb = 0        !none     |seqential pesticide number of daughter pesticide
+      integer :: ipdb = 0        !none     |sequential pesticide number of daughter pesticide
       integer :: imeta = 0       !none     |pesticide metabolite counter
       real :: mol_wt_rto = 0.    !ratio    |molecular weight ratio of duaghter to parent pesticide
       real :: pest_init = 0.     !kg/ha    |amount of pesticide present at beginning of day

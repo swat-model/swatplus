@@ -166,7 +166,7 @@
       ! SPECIAL OUTPUTS
         character(len=1) :: csvout   = "n"            !!  code to print .csv files n=no print; y=print;
         ! character(len=1) :: carbout  = "n"         !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
-          character(len=1) :: use_obj_labels  = "n"    !!  code to read in the print.prt print objects respecting the label of 
+        character(len=1) :: use_obj_labels  = "n"    !!  code to read in the print.prt print objects respecting the label of 
                                                      !!  in the row (1st column) to identify name of the print object 
 
         character(len=1) :: cdfout   = "n"            !!  code to print netcdf (cdf) files n=no print; y=print;
