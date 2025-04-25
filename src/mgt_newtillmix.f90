@@ -48,10 +48,10 @@
       real :: dtil = 0.                !mm             |depth of mixing
       real :: frac_mixed = 0.          !               |
       real :: frac_non_mixed = 0.      !               |
-      real :: sol_mass(soil(jj)%nly)    !              |mass of the soil layer
-      real :: sol_msm(soil(jj)%nly)     !              |sol_mass mixed
-      real :: sol_msn(soil(jj)%nly)     !              |sol_mass not mixed 
-      real :: frac_dep(soil(jj)%nly)    !              |fraction of soil layer in tillage depth
+      real, dimension(:), allocatable :: sol_mass    !              |mass of the soil layer
+      real, dimension(:), allocatable :: sol_msm     !              |sol_mass mixed
+      real, dimension(:), allocatable :: sol_msn     !              |sol_mass not mixed 
+      real, dimension(:), allocatable :: frac_dep    !              |fraction of soil layer in tillage depth
       real :: frac1 = 0.
       real :: frac2 = 0.
       real :: mix_clay
@@ -91,7 +91,12 @@
       mix_clay = 0.
       mix_silt = 0.
       mix_sand = 0.
-      
+
+      allocate (sol_mass(soil(jj)%nly), source = 0.)    
+      allocate (sol_msm(soil(jj)%nly), source = 0.)    
+      allocate (sol_msn(soil(jj)%nly), source = 0.)    
+      allocate (frac_dep(soil(jj)%nly),source = 0.)    
+
       if (bmix > 1.e-6) then
         !! biological mixing
         emix = bmix !bmix MJW (rev 412)
@@ -113,10 +118,6 @@
       !!by zhang DSSAT tillage
       !!=======================
 
-      sol_mass = 0.
-      sol_msm = 0.
-      sol_msn = 0.
-
       !! incorporate pathogens - no mixing - lost from transport
       if (dtil > 10.) then     
         !! incorporate pathogens
@@ -131,7 +132,6 @@
         ! added by Armen 09/10/2010 next line only
         if (dtil < 10.0) dtil = 11.0
         do l = 1, soil(jj)%nly
-
           if (soil(jj)%phys(l)%d <= dtil) then
             !! msm = mass of soil mixed for the layer
             !! msn = mass of soil not mixed for the layer       
@@ -154,9 +154,9 @@
           mix_sw = mix_sw + frac_mixed * soil(jj)%phys(l)%st
           mix_bd = mix_bd + frac_mixed * soil(jj)%phys(l)%bd
           mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock
-          mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand
-          mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt
-          mix_clay = mix_clay + frac_mixed * soil(jj)%phys(l)%clay
+          mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100.
+          mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt * sol_mass(l) / 100.
+          mix_clay = mix_clay + frac_mixed * soil(jj)%phys(l)%clay * sol_mass(l) / 100.
           
           mix_mn = mix_mn + frac_mixed * soil1(jj)%mn(l)
           mix_mp = mix_mp + frac_mixed * soil1(jj)%mp(l)
@@ -177,6 +177,7 @@
           do l = 1, soil(jj)%nly
             ! reconstitute each soil layer 
             frac_non_mixed = sol_msn(l) / sol_mass(l)
+            frac_mixed = 1. - frac_non_mixed
             
             soil1(jj)%mn(l) = frac_non_mixed * soil1(jj)%mn(l) + frac_dep(l) * mix_mn
             ! print*, "in mgt_newtill_mix", l, soil1(jj)%mn(l)%no3
@@ -194,22 +195,31 @@
             soil1(jj)%man(l) = frac_non_mixed * soil1(jj)%man(l) + frac_dep(l) * mix_org%man
             soil1(jj)%water(l) = frac_non_mixed * soil1(jj)%water(l) + frac_dep(l) * mix_org%water
             
-            soil(jj)%phys(l)%clay = frac_non_mixed * soil(jj)%phys(l)%clay + frac_mixed * mix_clay
-            soil(jj)%phys(l)%silt = frac_non_mixed * soil(jj)%phys(l)%silt + frac_mixed * mix_silt
-            soil(jj)%phys(l)%sand = frac_non_mixed * soil(jj)%phys(l)%sand + frac_mixed * mix_sand
-            soil(jj)%phys(l)%st = frac_non_mixed * soil(jj)%phys(l)%st + frac_mixed * mix_sw
-            soil(jj)%phys(l)%bd = frac_non_mixed * soil(jj)%phys(l)%bd + frac_mixed * mix_bd
-            soil(jj)%phys(l)%rock = frac_non_mixed * soil(jj)%phys(l)%rock + frac_mixed * mix_rock
+            soil(jj)%phys(l)%clay = 100. / sol_mass(l) * (frac_non_mixed * soil(jj)%phys(l)%clay * sol_mass(l) / 100. &
+                                                                                             + frac_dep(l) * mix_clay)
+            soil(jj)%phys(l)%silt = 100. / sol_mass(l) * (frac_non_mixed * soil(jj)%phys(l)%silt * sol_mass(l) / 100. &
+                                                                                             + frac_dep(l) * mix_silt)
+            soil(jj)%phys(l)%sand = 100. / sol_mass(l) * (frac_non_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100. &
+                                                                                             + frac_dep(l) * mix_sand)
+            soil(jj)%phys(l)%rock = 100. / sol_mass(l) * (frac_non_mixed * soil(jj)%phys(l)%rock * sol_mass(l) / 100. &
+                                                                                             + frac_dep(l) * mix_rock)
+            soil(jj)%phys(l)%st = frac_non_mixed * soil(jj)%phys(l)%st + frac_dep(l) * mix_sw
+            !soil(jj)%phys(l)%bd = frac_non_mixed * soil(jj)%phys(l)%bd + frac_dep(l) * mix_bd
 
             !do k = 1, npmx
             !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
             !end do
-
           end do
+
+        deallocate (sol_mass)    
+        deallocate (sol_msm)    
+        deallocate (sol_msn)    
+        deallocate (frac_dep)    
     
         if (bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
             call mgt_tillfactor(jj,bmix,emix,dtil)
         end if
+
       end if
 
       return

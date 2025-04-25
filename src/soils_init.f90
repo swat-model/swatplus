@@ -34,7 +34,7 @@
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
       character (len=16) :: units = ""  !        |name
-      type (soil_hru_database), dimension(:), allocatable :: sol_mm_db
+      type (soil_database), dimension(:), allocatable :: sol_mm_db
       
       !!Section 1
       !!this section sets, allocates, and initializes the original soil database
@@ -65,7 +65,7 @@
           sol(isol)%phys(1)%bd = soildb(isol)%ly(1)%bd
           sol(isol)%phys(1)%awc = soildb(isol)%ly(1)%awc
           sol(isol)%phys(1)%k = soildb(isol)%ly(1)%k
-          
+          sol(isol)%phys(1)%cbn = soildb(isol)%ly(1)%cbn
           sol(isol)%phys(1)%clay = soildb(isol)%ly(1)%clay
           sol(isol)%phys(1)%silt = soildb(isol)%ly(1)%silt
           sol(isol)%phys(1)%sand = soildb(isol)%ly(1)%sand
@@ -82,6 +82,7 @@
               sol(isol)%phys(j)%bd = soildb(isol)%ly(j-1)%bd
               sol(isol)%phys(j)%awc = soildb(isol)%ly(j-1)%awc
               sol(isol)%phys(j)%k = soildb(isol)%ly(j-1)%k
+              sol(isol)%phys(j)%cbn = soildb(isol)%ly(j-1)%cbn
               sol(isol)%phys(j)%clay = soildb(isol)%ly(j-1)%clay
               sol(isol)%phys(j)%silt = soildb(isol)%ly(j-1)%silt
               sol(isol)%phys(j)%sand = soildb(isol)%ly(j-1)%sand
@@ -99,6 +100,7 @@
               sol(isol)%phys(j)%bd = soildb(isol)%ly(j)%bd
               sol(isol)%phys(j)%awc = soildb(isol)%ly(j)%awc
               sol(isol)%phys(j)%k = soildb(isol)%ly(j)%k
+              sol(isol)%phys(j)%cbn = soildb(isol)%ly(j)%cbn
               sol(isol)%phys(j)%clay = soildb(isol)%ly(j)%clay
               sol(isol)%phys(j)%silt = soildb(isol)%ly(j)%silt
               sol(isol)%phys(j)%sand = soildb(isol)%ly(j)%sand
@@ -115,7 +117,7 @@
           ! Allocate a temporary data structure to do weighted averages from.
           tot_soil_depth = soildb(isol)%ly(soildb(isol)%s%nly)%z
           allocate (sol_mm_db(1))
-          allocate (sol_mm_db(1)%phys(tot_soil_depth))
+          ! allocate (sol_mm_db(1)%phys(tot_soil_depth))
           allocate (sol_mm_db(1)%ly(tot_soil_depth))
 
           ! Populate temporary data structure to do weighted averages from.
@@ -123,14 +125,15 @@
           do j = 1, soildb(isol)%s%nly
             do i = prev_depth + 1, tot_soil_depth
               if (i <= soildb(isol)%ly(j)%z .and. i > prev_depth ) then
-                sol_mm_db(1)%phys(i)%d = i
-                sol_mm_db(1)%phys(i)%bd = soildb(isol)%ly(j)%bd
-                sol_mm_db(1)%phys(i)%awc = soildb(isol)%ly(j)%awc
-                sol_mm_db(1)%phys(i)%k = soildb(isol)%ly(j)%k
-                sol_mm_db(1)%phys(i)%clay = soildb(isol)%ly(j)%clay
-                sol_mm_db(1)%phys(i)%silt = soildb(isol)%ly(j)%silt
-                sol_mm_db(1)%phys(i)%sand = soildb(isol)%ly(j)%sand
-                sol_mm_db(1)%phys(i)%rock = soildb(isol)%ly(j)%rock
+                sol_mm_db(1)%ly(i)%z = i
+                sol_mm_db(1)%ly(i)%bd = soildb(isol)%ly(j)%bd
+                sol_mm_db(1)%ly(i)%awc = soildb(isol)%ly(j)%awc
+                sol_mm_db(1)%ly(i)%k = soildb(isol)%ly(j)%k
+                sol_mm_db(1)%ly(i)%cbn = soildb(isol)%ly(j)%cbn
+                sol_mm_db(1)%ly(i)%clay = soildb(isol)%ly(j)%clay
+                sol_mm_db(1)%ly(i)%silt = soildb(isol)%ly(j)%silt
+                sol_mm_db(1)%ly(i)%sand = soildb(isol)%ly(j)%sand
+                sol_mm_db(1)%ly(i)%rock = soildb(isol)%ly(j)%rock
                 sol_mm_db(1)%ly(i)%alb = soildb(isol)%ly(j)%alb
                 sol_mm_db(1)%ly(i)%usle_k = soildb(isol)%ly(j)%usle_k
                 sol_mm_db(1)%ly(i)%ec = soildb(isol)%ly(j)%ec
@@ -190,7 +193,7 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%bd 
+                sum = sum + sol_mm_db(1)%ly(j)%bd 
                 n = n + 1
               end if
             end do
@@ -200,7 +203,7 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%awc
+                sum = sum + sol_mm_db(1)%ly(j)%awc
                 n = n + 1
               end if
             end do
@@ -211,7 +214,7 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%k
+                sum = sum + sol_mm_db(1)%ly(j)%k
                 n = n + 1
               end if
             end do
@@ -221,7 +224,17 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%clay
+                sum = sum + sol_mm_db(1)%ly(j)%cbn
+                n = n + 1
+              end if
+            end do
+            sol(isol)%phys(i)%cbn = sum/n
+
+            sum = 0.0
+            n = 0
+            do j = pcd, ccd
+              if (j <= tot_soil_depth) then
+                sum = sum + sol_mm_db(1)%ly(j)%clay
                 n = n + 1
               end if
             end do
@@ -231,7 +244,7 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%silt
+                sum = sum + sol_mm_db(1)%ly(j)%silt
                 n = n + 1
               end if
             end do
@@ -241,7 +254,7 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%sand
+                sum = sum + sol_mm_db(1)%ly(j)%sand
                 n = n + 1
               end if
             end do
@@ -251,7 +264,7 @@
             n = 0
             do j = pcd, ccd
               if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%rock
+                sum = sum + sol_mm_db(1)%ly(j)%rock
                 n = n + 1
               end if
             end do
@@ -309,7 +322,6 @@
 
             pcd = ccd + 1
           end do
-          deallocate (sol_mm_db(1)%phys)
           deallocate (sol_mm_db(1)%ly)
           deallocate (sol_mm_db)
           close (107)
@@ -408,7 +420,6 @@
         allocate (soil1(ihru)%microb(nly))
         allocate (soil1(ihru)%man(nly))
         allocate (soil1(ihru)%water(nly))
-
         allocate (soil1_init(ihru)%sw(nly), source = 0.)
         allocate (soil1_init(ihru)%cbn(nly), source = 0.)
         allocate (soil1_init(ihru)%sed(nly))
@@ -431,5 +442,13 @@
       end do
 
       return
+    end subroutine soils_init
       
-      end subroutine soils_init
+      
+      
+      
+      
+      
+      
+      
+      
