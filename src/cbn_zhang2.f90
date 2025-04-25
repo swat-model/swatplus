@@ -6,7 +6,7 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
-	use tillage_data_module
+	      use tillage_data_module
         use time_module, only : time
         
         implicit none
@@ -104,7 +104,6 @@
        real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
-       !real :: bmix_depth     !mm                   !depth of biological
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
