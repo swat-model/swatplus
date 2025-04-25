@@ -48,10 +48,10 @@
       real :: dtil = 0.                !mm             |depth of mixing
       real :: frac_mixed = 0.          !               |
       real :: frac_non_mixed = 0.      !               |
-      real :: sol_mass(15)    !              |mass of the soil layer
-      real :: sol_msm(15)     !              |sol_mass mixed
-      real :: sol_msn(15)     !              |sol_mass not mixed 
-      real :: frac_dep(15)    !              |fraction of soil layer in tillage depth
+      real, dimension(:), allocatable :: sol_mass    !              |mass of the soil layer
+      real, dimension(:), allocatable :: sol_msm     !              |sol_mass mixed
+      real, dimension(:), allocatable :: sol_msn     !              |sol_mass not mixed 
+      real, dimension(:), allocatable :: frac_dep    !              |fraction of soil layer in tillage depth
       real :: frac1 = 0.
       real :: frac2 = 0.
       real :: mix_clay
@@ -91,7 +91,12 @@
       mix_clay = 0.
       mix_silt = 0.
       mix_sand = 0.
-      
+
+      allocate (sol_mass(soil(jj)%nly), source = 0.)    
+      allocate (sol_msm(soil(jj)%nly), source = 0.)    
+      allocate (sol_msn(soil(jj)%nly), source = 0.)    
+      allocate (frac_dep(soil(jj)%nly),source = 0.)    
+
       if (bmix > 1.e-6) then
         !! biological mixing
         emix = bmix !bmix MJW (rev 412)
@@ -112,10 +117,6 @@
       end if
       !!by zhang DSSAT tillage
       !!=======================
-
-      sol_mass = 0.
-      sol_msm = 0.
-      sol_msn = 0.
 
       !! incorporate pathogens - no mixing - lost from transport
       if (dtil > 10.) then     
@@ -208,12 +209,17 @@
             !do k = 1, npmx
             !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
             !end do
-
           end do
+
+        deallocate (sol_mass)    
+        deallocate (sol_msm)    
+        deallocate (sol_msn)    
+        deallocate (frac_dep)    
     
         if (bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
             call mgt_tillfactor(jj,bmix,emix,dtil)
         end if
+
       end if
 
       return
