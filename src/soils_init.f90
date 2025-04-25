@@ -420,7 +420,6 @@
         allocate (soil1(ihru)%microb(nly))
         allocate (soil1(ihru)%man(nly))
         allocate (soil1(ihru)%water(nly))
-
         allocate (soil1_init(ihru)%sw(nly), source = 0.)
         allocate (soil1_init(ihru)%cbn(nly), source = 0.)
         allocate (soil1_init(ihru)%sed(nly))
@@ -443,5 +442,13 @@
       end do
 
       return
+    end subroutine soils_init
       
-      end subroutine soils_init
+      
+      
+      
+      
+      
+      
+      
+      
