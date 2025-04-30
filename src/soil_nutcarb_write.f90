@@ -77,11 +77,11 @@
         soil_prof_microb = soil_org_z
         soil_prof_water = soil_org_z
         do ly = 1, soil(j)%nly
-          if (ly /= 1) then
+          ! if (ly /= 1) then
             soil_prof_seq_hs = soil_prof_seq_hs + soil1(j)%hs(ly)
             soil_prof_seq_hp = soil_prof_seq_hp + soil1(j)%hp(ly)
             soil_prof_seq_microb = soil_prof_seq_microb + soil1(j)%microb(ly)
-          end if
+          ! end if
           soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
           soil_prof_str = soil_prof_str + soil1(j)%str(ly)
           soil_prof_hact = soil_prof_hact + soil1(j)%hact(ly)
@@ -133,11 +133,7 @@
         !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
-            if (ly == 1 ) then
-              soil1(j)%seq(ly)%c = 0.0
-            else
-              soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
-            endif
+            soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
           end do
         end if
         write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
