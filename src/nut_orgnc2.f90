@@ -154,7 +154,6 @@
 
       soil1(j)%microb(1)%c = soil1(j)%microb(1)%c - YBC 
       soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c + soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
-      soil1(j)%seq(1)%c = 0.0
       hsc_d(j)%surq_c = QBC * (surfq(j) / (surfq(j) + soil(j)%ly(1)%flat + 1.e-6))
        
       soil(j)%ly(1)%latc = QBC*(soil(j)%ly(1)%flat/(surfq(j)+soil(j)%ly(1)%flat+1.e-6))
