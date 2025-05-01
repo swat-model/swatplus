@@ -352,7 +352,7 @@
                 ! Changed by fg to always have some bio mixing
                 if (soil(j)%phys(k)%d <= bmix_depth) then            
                   ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
-                  org_con%till_eff = 1.0 + bmix_eff
+                  org_con%till_eff = 1.0 + soil(j)%ly(k)%tillagef
                 else
 
                   if (k == 1) then
@@ -362,7 +362,7 @@
                   end if
 
                   if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (bmix_eff * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    org_con%till_eff = 1.0 + (soil(j)%ly(k)%tillagef * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
                   else
                     org_con%till_eff = 1.0
                   end if
