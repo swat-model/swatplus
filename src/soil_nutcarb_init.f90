@@ -157,11 +157,11 @@
           frac_hum_passive = 0.44
  
           !initialize passive humus pool
-          if (ly == 1) then
-            soil1(ihru)%hp(ly) = soil_org_z
-            soil1(ihru)%hs(ly) = soil_org_z
-            soil1(ihru)%microb(ly) = soil_org_z
-          else
+          ! if (ly == 1) then
+            ! soil1(ihru)%hp(ly) = soil_org_z
+            ! soil1(ihru)%hs(ly) = soil_org_z
+            ! soil1(ihru)%microb(ly) = soil_org_z
+          ! else
 
             soil1(ihru)%hp(ly)%m = frac_hum_passive * soil1(ihru)%tot(ly)%m
             soil1(ihru)%hp(ly)%c = frac_hum_passive * soil1(ihru)%tot(ly)%c
@@ -179,14 +179,10 @@
             soil1(ihru)%microb(ly)%c = frac_hum_microb * soil1(ihru)%tot(ly)%c
             soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.                !assume 8:1 C:N ratio
             soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.               !assume 80:1 C:P ratio
-          endif
+          ! endif
 
           soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
-          if (ly == 1) then
-            soil1(ihru)%seq(ly)%c = 0.0
-          else
-            soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
-          endif
+          soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
 
         end if
       end do   !! ens soil layer loop 
