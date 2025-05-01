@@ -32,6 +32,7 @@
       use soil_module
       use constituent_mass_module
       use plant_module
+	    use tillage_data_module
       use time_module, only : time
       
       implicit none
@@ -60,6 +61,8 @@
       real :: mix_sw
       real :: mix_rock
       real :: mix_bd
+      logical :: bio_mix_event
+      logical :: mixit
 
       npmx = cs_db%num_pests
 
@@ -98,11 +101,17 @@
       allocate (frac_dep(soil(jj)%nly),source = 0.)    
 
       if (bmix > 1.e-6) then
+        bio_mix_event = .true.
         !! biological mixing
         emix = bmix !bmix MJW (rev 412)
         kk = soil(jj)%nly
-        dtil = Min(soil(jj)%phys(kk)%d, 50.) ! it was 300.  MJW (rev 412)
+        if (bsn_cc%cswat == 2) then                                       
+          dtil = Min(soil(jj)%phys(kk)%d, bmix_depth) ! bmix_depth as read from tillage.till
+        else
+          dtil = Min(soil(jj)%phys(kk)%d, 50.) ! it was 300.  MJW (rev 412)
+        endif
       else 
+        bio_mix_event = .false.
         !! tillage operation
         emix = tilldb(idtill)%effmix
         dtil = tilldb(idtill)%deptil
@@ -110,11 +119,19 @@
 
       !!by zhang DSSAT tillage
       !!=======================
-      if (bsn_cc%cswat == 2) then
-          tillage_days(jj) = 0
-          tillage_depth(jj) = dtil
-          tillage_switch(jj) = 1
-      end if
+      if (tillage_switch(jj) .eq. 1 .and. tillage_days(jj) .le. 30) then
+        if (bsn_cc%cswat == 2) then
+          if (bio_mix_event) then
+            dtil = 0.
+          endif
+        endif
+      endif
+      if (bio_mix_event == .false.) then
+        tillage_days(jj) = 0
+        tillage_depth(jj) = dtil
+        tillage_switch(jj) = 1
+      endif
+
       !!by zhang DSSAT tillage
       !!=======================
 
@@ -123,58 +140,70 @@
         !! incorporate pathogens
       end if
 
-      do l = 1, soil(jj)%nly
-        sol_mass(l) = (soil(jj)%phys(l)%thick / 1000.) * 10000. *                    &
-            soil(jj)%phys(1)%bd * 1000. * (1.- soil(jj)%phys(l)%rock/ 100.)
-      end do
-
       if (dtil > 0.) then
+        do l = 1, soil(jj)%nly
+          sol_mass(l) = (soil(jj)%phys(l)%thick / 1000.) * 10000. *                    &
+              soil(jj)%phys(1)%bd * 1000. * (1.- soil(jj)%phys(l)%rock/ 100.)
+        end do
+
         ! added by Armen 09/10/2010 next line only
         if (dtil < 10.0) dtil = 11.0
         do l = 1, soil(jj)%nly
-          if (soil(jj)%phys(l)%d <= dtil) then
-            !! msm = mass of soil mixed for the layer
-            !! msn = mass of soil not mixed for the layer       
-            sol_msm(l) = emix * sol_mass(l) 
-            sol_msn(l) = sol_mass(l) - sol_msm(l)
-            frac_dep(l) = soil(jj)%phys(l)%thick / dtil
-          else if (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
-            sol_msm(l) = emix * sol_mass(l) * (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
-            sol_msn(l) =  sol_mass(l) - sol_msm(l)
-            frac_dep(l) = (dtil - soil(jj)%phys(l-1)%d) / dtil
-          else
-            sol_msm(l) = 0.
-            sol_msn(l) = sol_mass(l)
-            frac_dep(l) = 0.
-          end if
+          mixit = .true.
+          if (bsn_cc%cswat == 2 .and. bio_mix_event == .true. .and. soil(jj)%phys(l)%tmp <= 0.) then
+            mixit = .false.
+          endif
+          if (mixit) then
+            if (soil(jj)%phys(l)%d <= dtil) then
+              !! msm = mass of soil mixed for the layer
+              !! msn = mass of soil not mixed for the layer       
+              sol_msm(l) = emix * sol_mass(l) 
+              sol_msn(l) = sol_mass(l) - sol_msm(l)
+              frac_dep(l) = soil(jj)%phys(l)%thick / dtil
+            else if (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
+              sol_msm(l) = emix * sol_mass(l) * (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
+              sol_msn(l) =  sol_mass(l) - sol_msm(l)
+              frac_dep(l) = (dtil - soil(jj)%phys(l-1)%d) / dtil
+            else
+              sol_msm(l) = 0.
+              sol_msn(l) = sol_mass(l)
+              frac_dep(l) = 0.
+            end if
 
-          !! calculate the mass each mixed element
-          frac_mixed = sol_msm(l) / sol_mass(l)
-          
-          mix_sw = mix_sw + frac_mixed * soil(jj)%phys(l)%st
-          mix_bd = mix_bd + frac_mixed * soil(jj)%phys(l)%bd
-          mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock
-          mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100.
-          mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt * sol_mass(l) / 100.
-          mix_clay = mix_clay + frac_mixed * soil(jj)%phys(l)%clay * sol_mass(l) / 100.
-          
-          mix_mn = mix_mn + frac_mixed * soil1(jj)%mn(l)
-          mix_mp = mix_mp + frac_mixed * soil1(jj)%mp(l)
-          mix_org%tot = mix_org%tot + frac_mixed * soil1(jj)%tot(l)
-          mix_org%rsd = mix_org%rsd + frac_mixed * soil1(jj)%rsd(l)
-          mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
-          mix_org%hsta = mix_org%hsta + frac_mixed * soil1(jj)%hsta(l)
-          mix_org%hs = mix_org%hs + frac_mixed * soil1(jj)%hs(l)
-          mix_org%hp = mix_org%hp + frac_mixed * soil1(jj)%hp(l)
-          mix_org%microb = mix_org%microb + frac_mixed * soil1(jj)%microb(l)
-          mix_org%str = mix_org%str + frac_mixed * soil1(jj)%str(l)
-          mix_org%lig = mix_org%lig + frac_mixed * soil1(jj)%lig(l)
-          mix_org%meta = mix_org%meta + frac_mixed * soil1(jj)%meta(l)
-          mix_org%man = mix_org%man + frac_mixed * soil1(jj)%man(l)
-          mix_org%water = mix_org%water + frac_mixed * soil1(jj)%water(l)
+            !! calculate the mass each mixed element
+            frac_mixed = sol_msm(l) / sol_mass(l)
+            
+            mix_sw = mix_sw + frac_mixed * soil(jj)%phys(l)%st
+            mix_bd = mix_bd + frac_mixed * soil(jj)%phys(l)%bd
+            mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock
+            mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100.
+            mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt * sol_mass(l) / 100.
+            mix_clay = mix_clay + frac_mixed * soil(jj)%phys(l)%clay * sol_mass(l) / 100.
+            
+            mix_mn = mix_mn + frac_mixed * soil1(jj)%mn(l)
+            mix_mp = mix_mp + frac_mixed * soil1(jj)%mp(l)
+            mix_org%tot = mix_org%tot + frac_mixed * soil1(jj)%tot(l)
+            mix_org%rsd = mix_org%rsd + frac_mixed * soil1(jj)%rsd(l)
+            mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
+            mix_org%hsta = mix_org%hsta + frac_mixed * soil1(jj)%hsta(l)
+            mix_org%hs = mix_org%hs + frac_mixed * soil1(jj)%hs(l)
+            mix_org%hp = mix_org%hp + frac_mixed * soil1(jj)%hp(l)
+            mix_org%microb = mix_org%microb + frac_mixed * soil1(jj)%microb(l)
+            mix_org%str = mix_org%str + frac_mixed * soil1(jj)%str(l)
+            mix_org%lig = mix_org%lig + frac_mixed * soil1(jj)%lig(l)
+            mix_org%meta = mix_org%meta + frac_mixed * soil1(jj)%meta(l)
+            mix_org%man = mix_org%man + frac_mixed * soil1(jj)%man(l)
+            mix_org%water = mix_org%water + frac_mixed * soil1(jj)%water(l)
+          endif
         end do
-     
-          do l = 1, soil(jj)%nly
+
+        do l = 1, soil(jj)%nly
+          mixit = .true.
+          if (bsn_cc%cswat == 2 .and. bio_mix_event == .true. .and. soil(jj)%phys(l)%tmp <= 0.) then
+            mixit = .false.
+          endif
+
+          if (mixit) then
             ! reconstitute each soil layer 
             frac_non_mixed = sol_msn(l) / sol_mass(l)
             frac_mixed = 1. - frac_non_mixed
@@ -209,15 +238,16 @@
             !do k = 1, npmx
             !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
             !end do
-          end do
+          endif
+        end do
 
         deallocate (sol_mass)    
         deallocate (sol_msm)    
         deallocate (sol_msn)    
         deallocate (frac_dep)    
     
-        if (bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
-            call mgt_tillfactor(jj,bmix,emix,dtil)
+        if (bsn_cc%cswat == 0 .or. bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
+          call mgt_tillfactor(jj,bio_mix_event,emix,dtil)
         end if
 
       end if
