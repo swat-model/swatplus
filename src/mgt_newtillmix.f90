@@ -246,7 +246,7 @@
         deallocate (sol_msn)    
         deallocate (frac_dep)    
     
-        if (bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 0 .or. bsn_cc%cswat == 1 .or. bsn_cc%cswat == 2) then
           call mgt_tillfactor(jj,bio_mix_event,emix,dtil)
         end if
 
