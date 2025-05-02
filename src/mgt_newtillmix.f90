@@ -44,7 +44,6 @@
       integer :: k = 0                 !none           |counter
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
-      integer :: ipl = 0
       integer :: prev_depth = 0
       real :: emix = 0.                !none           |mixing efficiency
       real :: dtil = 0.                !mm             |depth of mixing
@@ -54,8 +53,6 @@
       real, dimension(:), allocatable :: sol_msm     !              |sol_mass mixed
       real, dimension(:), allocatable :: sol_msn     !              |sol_mass not mixed 
       real, dimension(:), allocatable :: frac_dep    !              |fraction of soil layer in tillage depth
-      real :: frac1 = 0.
-      real :: frac2 = 0.
       real :: mix_clay
       real :: mix_silt
       real :: mix_sand
@@ -64,7 +61,6 @@
       real :: mix_bd
       logical :: bio_mix_event
       logical :: tillage_event
-      logical :: mixit
 
       npmx = cs_db%num_pests
 
