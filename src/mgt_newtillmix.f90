@@ -126,7 +126,7 @@
           endif
         endif
       endif
-      if (bio_mix_event == .false.) then
+      if (.not. bio_mix_event) then
         tillage_days(jj) = 0
         tillage_depth(jj) = dtil
         tillage_switch(jj) = 1
@@ -150,7 +150,7 @@
         if (dtil < 10.0) dtil = 11.0
         do l = 1, soil(jj)%nly
           mixit = .true.
-          if (bsn_cc%cswat == 2 .and. bio_mix_event == .true. .and. soil(jj)%phys(l)%tmp <= 0.) then
+          if (bsn_cc%cswat == 2 .and. bio_mix_event .and. soil(jj)%phys(l)%tmp <= 0.) then
             mixit = .false.
           endif
           if (mixit) then
@@ -199,7 +199,7 @@
 
         do l = 1, soil(jj)%nly
           mixit = .true.
-          if (bsn_cc%cswat == 2 .and. bio_mix_event == .true. .and. soil(jj)%phys(l)%tmp <= 0.) then
+          if (bsn_cc%cswat == 2 .and. bio_mix_event .and. soil(jj)%phys(l)%tmp <= 0.) then
             mixit = .false.
           endif
 
