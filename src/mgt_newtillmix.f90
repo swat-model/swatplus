@@ -168,6 +168,7 @@
           end do
 
         ! added by Armen 09/10/2010 next line only
+
           if (dtil < 10.0) dtil = 11.0
           do l = 1, soil(jj)%nly
             if (soil(jj)%phys(l)%d <= dtil) then
