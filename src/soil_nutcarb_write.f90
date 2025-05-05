@@ -273,13 +273,13 @@
               write (4582,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                             tot_lyr_n, soil1(j)%rsd(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
                             soil1(j)%microb(ly)%n, soil1(j)%lig(ly)%n, soil1(j)%water(ly)%n, soil1(j)%man(ly)%n, &
-                            tot_lyr_n, soil1(j)%rsd(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
+                            tot_lyr_p, soil1(j)%rsd(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
                             soil1(j)%microb(ly)%p, soil1(j)%lig(ly)%p, soil1(j)%water(ly)%p, soil1(j)%man(ly)%p
               if (pco%csvout == "y") then
                 write (4583,'(*(G0.7,:,","))'), freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                               tot_lyr_n, soil1(j)%rsd(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
                               soil1(j)%microb(ly)%n, soil1(j)%lig(ly)%n, soil1(j)%water(ly)%n, soil1(j)%man(ly)%n,  &
-                              tot_lyr_n, soil1(j)%rsd(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
+                              tot_lyr_p, soil1(j)%rsd(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
                               soil1(j)%microb(ly)%p, soil1(j)%lig(ly)%p, soil1(j)%water(ly)%p, soil1(j)%man(ly)%p
               endif
             enddo
