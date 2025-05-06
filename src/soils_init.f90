@@ -178,7 +178,7 @@
           
           allocate (sol(isol)%ly(mlyr))
           allocate (sol(isol)%phys(mlyr))
-          sol(isol)%phys(mlyr)%d = tot_soil_depth
+          ! sol(isol)%phys(mlyr)%d = tot_soil_depth
           rewind (107)  
           read (107,*,iostat=eof) titldum
           read (107,*,iostat=eof) header
@@ -200,7 +200,7 @@
               first_layer_flag = .false.
               backspace 107
             else 
-              sol(isol)%phys(i)%d = ccd
+              sol(isol)%phys(i)%d = Min(tot_soil_depth, ccd)
             endif
 
             sum = 0.0
