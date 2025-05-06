@@ -32,6 +32,8 @@
       integer :: profile_depth
       character (len=6) :: freq_label
       logical :: layer_output
+      logical :: print_soil_lyr_depths = .true.
+      CHARACTER(LEN=15) :: str
 
       layer_output = .false.
 
@@ -120,6 +122,12 @@
         end if
           
         !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
+        ! print header with soil layer depths
+        if (print_soil_lyr_depths) then
+        write (4548,*)                                     &
+            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+        endif 
+
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
             soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
@@ -128,8 +136,12 @@
         write (4548,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         if (pco%csvout == "y") then
+          if (print_soil_lyr_depths) then
+            write (4549,*)                                     &
+                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+          endif 
           write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
+                                                  (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
 
         !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
@@ -138,12 +150,22 @@
             soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
           end do
         end if
+        if (print_soil_lyr_depths) then
+        write (4558,*)                                     &
+            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+        endif 
         write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
         if (pco%csvout == "y") then
+
+          if (print_soil_lyr_depths) then
+            write (4559,*)                                     &
+                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+          endif 
           write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
+        print_soil_lyr_depths = .false.
         
         !write the cswat == 2 related files. 
         if (bsn_cc%cswat == 2) then
