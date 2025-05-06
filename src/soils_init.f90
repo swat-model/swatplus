@@ -34,6 +34,7 @@
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
       character (len=16) :: units = ""  !        |name
+      logical :: first_layer_flag !              |True if first non 10 mm layer.
       type (soil_database), dimension(:), allocatable :: sol_mm_db
       
       !!Section 1
@@ -158,13 +159,19 @@
             read (107,*,iostat=eof) ccd
             if (eof < 0) exit
             if (ccd <= tot_soil_depth) then
-              mlyr = mlyr + 1
+              if (ccd > 10) then
+                  mlyr = mlyr + 1
+              else
+                cycle
+              endif
             else if (ccd > tot_soil_depth) then
               ccd = tot_soil_depth
               mlyr = mlyr + 1
               exit
             endif  
           end do 
+
+          mlyr = mlyr + 1 ! This is to account for the adding a 10 mm layer below.
 
           tot_soil_depth = Min(tot_soil_depth, ccd)
           sol(isol)%s%nly = mlyr    !Adjust number of layers
@@ -177,17 +184,24 @@
           read (107,*,iostat=eof) header
           read (107,*,iostat=eof) units
 
+          first_layer_flag = .true.
           pcd = 1
           do i = 1, mlyr
-            read (107,*,iostat=eof) ccd
+            do
+              read (107,*,iostat=eof) ccd
+              if (ccd > 10) then
+                exit
+              endif
+            enddo
 
-            ! if (ccd > tot_soil_depth) then
-            !   sol(isol)%phys(i)%d = tot_soil_depth
-            ! else 
-            !   sol(isol)%phys(i)%d = ccd
-            ! endif
-
-            sol(isol)%phys(i)%d = ccd
+            if (first_layer_flag) then
+              sol(isol)%phys(i)%d = 10
+              ccd = 10
+              first_layer_flag = .false.
+              backspace 107
+            else 
+              sol(isol)%phys(i)%d = ccd
+            endif
 
             sum = 0.0
             n = 0
