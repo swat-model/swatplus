@@ -179,7 +179,7 @@
       else
         !! reservoir has not been constructed yet
         ob(icmd)%hd(1) = ob(icmd)%hin
-        obcs(icmd)%hd(1) = obcs(icmd)%hin(1)
+        if (cs_db%num_tot > 0) obcs(icmd)%hd(1) = obcs(icmd)%hin(1)
       end if
 
       
