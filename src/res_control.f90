@@ -28,6 +28,7 @@
 
       ht1 = ob(icmd)%hin    !! set incoming flow
       ht2 = resz            !! zero outgoing flow
+      hcs2 = hin_csz        !! zero outgoing constituents
 
       if (time%yrc > res_hyd(jres)%iyres .or. (time%mo >= res_hyd(jres)%mores   &
                                    .and. time%yrc == res_hyd(jres)%iyres)) then
@@ -178,14 +179,9 @@
       else
         !! reservoir has not been constructed yet
         ob(icmd)%hd(1) = ob(icmd)%hin
+        if (cs_db%num_tot > 0) obcs(icmd)%hd(1) = obcs(icmd)%hin(1)
       end if
 
-  !!!! for Luis only    
-      !if (jres == 1) then
-      !  write (7777,*) time%day, time%yrc, jres, res(jres)%flo, ht1%flo, ht2%flo,   &
-      !                                           res(jres)%sed, ht1%sed, ht2%sed
-      !end if
-  !!!! for Luis only
       
       return
       end subroutine res_control
