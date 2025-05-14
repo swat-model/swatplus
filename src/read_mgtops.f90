@@ -112,6 +112,22 @@
             endif
           end do
 
+        case ("manu")
+          !xwalk fert name with fertilizer data base
+          do idb = 1, db_mx%fertparm
+            if (sched(isched)%mgt_ops(iop)%op_char == fertdb(idb)%fertnm) then
+              sched(isched)%mgt_ops(iop)%op1 = idb
+              exit
+            endif
+          end do
+          !xwalk application type with chemical application data base
+          do idb = 1, db_mx%chemapp_db
+            if (sched(isched)%mgt_ops(iop)%op_plant == chemapp_db(idb)%name) then
+              sched(isched)%mgt_ops(iop)%op4 = idb
+              exit
+            endif
+          end do
+
         case ("pest")
           !xwalk fert name with fertilizer data base
           do idb = 1, db_mx%pestparm

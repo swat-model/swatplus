@@ -103,7 +103,7 @@
                         frt_kg * fertdb(ifrt)%forgn
         
           !orgc_f is the fraction of organic carbon in fertilizer - assume 0.42
-          orgc_f = 0.42 * frt_kg
+          orgc_f = 0.42
           !X1 is fertlizer applied to layer (kg/ha)
           !xx is fraction of fertilizer applied to layer
           X1 = xx * frt_kg 
