@@ -335,6 +335,7 @@
               
               rec_d(irec) = ob(icmd)%hd(1)
 
+              if(cs_db%num_tot > 0) obcs(icmd)%hd(1) = hin_csz
               if(cs_db%num_salts > 0) call recall_salt(irec) !rtb salt
               if(cs_db%num_cs > 0) call recall_cs(irec) !rtb cs
               
