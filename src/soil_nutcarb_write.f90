@@ -335,7 +335,7 @@
           if (pco%csvout == "y") then
             do ly = 1, soil(j)%nly
               write (4585,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                          soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c, &
+                          soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
                           soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
                           soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
             enddo
