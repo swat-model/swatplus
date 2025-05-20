@@ -641,6 +641,21 @@
           endif
         endif
 
+        !! write end of simulation soil properties headers to hru_endsim_soil_prop
+        if (bsn_cc%cswat == 2) then
+          if (pco%cb_hru%a == "y") then
+            open (4584,file = "hru_endsim_soil_prop.txt", recl = 1500)
+            write (4584,*)  bsn%name, prog
+            write (4584,*)  endsim_soil_prop_hdr
+            write (9000,*) "HRU                       hru_endsim_soil_prop.txt"
+            if (pco%csvout == "y") then
+              open (4585,file="hru_endsim_soil_prop.csv", recl = 1500)
+              write (4585,*)  bsn%name, prog
+              write (4585,'(*(G0.3,:,","))') endsim_soil_prop_hdr
+              write (9000,*) "HRU                       hru_endsim_soil_prop.csv"
+            end if
+          endif
+        endif
         
  !! NEW BASIN CARBON ALL OUTPUT FILE
         
