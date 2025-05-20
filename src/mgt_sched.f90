@@ -343,8 +343,21 @@
                   fertorgn, fertsolp, fertorgp
               endif
             endif
-            
 
+          case ("manu")   !! fertilizer operation
+            ipl = 1
+            ifrt = mgt%op1                          !fertilizer type from fert data base
+            frt_kg = mgt%op3                        !amount applied in kg/ha
+            ifertop = mgt%op4                       !surface application fraction from chem app data base
+              call pl_manure (ifrt, frt_kg, ifertop)
+              call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
+              call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
+              if (pco%mgtout == "y") then
+                write (2612,*) j, time%yrc, time%mo, time%day_mo, mgt%op_char, " MANURE ", &
+                  phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m,           &
+                  soil1(j)%rsd(1)%m, sol_sumno3(j), sol_sumsolp(j), frt_kg, fertno3, fertnh3,         &
+                  fertorgn, fertsolp, fertorgp
+              endif    
  
           case ("pest")   !! pesticide operation
             !xwalk application in the mgt file with the pest community
@@ -488,7 +501,6 @@
                   sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied, irrig(j)%runoff
             end if
 
-            
           case ("pudl")    !! Puddling operation Jaehak 2022
             !! xwalk with puddling ops names
             do ipdl = 1, db_mx%pudl_db
