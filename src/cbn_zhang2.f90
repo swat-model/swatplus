@@ -6,6 +6,7 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
+	      use tillage_data_module
         use time_module, only : time
         
         implicit none
@@ -103,7 +104,6 @@
        real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
-       real :: bmix_depth     !mm                   !depth of biological
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
@@ -249,7 +249,7 @@
        cpn5 = 0.
        wmin = 0.
        dmdn = 0.
-       bmix_depth = 50    
+       !bmix_depth = 50    
        soil_lyr_thickness = 0
 
        j = ihru
@@ -309,7 +309,7 @@
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
-          sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
+          !sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
           if (wc - soil(j)%phys(k)%wpmm < 0.) then
@@ -351,7 +351,8 @@
               else
                 ! Changed by fg to always have some bio mixing
                 if (soil(j)%phys(k)%d <= bmix_depth) then            
-                  org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                  ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                  org_con%till_eff = 1.0 + soil(j)%ly(k)%tillagef
                 else
 
                   if (k == 1) then
@@ -361,7 +362,7 @@
                   end if
 
                   if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (hru(j)%hyd%biomix * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    org_con%till_eff = 1.0 + (soil(j)%ly(k)%tillagef * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
                   else
                     org_con%till_eff = 1.0
                   end if
@@ -721,7 +722,7 @@
 	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
-              org_flux%co2fstr = .3 * lslcta
+              !org_flux%co2fstr = .3 * lslcta
               org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
@@ -980,11 +981,7 @@
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 
               ! soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
               soil1(j)%tot(k)%c = soil1(j)%str(k)%c + soil1(j)%meta(k)%c + soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
-              if (k == 1 ) then
-                soil1(j)%seq(k)%c = 0.0
-              else
-                soil1(j)%seq(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
-              endif
+              soil1(j)%seq(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
 
         end if  !soil temp and soil water > 0.
 
@@ -992,3 +989,4 @@
 
     return
     end subroutine cbn_zhang2
+    
