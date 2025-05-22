@@ -81,12 +81,6 @@
         sum_solp = sum_solp + soil1(j)%mp(nly)%lab
       end do
 
-      ! This temporary code to correct the values when they go negative.  
-      ! It is not root cause fix to the issue of soil no3 going negative. 
-      ! This code can/should be removed when the root cause is fixed.
-      if (sum_no3 < 0.0) sum_no3 = 0.0
-      if (sum_solp < 0.0) sum_solp = 0.0
-
       return
       
       end subroutine pl_nut_demand
