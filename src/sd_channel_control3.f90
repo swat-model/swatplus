@@ -120,7 +120,8 @@
       ht1 = ob(icmd)%hin
       
       !! zero outgoing flow and sediment - ht2
-      ht2 = hz 
+      ht2 = hz
+      obcs(icmd)%hd(:) = hin_csz
       
       !! zero daily in/out morphology and sediment budget output
       ch_sed_bud(ich) = ch_sed_budz
