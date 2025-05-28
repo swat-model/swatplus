@@ -65,7 +65,6 @@
       logical :: carbon_coef_file = .false. !           !set to true if carbon_coef.cbn file exits.
       
       type organic_allocations
-          real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
           ! real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
           real :: abp = 0.        !               |Fraction of decomposed microbial biomass allocated to passive humus
           real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
@@ -75,6 +74,7 @@
           real :: a1co2 =  0.     !               |Fraction of decomposed metabolic and passive pools to CO2
           real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
           real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
+          real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
       end type organic_allocations
       type (organic_allocations), dimension(2) :: org_allo 
       type (organic_allocations) :: org_alloz
