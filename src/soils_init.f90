@@ -178,7 +178,6 @@
           
           allocate (sol(isol)%ly(mlyr))
           allocate (sol(isol)%phys(mlyr))
-          sol(isol)%phys(mlyr)%d = tot_soil_depth
           rewind (107)  
           read (107,*,iostat=eof) titldum
           read (107,*,iostat=eof) header
@@ -200,26 +199,23 @@
               first_layer_flag = .false.
               backspace 107
             else 
+              if (ccd > tot_soil_depth) ccd = tot_soil_depth
               sol(isol)%phys(i)%d = ccd
             endif
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%bd 
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%bd 
+              n = n + 1
             end do
             sol(isol)%phys(i)%bd = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%awc
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%awc
+              n = n + 1
             end do
             sol(isol)%phys(i)%awc = sum/n
 
@@ -227,110 +223,88 @@
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%k
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%k
+              n = n + 1
             end do
             sol(isol)%phys(i)%k = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%cbn
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%cbn
+              n = n + 1
             end do
             sol(isol)%phys(i)%cbn = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%clay
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%clay
+              n = n + 1
             end do
             sol(isol)%phys(i)%clay = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%silt
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%silt
+              n = n + 1
             end do
             sol(isol)%phys(i)%silt = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%sand
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%sand
+              n = n + 1
             end do
             sol(isol)%phys(i)%sand = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%rock
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%rock
+              n = n + 1
             end do
             sol(isol)%phys(i)%rock = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%alb
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%alb
+              n = n + 1
             end do
             sol(isol)%ly(i)%alb = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%usle_k
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%usle_k
+              n = n + 1
             end do
             sol(isol)%ly(i)%usle_k = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%ec
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%ec
+              n = n + 1
             end do
             sol(isol)%ly(i)%ec = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%cal
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%cal
+              n = n + 1
             end do
             sol(isol)%ly(i)%cal = sum/n
 
             sum = 0.0
             n = 0
             do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%ph
-                n = n + 1
-              end if
+              sum = sum + sol_mm_db(1)%ly(j)%ph
+              n = n + 1
             end do
             sol(isol)%ly(i)%ph = sum/n
 
