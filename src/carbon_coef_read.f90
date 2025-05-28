@@ -19,10 +19,10 @@ subroutine carbon_coef_read
           read (107,*,iostat=eof) header
           read (107,*,iostat=eof) carbdb(1)%hp_rate, carbdb(1)%hs_rate, carbdb(1)%microb_rate, &
                 carbdb(1)%meta_rate, carbdb(1)%str_rate, carbdb(1)%microb_top_rate, carbdb(1)%hs_hp, &
-                org_allo(1)%a1co2, org_allo(1)%asco2, org_allo(1)%apco2 
+                org_allo(1)%a1co2, org_allo(1)%asco2, org_allo(1)%apco2, org_allo(1)%abco2  
           read (107,*,iostat=eof) carbdb(2)%hp_rate, carbdb(2)%hs_rate, carbdb(2)%microb_rate, &
                 carbdb(2)%meta_rate, carbdb(2)%str_rate, carbdb(2)%microb_top_rate, carbdb(2)%hs_hp, &
-                org_allo(2)%a1co2, org_allo(2)%asco2, org_allo(2)%apco2 
+                org_allo(2)%a1co2, org_allo(2)%asco2, org_allo(2)%apco2, org_allo(2)%abco2 
           close (107)
           carbon_coef_file = .true.
         endif
