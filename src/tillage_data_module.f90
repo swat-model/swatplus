@@ -3,6 +3,7 @@
       implicit none
            
       integer :: bmix_idtill = 0    !!              |none          |the tilldb index of the biomix tillage. 
+      integer :: till_eff_days = 30  !!              |none          |length of days a tillage operation will have an effect
       real    :: bmix_eff = 0.      !!              |none          |biological mixing efficieny
       real    :: bmix_depth = 0.    !!              |none          |biological mixing depth
 
