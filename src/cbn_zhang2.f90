@@ -326,7 +326,7 @@
 
             case(1)
               !calculate tillage factor using dssat
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 if (k == 1) then
                   org_con%till_eff = 1.6
                 else
@@ -344,7 +344,7 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 ! Kemanian method    ----having modi
                 org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
