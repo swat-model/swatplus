@@ -297,7 +297,6 @@
         end if
         
         ! Initialize org_allo variables to zero except for a1co2, asco2, and apco2 because they are input values and don't change.
-        org_allo(cf_lyr)%abco2 = 0.
         org_allo(cf_lyr)%abp = 0.
         org_allo(cf_lyr)%asp = 0.
         soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)   
@@ -327,7 +326,7 @@
 
             case(1)
               !calculate tillage factor using dssat
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 if (k == 1) then
                   org_con%till_eff = 1.6
                 else
@@ -345,7 +344,7 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 ! Kemanian method    ----having modi
                 org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
@@ -414,7 +413,6 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_allo(cf_lyr)%abco2 = .55
             !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
             if (.not. ufc) carbdb(cf_lyr)%hs_rate = 5.4799998e-04
             !carbdb%hp_rate=prmt(48) !century passive humus transformation rate d^-1(0.0000082_0.000015) original value = 0.000012 
@@ -426,6 +424,7 @@
             if (.not. ufc) org_allo(cf_lyr)%a1co2 = .55
             if (.not. ufc) org_allo(cf_lyr)%asco2 = .55
             if (.not. ufc) org_allo(cf_lyr)%apco2 = .55
+            if (.not. ufc) org_allo(cf_lyr)%abco2 = .55
             org_ratio%nchp = .1
             xbm = 1.
             ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate

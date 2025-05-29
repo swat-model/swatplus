@@ -122,8 +122,7 @@
           
         
       if (soil1(j)%microb(1)%c > .01) then
-          PRMT_21 = 0.  !KOC FOR CARBON LOSS IN WATER AND SEDIMENT(500._1500.) KD = KOC * C
-          PRMT_21 = 1000.
+          PRMT_21 = cb_wtr_coef%prmt_21 !KOC FOR CARBON LOSS IN WATER AND SEDIMENT(500._1500.) KD = KOC * C
           soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c + soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
           DK = .0001 * PRMT_21 * soil1(j)%tot(1)%c
           !X1=PO(LD1)-S15(LD1)
@@ -137,8 +136,7 @@
           X3=0.
           IF(V>1.E-10)THEN
               X3 = soil1(j)%microb(1)%c * (1.-EXP(-V/XX)) !loss of biomass C
-              PRMT_44 = 0. !RATIO OF SOLUBLE C CONCENTRATION IN RUNOFF TO PERCOLATE(0.1_1.)
-              PRMT_44 = .5
+              PRMT_44 = cb_wtr_coef%prmt_44  !RATIO OF SOLUBLE C CONCENTRATION IN RUNOFF TO PERCOLATE(0.1_1.)
               CO = X3/(soil(j)%ly(1)%prk + PRMT_44 * (surfq(j) + soil(j)%ly(1)%flat)) !CS is the horizontal concentration
               CS = PRMT_44*CO                                     !CO is the vertical concentration
               VBC = CO*(soil(j)%ly(1)%prk) 
