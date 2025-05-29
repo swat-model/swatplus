@@ -1,3 +1,0 @@
-File: carbon_water_coef.cbn   Carbon water coefficients used in subroutine nut_orgnc2.f90 which is called if cswat ==2
-prmt_21 prmt_44
-1000.   0.5
