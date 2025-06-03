@@ -126,12 +126,8 @@
         pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - leaf_drop
         pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - leaf_drop
         
+        !! Add leaf drop to surface soil residue
         soil1(j)%rsd(1) = soil1(j)%rsd(1) + leaf_drop
-        if (bsn_cc%cswat == 2) then
-          soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * leaf_drop
-          soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * leaf_drop
-          soil1(j)%lig(1) = soil1(j)%lig(1) + 0.12 * leaf_drop
-        end if
         
         !! update total community masses
         pl_mass(j)%tot_com = pl_mass(j)%tot_com - leaf_drop
