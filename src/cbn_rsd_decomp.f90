@@ -82,11 +82,6 @@
 
       !! compute humus mineralization of organic soil pools 
       do k = 1, soil(j)%nly
-        ! if (k == 1) then
-        !   kk = 2
-        ! else
-        !   kk = k
-        ! end if
 
         !! mineralization can occur only if temp above 0 deg
         if (soil(j)%phys(k)%tmp > 0.) then
@@ -104,37 +99,6 @@
           if (xx < 0.) xx = 0.
           if (xx > 1.e6) xx = 1.e6
           csf = Sqrt(xx)
-
-          !! compute flow from active to stable pools- maintain fraction of active (nactfr)
-          ! rwn = .1e-4 * ((soil1(j)%hact(k)%n * (1. / nactfr - 1.) - soil1(j)%hsta(k)%n))
-          ! if (rwn > 0.) then
-          !   rwn = Min(rwn, soil1(j)%hact(k)%n)
-          ! else
-          !   rwn = -(Min(Abs(rwn), soil1(j)%hsta(k)%n))
-          ! endif
-          ! soil1(j)%hsta(k)%n = Max(1.e-6, soil1(j)%hsta(k)%n + rwn)
-          ! soil1(j)%hact(k)%n = Max(1.e-6, soil1(j)%hact(k)%n - rwn)
-          ! hnb_d(j)%act_sta_n = hnb_d(j)%act_sta_n + rwn
-
-          ! !! compute humus mineralization on active organic n
-          ! hmn = bsn_prm%cmn * csf * soil1(j)%hact(k)%n
-          ! hmn = Min(hmn, soil1(j)%hact(k)%n)
-          ! !! compute humus mineralization on active organic p
-          ! xx = soil1(j)%hsta(k)%n + soil1(j)%hact(k)%n
-          ! if (xx > 1.e-6) then
-          !   hmp = 1.4 * hmn * soil1(j)%hsta(k)%p / xx
-          ! else
-          !   hmp = 0.
-          ! end if
-          ! hmp = Min(hmp, soil1(j)%hsta(k)%p)
-          ! !! move mineralized nutrients between pools
-          ! soil1(j)%hact(k)%n = Max(1.e-6, soil1(j)%hact(k)%n - hmn)
-          ! soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + hmn
-          ! soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p - hmp
-          ! soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + hmp
-          
-          ! hnb_d(j)%act_nit_n = hnb_d(j)%act_nit_n + hmn
-          ! hnb_d(j)%org_lab_p = hnb_d(j)%org_lab_p + hmp
 
           !! compute residue decomp and mineralization of 
           !! fresh organic n and p (upper two layers only)
@@ -170,31 +134,10 @@
           decr = Min(decr, 1.)
           decomp = decr * soil1(j)%rsd(k)
           soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
-          ! soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * decomp%n
-          ! soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * decomp%n
-          ! soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * decomp%p
-          ! soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * decomp%p
 
           soil1(j)%meta(k) = soil1(j)%meta(k) + 0.85 * decomp
           soil1(j)%str(k) = soil1(j)%str(k) + 0.15 * decomp
           soil1(j)%lig(k) = soil1(j)%lig(k) + 0.12 * decomp
-
-          ! hnb_d(j)%rsd_nitorg_n = hnb_d(j)%rsd_nitorg_n + .8 * decomp%n
-          ! hnb_d(j)%rsd_laborg_p = hnb_d(j)%rsd_laborg_p + .8 * decomp%p
-            
-          ! !!  compute denitrification
-          ! wdn = 0.   
-          ! if (i_sep(j) /= k .or. sep(isep)%opt  /= 1) then
-          !   if (sut >= bsn_prm%sdnco) then
-          !     wdn = soil1(j)%mn(k)%no3 * (1.-Exp(-bsn_prm%cdn * cdg * soil1(j)%cbn(k) / 100.))
-          !   else
-          !     wdn = 0.
-          !   endif
-          !   soil1(j)%mn(k)%no3 = max(0.0001,soil1(j)%mn(k)%no3 - wdn)
-          ! end if
-          ! hnb_d(j)%denit = hnb_d(j)%denit + wdn
-
-          !call nut_denit(k,j,cdg,wdn,0.05)
 
         end if
       end do        ! k = 1, soil(j)%nly
