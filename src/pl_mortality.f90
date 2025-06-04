@@ -25,39 +25,31 @@
       if (bm_dieoff > 1.e-6 .and. pl_mass(j)%ab_gr(ipl)%m > bm_dieoff) then
           
         !! partition all plant components by above ground ratio
-        rto = bm_dieoff / pl_mass(j)%ab_gr(ipl)%m
+        rto = bm_dieoff / pl_mass(j)%ab_gr(ipl)%m  ! Fraction of dead biomass
         rto = amin1 (1., rto)
-        pl_mass(j)%tot(ipl) = rto * pl_mass(j)%tot(ipl)
-        pl_mass(j)%ab_gr(ipl) = rto * pl_mass(j)%ab_gr(ipl)
-        pl_mass(j)%leaf(ipl) = rto * pl_mass(j)%leaf(ipl)
-        pl_mass(j)%stem(ipl) = rto * pl_mass(j)%stem(ipl)
-        pl_mass(j)%seed(ipl) = rto * pl_mass(j)%seed(ipl)
-        pl_mass(j)%root(ipl) = rto * pl_mass(j)%root(ipl)
-        
+      
         !! add dead material to residue
-        rto1 = 1. - rto
+        rto1 = 1. - rto  ! Fraction remaining of living biomass
         rto1 = max (0., rto1)
         
-      !! add above ground biomass to surface residue pools
-        soil1(j)%rsd(1) = soil1(j)%rsd(1) + rto1 * pl_mass(j)%ab_gr(ipl)
-        if (bsn_cc%cswat == 2) then
-          soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * rto1 * pl_mass(j)%ab_gr(ipl)
-          soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * rto1 * pl_mass(j)%ab_gr(ipl)
-          soil1(j)%lig(1) = soil1(j)%lig(1) + 0.12 * rto1 * pl_mass(j)%ab_gr(ipl)
-        end if
+        !! add above ground biomass that has died off to surface residue pools
+        soil1(j)%rsd(1) = soil1(j)%rsd(1) + rto * pl_mass(j)%ab_gr(ipl)
         
         !! add dead roots to soil residue pools
-        if (bsn_cc%cswat == 2) then
+        ! if (bsn_cc%cswat == 2) then
           do ly = 1, soil(j)%nly
-            soil1(j)%rsd(ly) = soil1(j)%rsd(ly) + soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-            if (bsn_cc%cswat == 2) then
-              soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * rto1 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-              soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * rto1 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-              soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * rto1 * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
-            end if
+            soil1(j)%rsd(ly) = soil1(j)%rsd(ly) + rto * soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
           end do
-        end if
-      
+        ! end if
+
+        ! Reduce remaining living biomass  
+        pl_mass(j)%tot(ipl) = rto1 * pl_mass(j)%tot(ipl)
+        pl_mass(j)%ab_gr(ipl) = rto1 * pl_mass(j)%ab_gr(ipl)
+        pl_mass(j)%leaf(ipl) = rto1 * pl_mass(j)%leaf(ipl)
+        pl_mass(j)%stem(ipl) = rto1 * pl_mass(j)%stem(ipl)
+        pl_mass(j)%seed(ipl) = rto1 * pl_mass(j)%seed(ipl)
+        pl_mass(j)%root(ipl) = rto1 * pl_mass(j)%root(ipl)
+        
       end if
 
       return
