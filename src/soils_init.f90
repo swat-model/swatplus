@@ -161,6 +161,10 @@
             if (ccd <= tot_soil_depth) then
               if (ccd > 10) then
                   mlyr = mlyr + 1
+                  if (ccd >= tot_soil_depth) then
+                    ccd = tot_soil_depth
+                    exit
+                  endif
               else
                 cycle
               endif
