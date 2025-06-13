@@ -65,7 +65,6 @@
       logical :: carbon_coef_file = .false. !           !set to true if carbon_coef.cbn file exits.
       
       type organic_allocations
-          real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
           ! real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching
           real :: abp = 0.        !               |Fraction of decomposed microbial biomass allocated to passive humus
           real :: asp = 0.        !               |Fraction of decomposed slow humus allocated to passive
@@ -75,6 +74,7 @@
           real :: a1co2 =  0.     !               |Fraction of decomposed metabolic and passive pools to CO2
           real :: asco2 = 0.      !               |Fraction of decomposed slow humus allocated to CO2
           real :: apco2 = 0.      !               |Fraction of decomposed  passive humus allocated to CO2
+          real :: abco2 = 0.      !               |Fraction of decomposed microbial biomass allocated to CO2
       end type organic_allocations
       type (organic_allocations), dimension(2) :: org_allo 
       type (organic_allocations) :: org_alloz
@@ -113,6 +113,12 @@
       type (organic_ratio) :: org_ratio                   
       type (organic_ratio) :: org_ratio_zero                   
       
+      type carbon_water_coef
+          real :: prmt_21 = 1000.   !   |KOC FOR CARBON LOSS IN WATER AND SEDIMENT(500._1500.) KD = KOC * C          
+          real :: prmt_44 = 0.5     !   |RATIO OF SOLUBLE C CONCENTRATION IN RUNOFF TO PERCOLATE(0.1_1.)
+      end type carbon_water_coef
+      type (carbon_water_coef) :: cb_wtr_coef                  
+
       type organic_transformations
           real :: bmctp = 0.       !kg ha-1 day-1        |potential transformation of C in microbial biomass
           real :: bmntp = 0.       !kg ha-1 day-1        |potential transformation of N in microbial biomass

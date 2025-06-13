@@ -1,0 +1,25 @@
+File: carb_coefs.cbn   Carbon coefficients used if cswat == 2
+
+# carbdb coefficients
+#               1st_lyr     other_lyrs
+hp_rate         1.2e-05     1.2e-05     
+hs_rate         2.92e-04    1.81e-04    
+microb_rate     0.0164      0.02        
+meta_rate       0.0405      0.0507      
+str_rate        0.0107      0.0134  
+microb_top_rate 0.0164      0.02            
+hs_hp           0.05        0.05 
+
+# org_allo coefficients
+#               1st_lyr     other_lyrs
+a1co2           0.600       0.55
+asco2           0.55        0.55
+apco2           0.55        0.55 
+abco2           0.55        0.0
+
+# carbon water partitioning coefficients
+prmt_21         1000.   
+prmt_44         0.5
+
+# Length of days that a tillage event will be effective
+till_eff_days   30

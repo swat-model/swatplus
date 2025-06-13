@@ -30,8 +30,10 @@
       integer :: j = 0          !none        |counter
       integer :: iob = 0
       integer :: profile_depth
-      character (len=6) :: freq_label
+      character (len=7) :: freq_label
       logical :: layer_output
+      logical :: print_soil_lyr_depths = .true.
+      CHARACTER(LEN=15) :: str
 
       layer_output = .false.
 
@@ -51,8 +53,8 @@
         case ("yl")
           freq_label = "year"
           layer_output = .true.
-        case ("a")
-          freq_label = "av_ann"
+        case (" a")
+          freq_label = "endsim"
       end select
            
       !! basin output - zero daily basin outputs before summing
@@ -120,6 +122,12 @@
         end if
           
         !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
+        ! print header with soil layer depths
+        if (print_soil_lyr_depths) then
+        write (4548,*)                                     &
+            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+        endif 
+
         if (bsn_cc%cswat /= 2) then
           do ly = 1, soil(j)%nly
             soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
@@ -128,8 +136,12 @@
         write (4548,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         if (pco%csvout == "y") then
+          if (print_soil_lyr_depths) then
+            write (4549,*)                                     &
+                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+          endif 
           write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
+                                                  (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
 
         !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
@@ -138,12 +150,22 @@
             soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
           end do
         end if
+        if (print_soil_lyr_depths) then
+        write (4558,*)                                     &
+            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+        endif 
         write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
         if (pco%csvout == "y") then
+
+          if (print_soil_lyr_depths) then
+            write (4559,*)                                     &
+                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+          endif 
           write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
         end if
+        print_soil_lyr_depths = .false.
         
         !write the cswat == 2 related files. 
         if (bsn_cc%cswat == 2) then
@@ -301,6 +323,26 @@
                           tot_prof_p, soil_prof_microb%p, soil_prof_lig%p, soil_prof_water%p, soil_prof_man%p
           endif 
         end if
+
+        ! write soil properties at the end of the simulation = "hru_endsim_soil_prop.txt/csv"
+        if (freq_label == "endsim") then
+          do ly = 1, soil(j)%nly
+            write (4584,*) freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                          soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
+                          soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
+                          soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
+          enddo
+          if (pco%csvout == "y") then
+            do ly = 1, soil(j)%nly
+              write (4585,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                          soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
+                          soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
+                          soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
+            enddo
+          endif 
+        endif
+
+
 
       end do    !! hru loop
       
