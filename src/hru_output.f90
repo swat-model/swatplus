@@ -274,20 +274,9 @@
              hpw_a(j) = hpwz
          end if
          
-         !! write yearly crop yields
-         if (time%end_yr == 1) then
-           if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
-             do ipl = 1, pcom(j)%npl
-               if (pcom(j)%plcur(ipl)%harv_num_yr > 0) then 
-                 pl_mass(j)%yield_yr(ipl) = pl_mass(j)%yield_yr(ipl) / float(pcom(j)%plcur(ipl)%harv_num_yr)
-               endif
-               write (4010,103) time%day, time%mo, time%day_mo, time%yrc, j, pcom(j)%pl(ipl), pl_mass(j)%yield_yr(ipl)
-               if (pco%csvout == "y") then
-                 write (4011,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, pcom(j)%pl(ipl), pl_mass(j)%yield_yr(ipl) 
-               end if
-             end do 
-           end if
-         end if
+         if (time%end_sim == 1 .and. pco%cb_hru%a == "y") then
+          call soil_nutcarb_write(" a")    
+         endif
 
          !! write average annual crop yields
          if (time%end_sim == 1) then
