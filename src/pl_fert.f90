@@ -133,7 +133,7 @@
           soil1(j)%lig(l) = soil1(j)%lig(l) + 0.175 * pool_fr * org_frt
           
           !! total residue pool is metabolic + structural
-          soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
+          ! soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
           
         end if
         
