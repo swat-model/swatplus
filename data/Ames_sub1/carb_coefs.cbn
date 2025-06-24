@@ -25,5 +25,5 @@ prmt_44         0.5
 till_eff_days   30
 
 # Manure carbon coefficients
-#             rtof   man_to_c               
-manure_coef   0.5    0.42
+rtof        0.5
+man_to_c    0.42           
