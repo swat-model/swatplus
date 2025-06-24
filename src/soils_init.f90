@@ -29,7 +29,19 @@
       integer :: n = 0            !              |count to use to compute an average
       real :: dep_new1 = 0.       !mm            |depth of top of septic layer
       real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
-      real :: sum = 0.            !              |temporary sum to do and average with 
+      real :: sum_bd = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_awc = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_cbn = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_k = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_clay = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_silt = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_sand = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_rock = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_alb = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_usle_k = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_ec = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_cal = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_ph = 0.            !              |temporary sum to do weighted average with 
       logical :: i_exist          !none          |check to determine if a file exists
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
@@ -209,110 +221,50 @@
               sol(isol)%phys(i)%d = csld
             endif
 
-            sum = 0.0
             n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%bd 
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%bd = sum/n
+            sum_bd = 0.     
+            sum_awc = 0.    
+            sum_cbn = 0.    
+            sum_k = 0.      
+            sum_clay = 0.    
+            sum_silt = 0.    
+            sum_sand = 0.    
+            sum_rock = 0.    
+            sum_alb = 0.    
+            sum_usle_k = 0.  
+            sum_ec = 0.     
+            sum_cal = 0.    
+            sum_ph = 0.     
 
-            sum = 0.0
-            n = 0
             do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%awc
+              sum_bd = sum_bd + sol_mm_db(1)%ly(j)%bd 
+              sum_awc = sum_awc + sol_mm_db(1)%ly(j)%awc
+              sum_k = sum_k + sol_mm_db(1)%ly(j)%k
+              sum_cbn = sum_cbn + sol_mm_db(1)%ly(j)%cbn
+              sum_clay = sum_clay + sol_mm_db(1)%ly(j)%clay
+              sum_silt = sum_silt + sol_mm_db(1)%ly(j)%silt
+              sum_sand = sum_sand + sol_mm_db(1)%ly(j)%sand
+              sum_rock = sum_rock + sol_mm_db(1)%ly(j)%rock
+              sum_alb = sum_alb + sol_mm_db(1)%ly(j)%alb
+              sum_usle_k = sum_usle_k + sol_mm_db(1)%ly(j)%usle_k
+              sum_ec = sum_ec + sol_mm_db(1)%ly(j)%ec
+              sum_cal = sum_cal + sol_mm_db(1)%ly(j)%cal
+              sum_ph = sum_ph + sol_mm_db(1)%ly(j)%ph
               n = n + 1
             end do
-            sol(isol)%phys(i)%awc = sum/n
-
-            
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%k
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%k = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%cbn
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%cbn = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%clay
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%clay = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%silt
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%silt = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%sand
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%sand = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%rock
-              n = n + 1
-            end do
-            sol(isol)%phys(i)%rock = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%alb
-              n = n + 1
-            end do
-            sol(isol)%ly(i)%alb = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%usle_k
-              n = n + 1
-            end do
-            sol(isol)%ly(i)%usle_k = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%ec
-              n = n + 1
-            end do
-            sol(isol)%ly(i)%ec = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%cal
-              n = n + 1
-            end do
-            sol(isol)%ly(i)%cal = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, csld
-              sum = sum + sol_mm_db(1)%ly(j)%ph
-              n = n + 1
-            end do
-            sol(isol)%ly(i)%ph = sum/n
+            sol(isol)%phys(i)%bd = sum_bd/n
+            sol(isol)%phys(i)%awc = sum_awc/n
+            sol(isol)%phys(i)%k = sum_k/n
+            sol(isol)%phys(i)%cbn = sum_cbn/n
+            sol(isol)%phys(i)%clay = sum_clay/n
+            sol(isol)%phys(i)%silt = sum_silt/n
+            sol(isol)%phys(i)%sand = sum_sand/n
+            sol(isol)%phys(i)%rock = sum_rock/n
+            sol(isol)%ly(i)%alb = sum_alb/n
+            sol(isol)%ly(i)%usle_k = sum_usle_k/n
+            sol(isol)%ly(i)%ec = sum_ec/n
+            sol(isol)%ly(i)%cal = sum_cal/n
+            sol(isol)%ly(i)%ph = sum_ph/n
 
             pcd = csld + 1
           end do
