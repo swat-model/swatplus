@@ -27,3 +27,7 @@ till_eff_days   30
 # Manure carbon coefficients
 rtof        0.5
 man_to_c    0.42           
+
+# Soil Carbon Initialization Values
+soil_cbn_test_depth     12
+soil_cbn_test_value     5.0 

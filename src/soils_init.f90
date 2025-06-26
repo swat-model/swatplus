@@ -27,6 +27,7 @@
       integer :: tot_soil_depth = 0 !mm          |total soil profile depth in millimeters 
       integer :: eof = 0          !              |end of file
       integer :: n = 0            !              |count to use to compute an average
+      real :: cbn_adjust_frac = 1. !             |adjustment factor based on carbon soil test 
       real :: dep_new1 = 0.       !mm            |depth of top of septic layer
       real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
       real :: sum_bd = 0.            !              |temporary sum to do weighted average with 
@@ -273,6 +274,20 @@
           close (107)
         end if
       end do
+
+      ! Adjust the soil carbon values based soil test values only for isol = 1
+      if (sol_cbn_test%d > 0.000001 .and. sol_cbn_test%cbn >= 0.000001 ) then
+        ! find the soil layer greater than or equal to the soil test depth
+        do i = 1, mlyr
+          if (sol(1)%phys(i)%d >= sol_cbn_test%d) then
+            cbn_adjust_frac = sol_cbn_test%cbn / sol(1)%phys(i)%cbn
+            exit
+          endif
+        end do
+        do i = 1, mlyr
+          sol(1)%phys(i)%cbn = cbn_adjust_frac * sol(1)%phys(i)%cbn 
+        enddo
+      endif
            
       do isol = 1, msoils
         call soil_phys_init(isol)          !! initialize soil physical parameters
