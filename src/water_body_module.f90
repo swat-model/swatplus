@@ -6,7 +6,6 @@
 
       type water_body
         real :: area_ha = 0.            !ha         |water body surface area
-        real :: precip = 0.             !ha-m       |precip on the water body
         real :: precip = 0.             !m3         |precip on the water body
         real :: evap = 0.               !m3         |evaporation from the water surface
         real :: seep = 0.               !m3         |seepage from bottom of water body
