@@ -309,7 +309,10 @@
             irrig(j)%applied = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * (1. - irrop_db(irrop)%surq)
             irrig(j)%runoff = irrop_db(irrop)%amt_mm * irrop_db(irrop)%surq
             pcom(j)%days_irr = 1            ! reset days since last irrigation
-
+      
+            ! add irrigation to yearly sum for dtbl conditioning jga6-25
+            hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
+            
             !print irrigation applied
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, irrop_db(irrop)%name, "IRRIGATE ", phubase(j),   &
@@ -494,6 +497,9 @@
             irrig(j)%runoff = irrop_db(irrop)%amt_mm * irrop_db(irrop)%surq
             pcom(j)%days_irr = 1            ! reset days since last irrigation
 
+            ! add irrigation to yearly sum for dtbl conditioning jga6-25
+            hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
+            
             !print irrigation applied
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo,  mgt%op_char, "IRRIGATE ", phubase(j),   &
