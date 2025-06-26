@@ -118,8 +118,6 @@
       hhsurfq = 0.
 !-----------------------------------------------------        
 
-        !! added for Srini in output.mgt nitrogen and phosphorus nutrients per JGA by gsm 9/8/2011
-                  
           sol_sumno3 = 0.
           sol_sumsolp = 0.
           do j = 1, sp_ob%hru

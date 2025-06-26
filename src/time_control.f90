@@ -146,7 +146,7 @@
         !! set initial soil water for hru, basin and lsu - for checking water balance
         if (pco%sw_init == "n") then
           if (time%yrs > pco%nyskip) then
-            call basin_sw_init     !***jga 
+            call basin_sw_init
             call aqu_pest_output_init
             pco%sw_init = "y"  !! won't reset again
           end if

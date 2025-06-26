@@ -489,7 +489,6 @@
           end if
 
       !! compute flood plain deposition
-      !sd_ch(ich)%bankfull_flo = 1.0      !***jga
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       if (peakrate > bf_flow) then
         !dep = sd_ch(ich)%chseq * ht1%sed           !((peakrate - bf_flow) / peakrate) * ht1%sed
@@ -502,7 +501,7 @@
     sedout = ht1%sed - dep + hc_sed + ebank_t     !  + ebtm_t
       
       !! set values for outflow hydrograph
-      !! calculate flow velocity and travel time  ht2 = ht1   !***jga 
+      !! calculate flow velocity and travel time  ht2 = ht1 
       ht2%flo = ht1%flo
       idb = ob(icmd)%props
       jrch = ich
@@ -523,16 +522,15 @@
           ben_area = sd_ch(ich)%chw * sd_ch(ich)%chl
           !! convert storage hyd - mass to concentration
           if (ch_stor(ich)%flo > 0.001) then
-            call hyd_convert_mass_to_conc (ch_stor(ich))    !***jga 
+            call hyd_convert_mass_to_conc (ch_stor(ich))  
           else
             ch_stor(ich) = hz
           end if
           
-          call ch_watqual4  !***jga 
+          call ch_watqual4  
           !! convert outflow and storage hyds - concentration to mass
-          call hyd_convert_conc_to_mass (ht2)      !***jga 
-          !call hyd_convert_conc_to_mass (ht3)      !***jga 
-          call hyd_convert_conc_to_mass (ch_stor(ich))     !***jga
+          call hyd_convert_conc_to_mass (ht2)
+          call hyd_convert_conc_to_mass (ch_stor(ich))   
           !ht2 = ht1
          
           !! compute nutrient losses using 2-stage ditch model

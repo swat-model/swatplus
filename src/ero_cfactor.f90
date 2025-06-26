@@ -50,7 +50,7 @@
       real :: cover = 0.    !kg/ha         |soil cover - sum of residue and biomass
       j = ihru
 
-      bsn_cc%cfac = 1   !***jga
+      bsn_cc%cfac = 1
       !! HRU sediment calculations
       if (bsn_cc%cfac == 0) then
         !! old method using minimum c factor (average of each plant in community)
@@ -95,7 +95,6 @@
         grnd_covfact = amin1 (1., grnd_covfact)
         grnd_covfact = max (0., grnd_covfact)
         
-        !! ***jga
         !grnd_covfact = 1.34 + 0.225 * log(pldb(idp)%usle_c)
         !grnd_covfact = amin1 (1., grnd_covfact)
         !grnd_covfact = max (0., grnd_covfact)
