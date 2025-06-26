@@ -391,7 +391,6 @@
       integer, dimension (:), allocatable :: i_sep
       integer, dimension (:), allocatable :: sep_tsincefail
       
- !!   change per JGA 9/8/2011 gsm for output.mgt 
       real, dimension (:), allocatable :: sol_sumno3
       real, dimension (:), allocatable :: sol_sumsolp
 

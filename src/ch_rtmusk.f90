@@ -87,9 +87,6 @@
       ch_wat_d(jrch)%evap = 0.
       ch_wat_d(jrch)%seep = 0.
       
-      !***jga
-      !ob(icmd)%tsin = (/0., 800., 2000., 4200., 5200., 4400., 3200., 2500., 2000., 1500., 1000., 700., 400.,     &
-      !                 0., 0., 0., 0., 0., 1000000., 1000000., 1000000., 1000000., 1000000., 1000000./)
       sum_inflo = sum (ob(icmd)%tsin)
         
       !! total wetland volume at start of day
@@ -168,7 +165,7 @@
 
             !! Variable Storage Coefficient method - sc=2*dt/(2*ttime+dt) - ttime=(in2+out1)/2
             scoef = dthr / (ch_rcurv(jrch)%in2%ttime + ch_rcurv(jrch)%out1%ttime + dthr)
-            scoef = bsn_prm%scoef * 2. * dthr / (2.* ch_rcurv(jrch)%out1%ttime + dthr)   !***jga
+            scoef = bsn_prm%scoef * 2. * dthr / (2.* ch_rcurv(jrch)%out1%ttime + dthr)
             scoef = Min (scoef, 1.)
             outflo = scoef * tot_stor(jrch)%flo
           end if
