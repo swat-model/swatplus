@@ -103,7 +103,7 @@ subroutine carbon_coef_read
                     error stop
               end select
             enddo
-            if (sol_cbn_test%d > 0.000001 .and. sol_cbn_test%cbn >= 0.000001 ) print*, "call soil_cbn_adjust"
+            ! if (sol_cbn_test%d > 0.000001 .and. sol_cbn_test%cbn >= 0.000001 ) print*, "call soil_cbn_adjust"
             carbon_coef_file = .true.
             close (107)
             exit
