@@ -83,6 +83,12 @@ subroutine carbon_coef_read
                 case("till_eff_days")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, till_eff_days
+                case("rtof")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, man_coef%rtof
+                case("man_to_c")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, man_coef%man_to_c
                 case default
                     write(*, fmt="(a,a,a)", advance="yes") "Error: The variable ", var_name, "in the input file carb_coefs.cbn is not a recognized variable."
                     write(*, fmt="(a)") "       and cannot be processed."
