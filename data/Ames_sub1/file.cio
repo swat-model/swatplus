@@ -22,7 +22,7 @@ lum               landuse.lum       management.sch    cntable.lum       cons_pra
 chg               null     null              null              null              null              null              null              null              null              
 init              plant.ini         soil_plant.ini    null     null              null              null              null              null              null              null              null              null              
 soils             soils.sol         nutrients.sol              null              
-decision_table    null              null              null              null              
+decision_table    lum.dtl           null              null              null
 regions           ls_unit.ele       null              null              null              null              null              null              null              aqu_catunit.ele   null              null              null              null              null              null              null              null              
 pcp_path          null              
 tmp_path          null              

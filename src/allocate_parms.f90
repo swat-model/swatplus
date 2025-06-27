@@ -59,7 +59,6 @@
       
       allocate (hhqday(mhru,time%step), source = 0.)
       
- !!  added per JGA for Srini by gsm 9/8/2011
  !! arrays for management output (output.mgt)  
       allocate (sol_sumno3(mhru), source = 0.)
       allocate (sol_sumsolp(mhru), source = 0.)

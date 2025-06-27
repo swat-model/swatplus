@@ -263,7 +263,14 @@
           ivar_cur = time%day_start 
           ivar_tbl = int(d_tbl%cond(ic)%lim_const)
           call cond_integer (ic, ivar_cur, ivar_tbl)
-                                           
+                                          
+        !yearly irrigation - mm jga6-25
+        case ("irr_year")
+          ob_num = d_tbl%cond(ic)%ob_num
+          if (ob_num == 0) ob_num = ob_cur
+          
+          call cond_real (ic, hru(ob_num)%irr_yr, d_tbl%cond(ic)%lim_const, idtbl)
+                                     
         !slope
         case ("slope")
           ob_num = d_tbl%cond(ic)%ob_num

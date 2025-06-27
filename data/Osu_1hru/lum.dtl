@@ -546,3 +546,10 @@ act_typ                    obj   obj_num              name            option    
 irrigate                   aqu         1         sprinkler     sprinkler_ilm      25.00000      20.00000              null  y   n   
 irrigate                   res         1         sprinkler     sprinkler_ilm      25.00000      20.00000              null  n   y   
 
+name                     conds      alts      acts       !limit yearly irrigation to 500 mm using sprinkler and stop after 70% heat units
+irr_year_limit              2         1         1
+var                        obj   obj_num           lim_var            lim_op     lim_const      alt1
+irr_year                   hru         0              null                 -   500.00000         <
+phu_plant                  hru         0           phu_mat                 -     0.70000         <
+act_typ                    obj   obj_num              name            option       const        const2                fp  outcome
+irr_demand                 hru         0         sprinkler     sprinkler_ilm  25.00000      20.00000              unlim  y

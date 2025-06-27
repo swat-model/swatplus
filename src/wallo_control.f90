@@ -122,6 +122,9 @@
                 call cs_irrig(iwallo,jj,j)
               endif
               
+              ! add irrigation to yearly sum for dtbl conditioning jga6-25
+              hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
+            
               if (pco%mgtout == "y") then
                 write (2612, *) j, time%yrc, time%mo, time%day_mo, wallo(iwallo)%name, "IRRIGATE", phubase(j),  &
                   pcom(j)%plcur(1)%phuacc, soil(j)%sw, pl_mass(j)%tot(1)%m, soil1(j)%rsd(1)%m,           &

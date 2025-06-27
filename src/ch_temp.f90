@@ -44,13 +44,13 @@
       k_e = 4.48 + 0.05 * ht1%temp + (ke_beta + 0.47) * f_wind
 
       !! Solar radiation (Short wave radiation). The shade-factor is included in the Solar radiation calculation
-      ssff = 0.5                                        !! Add code for shade factor ***jga***
+      ssff = 0.5                                        !! Add code for shade factor 
       h_sr = 0.97 * w%solrad * (1. - ssff)              !! Get the Solar radiation (Short wave radiation)
     
       !! Atmospheric radiation (Long wave radiation)
       e_s = 6.1275 * Exp(17.62 * w%tave / (237.3 + w%tave))                 !! Get the Saturated vapor pressure 
       e_a = e_s * w%rhum                                                    !! Get the vapor pressure
-      cloud = 1.                                                            !! need to set ***jga***
+      cloud = 1.                                                            !! need to set 
       e_atm = 0.74 + 0.0065 * e_a * (1. + 0.17 * cloud**2)                  !! Get the emissivity of the atmosphere 
       h_atm = 0.96 * e_atm * 5.67e-8 * (w%tave + 273.15)**4                 !! Atmospheric radiation (Long wave radiation)
 
