@@ -1,6 +1,7 @@
 management.sch file AMES
                           NAME NUMB_OPS NUMB_AUTO OP_TYP        MON        DAY HU_SCH   OP_DATA1    OP_DATA2  OP_DATA3
-mgt_01                              304         0
+mgt_01                              304         1
+irr_year_limit
                                                     till          4          1    0.0    chisplow        null     0.000
                                                     plnt          4         28    0.0        corn        null         0
                                                     fert          6          1    0.0        null      elem_n   181.400
