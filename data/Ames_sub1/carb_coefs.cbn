@@ -23,3 +23,7 @@ prmt_44         0.5
 
 # Length of days that a tillage event will be effective
 till_eff_days   30
+
+# Manure carbon coefficients
+rtof        0.5
+man_to_c    0.42           
