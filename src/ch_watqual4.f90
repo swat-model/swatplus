@@ -112,8 +112,7 @@
       if (wtmp <= 0.) wtmp = 0.1
       ht2%temp = wtmp
 
-      !! benthic sources/losses in mg   
-      !ch_nut(jnut)%rs2 = 5.   !!***jga
+      !! benthic sources/losses in mg  
       rs2_s =  Theta(ch_nut(jnut)%rs2,thrs2,wtmp) * ben_area    !ch_hyd(jhyd)%l *ch_hyd(jhyd)%w * rt_delt
       rs3_s =  Theta(ch_nut(jnut)%rs3,thrs3,wtmp) * ben_area    !ch_hyd(jhyd)%l *ch_hyd(jhyd)%w * rt_delt
       rk4_s =  Theta(ch_nut(jnut)%rk4,thrk4,wtmp) * ben_area    !ch_hyd(jhyd)%l *ch_hyd(jhyd)%w * rt_delt
@@ -183,7 +182,6 @@
                 (ch_nut(jnut)%k_l + algi *  (Exp(-lambda * rchdep))))
         fll = 0.92 * (wgn_pms(iwgn)%daylth / 24.) * fl_1
 
-        !ch_nut(jnut)%mumax = 3.   !***jga
         !! calculate local algal growth rate
         if (algcon < 5000.) then
           select case (ch_nut(jnut)%igropt)
@@ -301,7 +299,6 @@
         bc4_k = Theta (ch_nut(jnut)%bc4, thbc4,wtmp)
         bc4_m = wq_k2m (tday, rt_delt, -bc4_k, ht3%sedp, ht3%sedp) 
         rs5_k = 0.
-        !ch_nut(jnut)%rs5 = 0.   !  ***jga
         if (rchdep > 0.001) rs5_k = Theta (ch_nut(jnut)%rs5, thrs5, wtmp) / rchdep 
 
         factk = -rs5_k

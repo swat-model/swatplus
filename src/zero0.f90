@@ -47,7 +47,6 @@
       itb = 0
       grz_days = 0
 
-  !! change per JGA irrigation 4/2/2009
       latno3 = 0.
       orgn_con = 0.
       orgp_con = 0.
@@ -65,7 +64,6 @@
       stmaxd = 0.
 !    Drainmod tile equations  01/2006 
 
-!!   added for Srini in output.mgt nitrogen and phosphorus nutrients per JGA by gsm 9/8/2011
       sol_sumsolp = 0.
       soln_con = 0.
       solp_con = 0.
