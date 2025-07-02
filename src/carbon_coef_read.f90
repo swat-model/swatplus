@@ -3,6 +3,7 @@ subroutine carbon_coef_read
     use carbon_module
     use basin_module
     use tillage_data_module 
+    use soil_module
     
     implicit none
 
@@ -10,7 +11,7 @@ subroutine carbon_coef_read
     logical :: i_exist = .false.      !           |true if file exists
     character (len=80) :: titldum = ""!           |title of file
     character (len=80) :: header = "" !           |header of file
-    character (len=16) :: var_name = "" !           
+    character (len=24) :: var_name = "" !           
     
     ! if (bsn_cc%cswat == 2) then
     !     inquire (file='carbon_coef.cbn', exist=i_exist)
@@ -89,6 +90,12 @@ subroutine carbon_coef_read
                 case("man_to_c")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, man_coef%man_to_c
+                case("soil_cbn_test_depth")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, sol_cbn_test%d
+                case("soil_cbn_test_value")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, sol_cbn_test%cbn
                 case default
                     write(*, fmt="(a,a,a)", advance="yes") "Error: The variable ", var_name, "in the input file carb_coefs.cbn is not a recognized variable."
                     write(*, fmt="(a)") "       and cannot be processed."
@@ -96,6 +103,7 @@ subroutine carbon_coef_read
                     error stop
               end select
             enddo
+            ! if (sol_cbn_test%d > 0.000001 .and. sol_cbn_test%cbn >= 0.000001 ) print*, "call soil_cbn_adjust"
             carbon_coef_file = .true.
             close (107)
             exit
