@@ -124,7 +124,6 @@
         fp_dep%no3 = 0.         !trap_eff * ht1%no3
         fp_dep%solp = 0.        !trap_eff * ht1%solp
         
-        !fp_dep = chaz    !***jga
         ht1 = ht1 - fp_dep
         
         !! if flood plain link - fill wetlands to emergency
