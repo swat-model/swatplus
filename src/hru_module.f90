@@ -277,6 +277,7 @@
         real :: water_evap = 0.
         real :: wet_obank_in = 0.               !mm         |inflow from overbank into wetlands
         real :: precip_aa = 0.
+        real :: irr_yr = 0.                     !mm         |irrigation for year - used as dtbl condition jga6-25
         character(len=1) :: wet_fp = "n"
         character(len=40) :: irr_src = "unlim"   !           |irrigation source, Jaehak 2022
         real :: strsa = 0.
@@ -391,7 +392,6 @@
       integer, dimension (:), allocatable :: i_sep
       integer, dimension (:), allocatable :: sep_tsincefail
       
- !!   change per JGA 9/8/2011 gsm for output.mgt 
       real, dimension (:), allocatable :: sol_sumno3
       real, dimension (:), allocatable :: sol_sumsolp
 
