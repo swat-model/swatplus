@@ -2,9 +2,10 @@ lum.dtl: yearly irrigation limit example for Ames dataset
 2
 
 name                     conds      alts      acts       !limit yearly irrigation to 500 mm using irrigate action
-irr_year_irr                3         1         1
+irr_year_irr                4         1         1
 var                        obj   obj_num           lim_var            lim_op  lim_const      alt1
 irr_year                   hru         0              null                 -   500.00000         <
+w_stress                   hru         0              null                 -   0.80000           <
 phu_plant                  hru         0           phu_mat                 -     0.20000         >
 leaf_area                  hru         0           null                    -     0.50000         >
 act_typ                    obj   obj_num              name            option    const        const2                fp  outcome
