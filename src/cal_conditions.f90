@@ -97,7 +97,7 @@
             case ("cal_group")     !for hru    
               if (cal_upd(ichg_par)%cond(ic)%targc /= hru(ielem)%cal_group) then 
                 cond_met = "n"
-                exit
+                !exit
               end if
             end select
           end do    ! ic - conditions
