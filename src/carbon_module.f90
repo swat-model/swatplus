@@ -63,6 +63,14 @@
       type (carbon_inputs), dimension(2) :: carbdb 
       type (carbon_inputs) :: carbz  
       logical :: carbon_coef_file = .false. !           !set to true if carbon_coef.cbn file exits.
+
+      type manure_coef
+          real :: rtof = 0.5            !none          |weighting factor used to partition the 
+                                        !              |organic N & P concentration of septic effluent
+                                        !              |between the fresh organic and the stable organic pools
+          real :: man_to_c = 0.42       !              |conversion of manure solids to carbon
+      end type manure_coef
+      type (manure_coef) :: man_coef
       
       type organic_allocations
           ! real :: abl = 0.        !               |Fraction of microbial biomass loss due to leaching

@@ -70,7 +70,7 @@
       rtos = 1. - 2.54 / smx(h)
       sumul = soil(h)%sumul
       sumfc = soil(h)%sumfc + hru(h)%hyd%cn3_swf * (soil(h)%sumul - soil(h)%sumfc)
-      if (sumfc < 0.) then  !***jga
+      if (sumfc < 0.) then
         sumfc = 10.
       end if
       sumfc = max (.05, sumfc)
