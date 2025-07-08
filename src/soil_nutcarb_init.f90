@@ -51,9 +51,9 @@
 
       do ly = 1, nly
         if (ly == 1) then
-          soil1(ihru)%cbn(ly) = max(0.001, soil(isol)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
+          soil1(ihru)%cbn(ly) = max(0.001, soil(ihru)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
         else
-          soil1(ihru)%cbn(ly) = soil(isol)%phys(ly)%cbn    
+          soil1(ihru)%cbn(ly) = soil(ihru)%phys(ly)%cbn    
         endif
       enddo
 
