@@ -100,7 +100,7 @@
                 end if
                 npaths = cs_db%num_paths
                 if (npaths > 0) then
-          allocate (obcs(i)%hin(1)%path(npaths), source = 0.)
+                  allocate (obcs(i)%hin(1)%path(npaths), source = 0.)
                   allocate (obcs(i)%hin_sur(1)%path(npaths), source = 0.)
                   allocate (obcs(i)%hin_lat(1)%path(npaths), source = 0.)
                   allocate (obcs(i)%hin_til(1)%path(npaths), source = 0.)
