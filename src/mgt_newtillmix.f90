@@ -184,9 +184,9 @@
             soil1(jj)%man(l) = frac_non_mixed * soil1(jj)%man(l) + frac_dep(l) * mix_org%man
             soil1(jj)%water(l) = frac_non_mixed * soil1(jj)%water(l) + frac_dep(l) * mix_org%water
             
-            soil(jj)%phys(l)%clay = frac_non_mixed * soil(jj)%phys(l)%clay + frac_mixed * mix_clay
-            soil(jj)%phys(l)%silt = frac_non_mixed * soil(jj)%phys(l)%silt + frac_mixed * mix_silt
-            soil(jj)%phys(l)%sand = frac_non_mixed * soil(jj)%phys(l)%sand + frac_mixed * mix_sand
+            !soil(jj)%phys(l)%clay = frac_non_mixed * soil(jj)%phys(l)%clay + frac_mixed * mix_clay
+            !soil(jj)%phys(l)%silt = frac_non_mixed * soil(jj)%phys(l)%silt + frac_mixed * mix_silt
+            !soil(jj)%phys(l)%sand = frac_non_mixed * soil(jj)%phys(l)%sand + frac_mixed * mix_sand
 
             !do k = 1, npmx
             !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
