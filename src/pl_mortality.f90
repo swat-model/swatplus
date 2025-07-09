@@ -20,12 +20,12 @@
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
       
-      !keep biomass below maximum - excess to residue (need to include c, n and p adjustments)
-      bm_dieoff = (1. + pldb(idp)%bm_dieoff) * (pl_mass(j)%ab_gr(ipl)%m - (pldb(idp)%bmx_peren * 1000.))  !t/ha -> kg/ha
+      !! keep biomass below maximum - 5% more than excess - excess to residue
+      bm_dieoff = 1.05 * (pl_mass(j)%ab_gr(ipl)%m - (pldb(idp)%bmx_peren * 1000.))  !t/ha -> kg/ha
       if (bm_dieoff > 1.e-6 .and. pl_mass(j)%ab_gr(ipl)%m > bm_dieoff) then
           
         !! partition all plant components by above ground ratio
-        rto = bm_dieoff / pl_mass(j)%ab_gr(ipl)%m
+        rto = 1. - (bm_dieoff / pl_mass(j)%ab_gr(ipl)%m)
         rto = amin1 (1., rto)
         pl_mass(j)%tot(ipl) = rto * pl_mass(j)%tot(ipl)
         pl_mass(j)%ab_gr(ipl) = rto * pl_mass(j)%ab_gr(ipl)
@@ -38,8 +38,9 @@
         rto1 = 1. - rto
         rto1 = max (0., rto1)
         
-      !! add above ground biomass to surface residue pools
+        !! add above ground die off biomass to surface residue pools
         soil1(j)%rsd(1) = soil1(j)%rsd(1) + rto1 * pl_mass(j)%ab_gr(ipl)
+        
         if (bsn_cc%cswat == 2) then
           soil1(j)%meta(1) = soil1(j)%meta(1) + 0.85 * rto1 * pl_mass(j)%ab_gr(ipl)
           soil1(j)%str(1) = soil1(j)%str(1) + 0.15 * rto1 * pl_mass(j)%ab_gr(ipl)
