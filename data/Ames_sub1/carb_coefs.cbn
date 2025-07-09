@@ -29,5 +29,7 @@ rtof        0.5
 man_to_c    0.42           
 
 # Soil Carbon Initialization Values
-soil_cbn_test_depth     12
-soil_cbn_test_value     5.0 
+nmbr_cbn_tests  2
+#         soil_name      depth_mm  cbn_value
+cbn_test  soil_01-h1     12        5.0 
+cbn_test  soil_03-h3     12        0.5 
