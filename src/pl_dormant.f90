@@ -36,18 +36,11 @@
           !! add dead stem mass to residue pool
           rto = pldb(idp)%bm_dieoff
           stem_drop = rto * pl_mass(j)%stem(ipl)
-          !! drop lai to minimum if not already
+          !! lower lai by same ratio
           lai_init = pcom(j)%plg(ipl)%lai
-          pcom(j)%plg(ipl)%lai = pldb(idp)%alai_min
+          pcom(j)%plg(ipl)%lai = Max (pldb(idp)%alai_min, rto * lai_init)
           !! compute leaf biomass drop
-          if (lai_init > 0.001) then
-            lai_drop = (lai_init - pcom(j)%plg(ipl)%lai) / lai_init
-          else
-            lai_drop = 0.
-          end if
-          lai_drop = max (0., lai_drop)
-          lai_drop = amin1 (1., lai_drop)
-          leaf_drop%m = rto * lai_drop * pl_mass(j)%leaf(ipl)%m
+          leaf_drop%m = rto * pl_mass(j)%leaf(ipl)%m
           leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
           leaf_drop%n = max (0., leaf_drop%n)
           leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
@@ -58,6 +51,9 @@
 
           !! add all seed/fruit mass to residue pool
           pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - abgr_drop
+        if (pl_mass(j)%tot_com%m < 0.) then
+          pl_mass(j)%tot_com%m = 0.
+        end if
           pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop
           pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - stem_drop
           pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
