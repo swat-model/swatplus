@@ -1,4 +1,0 @@
-File: carbon_coef.cbn   Carbon coefficients used if cswat == 2
-hp_rate     hs_rate     microb_rate meta_rate   str_rate    microb_top_rate hs_hp   a1co2   asco2   apco2     
-1.2e-05     5.48e-04    0.0164      0.0405      0.0107      0.0164          0.05    0.55    0.55    0.55
-1.2e-05     5.48e-04    0.02        0.0507      0.0132      0.02            0.05    0.55    0.55    0.55

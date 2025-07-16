@@ -6,14 +6,15 @@
 
       type water_body
         real :: area_ha = 0.            !ha         |water body surface area
-        real :: precip = 0.             !ha-m       |precip on the water body
-        real :: evap = 0.               !ha-m       |evaporation from the water surface
-        real :: seep = 0.               !ha-m       |seepage from bottom of water body
-        !real :: temp = 0.               !deg C      |ave temperature over time period
+        real :: precip = 0.             !m3         |precip on the water body
+        real :: evap = 0.               !m3         |evaporation from the water surface
+        real :: seep = 0.               !m3         |seepage from bottom of water body
         !real :: chla = 0.               !ppm        |ave chlorophyll-a concentration during time period
-        !real :: cbod = 0.               !mg O2/L    |ave carbonaceous biochemical oxygen concentration during time period
-        !real :: dox = 0.                !mg O2/L    |ave dissolved oxygen concentration during time period
-        !real :: secci = 0.              !m          !ave seci depth - water clarity indicator during time period
+        !real :: temp = 0.              !deg C      |ave temperature over time period
+        !real :: chla = 0.              !ppm        |ave chlorophyll-a concentration during time period
+        !real :: cbod = 0.              !mg O2/L    |ave carbonaceous biochemical oxygen concentration during time period
+        !real :: dox = 0.               !mg O2/L    |ave dissolved oxygen concentration during time period
+        !real :: secci = 0.             !m          !ave seci depth - water clarity indicator during time period
       end type water_body
       type (water_body) :: wbodz
       

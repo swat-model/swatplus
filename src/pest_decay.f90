@@ -4,15 +4,6 @@
 !!    this subroutine calculates degradation of pesticide in the soil and on 
 !!    the plants
 
-!!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
-!!    name          |units         |definition
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    decay_f(:)    |none          |exponential of the rate constant for
-!!                                 |degradation of the pesticide on foliage
-!!    decay_s(:)    |none          |exponential of the rate constant for
-!!                                 |degradation of the pesticide in soil
-!!    ihru          |none          |HRU number
-
       use pesticide_data_module
       use hru_module, only : ihru
       use constituent_mass_module
@@ -50,7 +41,7 @@
           !! calculate degradation in soil
           do l = 1, soil(j)%nly
             pest_init = cs_soil(j)%ly(l)%pest(k)
-            if (pest_init > 1.e-12) then
+            if (pest_init > 0.) then
               pest_end = pest_init * pestcp(ipest_db)%decay_s
               cs_soil(j)%ly(l)%pest(k) = pest_end
               pst_decay = (pest_init - pest_end)
@@ -72,7 +63,7 @@
           !! adjust foliar pesticide for wash off
           do ipl = 1, pcom(j)%npl
             pest_init = cs_pl(j)%pl_on(ipl)%pest(k)
-            if (pest_init > 1.e-12) then
+            if (pest_init > 0.) then
               pest_end = pest_init * pestcp(ipest_db)%decay_f
               cs_pl(j)%pl_on(ipl)%pest(k) = pest_end
               hpestb_d(j)%pest(k)%decay_f = pest_init - pest_end

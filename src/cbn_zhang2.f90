@@ -6,6 +6,7 @@
         use organic_mineral_mass_module
         use carbon_module
         use output_landscape_module
+	      use tillage_data_module
         use time_module, only : time
         
         implicit none
@@ -102,8 +103,7 @@
        real :: min_n_ppm = 0  !                     |
        real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
-       integer :: cf_lyr         !                     |hich layer of coefs to use in carbon_coef.cbn
-       real :: bmix_depth     !mm                   !depth of biological
+       integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
        real :: sol_min_n = 0.    !                     |
@@ -249,7 +249,7 @@
        cpn5 = 0.
        wmin = 0.
        dmdn = 0.
-       bmix_depth = 50    
+       !bmix_depth = 50    
        soil_lyr_thickness = 0
 
        j = ihru
@@ -297,7 +297,6 @@
         end if
         
         ! Initialize org_allo variables to zero except for a1co2, asco2, and apco2 because they are input values and don't change.
-        org_allo(cf_lyr)%abco2 = 0.
         org_allo(cf_lyr)%abp = 0.
         org_allo(cf_lyr)%asp = 0.
         soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)   
@@ -309,7 +308,7 @@
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
-          sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
+          !sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
           if (wc - soil(j)%phys(k)%wpmm < 0.) then
@@ -327,7 +326,7 @@
 
             case(1)
               !calculate tillage factor using dssat
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 if (k == 1) then
                   org_con%till_eff = 1.6
                 else
@@ -345,13 +344,14 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. 30) then
+              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 ! Kemanian method    ----having modi
                 org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
               else
                 ! Changed by fg to always have some bio mixing
                 if (soil(j)%phys(k)%d <= bmix_depth) then            
-                  org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                  ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
+                  org_con%till_eff = 1.0 + soil(j)%ly(k)%tillagef
                 else
 
                   if (k == 1) then
@@ -361,7 +361,7 @@
                   end if
 
                   if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (hru(j)%hyd%biomix * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    org_con%till_eff = 1.0 + (soil(j)%ly(k)%tillagef * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
                   else
                     org_con%till_eff = 1.0
                   end if
@@ -413,7 +413,6 @@
 
           ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
-            org_allo(cf_lyr)%abco2 = .55
             !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
             if (.not. ufc) carbdb(cf_lyr)%hs_rate = 5.4799998e-04
             !carbdb%hp_rate=prmt(48) !century passive humus transformation rate d^-1(0.0000082_0.000015) original value = 0.000012 
@@ -425,6 +424,7 @@
             if (.not. ufc) org_allo(cf_lyr)%a1co2 = .55
             if (.not. ufc) org_allo(cf_lyr)%asco2 = .55
             if (.not. ufc) org_allo(cf_lyr)%apco2 = .55
+            if (.not. ufc) org_allo(cf_lyr)%abco2 = .55
             org_ratio%nchp = .1
             xbm = 1.
             ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
@@ -721,7 +721,7 @@
 	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
-              org_flux%co2fstr = .3 * lslcta
+              !org_flux%co2fstr = .3 * lslcta
               org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
@@ -905,15 +905,10 @@
                 hrc_d(j)%rsd_rootdecay_c = lmcta + lscta
                 ! soil1(j)%rsd(k)%c = soil1(j)%rsd(k)%c - hrc_d(j)%rsd_rootdecay_c
               end if 
-              
-                soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 - (org_flux%immmets1 + org_flux%immstrs1 + org_flux%immstrs2 +    &
-                            org_flux%imms1s2 + org_flux%imms1s3 + org_flux%imms2s1 + org_flux%imms2s3 + org_flux%imms3s1)
-      
-                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + org_flux%mnrmets1 + org_flux%mnrstrs1 + org_flux%mnrstrs2 +     &
-                             org_flux%mnrs1s2 + org_flux%mnrs1s3 + org_flux%mnrs2s1 + org_flux%mnrs2s3 + org_flux%mnrs3s1
-                !hnb_d(j)%immob =
-                !hnb_d(j)%minrl =
-                
+                      
+              if (soil1(j)%mn(k)%no3 < 0.0) soil1(j)%mn(k)%no3 = 0.0
+              if (soil1(j)%mn(k)%nh4 < 0.0) soil1(j)%mn(k)%nh4 = 0.0
+
               soil1(j)%meta(k)%n = max(.001, soil1(j)%meta(k)%n - org_flux%efmets1 & !subtract n flow from met (metabolic litter) to s1 (microbial biomass)
                             - org_flux%mnrmets1)                    !subtract n immobilization during transformaiton from met (metabolic litter) to s1 (microbial biomass)
 
@@ -980,11 +975,7 @@
               !soil1(j)%tot(k)%c = 100. * (soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c) / sol_mass 
               ! soil1(j)%tot(k)%c = soil1(j)%hs(k)%c + soil1(j)%hp(k)%c + soil1(j)%microb(k)%c
               soil1(j)%tot(k)%c = soil1(j)%str(k)%c + soil1(j)%meta(k)%c + soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
-              if (k == 1 ) then
-                soil1(j)%seq(k)%c = 0.0
-              else
-                soil1(j)%seq(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
-              endif
+              soil1(j)%seq(k)%c = soil1(j)%hp(k)%c + soil1(j)%hs(k)%c + soil1(j)%microb(k)%c 
 
         end if  !soil temp and soil water > 0.
 
@@ -992,3 +983,4 @@
 
     return
     end subroutine cbn_zhang2
+    

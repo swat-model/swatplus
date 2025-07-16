@@ -21,7 +21,7 @@
       integer :: j = 0            !none          |counter
       integer :: nly = 0          !              |end of loop
       integer :: ly = 0           !none          |counter
-      integer :: ccd = 0          !mm            |current custom depth in millimeters
+      integer :: csld = 0         !mm            |current custom soil layer depth in millimeters
       integer :: pcd = 0          !mm            |previous custom depth in millimeters
       integer :: prev_depth = 0   !mm            |previous custom depth in millimeters
       integer :: tot_soil_depth = 0 !mm          |total soil profile depth in millimeters 
@@ -29,12 +29,25 @@
       integer :: n = 0            !              |count to use to compute an average
       real :: dep_new1 = 0.       !mm            |depth of top of septic layer
       real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
-      real :: sum = 0.            !              |temporary sum to do and average with 
+      real :: sum_bd = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_awc = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_cbn = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_k = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_clay = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_silt = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_sand = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_rock = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_alb = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_usle_k = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_ec = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_cal = 0.            !              |temporary sum to do weighted average with 
+      real :: sum_ph = 0.            !              |temporary sum to do weighted average with 
       logical :: i_exist          !none          |check to determine if a file exists
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
       character (len=16) :: units = ""  !        |name
-      type (soil_hru_database), dimension(:), allocatable :: sol_mm_db
+      logical :: first_layer_flag !              |True if first non 10 mm layer.
+      type (soil_database), dimension(:), allocatable :: sol_mm_db
       
       !!Section 1
       !!this section sets, allocates, and initializes the original soil database
@@ -65,7 +78,7 @@
           sol(isol)%phys(1)%bd = soildb(isol)%ly(1)%bd
           sol(isol)%phys(1)%awc = soildb(isol)%ly(1)%awc
           sol(isol)%phys(1)%k = soildb(isol)%ly(1)%k
-          
+          sol(isol)%phys(1)%cbn = soildb(isol)%ly(1)%cbn
           sol(isol)%phys(1)%clay = soildb(isol)%ly(1)%clay
           sol(isol)%phys(1)%silt = soildb(isol)%ly(1)%silt
           sol(isol)%phys(1)%sand = soildb(isol)%ly(1)%sand
@@ -82,6 +95,7 @@
               sol(isol)%phys(j)%bd = soildb(isol)%ly(j-1)%bd
               sol(isol)%phys(j)%awc = soildb(isol)%ly(j-1)%awc
               sol(isol)%phys(j)%k = soildb(isol)%ly(j-1)%k
+              sol(isol)%phys(j)%cbn = soildb(isol)%ly(j-1)%cbn
               sol(isol)%phys(j)%clay = soildb(isol)%ly(j-1)%clay
               sol(isol)%phys(j)%silt = soildb(isol)%ly(j-1)%silt
               sol(isol)%phys(j)%sand = soildb(isol)%ly(j-1)%sand
@@ -99,6 +113,7 @@
               sol(isol)%phys(j)%bd = soildb(isol)%ly(j)%bd
               sol(isol)%phys(j)%awc = soildb(isol)%ly(j)%awc
               sol(isol)%phys(j)%k = soildb(isol)%ly(j)%k
+              sol(isol)%phys(j)%cbn = soildb(isol)%ly(j)%cbn
               sol(isol)%phys(j)%clay = soildb(isol)%ly(j)%clay
               sol(isol)%phys(j)%silt = soildb(isol)%ly(j)%silt
               sol(isol)%phys(j)%sand = soildb(isol)%ly(j)%sand
@@ -115,7 +130,7 @@
           ! Allocate a temporary data structure to do weighted averages from.
           tot_soil_depth = soildb(isol)%ly(soildb(isol)%s%nly)%z
           allocate (sol_mm_db(1))
-          allocate (sol_mm_db(1)%phys(tot_soil_depth))
+          ! allocate (sol_mm_db(1)%phys(tot_soil_depth))
           allocate (sol_mm_db(1)%ly(tot_soil_depth))
 
           ! Populate temporary data structure to do weighted averages from.
@@ -123,14 +138,15 @@
           do j = 1, soildb(isol)%s%nly
             do i = prev_depth + 1, tot_soil_depth
               if (i <= soildb(isol)%ly(j)%z .and. i > prev_depth ) then
-                sol_mm_db(1)%phys(i)%d = i
-                sol_mm_db(1)%phys(i)%bd = soildb(isol)%ly(j)%bd
-                sol_mm_db(1)%phys(i)%awc = soildb(isol)%ly(j)%awc
-                sol_mm_db(1)%phys(i)%k = soildb(isol)%ly(j)%k
-                sol_mm_db(1)%phys(i)%clay = soildb(isol)%ly(j)%clay
-                sol_mm_db(1)%phys(i)%silt = soildb(isol)%ly(j)%silt
-                sol_mm_db(1)%phys(i)%sand = soildb(isol)%ly(j)%sand
-                sol_mm_db(1)%phys(i)%rock = soildb(isol)%ly(j)%rock
+                sol_mm_db(1)%ly(i)%z = i
+                sol_mm_db(1)%ly(i)%bd = soildb(isol)%ly(j)%bd
+                sol_mm_db(1)%ly(i)%awc = soildb(isol)%ly(j)%awc
+                sol_mm_db(1)%ly(i)%k = soildb(isol)%ly(j)%k
+                sol_mm_db(1)%ly(i)%cbn = soildb(isol)%ly(j)%cbn
+                sol_mm_db(1)%ly(i)%clay = soildb(isol)%ly(j)%clay
+                sol_mm_db(1)%ly(i)%silt = soildb(isol)%ly(j)%silt
+                sol_mm_db(1)%ly(i)%sand = soildb(isol)%ly(j)%sand
+                sol_mm_db(1)%ly(i)%rock = soildb(isol)%ly(j)%rock
                 sol_mm_db(1)%ly(i)%alb = soildb(isol)%ly(j)%alb
                 sol_mm_db(1)%ly(i)%usle_k = soildb(isol)%ly(j)%usle_k
                 sol_mm_db(1)%ly(i)%ec = soildb(isol)%ly(j)%ec
@@ -150,166 +166,108 @@
           if (eof < 0) exit
           read (107,*,iostat=eof) units
           if (eof < 0) exit
+          mlyr = 0
           do 
-            read (107,*,iostat=eof) ccd
+            read (107,*,iostat=eof) csld
             if (eof < 0) exit
-            if (ccd <= tot_soil_depth) then
-              mlyr = mlyr + 1
-            else if (ccd > tot_soil_depth) then
-              ccd = tot_soil_depth
+            ! sc = csld - tot_soil_depth
+            select case (csld <= tot_soil_depth)
+            case (.true.)
+              if (csld > 10) then
+                mlyr = mlyr + 1
+                if (csld == tot_soil_depth) then
+                  csld = tot_soil_depth
+                  exit
+                endif
+              else 
+                cycle
+              endif
+            case (.false.)
+              csld = tot_soil_depth
               mlyr = mlyr + 1
               exit
-            endif  
+            end select
           end do 
 
-          tot_soil_depth = Min(tot_soil_depth, ccd)
+          mlyr = mlyr + 1 ! This is to account for the adding a 10 mm layer below.
+
+          tot_soil_depth = Min(tot_soil_depth, csld)
           sol(isol)%s%nly = mlyr    !Adjust number of layers
           
-          tot_soil_depth = Min(tot_soil_depth, ccd)
           allocate (sol(isol)%ly(mlyr))
           allocate (sol(isol)%phys(mlyr))
-          sol(isol)%phys(mlyr)%d = tot_soil_depth
           rewind (107)  
           read (107,*,iostat=eof) titldum
           read (107,*,iostat=eof) header
           read (107,*,iostat=eof) units
 
+          first_layer_flag = .true.
           pcd = 1
           do i = 1, mlyr
-            read (107,*,iostat=eof) ccd
+            do
+              read (107,*,iostat=eof) csld
+              if (csld > 10) then
+                exit
+              endif
+            enddo
 
-            ! if (ccd > tot_soil_depth) then
-            !   sol(isol)%phys(i)%d = tot_soil_depth
-            ! else 
-            !   sol(isol)%phys(i)%d = ccd
-            ! endif
+            if (first_layer_flag) then
+              sol(isol)%phys(i)%d = 10
+              csld = 10
+              first_layer_flag = .false.
+              backspace 107
+            else 
+              if (csld > tot_soil_depth) csld = tot_soil_depth
+              sol(isol)%phys(i)%d = csld
+            endif
 
-            sol(isol)%phys(i)%d = ccd
-
-            sum = 0.0
             n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%bd 
-                n = n + 1
-              end if
-            end do
-            sol(isol)%phys(i)%bd = sum/n
+            sum_bd = 0.     
+            sum_awc = 0.    
+            sum_cbn = 0.    
+            sum_k = 0.      
+            sum_clay = 0.    
+            sum_silt = 0.    
+            sum_sand = 0.    
+            sum_rock = 0.    
+            sum_alb = 0.    
+            sum_usle_k = 0.  
+            sum_ec = 0.     
+            sum_cal = 0.    
+            sum_ph = 0.     
 
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%awc
-                n = n + 1
-              end if
+            do j = pcd, csld
+              sum_bd = sum_bd + sol_mm_db(1)%ly(j)%bd 
+              sum_awc = sum_awc + sol_mm_db(1)%ly(j)%awc
+              sum_k = sum_k + sol_mm_db(1)%ly(j)%k
+              sum_cbn = sum_cbn + sol_mm_db(1)%ly(j)%cbn
+              sum_clay = sum_clay + sol_mm_db(1)%ly(j)%clay
+              sum_silt = sum_silt + sol_mm_db(1)%ly(j)%silt
+              sum_sand = sum_sand + sol_mm_db(1)%ly(j)%sand
+              sum_rock = sum_rock + sol_mm_db(1)%ly(j)%rock
+              sum_alb = sum_alb + sol_mm_db(1)%ly(j)%alb
+              sum_usle_k = sum_usle_k + sol_mm_db(1)%ly(j)%usle_k
+              sum_ec = sum_ec + sol_mm_db(1)%ly(j)%ec
+              sum_cal = sum_cal + sol_mm_db(1)%ly(j)%cal
+              sum_ph = sum_ph + sol_mm_db(1)%ly(j)%ph
+              n = n + 1
             end do
-            sol(isol)%phys(i)%awc = sum/n
+            sol(isol)%phys(i)%bd = sum_bd/n
+            sol(isol)%phys(i)%awc = sum_awc/n
+            sol(isol)%phys(i)%k = sum_k/n
+            sol(isol)%phys(i)%cbn = sum_cbn/n
+            sol(isol)%phys(i)%clay = sum_clay/n
+            sol(isol)%phys(i)%silt = sum_silt/n
+            sol(isol)%phys(i)%sand = sum_sand/n
+            sol(isol)%phys(i)%rock = sum_rock/n
+            sol(isol)%ly(i)%alb = sum_alb/n
+            sol(isol)%ly(i)%usle_k = sum_usle_k/n
+            sol(isol)%ly(i)%ec = sum_ec/n
+            sol(isol)%ly(i)%cal = sum_cal/n
+            sol(isol)%ly(i)%ph = sum_ph/n
 
-            
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%k
-                n = n + 1
-              end if
-            end do
-            sol(isol)%phys(i)%k = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%clay
-                n = n + 1
-              end if
-            end do
-            sol(isol)%phys(i)%clay = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%silt
-                n = n + 1
-              end if
-            end do
-            sol(isol)%phys(i)%silt = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%sand
-                n = n + 1
-              end if
-            end do
-            sol(isol)%phys(i)%sand = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%phys(j)%rock
-                n = n + 1
-              end if
-            end do
-            sol(isol)%phys(i)%rock = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%alb
-                n = n + 1
-              end if
-            end do
-            sol(isol)%ly(i)%alb = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%usle_k
-                n = n + 1
-              end if
-            end do
-            sol(isol)%ly(i)%usle_k = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%ec
-                n = n + 1
-              end if
-            end do
-            sol(isol)%ly(i)%ec = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%cal
-                n = n + 1
-              end if
-            end do
-            sol(isol)%ly(i)%cal = sum/n
-
-            sum = 0.0
-            n = 0
-            do j = pcd, ccd
-              if (j <= tot_soil_depth) then
-                sum = sum + sol_mm_db(1)%ly(j)%ph
-                n = n + 1
-              end if
-            end do
-            sol(isol)%ly(i)%ph = sum/n
-
-            pcd = ccd + 1
+            pcd = csld + 1
           end do
-          deallocate (sol_mm_db(1)%phys)
           deallocate (sol_mm_db(1)%ly)
           deallocate (sol_mm_db)
           close (107)
@@ -408,7 +366,6 @@
         allocate (soil1(ihru)%microb(nly))
         allocate (soil1(ihru)%man(nly))
         allocate (soil1(ihru)%water(nly))
-
         allocate (soil1_init(ihru)%sw(nly), source = 0.)
         allocate (soil1_init(ihru)%cbn(nly), source = 0.)
         allocate (soil1_init(ihru)%sed(nly))
@@ -431,5 +388,13 @@
       end do
 
       return
+    end subroutine soils_init
       
-      end subroutine soils_init
+      
+      
+      
+      
+      
+      
+      
+      
