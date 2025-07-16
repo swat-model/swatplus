@@ -95,6 +95,7 @@
       
       !! compute flood plain deposition
       ave_rate = ht1%flo / 86400.     !m3/s
+      sd_ch(ich)%bankfull_flo = 2.
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       florate_ob = ave_rate - bf_flow
       if (florate_ob > 0.) then
@@ -112,7 +113,7 @@
         !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
         fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
-        exp_co = 0.0003 * fp_m2 / florate_ob
+        exp_co = 0.0001 * fp_m2 / florate_ob
         trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
@@ -177,7 +178,8 @@
       b_exp = min (3.5, b_exp)
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
-        ebank_m = 0.00024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
+        ebank_m = 0.001 / (1. + exp(-4. * (vel_rch / vel_cr) / sd_ch(ich)%chw))
+        !ebank_m = 0.00024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
       else
         ebank_m = 0.
       end if
