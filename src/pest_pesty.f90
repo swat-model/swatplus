@@ -3,15 +3,6 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates pesticide transported with suspended sediment 
 
-!!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
-!!    name          |units        |definition
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    enratio       |none         |enrichment ratio calculated for day in HRU
-!!    ihru          |none         |HRU number
-!!    pst_enr(:,:)  |none         |pesticide enrichment ratio
-!!    zdb(:,:)      |mm           |division term from net pesticide equation
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
       use hru_module, only : hru, sedyld, ihru, enratio
       use soil_module
       use constituent_mass_module

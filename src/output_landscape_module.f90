@@ -782,7 +782,7 @@
 !! NEW PLANT CARBON STAT OUTPUT
       
      type output_plc_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=11) :: day           =    "       jday"
          character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
@@ -800,7 +800,7 @@
       type (output_plc_header) :: plc_hdr
       
       type output_plc_header_units      
-         character (len=6) ::  freq         =    "      "
+         character (len=7) ::  freq         =    "       "
          character (len=11) :: day          =    "           "
          character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "
@@ -822,8 +822,9 @@
 !! NEW RESIDUE CARBON STAT OUTPUT
       
      type output_rsdc_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -843,8 +844,9 @@
       type (output_rsdc_header) :: rsdc_hdr
       
       type output_rsdc_header_units      
-         character (len=6) ::  freq         =  "      "
+         character (len=7) ::  freq         =  "       "
          character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
          character (len=12) :: day          =  "            "
          character (len=12) :: mo           =  "            "
          character (len=12) :: day_mo       =  "            "
@@ -868,8 +870,9 @@
 !! NEW SOIL CARBON STAT OUTPUT
       
      type output_soilc_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -889,8 +892,9 @@
       type (output_soilc_header) :: soilc_hdr
       
       type output_soilc_header_units      
-         character (len=6) ::  freq         = "      "
+         character (len=7) ::  freq         = "       "
          character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: soil_depth   = "          mm"
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -910,8 +914,9 @@
       type (output_soilc_header_units) :: soilc_hdr_units
 
      type output_soil_org_flux_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -960,8 +965,9 @@
       type (output_soil_org_flux_header) :: soil_org_flux_hdr
 
      type output_soil_org_flux_header_units     
-         character (len=6)  :: freq         = "      "
+         character (len=7)  :: freq         = "       "
          character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: soil_depth   = "          mm"
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -1002,8 +1008,6 @@
          character(len=15)  :: mnrs1s3   =    "        kg_N/ha" 
          character(len=15)  :: mnrs2s1   =    "        kg_N/ha" 
          character(len=15)  :: mnrs2s3   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs3s1   =    "        kg_N/ha" 
-         character(len=15)  :: co2fs1    =    "        kg_C/ha" 
          character(len=15)  :: co2fs2    =    "        kg_C/ha"  
          character(len=15)  :: co2fs3    =    "        kg_C/ha" 
          end type output_soil_org_flux_header_units
@@ -1011,8 +1015,9 @@
       
       ! output soil_carb_mb_stat header
       type output_soil_carb_mb_hdr     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1069,8 +1074,9 @@
       type (output_soil_carb_mb_hdr) :: soil_mb_hdr
       
       type output_soil_carb_mb_units
-         character (len=6)  :: freq         = "      "
+         character (len=7)  :: freq         = "       "
          character (len=12) :: soil_lyr     = "            "
+         character (len=12) :: soil_depth   = "          mm"
          character (len=12) :: day          = "            "
          character (len=12) :: mo           = "            "
          character (len=12) :: day_mo       = "            "
@@ -1127,8 +1133,9 @@
       type (output_soil_carb_mb_units) :: soil_mb_units
 
      type output_cpool_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1149,8 +1156,9 @@
       type (output_cpool_header) :: cpool_hdr
       
       type output_cpool_header_units      
-         character (len=6) ::  freq         =  "      "
+         character (len=7) ::  freq         =  "       "
          character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
          character (len=12) :: day          =  "            "
          character (len=12) :: mo           =  "            "
          character (len=12) :: day_mo       =  "            "
@@ -1170,9 +1178,78 @@
         end type output_cpool_header_units         
       type (output_cpool_header_units) :: cpool_units
 
-     type output_carb_vars_header     
-         character (len=6) ::  freq          =    "freq  "
+     type output_n_p_pool_header     
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "
+         character(len=15)  :: total_pool_n  =    "     tot_pool_n"
+         character(len=15)  :: residue_n     =    "      residue_n"
+         character(len=15)  :: str_n         =    "   structural_n"  
+         character(len=15)  :: meta_n        =    "    metabolic_n"         
+         character(len=15)  :: hs_n          =    "           hs_n"         
+         character(len=15)  :: hp_n          =    "           hp_n"         
+         character(len=15)  :: microb_n      =    "    microbial_n"         
+         character(len=15)  :: lig_n         =    "       lignin_n"      
+         character(len=15)  :: water_n       =    "        water_n"
+         character(len=15)  :: manure_n      =    "       manure_n"  
+         character(len=15)  :: total_pool_p  =    "     tot_pool_p"
+         character(len=15)  :: residue_p     =    "      residue_p"
+         character(len=15)  :: str_p         =    "   structural_p"  
+         character(len=15)  :: meta_p        =    "    metabolic_p"         
+         character(len=15)  :: hs_p          =    "           hs_p"         
+         character(len=15)  :: hp_p          =    "           hp_p"         
+         character(len=15)  :: microb_p      =    "    microbial_p"         
+         character(len=15)  :: lig_p         =    "       lignin_p"      
+         character(len=15)  :: water_p       =    "        water_p"
+         character(len=15)  :: manure_p      =    "       manure_p"  
+         end type output_n_p_pool_header       
+      type (output_n_p_pool_header) :: n_p_pool_hdr
+      
+      type output_n_p_pool_header_units      
+         character (len=7) ::  freq         =  "       "
+         character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
+         character (len=12) :: day          =  "            "
+         character (len=12) :: mo           =  "            "
+         character (len=12) :: day_mo       =  "            "
+         character (len=12) :: yrc          =  "            "
+         character (len=12)  :: isd         =  "            "
+         character (len=22) :: id           =  "                      "
+         character (len=13) :: name         =  "             "
+         character(len=15)  :: total_pool_n =  "          kg/ha"
+         character(len=15)  :: residue_n    =  "          kg/ha"
+         character(len=15)  :: str_n        =  "          kg/ha"  
+         character(len=15)  :: meta_n       =  "          kg/ha"         
+         character(len=15)  :: hs_n         =  "          kg/ha"         
+         character(len=15)  :: hp_n         =  "          kg/ha"         
+         character(len=15)  :: microb_n     =  "          kg/ha"         
+         character(len=15)  :: lig_n        =  "          kg/ha"      
+         character(len=15)  :: water_n      =  "          kg/ha"
+         character(len=15)  :: manure_n     =  "          kg/ha"  
+         character(len=15)  :: total_pool_p =  "          kg/ha"
+         character(len=15)  :: residue_p    =  "          kg/ha"
+         character(len=15)  :: str_p        =  "          kg/ha"  
+         character(len=15)  :: meta_p       =  "          kg/ha"         
+         character(len=15)  :: hs_p         =  "          kg/ha"         
+         character(len=15)  :: hp_p         =  "          kg/ha"         
+         character(len=15)  :: microb_p     =  "          kg/ha"         
+         character(len=15)  :: lig_p        =  "          kg/ha"      
+         character(len=15)  :: water_p      =  "          kg/ha"
+         character(len=15)  :: manure_p     =  "          kg/ha"  
+        end type output_n_p_pool_header_units         
+      type (output_n_p_pool_header_units) :: n_p_pool_units
+
+     type output_carb_vars_header     
+         character (len=7) ::  freq          =    "freq   "
+         character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1188,12 +1265,14 @@
          character(len=15)  :: no3           =    "            no3"         
          character(len=15)  :: nh4           =    "            nh4"         
          character(len=15)  :: resp          =    "       co2_resp"         
+         character(len=15)  :: soil_tmp      =    "      soil_temp"         
          end type output_carb_vars_header
       type (output_carb_vars_header) :: carbvars_hdr
       
      type output_org_allo_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1211,8 +1290,9 @@
       type (output_org_allo_header) :: org_allow_hdr
       
      type output_org_ratio_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1227,8 +1307,9 @@
       type (output_org_ratio_header) :: org_ratio_hdr
       
      type output_org_trans_header     
-         character (len=6) ::  freq          =    "freq  "
+         character (len=7) ::  freq          =    "freq   "
          character (len=12) :: soil_lyr      =    "    soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
          character (len=12) :: day           =    "        jday"
          character (len=12) :: mo            =    "         mon"
          character (len=12) :: day_mo        =    "         day"
@@ -1252,8 +1333,9 @@
       type (output_org_trans_header) :: org_trans_hdr
       
       type output_org_trans_header_units      
-         character (len=6) ::  freq         =  "      "
+         character (len=7) ::  freq         =  "       "
          character (len=12) :: soil_lyr     =  "            "
+         character (len=12) :: soil_depth   =  "          mm"
          character (len=12) :: day          =  "            "
          character (len=12) :: mo           =  "            "
          character (len=12) :: day_mo       =  "            "
@@ -1275,6 +1357,35 @@
          character(len=15)  :: lsntp        =  "          kg/ha"  
         end type output_org_trans_header_units
       type (output_org_trans_header_units) :: org_trans_units
+
+     type output_endsim_soil_prop_header     
+         character (len=7)  :: freq          =    "freq   "
+         character (len=20) :: soil_name     =    "soil_name           "
+         character (len=8)  :: soil_lyr      =    "soil_lyr"
+         character (len=12) :: soil_depth    =    "  soil_depth"
+         character (len=12) :: day           =    "        jday"
+         character (len=12) :: mo            =    "         mon"
+         character (len=12) :: day_mo        =    "         day"
+         character (len=12) :: yrc           =    "          yr"
+         character (len=12) :: isd           =    "        unit"
+         character (len=22) :: id            =    "                gis_id"
+         character (len=13) :: name          =    "    name     "  
+         character(len=15)  :: bd            =    "             bd"
+         character(len=15)  :: awc           =    "            awc"
+         character(len=15)  :: soil_k        =    "         soil_k"  
+         character(len=15)  :: carbon        =    "         carbon"         
+         character(len=15)  :: clay          =    "           clay"         
+         character(len=15)  :: silt          =    "           silt"         
+         character(len=15)  :: sand          =    "           sand"         
+         character(len=15)  :: rock          =    "           rock"         
+         character(len=15)  :: alb           =    "            alb"         
+         character(len=15)  :: usle_k        =    "         usle_k"         
+         character(len=15)  :: ec            =    "             ec"      
+         character(len=15)  :: caco3         =    "          caco3"
+         character(len=15)  :: ph            =    "             ph"  
+         end type output_endsim_soil_prop_header
+      type (output_endsim_soil_prop_header) ::endsim_soil_prop_hdr
+      
 
 
 !!! NEW SOIL CARBON STAT OUTPUT
@@ -1806,6 +1917,10 @@
         hru3%rhum = hru1%rhum + hru2%rhum
         hru3%solrad = hru1%solrad + hru2%solrad
         hru3%phubase0 = hru1%phubase0 + hru2%phubase0
+        hru3%lai_max = hru1%lai_max + hru2%lai_max
+        hru3%bm_max = hru1%bm_max + hru2%bm_max
+        hru3%bm_grow = hru1%bm_grow + hru2%bm_grow
+        hru3%c_gro = hru1%c_gro + hru2%c_gro
       end function hruout_plantweather_add
 
       function hruout_waterbal_div (hru1,const) result (hru2)
@@ -2055,6 +2170,10 @@
         hru2%wndspd = hru1%wndspd
         hru2%rhum = hru1%rhum
         hru2%phubase0 = hru1%phubase0
+        hru2%lai_max = hru1%lai_max
+        hru2%bm_max = hru1%bm_max
+        hru2%bm_grow = hru1%bm_grow
+        hru2%c_gro = hru1%c_gro
       end function hruout_plantweather_div
                   
       function hruout_plantweather_ave (hru1,const) result (hru2)
@@ -2082,6 +2201,10 @@
         hru2%rhum = hru1%rhum / const
         hru2%solrad = hru1%solrad / const
         hru2%phubase0 = hru1%phubase0 / const
+        hru2%lai_max = hru1%lai_max / const
+        hru2%bm_max = hru1%bm_max / const
+        hru2%bm_grow = hru1%bm_grow / const
+        hru2%c_gro = hru1%c_gro / const
       end function hruout_plantweather_ave
                           
       function hruout_plantweather_mult (hru1,const) result (hru2)
@@ -2109,6 +2232,10 @@
         hru2%wndspd = hru1%wndspd * const
         hru2%rhum = hru1%rhum * const
         hru2%phubase0 = hru1%phubase0 * const
+        hru2%lai_max = hru1%lai_max * const
+        hru2%bm_max = hru1%bm_max * const
+        hru2%bm_grow = hru1%bm_grow * const
+        hru2%c_gro = hru1%c_gro * const
       end function hruout_plantweather_mult
                           
                             
