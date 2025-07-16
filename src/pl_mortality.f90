@@ -20,12 +20,14 @@
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
       
-      !keep biomass below maximum - excess to residue (need to include c, n and p adjustments)
-      bm_dieoff = (1. + pldb(idp)%bm_dieoff) * (pl_mass(j)%ab_gr(ipl)%m - (pldb(idp)%bmx_peren * 1000.))  !t/ha -> kg/ha
+      !! keep biomass below maximum - 5% more than excess - excess to residue
+      bm_dieoff = 1.05 * (pl_mass(j)%ab_gr(ipl)%m - (pldb(idp)%bmx_peren * 1000.))  !t/ha -> kg/ha
       if (bm_dieoff > 1.e-6 .and. pl_mass(j)%ab_gr(ipl)%m > bm_dieoff) then
           
         !! partition all plant components by above ground ratio
+
         rto = bm_dieoff / pl_mass(j)%ab_gr(ipl)%m  ! Fraction of dead biomass
+
         rto = amin1 (1., rto)
       
         !! add dead material to residue
