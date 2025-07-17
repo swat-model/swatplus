@@ -63,7 +63,7 @@
 
         !! remove biomass trampled - assume evenly divided by biomass of plant
         tramp_plant = graze%tramp / pl_mass(j)%ab_gr_com%m
-        tramp_plant = amin1 (tramp_plant, 1.)
+        tramp_plant = 0. !***jga amin1 (tramp_plant, 1.)
         
         !! remove biomass and organics from plant pools
         !! update remaining plant organic pools
