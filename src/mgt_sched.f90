@@ -200,7 +200,7 @@
                       pcom(j)%plstr(ipl)%sum_a
                 end if 
               end if
-              pcom(j)%plcur(ipl)%phuacc = 0.
+              !pcom(j)%plcur(ipl)%phuacc = 0.
               end if
             end do
           
