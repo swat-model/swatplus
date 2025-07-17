@@ -16,6 +16,7 @@
       integer :: idp = 0            !              |
       integer :: iob = 0            !              |
       integer :: iwgn = 0           !              |
+      integer :: ly = 0             !              |soil layer number
       real :: rto = 0.              !              |
       real :: lai_init = 0.         !
       real :: lai_drop = 0.
@@ -33,20 +34,13 @@
         if (pldb(idp)%typ == "perennial") then
           pcom(j)%plcur(ipl)%idorm = "y"
           !! add dead stem mass to residue pool
-          rto = pldb(idp)%bm_dieoff
+          rto = 0. !***jga  pldb(idp)%bm_dieoff
           stem_drop = rto * pl_mass(j)%stem(ipl)
-          !! drop lai to minimum if not already
+          !! lower lai by same ratio
           lai_init = pcom(j)%plg(ipl)%lai
-          pcom(j)%plg(ipl)%lai = pldb(idp)%alai_min
+          pcom(j)%plg(ipl)%lai = rto * lai_init
           !! compute leaf biomass drop
-          if (lai_init > 0.001) then
-            lai_drop = (lai_init - pcom(j)%plg(ipl)%lai) / lai_init
-          else
-            lai_drop = 0.
-          end if
-          lai_drop = max (0., lai_drop)
-          lai_drop = amin1 (1., lai_drop)
-          leaf_drop%m = rto * lai_drop * pl_mass(j)%leaf(ipl)%m
+          leaf_drop%m = rto * pl_mass(j)%leaf(ipl)%m
           leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
           leaf_drop%n = max (0., leaf_drop%n)
           leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
@@ -57,15 +51,25 @@
 
           !! add all seed/fruit mass to residue pool
           pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - abgr_drop
+          if (pl_mass(j)%tot_com%m < 0.) then
+            pl_mass(j)%tot_com%m = 0.
+          end if
           pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop
           pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - stem_drop
           pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
           pl_mass(j)%seed(ipl) = plt_mass_z
           
-          !! add above ground drop to surface soil residue
           soil1(j)%rsd(1) = soil1(j)%rsd(1) + abgr_drop
+          if (bsn_cc%cswat == 2) then
+            soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * abgr_drop
+            soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * abgr_drop
+            soil1(j)%lig(ly) = soil1(j)%lig(ly) + 0.12 * abgr_drop  ! 0.12 = 0.8 * 0.15 -> lig = 80%str
+          end if
           
-        end if
+          pcom(j)%plcur(ipl)%idorm = "y"
+          pcom(j)%plcur(ipl)%phuacc = 0.
+          pcom(j)%plstr(ipl)%strsw = 1.
+        end if   ! beginning of dormancy for perennial
 
         !! beginning of cool season annual dormant period
         if (pldb(idp)%typ == "cold_annual") then
@@ -73,8 +77,9 @@
             pcom(j)%plcur(ipl)%idorm = "y"
             pcom(j)%plstr(ipl)%strsw = 1.
           end if 
-        end if
-      end if
+        end if  ! beginning of cool season annual dormant period
+        
+      end if    ! beginning of dormancy 
 
       !! check if end of dormant period
       if (pcom(j)%plcur(ipl)%idorm == "y" .and. wst(iwst)%weat%daylength - dormhr(j) >=   &
@@ -92,7 +97,7 @@
           pcom(j)%plcur(ipl)%phuacc = 0.
         end if
 
-      end if
+      end if    ! end of dormant period
 
       return
       end subroutine pl_dormant

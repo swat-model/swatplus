@@ -823,6 +823,9 @@
       ! output_plantweather
         hpw_d(j)%lai = pcom(j)%lai_sum
         hpw_d(j)%bioms = pl_mass(j)%tot_com%m
+        if (pl_mass(j)%tot_com%m < 0.) then
+          pl_mass(j)%tot_com%m = 0.
+        end if
         hpw_d(j)%residue = soil1(j)%rsd(1)%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z

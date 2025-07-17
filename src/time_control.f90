@@ -73,6 +73,7 @@
       real :: crop_yld_t_ha = 0.     !t/ha          |annual and ave annual basin crop yields
       real :: sw_init = 0.
       real :: sno_init = 0.
+      real :: bank_mm, bed_mm
       integer :: iob = 0             !              |
       integer :: curyr = 0           !              |
       integer :: mo = 0              !              |
@@ -372,13 +373,17 @@
       
       do ich = 1, sp_ob%chandeg
         !! write channel morphology - downcutting and widening
-        ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / 1000. / sd_ch(ich)%chw / time%yrs_prt
+        bank_mm = ch_morph(ich)%w_yr 
+        bed_mm = ch_morph(ich)%d_yr
+        ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / sd_ch(ich)%chw / time%yrs_prt
         ch_morph(ich)%d_yr = ch_morph(ich)%d_yr / sd_ch(ich)%chd / time%yrs_prt
+        !! mm = t / (3.*bd*w*l) -> assume fp width = 3*chw; len(m)=1000.*km; bd=t/m3; mm=1000.*m
         ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm / (3. * sd_ch(ich)%chw *           &
-                                         sd_ch(ich)%chl * 1000.) / time%yrs_prt
+                                                sd_ch(ich)%chl) / time%yrs_prt
         iob = sp_ob1%chandeg + ich - 1
-        write (7778,*) ich, ob(iob)%name, ob(iob)%area_ha, ch_morph(ich)%w_yr,       &
-                                           ch_morph(ich)%d_yr, ch_morph(ich)%fp_mm
+        write (7778,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chw, bank_mm,  &
+                ch_morph(ich)%w_yr, sd_ch(ich)%chd, bed_mm, ch_morph(ich)%d_yr,      &
+                                                            ch_morph(ich)%fp_mm
       end do
       
       do ich = 1, sp_ob%res

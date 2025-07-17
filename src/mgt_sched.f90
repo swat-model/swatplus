@@ -200,7 +200,7 @@
                       pcom(j)%plstr(ipl)%sum_a
                 end if 
               end if
-              pcom(j)%plcur(ipl)%phuacc = 0.
+              !pcom(j)%plcur(ipl)%phuacc = 0.
               end if
             end do
           
@@ -309,7 +309,7 @@
             irrig(j)%applied = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * (1. - irrop_db(irrop)%surq)
             irrig(j)%runoff = irrop_db(irrop)%amt_mm * irrop_db(irrop)%surq
             pcom(j)%days_irr = 1            ! reset days since last irrigation
-      
+
             ! add irrigation to yearly sum for dtbl conditioning jga6-25
             hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
             
