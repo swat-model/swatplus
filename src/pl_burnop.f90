@@ -32,7 +32,10 @@
 
       !!update curve number
       cnop = cn2(j) + fire_db(iburn)%cn2_upd
-      call curno(cnop,j)
+      if (cnop > 98.0) then
+        cnop = 98.0
+      end if
+      call curno(cnop, j)
       
       !! zero total community masses
       pl_mass(j)%tot_com = plt_mass_z
