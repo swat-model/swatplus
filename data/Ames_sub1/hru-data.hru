@@ -1,8 +1,8 @@
 hru-data.hru: 
       id  name                          topo             hydro              soil            lu_mgt   soil_plant_init         surf_stor              snow             field  
-       1  hru0001                topohru0001           hyd0001           soil_01          cosy_lum        soilplant1              null           snow001              null  
-       2  hru0002                topohru0002           hyd0002           soil_02          cosy_lum2        soilplant1              null           snow001              null  
-       3  hru0003                topohru0003           hyd0003           soil_03          cosy_lum        soilplant1              null           snow001              null  
+       1  hru0001                topohru0001           hyd0001           soil_01-h1       cosy_lum        soilplant1              null           snow001              null  
+       2  hru0002                topohru0002           hyd0002           soil_02          cosy_lum        soilplant1              null           snow001              null  
+       3  hru0003                topohru0003           hyd0003           soil_03-h3       cosy_lum        soilplant1              null           snow001              null  
        4  hru0004                topohru0004           hyd0004           soil_04          cosy_lum        soilplant1              null           snow001              null  
        5  hru0005                topohru0005           hyd0005           soil_05          cosy_lum        soilplant1              null           snow001              null  
        6  hru0006                topohru0006           hyd0006           soil_06          cosy_lum        soilplant1              null           snow001              null  

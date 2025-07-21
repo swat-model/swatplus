@@ -27,6 +27,8 @@
       integer :: tot_soil_depth = 0 !mm          |total soil profile depth in millimeters 
       integer :: eof = 0          !              |end of file
       integer :: n = 0            !              |count to use to compute an average
+      integer :: sol_test         !              |soil test index
+      real :: cbn_adjust_frac = 1. !             |adjustment factor based on carbon soil test 
       real :: dep_new1 = 0.       !mm            |depth of top of septic layer
       real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
       real :: sum_bd = 0.            !              |temporary sum to do weighted average with 
@@ -272,6 +274,23 @@
           deallocate (sol_mm_db)
           close (107)
         end if
+
+        ! Adjust the soil carbon values based on soil test values
+        if (allocated(sol_cbn_test)) then
+          do sol_test = 1, nmbr_cbn_tests
+            if (sol_cbn_test(sol_test)%snam == sol(isol)%s%snam) then
+              do i = 1, mlyr
+                if (sol(1)%phys(i)%d >= sol_cbn_test(sol_test)%d) then
+                  cbn_adjust_frac = sol_cbn_test(sol_test)%cbn / sol(isol)%phys(i)%cbn
+                  exit
+                endif
+              end do
+              do i = 1, mlyr
+                sol(isol)%phys(i)%cbn = cbn_adjust_frac * sol(isol)%phys(i)%cbn 
+              enddo
+            endif
+          enddo
+        endif
       end do
            
       do isol = 1, msoils
