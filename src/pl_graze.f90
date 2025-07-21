@@ -52,40 +52,26 @@
         !! later we can add preferences - by animal type or simply by n and p content
         eat_plant =  graze%eat / pl_mass(j)%ab_gr_com%m
         eat_plant = amin1 (eat_plant, 1.)
-        eat_seed = eat_plant * pl_mass(j)%seed(ipl)%m / pl_mass(j)%ab_gr(ipl)%m
-        eat_leaf = eat_plant * pl_mass(j)%leaf(ipl)%m / pl_mass(j)%ab_gr(ipl)%m
-        eat_stem = eat_plant * pl_mass(j)%stem(ipl)%m / pl_mass(j)%ab_gr(ipl)%m
-        graz_plant = eat_plant * pl_mass(j)%ab_gr(ipl)
-        graz_seed = eat_seed * pl_mass(j)%seed(ipl)
-        graz_leaf = eat_leaf * pl_mass(j)%leaf(ipl)
-        graz_stem = eat_stem * pl_mass(j)%stem(ipl)
         
         !! remove biomass and organics from plant pools
         !! update remaining plant organic pools
-        pl_mass(j)%seed(ipl) = pl_mass(j)%seed(ipl) - graz_seed
-        pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - graz_leaf
-        pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - graz_stem
-        pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - graz_plant
-        pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - graz_plant
+        pl_mass(j)%seed(ipl) = pl_mass(j)%seed(ipl) - eat_plant * pl_mass(j)%seed(ipl)
+        pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - eat_plant * pl_mass(j)%leaf(ipl)
+        pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - eat_plant * pl_mass(j)%stem(ipl)
+        pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - eat_plant * pl_mass(j)%ab_gr(ipl)
+        pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - eat_plant * pl_mass(j)%ab_gr(ipl)
 
         !! remove biomass trampled - assume evenly divided by biomass of plant
         tramp_plant = graze%tramp / pl_mass(j)%ab_gr_com%m
-        tramp_plant = amin1 (tramp_plant, 1.)
-        tramp_seed = tramp_plant * pl_mass(j)%seed(ipl)%m / pl_mass(j)%ab_gr(ipl)%m
-        tramp_leaf = tramp_plant * pl_mass(j)%leaf(ipl)%m / pl_mass(j)%ab_gr(ipl)%m
-        tramp_stem = tramp_plant * pl_mass(j)%stem(ipl)%m / pl_mass(j)%ab_gr(ipl)%m
-        graz_plant = tramp_plant * pl_mass(j)%ab_gr(ipl)
-        graz_seed = tramp_seed * pl_mass(j)%seed(ipl)
-        graz_leaf = tramp_leaf * pl_mass(j)%leaf(ipl)
-        graz_stem = tramp_stem * pl_mass(j)%stem(ipl)
+        tramp_plant = 0. !***jga amin1 (tramp_plant, 1.)
         
         !! remove biomass and organics from plant pools
         !! update remaining plant organic pools
-        pl_mass(j)%seed(ipl) = pl_mass(j)%seed(ipl) - graz_seed
-        pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - graz_leaf
-        pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - graz_stem
-        pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - graz_plant
-        pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - graz_plant
+        pl_mass(j)%seed(ipl) = pl_mass(j)%seed(ipl) - tramp_plant * pl_mass(j)%seed(ipl)
+        pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - tramp_plant * pl_mass(j)%leaf(ipl)
+        pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - tramp_plant * pl_mass(j)%stem(ipl)
+        pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - tramp_plant * pl_mass(j)%ab_gr(ipl)
+        pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - tramp_plant * pl_mass(j)%ab_gr(ipl)
 
         !! reset leaf area index and fraction of growing season
         if (dmi > 1.) then
