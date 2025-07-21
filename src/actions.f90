@@ -473,7 +473,7 @@
                         pcom(j)%plstr(ipl)%sum_a
                   end if 
                 end if
-                pcom(j)%plcur(ipl)%phuacc = 0.
+                !pcom(j)%plcur(ipl)%phuacc = 0.
               end do
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
               pcom(j)%dtbl(idtbl)%days_act(iac) = 1     !reset days since last action

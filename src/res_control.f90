@@ -27,7 +27,7 @@
       real :: alpha_down = 0.
 
       ht1 = ob(icmd)%hin    !! set incoming flow
-      ht2 = resz            !! zero outgoing flow
+      ht2 = resz            !! zero outgoing flow, sediment and nutrients
       hcs2 = hin_csz        !! zero outgoing constituents
 
       if (time%yrc > res_hyd(jres)%iyres .or. (time%mo >= res_hyd(jres)%mores   &
@@ -182,6 +182,7 @@
         if (cs_db%num_tot > 0) obcs(icmd)%hd(1) = obcs(icmd)%hin(1)
       end if
 
-      
+
+
       return
       end subroutine res_control
