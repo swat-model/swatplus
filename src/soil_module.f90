@@ -53,6 +53,14 @@
       end type soil_physical_properties
       type (soil_physical_properties),dimension (:), allocatable:: phys1
 
+      type soil_carbon_test
+        character(len=16) :: snam = ""     !! NA            soil series name  
+        real :: d = 0.              !! mm           ! depth in mm of soil carbon test
+        real :: cbn = 0.            !! mm/hr        ! percent organic carbon from soil test
+      end type soil_carbon_test
+      type (soil_carbon_test), dimension(:), allocatable :: sol_cbn_test
+      integer :: nmbr_cbn_tests = 0 !! none         |number of soil carbon tests 
+
       type soil_profile
         character(len=16) :: snam = ""     !! NA            soil series name  
         character(len=16) :: hydgrp = ""    !! NA            hydrologic soil group
