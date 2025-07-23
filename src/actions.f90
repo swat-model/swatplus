@@ -1088,11 +1088,14 @@
             if (j == 0) j = ob_cur
             
             if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
-              iburn = d_tbl%act_typ(iac)           !burn type from fire data base
+              iburn = d_tbl%act_typ(iac)           !burn type
               do ipl = 1, pcom(j)%npl
                 call pl_burnop (j, iburn)
               end do
                         
+
+              ! reset plant index for output after burn operation
+              ipl = 1
               if (pco%mgtout == "y") then
                 write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "    BURN", phubase(j),    &
                     pcom(j)%plcur(ipl)%phuacc, soil(j)%sw,pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m,   &
