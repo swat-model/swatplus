@@ -73,6 +73,7 @@
       real :: crop_yld_t_ha = 0.     !t/ha          |annual and ave annual basin crop yields
       real :: sw_init = 0.
       real :: sno_init = 0.
+      real :: bank_mm, bed_mm
       integer :: iob = 0             !              |
       integer :: curyr = 0           !              |
       integer :: mo = 0              !              |
@@ -146,7 +147,7 @@
         !! set initial soil water for hru, basin and lsu - for checking water balance
         if (pco%sw_init == "n") then
           if (time%yrs > pco%nyskip) then
-            call basin_sw_init     !***jga 
+            call basin_sw_init
             call aqu_pest_output_init
             pco%sw_init = "y"  !! won't reset again
           end if
@@ -254,6 +255,9 @@
             do ihru = 1, sp_ob%hru
               iob = sp_ob1%hru + ihru - 1
               if (ob(iob)%lat < 0) then
+                !! zero yearly irrigation for dtbl conditioning jga6-25
+                hru(ihru)%irr_yr = 0.
+            
                 phubase(ihru) = 0.
                 yr_skip(ihru) = 0
                 isched = hru(ihru)%mgt_ops
@@ -331,7 +335,7 @@
           if (bsn_cc%cswat /= 2) then                                       !! fg added this because so that cbn_zhang2 can handle bio mixing directly
             if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
           end if
-          
+
           !! update sequence number for year in rotation to that of
           !! the next year and reset sequence numbers for operations
           do ipl = 1, pcom(j)%npl
@@ -348,6 +352,9 @@
           ! on December 31 (winter solstice is around December 22)
           iob = sp_ob1%hru + j - 1
           if (ob(iob)%lat >= 0) then
+            ! zero yearly irrigation for dtbl conditioning jga6-25
+            hru(ihru)%irr_yr = 0.
+            
             phubase(j) = 0.
             yr_skip(j) = 0
             isched = hru(j)%mgt_ops
@@ -366,13 +373,17 @@
       
       do ich = 1, sp_ob%chandeg
         !! write channel morphology - downcutting and widening
-        ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / 1000. / sd_ch(ich)%chw / time%yrs_prt
+        bank_mm = ch_morph(ich)%w_yr 
+        bed_mm = ch_morph(ich)%d_yr
+        ch_morph(ich)%w_yr = ch_morph(ich)%w_yr / sd_ch(ich)%chw / time%yrs_prt
         ch_morph(ich)%d_yr = ch_morph(ich)%d_yr / sd_ch(ich)%chd / time%yrs_prt
+        !! mm = t / (3.*bd*w*l) -> assume fp width = 3*chw; len(m)=1000.*km; bd=t/m3; mm=1000.*m
         ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm / (3. * sd_ch(ich)%chw *           &
-                                         sd_ch(ich)%chl * 1000.) / time%yrs_prt
+                                                sd_ch(ich)%chl) / time%yrs_prt
         iob = sp_ob1%chandeg + ich - 1
-        write (7778,*) ich, ob(iob)%name, ob(iob)%area_ha, ch_morph(ich)%w_yr,       &
-                                           ch_morph(ich)%d_yr, ch_morph(ich)%fp_mm
+        write (7778,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chw, bank_mm,  &
+                ch_morph(ich)%w_yr, sd_ch(ich)%chd, bed_mm, ch_morph(ich)%d_yr,      &
+                                                            ch_morph(ich)%fp_mm
       end do
       
       do ich = 1, sp_ob%res
