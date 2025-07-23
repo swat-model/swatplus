@@ -309,7 +309,7 @@
             irrig(j)%applied = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * (1. - irrop_db(irrop)%surq)
             irrig(j)%runoff = irrop_db(irrop)%amt_mm * irrop_db(irrop)%surq
             pcom(j)%days_irr = 1            ! reset days since last irrigation
-
+      
             ! add irrigation to yearly sum for dtbl conditioning jga6-25
             hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
             
@@ -411,16 +411,16 @@
             endif
  
           case ("burn")   !! burning
-            iburn = mgt%op1                 !burn type from fire data base
-            do ipl = 1, pcom(j)%npl
-              call pl_burnop (j, iburn)
+            iburn = mgt%op1   ! burn type from fire database
+            call pl_burnop(j, iburn)
 
-              if (pco%mgtout == "y") then
-                write (2612, *) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "    BURN ", phubase(j),   &
+            if (pco%mgtout == "y") then
+                do ipl = 1, pcom(j)%npl
+                    write (2612, *) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "    BURN ", phubase(j),   &
                     pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m,      &
                     sol_sumno3(j), sol_sumsolp(j)
-              end if
-            end do
+                end do
+            end if
 
           case ("swep")   !! street sweeping (only if iurban=2)
             ipl = Max(1, mgt%op2)
