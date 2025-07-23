@@ -45,8 +45,8 @@
       real :: sum_ec = 0.         !              |temporary sum to do weighted average with 
       real :: sum_cal = 0.        !              |temporary sum to do weighted average with 
       real :: sum_ph = 0.         !              |temporary sum to do weighted average with 
-      real :: cbn_ltbd = 0.       !              |Layer thickness time bulk density of that layer 
-      real :: cbn_ltbd_sum = 0.   !              |Sum of layer thickness times bulk density
+      real :: cbn_ltxbd = 0.       !              |Layer thickness time bulk density of that layer 
+      real :: cbn_ltxbd_sum = 0.   !              |Sum of layer thickness times bulk density
       real :: cbn_wsum = 0.       !              |Temporary sum to do carbon weighted average sum 
       real :: cbn_wavg = 0.       !              |weighted average of soil carbon
       real :: cbn_adjust_frac = 0. !             |computed  weigted average adjustment factor for soil carbon
@@ -291,19 +291,19 @@
             if (sol_cbn_test(sol_test)%snam == sol(isol)%s%snam) then
               prev_depth = 0
               cbn_wsum = 0.0
-              cbn_ltbd_sum = 0.0 
+              cbn_ltxbd_sum = 0.0 
               do i = 1, mlyr
                 if (sol_cbn_test(sol_test)%d > prev_depth) then
                   soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
-                  cbn_ltbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
-                  cbn_ltbd_sum = cbn_ltbd_sum + cbn_ltbd
-                  cbn_wsum = cbn_wsum + cbn_ltbd * sol(isol)%phys(i)%cbn
+                  cbn_ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
+                  cbn_ltxbd_sum = cbn_ltxbd_sum + cbn_ltxbd
+                  cbn_wsum = cbn_wsum + cbn_ltxbd * sol(isol)%phys(i)%cbn
                   prev_depth = sol(isol)%phys(i)%d
                 else 
                   exit
                 endif
               enddo
-              cbn_wavg = cbn_wsum/cbn_ltbd_sum
+              cbn_wavg = cbn_wsum/cbn_ltxbd_sum
               cbn_adjust_frac = sol_cbn_test(sol_test)%cbn / cbn_wavg 
               prev_depth = 0.0
               do i = 1, mlyr
