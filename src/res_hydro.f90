@@ -99,7 +99,7 @@
               end select
               ht2%flo = ht2%flo + (wbody%flo - b_lo) / d_tbl%act(iac)%const / nstep
               ht2%flo = max(0.,ht2%flo)
-              !wbody%flo = max(0.,wbody%flo - ht2%flo)
+              wbody%flo = max(0.,wbody%flo - ht2%flo)    ! & jga-jj 6-3-2025
               vol = wbody%flo
               
             case ("dyrt")

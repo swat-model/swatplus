@@ -42,6 +42,9 @@
       harv_stem = hi_tot * pl_mass(j)%stem(ipl)
       pl_yield = harv_seed + harv_leaf + harv_stem
             
+      !! check if above ground > minimum biomass to cut
+      if (pl_mass(j)%ab_gr(ipl)%m - pl_yield%m > harvop_db(iharvop)%bm_min) then
+          
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
       pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
       !! add plant carbon for printing
@@ -91,5 +94,7 @@
         pcom(j)%plcur(ipl)%phuacc = 0.
       end if
 
+      end if   !ab_gr_bm > bm_min
+      
       return
       end subroutine mgt_harvbiomass
