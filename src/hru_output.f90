@@ -98,13 +98,15 @@
           hwb_y(j) = hwb_y(j) + hwb_m(j)
           hnb_y(j) = hnb_y(j) + hnb_m(j)
           hls_y(j) = hls_y(j) + hls_m(j)
+          bm_max_y = hpw_y(j)%bm_max      ! save off yearly bm_max
           hpw_y(j) = hpw_y(j) + hpw_m(j)
+          hpw_y(j)%bm_max = bm_max_y      ! restore yearly bm_max
           
           const = float (ndays(time%mo + 1) - ndays(time%mo))
           hpw_m(j) = hpw_m(j) // const
           hwb_m(j) = hwb_m(j) // const
           
-          hpw_m(j)%bm_max = bm_max_m
+          hpw_m(j)%bm_max = bm_max_m     ! restore monthly bm_max value
           
           !! monthly print
            hwb_m(j)%sw_final = hwb_d(j)%sw_final
