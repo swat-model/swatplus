@@ -1,0 +1,31 @@
+file.cio: written by swat-netcdf converter (@celray)
+simulation        time.sim          print.prt         null              object.cnt        null
+basin             codes.bsn         parameters.bsn    
+climate           netcdf.ncw        weather-wgn.cli   null              null              null              null              null              null              null
+connect           hru.con           null              rout_unit.con     null              aquifer.con       null              null              reservoir.con     null              null              null              null              chandeg.con       
+channel           initial.cha       null              null              null              nutrients.cha     channel-lte.cha   hyd-sed-lte.cha   null              
+reservoir         initial.res       reservoir.res     hydrology.res     sediment.res      nutrients.res     weir.res          wetland.wet       hydrology.wet     
+routing_unit      rout_unit.def     rout_unit.ele     rout_unit.rtu     null              
+hru               hru-data.hru      null              
+exco              null              null              null              null              null              null              
+recall            null              
+dr                null              null              null              null              null              null              
+aquifer           initial.aqu       aquifer.aqu       
+herd              null              null              null              
+water_rights      null              null              null              
+link              null              null              
+hydrology         hydrology.hyd     topography.hyd    field.fld         
+structural        tiledrain.str     septic.str        filterstrip.str   grassedww.str     bmpuser.str       
+hru_parm_db       plants.plt        fertilizer.frt    tillage.til       pesticide.pes     null              null              null              urban.urb         septic.sep        snow.sno          
+ops               harv.ops          graze.ops         irr.ops           chem_app.ops      fire.ops          sweep.ops         
+lum               landuse.lum       management.sch    cntable.lum       cons_practice.lum  ovn_table.lum     
+chg               cal_parms.cal     null              null              null              null              null              null              null              null              
+init              plant.ini         soil_plant.ini    om_water.ini      null              null              null              null              null              null              null              null              
+soils             soils.sol         nutrients.sol     null              
+decision_table    lum.dtl           res_rel.dtl       null              null              
+regions           ls_unit.ele       ls_unit.def       null              null              null              null              null              null              aqu_catunit.ele   null              null              null              null              null              null              null              null              
+pcp_path          save.nc4
+tmp_path          save.nc4
+slr_path          save.nc4
+hmd_path          save.nc4
+wnd_path          save.nc4

@@ -66,6 +66,26 @@ In addition to CMake, the following tools are also needed:
 
 Use the operating system's preferred way of adding those tools to your installation. There is certainly more than one way of getting and installing them.
 
+<p style="color:orange;">Important: </p>
+
+If you cannot compile successfully, download binaries for the netcdf version [here](https://celray.chawanda.com/assets/downloads/SWATPlusNetCDF_x64.zip). You may need to install [SWAT+ Runtime DLLs](https://celray.chawanda.com/assets/downloads/SWATPlusRuntimeDLLs-v0.0.3.exe) if the executable does not run on your Windows system. These are easier to install on Linux (and Mac OS).
+
+To compile the netcdf version: <br>
+Install netcdf
+- https://downloads.unidata.ucar.edu/netcdf-c/4.9.3/netCDF4.9.3-NC4-64.exe
+
+Install oneAPI Base and Fortran compiler
+- https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html
+- https://www.intel.com/content/www/us/en/developer/tools/oneapi/fortran-compiler-download.html
+
+Create a fortran visual studio project
+- project properties (without the quotes)
+  ```
+  > Fortran > General > Additional Include Directories = 'C:\Program Files\netCDF 4.9.3\include'
+  > Linker > General > Additional Library Directories = 'C:\Program Files\netCDF 4.9.3\lib'
+  > Linker > Input > Additional Dependencies = 'netcdf.lib'
+  ```
+
 __The following sections are emphasizing various development aspects.__
 
 * [Configuring, Building, Installing SWAT+ using cmake](doc/Building.md)

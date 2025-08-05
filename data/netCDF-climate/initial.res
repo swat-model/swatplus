@@ -1,0 +1,4 @@
+initial.res: written by SWAT+ editor v2.3.3 on 2024-08-26 08:40 
+name                       org_min              pest              path              hmet              salt  description       
+initres1                   no_init              null              null              null              null  null              
+initwet1                   no_init              null              null              null              null  null              

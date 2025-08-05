@@ -127,8 +127,19 @@
       type weather_station
         character(len=50) :: name = "Farmer Branch IL"
         real :: lat = 0.                    ! degrees    |latitude
+        real :: lon = 0.                    ! degrees    |longitude
+        real :: elev = 0.                   ! metres     |elevation
         type (weather_codes_station_char) :: wco_c
         type (weather_codes_station) :: wco 
+        
+        real :: pcp_factor = 1.            ! none        |precipitation unit conversion factor
+        real :: tmin_factor = 1.           ! none        |minimum temperature unit conversion factor
+        real :: tmax_factor = 1.           ! none        |maximum temperature unit conversion factor
+        real :: slr_factor = 1.            ! none        |solar radiation unit conversion factor
+        real :: hmd_factor = 1.            ! none        |relative humidity unit conversion factor
+        real :: wnd_factor = 1.            ! none        |wind unit conversion factor
+        real :: pet_factor = 1.            ! none        |potential ET unit conversion factor
+
         type (weather_daily) :: weat
         real :: precip_aa = 0.              ! mm         |average annual precipitation
         real :: pet_aa = 0.                 ! mm         |average annual potential ET
