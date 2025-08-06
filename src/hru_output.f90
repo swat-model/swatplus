@@ -20,6 +20,10 @@
       integer :: iob = 0
       integer :: ipl = 0
 	  integer :: ilu = 0
+      real :: bm_max_d = 0.
+      real :: bm_max_m = 0.
+      real :: bm_max_y = 0.
+      real :: bm_max_a = 0.
       real :: const = 0.
       real :: sw_init = 0.
       real :: sno_init = 0.
@@ -36,7 +40,15 @@
         hwb_m(j) = hwb_m(j) + hwb_d(j)
         hnb_m(j) = hnb_m(j) + hnb_d(j)
         hls_m(j) = hls_m(j) + hls_d(j) 
+        bm_max_m = hpw_m(j)%bm_max     ! save off monthly bm_max value
+        bm_max_y = hpw_y(j)%bm_max     ! save off yearly bm_max value
+        bm_max_a = hpw_a(j)%bm_max     ! save off annual bm_max value
         hpw_m(j) = hpw_m(j) + hpw_d(j)
+        hpw_m(j)%bm_max = bm_max_m     ! restore monthly bm_max value
+        hpw_d(j)%bm_max = hpw_d(j)%bioms
+        hpw_m(j)%bm_max = Max(hpw_d(j)%bioms, hpw_m(j)%bm_max)
+        hpw_y(j)%bm_max = Max(hpw_d(j)%bioms, hpw_y(j)%bm_max)
+        hpw_a(j)%bm_max = Max(hpw_d(j)%bioms, hpw_a(j)%bm_max)
         
         hwb_d(j)%sw_final = soil(j)%sw
         hwb_d(j)%sw = (hwb_d(j)%sw_init + hwb_d(j)%sw_final) / 2.
@@ -74,6 +86,7 @@
             end if
           end if
           if (pco%pw_hru%d == "y") then
+            hpw_d(j)%bm_max = hpw_d(j)%bioms
             write (2040,101) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpw_d(j),                  & 
                                                                           lum(ilu)%plant_cov, lum(ilu)%mgt_ops  !! plant weather day 
               if (pco%csvout == "y") then 
@@ -85,14 +98,19 @@
          
         !! check end of month
         if (time%end_mo == 1) then
+          bm_max_m = hpw_m(j)%bm_max
           hwb_y(j) = hwb_y(j) + hwb_m(j)
           hnb_y(j) = hnb_y(j) + hnb_m(j)
           hls_y(j) = hls_y(j) + hls_m(j)
+          bm_max_y = hpw_y(j)%bm_max      ! save off yearly bm_max
           hpw_y(j) = hpw_y(j) + hpw_m(j)
+          hpw_y(j)%bm_max = bm_max_y      ! restore yearly bm_max
           
           const = float (ndays(time%mo + 1) - ndays(time%mo))
           hpw_m(j) = hpw_m(j) // const
           hwb_m(j) = hwb_m(j) // const
+          
+          hpw_m(j)%bm_max = bm_max_m     ! restore monthly bm_max value
           
           !! monthly print
            hwb_m(j)%sw_final = hwb_d(j)%sw_final
@@ -135,6 +153,7 @@
                                                                 hpw_m(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops  
                end if 
            end if
+           hpw_m(j)%bm_max = 0.0
           
           sw_init = hwb_m(j)%sw_final
           sno_init = hwb_m(j)%sno_final
@@ -148,6 +167,7 @@
         
         !! check end of year
         if (time%end_yr == 1) then
+          bm_max_y = hpw_y(j)%bm_max
           hwb_a(j) = hwb_a(j) + hwb_y(j)
           hnb_a(j) = hnb_a(j) + hnb_y(j)
           hls_a(j) = hls_a(j) + hls_y(j)
@@ -157,6 +177,9 @@
           hwb_y(j) = hwb_y(j) // const
           hpw_y(j) = hpw_y(j) // const
           
+          hpw_y(j)%bm_max = bm_max_y   ! Restore bm_max_y
+          hpw_a(j)%bm_max = bm_max_a   ! Restore bm_max_a
+
           !! yearly print
           hwb_y(j)%sw_final = hwb_d(j)%sw_final
           hwb_y(j)%sno_final = hwb_d(j)%sno_final
@@ -201,6 +224,7 @@
                                                                 hpw_y(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops  
                end if 
            end if
+          hpw_y(j)%bm_max = 0.0
            
           !reset yearly parameters in time_control - for calibration runs
         end if
@@ -264,6 +288,7 @@
            hpw_a(j) = hpw_a(j) // time%days_prt
            hpw_a(j)%nplnt = pl_mass(j)%tot_com%n
            hpw_a(j)%pplnt = pl_mass(j)%tot_com%p
+           hpw_a(j)%bm_max = bm_max_a   ! Restore bm_max_a
            write (2043,102) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpw_a(j),           &
                                                                         lum(ilu)%plant_cov, lum(ilu)%mgt_ops  !! plant weather ann
              if (pco%csvout == "y") then 
