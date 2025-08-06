@@ -141,8 +141,8 @@
 
           pl_mass_up%m = bioday * pcom(j)%plstr(ipl)%reg
           pl_mass_up%c = 0.42 * bioday * pcom(j)%plstr(ipl)%reg
-          hpw_d(j)%bm_grow = pl_mass_up%m
-          hpw_d(j)%c_gro = pl_mass_up%c
+          hpw_d(j)%bm_grow = hpw_d(j)%bm_grow + pl_mass_up%m
+          hpw_d(j)%c_gro = hpw_d(j)%c_gro + pl_mass_up%c
                 
           !! increase in plant c
           if (bsn_cc%cswat == 2) then
