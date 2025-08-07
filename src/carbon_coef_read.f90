@@ -8,30 +8,12 @@ subroutine carbon_coef_read
     implicit none
 
     integer :: eof = 0                !           |end of file
-    integer :: soil_test_cntr  = 0    !           |counter for carbon test, cannot exceed nmbr_cbn_tests 
-    ! integer :: soil_phys_test_cntr  = 0     !           |counter for carbon test, cannot exceed nmbr_cbn_tests 
+    integer :: soil_test_cntr  = 0    !           |counter for soil test, cannot exceed nmbr_soil_tests 
     logical :: i_exist = .false.      !           |true if file exists
     character (len=80) :: titldum = ""!           |title of file
     character (len=80) :: header = "" !           |header of file
     character (len=24) :: var_name = "" !
     
-    ! if (bsn_cc%cswat == 2) then
-    !     inquire (file='carbon_coef.cbn', exist=i_exist)
-    !     if (i_exist) then
-    !       open (107,file='carbon_coef.cbn',recl = 1500)
-    !       read (107,*,iostat=eof) titldum
-    !       read (107,*,iostat=eof) header
-    !       read (107,*,iostat=eof) carbdb(1)%hp_rate, carbdb(1)%hs_rate, carbdb(1)%microb_rate, &
-    !             carbdb(1)%meta_rate, carbdb(1)%str_rate, carbdb(1)%microb_top_rate, carbdb(1)%hs_hp, &
-    !             org_allo(1)%a1co2, org_allo(1)%asco2, org_allo(1)%apco2, org_allo(1)%abco2  
-    !       read (107,*,iostat=eof) carbdb(2)%hp_rate, carbdb(2)%hs_rate, carbdb(2)%microb_rate, &
-    !             carbdb(2)%meta_rate, carbdb(2)%str_rate, carbdb(2)%microb_top_rate, carbdb(2)%hs_hp, &
-    !             org_allo(2)%a1co2, org_allo(2)%asco2, org_allo(2)%apco2, org_allo(2)%abco2 
-    !       close (107)
-    !       carbon_coef_file = .true.
-    !     endif
-    ! endif
-
     nmbr_soil_tests = 0     ! comes from soil module
     soil_test_cntr  = 0     ! local variable
     ! soil_phys_test_cntr  = 0
@@ -124,31 +106,6 @@ subroutine carbon_coef_read
                                                       sol_test(soil_test_cntr)%sand,    &
                                                       sol_test(soil_test_cntr)%silt,    &
                                                       sol_test(soil_test_cntr)%clay   
-                ! case("nmbr_soil_phys_tests")
-                !     backspace (107)
-                !     read (107,*,iostat=eof) var_name, nmbr_soil_phys_tests
-                !     allocate(sol_phys_test(nmbr_soil_phys_tests))
-                ! case("soil_phys_test")
-                !     soil_phys_test_cntr = soil_phys_test_cntr + 1
-                !     if (nmbr_soil_phys_tests == 0) then
-                !         write(*, fmt="(a)", advance="yes") "Error: The number of soil phys tests (nmbr_soil_phys_tests) has not been specified in the input file carb_coefs.cbn."
-                !         write(*, fmt="(a)")                "       The soil_phys_test cannot be processed."
-                !         print*
-                !         error stop
-                !     endif
-                !     if (soil_phys_test_cntr > nmbr_soil_phys_tests) then
-                !         write(*, fmt="(a,i3,a)", advance="yes") "Error: The number of soil_phys_test exceeds the input nmbr_soil_phys_tests of", nmbr_soil_phys_tests, " in the input file carb_coefs.cbn."
-                !         write(*, fmt="(a)")                     "       The soil_phys_test cannot be processed."
-                !         print*
-                !         error stop
-                !     endif
-                !     backspace (107)
-                !     read (107,*,iostat=eof) var_name, sol_phys_test(soil_phys_test_cntr)%snam,  &
-                !                                       sol_phys_test(soil_phys_test_cntr)%d,     &
-                !                                       sol_phys_test(soil_phys_test_cntr)%bd,    &
-                !                                       sol_phys_test(soil_phys_test_cntr)%sand,  &
-                !                                       sol_phys_test(soil_phys_test_cntr)%silt,  &
-                                                    !   sol_phys_test(soil_phys_test_cntr)%clay   
                 case default
                     write(*, fmt="(a,a,a)", advance="yes") "Error: The variable ", var_name, "in the input file carb_coefs.cbn is not a recognized variable."
                     write(*, fmt="(a)")                    "       and cannot be processed."
@@ -156,7 +113,6 @@ subroutine carbon_coef_read
                     error stop
               end select
             enddo
-            ! if (sol_cbn_test%d > 0.000001 .and. sol_cbn_test%cbn >= 0.000001 ) print*, "call soil_cbn_adjust"
             carbon_coef_file = .true.
             close (107)
             exit
@@ -168,13 +124,6 @@ subroutine carbon_coef_read
             print*
             error stop
           endif
-        !   if (nmbr_soil_phys_tests > 0 .and. nmbr_soil_phys_tests /= soil_phys_test_cntr ) then
-        !     write(*, fmt="(a,I3,a,i3)", advance="yes")   "Error: The nmbr_soil_phys_tests of",  nmbr_soil_phys_tests, " does not match the input number of soil_phys_tests of", soil_phys_test_cntr
-        !     write(*, fmt="(a,I3,a,i3,a)", advance="yes") "       in the input file carb_coefs.cbn."
-        !     write(*, fmt="(a)")                          "       The soil_phys_test cannot be processed."
-        !     print*
-        !     error stop
-        !   endif
         endif
     endif
     return
