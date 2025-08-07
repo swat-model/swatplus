@@ -50,12 +50,8 @@
       real :: ltxbd_sum = 0.   !              |Sum of layer thickness times bulk density
       real :: wavg_bd = 0.       !              |weighted average of soil carbon
       real :: wavg_cbn = 0.       !              |weighted average of soil carbon
-      real :: wavg_sand = 0.       !              |weighted average of soil carbon
-      real :: wavg_clay = 0.       !              |weighted average of soil carbon
       real :: adjust_frac_bd = 0. !             |computed  weigted average adjustment factor for soil carbon
       real :: adjust_frac_cbn = 0. !             |computed  weigted average adjustment factor for soil carbon
-      real :: adjust_frac_sand = 0. !             |computed  weigted average adjustment factor for soil carbon
-      real :: adjust_frac_clay = 0. !             |computed  weigted average adjustment factor for soil carbon
       logical :: i_exist          !none          |check to determine if a file exists
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
@@ -294,36 +290,38 @@
         ! original data in the layers is maintained.
         if (allocated(sol_test)) then
 
-          ! adjust bulk density first if it is provided in soil test data because the other soil test are
-          ! weighted by buld density and layer thickness.
           do test = 1, nmbr_soil_tests
             if (sol_test(test)%snam == sol(isol)%s%snam) then
-              if (sol_test(test)%bd < 0.0001) exit
-              prev_depth = 0
-              sum_bd = 0.0 
-              sum_thick = 0.0 
-              do i = 1, mlyr
-                if (sol_test(test)%d > prev_depth) then
-                  soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
-                  ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
-                  sum_bd = sum_bd + ltxbd
-                  sum_thick = sum_thick + soil_lyr_thickness
-                  prev_depth = sol(isol)%phys(i)%d
-                else 
-                  exit
-                endif
-              enddo
-              wavg_bd = sum_bd/sum_thick
-              adjust_frac_bd = sol_test(test)%bd / wavg_bd 
-              prev_depth = 0.0
-              do i = 1, mlyr
-                if (sol_test(test)%d > prev_depth) then
-                  sol(isol)%phys(i)%bd = adjust_frac_bd * sol(isol)%phys(i)%bd 
-                  prev_depth = sol(isol)%phys(i)%d
-                else 
-                  exit
-                endif
-              enddo
+
+              ! adjust bulk density first if it is provided in soil test data because 
+              ! the other soil test values are weighted by bulk density and layer thickness.
+              if (sol_test(test)%bd > 0.00001) then
+                prev_depth = 0
+                sum_bd = 0.0 
+                sum_thick = 0.0 
+                do i = 1, mlyr
+                  if (sol_test(test)%d > prev_depth) then
+                    soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
+                    ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
+                    sum_bd = sum_bd + ltxbd
+                    sum_thick = sum_thick + soil_lyr_thickness
+                    prev_depth = sol(isol)%phys(i)%d
+                  else 
+                    exit
+                  endif
+                enddo
+                wavg_bd = sum_bd/sum_thick
+                adjust_frac_bd = sol_test(test)%bd / wavg_bd 
+                prev_depth = 0.0
+                do i = 1, mlyr
+                  if (sol_test(test)%d > prev_depth) then
+                    sol(isol)%phys(i)%bd = adjust_frac_bd * sol(isol)%phys(i)%bd 
+                    prev_depth = sol(isol)%phys(i)%d
+                  else 
+                    exit
+                  endif
+                enddo
+              endif
             endif
           end do
 
@@ -340,16 +338,14 @@
                   ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
                   ltxbd_sum = ltxbd_sum + ltxbd
                   sum_cbn = sum_cbn + ltxbd * sol(isol)%phys(i)%cbn
-                  sum_sand = sum_sand + ltxbd * sol(isol)%phys(i)%sand
-                  sum_clay = sum_clay + ltxbd * sol(isol)%phys(i)%clay
                   prev_depth = sol(isol)%phys(i)%d
                 else 
                   exit
                 endif
               enddo
 
-              do
-                if (sol_test(test)%cbn < 0.0001) exit
+              ! Adjust carbon based on soil test
+              if (sol_test(test)%cbn > 0.00001) then
                 wavg_cbn = sum_cbn/ltxbd_sum
                 adjust_frac_cbn = sol_test(test)%cbn / wavg_cbn 
                 prev_depth = 0.0
@@ -361,30 +357,25 @@
                     exit
                   endif
                 enddo
-                exit
-              enddo
+              endif
 
-              do
-                if (sol_test(test)%sand < 0.0001 .or. &
-                    sol_test(test)%silt < 0.0001 .or. &
-                    sol_test(test)%clay < 0.0001 ) exit
-                wavg_sand = sum_sand/ltxbd_sum
-                adjust_frac_sand = sol_test(test)%sand / wavg_sand 
-                wavg_clay = sum_clay/ltxbd_sum
-                adjust_frac_clay = sol_test(test)%clay / wavg_clay 
+              ! Adjust sand, silt, and clay based on soil test. Note: the sand, silt, and clay 
+              ! cannot be weighted independently and adjusted so that they total 100% for each layer.
+              if (sol_test(test)%sand > 0.00001 .and. &
+                    sol_test(test)%silt > 0.00001 .and. &
+                    sol_test(test)%clay > 0.00001 ) then
                 prev_depth = 0.0
                 do i = 1, mlyr
                   if (sol_test(test)%d > prev_depth) then
-                    sol(isol)%phys(i)%sand = adjust_frac_sand * sol(isol)%phys(i)%sand
-                    sol(isol)%phys(i)%clay = adjust_frac_clay * sol(isol)%phys(i)%clay
+                    sol(isol)%phys(i)%sand = sol_test(test)%sand
+                    sol(isol)%phys(i)%clay = sol_test(test)%clay
                     sol(isol)%phys(i)%silt = 100.0 - (sol(isol)%phys(i)%sand + sol(isol)%phys(i)%clay)
                     prev_depth = sol(isol)%phys(i)%d
                   else 
                     exit
                   endif
                 enddo
-                exit
-              enddo
+              endif
             endif
           enddo
         endif
