@@ -28,8 +28,9 @@ till_eff_days   30
 rtof        0.5
 man_to_c    0.42           
 
-# Soil Carbon Initialization Values
-nmbr_cbn_tests  2
-#         soil_name      depth_mm  cbn_value
-cbn_test  soil_01-h1     12        5.0 
-cbn_test  soil_03-h3     12        0.5 
+# Soil Test Values (sname and depth_mm are required, enter 0.0 for missing values)
+# data are assumed to be weighted average values down to depth_mm
+nmbr_soil_tests  2
+#         soil_name      depth_mm  bulk_density carbon %sand    %silt   %clay
+soil_test soil_01-h1     150        1.8         4.0     30.0     30.0    40.0 
+soil_test soil_03-h3     150        1.6         3.0     40.0     30.0    30.0
