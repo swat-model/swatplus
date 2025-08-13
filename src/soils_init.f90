@@ -28,12 +28,9 @@
       integer :: tot_soil_depth = 0 !mm          |total soil profile depth in millimeters 
       integer :: eof = 0          !              |end of file
       integer :: n = 0            !              |count to use to compute an average
-      integer :: test             !              |soil test index
-      integer :: soil_lyr_thickness !            |temporary variable to store layer thickness
       real :: dep_new1 = 0.       !mm            |depth of top of septic layer
       real :: dep_new2 = 0.       !mm            |depth of bottom of septic layer
       real :: sum_bd = 0.         !              |temporary sum to do weighted average with 
-      real :: sum_thick = 0.         !              |temporary sum to do weighted average with 
       real :: sum_awc = 0.        !              |temporary sum to do weighted average with 
       real :: sum_cbn = 0.        !              |temporary sum to do weighted average with 
       real :: sum_k = 0.          !              |temporary sum to do weighted average with 
@@ -46,12 +43,6 @@
       real :: sum_ec = 0.         !              |temporary sum to do weighted average with 
       real :: sum_cal = 0.        !              |temporary sum to do weighted average with 
       real :: sum_ph = 0.         !              |temporary sum to do weighted average with 
-      real :: ltxbd = 0.       !              |Layer thickness time bulk density of that layer 
-      real :: ltxbd_sum = 0.   !              |Sum of layer thickness times bulk density
-      real :: wavg_bd = 0.       !              |weighted average of soil carbon
-      real :: wavg_cbn = 0.       !              |weighted average of soil carbon
-      real :: adjust_frac_bd = 0. !             |computed  weigted average adjustment factor for soil carbon
-      real :: adjust_frac_cbn = 0. !             |computed  weigted average adjustment factor for soil carbon
       logical :: i_exist          !none          |check to determine if a file exists
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
@@ -283,102 +274,10 @@
           close (107)
         end if
 
-        ! Adjust the input soil values based input soil test values.
-        ! A soil test value is a weighted average based on bulk density and layer thickness 
-        ! down to the test layer depth.  The changes to soil data must result in the same weighted
-        ! average as the soil test value down to the soil test depth.  The relative differences in 
-        ! original data in the layers is maintained.
         if (allocated(sol_test)) then
-
-          do test = 1, nmbr_soil_tests
-            if (sol_test(test)%snam == sol(isol)%s%snam) then
-
-              ! adjust bulk density first if it is provided in soil test data because 
-              ! the other soil test values are weighted by bulk density and layer thickness.
-              if (sol_test(test)%bd > 0.00001) then
-                prev_depth = 0
-                sum_bd = 0.0 
-                sum_thick = 0.0 
-                do i = 1, mlyr
-                  if (sol_test(test)%d > prev_depth) then
-                    soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
-                    ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
-                    sum_bd = sum_bd + ltxbd
-                    sum_thick = sum_thick + soil_lyr_thickness
-                    prev_depth = sol(isol)%phys(i)%d
-                  else 
-                    exit
-                  endif
-                enddo
-                wavg_bd = sum_bd/sum_thick
-                adjust_frac_bd = sol_test(test)%bd / wavg_bd 
-                prev_depth = 0.0
-                do i = 1, mlyr
-                  if (sol_test(test)%d > prev_depth) then
-                    sol(isol)%phys(i)%bd = adjust_frac_bd * sol(isol)%phys(i)%bd 
-                    prev_depth = sol(isol)%phys(i)%d
-                  else 
-                    exit
-                  endif
-                enddo
-              endif
-            endif
-          end do
-
-          do test = 1, nmbr_soil_tests
-            if (sol_test(test)%snam == sol(isol)%s%snam) then
-              prev_depth = 0
-              sum_cbn = 0.    
-              sum_sand = 0.    
-              sum_clay = 0.    
-              ltxbd_sum = 0.0 
-              do i = 1, mlyr
-                if (sol_test(test)%d > prev_depth) then
-                  soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
-                  ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
-                  ltxbd_sum = ltxbd_sum + ltxbd
-                  sum_cbn = sum_cbn + ltxbd * sol(isol)%phys(i)%cbn
-                  prev_depth = sol(isol)%phys(i)%d
-                else 
-                  exit
-                endif
-              enddo
-
-              ! Adjust carbon based on soil test
-              if (sol_test(test)%cbn > 0.00001) then
-                wavg_cbn = sum_cbn/ltxbd_sum
-                adjust_frac_cbn = sol_test(test)%cbn / wavg_cbn 
-                prev_depth = 0.0
-                do i = 1, mlyr
-                  if (sol_test(test)%d > prev_depth) then
-                    sol(isol)%phys(i)%cbn = adjust_frac_cbn * sol(isol)%phys(i)%cbn 
-                    prev_depth = sol(isol)%phys(i)%d
-                  else 
-                    exit
-                  endif
-                enddo
-              endif
-
-              ! Adjust sand, silt, and clay based on soil test. Note: the sand, silt, and clay 
-              ! cannot be weighted independently and adjusted so that they total 100% for each layer.
-              if (sol_test(test)%sand > 0.00001 .and. &
-                    sol_test(test)%silt > 0.00001 .and. &
-                    sol_test(test)%clay > 0.00001 ) then
-                prev_depth = 0.0
-                do i = 1, mlyr
-                  if (sol_test(test)%d > prev_depth) then
-                    sol(isol)%phys(i)%sand = sol_test(test)%sand
-                    sol(isol)%phys(i)%clay = sol_test(test)%clay
-                    sol(isol)%phys(i)%silt = 100.0 - (sol(isol)%phys(i)%sand + sol(isol)%phys(i)%clay)
-                    prev_depth = sol(isol)%phys(i)%d
-                  else 
-                    exit
-                  endif
-                enddo
-              endif
-            endif
-          enddo
+          call soils_test_adjust(isol, mlyr)  ! Adjust the input soils data based input soil test values.
         endif
+
       end do
            
       do isol = 1, msoils
