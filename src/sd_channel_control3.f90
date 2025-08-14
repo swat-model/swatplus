@@ -260,16 +260,14 @@
         if (bsn_cc%qual2e == 1) then
           !! new nutrient channel transformations - overrides qual2e
           conc_chng = 1. - exp(-sd_ch(ich)%n_sol_part * rcurv%ttime)
-          ch_trans%orgn = conc_chng * ht1%orgn
-          ch_trans%orgn = Min (ht1%no3, ch_trans%orgn)
-          ch_trans%no3 = ch_trans%orgn
+          ch_trans%no3 = conc_chng * ht1%no3
+          ch_trans%orgn = ch_trans%no3
           ht2%orgn = ht1%orgn + ch_trans%orgn
           ht2%no3 = ht1%no3 - ch_trans%no3
           
           conc_chng = 1. - exp(-sd_ch(ich)%p_sol_part * rcurv%ttime)
-          ch_trans%sedp = conc_chng * ht1%sedp
-          ch_trans%sedp = Min (ht1%solp, ch_trans%sedp)
-          ch_trans%solp = ch_trans%sedp
+          ch_trans%solp = conc_chng * ht1%solp
+          ch_trans%sedp = ch_trans%solp
           ht2%sedp = ht1%sedp + ch_trans%sedp
           ht2%solp = ht1%solp - ch_trans%solp
         end if
