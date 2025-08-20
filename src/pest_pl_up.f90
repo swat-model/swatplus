@@ -32,7 +32,7 @@
           if (cs_pl(j)%pl_on(ipl)%pest(k) >= 0.0001) then
             if (ipest_db > 0) then
               do ly = 1, soil(j)%nly
-                pest_up = pestdb(ipest_db)%pl_uptake * pcom(j)%plcur(ipl)%uptake(ly) / soil(j)%phys(k)%st   &
+                pest_up = pestdb(ipest_db)%pl_uptake * pcom(j)%plcur(ipl)%uptake(ly) / soil(j)%phys(ly)%st &
                                                                                 * cs_soil(j)%ly(ly)%pest(k)
                 if (pest_up > cs_soil(j)%ly(ly)%pest(k)) pest_up = cs_soil(j)%ly(ly)%pest(k)
                 cs_soil(j)%ly(ly)%pest(k) = cs_soil(j)%ly(ly)%pest(k) - pest_up
