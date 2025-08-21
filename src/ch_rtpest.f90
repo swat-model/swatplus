@@ -37,8 +37,11 @@
       !! zero outputs
       chpst_d(jrch) = chpstz
       
-      !! initialize depth of water for pesticide calculations
+      !! initialize depth of water for pesticide calculations
+
       depth = rcurv%dep
+      
+      !! if depth is less than 0.01 m, set to 0.01 m
       if (depth < 0.01) then
         depth = .01
       endif
