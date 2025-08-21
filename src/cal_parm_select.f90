@@ -842,6 +842,9 @@
          case ("no3_init")
             aqu_dat(ielem)%no3 = chg_par(aqu_dat(ielem)%no3,                &
                          chg_typ, chg_val, absmin, absmax)
+            !! convert ppm -> kg    (m3=10*mm*ha)     kg=m3*ppm/1000
+            aqu_d(ielem)%no3_st = (10. * aqu_d(ielem)%flo * aqu_prm(ielem)%area_ha) &
+                                                       * aqu_dat(ielem)%no3 / 1000.
             
          case ("minp_init")
             aqu_dat(ielem)%minp = chg_par(aqu_dat(ielem)%minp,              &
@@ -875,7 +878,8 @@
          case ("sp_yld")
             aqu_dat(ielem)%spyld = chg_par(aqu_dat(ielem)%spyld,            &
                          chg_typ, chg_val, absmin, absmax)
-            aqu_d(ielem)%stor = 1000. * (aqu_dat(ielem)%dep_bot - aqu_d(ielem)%dep_wt) * aqu_dat(ielem)%spyld
+            aqu_d(ielem)%stor = 1000. * (aqu_dat(ielem)%dep_bot - aqu_d(ielem)%dep_wt) &
+                                                                * aqu_dat(ielem)%spyld
                     
          case ("hlife_n")
             aqu_dat(ielem)%hlife_n = chg_par(aqu_dat(ielem)%hlife_n,        &
