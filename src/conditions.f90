@@ -715,7 +715,7 @@
           
           do ialt = 1, d_tbl%alts
             if (d_tbl%alt(ic,ialt) == "=") then
-              if (sd_ch(ob_num)%order /= d_tbl%cond(ic)%lim_var) then
+              if (sd_ch(ob_num)%order /= int(d_tbl%cond(ic)%lim_const)) then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if

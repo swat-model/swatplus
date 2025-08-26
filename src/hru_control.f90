@@ -821,9 +821,6 @@
       ! output_plantweather
         hpw_d(j)%lai = pcom(j)%lai_sum
         hpw_d(j)%bioms = pl_mass(j)%tot_com%m
-        if (pl_mass(j)%tot_com%m < 0.) then
-          pl_mass(j)%tot_com%m = 0.
-        end if
         hpw_d(j)%residue = soil1(j)%rsd(1)%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
@@ -850,6 +847,10 @@
         hpw_d(j)%phubase0 = phubase(j)
 
       ! output_losses
+        !! don't sum during skip years
+        if (time%yrs > pco%nyskip) then
+          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j)
+        end if
         hls_d(j)%sedyld = sedyld(j) / hru(j)%area_ha
         hls_d(j)%sedorgn = sedorgn(j)
         hls_d(j)%sedorgp = sedorgp(j)
