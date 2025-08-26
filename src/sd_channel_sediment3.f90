@@ -53,7 +53,9 @@
       real :: flovol_ob = 0.
       real :: wet_fill = 0.
       real :: ave_rate
-      !!
+      real :: v_vc = 0.
+      real :: m_exhaust = 0.
+      real :: dur_scale = 0.
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
@@ -95,7 +97,7 @@
       
       !! compute flood plain deposition
       ave_rate = ht1%flo / 86400.     !m3/s
-      sd_ch(ich)%bankfull_flo = 2.
+     
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       florate_ob = ave_rate - bf_flow
       if (florate_ob > 0.) then
@@ -112,7 +114,7 @@
         flovol_ob = Min (0.8 * ht1%flo, flovol_ob)
         !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
-        fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
+        fp_m2 = 4.3 * (sd_ch(ich)%chw ** 1.12) * sd_ch(ich)%chl * 1000.
         exp_co = 0.0001 * fp_m2 / florate_ob
         trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
         trap_eff = Min (1., trap_eff)
@@ -156,9 +158,6 @@
             
       end if     ! florate_ob > 0.
       
-      !! add sediment deposition to calculate mm of deposition over the flood plain later
-      ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm + fp_dep%sed
-      
       !! calc bank erosion
       cohesion = (-87.1 + (42.82 * sd_ch(ich)%ch_clay) - (0.261 * sd_ch(ich)%ch_clay ** 2.) &
                                      + (0.029 * sd_ch(ich)%ch_clay ** 3.))
@@ -179,7 +178,12 @@
       b_exp = min (3.5, b_exp)
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
-        ebank_m = 0.001 / (1. + exp(-4. * (vel_rch / vel_cr) / sd_ch(ich)%chw))
+        dur_scale = 0.000087 * (ob(icmd)%area_ha / 100.) ** (-0.0817)
+        v_vc = dur_scale * sd_ch(ich)%chw * (1. / (1. + exp(-4. * (vel_rch / vel_cr - 1.))))
+        m_exhaust = 0.0002 * sd_ch(ich)%chw
+        ebank_m = 1. / (1. / v_vc + 1. / m_exhaust)
+        !ebank_m = 0.0001 * sd_ch(ich)%chw * (1. / (1. + exp(-4. * (vel_rch / vel_cr - 1.))) - 0.5)
+        !ebank_m = 0.001 / (1. + exp(-4. * (vel_rch / vel_cr) / sd_ch(ich)%chw))
         !ebank_m = 0.00024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
       else
         ebank_m = 0.
@@ -187,22 +191,21 @@
       
       !! write for Peter
       !if (ich == 2133) then
-      !write () time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chw, sd_ch(ich)%chl,   &
-      !    sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
-      !    sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
-      !    bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m, "  0.24 ")
+      write (7777, *) time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chd, sd_ch(ich)%chl,   &
+          sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
+          sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
+          bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m
       !end if
       
-      ch_morph(ich)%w_yr = ch_morph(ich)%w_yr + ebank_m
-
       !! mass of sediment eroded -> t = 1000 * bankcut (mm) * depth (m) * lengthcut (m) * bd (t/m3)
       !! arc length = 0.33 * meander wavelength * sinuosity 
       !arc_len = 0.66 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
-      arc_len = 0.25 * sd_ch(ich)%chl
+      arc_len = 0.2 * sd_ch(ich)%arc_len_fr * sd_ch(ich)%chl
       prot_len = arc_len * sd_ch(ich)%arc_len_fr
       !ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%arc_len_fr * prot_len * sd_ch(ich)%ch_bd
       ebank_t = 1000. * ebank_m * sd_ch(ich)%chd * arc_len * sd_ch(ich)%ch_bd
       bank_ero%sed = ebank_t
+      
       !! calculate associated nutrients
       bank_ero%orgn = bank_ero%sed * sd_ch(ich)%n_conc / 1000.
       bank_ero%sedp = (1. - sd_ch(ich)%p_bio) * bank_ero%sed * sd_ch(ich)%p_conc / 1000.
@@ -234,7 +237,8 @@
       ch_dep%orgn = sd_ch(ich)%n_dep_enr * sd_ch(ich)%wash_bed_fr * bank_ero%orgn
       ch_dep%sedp = sd_ch(ich)%p_dep_enr * sd_ch(ich)%wash_bed_fr * bank_ero%sedp
       ht1 = ht1 - ch_dep
-      !! calculate bed erosion
+      
+      !! currently only simulating wash load and not including bed load transport
       !! no downcutting below equilibrium slope
       if (sd_ch(ich)%chs > 0.000001) then
         !! calc critical shear and shear on bottom of channel
@@ -249,8 +253,11 @@
         !! calc mass of sediment eroded -> t = m * width (m) * length (km) * 1000 m/km * bd (t/m3)
         ebtm_t = 1000. * ebtm_m * sd_ch(ich)%chw * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
       end if
-      ch_morph(ich)%d_yr = ch_morph(ich)%d_yr + ebtm_m
-
+      
+      !! currently only simulating wash load and not including bed load transport
+      ebtm_m = 0.
+      ebtm_t = 0.
+      
       bed_ero%sed = sd_ch(ich)%wash_bed_fr * ebtm_t
       !! calculate associated nutrients
       bed_ero%orgn = bed_ero%sed * sd_ch(ich)%n_conc
@@ -259,8 +266,16 @@
       bed_ero%solp = sd_ch(ich)%p_bio * bed_ero%sed * sd_ch(ich)%p_conc
       bed_ero%no2 = 0.
       rto = bed_ero%flo / ht1%flo
-      !ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
-      !ht1 = ht1 + bed_ero
+      
+      !! don't sum during skip years
+      if (time%yrs > pco%nyskip) then
+        !! add sediment deposition to calculate mm of deposition over the flood plain later
+        ch_morph(ich)%fp_t = ch_morph(ich)%fp_t + fp_dep%sed
+        ch_morph(ich)%ebank_t = ch_morph(ich)%ebank_t + ebank_t
+        ch_morph(ich)%ebank_m = ch_morph(ich)%ebank_m + ebank_m
+        ch_morph(ich)%ebtm_t = ch_morph(ich)%ebtm_t + ebtm_m
+        ch_morph(ich)%ebtm_t = ch_morph(ich)%ebtm_t + ebtm_t
+      end if
       
       end if        ! inflow>0
 

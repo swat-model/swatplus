@@ -9,7 +9,6 @@
       call constit_db_read
       call pest_metabolite_read     !! read pesticide metabolites
       call soil_plant_init
-      call soil_plant_init_cs
       call solt_db_read
       call pest_hru_aqu_read
       call path_hru_aqu_read
