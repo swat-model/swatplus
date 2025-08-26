@@ -90,7 +90,7 @@
           if(bsn_cc%gwflow == 0) then !proceed with original code
           j = wallo(iwallo)%dmd(idmd)%src_ob(isrc)%ob_num
           isrc_wallo = wallo(iwallo)%dmd(idmd)%src(isrc)%src
-          avail = 10. * aqu_d(j)%stor * aqu_prm(j)%area_ha   ! Convert mm of storage over ha to total m³: m³ = 10 * ha * mm
+          avail = 10. * aqu_d(j)%stor * aqu_prm(j)%area_ha   !m3 = 10*ha*mm
           if (dmd_m3 < avail) then
             !! only have flow, no3, and minp(solp) for aquifer
             ht5%flo = dmd_m3

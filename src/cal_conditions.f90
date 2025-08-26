@@ -10,6 +10,7 @@
       use plant_data_module
       use time_module
       use reservoir_module
+      use sd_channel_module
       use climate_module, only : pcp, tmp
       
       use landuse_data_module
@@ -93,7 +94,11 @@
                 cond_met = "n"
                 exit
               end if
-              
+            case ("str_order")     !for hru    
+              if (int(cal_upd(ichg_par)%cond(ic)%targ) /= sd_ch(ielem)%order) then 
+                cond_met = "n"
+                !exit
+              end if
             case ("cal_group")     !for hru    
               if (cal_upd(ichg_par)%cond(ic)%targc /= hru(ielem)%cal_group) then 
                 cond_met = "n"

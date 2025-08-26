@@ -109,10 +109,9 @@
       chpst_d(jrch) = chpstz
       
       !! initialize depth of water for pesticide calculations
-      if (rchdep < 0.01) then
+      depth = rcurv%dep
+      if (depth < 0.01) then
         depth = .01
-      else
-        depth = rchdep
       endif
 
       do ipest = 1, cs_db%num_pests
