@@ -1080,8 +1080,7 @@
             ich = ob_cur
             !set new cover and name for calibration
             sd_ch(ich)%cov = d_tbl%act(iac)%const
-            sd_ch(ich)%order = d_tbl%act(iac)%file_pointer
-        
+            
           ! burning
           case ("burn")
             j = d_tbl%act(iac)%ob_num
