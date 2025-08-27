@@ -255,9 +255,6 @@
             do ihru = 1, sp_ob%hru
               iob = sp_ob1%hru + ihru - 1
               if (ob(iob)%lat < 0) then
-                !! zero yearly irrigation for dtbl conditioning jga6-25
-                hru(ihru)%irr_yr = 0.
-            
                 phubase(ihru) = 0.
                 yr_skip(ihru) = 0
                 isched = hru(ihru)%mgt_ops
