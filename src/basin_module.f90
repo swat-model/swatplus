@@ -248,6 +248,19 @@
       type (basin_print_codes) :: pco
       type (basin_print_codes) :: pco_init
       
+      !! basin sediment budget
+      type basin_sediment_budget
+        real :: upland_t = 0.          !! total upland sediment yield - all land uses - tons
+        real :: ch_ebank_t = 0.        !! total bank erosion - all stream orders - tons
+        real :: up_ch_rto = 0.         !! upland/channel ratio
+        real :: ch_w_yr = 0.           !! basin average widths per year
+        real :: fp_dep_t = 0.          !! total flood plain deposition - stream orders - tons
+        real :: fp_dep_mm = 0.         !! basin flood plain deposition - mm/year
+        real :: res_dep_t = 0.         !! total reservoir deposition - all reservoirs - tons
+        real :: res_trap_eff = 0.      !! average reservoir trap efficiency - all reservoirs
+      end type basin_sediment_budget
+      type (basin_sediment_budget) :: bsn_sedbud
+      
       type mgt_header         
           character (len=12) :: hru =       "        hru"
           character (len=12) :: year =      "       year"

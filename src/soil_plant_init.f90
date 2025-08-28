@@ -1,6 +1,7 @@
       subroutine soil_plant_init
     
       use hru_module
+      use basin_module
       use input_file_module
       use maximum_data_module
       use constituent_mass_module
@@ -42,8 +43,14 @@
           if (eof < 0) exit
           
           do ii = 1, imax
-            read (107,*,iostat=eof) sol_plt_ini(ii)%name, sol_plt_ini(ii)%sw_frac, sol_plt_ini(ii)%nutc,  &
+            if (bsn_cc%nam1 == 0) then
+              read (107,*,iostat=eof) sol_plt_ini(ii)%name, sol_plt_ini(ii)%sw_frac, sol_plt_ini(ii)%nutc,  &
                 sol_plt_ini(ii)%pestc, sol_plt_ini(ii)%pathc, sol_plt_ini(ii)%saltc, sol_plt_ini(ii)%hmetc
+            else
+              read (107,*,iostat=eof) sol_plt_ini(ii)%name, sol_plt_ini(ii)%sw_frac, sol_plt_ini(ii)%nutc,  &
+                sol_plt_ini(ii)%pestc, sol_plt_ini(ii)%pathc, sol_plt_ini(ii)%saltc, sol_plt_ini(ii)%hmetc, &
+                sol_plt_ini(ii)%csc
+            end if
             if (eof < 0) exit
           end do
           close (107)

@@ -852,6 +852,10 @@
         hpw_d(j)%phubase0 = phubase(j)
 
       ! output_losses
+        !! don't sum during skip years
+        if (time%yrs > pco%nyskip) then
+          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j)
+        end if
         hls_d(j)%sedyld = sedyld(j) / hru(j)%area_ha
         hls_d(j)%sedorgn = sedorgn(j)
         hls_d(j)%sedorgp = sedorgp(j)
