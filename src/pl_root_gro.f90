@@ -16,7 +16,6 @@
       real :: rto1 = 0.             !none               |ratio of current years + 1 of growth:years to maturity of perennial
       real :: rto2 = 0.             !none               |ratio of 1 year:years to maturity of perennial
       real :: phumax = 0.
-      real :: rdmax_yr = 0.
              
       idp = pcom(j)%plcur(ipl)%idplt
 
@@ -25,8 +24,10 @@
              pldb(idp)%typ == "warm_annual_tuber" .or. pldb(idp)%typ == "cold_annual_tuber") then
         pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc * 1000. * pldb(idp)%rdmx
       else
-        pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc_p * 1000. * pldb(idp)%rdmx
+        rto = float (pcom(j)%plcur(ipl)%curyr_mat) / float (pldb(idp)%mat_yrs)
+        pcom(j)%plg(ipl)%root_dep = 10. * rto * 1000. * pldb(idp)%rdmx
       end if
+      pcom(j)%plg(ipl)%root_dep = Min (pcom(j)%plg(ipl)%root_dep, 1000. * pldb(idp)%rdmx)
       if (pcom(j)%plg(ipl)%root_dep > soil(j)%zmx) pcom(j)%plg(ipl)%root_dep = soil(j)%zmx
       if (pcom(j)%plg(ipl)%root_dep < 25.4) pcom(j)%plg(ipl)%root_dep = 25.4
 
