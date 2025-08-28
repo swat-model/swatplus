@@ -326,7 +326,7 @@
           pcom(j)%plcur(ipl)%curyr_mat = max (1, pcom(j)%plcur(ipl)%curyr_mat)
           ! set total hu to maturity for perennials
           pcom(j)%plcur(ipl)%phumat_p = pcom(j)%plcur(ipl)%phumat * pldb(idp)%mat_yrs
-            
+          pcom(j)%plcur(ipl)%phuacc_p = pcom(j)%plcur(ipl)%phumat_p * pcomdb(icom)%pl(ipl)%fr_yrmat
           cvm_com(j) = plcp(idp)%cvm + cvm_com(j)
           pcom(j)%rsd_covfac = pcom(j)%rsd_covfac + pldb(idp)%rsd_covfac
           rsdco_plcom(j) = rsdco_plcom(j) + pldb(idp)%rsdco_pl

@@ -397,23 +397,29 @@
       end do
       
       !! average and write by stream order
-      do iord = 1, 12
-        if (ch_morph_ord(iord)%num > 0) then
-          ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / ch_morph_ord(iord)%num
-          ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / ch_morph_ord(iord)%num
-          ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / ch_morph_ord(iord)%num
-        end if
-      end do
+      if (sp_ob%chandeg > 0) then
+        do iord = 1, 12
+          if (ch_morph_ord(iord)%num > 0) then
+            ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / ch_morph_ord(iord)%num
+            ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / ch_morph_ord(iord)%num
+            ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / ch_morph_ord(iord)%num
+          end if
+        end do
+      end if
       
       !! write ch_order_sed.txt
-      do iord = 1, 12
-        write (8001,*) iord, ch_morph_ord(iord)%num, ch_morph_ord(iord)%ebank_t,     &
-          ch_morph_ord(iord)%w_yr, ch_morph_ord(iord)%fp_t, ch_morph_ord(iord)%fp_mm
-      end do
+      if (sp_ob%chandeg > 0) then
+        do iord = 1, 12
+          write (8001,*) iord, ch_morph_ord(iord)%num, ch_morph_ord(iord)%ebank_t,     &
+            ch_morph_ord(iord)%w_yr, ch_morph_ord(iord)%fp_t, ch_morph_ord(iord)%fp_mm
+        end do
+      end if
       
       !! upland/channel sediment ratio
-      bsn_sedbud%up_ch_rto = bsn_sedbud%upland_t / bsn_sedbud%ch_ebank_t
-      bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr / sp_ob%chandeg
+      if (bsn_sedbud%ch_ebank_t > 0.) then
+        bsn_sedbud%up_ch_rto = bsn_sedbud%upland_t / bsn_sedbud%ch_ebank_t
+        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr / sp_ob%chandeg
+      end if
       
       do ires= 1, sp_ob%res
         !! write reservoir trap efficiencies
@@ -425,9 +431,10 @@
       end do
           
       !! basin reservoir deposition and average trap efficiency
-      bsn_sedbud%res_dep_t = bres_in_a%sed - bres_out_a%sed
-      bsn_sedbud%res_trap_eff = bsn_sedbud%res_dep_t / bres_in_a%sed
-      
+      if (bres_in_a%sed > 0.01) then
+        bsn_sedbud%res_dep_t = bres_in_a%sed - bres_out_a%sed
+        bsn_sedbud%res_trap_eff = bsn_sedbud%res_dep_t / bres_in_a%sed
+      end if
       !! write basin sediment budget - ch_sedbud.txt
       write (8002,*) bsn_sedbud 
       

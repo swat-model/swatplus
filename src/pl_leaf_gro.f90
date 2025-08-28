@@ -89,15 +89,15 @@
           ff = f - pcom(j)%plg(ipl)%laimxfr
           pcom(j)%plg(ipl)%laimxfr = f
           
-          exponent = plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p  ! fg added to check value
+          !exponent = plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p  ! fg added to check value
 
-          if (exponent < -16.0) exponent = -16.0                                      ! fg added to check value 
+          !if (exponent < -16.0) exponent = -16.0                                      ! fg added to check value 
           
-          ! f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p +            &
-          !     Exp(plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p))
+          f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p +            &
+               Exp(plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc_p))
 
-          f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p +            &  ! fg change
-              Exp(exponent))
+          !f_p = pcom(j)%plcur(ipl)%phuacc_p / (pcom(j)%plcur(ipl)%phuacc_p +            &  ! fg change
+          !    Exp(exponent))
 
           !pcom(j)%plg(ipl)%laimxfr_p = amin1 (f_p, pcom(j)%plg(ipl)%laimxfr_p)
           !ff_p = f_p - pcom(j)%plg(ipl)%laimxfr_p
