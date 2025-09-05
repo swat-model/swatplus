@@ -459,15 +459,11 @@
         if (pco%cb_hru%d == "y" .or. pco%cb_hru%m == "y"  .or. pco%cb_hru%y == "y" .or. & 
             pco%cb_hru%d == "l" .or. pco%cb_hru%m == "l"  .or. pco%cb_hru%y == "l") then
           open (4548,file = "hru_cbn_lyr.txt", recl = 1500)
-          write (4548,*)  bsn%name, prog
-          write (4548,*)                                     &
-            "freq          jday         mon         day        year        unit hru     name               total soil carbon (Mg/ha) by layer depth in mm "
+          write (4548,*)  bsn%name, prog, "total soil carbon (Mg/ha) by layer depth in mm"
           write (9000,*) "HRU                       hru_cbn_lyr.txt"
           if (pco%csvout == "y") then
             open (4549,file="hru_cbn_lyr.csv", recl = 1500)
-            write (4549,*)  bsn%name, prog
-            write (4549,*)                  &
-            "freq,jday,mon,day,year,unit,hru,name,total soil carbon (Mg/ha) by layer depth in mm"
+            write (4549,*)  bsn%name, prog, "total soil carbon (Mg/ha) by layer depth in mm"
             write (9000,*) "HRU                       hru_cbn_lyr.csv"
           end if
     
