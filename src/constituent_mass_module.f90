@@ -77,9 +77,9 @@
 
       ! constituent mass - soil, plant, aquifer, and channels
       type constituent_mass
-        real, dimension (:), allocatable :: pest        !kg/ha          |pesticide in soil layer
-        real, dimension (:), allocatable :: path        !pathogen hydrographs
-        real, dimension (:), allocatable :: hmet        !heavy metal hydrographs 
+        real, dimension (:), allocatable :: pest        !pesticide (kg/ha)
+        real, dimension (:), allocatable :: path        !pathogen (cfu)
+        real, dimension (:), allocatable :: hmet        !heavy metal (kg/ha) 
         real, dimension (:), allocatable :: salt        !salt ion mass (kg/ha)
         real, dimension (:), allocatable :: salt_min    !salt mineral hydrographs
         real, dimension (:), allocatable :: saltc       !salt ion concentrations (mg/L)
@@ -116,17 +116,6 @@
       type (constituent_mass), dimension (:), allocatable :: ch_benthic
       type (constituent_mass), dimension (:), allocatable :: ch_water_init
       type (constituent_mass), dimension (:), allocatable :: ch_benthic_init
-      
-      ! constituent mass - reservoirs
-      type constituent_mass_res
-        real, dimension (:), allocatable :: pest
-        real, dimension (:), allocatable :: path
-        real, dimension (:), allocatable :: hmet
-        real, dimension (:), allocatable :: salt        !salt ion mass (kg)
-        real, dimension (:), allocatable :: saltc       !salt ion concentrations (g/m3)
-        real, dimension (:), allocatable :: cs          !constituent mass (kg)
-        real, dimension (:), allocatable :: csc         !constituent concentration (g/m3)
-      end type constituent_mass_res
       
       ! storing salt and constituent mass in reservoirs
       type (constituent_mass), dimension (:), allocatable :: res_water
