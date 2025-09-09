@@ -5,7 +5,6 @@
       use maximum_data_module
       use calibration_data_module
       use hru_module
-      use soil_module
 
       implicit none
       
@@ -116,22 +115,9 @@
       
       call proc_open
       
-      !! new checker.out file - always prints
-      open (4000,file = "checker.out",recl=1200)
-      write (4000,*) bsn%name, prog
-      write (4000,*) chk_hdr
-      write (4000,*) chk_unit
-      write (9000,*) "CHK                       checker.out"
-
-      do j = 1, sp_ob%hru
-         write (4000,100) soil(j)%snam, soil(j)%hydgrp, soil(j)%zmx, soil(j)%usle_k, soil(j)%sumfc,  &
-            soil(j)%sumul, hru(j)%lumv%usle_p, hru(j)%lumv%usle_ls, hru(j)%hyd%esco, hru(j)%hyd%epco,      &
-            hru(j)%hyd%cn3_swf, hru(j)%hyd%perco, hru(j)%hyd%latq_co, hru(j)%tiledrain  
-      end do
-
-      100   format(2a16,11f12.4,i12)
-    !! new checker.out file - always prints
-        
+      !! checker output file 
+      if (pco%wb_hru%a == "y") call wb_check
+              
       ! compute unit hydrograph parameters for subdaily runoff
       call unit_hyd_ru_hru
 
@@ -141,12 +127,7 @@
       
       ! save initial time settings for soft calibration runs
       time_init = time
-      !if (bsn_cc%uhyd==1)then
- 
-	  !open(100100,file="paddy_test.csv") !temporary output for paddy Jaehak 2022 
-      !write(100100,'(4a7,20a21)')"Year,","Mon,","Day,","HRU,","Precip,","Irrig,","Seep,","PET,","ET,","WeirH,","Wtrdep,","WeirQ,","SW,","Sedcon,","SedYld,","NO3Con,","NO3Yld,","LAI,","SALT" 
-      !end if
-
+      
       !! simulate watershed processes
       if (time%step < 0) then
         !! export coefficient - average annual
