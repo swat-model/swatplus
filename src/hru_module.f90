@@ -142,23 +142,6 @@
         integer :: cs = 1 !rtb cs
       end type soil_plant_initialize
       type (soil_plant_initialize), dimension (:), allocatable :: sol_plt_ini
-      
-      !rtb salt/cs
-      type soil_plant_initialize_cs
-        character(len=16) :: name = ""
-        character(len=16) :: pestc = ""
-        character(len=16) :: pathc = ""
-        character(len=16) :: saltc = ""
-        character(len=16) :: hmetc = ""
-        character(len=16) :: csc = "" !rtb cs
-        integer :: pest = 1
-        integer :: path = 1
-        integer :: salt = 1
-        integer :: hmet = 1
-        integer :: cs = 1
-      end type soil_plant_initialize_cs
-      type (soil_plant_initialize_cs), dimension (:), allocatable :: sol_plt_ini_cs
-      
         
       type hru_databases
         character(len=40) :: name = ""
