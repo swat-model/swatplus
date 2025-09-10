@@ -266,23 +266,23 @@
             do ly = 1, soil(j)%nly
               write (4572,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                             soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c
+                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%phys(ly)%st
             enddo
           endif
           write (4572,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                         soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
-                        soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c
+                        soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c, soil(j)%sw
           if (pco%csvout == "y") then
             if (layer_output) then
               do ly = 1, soil(j)%nly
                 write (4573,'(*(G0.7,:,","))'), freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                               soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                              soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c
+                              soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%sw
               enddo
             endif
             write (4573,'(*(G0.7,:,","))') freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                           soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
-                          soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c
+                          soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c, soil(j)%sw
           endif 
           
           !write n and p pool values for the soil profile file = "hru_n_p_pool_stat.txt/csv"
