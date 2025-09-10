@@ -65,17 +65,6 @@
       type (soil_test), dimension(:), allocatable :: sol_test
       integer :: nmbr_soil_tests = 0 !! none         |number of soil carbon tests 
 
-      ! type soil_phys_test
-      !   character(len=16) :: snam = ""  !! NA         | soil series name  
-      !   real :: d = 0.                !! mm           | depth in mm of soil test
-      !   real :: bd = 0.               !! Mg/m^3       | bulk density soil test
-      !   real :: sand = 0.             !! %            | percent sand
-      !   real :: silt = 0.             !! %            | percent silt
-      !   real :: clay = 0.             !! %            | percent clay
-      ! end type soil_phys_test
-      ! type (soil_phys_test), dimension(:), allocatable :: sol_phys_test
-      ! integer :: nmbr_soil_phys_tests = 0 !! none         |number of soil carbon tests 
-
       type soil_profile
         character(len=16) :: snam = ""     !! NA            soil series name  
         character(len=16) :: hydgrp = ""    !! NA            hydrologic soil group
