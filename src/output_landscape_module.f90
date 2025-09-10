@@ -1152,6 +1152,7 @@
          character(len=15)  :: lig_c         =    "       lignin_c"      
          character(len=15)  :: water_c       =    "        water_c"
          character(len=15)  :: manure_c      =    "       manure_c"  
+         character(len=15)  :: soil_water    =    "     soil_water"  
          end type output_cpool_header       
       type (output_cpool_header) :: cpool_hdr
       
@@ -1175,6 +1176,7 @@
          character(len=15)  :: lig_c        =  "          kg/ha"      
          character(len=15)  :: water_c      =  "          kg/ha"
          character(len=15)  :: manure_c     =  "          kg/ha"  
+         character(len=15)  :: soil_water   =  "          mm/mm"  
         end type output_cpool_header_units         
       type (output_cpool_header_units) :: cpool_units
 
