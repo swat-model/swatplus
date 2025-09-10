@@ -155,7 +155,7 @@
         end if
         if (print_soil_lyr_depths) then
         write (4558,*)                                     &
-            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+            "freq           jday         mon         day        year        unit hru     name           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
         endif 
         write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
@@ -163,7 +163,7 @@
 
           if (print_soil_lyr_depths) then
             write (4559,*)                                     &
-                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                "freq,jday,mon,day,year,unit,hru,name,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
           endif 
           write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
