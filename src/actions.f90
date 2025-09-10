@@ -238,8 +238,10 @@
               rto1 = (1. - rto)
               irrig(j)%water = rto * res(iob)                           ! organics in irrigation water
               res(iob) = rto1 * res(iob)                                ! remainder stays in reservoir
-              !cs_irr(iob) = rto * res_water(iob)                        ! constituents in irrigation water
-              !res_water(iob) = rto1 * res_water(iob)                    ! remainder stays in reservoir
+              res_ob(iob)%irrig_track = res_ob(iob)%irrig_track + 1     ! Tracker to update irrigation demand
+              res_ob(iob)%d_irrig_day = irrig(j)%demand
+              !cs_irr(iob) = rto * res_water(iob)                       ! constituents in irrigation water
+              !res_water(iob) = rto1 * res_water(iob)                   ! remainder stays in reservoir
               
             end select
                   

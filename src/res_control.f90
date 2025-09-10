@@ -54,8 +54,10 @@
           !! determine reservoir outflow
           irel = res_dat(idat)%release
           d_tbl => dtbl_res(irel)
-          pvol_m3 = 0.5 * res_ob(jres)%pvol
-          evol_m3 = 0.5 * res_ob(jres)%evol
+          !pvol_m3 = 0.5 * res_ob(jres)%pvol
+          !evol_m3 = 0.5 * res_ob(jres)%evol
+          pvol_m3 = res_ob(jres)%pvol                               ! Removed 0.50 * res_ob(jres)%pvol (I don't know why it was there) Jose T
+          evol_m3 = res_ob(jres)%evol                               ! Removed 0.50 * res_ob(jres)%pvol (I don't know why it was there) Jose T
           if (res_wat_d(jres)%area_ha > 1.e-6) then
             dep = wbody%flo / res_wat_d(jres)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
           else
