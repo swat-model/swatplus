@@ -125,7 +125,7 @@
         ! print header with soil layer depths
         if (print_soil_lyr_depths) then
         write (4548,*)                                     &
-            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+           "freq           jday         mon         day        year        unit hru     name           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
         endif 
 
         if (bsn_cc%cswat /= 2) then
@@ -138,7 +138,7 @@
         if (pco%csvout == "y") then
           if (print_soil_lyr_depths) then
             write (4549,*)                                     &
-                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                "freq,jday,mon,day,year,unit,hru,name,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
           endif 
           write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                   (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
