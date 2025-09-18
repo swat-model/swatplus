@@ -174,7 +174,6 @@
           if (eof < 0) exit
           read (107,*,iostat=eof) name, pco%cs_wet%d, pco%cs_wet%m, pco%cs_wet%y, pco%cs_wet%a
           if (eof < 0) exit
-          exit
         else
           do while (eof >= 0)
             read (107,*,iostat=eof) name
@@ -624,6 +623,7 @@
             end select
           end do
         end if
+        exit
       end do
       end if
       close (107)
