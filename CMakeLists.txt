@@ -30,7 +30,7 @@ endif()
 
 if (UNIX)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
-        set(fdialect        "-fpp utils.F90 -free -fpe0 -traceback -diag-disable=10448")
+        set(fdialect        "-fpp -free -fpe0 -traceback -diag-disable=10448")
         set(fdebug          "-warn all")
         set(frelease        "-O")
         set(FFC             "ifo")
