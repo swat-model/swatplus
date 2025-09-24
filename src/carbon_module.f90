@@ -184,7 +184,7 @@
           real :: co2fs3 = 0.            !(kg C ha-1 day-1) |CO2 production resulting from S3 (Passive Humus) transformations  
       end type organic_flux
       type (organic_flux) :: org_flux
-	    type (organic_flux) :: org_flux_zero
+      type (organic_flux) :: org_flux_zero
       
       type carbon_soil_transformations
           real :: meta_micr = 0.        !(kg C ha-1 day-1) |C transformed from Metabolic Litter to S1 (Microbial Biomass) 
