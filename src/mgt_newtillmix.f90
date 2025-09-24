@@ -191,7 +191,7 @@
             
             mix_sw = mix_sw + frac_mixed * soil(jj)%phys(l)%st
             mix_bd = mix_bd + frac_mixed * soil(jj)%phys(l)%bd
-            mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock
+            mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock * sol_mass(l) / 100.
             mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100.
             mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt * sol_mass(l) / 100.
             mix_clay = mix_clay + frac_mixed * soil(jj)%phys(l)%clay * sol_mass(l) / 100.
