@@ -190,10 +190,10 @@
       
       !! write for Peter
       !if (ich == 2133) then
-      write (7777, *) time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chd, sd_ch(ich)%chl,   &
-          sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
-          sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
-          bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m
+      !write (7777, *) time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chd, sd_ch(ich)%chl,   &
+          !sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
+          !sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
+          !bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m
       !end if
       
       !! mass of sediment eroded -> t = 1000 * bankcut (mm) * depth (m) * lengthcut (m) * bd (t/m3)
