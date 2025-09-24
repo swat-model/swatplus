@@ -356,57 +356,57 @@
           character (len=12)  :: id = "         -- "                                        
           character (len=16) :: name =  "   --           "
           character(len=16)  :: area  = "        ha      "  
-          character(len=15)  :: width = "         m      "      
-          character(len=15)  :: wyr =   "      ratio     "      
-          character(len=15)  :: depth = "        m       "       
-          character(len=15)  :: dyr =   "     ratio      "      
-          character(len=15)  :: fp_dep= "         mm     "         
+          character(len=15)  :: width = "         m     "      
+          character(len=15)  :: wyr =   "      ratio    "      
+          character(len=15)  :: depth = "        m      "       
+          character(len=15)  :: dyr =   "     ratio     "      
+          character(len=15)  :: fp_dep= "         mm    "         
       end type ch_header_nam1_units
       type (ch_header_nam1_units) :: ch_hdr_nam1_units
       
       !!MIKE NAM OUTPUTS CH_ORDER_SED.TXT 
       type ch_header_nam2 
-          character(len=16) :: iord =        " stream_order    "
-          character(len=16) :: nord =        " number_order    "
-          character(len=16) :: ebank_t =     " ebank_ord_1     "      
-          character(len=15) :: w_yr =        " w/yr            "      
-          character(len=15) :: fp_dep_t =    " fp_dep_t        "      
-          character(len=15) :: fp_dep_mm =   " fp_dep_mm       "  
+          character(len=16) :: iord =        " stream_order   "
+          character(len=16) :: nord =        " number_order   "
+          character(len=16) :: ebank_t =     " ebank_ord_1    "      
+          character(len=15) :: w_yr =        " w/yr         "      
+          character(len=15) :: fp_dep_t =    " fp_dep_t     "      
+          character(len=15) :: fp_dep_mm =   " fp_dep_mm    "  
       end type ch_header_nam2
       type (ch_header_nam2) :: ch_hdr_nam2
       
       type ch_header_nam2_units     
-          character(len=16)  :: iord =        "     ---         " 
-          character(len=16)  :: nord =        "     ---          "      
-          character(len=16)  :: ebank_t =     " tons            "      
-          character(len=15)  :: w_yr =        " ratio           "      
-          character(len=15)  :: fp_dep_t =    " tons            "      
-          character(len=15)  :: fp_dep_mm =   " mm              "     
+          character(len=16)  :: iord =        "     ---        " 
+          character(len=16)  :: nord =        "     ---        "      
+          character(len=16)  :: ebank_t =     " tons           "      
+          character(len=15)  :: w_yr =        " ratio         "      
+          character(len=15)  :: fp_dep_t =    " tons          "      
+          character(len=15)  :: fp_dep_mm =   " mm            "     
       end type ch_header_nam2_units
       type (ch_header_nam2_units) :: ch_hdr_nam2_units
       
 !!MIKE NAM OUTPUTS CH_SEDBUD.TXT 
       type ch_header_nam3       
-          character(len=16)  :: up_ero =       " upland_ero      "      
-          character(len=15)  :: bank_ero =     " bank_ero        "      
-          character(len=15)  :: up_ch_ratio =  " up/ch_ratio     "      
-          character(len=15)  :: ch_wyr =       " ch_w/yr         "      
-          character(len=15)  :: fp_dep_t =     " fp_dep          "        
-          character(len=15)  :: fp_dep_mm =    " fp_dep          "      
-          character(len=15)  :: res_dep =      " res_dep         " 
-          character(len=15)  :: res_trap_eff = " res_trap_eff   "       
+          character(len=16)  :: up_ero =       " upland_ero     "      
+          character(len=15)  :: bank_ero =     " bank_ero      "      
+          character(len=15)  :: up_ch_ratio =  " up/ch_ratio   "      
+          character(len=15)  :: ch_wyr =       " ch_w/yr       "      
+          character(len=15)  :: fp_dep_t =     " fp_dep        "        
+          character(len=15)  :: fp_dep_mm =    " fp_dep        "      
+          character(len=15)  :: res_dep =      " res_dep       " 
+          character(len=15)  :: res_trap_eff = " res_trap_eff  "       
       end type ch_header_nam3
       type (ch_header_nam3) :: ch_hdr_nam3
       
       type ch_header_nam3_units
-          character(len=16)  :: up_ero       = " tons            "      
-          character(len=15)  :: bank_ero     = " tons            "      
-          character(len=15)  :: up_ch_ratio  = " ratio           "      
-          character(len=15)  :: ch_wyr       = " ratio           "      
-          character(len=15)  :: fp_dep_t     = " tons            "        
-          character(len=15)  :: fp_dep_mm    = " mm              "     
-          character(len=15)  :: res_dep      = " tons            " 
-          character(len=15)  :: res_trap_eff = " null            "          
+          character(len=16)  :: up_ero       = " tons           "      
+          character(len=15)  :: bank_ero     = " tons          "      
+          character(len=15)  :: up_ch_ratio  = " ratio         "      
+          character(len=15)  :: ch_wyr       = " ratio         "      
+          character(len=15)  :: fp_dep_t     = " tons          "        
+          character(len=15)  :: fp_dep_mm    = " mm            "     
+          character(len=15)  :: res_dep      = " tons          " 
+          character(len=15)  :: res_trap_eff = " null          "          
       end type ch_header_nam3_units
       type (ch_header_nam3_units) :: ch_hdr_nam3_units
 

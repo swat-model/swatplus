@@ -26,6 +26,9 @@
       real :: tot_lyr_p
       real :: tot_prof_n
       real :: tot_prof_p
+      real :: lyr_swc           !mm/mm       |layer soil water content including wilting point moisture content.
+      real :: prf_swc = 0.0     !mm/mm       |average profile soil water content including wilting point moisture content.
+      real :: prf_depth = 0.0   !mm          |depth of soil profile.
       integer :: iihru = 0      !none        |counter
       integer :: j = 0          !none        |counter
       integer :: iob = 0
@@ -125,7 +128,7 @@
         ! print header with soil layer depths
         if (print_soil_lyr_depths) then
         write (4548,*)                                     &
-            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+           "freq           jday         mon         day        year        unit hru     name           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
         endif 
 
         if (bsn_cc%cswat /= 2) then
@@ -138,7 +141,7 @@
         if (pco%csvout == "y") then
           if (print_soil_lyr_depths) then
             write (4549,*)                                     &
-                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                "freq,jday,mon,day,year,unit,hru,name,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
           endif 
           write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                   (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
@@ -152,7 +155,7 @@
         end if
         if (print_soil_lyr_depths) then
         write (4558,*)                                     &
-            "   -             -           -           -           -           -   -        -           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+            "freq           jday         mon         day        year        unit hru     name           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
         endif 
         write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
@@ -160,7 +163,7 @@
 
           if (print_soil_lyr_depths) then
             write (4559,*)                                     &
-                "-,-,-,-,-,-,-,-,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                "freq,jday,mon,day,year,unit,hru,name,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
           endif 
           write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                 (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
@@ -262,27 +265,37 @@
           endif 
 
           !write carbon pool for the soil profile file = "hru_cpool_stat.txt/csv"
+          prf_swc = 0.0
+          prf_depth = 0.0
+          do ly = 1, soil(j)%nly
+            prf_swc = prf_swc + soil(j)%phys(ly)%st + soil(j)%phys(ly)%wp
+            prf_depth = prf_depth + soil(j)%phys(ly)%thick
+          enddo
+          prf_swc = prf_swc / prf_depth
+
           if (layer_output) then
             do ly = 1, soil(j)%nly
+              lyr_swc = (soil(j)%phys(ly)%st + soil(j)%phys(ly)%wp) / soil(j)%phys(ly)%thick
               write (4572,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                             soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c
+                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, lyr_swc
             enddo
           endif
           write (4572,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                         soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
-                        soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c
+                        soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c, prf_swc
           if (pco%csvout == "y") then
             if (layer_output) then
               do ly = 1, soil(j)%nly
+                lyr_swc = (soil(j)%phys(ly)%st + soil(j)%phys(ly)%wp) / soil(j)%phys(ly)%thick
                 write (4573,'(*(G0.7,:,","))'), freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                               soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                              soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c
+                              soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, lyr_swc
               enddo
             endif
             write (4573,'(*(G0.7,:,","))') freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                           soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
-                          soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c
+                          soil_prof_microb%c, soil_prof_lig%c, soil_prof_water%c, soil_prof_man%c, prf_swc
           endif 
           
           !write n and p pool values for the soil profile file = "hru_n_p_pool_stat.txt/csv"
