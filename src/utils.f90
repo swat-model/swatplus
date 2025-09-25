@@ -21,7 +21,7 @@ real function exp_w(y)
         write(error_unit,'(A)') "Intel Fortran compiler stack trace"
         call tracebackqq(USER_EXIT_CODE=-1)
 #elif defined(__GFORTRAN__)
-        write(error_unit,'(A)') "Intel Fortran compiler stack trace"
+        write(error_unit,'(A)') "GNU Fortran compiler stack trace"
         call backtrace()
 #else
         write(error_unit, *)  "No stack trace available: Unknown compiler"
