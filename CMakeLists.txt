@@ -40,7 +40,7 @@ if (UNIX)
         set(fdebug          "-warn all -O0")
         set(frelease        "-O")
         set(FFC             "ifx")
-        # link_libraries("-static")
+        link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
         set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
         set(fdebug          "-Wall")
@@ -58,7 +58,7 @@ elseif(WIN32)
         set(FFC             "ifo")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
-        set(fdialect        "/-fpp free /fpe0 /traceback")
+        set(fdialect        "/fpp free /fpe0 /traceback")
         set(fdebug          "/warn:all")
         set(frelease        "/O")
         set(FFC             "ifx")
@@ -138,7 +138,7 @@ install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION ${PROJECT_SOURCE
 
 #############################################################################
 # Testing
-find_package(Python3 REQUIRED)
+find_package(Python3 QUIET)
 
 set(spcheck "${PROJECT_SOURCE_DIR}/test/spcheck.py")
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
