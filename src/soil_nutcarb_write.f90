@@ -176,12 +176,12 @@
           if (layer_output) then
             profile_depth = int(soil(j)%phys(soil(j)%nly)%d)
             do ly = 1, soil(j)%nly
-              write (4561,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              write (4561,10) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                   soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                   soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
             enddo
           endif
-          write (4561,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+          write (4561,10) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
               soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
               soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
           if (pco%csvout == "y") then
@@ -377,6 +377,7 @@
       !! write all carbon, organic n and p, and mineral n and p for the soil profile, plants, and residue
       write (4566,*) time%day, time%yrc, ' basin ', bsn_org_soil%c, bsn_org_pl%c, bsn_org_rsd%c
           
+      10 FORMAT(A5,8I5,1X,A15,8F15.7)
       return
 
       end subroutine soil_nutcarb_write
