@@ -268,17 +268,16 @@
           prf_swc = 0.0
           prf_depth = 0.0
           do ly = 1, soil(j)%nly
-            prf_swc = prf_swc + soil(j)%phys(ly)%st + soil(j)%phys(ly)%wp
+            prf_swc = prf_swc + soil(j)%phys(ly)%tot_sw
             prf_depth = prf_depth + soil(j)%phys(ly)%thick
           enddo
           prf_swc = prf_swc / prf_depth
 
           if (layer_output) then
             do ly = 1, soil(j)%nly
-              lyr_swc = (soil(j)%phys(ly)%st + soil(j)%phys(ly)%wp) / soil(j)%phys(ly)%thick
               write (4572,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                             soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, lyr_swc
+                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%phys(ly)%thick
             enddo
           endif
           write (4572,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
