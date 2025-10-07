@@ -277,7 +277,7 @@
             do ly = 1, soil(j)%nly
               write (4572,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                             soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%phys(ly)%thick
+                            soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%phys(ly)%tot_sw
             enddo
           endif
           write (4572,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
