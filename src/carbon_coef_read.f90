@@ -1,5 +1,7 @@
 subroutine carbon_coef_read
 
+    ! Purpose: Read in variables for calibration purposes.
+
     use carbon_module
     use basin_module
     use tillage_data_module 
