@@ -50,6 +50,7 @@
         real :: up = 0.             !! mm H2O/mm    ! soil water content of soil at -0.033 MPa (field capacity)
         real :: wp = 0.             !! mm H20/mm    ! soil water content of soil at -1.5 MPa (wilting point)
         real :: wpmm = 0.           !! mm H20       ! water content of soil at -1.5 MPa (wilting point)
+        real :: tot_sw = 0.         !! mm H20       ! total soil water content in mm/mm by layer that includes wilting point water content   
       end type soil_physical_properties
       type (soil_physical_properties),dimension (:), allocatable:: phys1
 
