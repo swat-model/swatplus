@@ -475,6 +475,11 @@
             soil(j)%sw_300 = soil(j)%sw_300 + soil(j)%phys(ly)%st
           end if
         end do
+
+        ! compute total soil water for each layer in mm/mm of water content
+        do ly = 1, soil(j)%nly
+          soil(j)%phys(ly)%tot_sw = (soil(j)%phys(ly)%st / soil(j)%phys(ly)%thick) + soil(j)%phys(ly)%wp 
+        end do
         
         !! compute actual ET for day in HRU
         etday = ep_day + es_day + canev
