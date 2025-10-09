@@ -2,7 +2,6 @@
     
       use carbon_module
       
-      ! test
       implicit none
       
       character (len=80) :: titldum = ""!           |title of file
