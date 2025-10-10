@@ -28,6 +28,11 @@ till_eff_days   30
 rtof        0.5
 man_to_c    0.42           
 
+# meta, str, and lignin partioning fractions
+meta_frac       0.85
+str_frac        0.15
+lig_frac        0.12
+
 # Soil Test Values (sname and depth_mm are required, enter 0.0 for missing values).
 # If sand, silt, clay are not 0.0 they must total to 100.0
 # data are assumed to be weighted average values down to depth_mm
