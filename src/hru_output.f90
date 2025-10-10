@@ -299,9 +299,11 @@
              hpw_a(j) = hpwz
          end if
          
-         if (time%end_sim == 1 .and. pco%cb_hru%a == "y") then
-          call soil_nutcarb_write(" a")    
-         endif
+          if (time%end_sim == 1) then
+            if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
+              call soil_nutcarb_write(" e")    
+            endif
+          endif
 
          !! write average annual crop yields
          if (time%end_sim == 1) then
