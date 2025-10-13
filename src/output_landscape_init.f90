@@ -652,7 +652,7 @@
         !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
         if (bsn_cc%cswat == 2) then
           if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
-            open (4586.,file = "hru_begsim_soil_prop.txt", recl = 1500)
+            open (4586,file = "hru_begsim_soil_prop.txt", recl = 1500)
             write (4586,*)  bsn%name, prog
             write (4586,*)  endsim_soil_prop_hdr  ! begsim can use the same header as endsim 
             write (9000,*) "HRU                       hru_begsim_soil_prop.txt"
