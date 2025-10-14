@@ -127,7 +127,7 @@
            do
              f1 = cuminf(k) + adj_hc * Real(time%dtm) / 60. +        &
                    psidt * Log((tst + psidt)/(cuminf(k) + psidt))
-             if (Abs(f1 - tst) <= 0.001) then
+             if (abs(f1 - tst) <= 0.001) then
                cuminf(k) = f1
                excum(k) = cumr(k) - cuminf(k)
                if (k == 1) then
