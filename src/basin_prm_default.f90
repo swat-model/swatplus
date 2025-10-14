@@ -2,6 +2,7 @@
     
        use basin_module
        use hru_module, only :  uptake
+       use utils
        
        implicit none
       
@@ -53,7 +54,7 @@
          uptake%water_dis = 10.0       !! the uptake distribution for water is hardwired - users are not allowed to modify
          uptake%water_norm = 1. - exp(-uptake%water_dis)
          uptake%n_norm = 1. - exp(-bsn_prm%n_updis)
-         uptake%p_norm = 1. - exp(-bsn_prm%p_updis)
+         uptake%p_norm = 1. - exp_w(-bsn_prm%p_updis)
          
          !! set maximum days to store hru, ru and channel output
          bsn_prm%day_lag_mx = 2
