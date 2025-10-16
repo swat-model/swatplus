@@ -1,4 +1,5 @@
       subroutine soils_init
+      ! Initialize soils data
       
       use hru_module, only : hru, wfsh, ihru, isep, iseptic, i_sep
       use soil_module
