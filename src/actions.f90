@@ -86,6 +86,8 @@
       real :: stor_m3 = 0.
       character(len=1) :: action = ""      !         |
       character(len=40) :: lu_prev = ""    !         |
+      print *, "Hello my name is Gerardo and I am in the code"
+      stop
 
       do iac = 1, d_tbl%acts
         action = "n"
