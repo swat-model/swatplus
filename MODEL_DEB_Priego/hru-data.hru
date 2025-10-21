@@ -1,0 +1,12 @@
+hru-data.hru: written by SWAT+ editor v2.3.3 on 2025-03-25 10:57 for SWAT+ rev.60.5.7
+      id  name                          topo             hydro              soil            lu_mgt   soil_plant_init         surf_stor              snow             field  
+       1  hru01                    topohru01             hyd01            665220      frsd_new_lum        soilplant1              null           snow001              null  
+       2  hru02                    topohru02             hyd02            665220      frsd_new_lum        soilplant1              null           snow001              null  
+       3  hru03                    topohru03             hyd03            665220      frsd_new_lum        soilplant1              null           snow001              null  
+       4  hru04                    topohru04             hyd04            665220      frsd_new_lum        soilplant1              null           snow001              null  
+       5  hru05                    topohru05             hyd05            665220          barn_lum        soilplant1              null           snow001              null  
+       6  hru06                    topohru06             hyd06            665220          barn_lum        soilplant1              null           snow001              null  
+       7  hru07                    topohru07             hyd07            665220      frsd_mat_lum        soilplant1              null           snow001              null  
+       8  hru08                    topohru08             hyd08            665220      frsd_mat_lum        soilplant1              null           snow001              null  
+       9  hru09                    topohru09             hyd09            665220      frsd_mat_lum        soilplant1              null           snow001              null  
+      10  hru10                    topohru10             hyd10            665220      frsd_mat_lum        soilplant1              null           snow001              null  

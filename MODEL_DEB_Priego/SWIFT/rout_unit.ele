@@ -1,0 +1,12 @@
+rout_unit.ele: written by SWAT+ editor v2.3.3 on 2025-03-25 10:57 for SWAT+ rev.60.5.7
+      id  name                   obj_typ    obj_id          frac               dlr
+       1  hru01                      hru         1     7.7087E-3                 0
+       2  hru02                      hru         2     9.3277E-3                 0
+       3  hru03                      hru         3     5.5071E-3                 0
+       4  hru04                      hru         4     1.2756E-3                 0
+       5  hru05                      hru         5     5.0901E-4                 0
+       6  hru06                      hru         6     1.9011E-4                 0
+       7  hru07                      hru         7     1.7147E-2                 0
+       8  hru08                      hru         8     9.3480E-2                 0
+       9  hru09                      hru         9     3.7995E-1                 0
+      10  hru10                      hru        10     4.8491E-1                 0

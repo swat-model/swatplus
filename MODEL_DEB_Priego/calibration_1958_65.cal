@@ -1,0 +1,15 @@
+calibration.cal: written by SWAT++SPOTPY
+12
+cal_parm               chg_typ       chg_val     conds  soil_lyr1  soil_lyr2       yr1       yr2      day1      day2   obj_tot
+perco                   absval         0.991         0          0          0         0         0         0         0         0  
+petco                   absval         0.992         0          0          0         0         0         0         0         0  
+canmx                   absval          1.82         0          0          0         0         0         0         0         0  
+surlag                  absval         0.703         0          0          0         0         0         0         0         0  
+awc                     absval         0.499         0          0          0         0         0         0         0         0  
+k                       absval          42.0         0          0          0         0         0         0         0         0  
+bd                      absval          1.05         0          0          0         0         0         0         0         0  
+snomelt_tmp             absval          1.99         0          0          0         0         0         0         0         0  
+snofall_tmp             absval        -0.259         0          0          0         0         0         0         0         0  
+snomelt_max             absval          2.02         0          0          0         0         0         0         0         0  
+snomelt_min             absval          1.32         0          0          0         0         0         0         0         0  
+snomelt_lag             absval         0.483         0          0          0         0         0         0         0         0  

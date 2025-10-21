@@ -1,0 +1,12 @@
+ls_unit.ele: written by SWAT+ editor v2.3.3 on 2025-03-25 10:57 for SWAT+ rev.60.5.7
+      id  name                   obj_typ  obj_typ_no      bsn_frac      sub_frac      reg_frac  
+       1  hru01                      hru           1     7.7087E-3       0.00771       0.00000  
+       2  hru02                      hru           2     9.3277E-3       0.00933       0.00000  
+       3  hru03                      hru           3     5.5071E-3       0.00551       0.00000  
+       4  hru04                      hru           4     1.2756E-3       0.00128       0.00000  
+       5  hru05                      hru           5     5.0901E-4       0.00051       0.00000  
+       6  hru06                      hru           6     1.9011E-4       0.00019       0.00000  
+       7  hru07                      hru           7     1.7147E-2       0.01715       0.00000  
+       8  hru08                      hru           8     9.3480E-2       0.09348       0.00000  
+       9  hru09                      hru           9     3.7995E-1       0.37995       0.00000  
+      10  hru10                      hru          10     4.8491E-1       0.48491       0.00000  

@@ -1,0 +1,5 @@
+title
+2
+MAX_HITS	NAME		DTABLE
+  1       frsd_to_barn   forest_to_barn 
+  1       barn_to_frsd   barn_to_forest  

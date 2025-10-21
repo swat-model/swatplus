@@ -1,0 +1,3 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+         day          yr        unit           str_c             lig_c         meta_c          man_c          hum_c         phum_c       mb_c 
+          --          --          --           kg/ha             kg/ha          kg/ha          kg/ha          kg/ha          kg/ha          kg/ha

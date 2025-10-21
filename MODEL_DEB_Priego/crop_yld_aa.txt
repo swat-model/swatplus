@@ -1,0 +1,3 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+                                                                            --YIELD (kg/ha)--
+  jday   mon   day    yr    unit PLANTNM                         MASS          C           N           P

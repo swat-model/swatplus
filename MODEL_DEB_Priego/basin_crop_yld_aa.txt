@@ -1,0 +1,2 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+       year      plant_no   plant_name       harv_area(ha)     yld(t)          yld(t/ha)      

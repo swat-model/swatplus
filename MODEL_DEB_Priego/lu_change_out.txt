@@ -1,0 +1,2 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+          hru       year         mon         day     operation   lu_before         lu_after

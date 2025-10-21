@@ -1,0 +1,14 @@
+ Hubbard_Brook_Watershed_2
+          10
+   iwst                                  name                   land_use                                       slope      hydgrp                                                                                                                                                                                                                              null          null
+    ---                                  ----                   --------                                         m/m      ------                                                                                                                                                                                                                              null          null
+       1                                 hru01                   frsd_new_lum                                  0.5371E-01 B                           null            null
+       2                                 hru02                   frsd_new_lum                                  0.1497     B                           null            null
+       3                                 hru03                   frsd_new_lum                                  0.2490     B                           null            null
+       4                                 hru04                   frsd_new_lum                                  0.4439     B                           null            null
+       5                                 hru05                   barn_lum                                      0.4057E-01 B                           null            null
+       6                                 hru06                   barn_lum                                      0.1364     B                           null            null
+       7                                 hru07                   frsd_mat_lum                                  0.6808E-01 B                           null            null
+       8                                 hru08                   frsd_mat_lum                                  0.1607     B                           null            null
+       9                                 hru09                   frsd_mat_lum                                  0.2832     B                           null            null
+      10                                 hru10                   frsd_mat_lum                                  0.4690     B                           null            null

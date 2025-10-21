@@ -1,0 +1,21 @@
+weather-sta.cli: written by SWAT+ editor v2.3.3 on 2025-03-25 10:57 for SWAT+ rev.60.5.7
+name                           wgn                        pcp                        tmp                        slr                        hmd                        wnd           wnd_dir          atmo_dep  
+s43556n71250w             436n712w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43556n71562w             436n716w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43556n71875w             436n719w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43556n72188w             436n722w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43868n71250w             439n712w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43868n71562w             439n716w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43868n71875w             439n719w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43868n72188w             439n722w                        sim                        sim                        sim                        sim                        sim              null              null  
+s43919n71758w             439n719w                 WG_WS2.pcp                  STA14.tmp                        sim                        sim                        sim              null              null  
+s43921n71766w             439n719w                 WG_WS2.pcp                   STA6.tmp                        sim                        sim                        sim              null              null  
+s43927n71747w             439n719w                 WG_WS2.pcp                  STA23.tmp                        sim                        sim                        sim              null              null  
+s43944n71701w             439n716w                 WG_WS2.pcp                  STA17.tmp                        sim                        sim                        sim              null              null  
+s43952n71725w             439n719w                 WG_WS2.pcp                     HQ.tmp                        sim                        sim                        sim              null              null  
+s43957n71735w             439n719w                 WG_WS2.pcp                   STA1.tmp                        sim                        sim                        sim              null              null  
+s43958n71725w             439n719w                 WG_WS2.pcp                     HQ.tmp                        sim                        sim                        sim              null              null  
+s44180n71250w             442n712w                        sim                        sim                        sim                        sim                        sim              null              null  
+s44180n71562w             442n716w                        sim                        sim                        sim                        sim                        sim              null              null  
+s44180n71875w             442n719w                        sim                        sim                        sim                        sim                        sim              null              null  
+s44180n72188w             442n722w                        sim                        sim                        sim                        sim                        sim              null              null  

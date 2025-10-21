@@ -1,0 +1,3 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+   jday   mon   day    yr   unit  gis_id  name                       flo          dep_wt            stor          rchrg           seep          revap         no3_st           minp           orgn           orgp       no3_rchg       no3_loss        no3_lat       no3_seep        flo_cha        flo_res         flo_ls
+                                                                       mm              m              mm             mm             mm             mm        kg/ha_N        kg/ha_P        kg/ha_N        kg/ha_P        kg/ha_N        kg/ha_N        kg/ha_N        kg/ha_N             mm             mm             mm
