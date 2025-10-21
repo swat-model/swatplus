@@ -1,0 +1,3 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+  stream_order    number_order    ebank_ord_1     w/yr           fp_dep_t       fp_dep_mm     
+      ---             ---         tons            ratio          tons           mm            

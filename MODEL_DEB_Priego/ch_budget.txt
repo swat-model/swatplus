@@ -1,0 +1,3 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+        chan  name                  area           width           w/yr         depth           d/yr          fp_dep    
+          --    --                   ha               m           ratio            m           ratio              mm    

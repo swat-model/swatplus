@@ -1,0 +1,3 @@
+ Hubbard_Brook_Watershed_2 SWAT+ 2025-10-21        MODULAR Rev 2025.unknown                               
+  upland_ero      bank_ero       up/ch_ratio    ch_w/yr        fp_dep         fp_dep         res_dep        res_trap_eff  
+  tons            tons           ratio          ratio          tons           mm             tons           null          
