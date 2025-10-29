@@ -26,7 +26,7 @@
       end type actions_var
        
       type decision_table
-        character (len=25) :: name = ""                                 ! name of the decision table
+        character (len=40) :: name = ""                                 ! name of the decision table
         integer :: conds = 0                                            ! number of conditions
         integer :: alts = 0                                             ! number of alternatives
         integer :: acts = 0                                             ! number of actions

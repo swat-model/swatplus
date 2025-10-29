@@ -121,7 +121,9 @@
       
       !! zero outgoing flow and sediment - ht2
       ht2 = hz
-      obcs(icmd)%hd(:) = hin_csz
+      if (cs_db%num_tot > 0.) then
+        obcs(icmd)%hd(:) = hin_csz
+      end if
       
       !! zero daily in/out morphology and sediment budget output
       ch_sed_bud(ich) = ch_sed_budz

@@ -6,7 +6,7 @@
       
       implicit none 
 
-!!!  SWAT-DEG CHANNEL
+!!!  Water Allocation Output
       if (db_mx%wallo_db > 0) then
         if (pco%water_allo%d == "y") then
           open (3110,file="water_allo_day.txt",recl = 1500)

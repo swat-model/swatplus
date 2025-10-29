@@ -11,7 +11,6 @@
       integer :: date_time(8)           !              |
       character*10 b(3)                 !              |
       integer :: iob = 0
-      integer :: j = 0                  !none		   |counter
       integer, allocatable, dimension(:) :: cmd_next
     
       prog = " SWAT+ @TODAY@        MODULAR Rev @YEAR@.@SWAT_VERSION@"
@@ -92,7 +91,12 @@
       call dtbl_flocon_read
             
       ! read water treatment and water allocation files - before hru lum tables
-      call treat_read_om
+      call om_treat_read
+      call om_use_read
+      call water_treatment_read
+      call water_use_read
+      call water_tower_read
+      call water_pipe_read
       call water_allocation_read
       
       call hru_dtbl_actions_init
@@ -115,9 +119,7 @@
       
       call proc_open
       
-      !! checker output file 
-      if (pco%wb_hru%a == "y") call wb_check
-              
+        
       ! compute unit hydrograph parameters for subdaily runoff
       call unit_hyd_ru_hru
 
@@ -127,7 +129,12 @@
       
       ! save initial time settings for soft calibration runs
       time_init = time
-      
+      !if (bsn_cc%uhyd==1)then
+ 
+	  !open(100100,file="paddy_test.csv") !temporary output for paddy Jaehak 2022 
+      !write(100100,'(4a7,20a21)')"Year,","Mon,","Day,","HRU,","Precip,","Irrig,","Seep,","PET,","ET,","WeirH,","Wtrdep,","WeirQ,","SW,","Sedcon,","SedYld,","NO3Con,","NO3Yld,","LAI,","SALT" 
+      !end if
+
       !! simulate watershed processes
       if (time%step < 0) then
         !! export coefficient - average annual
