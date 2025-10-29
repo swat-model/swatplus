@@ -71,7 +71,6 @@
         sd_ch(i)%name = sd_chd(idb)%name
         sd_ch(i)%obj_no = icmd
         sd_ch(i)%order = sd_chd(idb)%order
-        if (sd_ch(i)%order > 12) sd_ch(i)%order = 1
         sd_ch(i)%chw = sd_chd(idb)%chw
         sd_ch(i)%chd = sd_chd(idb)%chd
         sd_ch(i)%chs = sd_chd(idb)%chs
