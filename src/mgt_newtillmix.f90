@@ -137,7 +137,7 @@
       !!=======================
       if (bsn_cc%cswat == 2) then
         if (bio_mix_event .eqv. .true.) then
-          if (tillage_switch(jj) .eq. 1 .and. tillage_days(jj) .le. 30) then
+          if (tillage_switch(jj) .eq. 1 .and. tillage_days(jj) .le. till_eff_days) then
             if (bio_mix_event) then
               dtil = 0.
               bio_mix_event = .false.
