@@ -1,5 +1,5 @@
       subroutine ch_rtpest
-
+      
 !!     ~ ~ ~ PURPOSE ~ ~ ~
 !!     this subroutine computes the daily stream pesticide balance
 !!     (soluble and sorbed)     
@@ -13,7 +13,7 @@
       use pesticide_data_module
 
       implicit none
-
+      
       integer :: ipest = 0      !none                   |pesticide counter - sequential
       integer :: jpst = 0       !none                   |pesticide counter from data base
       integer :: ipseq = 0      !none                   |sequential basin pesticide number
@@ -36,12 +36,10 @@
 
       !! zero outputs
       chpst_d(jrch) = chpstz
-
+      
       !! initialize depth of water for pesticide calculations
 
       depth = rcurv%dep
-
-      !! if depth is less than 0.01 m, set to 0.01 m.
       if (depth < 0.01) then
         depth = .01
       endif
@@ -51,13 +49,13 @@
 
         !! volume of water entering reach and stored in reach
         wtrin = ht1%flo + ch_stor(jrch)%flo
-
+         
         !! pesticide transported into reach during day
         pstin = hcs1%pest(ipest) 
 
         !! calculate mass of pesticide in reach
         chpstmass = pstin + ch_water(jrch)%pest(ipest)
-
+      
         !! calculate mass of pesticide in bed sediment
         sedpstmass = ch_benthic(jrch)%pest(ipest)
 
@@ -71,7 +69,7 @@
         if (wtrin / 86400. > 1.e-9) then
           !! calculate sediment concentration
           sedcon = ht1%sed / wtrin * 1.e6
-
+          
           !! set kd
           kd = pestdb(jpst)%koc * sd_ch(jrch)%carbon / 100.
 
@@ -169,7 +167,7 @@
             sedpstmass = sedpstmass + (chpstmass * frsol - solmax)
             chpstmass = chpstmass - (chpstmass * frsol - solmax)
           end if
-
+        
         else   
           !!insignificant flow
           sedpstmass = sedpstmass + chpstmass
@@ -207,7 +205,7 @@
         rto_out = Min (1., rto_out)
         hcs2%pest(ipest) = rto_out * chpstmass
         ch_water(jrch)%pest(ipest) = (1. - rto_out) * chpstmass
-
+        
       end do
 
       return
