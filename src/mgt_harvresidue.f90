@@ -25,7 +25,7 @@
       integer, intent (in) :: iharvop   !               |harvest operation type
       
       j = jj
-
+      !! prevent the harvest efficiency from being too small
       if (harveff < .00001) then
             eff = harvop_db(iharvop)%eff
       else
@@ -37,12 +37,14 @@
       
       !! harvest plant surface residue
       soil1(j)%rsd(1) = (1. - eff) * soil1(j)%rsd(1)
+      !! the partitioning is handleed in the cbn_rds_decomp subroutine
       ! soil1(j)%meta(1) = (1. - harveff) * soil1(j)%meta(1)
       ! soil1(j)%str(1) = (1. - harveff) * soil1(j)%str(1)
       ! soil1(j)%lig(1) = (1. - harveff) * soil1(j)%lig(1)
       
       !! compute carbon in harvested residue
       ! hrc_d(j)%harv_stov_c = hrc_d(j)%harv_stov_c + 0.42 * (1. - harveff) * soil1(j)%rsd(1)%c
+      !! carbon residue is not accumulated for harvested residue 
       hrc_d(j)%harv_stov_c = 0.42 * soil1(j)%rsd(1)%c
       
       return

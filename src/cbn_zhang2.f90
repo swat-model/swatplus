@@ -152,7 +152,7 @@
        real :: cpn4 = 0.         !                     |
        real :: cpn5 = 0.         !                     |
        real :: wmin = 0.         !                     |
-       real :: dmdn = 0.         !                     |
+       real :: trnn = 0.         !                     |
        real :: wdn = 0.          !kg N/ha              |amount of nitrogen lost from nitrate pool in
        real :: deltawn = 0.      !                     |
        real :: deltabmc = 0.     !                     |
@@ -248,7 +248,7 @@
        cpn4 = 0.
        cpn5 = 0.
        wmin = 0.
-       dmdn = 0.
+       trnn = 0.
        !bmix_depth = 50    
        soil_lyr_thickness = 0
 
@@ -569,13 +569,13 @@
               wmin = max(1.e-5,soil1(j)%mn(k)%no3 + soil1(j)%mn(k)%nh4 + sum)
               
               !total demand for potential tranformaiton of som
-              dmdn = cpn1 +cpn2 + cpn3 + cpn4 + cpn5
+              trnn = cpn1 +cpn2 + cpn3 + cpn4 + cpn5
               
               reduc = 1.
         !     reduce demand if supply limits
         
-              if (wmin < dmdn) then
-                  reduc = wmin / dmdn
+              if (wmin < trnn) then
+                  reduc = wmin / trnn
               end if
               
         !     actual transformations
@@ -677,10 +677,10 @@
                   wmin = max(1.e-5, soil1(j)%mn(k)%no3 + soil1(j)%mn(k)%nh4 + sum)
                   
                   !total demand for potential tranformaiton of som
-                  dmdn = cpn1 + cpn2 + cpn3 + cpn4 + cpn5              
+                  trnn = cpn1 + cpn2 + cpn3 + cpn4 + cpn5              
 
               !supply - demand
-              rnmn = sum - dmdn
+              rnmn = sum - trnn
               
         !     update
               if (rnmn > 0.) then

@@ -58,7 +58,7 @@
         real :: flo_satex = 0.         !! m3           |volume of water from saturation excess (high water table; from gwflow module)
         real :: flo_satexsw = 0.       !! m3           |volume of water from saturation excess (saturated profile)
         real :: flo_tile = 0.          !! m3           |volume of water from tile flow
-      end type
+      end type hyd_sep
       
       type (hyd_output), dimension(:),allocatable :: hd
       type (hyd_output), dimension(:), allocatable :: rec_d
@@ -169,7 +169,71 @@
       type (hyd_output) :: bch_out_y
       type (hyd_output) :: bch_out_a
       type (hyd_output) :: chomz
-
+      
+      !! source and receiving objects
+      type wallo_source_object
+        type (hyd_output) :: hd
+      end type wallo_source_object
+        
+      !! source and receiving objects
+      type wallo_transfer_object
+        !! total for transfer object
+        type (hyd_output) :: h_tot
+        type (wallo_source_object), dimension (:), allocatable :: src
+      end type wallo_transfer_object
+      
+      !! source and receiving objects
+      type water_allocation_object
+        !! source and receiving objects
+        type (wallo_transfer_object), dimension (:), allocatable :: trn
+      end type water_allocation_object
+      type (water_allocation_object), dimension (:), allocatable :: wal_omd
+      type (water_allocation_object), dimension (:), allocatable :: wal_omm
+      type (water_allocation_object), dimension (:), allocatable :: wal_omy
+      type (water_allocation_object), dimension (:), allocatable :: wal_oma
+        
+      !! water withdrawn from an individual source
+      type (hyd_output) :: wdraw_om
+      !! total water withdrawn from all sources
+      type (hyd_output) :: wdraw_om_tot
+      !! outflow from an water allocation object - wtp or use
+      type (hyd_output) :: outflo_om
+      
+      !! water treatment plant storage and outflow
+      type (hyd_output), dimension (:), allocatable :: wtp_om_stor
+      type (hyd_output), dimension (:), allocatable :: wtp_om_out
+      !! water treatment plant treated concentrations - input
+      type (hyd_output), dimension (:), allocatable :: wtp_om_treat
+      
+      !! amount of organic-mineral removed by treatment plants
+      type (hyd_output), dimension (:), allocatable :: wal_tr_omd
+      type (hyd_output), dimension (:), allocatable :: wal_tr_omm
+      type (hyd_output), dimension (:), allocatable :: wal_tr_omy
+      type (hyd_output), dimension (:), allocatable :: wal_tr_oma
+      
+      !! amount of organic-mineral added by uses
+      type (hyd_output), dimension (:), allocatable :: wal_use_omd
+      type (hyd_output), dimension (:), allocatable :: wal_use_omm
+      type (hyd_output), dimension (:), allocatable :: wal_use_omy
+      type (hyd_output), dimension (:), allocatable :: wal_use_oma
+      
+      !! water use storage and outflow
+      type (hyd_output), dimension (:), allocatable :: wuse_om_stor
+      type (hyd_output), dimension (:), allocatable :: wuse_om_out
+      !! water use effluent concentrations - input
+      type (hyd_output), dimension (:), allocatable :: wuse_om_efflu
+      
+      !! outside source outflow
+      type (hyd_output), dimension (:), allocatable :: osrc_om_out
+      
+      !! canal storage and outflow
+      type (hyd_output), dimension (:), allocatable :: canal_om_stor
+      type (hyd_output), dimension (:), allocatable :: canal_om_out
+      
+      !! water tower storage and outflow
+      type (hyd_output), dimension (:), allocatable :: wtow_om_stor
+      type (hyd_output), dimension (:), allocatable :: wtow_om_out
+       
       type object_output
         character (len=10) :: name = ""
         character (len=10) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
@@ -487,9 +551,6 @@
       
       !delivery ratio - all fractions 
       type (hyd_output), dimension(:), allocatable :: dr          !delivery ratio for objects- chan, res, lu
-
-      !treatment - fraction of flow and ppm 
-      type (hyd_output), dimension(:), allocatable :: trt         !wastewater treatment plants
 
       !export coefficient - m3, t, kg
       type (hyd_output), dimension(:), allocatable :: exco        !export coefficient

@@ -12,7 +12,7 @@
       implicit none 
 
       integer, intent (in) :: imallo     !water allocation object number
-      integer :: idmd = 0                   !water demand object number
+      integer :: itrn = 0                   !water demand object number
       integer :: isrc = 0                   !source object number
       integer :: j = 0                      !hru number
       integer :: id = 0                     !decision table number
@@ -34,35 +34,35 @@
       end if
       
       !!loop through each demand object for manure demand
-      do idmd = 1, mallo(imallo)%dmd_obs
+      do itrn = 1, mallo(imallo)%trn_obs
         !! check decision table for manure application
-        if (mallo(imallo)%dmd(idmd)%dtbl /= "null" .and. mallo(imallo)%dmd(idmd)%dtbl_num /= 0) then
-          j = mallo(imallo)%dmd(idmd)%ob_num
-          id = mallo(imallo)%dmd(idmd)%dtbl_num
+        if (mallo(imallo)%trn(itrn)%dtbl /= "null" .and. mallo(imallo)%trn(itrn)%dtbl_num /= 0) then
+          j = mallo(imallo)%trn(itrn)%ob_num
+          id = mallo(imallo)%trn(itrn)%dtbl_num
           d_tbl => dtbl_lum(id)
           call conditions (j, id)
-          call actions (j, idmd, id)
+          call actions (j, itrn, id)
         end if
       end do
  
       !!loop through each demand object again and subtract from source if available
-      do idmd = 1, mallo(imallo)%dmd_obs
-        if (mallo(imallo)%dmd(idmd)%manure_amt%app_t_ha > 0. .and.      &
+      do itrn = 1, mallo(imallo)%trn_obs
+        if (mallo(imallo)%trn(itrn)%manure_amt%app_t_ha > 0. .and.      &
                     frt_kg > mallo(imallo)%src(isrc)%bal_d%stor) then
-          isrc = mallo(imallo)%dmd(idmd)%manure_amt%src_obj         !source object
+          isrc = mallo(imallo)%trn(itrn)%manure_amt%src_obj         !source object
           ifrt = mallo(imallo)%src(isrc)%fertdb                     !fertilizer type from fert data base
-          frt_kg = mallo(imallo)%dmd(idmd)%manure_amt%app_t_ha      !amount applied in kg/ha
-          ifertop = mallo(imallo)%dmd(idmd)%manure_amt%app_method   !surface application fraction from chem app data base
-          ihru = mallo(imallo)%dmd(idmd)%ob_num                        !hru number
+          frt_kg = mallo(imallo)%trn(itrn)%manure_amt%app_t_ha      !amount applied in kg/ha
+          ifertop = mallo(imallo)%trn(itrn)%manure_amt%app_method   !surface application fraction from chem app data base
+          ihru = mallo(imallo)%trn(itrn)%ob_num                        !hru number
           call pl_fert (ifrt, frt_kg, ifertop)
-          mallo(imallo)%dmd(idmd)%manure_amt = manure_amtz
+          mallo(imallo)%trn(itrn)%manure_amt = manure_amtz
           
           !! subtract manure from source
           mallo(imallo)%src(isrc)%bal_d%stor = mallo(imallo)%src(isrc)%bal_d%stor - frt_kg
           mallo(imallo)%src(isrc)%bal_d%withdr = frt_kg
           
           !! set daily withdrawal and source
-          mallo(imallo)%dmd(idmd)%withdr(isrc) = frt_kg
+          mallo(imallo)%trn(itrn)%withdr(isrc) = frt_kg
 
           if (pco%mgtout == "y") then
             write (2612, *) j, time%yrc, time%mo, time%day_mo, fertdb(ifrt)%fertnm, "    MANU",       &

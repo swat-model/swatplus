@@ -33,7 +33,7 @@
       use constituent_mass_module
       use plant_module
       use tillage_data_module
-      ! use time_module, only : time
+      use time_module, only : time
       
       implicit none
 
@@ -191,6 +191,7 @@
             
             mix_sw = mix_sw + frac_mixed * soil(jj)%phys(l)%st
             mix_bd = mix_bd + frac_mixed * soil(jj)%phys(l)%bd
+
             if (.not. bio_mix_event) mix_rock = mix_rock + frac_mixed * soil(jj)%phys(l)%rock * sol_mass(l) / 100.
             mix_sand = mix_sand + frac_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100.
             mix_silt = mix_silt + frac_mixed * soil(jj)%phys(l)%silt * sol_mass(l) / 100.
