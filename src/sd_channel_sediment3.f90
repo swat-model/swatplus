@@ -1,5 +1,5 @@
-subroutine sd_channel_sediment3
-
+      subroutine sd_channel_sediment3
+        
       use climate_module
       use sd_channel_module
       use channel_module
@@ -8,6 +8,7 @@ subroutine sd_channel_sediment3
       use hru_module, only : hru
       use water_body_module
       use reservoir_module
+      use utils
 
       implicit none     
 
@@ -181,8 +182,9 @@ subroutine sd_channel_sediment3
       b_exp = min (3.5, b_exp)
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
+
         dur_scale = 0.0001 * (ob(icmd)%area_ha / 100.) ** (-0.0858)
-        v_vc = dur_scale * sd_ch(ich)%chw * (1. / (1. + exp(-4. * (vel_rch / vel_cr - 1.))))
+        v_vc = dur_scale * sd_ch(ich)%chw * (1. / (1. + exp_w(-4. * (vel_rch / vel_cr - 1.))))
         m_exhaust = 0.0002 * sd_ch(ich)%chw
         ebank_m = 1. / (1. / v_vc + 1. / m_exhaust)
         !ebank_m = 0.0001 * sd_ch(ich)%chw * (1. / (1. + exp(-4. * (vel_rch / vel_cr - 1.))) - 0.5)
