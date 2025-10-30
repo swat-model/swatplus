@@ -52,7 +52,9 @@
         qday = 0.
         do k=1,time%step
           !! Left-over (previous timestep) + inflow (current  timestep)
-          hhsurf_bs(1,j,k) = Max(0., bsprev + hhsurfq(j,k))
+          ! hhsurf_bs(1,j,k) = Max(0., bsprev + hhsurfq(j,k))
+          hhsurf_bs(1,j,k) = Max(1.e-9, bsprev + hhsurfq(j,k))
+          if (hhsurf_bs(1,j,k) == 1.e-9) hhsurf_bs(1,j,k) =  0.0
     
           !! new estimation of runoff and sediment reaching the main channel
           hhsurfq(j,k) = hhsurf_bs(1,j,k) * brt(j)

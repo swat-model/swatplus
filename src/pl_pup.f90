@@ -33,6 +33,7 @@
       use soil_module
       use plant_module
       use output_landscape_module
+      use utils
 
       implicit none
 
@@ -64,7 +65,7 @@
       do l = 1, soil(j)%nly
         soil_depth = soil(j)%phys(l)%d
         if (root_depth < soil_depth) exit
-        upmx = uapd(ipl) * rto_solp * (1. - Exp(-bsn_prm%p_updis * soil_depth / root_depth)) / uptake%p_norm
+        upmx = uapd(ipl) * rto_solp * (1. - Exp_w(-bsn_prm%p_updis * soil_depth / root_depth)) / uptake%p_norm
         uapl = Min(upmx - pplnt(j), soil1(j)%mp(l)%lab)
         pplnt(j) = pplnt(j) + uapl
         soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab - uapl

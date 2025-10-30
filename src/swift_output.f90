@@ -31,6 +31,34 @@
       character(len=25)  :: file_list(ifile) = "" ! list of SWAT input files to copy to SWIFT folder
       logical :: i_exist
       
+      ! SWIFT file formats
+      ! Format statements where changed below because they cause runtime errors in gfortran
+      ! a format likes 12xA48 need to be 12x,A48
+      ! 201 format (A8,12xA8,46X,*(A16,F5.1,A4,1xA16,F5.1,A4))        ! format of precip.swf headers
+      201 format (A8,12x,A8,46X,*(A16,F5.1,A4,1x,A16,F5.1,A4))        ! format of precip.swf headers
+      ! 301 format (I8,1xA64,F16.4,8xF16.4)                           ! format of precip.swf
+      301 format (I8,1x,A64,F16.4,8x,F16.4)                           ! format of precip.swf
+      ! 202 format (A8,30xA8,18X,A8,36xA8,4xA8,218x1A8,6x1A8)         ! format of hru_dat.swf headers
+      202 format (A8,30x,A8,18X,A8,36x,A8,4x,A8,218x,1A8,6x,1A8)      ! format of hru_dat.swf headers
+      ! 302 format (1I8,1x2A48, G16.4 ,1x*(G16.4))                      ! format of hru_dat.swf
+      302 format (1I8,1x,2A48, G16.4 ,1x, *(G16.4))                      ! format of hru_dat.swf
+      ! 203 format (A8,*(2x1A16,10x1A16, 6x1A16, 2x6A16))               ! format of hru_exco.swf headers      
+      203 format (A8,*(2x,1A16,10x,1A16, 6x,1A16, 2x,6A16))               ! format of hru_exco.swf headers      
+      ! 303 format (I8,*(2x1A16,8xF16.4, 7F16.4,10x))                   ! format of hru_exco.swf 
+      303 format (I8,*(2x,1A16,8x,F16.4, 7F16.4,10x))                   ! format of hru_exco.swf 
+      ! 204 format (4xA8,*(A8,8x))                                      ! format of hru_wet.swf headers
+      204 format (4x,A8,*(A8,8x))                                      ! format of hru_wet.swf headers
+      ! 205 format (7xA16, A16, 10x,*(A16))                           ! format of chan_dat.swf headers
+      205 format (7x,A16, A16, 10x,*(A16))                           ! format of chan_dat.swf headers
+      305 format (I8, 1x, A16, A16,*(F16.4))                             ! format of chan_dat.swf
+      ! 206 format (4xA8, 1xA8, 20x,*(A16))                           ! format of chan_dr.swf headers
+      206 format (4x,A8, 1x,A8, 20x,*(A16))                           ! format of chan_dr.swf headers
+!*** tu Wunused-label:       306 format (I8,4xA16, 10xA16,*(F16.4))                        ! format of chan_dr.swf
+      ! 207 format (A16,1x*(A16))                                     ! format of aqu_dr.swf headers
+      207 format (A16,1x,*(A16))                                     ! format of aqu_dr.swf headers
+      ! 208 format (6xA8, 1xA8, 16x,*(A8,6x))                      ! format of res_dat.swf headers
+      208 format (6x,A8,1x,A8,16x,*(A8,6x))                      ! format of res_dat.swf headers
+      
       !! check for file_cio.swf to determine if SWIFT folder exist
       inquire (file="SWIFT/file_cio.swf", exist=i_exist)
       if (.not. i_exist) then   ! if not use system-specific command to create SWIFT folder
@@ -72,8 +100,9 @@
       open (107,file="SWIFT/precip.swf",recl = 1500)
       write (107, *) bsn%name
       write (107, *) db_mx%wst
-      write (107, *) "iwst ", "name ", "precip_aa/", yrs_print,'yrs', "pet_aa/", yrs_print, 'yrs'
-      write (107, '(A8,12xA8,46X,A16,6xA16)') "--- ", "---- ", "mm", "mm"
+      write (107, 201) "iwst ", "name ", "precip_aa/", yrs_print,'yrs', "pet_aa/", yrs_print, 'yrs'
+      ! write (107, '(A8,12xA8,46X,A16,6xA16)') "--- ", "---- ", "mm", "mm"
+      write (107, '(A8,12x,A8,46X,A16,6x,A16)') "--- ", "---- ", "mm", "mm"
       do iwst = 1, db_mx%wst
         wst(iwst)%precip_aa = wst(iwst)%precip_aa / yrs_print
         wst(iwst)%pet_aa = wst(iwst)%pet_aa / yrs_print

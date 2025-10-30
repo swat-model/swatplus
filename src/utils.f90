@@ -12,7 +12,8 @@ real function exp_w(y)
     real, intent(in) :: y
     logical :: err_output
     
-    err_output = .true.
+    ! err_output = .true.
+    err_output = .false.
     ! err_output = .false.
 
     if (y < -80.) then
