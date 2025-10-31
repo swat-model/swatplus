@@ -135,9 +135,15 @@
           decomp = decr * soil1(j)%rsd(k)
           soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
 
-          soil1(j)%meta(k) = soil1(j)%meta(k) + 0.85 * decomp
-          soil1(j)%str(k) = soil1(j)%str(k) + 0.15 * decomp
-          soil1(j)%lig(k) = soil1(j)%lig(k) + 0.12 * decomp
+          ! The following if statements are to prevent runtime underflow errors with gfortran 
+          if (soil1(j)%rsd(k)%m < 1.e-10) soil1(j)%rsd(k)%m = 0.0 
+          if (soil1(j)%rsd(k)%c < 1.e-10) soil1(j)%rsd(k)%c = 0.0 
+          if (soil1(j)%rsd(k)%n < 1.e-10) soil1(j)%rsd(k)%n = 0.0 
+          if (soil1(j)%rsd(k)%p < 1.e-10) soil1(j)%rsd(k)%p = 0.0 
+
+          soil1(j)%meta(k) = soil1(j)%meta(k) + meta_frac * decomp
+          soil1(j)%str(k) = soil1(j)%str(k) + str_frac * decomp
+          soil1(j)%lig(k) = soil1(j)%lig(k) + lig_frac * decomp
 
         end if
       end do        ! k = 1, soil(j)%nly

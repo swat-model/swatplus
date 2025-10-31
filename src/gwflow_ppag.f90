@@ -1,4 +1,4 @@
-      subroutine gwflow_ppag(hru_id,hru_demand,extracted,dmd_unmet) !rtb gwflow
+      subroutine gwflow_ppag(hru_id,hru_demand,extracted,trn_unmet) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the volume of groundwater that is extracted
@@ -21,7 +21,7 @@
       integer, intent (in) :: hru_id        !       |hru that has an irrigation water demand
       real, intent (in) :: hru_demand       !m3     |volume of irrigation water demand
       real, intent (inout) :: extracted     !m3     |volume of groundwater extracted from aquifer for irrigation
-      real, intent (inout) :: dmd_unmet     !m3     |volume of irrigation demand not met by aquifer
+      real, intent (inout) :: trn_unmet     !m3     |volume of irrigation demand not met by aquifer
       integer :: i = 0                      !       |counter
       integer :: s = 0                      !       |solute counter
       integer :: cell_id = 0                !       |gwflow cell
@@ -40,7 +40,7 @@
       
       !zero out the total met and unmet demand
       extracted = 0.
-      dmd_unmet = 0.
+      trn_unmet = 0.
 
       !only proceed if the HRU is connected (intersected with) gwflow grid cells
       sum_pump = 0.
@@ -72,7 +72,7 @@
             gwvol_removed = cell_demand
           endif
           extracted = extracted + gwvol_removed
-          dmd_unmet = dmd_unmet + gwvol_unmet
+          trn_unmet = trn_unmet + gwvol_unmet
           
           !save the pumping volume (m3), for use in gwflow_simulate
           gw_ss(cell_id)%ppag = gwvol_removed * (-1) !m3 negative = leaving the aquifer
