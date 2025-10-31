@@ -53,6 +53,10 @@
       integer :: idp = 0                   !         |
       integer :: istr = 0                  !         |
       integer :: istr1 = 0                 !         |
+      integer :: iob_out = 0
+      integer :: inhyd = 0                 !         |
+      integer :: ihyd_in = 0               !         |
+      integer :: icon = 0                  !         |
       integer :: iplt_bsn = 0
       integer :: irrop = 0                 !         |
       integer :: igr = 0
@@ -65,7 +69,8 @@
       integer :: ires = 0
       integer :: idb = 0
       integer :: imallo = 0
-      integer :: idmd = 0
+      integer :: itrn = 0
+      integer :: irec = 0
       integer :: iplt = 0
       integer :: num_plts_cur = 0
       integer :: hru_rcv
@@ -74,6 +79,7 @@
       real :: frt_kg = 0.
       real :: harveff = 0.
       real :: wur = 0.                     !         |
+      real :: frac = 0.                    !         |
       real :: rto = 0.                     !         |
       real :: rto1 = 0.                    !         |
       real :: pest_kg = 0.                 !kg/ha    |amount of pesticide applied 
@@ -102,15 +108,15 @@
           !manure demand - for manure allocation
           case ("manure_demand")
             j = ob_cur
-            idmd = ob_num
+            itrn = ob_num
             imallo = 1      !if mallo objects > 1, need to input
             
-            mallo(imallo)%dmd(idmd)%manure_amt = manure_amtz
+            mallo(imallo)%trn(itrn)%manure_amt = manure_amtz
             if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
-              mallo(imallo)%dmd(idmd)%manure_amt%mallo_obj = 1                      !assume 1 manure allocation object - could use file_pointer to xwalk
-              mallo(imallo)%dmd(idmd)%manure_amt%src_obj = d_tbl%act(iac)%ob_num    !amount applied - t/ha
-              mallo(imallo)%dmd(idmd)%manure_amt%app_t_ha = d_tbl%act(iac)%const    !manure source object number
-              mallo(imallo)%dmd(idmd)%manure_amt%app_method = d_tbl%act_app(iac)    !manure application method
+              mallo(imallo)%trn(itrn)%manure_amt%mallo_obj = 1                      !assume 1 manure allocation object - could use file_pointer to xwalk
+              mallo(imallo)%trn(itrn)%manure_amt%src_obj = d_tbl%act(iac)%ob_num    !amount applied - t/ha
+              mallo(imallo)%trn(itrn)%manure_amt%app_t_ha = d_tbl%act(iac)%const    !manure source object number
+              mallo(imallo)%trn(itrn)%manure_amt%app_method = d_tbl%act_app(iac)    !manure application method
             end if
 
           !irrigation demand - hru action
@@ -150,7 +156,7 @@
               else
                 !! set demand for irrigation from channel, reservoir or aquifer
                 if (pco%mgtout == "y") then
-                  write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIG_DMD", phubase(j), &
+                  write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIG_trn", phubase(j), &
                       pcom(j)%plcur(ipl)%phuacc, soil(j)%sw,pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
                       sol_sumno3(j), sol_sumsolp(j), irrop_db(irrop)%amt_mm
                 end if
@@ -762,12 +768,12 @@
             !! demand is to fill to principal spillway
             case ("storage")
               if (d_tbl%act(iac)%file_pointer == "pvol") then
-                dmd_m3 = d_tbl%act(iac)%const * res_ob(j)%pvol - res(j)%flo
-                dmd_m3 = Max (0., dmd_m3)
+                trn_m3 = d_tbl%act(iac)%const * res_ob(j)%pvol - res(j)%flo
+                trn_m3 = Max (0., trn_m3)
               end if
               if (d_tbl%act(iac)%file_pointer == "evol") then
-                dmd_m3 = d_tbl%act(iac)%const * res_ob(j)%evol - res(j)%flo
-                dmd_m3 = Max (0., dmd_m3)
+                trn_m3 = d_tbl%act(iac)%const * res_ob(j)%evol - res(j)%flo
+                trn_m3 = Max (0., trn_m3)
               end if
             end select
             
@@ -1074,7 +1080,8 @@
             ich = ob_cur
             !set new cover and name for calibration
             sd_ch(ich)%cov = d_tbl%act(iac)%const
-            
+            sd_ch(ich)%order = d_tbl%act(iac)%const2
+        
           ! burning
           case ("burn")
             j = d_tbl%act(iac)%ob_num

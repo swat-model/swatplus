@@ -12,7 +12,6 @@
       use basin_module
       use channel_data_module
       use channel_module
-      use sd_channel_module
       use hydrograph_module !, only : ob, icmd, jrch, isdch, fp_stor, ch_stor, wet
       use time_module
       use channel_velocity_module

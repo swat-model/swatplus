@@ -1,7 +1,8 @@
-      subroutine wallo_transfer (iwallo, idmd)
+      subroutine wallo_transfer (iwallo, itrn)
       
       use water_allocation_module
       use hydrograph_module
+      use constituent_mass_module
       use sd_channel_module
       use aquifer_module
       use reservoir_module
@@ -10,31 +11,22 @@
       implicit none 
 
       integer, intent (in):: iwallo         !water allocation object number
-      integer, intent (in) :: idmd          !water demand object number
-      integer :: j = 0              !none       |object number of specific type (cha, res, aqu, etc)
-      integer :: iob = 0            !none       |object number (ob)
+      integer, intent (in) :: itrn          !water demand object number
+      integer :: isrc = 0                   !source object number
+      integer :: iconv = 0                  !conveyance object number (pipe or pump number)
 
-      !! check if water is available from each source - set withdrawal and unmet
-      select case (wallo(iwallo)%dmd(idmd)%rcv_ob)
-      !! divert flowing water from channel source
-      case ("cha")
-        j = wallo(iwallo)%dmd(idmd)%rcv_num
-        iob = sd_ch(j)%obj_no
-        ob(iob)%trans = wallo(iwallo)%dmd(idmd)%hd
-            
-      !! reservor source
-      case ("res") 
-        j = wallo(iwallo)%dmd(idmd)%rcv_num
-        res(j) = res(j) + wallo(iwallo)%dmd(idmd)%hd
-            
-      !! aquifer source
-      case ("aqu") 
-        j = wallo(iwallo)%dmd(idmd)%rcv_num
-        aqu_d(j)%stor = aqu_d(j)%stor + (wallo(iwallo)%dmd(idmd)%hd%flo / (10. * aqu_prm(j)%area_ha))  !mm = m3/(10.*ha)
-        aqu_d(j)%no3_st = aqu_d(j)%no3_st + wallo(iwallo)%dmd(idmd)%hd%no3
-        aqu_d(j)%minp = aqu_d(j)%minp + wallo(iwallo)%dmd(idmd)%hd%solp
-            
-      end select
- 
+      
+      !! transfer water to receiving object from each source
+      do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
+        iconv = wallo(iwallo)%trn(itrn)%src(isrc)%conv_num
+        select case (wallo(iwallo)%trn(itrn)%src(isrc)%conv_typ)
+        case ("pipe")
+          !! organic hydrograph being transfered from the source to the receiving object
+          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = (1. - pipe(iconv)%loss_fr) *            &
+                                                 wal_omd(iwallo)%trn(itrn)%src(isrc)%hd
+        case ("pump")
+          !! include pump losses here
+        end select
+      end do
       return
       end subroutine wallo_transfer

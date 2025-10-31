@@ -17,7 +17,7 @@
       
       type swatdeg_hydsed_data
         character(len=25) :: name = ""
-        integer :: order = 1
+        integer :: order = 0
         real :: chw = 0.            !m          |channel width
         real :: chd = 0.            !m          |channel depth
         real :: chs = 0.            !m/m        |channel slope
@@ -44,7 +44,7 @@
       
       type swatdeg_sednut_data
         character(len=25) :: name = ""
-        integer :: order = 1
+        character(len=16) :: order = ""
         real :: pk_rto = 1.         !ratio      |ratio of peak to mean daily flow in channel
         real :: fp_inun_days = 5.   !days       |number of days fllod plain is inundated after flood
         real :: n_setl = 0.5        !ratio      |ratio of amount of N settling and sediment settling
