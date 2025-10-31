@@ -87,22 +87,6 @@
           end if
           end if
         end if
-        
-      !! Mike new output files for NAM
-      open (8000,file="ch_budget.txt",recl = 1500)
-      write (8000,*) bsn%name, prog
-      write (8000,*) ch_hdr_nam1   !! channel
-      write (8000,*) ch_hdr_nam1_units
-      
-      open (8001,file="ch_order_sed.txt",recl = 1500)
-      write (8001,*) bsn%name, prog
-      write (8001,*) ch_hdr_nam2   !! channel
-      write (8001,*) ch_hdr_nam2_units
-      
-      open (8002,file="ch_sedbud.txt",recl = 1500)
-      write (8002,*) bsn%name, prog
-      write (8002,*) ch_hdr_nam3   !! channel
-      write (8002,*) ch_hdr_nam3_units
                          
       return
       end subroutine header_channel

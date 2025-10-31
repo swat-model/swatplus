@@ -1,9 +1,12 @@
 subroutine carbon_coef_read
 
+    ! Purpose: Read in variables for calibration purposes.
+
     use carbon_module
     use basin_module
     use tillage_data_module 
     use soil_module
+    use organic_mineral_mass_module
     
     implicit none
 
@@ -78,6 +81,15 @@ subroutine carbon_coef_read
                 case("man_to_c")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, man_coef%man_to_c
+                case("meta_frac")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, meta_frac 
+                case("str_frac")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, str_frac 
+                case("lig_frac")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, lig_frac 
                 case("nmbr_soil_tests")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, nmbr_soil_tests
