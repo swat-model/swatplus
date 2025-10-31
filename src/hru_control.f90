@@ -394,12 +394,12 @@
         !end if
 
         !! check irrigation demand decision table for water allocation (after adding irrigation)
-        if (hru(j)%irr_dmd_dtbl > 0) then
-          id = hru(j)%irr_dmd_dtbl
+        if (hru(j)%irr_trn_dtbl > 0) then
+          id = hru(j)%irr_trn_dtbl
           jj = j
           d_tbl => dtbl_lum(id)
           !! iauto points to pcom(j)%dtbl(iauto) for days between operation
-          iauto = hru(j)%irr_dmd_iauto
+          iauto = hru(j)%irr_trn_iauto
           call conditions (jj, iauto)
           call actions (jj, iob, iauto)
         end if

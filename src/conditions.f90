@@ -263,7 +263,7 @@
           ivar_cur = time%day_start 
           ivar_tbl = int(d_tbl%cond(ic)%lim_const)
           call cond_integer (ic, ivar_cur, ivar_tbl)
-                                           
+                                          
         !yearly irrigation - mm jga6-25
         case ("irr_year")
           ob_num = d_tbl%cond(ic)%ob_num
@@ -722,7 +722,7 @@
           
           do ialt = 1, d_tbl%alts
             if (d_tbl%alt(ic,ialt) == "=") then
-              if (sd_ch(ob_num)%order /= int(d_tbl%cond(ic)%lim_const)) then
+              if (sd_ch(ob_num)%order /= d_tbl%cond(ic)%lim_const) then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if

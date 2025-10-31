@@ -105,7 +105,7 @@
               end do
               ! initial heavy metals
               do ics = 1, db_mx%hmet_ini
-                if (sol_plt_ini(isp_ini)%hmetc == hmet_water_ini(ics)%name) then
+                if (sol_plt_ini(isp_ini)%hmetc == hmet_soil_ini(ics)%name) then
                   sol_plt_ini(isp_ini)%hmet = ics
                   exit
                 end if

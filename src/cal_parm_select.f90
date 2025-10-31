@@ -250,12 +250,6 @@
       case ("tile_latk")
         hru(ielem)%sdr%lag = chg_par(hru(ielem)%sdr%latksat,           &
                          chg_typ, chg_val, absmin, absmax)
-                         
-     case ("z")
-          soil(ielem)%zmx = chg_par(soil(ielem)%zmx,                   &
-                         chg_typ, chg_val, absmin, absmax)
-          call soil_awc_init (ielem)
-          call curno (cn2(ielem), ielem)
                       
       !! SOL  
       case ("anion_excl")
@@ -266,6 +260,11 @@
          soil(ielem)%crk = chg_par(soil(ielem)%crk,                      &
                          chg_typ, chg_val, absmin, absmax)
          
+      case ("z")
+          soil(ielem)%phys(ly)%d = chg_par(soil(ielem)%phys(ly)%d,     &
+                         chg_typ, chg_val, absmin, absmax)
+          call soil_awc_init (ielem)
+          call curno (cn2(ielem), ielem)
          
       case ("bd")
           soil(ielem)%phys(ly)%bd = chg_par(soil(ielem)%phys(ly)%bd,    &

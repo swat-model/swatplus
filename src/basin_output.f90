@@ -201,7 +201,7 @@
         end if
         
 !!!!! average annual print - BASIN
-      if (time%end_sim == 1 .and. pco%wb_bsn%a == "y") then
+      if (time%end_sim == 1) then
         sw_init = bwb_a%sw_init
         sno_init = bwb_a%sno_init
         bwb_a = bwb_a / time%yrs_prt
@@ -211,39 +211,43 @@
         bwb_a%sno_init = sno_init
         bwb_a%sno_final = bwb_d%sno_final
 
+        if (pco%wb_bsn%a == "y") then
         write (2053,103) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bwb_a, cal_sim, cal_adj
         if (pco%csvout == "y") then 
           write (2057,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bwb_a,    &
                     cal_sim, cal_adj
         end if
+        end if
         ban_precip_aa = bwb_a%precip
         bwb_a = hwbz
       end if
-      if (time%end_sim == 1 .and. pco%nb_bsn%a == "y") then
-        bnb_a = bnb_a / time%yrs_prt  
+      if (time%end_sim == 1) then
+        bnb_a = bnb_a / time%yrs_prt
+        if (pco%nb_bsn%a == "y") then
         write (2063,104) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bnb_a
         if (pco%csvout == "y") then 
           write (2067,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bnb_a
-          end if 
+        end if
+        end if
       end if
-      if (time%end_sim == 1 .and. pco%ls_bsn%a == "y") then     
+      if (time%end_sim == 1) then
         bls_a = bls_a / time%yrs_prt
+        if (pco%ls_bsn%a == "y") then
         write (2073,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bls_a
         if (pco%csvout == "y") then 
           write (2077,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bls_a
-        end if 
-        bls_a = hlsz
+        end if
+        end if
       end if
-      if (time%end_sim == 1 .and. pco%pw_bsn%a == "y") then     
+      if (time%end_sim == 1) then
         bpw_a = bpw_a / time%yrs_prt
         bpw_a = bpw_a // time%days_prt
-        !bpw_a%nplnt = bpw_d%nplnt
-        !bpw_a%nplnt = bpw_d%pplnt
+        if (pco%pw_bsn%a == "y") then
         write (2083,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bpw_a
         if (pco%csvout == "y") then 
           write (2087,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "        1", bsn%name, bpw_a
-        end if 
-        bpw_a = hpwz
+        end if
+        end if
       end if
       
       return

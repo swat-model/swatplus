@@ -153,7 +153,7 @@
               ht2%flo = ht2%flo + ht1%flo + (wbody%flo - b_lo)
               ht2%flo = max(0.,ht2%flo)
               
-            case ("irrig_dmd")
+            case ("irrig_trn")
               !! release based on irrigation demand of hru or water rights object
               iob = Int(d_tbl%act(iac)%const2)
               select case (d_tbl%act(iac)%file_pointer)

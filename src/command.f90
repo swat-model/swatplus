@@ -424,7 +424,12 @@
       
         !! print water allocation output
         do iwro =1, db_mx%wallo_db
-          call water_allocation_output (iwro)
+          call wallo_allo_output (iwro)
+          call wallo_trn_output (iwro)
+          call wallo_treat_output (iwro)
+          call wallo_use_output (iwro)
+          !call wallo_osrc_output (iwro)
+          !call wallo_odmd_output (iwro)
         end do
         
         !! print manure allocation output
