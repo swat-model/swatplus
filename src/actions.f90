@@ -87,6 +87,7 @@
       character(len=1) :: action = ""      !         |
       character(len=40) :: lu_prev = ""    !         |
 
+      ! comment
       do iac = 1, d_tbl%acts
         action = "n"
         do ial = 1, d_tbl%alts
