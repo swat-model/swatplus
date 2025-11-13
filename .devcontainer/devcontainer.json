@@ -12,7 +12,7 @@
 		// 2A. Install relevant extensions automatically
 		"extensions": [
 		  "ms-vscode.cmake-tools",
-		  "fortran-lang.linter-gfortran",
+		  "ismoreirakt.fortrant",
 		  "ms-vscode.cpptools",
 		  "mhutchie.git-graph",
 		  "GitHub.remotehub"
