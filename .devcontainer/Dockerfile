@@ -33,7 +33,7 @@ RUN apt-get update && \
 RUN echo "source /opt/intel/oneapi/setvars.sh" >> /etc/bash.bashrc
 
 # 5. Prepend ifx path to the global PATH environment
-ENV PATH=/opt/intel/oneapi/compiler/2025.0/bin:$PATH
-ENV LD_LIBRARY_PATH=/opt/intel/oneapi/compiler/2025.0/lib:$LD_LIBRARY_PATH
+# ENV PATH=/opt/intel/oneapi/compiler/2025.0/bin:$PATH
+# ENV LD_LIBRARY_PATH=/opt/intel/oneapi/compiler/2025.0/lib:$LD_LIBRARY_PATH
 
 # That’s it! The container now has ifx + CMake installed and configured.
