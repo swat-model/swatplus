@@ -10,7 +10,6 @@
       use pesticide_data_module
       use res_salt_module
       use res_cs_module
-      use hru_module, only : hru
       
       implicit none
 

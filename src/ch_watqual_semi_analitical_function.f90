@@ -57,7 +57,8 @@
       !end if
 
       return
-      end function
+      
+      end function  wq_semianalyt
       
      function wq_k2m (t1, t2, tk, c1, c2)
       
@@ -108,4 +109,5 @@
       wq_k2m = tm
 
       return
-      end function
+      
+      end function wq_k2m

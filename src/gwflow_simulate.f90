@@ -10,9 +10,6 @@
       use sd_channel_module
       use time_module
       use soil_module
-      use water_body_module, only: res_wat_d
-      use maximum_data_module, only : db_mx
-      use calibration_data_module, only : lsu_out
       
       implicit none
       
@@ -2533,5 +2530,4 @@
       
 
       return
-      end subroutine gwflow_simulate
-            
+      end subroutine gwflow_simulate        

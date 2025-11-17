@@ -3,7 +3,6 @@
       use dr_module
       use input_file_module
       use constituent_mass_module
-      !use organic_mineral_mass_module
       use maximum_data_module
 
       implicit none

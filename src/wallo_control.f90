@@ -18,13 +18,8 @@
       integer :: isrc = 0                   !source object number
       integer :: j = 0                      !hru number
       integer :: jj = 0                     !variable for passing
-      integer :: irec = 0                   !recall id
-      integer :: dum = 0
       real :: irr_mm = 0.                   !mm     |irrigation applied
-      real :: div_total = 0.                !m3     |cumulative available diversion water
-      real :: div_daily = 0.                !m3     |daily water diverted for irrigation
-      
-
+    
       !! zero demand, withdrawal, and unmet for entire allocation object
       wallo(iwallo)%tot = walloz
       

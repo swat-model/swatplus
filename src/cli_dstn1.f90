@@ -32,4 +32,5 @@
       cli_dstn1 = Sqrt(-2. * Log(rn1)) * Cos(6.283185 * rn2)
 
       return
-      end function
+      
+      end function cli_dstn1

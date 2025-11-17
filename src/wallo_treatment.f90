@@ -9,7 +9,6 @@
       integer, intent (in):: iwallo     !water allocation object number
       integer, intent (in) :: itrn      !water transfer object number
       integer, intent (in) :: itrt      !water treatment plant object number
-      integer :: iom                    !number of organic-mineral data concentrations of treated water 
       
       !! treating water to wtp concentrations
       outflo_om = wtp_om_treat(itrt)

@@ -6,7 +6,7 @@
       use reservoir_data_module
       use reservoir_module
       use water_body_module
-      use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      use hydrograph_module, only : ob, ht2, wet
       use hru_module, only : hru, wetqcs, wtspcs
       use constituent_mass_module
       use res_cs_module

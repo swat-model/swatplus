@@ -25,9 +25,6 @@
 !!    ir          |
 !!    j           |none          |HRU number
 !!    k           |none          |counter (soil layer)
-!!    reduc       |none          |fraction of water uptake by plants achieved
-!!                               |where the reduction is caused by low water
-!!                               |content
 !!    sum         |
 !!    sump        |
 !!    wuse        |mm H2O        |water uptake by plants in each soil layer
@@ -59,10 +56,6 @@
       real :: sum = 0.       !          |
       real :: sum_wuse = 0.  !mm H2O    |water uptake by plants from all layers
       real :: sum_wusep = 0. !mm H2O    |previous water uptake by plants from all layers
-      real :: reduc = 0.     !none      |fraction of water uptake by plants achieved
-                             !          |where the reduction is caused by low water
-                             !          |content
-
       real :: sump = 0.      !          |
       real :: gx = 0.        !mm        |lowest depth in layer from which nitrogen
                              !          |may be removed
@@ -74,7 +67,6 @@
       real :: sw_decrease = 0.                                               !rtb salt
       real :: salt_decrease = 0.                                             !rtb salt
       real :: theta_w = 0.                                                   !rtb salt
-      real :: soil_TDS = 0.                                                  !rtb salt
       real :: soil_TDS_sat = 0.                                              !rtb salt
       real :: soil_ECe = 0.                                                  !rtb salt
       real :: a_val = 0.                                                     !rtb salt

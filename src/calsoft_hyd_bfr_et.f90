@@ -36,16 +36,6 @@
       ! calibrate esco and pet for water yield
         iter_ind = 1
         
-              
-            
-
-                
-
-            
-        
-
-
-        
         ! 1st esco adjustment
         isim = 0
         do ireg = 1, db_mx%lsu_reg

@@ -25,9 +25,9 @@
       real :: xx = 0.                    !              | 
       real :: yy = 0.                    !              | 
       real :: amn = 0.                   !              | 
-      real :: atri                       !none          |daily value generated for distribution
-      real :: aunif                      !              | 
-
+      real :: atri                       !none          |daily value generated for distribution      
+      real, external :: aunif
+      
       u3 = 0.
       rn = 0.
       y = 0.
@@ -70,4 +70,4 @@
       if (atri <= 0.0) atri = 0.001
 
       return
-      end
+      end function atri

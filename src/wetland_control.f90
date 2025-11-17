@@ -3,7 +3,7 @@
       use reservoir_data_module
       use reservoir_module
       use hru_module, only : hru, sedyld, sanyld, silyld, clayld, sagyld, lagyld, grayld, sedminps, sedminpa,   &
-        surqno3, sedorgn, sedorgp, ihru, pet_day, surfq, tconc, usle_cfac, cklsp, hhsurfq
+        surqno3, sedorgn, sedorgp, ihru, surfq, tconc, usle_cfac, cklsp, hhsurfq
       use conditional_module
       use climate_module
       use hydrograph_module

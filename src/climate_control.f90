@@ -41,24 +41,16 @@
       implicit none
            
       integer :: ii = 0           !none          |counter       
-      integer :: iyp = 0          !none          |year currently being simulated
-      integer :: idap = 0         !julain date   |day currently being simulated
-      real :: petmeas = 0.        !mm H2O        |potential ET value read in for day 
+      integer :: iyp = 0          !none          |year currently being simulated 
       real :: half_hr_mn = 0.     !mm H2O        |lowest value half hour precip fraction can have
       real :: half_hr_mx = 0.     !mm H2O        |highest value half hour precip fraction can have
       integer :: iwgn = 0         !              |
-      integer :: ipet = 0         !              |
       integer :: ig = 0           !              |
       integer :: yrs_to_start = 0 !              |
       integer :: cur_day = 0
       real :: ramm = 0.           !MJ/m2         |extraterrestrial radiation
       real :: xl = 0.             !MJ/kg         |latent heat of vaporization
       real :: atri                !none          |daily value generated for distribution
-      integer :: ifirstpet = -1   !none          |potential ET data search code
-                                  !              |0 first day of potential ET data located in
-                                  !              |file
-                                  !              |1 first day of potential ET data not located
-                                  !              |in file
       real :: xx = 0.
       character(len=1) :: out_bounds = 'n'
         

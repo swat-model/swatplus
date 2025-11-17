@@ -55,8 +55,8 @@
       integer :: rndseed10 = 0!none          |seed for random number generator that is 
                            !              |used to reset other random number seeds 
       integer :: iwgn = 0  !none          |counter 
-      real :: aunif        !              |
-      
+      real, external :: aunif
+
       
 !!    initialize random number array locator
       idg = (/1,2,3,4,5,6,7,8,9/)

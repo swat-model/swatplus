@@ -67,5 +67,5 @@
       !! Final stream temperature
       ob(iob)%hd(1)%temp = ht1%temp + t_heat_exch
     
-      return    
+      return  
       end subroutine ch_temp1

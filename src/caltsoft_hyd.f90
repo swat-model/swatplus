@@ -37,7 +37,7 @@
       real :: rto3 = 0.        !none      |fraction difference between CN3 and CN1 
       real :: rtos = 0.        !none      |fraction difference between CN=99 and CN1 
       real :: sumul = 0.       !mm H2O    |amount of water held in soil profile at saturation
-      real :: sumfc = 0.       !mm H2O    |amount of water held in the soil profile at field capacity
+      real :: sumfc = 0.       !mm H2O    |amount of water held in the soil profile at field capacity    
       
       !calibrate hydrology
         iter_all = 1

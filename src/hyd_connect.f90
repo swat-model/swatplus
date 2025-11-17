@@ -12,7 +12,6 @@
       use constituent_mass_module
       use ru_module
       use basin_module
-      use gwflow_module, only: nat_model
       
       implicit none
 

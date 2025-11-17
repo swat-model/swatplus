@@ -38,4 +38,4 @@
 
 !  END OF SUBROUTINE RAN1
       return
-      end
+      end function ran1

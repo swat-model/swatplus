@@ -172,4 +172,4 @@
       end do                                  !! operation loop
     
       return
-      end
+      end subroutine read_mgtops
