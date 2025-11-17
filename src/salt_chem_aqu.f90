@@ -262,4 +262,4 @@
       asaltb_d(iaq)%salt(1)%diss = mass_after - mass_before
       
       return
-      end
+      end subroutine salt_chem_aqu

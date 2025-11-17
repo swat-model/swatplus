@@ -23,11 +23,9 @@
       integer :: ihru_s = 0        !none      |counter
       integer :: iter_ind = 0      !          |end of loop
       integer :: ietco = 0         !none      |counter
-      real :: rmeas = 0.            !          |
-      real :: denom = 0.            !          |
-      real :: soft = 0.             !          |
-      real :: diff = 0.             !          |
-      real :: chg_val = 0.          !          |   
+      real :: soft = 0.            !          |
+      real :: diff = 0.            !          |
+      real :: chg_val = 0.         !          |   
       real :: pred = 0.
       ! calibrate esco and pet for water yield
         iter_ind = 1

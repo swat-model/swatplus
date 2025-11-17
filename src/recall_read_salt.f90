@@ -29,13 +29,9 @@
       integer :: ipc = 0              !none       |counter
       integer :: ii = 0               !none       |counter
       integer :: i = 0                !           |
-      integer :: iexco_om = 0
-      integer :: ifirst = 0           !           |
-      integer :: iexo_allo = 0
       integer :: isalt = 0
       integer :: jj = 0
       integer :: kk = 0
-      integer :: dum = 0
       
       eof = 0
       imax = 0

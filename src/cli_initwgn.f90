@@ -109,7 +109,7 @@
       integer :: nda = 0                    !julian date   |julian date of last day in the month
       real :: cli_dstn1                     !              |
       real :: pcp_gen = 0.                  !mm H2O        |generated precipitation
-      real :: aunif                         !              |
+      real, external :: aunif               !              |
       integer :: xrnd = 0                   !              |
       integer :: iwgn                       !              |
       integer :: mo_ppet = 0                !              |

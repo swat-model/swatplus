@@ -38,8 +38,6 @@
       integer :: ihtyp = 0            !              |
       integer :: iaq = 0              !none          |counter
       integer :: j = 0                !none          |counter
-      integer :: nly = 0
-      integer :: ly = 0
       integer :: ihyd = 0             !              |
       integer :: idr = 0              !              |
       integer :: iwro = 0             !              |
@@ -613,6 +611,5 @@
 102   format(i6,11x,i3,8x,i5,5x,1000(f16.4))
 103   format(4i6,2i8,2x,a,35f12.3)      
 
-      
       return
-      end
+      end subroutine command

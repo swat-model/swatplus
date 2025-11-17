@@ -20,15 +20,11 @@
       integer :: ics = 0                 !       |constituent counter
       integer :: sol_index = 0
       real :: chan_depth = 0.            !m      |channel depth
-      real :: chan_width = 0.            !m      |channel width
-      real :: chan_length = 0.           !m      |length of channel, in cell
       real :: bed_elev = 0.              !m      |elevation of channel bed, in cell
       real :: bed_K = 0.                 !m/day  |hydraulic conductivity of channel bed, in cell
-      real :: bed_thick = 0.             !m      |thickness of channel bed, in cell
       real :: chan_stage = 0.            !m      |elevation of water in channel, in cell
       real :: flow_area = 0.             !m2     |groundwater flow area of water exchange, in cell
       real :: riv_flow_area = 0.         !m2       |groundwater flow area of water exchange for channel
-      real :: gw_head = 0.               !m      |current groundwater head in cell
       real :: Q = 0.                     !m3/day |water exchange flow rate in floodplain, calculated by Darcy's Law
       real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
       real :: chan_csol(100) = 0.        !g/m3   |solute concentration in channel water

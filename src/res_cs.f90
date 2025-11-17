@@ -6,7 +6,7 @@
       use reservoir_data_module
       use reservoir_module
       use water_body_module
-      use hydrograph_module, only : res, resz, ob, ht2, wbody
+      use hydrograph_module, only : res, ob, ht2
       use constituent_mass_module
       use res_cs_module
       use climate_module
@@ -19,9 +19,6 @@
       integer :: icon              !none          |counter
       integer :: iwst = 0          !none          |weather station number
       integer :: ics = 0           !constituent counter
-      real    :: cs_mass = 0.      !mass of constituent in reservoir water (kg)
-      real    :: cs_mass_out = 0.  !mass of constituent leaving the reservoir via outflow (kg)
-      real    :: cs_conc = 0.      !concentration of constituent in reservoir water (g/m3 = mg/L)
       integer :: icmd = 0          !none  
       real    :: k_react = 0.      !1/day - first-order rate constant, affected by temperature 
       real    :: v_settle = 0.     !m/day   - settling rate

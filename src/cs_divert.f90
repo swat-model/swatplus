@@ -8,4 +8,4 @@
 !!    from the source object
       
       return
-      end !cs_divert
+      end subroutine cs_divert

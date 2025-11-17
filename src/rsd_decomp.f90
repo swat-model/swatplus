@@ -32,7 +32,7 @@
       use plant_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : rsdco_plcom, i_sep, ihru, ipl, isep 
+      use hru_module, only : rsdco_plcom, ihru
       use soil_module
       use plant_module
       use output_landscape_module, only : hnb_d
@@ -41,7 +41,6 @@
       implicit none 
 
       integer :: j = 0      !none          |HRU number
-      integer :: k = 0      !none          |counter (soil layer)
       integer :: ly = 0     !none          |soil layer used to compute soil water and |soil temperature factors
       real :: xx = 0.       !varies        |variable to hold intermediate calculation result
       real :: csf = 0.      !none          |combined temperature/soil water factor

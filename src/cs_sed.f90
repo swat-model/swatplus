@@ -3,7 +3,7 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the amount of selenium attached to sediment in surface runoff
 
-      use hru_module, only : hru, sedorgn, sedyld, ihru, enratio, sedmcs
+      use hru_module, only : hru, sedyld, ihru, enratio, sedmcs
       use basin_module
       use constituent_mass_module
       use soil_module
@@ -61,4 +61,4 @@
 
       
       return
-      end !cs_sed
+      end subroutine cs_sed

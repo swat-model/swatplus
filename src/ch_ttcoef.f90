@@ -68,8 +68,7 @@
       real :: chsslope = 0.      !none          |change in horizontal distance per unit
                                  !              |change in vertical distance on channel side
                                  !              |slopes; always set to 2 (slope=1/2)
-      real :: qman               !m^3/s or m/s  |flow rate or flow velocity
-
+      real, external  :: qman    !m^3/s or m/s  |flow rate or flow velocity
 
       aa = 1.
       b = 0.
@@ -143,4 +142,5 @@
       ch_vel(k)%stor_dis_1bf = ch_hyd(k)%l / ch_vel(k)%celerity_1bf / 3.6
 
       return
+      
       end subroutine ch_ttcoef

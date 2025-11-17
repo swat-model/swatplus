@@ -40,6 +40,6 @@
 
       endif
 
-      
+
       return
       end subroutine cs_plant_read

@@ -47,7 +47,7 @@
       real :: smxold = 0.                  !              | 
       real :: sumul = 0.                   !mm H2O        |amount of water held in soil profile at saturation
       real :: sumfc = 0.                   !mm H2O        |amount of water held in the soil profile at field capacity
-      real :: max                        !              |
+      real :: max                          !              |
       real :: amin1                        !              |
       
       cn2(h) = cnn

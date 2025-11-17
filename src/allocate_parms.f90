@@ -220,4 +220,4 @@
 
 !!    zero reservoir module
       return
-      end
+      end subroutine allocate_parms

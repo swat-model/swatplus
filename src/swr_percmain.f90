@@ -34,11 +34,10 @@
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
       use hru_module, only : hru, ihru, i_sep, inflpcp, isep, latlyr, latq, lyrtile, qstemm, sepbtm, sepcrktot, sepday,   &
-         sw_excess, wt_shall, qtile, gwsoilq !rtb gwflow
+         sw_excess, wt_shall, qtile   !rtb gwflow
       use soil_module
       use septic_data_module
       use hydrograph_module
-      use gwflow_module, only : gw_soil_flag,gw_solute_flag !rtb gwflow
       use basin_module
       
       implicit none

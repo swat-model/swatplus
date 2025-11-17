@@ -42,7 +42,6 @@
       integer :: cal_lyr1 = 0
       integer :: cal_lyr2 = 0
       integer :: iplant = 0
-      integer :: icom = 0
          
       do ichg_par = 1, db_mx%cal_upd
 

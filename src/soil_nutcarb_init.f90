@@ -25,7 +25,7 @@
       real :: actp = 0.
       real :: solp = 0.
       real :: ssp = 0.
-      real :: psp = 0.                  !              | 
+      real :: psp = 0.                  !              |
 
       nly = soil(ihru)%nly
 

@@ -45,8 +45,8 @@
       real, intent (in) :: absmin                           !                |minimum range for variable 
       real, intent (in) :: absmax                           !                |maximum change for variable
       integer, intent (in) :: ielem                         !                | 
-      integer, intent (in) :: num_db                        !                | 
       integer, intent (in) :: ly                            !                |
+      integer, intent (in) :: num_db
       integer :: jj = 0                                     !                |soil layer counter
       integer :: ipl = 0                                    !                |soil layer counter
       integer :: ihru = 0                                   !                |hru counter

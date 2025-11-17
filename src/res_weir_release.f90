@@ -21,9 +21,7 @@
       integer :: iweir = 0          !none      |weir ID 
       integer :: nstep = 0          !none      |counter
       integer :: tstep = 0          !none      |hru number
-      integer :: iac = 0            !none      |counter 
       integer :: ic = 0             !none      |counter
-      integer :: weir_flg=0         !none      |counter
       integer,  intent (in) :: id   !none      |hru number
       integer,  intent (in) :: ihyd !          |
       real :: vol = 0.              !          |

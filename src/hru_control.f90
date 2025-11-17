@@ -11,9 +11,9 @@
          surqsolp, sedminpa, sedminps, fertn, fertp, fixn, grazn, grazp, ipl, qp_cms, qtile,      &
          snofall, snomlt, usle, canev, ep_day, es_day, etday, inflpcp, isep, iwgen, ls_overq,     &
          nd_30, pet_day, precip_eff, qday, latqrunon, gwsoilq, satexq, surf_bs, bss, bss_ex, brt, &
-         gwsoiln, gwsoilp, satexn, satexq_chan, surqsalt, latqsalt, tilesalt, percsalt, urbqsalt, & !rtb gwflow; rtb salt
-         wetqsalt, wtspsalt,gwupsalt, usle_cfac,                                                  &
-         surqcs, latqcs, tilecs, perccs, gwupcs, sedmcs, urbqcs, wetqcs, wtspcs                         !rtb cs
+         gwsoiln, gwsoilp, satexq_chan, surqsalt, latqsalt, tilesalt, percsalt, urbqsalt,         & !rtb gwflow; rtb salt
+         wetqsalt, wtspsalt, gwupsalt, surqcs, latqcs, tilecs, perccs, gwupcs, sedmcs, urbqcs,    &
+         wetqcs, wtspcs    !rtb cs
                                                                                                                                         !HAK 7/27/22
       use soil_module 
       use plant_module

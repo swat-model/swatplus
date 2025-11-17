@@ -104,13 +104,9 @@
       acsb_d(iaq)%cs(1)%rctn = mass_seo4_after - mass_seo4_before !kg
       acsb_d(iaq)%cs(2)%rctn = mass_seo3_after - mass_seo3_before !kg    
       
-
       return
-      end ! cs_rctn_aqu
       
-      
-      
-      
+      end subroutine cs_rctn_aqu
       
       !rate laws for Se chemical reduction (seo4 --> seo3) --------------------------------------------------------------------------------
       subroutine se_reactions_aquifer(iaq,conc_rg,k_rg,k_slope)
@@ -185,9 +181,6 @@
       k_rg(k_slope,2) = dseo3
       k_rg(k_slope,3) = dno3
 
+      
       return 
-      end !se_reactions_aquifer
-
-
-
-
+      end subroutine se_reactions_aquifer

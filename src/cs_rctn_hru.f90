@@ -15,9 +15,6 @@
       integer :: j = 0
       integer :: jj = 0
       integer :: n = 0
-      integer :: dum = 0
-      real :: cseo4 = 0.
-      real :: cseo3 = 0.
       real :: conc_old
       real :: conc_new
       real :: conc_rg
@@ -25,7 +22,6 @@
       real :: phi_value
       real :: hru_area_m2 = 0.
       real :: water_volume = 0.
-      real :: gw_volume = 0.
       real :: mass_seo4_before = 0.
       real :: mass_seo3_before = 0.
       real :: mass_seo4_after = 0.
@@ -126,13 +122,9 @@
       hcsb_d(j)%cs(1)%rctn = mass_seo4_after - mass_seo4_before !kg/ha
       hcsb_d(j)%cs(2)%rctn = mass_seo3_after - mass_seo3_before !kg/ha
       
-
       return
-      end !cs_rctn_hru
-
       
-      
-      
+      end subroutine cs_rctn_hru 
 
       !rate laws for Se chemical reduction (seo4 --> seo3) --------------------------------------------------------------------------------
       subroutine se_reactions_soil(j,jj,conc_rg,k_rg,k_slope)
@@ -146,14 +138,10 @@
       integer :: k_slope
       integer :: kk = 0
       real :: conc_rg
-      real :: conc_old
       real :: k_rg
       real :: cseo4 = 0.
       real :: cseo3 = 0.
       real :: no3inhib = 0.
-      real :: hru_area_m2 = 0.
-      real :: no3_mass_kg = 0.
-      real :: no3_conc = 0.
       real :: seo4red = 0.
       real :: seo3red = 0.
       real :: dseo4 = 0.
@@ -170,7 +158,7 @@
       real :: ko2a = 0.
       real :: kno3 = 0.
       real :: sseratio = 0.
-      dimension conc_rg(3),conc_old(3),k_rg(4,3)
+      dimension conc_rg(3), k_rg(4,3)
 
       !get concentration of SeO4 and SeO3
       cseo4 = conc_rg(1)
@@ -217,5 +205,4 @@
       k_rg(k_slope,3) = dno3
 
       return 
-      end !se_reactions_soil
-
+      end subroutine se_reactions_soil

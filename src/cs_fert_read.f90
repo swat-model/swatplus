@@ -15,7 +15,6 @@
       character (len=30) :: fert_name = ""
       integer :: icsi = 0
       integer :: eof = 0
-      integer :: imax = 0
       logical :: i_exist              !none       |check to determine if file exists
 
       eof = 0
