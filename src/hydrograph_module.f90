@@ -224,7 +224,7 @@
       type (hyd_output), dimension (:), allocatable :: wuse_om_efflu
       
       !! outside source outflow
-      type (hyd_output), dimension (:), allocatable :: osrc_om_out
+      type (hyd_output), dimension (:), allocatable :: osrc_om
       
       !! canal storage and outflow
       type (hyd_output), dimension (:), allocatable :: canal_om_stor

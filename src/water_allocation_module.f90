@@ -104,8 +104,9 @@
         integer :: isalts = 0                   !salt ions
         integer :: iconstit = 0                 !other constituents
       end type water_treatment_use_data        
-      type (water_treatment_use_data), dimension(:), allocatable :: wtp        
+      type (water_treatment_use_data), dimension(:), allocatable :: wtp
       type (water_treatment_use_data), dimension(:), allocatable :: wuse
+      type (water_treatment_use_data), dimension(:), allocatable :: osrc
       
       type aquifer_loss
         real :: aqu_num                         !aquifer number
@@ -129,6 +130,7 @@
       character(len=16), dimension(:), allocatable :: om_init_name
       character(len=16), dimension(:), allocatable :: om_treat_name
       character(len=16), dimension(:), allocatable :: om_use_name
+      character(len=16), dimension(:), allocatable :: om_osrc_name
       
       !transfer object output
       type transfer_object_output
