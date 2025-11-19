@@ -26,7 +26,7 @@
         select case (wallo(iwallo)%trn(itrn)%src(1)%typ)
         !! source object is an out of basin source
         case ("osrc")
-          wallod_out(iwallo)%trn(itrn)%trn_flo = osrc_om_out(isrc)%flo
+          wallod_out(iwallo)%trn(itrn)%trn_flo = osrc_om(isrc)%flo
         !! source object is a water treatment plant
         case ("wtp")
           wallod_out(iwallo)%trn(itrn)%trn_flo = wtp_om_out(isrc)%flo

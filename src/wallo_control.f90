@@ -45,7 +45,7 @@
             iosrc = wallo(iwallo)%src(isrc)%ob_num
             select case (wallo(iwallo)%src(isrc)%lim_typ)
             case ("mon_lim")
-              osrc_om_out(iosrc)%flo = wallo(iwallo)%src(isrc)%limit_mon(time%mo)
+              osrc_om(iosrc)%flo = wallo(iwallo)%src(isrc)%limit_mon(time%mo)
             case ("dtbl")
               !! use decision table for outflow
             case ("recall")

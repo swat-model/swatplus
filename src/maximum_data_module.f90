@@ -144,6 +144,7 @@
         integer :: water_use = 0
         integer :: om_treat = 0
         integer :: om_use = 0
+        integer :: outside_src = 0
       end type data_files_max_elements
       type (data_files_max_elements), save :: db_mx
                                  
