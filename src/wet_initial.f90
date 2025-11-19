@@ -34,16 +34,15 @@
       integer :: ics = 0                 !none       |counter
       integer :: isstor = 0              !none       |counter
   
-      iprop = hru(iihru)%dbs%surf_stor
       iweir = wet_ob(iihru)%iweir
         
       !! check if hru can store surface water
-      if (iprop > 0) then
         !! crosswalk with wetland data files
         if (hru(iihru)%dbsc%surf_stor /= "null") then
           do isstor = 1, db_mx%wet_dat
             if (hru(iihru)%dbsc%surf_stor == wet_dat_c(isstor)%name) then
               hru(iihru)%dbs%surf_stor = isstor
+              iprop = hru(iihru)%dbs%surf_stor
               hru(iihru)%wet_db = isstor
                   
               !! initialize orgaincs and minerals in water
@@ -124,10 +123,9 @@
               exit
             end if
           end do
-        end if
+          
         if (hru(iihru)%dbs%surf_stor == 0 .and. hru(iihru)%dbsc%surf_stor /= 'null')       & 
               write (9001,*) hru(iihru)%dbsc%surf_stor,"not found (wetland.wet)"
-       
             
         !! initialize parameters
         hru(iihru)%wet_hc = wet_hyd(iihru)%k  !mm/hr

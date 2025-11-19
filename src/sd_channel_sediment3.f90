@@ -56,6 +56,9 @@
       real :: v_vc = 0.
       real :: m_exhaust = 0.
       real :: dur_scale = 0.
+      real :: f_active = 0.
+      real :: r_fac = 0.
+      real :: n_days = 0.
       
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
@@ -97,7 +100,7 @@
       
       !! compute flood plain deposition
       ave_rate = ht1%flo / 86400.     !m3/s
-     
+      !sd_ch(ich)%bankfull_flo = 1.           ***jga 
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
       florate_ob = ave_rate - bf_flow
       if (florate_ob > 0.) then
@@ -114,9 +117,13 @@
         flovol_ob = Min (0.8 * ht1%flo, flovol_ob)
         !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
-        fp_m2 = 4.3 * (sd_ch(ich)%chw ** 1.12) * sd_ch(ich)%chl * 1000.
+        !! flood plain area per km (1000 m) of length
+        fp_m2 = 4.3 * (sd_ch(ich)%chw ** 1.12) * 1000.
         exp_co = 0.0001 * fp_m2 / florate_ob
-        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
+        trap_eff =  sd_ch(ich)%chl * (florate_ob / ave_rate) * (1. - exp(-exp_co))
+        !! adjustment for calibration
+        !sd_ch(ich)%fp_inun_days = 0.2         ***jga 
+        trap_eff = sd_ch(ich)%fp_inun_days * trap_eff 
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
         
@@ -166,7 +173,7 @@
       bd_fac = Max (0.001, 0.03924 * sd_ch(ich)%ch_bd * 1000. - 1000.)
       cohes_fac = 0.021 * cohesion + veg
       vel_cr = log10 (2200. * sd_ch(ich)%chd) * (0.0004 * (bd_fac + cohes_fac)) ** 0.5
-      !sd_ch(ich)%vcr_coef = 1.
+      !sd_ch(ich)%vcr_coef = 3.                 ***jga 
       vel_cr = sd_ch(ich)%vcr_coef * vel_cr
       
       !! calculate radius of curvature
@@ -178,23 +185,28 @@
       b_exp = min (3.5, b_exp)
       if (vel_rch > vel_cr) then
         !! bank erosion m/yr
-        dur_scale = 0.000087 * (ob(icmd)%area_ha / 100.) ** (-0.0817)
-        v_vc = dur_scale * sd_ch(ich)%chw * (1. / (1. + exp(-4. * (vel_rch / vel_cr - 1.))))
-        m_exhaust = 0.0002 * sd_ch(ich)%chw
-        ebank_m = 1. / (1. / v_vc + 1. / m_exhaust)
+        n_days = 2.4 * (ob(icmd)%area_ha / 100.) ** (0.2)
+        dur_scale = 0.0095 * (ob(icmd)%area_ha / 100.) ** (-0.0817)  ! 0.00087
+        v_vc = vel_rch / vel_cr
+        f_active = 1. / (1. + exp(-4. * (v_vc - 1.)))
+        !r_fac = dur_scale * f_active * v_vc * sd_ch(ich)%chw
+        r_fac = 0.01 / n_days * v_vc * sd_ch(ich)%chw !0.02
+        m_exhaust = 0.02 * sd_ch(ich)%chw / n_days    ! 0.05 
+        ebank_m = 1. / (1. / r_fac + 1. / m_exhaust)
+        !ebank_m = 1. / (1. / v_vc + 1. / m_exhaust)
         !ebank_m = 0.0001 * sd_ch(ich)%chw * (1. / (1. + exp(-4. * (vel_rch / vel_cr - 1.))) - 0.5)
         !ebank_m = 0.001 / (1. + exp(-4. * (vel_rch / vel_cr) / sd_ch(ich)%chw))
-        !ebank_m = 0.00024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp
+        !ebank_m = 0.024 * (vel_rch / vel_cr) ** sd_ch(ich)%bank_exp   ! 0.00024
       else
         ebank_m = 0.
       end if
       
       !! write for Peter
       !if (ich == 2133) then
-      !write (7777, *) time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chd, sd_ch(ich)%chl,   &
-          !sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
-          !sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
-          !bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m
+      write (7777, *) time%day, time%yrc, ich, sd_ch(ich)%chw, sd_ch(ich)%chd, sd_ch(ich)%chl,   &
+          sd_ch(ich)%chn, sd_ch(ich)%sinu, sd_ch(ich)%pk_rto, pk_rto, peakrate, vel,      &
+          sd_ch(ich)%ch_clay, cohesion, sd_ch(ich)%cov, veg, cohes_fac, sd_ch(ich)%ch_bd, &
+          bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m
       !end if
       
       !! mass of sediment eroded -> t = 1000 * bankcut (mm) * depth (m) * lengthcut (m) * bd (t/m3)
