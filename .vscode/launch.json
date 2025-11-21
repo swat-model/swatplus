@@ -9,7 +9,7 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "stopAtEntry": false,
-            // "cwd": "${workspaceFolder}/data_test/Ames_sub1",
+            // Change the following to where swatplus input data exists
             "cwd": "${workspaceFolder}/workdata/Ames_sub1",
             "environment": [
                 {
@@ -38,7 +38,7 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "stopAtEntry": false,
-            // "cwd": "${workspaceFolder}/data_test/Ames_sub1",
+            // Change the following to where swatplus input data exists
             "cwd": "${workspaceFolder}/workdata/my_data",
             "environment": [
                 {
