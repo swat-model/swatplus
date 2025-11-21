@@ -86,7 +86,7 @@
         end if
         
       !! average annual print - RESERVOIR
-      if (time%end_sim == 1) then
+      if (time%end_sim == 1 .and. pco%res_bsn%a == "y") then
         bres_in_a = bres_in_a / time%yrs_prt
         bres_out_a = bres_out_a / time%yrs_prt
         bres_wat_a = bres_wat_a / time%yrs_prt

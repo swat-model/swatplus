@@ -1,7 +1,7 @@
       subroutine wallo_control (iwallo)
       
       use water_allocation_module
-      use hydrograph_module, only : irrig, hz, recall
+      use hydrograph_module   !, only : irrig, hz, recall
       use hru_module
       use basin_module
       use time_module
@@ -13,7 +13,8 @@
       implicit none 
 
       integer, intent (inout) :: iwallo     !water allocation object number
-      integer :: idmd = 0                   !water demand object number
+      integer :: itrn = 0                   !water demand object number
+      integer :: iosrc = 0                  !source object number
       integer :: isrc = 0                   !source object number
       integer :: j = 0                      !hru number
       integer :: jj = 0                     !variable for passing
@@ -27,98 +28,105 @@
       !! zero demand, withdrawal, and unmet for entire allocation object
       wallo(iwallo)%tot = walloz
       
-      !! check if canal or inflow diversions and set available water from recall object
-      do isrc = 1,wallo(iwallo)%src_obs
-        !! set total volumes of canal diversions (source = "div") - rtb
-        if (wallo(iwallo)%src(isrc)%ob_typ == "div") then  
-          irec = wallo(iwallo)%src(isrc)%ob_num !number in recall.rec
-          !calculate newly available canal water
-          div_daily = recall(irec)%hd(time%day,time%yrs)%flo * (-1) !m3; make positive
-          if(div_daily > 0) then
-            dum = 10
-          endif
-          div_total = div_volume_daily(irec) !m3
-          div_volume_daily(irec) = ((1.-div_delay)*div_daily) + (div_delay*div_total) !m3
-          if (div_volume_daily(irec) < 1.e-6) then
-            div_volume_daily(irec) = 0.
-          endif
-          !total available canal water for irrigation
-          div_volume_total(irec) = div_volume_total(irec) + div_volume_daily(irec) !m3
-        endif
-        
-        !! set total volumes of inflow diversions from recall file
-        if (wallo(iwallo)%src(isrc)%ob_typ == "div_rec") then  
-          irec = wallo(iwallo)%src(isrc)%rec_num !number in recall.rec
-          !total available source water
-          wallo(iwallo)%src(isrc)%div_vol = recall(irec)%hd(time%day,time%yrs)%flo !m3
-        end if
-        
-        !! set total volumes of inflow diversions from monthly flow rate (m3/s)
-        if (wallo(iwallo)%src(isrc)%ob_typ == "div_in") then  
-          !total available source water - m3
-          wallo(iwallo)%src(isrc)%div_vol = wallo(iwallo)%src(isrc)%limit_mon(time%mo) * 86400.
-        end if
-      end do
+      !! zero total transfer and treatment and use outflows
+      wal_omd(iwallo)%trn(:)%h_tot = hz
+      wtp_om_out = hz
+      wuse_om_out = hz
       
       !!loop through each demand object
-      do idmd = 1, wallo(iwallo)%dmd_obs
+      do itrn = 1, wallo(iwallo)%trn_obs
                
         !! zero demand, withdrawal, and unmet for each source
-        do isrc = 1, wallo(iwallo)%dmd(idmd)%dmd_src_obs
-          wallod_out(iwallo)%dmd(idmd)%src(isrc) = walloz
+        do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
+          wallod_out(iwallo)%trn(itrn)%src(isrc) = walloz
+          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = hz
         end do
   
-        !! set demand for each object
-        call wallo_demand (iwallo, idmd)
+        !! compute flow from outside sources
+        do isrc = 1, wallo(iwallo)%src_obs
+          if (wallo(iwallo)%src(isrc)%ob_typ == "osrc") then
+            iosrc = wallo(iwallo)%src(isrc)%ob_num
+            select case (wallo(iwallo)%src(isrc)%lim_typ)
+            case ("mon_lim")
+              osrc_om_out(iosrc)%flo = wallo(iwallo)%src(isrc)%limit_mon(time%mo)
+            case ("dtbl")
+              !! use decision table for outflow
+            case ("recall")
+              !! use recall for outflow
+            end select
+          end if
+        end do
+          
+        !! set demand for each transfer object - wallod_out(iwallo)%trn(itrn)%trn_flo
+        call wallo_demand (iwallo, itrn)
+        
+        !! initialize unmet to total demand and subtract as water is withdrawn
+        wallo(iwallo)%trn(itrn)%unmet_m3 = wallod_out(iwallo)%trn(itrn)%trn_flo
+      
+        !! zero demand, withdrawal, and unmet for each source
+        wallod_out(iwallo)%trn(itrn)%src(:) = walloz
+
+        !! compute demand for each source object
+        wdraw_om_tot = hz
+        do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
+          wallod_out(iwallo)%trn(itrn)%src(isrc)%demand = wallo(iwallo)%trn(itrn)%src(isrc)%frac *      &
+                                                                wallod_out(iwallo)%trn(itrn)%trn_flo
+        end do
  
-        !! if demand - check source availability
-        if (wallod_out(iwallo)%dmd(idmd)%dmd_tot > 0.) then
+        !! if demand - check source availability and withdraw water
+        if (wallod_out(iwallo)%trn(itrn)%trn_flo > 0.) then
             
-          wallo(iwallo)%dmd(idmd)%hd = hz
-          !! check if water is available from each source - set withdrawal and unmet
-          do isrc = 1, wallo(iwallo)%dmd(idmd)%dmd_src_obs
-            dmd_m3 = wallod_out(iwallo)%dmd(idmd)%src(isrc)%demand
-            if (dmd_m3 > 1.e-6) then
-              call wallo_withdraw (iwallo, idmd, isrc)
+          !! check if water is available from each source - set withdrawal and unmet - wallo(iwallo)%trn(itrn)%src(isrc)%hd
+          wdraw_om_tot = hz
+          do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
+            trn_m3 = wallod_out(iwallo)%trn(itrn)%src(isrc)%demand
+            if (trn_m3 > 1.e-6) then
+              call wallo_withdraw (iwallo, itrn, isrc)
             end if
           end do
         
           !! loop through sources again to check if compensation is allowed
-          do isrc = 1, wallo(iwallo)%dmd(idmd)%dmd_src_obs
-            if (wallo(iwallo)%dmd(idmd)%src(isrc)%comp == "y") then
-              dmd_m3 = wallo(iwallo)%dmd(idmd)%unmet_m3
-              if (dmd_m3 > 1.e-6) then
-                call wallo_withdraw (iwallo, idmd, isrc)
+          do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
+            if (wallo(iwallo)%trn(itrn)%src(isrc)%comp == "y") then
+              trn_m3 = wallo(iwallo)%trn(itrn)%unmet_m3
+              if (trn_m3 > 1.e-6) then
+                call wallo_withdraw (iwallo, itrn, isrc)
               end if
             end if
           end do
         
-          !! compute total withdrawal for demand object from all sources
-          wallo(iwallo)%dmd(idmd)%withdr_tot = 0.
-          do isrc = 1, wallo(iwallo)%dmd(idmd)%dmd_src_obs
-            wallo(iwallo)%dmd(idmd)%withdr_tot = wallo(iwallo)%dmd(idmd)%withdr_tot +           &
-                                                  wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr
+          !! compute total withdrawal for receiving object from all sources
+          wallo(iwallo)%trn(itrn)%withdr_tot = 0.
+          do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
+            wallo(iwallo)%trn(itrn)%withdr_tot = wallo(iwallo)%trn(itrn)%withdr_tot +           &
+                                                  wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
           end do
         
-          !! if irrigating set amount applied and runoff
-          select case (wallo(iwallo)%dmd(idmd)%ob_typ)
-          !! irrigation demand
+          !! transfer water (pipes) to receiving object from all sources
+          wallo(iwallo)%trn(itrn)%withdr_tot = 0.
+          call wallo_transfer (iwallo, itrn)
+        
+          !! add water withdrawn from source to the receiving object  - wal_omd(iwallo)%trn(itrn)%h_tot
+          j = wallo(iwallo)%trn(itrn)%rcv%num
+          select case (wallo(iwallo)%trn(itrn)%rcv%typ)
+          !! irrigation transfer - set amount applied and runoff
           case ("hru")
-            if (wallo(iwallo)%dmd(idmd)%withdr_tot > 0.) then
-              j = wallo(iwallo)%dmd(idmd)%ob_num
-              irr_mm = wallo(iwallo)%dmd(idmd)%withdr_tot / (hru(j)%area_ha * 10.)      !mm = m3 / (ha * 10.)
-              irrig(j)%applied = irr_mm * wallo(iwallo)%dmd(idmd)%irr_eff * (1. - wallo(iwallo)%dmd(idmd)%surq)
-              irrig(j)%runoff = wallo(iwallo)%dmd(idmd)%amount * wallo(iwallo)%dmd(idmd)%surq
+            if (wallo(iwallo)%trn(itrn)%withdr_tot > 0.) then
+              irr_mm = wallo(iwallo)%trn(itrn)%withdr_tot / (hru(j)%area_ha * 10.)      !mm = m3 / (ha * 10.)
+              irrig(j)%applied = irr_mm * wallo(iwallo)%trn(itrn)%irr_eff * (1. - wallo(iwallo)%trn(itrn)%surq)
+              irrig(j)%runoff = wallo(iwallo)%trn(itrn)%amount * wallo(iwallo)%trn(itrn)%surq
               pcom(j)%days_irr = 1            ! reset days since last irrigation
+              
+              !! send runoff to canal?
               
               !rtb salt: irrigation salt mass accounting
               if(cs_db%num_salts > 0) then
-                jj = idmd !to avoid a compiler warning
+                jj = itrn !to avoid a compiler warning
                 call salt_irrig(iwallo,jj,j)
               endif
               !rtb cs: irrigation constituent mass accounting
               if(cs_db%num_cs > 0) then
-                jj = idmd !to avoid a compiler warning
+                jj = itrn !to avoid a compiler warning
                 call cs_irrig(iwallo,jj,j)
               endif
               
@@ -131,30 +139,52 @@
                   sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied
               end if
             end if
+            
+            case ("res")
+              !! reservoir transfer - maintain reservoir levels at a specified level or required transfer
+              res(j) = res(j) + wal_omd(iwallo)%trn(itrn)%h_tot
+            
+            case ("aqu")
+              !! aquifer transfer - maintain aquifer levels at a specified level or required transfer
+              aqu(j) = aqu(j) + wal_omd(iwallo)%trn(itrn)%h_tot
+              !! calculate water table depth
+              
+            case ("wtp")
+              !! wastewater treatment 
+              wtp_om_stor(j) = wtp_om_stor(j) + wal_omd(iwallo)%trn(itrn)%h_tot
+              !! compute outflow and concentrations
+              call wallo_treatment (iwallo, itrn, j)
+              
+            case ("use")
+              !! water use (domestic, industrial, commercial) 
+              wuse_om_stor(j) = wuse_om_stor(j) + wal_omd(iwallo)%trn(itrn)%h_tot
+              !! compute outflow and concentrations
+              call wallo_use (iwallo, itrn, j)
+              
+            case ("stor")
+              !! water tower storage - don't change concentrations or compute outflow
+              wtow_om_stor(j) = wtow_om_stor(j) + wal_omd(iwallo)%trn(itrn)%h_tot
+           
+            case ("canal")
+              !! canal storage - compute outflow - change concentrations?
+              canal_om_stor(j) = canal_om_stor(j) + wal_omd(iwallo)%trn(itrn)%h_tot
+              !! compute losses - evap and seepage, and outflow
+              ! call canal()
           end select
         
         end if      !if there is demand 
         
-        !! treatment of withdrawn water
-        if (wallo(iwallo)%dmd(idmd)%treat_typ == "out") then
-          !! no treatment - treated = withdrawal
-          wallo(iwallo)%dmd(idmd)%trt = wallo(iwallo)%dmd(idmd)%hd
-        else
-          !! compute treatment by inputting the mass or concentrations
-          call wallo_treatment (iwallo, idmd)
-        end if
+        !! sum organics 
+        wdraw_om_tot = wdraw_om_tot + wdraw_om
         
-        !! transfer (diversion) of withdrawn and possibly treated water
-        if (wallo(iwallo)%dmd(idmd)%rcv_ob  /= "null") then
-          call wallo_transfer (iwallo, idmd)
-        end if
+        !! sum constituents
         
         !! sum demand, withdrawal, and unmet for entire allocation object
-        wallo(iwallo)%tot%demand = wallo(iwallo)%tot%demand + wallod_out(iwallo)%dmd(idmd)%dmd_tot
-        wallo(iwallo)%tot%withdr = wallo(iwallo)%tot%withdr + wallo(iwallo)%dmd(idmd)%withdr_tot
-        wallo(iwallo)%tot%unmet = wallo(iwallo)%tot%unmet + wallo(iwallo)%dmd(idmd)%unmet_m3
+        wallo(iwallo)%tot%demand = wallo(iwallo)%tot%demand + wallod_out(iwallo)%trn(itrn)%trn_flo
+        wallo(iwallo)%tot%withdr = wallo(iwallo)%tot%withdr + wallo(iwallo)%trn(itrn)%withdr_tot
+        wallo(iwallo)%tot%unmet = wallo(iwallo)%tot%unmet + wallo(iwallo)%trn(itrn)%unmet_m3
         
       end do        !demand object loop
         
       return
-    end subroutine wallo_control
+      end subroutine wallo_control

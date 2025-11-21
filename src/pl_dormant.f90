@@ -60,6 +60,7 @@
           pl_mass(j)%seed(ipl) = plt_mass_z
           
           soil1(j)%rsd(1) = soil1(j)%rsd(1) + abgr_drop
+          !! This allocation if cswat == 2 is done in cbn_rsd_decomp subroutine
           ! if (bsn_cc%cswat == 2) then
           !   soil1(j)%meta(ly) = soil1(j)%meta(ly) + 0.85 * abgr_drop
           !   soil1(j)%str(ly) = soil1(j)%str(ly) + 0.15 * abgr_drop

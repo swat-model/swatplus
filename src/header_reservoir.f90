@@ -7,7 +7,7 @@
      
      implicit none 
 
-        open (7777,file="reservoir_sed.txt",recl=1500)
+    !open (7777,file="reservoir_sed.txt",recl=1500)
         
     !! RESERVOIR
       if (pco%res%d == "y" .and. sp_ob%res > 0 ) then

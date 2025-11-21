@@ -388,6 +388,8 @@
               do ielem = 1, ru_def(iru)%num_tot
                 ielem_db = ru_def(iru)%num(ielem)
                 kk = ru_elem(ielem_db)%obj
+                rcv_sum(kk) = rcv_sum(kk) + 1               ! setting sequential receiving hyd number
+                jj = rcv_sum(kk)  
                 ob(kk)%obj_in(jj) = i                       ! source object number (for receiving unit)
                 ob(kk)%obtyp_in(jj) = ob(i)%typ
                 ob(kk)%obtypno_in(jj) = ob(i)%props

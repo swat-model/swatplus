@@ -58,10 +58,10 @@
         character (len=25) :: name = ""         !name of the water allocation object
         character (len=25) :: rule_typ = ""     !rule type to allocate water
         integer :: src_obs = 0                  !number of source objects
-        integer :: dmd_obs = 0                  !number of demand objects
+        integer :: trn_obs = 0                  !number of demand objects
         type (source_manure_output) :: tot            !total demand, withdrawal and unmet for entire allocation object
         type (manure_source_objects), dimension(:), allocatable :: src        !dimension by source objects
-        type (manure_demand_objects), dimension(:), allocatable :: dmd        !dimension by demand objects
+        type (manure_demand_objects), dimension(:), allocatable :: trn        !dimension by demand objects
       end type manure_allocation
       type (manure_allocation), dimension(:), allocatable :: mallo            !dimension by water allocation objects
 
@@ -70,23 +70,23 @@
         character(len=6) :: mo       =   "   mon"
         character(len=6) :: day_mo   =   " day "
         character(len=6) :: yrc      =   " yr  "
-        character(len=8) :: idmd     =   " unit   "
-        character(len=16) :: dmd_typ  =  "dmd_typ         "
-        character(len=16) :: dmd_num =   "    dmd_num     "
+        character(len=8) :: itrn     =   " unit   "
+        character(len=16) :: trn_typ  =  "trn_typ         "
+        character(len=16) :: trn_num =   "    trn_num     "
         character(len=12) :: src1_obj =  "   src1_obj "
         character(len=12) :: src1_typ =  " src1_typ   "
         character(len=12)  :: src1_num = " src1_num   "
-        character(len=15) :: dmd1  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
+        character(len=15) :: trn1  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
         character(len=15) :: s1out  =   "src1_withdraw  "       !! ha-m     |withdrawal from source 1
         character(len=12) :: s1un =    "  src1_unmet"          !! ha-m     |unmet from source 1 
         character(len=12) :: src2_typ =  " src2_typ   "
         character(len=12)  :: src2_num = " src2_num   "
-        character(len=15) :: dmd2  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
+        character(len=15) :: trn2  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
         character(len=15) :: s2out  =   "src2_withdraw  "       !! ha-m     |withdrawal from source 2
         character(len=12) :: s2un =    "  src2_unmet"          !! ha-m     |unmet from source 2           
         character(len=12) :: src3_typ =  " src3_typ   "
         character(len=12)  :: src3_num = " src3_num   "
-        character(len=15) :: dmd3  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
+        character(len=15) :: trn3  =     "    demand     "      !! ha-m     |demand - muni or irrigation       
         character(len=15) :: s3out  =   "src3_withdraw  "       !! ha-m     |withdrawal from source 3
         character(len=12) :: s3un =    "  src3_unmet"          !! ha-m     |unmet from source 3 
         end type mallo_header
@@ -97,23 +97,23 @@
         character (len=8) :: mo       =  "        "
         character (len=8) :: day_mo   =  "        "
         character (len=8) :: yrc      =  "        "
-        character (len=8) :: idmd     =  "        "
-        character (len=16) :: dmd_typ  =  "                "
-        character (len=16) :: dmd_num  =  "                "
+        character (len=8) :: itrn     =  "        "
+        character (len=16) :: trn_typ  =  "                "
+        character (len=16) :: trn_num  =  "                "
         character (len=12) :: src1_obj =  "            "
         character (len=12) :: src1_typ =  "            "
         character (len=8) :: src1_num =  "        "
-        character (len=15) :: dmd1 =      "m^3            "            !! ha-m    |demand - muni or irrigation
+        character (len=15) :: trn1 =      "m^3            "            !! ha-m    |demand - muni or irrigation
         character (len=15) :: s1out =     "m^3            "            !! ha-m    |withdrawal from source 1       
         character (len=9) :: s1un =      "m^3      "                   !! ha-m    |unmet from source 1 
         character (len=15) :: src2_typ =  "               "
         character (len=15) :: src2_num =  "               "
-        character (len=15) :: dmd2 =      "m^3            "        !! ha-m    |demand - muni or irrigation
+        character (len=15) :: trn2 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s2out =     "m^3            "        !! ha-m    |withdrawal from source 2       
         character (len=15) :: s2un =      "m^3            "        !! ha-m    |unmet from source 2        
         character (len=15) :: src3_typ =  "               "
         character (len=15) :: src3_num =  "               "
-        character (len=15) :: dmd3 =      "m^3            "        !! ha-m    |demand - muni or irrigation
+        character (len=15) :: trn3 =      "m^3            "        !! ha-m    |demand - muni or irrigation
         character (len=15) :: s3out =     "m^3            "        !! ha-m    |withdrawal from source 3       
         character (len=15) :: s3un =      "m^3            "        !! ha-m    |unmet from source 3   
         end type mallo_header_units

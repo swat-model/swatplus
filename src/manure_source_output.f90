@@ -7,7 +7,7 @@
       implicit none
       
       integer, intent (in) :: imallo        !             |
-      integer :: idmd = 0
+      integer :: itrn = 0
       integer :: isrc = 0
 
       !! loop through and print each demand object
@@ -17,11 +17,11 @@
       
 !!!!! daily print
         if (pco%water_allo%d == "y") then   !!using region water balance print codes for now
-          write (3200,100) time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,                &
+          write (3200,100) time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,                &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_d  
 
            if (pco%csvout == "y") then
-          write (3201,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,   &
+          write (3201,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_d  
 
            end if
@@ -35,11 +35,11 @@
           mallo(imallo)%src(isrc)%bal_y = mallo(imallo)%src(isrc)%bal_y + mallo(imallo)%src(isrc)%bal_m
           
           if (pco%water_allo%m == "y") then
-          write (3202,100) time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,                &
+          write (3202,100) time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,                &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_m
  
               if (pco%csvout == "y") then
-          write (3203,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,   &
+          write (3203,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_m  
 
           end if
@@ -55,11 +55,11 @@
           mallo(imallo)%src(isrc)%bal_a = mallo(imallo)%src(isrc)%bal_a + mallo(imallo)%src(isrc)%bal_y
           
         if (pco%water_allo%y == "y") then
-          write (3204,100) time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,                &
+          write (3204,100) time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,                &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_y
   
               if (pco%csvout == "y") then
-          write (3205,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,   &
+          write (3205,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_y
           end if
         end if
@@ -74,17 +74,17 @@
           mallo(imallo)%src(isrc)%bal_a = mallo(imallo)%src(isrc)%bal_a / time%yrs_prt
           
         if (pco%water_allo%a == "y") then
-        write (3206,100) time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,                &
+        write (3206,100) time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,                &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_a
 
         if (pco%csvout == "y") then
-        write (3207,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, idmd, mallo(imallo)%src(isrc)%num,   &
+        write (3207,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_a
         end if
        end if
       end if 
       
-      end do    ! do idmd = 1, mallo(imallo)%src_obs
+      end do    ! do itrn = 1, mallo(imallo)%src_obs
       
       return
       
