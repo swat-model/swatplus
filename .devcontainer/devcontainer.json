@@ -6,7 +6,7 @@
 	  "dockerfile": "Dockerfile"
 	},
 	//"postCreateCommand": "mkdir -p /workspaces/data_test && cp -r /workspaces/*/data/Ames_sub1 /workspaces/data_test/",
-    "postCreateCommand": "mkdir -p debug_folder && cp -r data/Ames_sub1/* debug_folder",
+    "postCreateCommand": "mkdir -p /workdata/Ames_sub1 && cp -r data/Ames_sub1/* /workdata/Ames_sub1 && mkdir -p /workdata/my_data",
 	// 2. VS Code customizations
 	"customizations": {
 	  "vscode": {
