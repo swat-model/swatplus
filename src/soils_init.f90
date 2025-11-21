@@ -43,6 +43,11 @@
       real :: sum_ec = 0.         !              |temporary sum to do weighted average with 
       real :: sum_cal = 0.        !              |temporary sum to do weighted average with 
       real :: sum_ph = 0.         !              |temporary sum to do weighted average with 
+      real :: cbn_ltxbd = 0.       !              |Layer thickness time bulk density of that layer 
+      real :: cbn_ltxbd_sum = 0.   !              |Sum of layer thickness times bulk density
+      real :: cbn_wsum = 0.       !              |Temporary sum to do carbon weighted average sum 
+      real :: cbn_wavg = 0.       !              |weighted average of soil carbon
+      real :: cbn_adjust_frac = 0. !             |computed  weigted average adjustment factor for soil carbon
       logical :: i_exist          !none          |check to determine if a file exists
       character (len=500) :: header = "" !       |header of file
       character (len=80) :: titldum = "" !       |title of file
@@ -275,9 +280,8 @@
         end if
 
         if (allocated(sol_test)) then
-          call soils_test_adjust(isol, mlyr)  ! Adjust the input soils data based input soil test values.
+          call soils_test_adjust(isol, mlyr)
         endif
-
       end do
            
       do isol = 1, msoils

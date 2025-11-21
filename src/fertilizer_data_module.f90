@@ -13,7 +13,7 @@
       type (fertilizer_db), dimension(:),allocatable, save :: fertdb
       
       type manure_data
-        character(len=16) :: fertnm = " "
+        character(len=16) :: manurenm = " "
       !  character(len=16), dimension(:),allocatable :: path = " "
       !  character(len=16), dimension(:),allocatable :: antibiotic = " "
       end type manure_data
