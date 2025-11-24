@@ -15,6 +15,8 @@
       
       implicit none
       
+      external :: cs_rtcn_aqu, cs_sorb_aqu, salt_chem_aqu
+      
       integer :: iaq = 0        !none       |counter
       integer :: iaqdb = 0      !           |
       integer :: icha = 0       !           |

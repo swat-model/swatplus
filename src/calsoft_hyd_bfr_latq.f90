@@ -6,7 +6,7 @@
       use hydrograph_module
       use ru_module
       use aquifer_module
-      use channel_module
+      ! use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
