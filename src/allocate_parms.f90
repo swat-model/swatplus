@@ -15,6 +15,8 @@
 
       implicit none
       
+      external :: zero0, zero1, zero2, zeroini
+      
       integer :: mhru = 0
       integer :: mch = 0
       integer :: mpc = 0
