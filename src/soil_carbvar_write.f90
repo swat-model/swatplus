@@ -94,6 +94,4 @@
             end do
         end if
       return
-      end subroutine
-    
-
+      end subroutine soil_carbvar_write

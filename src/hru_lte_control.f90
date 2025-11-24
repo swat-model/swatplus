@@ -11,6 +11,8 @@
       
       implicit none
       
+      external :: actions, conditions
+      
       integer :: isd                    !             |
       !real :: timeint(1000)
       real :: a1 = .2                   !             |

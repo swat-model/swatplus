@@ -14,6 +14,11 @@
 
       implicit none
       
+      external :: copy_file
+#if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+      external :: SYSTEM
+#endif
+      
       integer :: iaqu = 0
       integer :: icha = 0
       integer :: ires = 0
@@ -25,7 +30,6 @@
       integer :: iob = 0
       integer :: i = 0                              ! loop counter
       integer, parameter :: ifile = 14              ! number of SWAT input files to copy to SWIFT folder
-      character (len=8) :: wet_y_n = ""
       character(len=100) :: folderPath = ""
       character(len=100) :: command = ""
       character(len=25)  :: file_list(ifile) = "" ! list of SWAT input files to copy to SWIFT folder

@@ -6,7 +6,6 @@
 !!    within the model)
       
       use gwflow_module
-      use hydrograph_module, only : ch_stor
       use time_module
       use constituent_mass_module
       

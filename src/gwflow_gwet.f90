@@ -14,7 +14,6 @@
       integer :: i = 0                      !       |counter
       integer :: j = 0                      !       |counter
       integer :: k = 0                      !       |counter
-      integer :: s = 0                      !       |solute counter
       integer :: cell_id = 0                !       |gwflow cell
       integer :: hru_id = 0                 !       |id of HRU
       integer :: ob_num = 0                 !       |object number of HRU

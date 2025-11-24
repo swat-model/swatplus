@@ -10,6 +10,8 @@
       use climate_module
     
       implicit none     
+      
+      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_watqual4, conditions, sd_channel_sediment3
     
       integer :: isd_db = 0           !              |
       integer :: ipest = 0            !              |

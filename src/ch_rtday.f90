@@ -63,6 +63,8 @@
 
       implicit none
       
+      real, external :: qman
+      
       real :: scoef = 0.    !none          |Storage coefficient (fraction of water in
       real :: p = 0.        !m             |wetted perimeter
       !real :: tbase        !not used in this subroutine
@@ -82,7 +84,6 @@
       real :: rtevp1 = 0.   !units         |description 
       real :: rtevp2 = 0.   !units         |description 
       real :: det = 0.      !hr            |time step (24 hours)
-      real :: qman          !m^3/s or m/s  |flow rate or flow velocity
       real :: adddep = 0.   !units         |description  
       integer :: itermx = 0 !units         |description 
       integer :: ihr = 0

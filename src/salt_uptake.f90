@@ -11,7 +11,7 @@
       
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ep_day, ihru 
+      use hru_module, only : ihru 
       use hydrograph_module
       use output_landscape_module
       use salt_module
@@ -31,13 +31,9 @@
       real    :: rm = 0.            !kg          |current root mass of plant
       real    :: rm_layer = 0.      !kg          |root mass in the soil layer
       real    :: rm_fract(50) = 0.  !            |fraction of root mass in the soil layer
-      real    :: irrig_mass = 0.    !kg          |total salt mass in irrigation water
-      real    :: uptake_mass_total = 0.!kg          |total uptake mass in soil layer
+      !real    :: uptake_mass_total = 0.!kg       |total uptake mass in soil layer
       real    :: uptake_mass = 0.   !kg/ha       |uptake mass in soil layer per unit area
-      integer :: dum = 0
-      
-      
-      
+         
       !HRU id
       j = ihru
       

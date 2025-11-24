@@ -2,7 +2,7 @@
       
       use time_module
       use basin_module
-      use channel_module
+      ! use channel_module
       use hydrograph_module
       use water_body_module
       
