@@ -10,6 +10,10 @@
       
       implicit none      
       
+      
+      
+      
+      external :: search, jdt
       integer :: iyear = 0   !            |
       integer :: day = 0     !            |
       integer :: mon = 0     !            |
@@ -172,4 +176,4 @@
       end do                                  !! operation loop
     
       return
-      end
+      end subroutine read_mgtops

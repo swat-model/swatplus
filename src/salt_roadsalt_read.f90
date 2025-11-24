@@ -10,32 +10,24 @@
       
       implicit none
       
-      character (len=80) :: file = "" !           |filename
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
       character (len=4) :: salt_ion = ""!           |
       character (len=15) :: station_name = "" !       |
       integer :: eof = 0              !           |end of file
       integer :: iadep = 0            !           |counter
       integer :: imo = 0              !           |counter
       integer :: iyr = 0              !           |counter
-      integer :: imo_atmo = 0         !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo = 0        !           |
       integer :: isalt = 0            !           |salt ion counter
-      integer :: imonth = 0           !           |month counter
       integer :: year_index = 0
       integer :: yr_weat = 0
       integer :: year_days = 0
       integer :: iday = 0
       integer :: day_flag(366) = 0
-      integer :: dum = 0
       real    :: day_precip = 0.
       real    :: day_temp = 0.
       real    :: year_precip = 0.
       real    :: day_fraction = 0.
-      
-      
+           
       eof = 0
 
       !only proceed if there are salt ions in the simulation

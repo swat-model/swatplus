@@ -30,13 +30,7 @@
       integer :: ipl = 0   !none        |counter
       real :: manure_kg = 0.
       real :: eat_plant = 0.  !frac       |fraction of above ground biomass of each plant eaten
-      real :: eat_seed = 0. !frac       |fraction of seed of each plant eaten
-      real :: eat_leaf = 0. !frac       |fraction of leaf of each plant eaten
-      real :: eat_stem = 0. !frac       |fraction of stem of each plant eaten
       real :: tramp_plant = 0.!frac       |fraction of above ground biomass of each plant trampled
-      real :: tramp_seed = 0. !frac       |fraction of seed of each plant trampled
-      real :: tramp_leaf = 0. !frac       |fraction of leaf of each plant trampled
-      real :: tramp_stem = 0. !frac       |fraction of stem of each plant trampled
 
       j = ihru
 

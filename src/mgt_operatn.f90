@@ -31,6 +31,8 @@
       use time_module
       
       implicit none
+      
+      external :: mgt_sched
 
       integer :: j = 0       !none          |HRU number
       real :: aphu = 0.      !heat units    |fraction of total heat units accumulated 

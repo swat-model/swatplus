@@ -11,17 +11,13 @@
       implicit none
 
       character(len=20) :: col_head_con(17) = ""
-      integer :: i = 0
       integer :: j = 0
       integer :: k = 0
-      integer :: in_chan = 0
-      integer :: in_con = 0
       integer :: cell_ID = 0
       integer :: channel = 0
       integer :: chan_zone = 0
       integer :: dum1 = 0
       integer :: dum2 = 0
-      integer :: chan_cell = 0
       real :: bed_elev = 0.
       real :: chan_length = 0.
       real :: dum3 = 0.

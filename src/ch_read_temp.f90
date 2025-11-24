@@ -59,5 +59,5 @@
       enddo
       endif
 
-      return    
+      return  
       end subroutine ch_read_temp

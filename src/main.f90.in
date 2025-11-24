@@ -8,6 +8,17 @@
 
       implicit none
       
+      external :: proc_bsn, proc_date_time, proc_db, proc_read, hyd_connect, exco_db_read, dr_db_read
+      external :: cli_lapse, object_read_output, om_water_init, pest_cha_res_read, path_cha_res_read
+      external :: salt_cha_read, cs_cha_read, lsu_read_elements, proc_hru, proc_cha, proc_aqu
+      external :: dtbl_lum_read, hru_lte_read, proc_cond, res_read_weir, dtbl_res_read, dtbl_scen_read
+      external :: cal_cond_read, manure_allocation_read, dtbl_flocon_read, om_treat_read, om_use_read
+      external :: water_treatment_read, water_use_read, water_tower_read, water_pipe_read, water_allocation_read
+      external :: hru_dtbl_actions_init, proc_res, wet_read_hyd, wet_read, wet_read_salt_cs
+      external :: wet_all_initial, wet_fp_init, soil_nutcarb_init, proc_cal, proc_open
+      external :: unit_hyd_ru_hru, dr_ru, hyd_connect_out, command, time_control
+      external :: calsoft_control, cal_parmchg_read, calhard_control, swift_output
+      
       integer :: date_time(8)           !              |
       character*10 b(3)                 !              |
       integer :: iob = 0

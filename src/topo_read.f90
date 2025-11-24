@@ -6,6 +6,10 @@
       
       implicit none
     
+      
+      
+      
+      external :: search
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
       integer :: eof = 0              !           |end of file
