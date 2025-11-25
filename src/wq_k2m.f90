@@ -38,6 +38,7 @@
       real :: tm = 0.
       real :: h3 = 0.
       real :: wq_k2m
+      real :: wq_semianalyt
       
       h1 = wq_semianalyt (t1, t2, 0., 0., c1, c2)
       h2 = wq_semianalyt (t1, t2, 0., tk, c1, c2)
