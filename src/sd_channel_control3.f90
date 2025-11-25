@@ -19,6 +19,10 @@
       use channel_velocity_module
       
       implicit none     
+      
+      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_watqual4, conditions, gwflow_canl, &
+                  gwflow_gwsw, gwflow_satx, gwflow_tile, rcurv_interp_flo, sd_channel_sediment3, &
+                  wallo_control, cli_lapse
     
       integer :: isd_db = 0           !              |
       integer :: ipest = 0            !              |

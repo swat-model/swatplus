@@ -5,6 +5,8 @@
       use plant_data_module
       
       implicit none 
+      
+      external :: ascrv
 
       integer :: ic = 0       !none        |counter
       real :: c1 = 0.         !            |

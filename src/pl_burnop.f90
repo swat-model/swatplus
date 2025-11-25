@@ -19,6 +19,8 @@
       use carbon_module
       
       implicit none      
+      
+      external :: curno
    
       integer :: j = 0                       !none          |counter
       integer, intent (in) :: jj             !none          |counter  

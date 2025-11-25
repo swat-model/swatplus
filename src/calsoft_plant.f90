@@ -18,6 +18,8 @@
       
       implicit none
       
+      external :: calsoft_plant_zero, re_initialize, time_control
+      
       integer :: iter_all = 0  !          |end of loop
       integer :: iterall = 0   !none      |counter
       integer :: isim = 0      !          |

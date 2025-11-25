@@ -15,6 +15,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: hyddep_output
       integer :: i = 0
       
       character (len=80) :: titldum = ""!           |title of file

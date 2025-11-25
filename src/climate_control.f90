@@ -39,9 +39,10 @@
       use maximum_data_module
       
       implicit none
+      
+      external :: cli_bounds_check, cli_clgen, cli_precip_control, cli_rhgen, cli_slrgen, cli_tgen, cli_weatgn, cli_wndgen, atri
            
       integer :: ii = 0           !none          |counter       
-      integer :: iyp = 0          !none          |year currently being simulated 
       real :: half_hr_mn = 0.     !mm H2O        |lowest value half hour precip fraction can have
       real :: half_hr_mx = 0.     !mm H2O        |highest value half hour precip fraction can have
       integer :: iwgn = 0         !              |

@@ -26,7 +26,7 @@
       integer :: iyrs = 0             !           | 
       integer :: iyr_prev = 0         !none       |previous year
       integer :: istep = 0            !           | 
-      integer :: ipc = 0              !none       |counter
+      !integer :: ipc = 0              !none       |counter
       integer :: ii = 0               !none       |counter
       integer :: i = 0                !           |
       integer :: isalt = 0

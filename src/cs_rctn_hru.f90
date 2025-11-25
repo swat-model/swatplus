@@ -11,6 +11,8 @@
       use cs_module
 
       implicit none
+      
+      external :: se_reactions_soil
 
       integer :: j = 0
       integer :: jj = 0

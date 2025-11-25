@@ -21,17 +21,17 @@
       integer :: k = 0                !none       |counter
       integer :: isrc = 0             !none       |counter
       integer :: jsrc = 0             !none       |counter  
-      integer :: ircv = 0             !none       |counter
+      !integer :: ircv = 0             !none       |counter
       integer :: iwro = 0             !none       |number of water allocation objects
       integer :: num_objs = 0
       integer :: num_src = 0
-      integer :: num_rcv = 0
+      !integer :: num_rcv = 0
       integer :: itrn = 0
       integer :: idb = 0
       integer :: idb_irr = 0
       integer :: ihru = 0
-      integer :: isrc_wallo = 0
-      integer :: div_found = 0
+      !integer :: isrc_wallo = 0
+      !integer :: div_found = 0
       
       eof = 0
       imax = 0

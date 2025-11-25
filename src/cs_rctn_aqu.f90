@@ -12,6 +12,8 @@
       use cs_aquifer
 
       implicit none
+      
+      external :: se_reactions_aquifer
 
       integer :: n = 0
       integer :: iaq = 0

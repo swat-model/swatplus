@@ -31,7 +31,7 @@
       real    :: rm = 0.            !kg          |current root mass of plant
       real    :: rm_layer = 0.      !kg          |root mass in the soil layer
       real    :: rm_fract(50) = 0.  !            |fraction of root mass in the soil layer
-      real    :: uptake_mass_total = 0.!kg       |total uptake mass in soil laye
+      !real    :: uptake_mass_total = 0.!kg       |total uptake mass in soil layer
       real    :: uptake_mass = 0.   !kg/ha       |uptake mass in soil layer per unit area
          
       !HRU id

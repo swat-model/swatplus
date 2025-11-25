@@ -9,6 +9,8 @@
         use tillage_data_module
         
         implicit none
+      
+      external :: nut_np_flow, fcgd
         
         !!transput variables;
         !!  std(:)          : standing dead (kg ha-1)                                               (not used)

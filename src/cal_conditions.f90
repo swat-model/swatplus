@@ -15,6 +15,8 @@
       use landuse_data_module
       
       implicit none
+      
+      external :: chg_par, cal_parm_select
            
       character(len=25) :: chg_parm = ""                      !                |               
       character(len=16) :: chg_typ = ""                       !variable        |type of change (absval, abschg, pctchg)

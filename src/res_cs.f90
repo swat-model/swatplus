@@ -14,6 +14,8 @@
       
       implicit none      
       
+      real, external :: theta
+      
       integer, intent (in) :: iob
       integer :: jres              !reservoir number (incoming)
       integer :: icon              !none          |counter
@@ -33,7 +35,6 @@
       real    :: cs_rctn = 0.
       real    :: cs_prod = 0.
       real    :: seo4_convert = 0. !kg            |mass of seo4 converted to seo3
-      real    :: theta             !temperature factor for chemical reactions  
       real    :: mass_avail = 0.   !track available constituent mass in the reservoir (kg)
       
       !object number

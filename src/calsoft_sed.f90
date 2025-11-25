@@ -18,6 +18,8 @@
       
       implicit none
       
+      external :: re_initialize, time_control
+      
       integer :: isim = 0      !          |
       integer :: ireg = 0      !none      |counter
       integer :: ilum = 0      !none      |counter
