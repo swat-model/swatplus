@@ -14,6 +14,8 @@
       
       implicit none
       
+      external :: ascrv, time_control
+      
       integer :: iter_all = 0  !none      |counter
       integer :: iterall = 0   !none      |counter
       integer :: isim = 0      !          |

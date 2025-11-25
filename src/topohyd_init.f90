@@ -8,6 +8,8 @@
       use plant_module
       
       implicit none
+      
+      external :: ascrv
 
       integer :: isno = 0             !none       |counter
       integer :: ifield_db = 0        !           |

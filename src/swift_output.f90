@@ -14,6 +14,11 @@
 
       implicit none
       
+      external :: copy_file
+#if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+      external :: SYSTEM
+#endif
+      
       integer :: iaqu = 0
       integer :: icha = 0
       integer :: ires = 0

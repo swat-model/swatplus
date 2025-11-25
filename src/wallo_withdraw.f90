@@ -8,6 +8,8 @@
       use basin_module, only : bsn_cc
       
       implicit none 
+      
+      external :: gwflow_ppag
 
       integer, intent (in):: iwallo         !water allocation object number
       integer, intent (in) :: itrn          !water demand object number

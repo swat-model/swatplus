@@ -40,6 +40,17 @@
       !use basin_module, only : bsn_cc
       
       implicit none
+      
+      external :: actions, albedo, cbn_rsd_decomp, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
+                  cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
+                  nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc, nut_orgnc2, nut_pminrl, &
+                  nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
+                  pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_fert, &
+                  pl_graze, pl_grow, rls_routeaqu, rls_routesoil, rls_routesurf, rls_routetile, &
+                  salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
+                  smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
+                  swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
+                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)

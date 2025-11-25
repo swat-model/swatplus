@@ -11,6 +11,8 @@
       use utils
 
       implicit none     
+      
+      external :: rcurv_interp_flo
 
       integer :: iob = 0            !               |object number
       integer :: ihru = 0

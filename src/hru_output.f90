@@ -14,6 +14,8 @@
       
       implicit none
       
+      external :: soil_nutcarb_write
+      
       integer, intent (in) :: ihru             !            |
       integer :: idp = 0                       !            |
       integer :: j = 0

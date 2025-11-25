@@ -12,7 +12,7 @@
  
       character (len=80) :: titldum = ""
       character (len=80) :: header = ""
-      character (len=30) :: fert_name = ""
+      !character (len=30) :: fert_name = ""
       integer :: icsi = 0
       integer :: eof = 0
       logical :: i_exist              !none       |check to determine if file exists

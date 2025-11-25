@@ -29,6 +29,8 @@
       use time_module
 
       implicit none
+      
+      external :: activity_coefficient, CaCO3, CaSO4, cationexchange, Ionic_strength, MgCO3, MgSO4, NaCl
 
       integer :: j = 0
       integer :: jj = 0

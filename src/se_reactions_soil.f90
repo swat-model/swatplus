@@ -6,7 +6,7 @@
       implicit none
 
       integer :: j
-      integer :: jj
+      integer :: jj ! unused
       integer :: k_slope
       integer :: kk = 0
       real :: conc_rg
@@ -31,6 +31,9 @@
       real :: kno3 = 0.
       real :: sseratio = 0.
       dimension conc_rg(3), k_rg(4,3)
+
+      !! suppress unused variable warning
+      if (jj < 0) continue
 
       !get concentration of SeO4 and SeO3
       cseo4 = conc_rg(1)

@@ -35,6 +35,8 @@
       use soil_module
       
       implicit none
+      
+      external :: ascrv
    
       integer, intent (in) :: h            !none          |HRU number
       real, intent (in) :: cnn             !cnn           |none          |SCS runoff curve number for moisture condition II

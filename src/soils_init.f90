@@ -14,6 +14,8 @@
       
       implicit none  
       
+      external :: soil_phys_init, soils_test_adjust, layersplit
+      
 
       integer :: msoils = 0       !none          !ending of loop
       integer :: isol = 0         !none          |counter

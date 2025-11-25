@@ -21,7 +21,6 @@
       integer :: idat = 0               !             |
       integer :: iaq = 0
       integer :: iob = 0
-      integer :: ini = 0
       integer :: ipest = 0
       integer :: ipath = 0
       integer :: isalt = 0

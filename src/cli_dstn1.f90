@@ -27,7 +27,7 @@
       
       real, intent (in) :: rn1     !none          |first random number
       real, intent (in) :: rn2     !none          |second random number 
-      real :: cli_dstn1            !              |
+      real :: cli_dstn1                           !none          |function return value
       
       cli_dstn1 = Sqrt(-2. * Log(rn1)) * Cos(6.283185 * rn2)
 

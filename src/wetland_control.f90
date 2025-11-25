@@ -19,6 +19,8 @@
       use gwflow_module
       
       implicit none
+      
+      external :: conditions, ero_cfactor, gwflow_wetl, res_hydro, res_nutrient, res_sediment, res_weir_release, wet_cs, wet_salt
      
       real :: bypass = 1.             !              | 
       integer :: j = 0                !none          |counter

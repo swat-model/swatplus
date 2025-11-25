@@ -4,6 +4,8 @@
        use input_file_module
        
        implicit none
+      
+      external :: xmon
        
        character (len=80) :: titldum = "" !           |title of file
        character (len=500) :: header = "" !           |header of file       

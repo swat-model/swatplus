@@ -20,6 +20,8 @@
       use water_allocation_module
 
       implicit none
+      
+      external :: cond_integer, cond_real, aunif
 
       integer, intent (in)  :: ob_cur         !          |
       integer, intent (in)  :: idtbl          !none      |

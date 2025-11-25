@@ -18,6 +18,8 @@
       
       implicit none
       
+      external :: calsoft_hyd_bfr_et, calsoft_hyd_bfr_latq, calsoft_hyd_bfr_perc, calsoft_hyd_bfr_pet, calsoft_hyd_bfr_surq
+      
       integer :: iter_all = 0  !none      |counter
       integer :: iterall = 0   !none      |counter
 

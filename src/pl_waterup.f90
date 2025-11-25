@@ -47,6 +47,8 @@
       
       implicit none
       
+      external :: salt_chem_soil_single
+      
       integer :: j = 0       !none      |hru number
       integer :: k = 0       !none      |counter 
       integer :: ir = 0      !none      |flag to denote bottom of root zone reached

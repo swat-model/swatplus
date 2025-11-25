@@ -42,6 +42,8 @@
       
       implicit none
       
+      external :: gwflow_soil, swr_drains, swr_origtile, swr_percmacro, swr_percmicro, swr_satexcess
+      
       integer :: j = 0       !none       |HRU number
       integer :: j1 = 0      !none       |counter
       integer :: ires = 0    !none       |counter

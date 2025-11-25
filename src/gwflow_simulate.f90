@@ -13,6 +13,8 @@
       
       implicit none
       
+      external :: gwflow_canl_out, gwflow_chem, gwflow_gwet, gwflow_ppex, gwflow_rech
+      
       !counters and general information
       integer :: i = 0                !           |counter
       integer :: j = 0                !           |counter

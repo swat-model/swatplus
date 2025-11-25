@@ -6,6 +6,8 @@
       use maximum_data_module
 
       implicit none
+      
+      external :: dr_read_om, dr_path_read, dr_read_hmet, dr_read_pest, dr_read_salt, ee
  
       character (len=80) :: titldum = ""
       character (len=80) :: header = ""
