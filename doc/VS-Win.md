@@ -12,6 +12,8 @@ Even though Visual Studio bundles Git, a separate install is needed to support S
 
 3. Install [**Git**](https://git-scm.com/downloads/win) .
 
+**Important:** After installing all the above, reboot your computer.
+
 Running integrated SWAT+ tests in Visual Studio requires Python. You may optionally Install Python from the Microsoft App Store and the Python workload in Visual Studio.    
 
 ## Starting Visual Studio
