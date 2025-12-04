@@ -440,9 +440,6 @@
         end if
       end do
           
-      !! write basin sediment budget - ch_sedbud.txt
-      write (8002,*) bsn_sedbud 
-      
       !! ave annual calibration output and reset time for next simulation
       call calsoft_ave_output
       yrs_print = time%yrs_prt
