@@ -24,8 +24,7 @@
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_subday.csv"
           end if
            end if         
-         end if
-          
+
           open (2500,file="channel_sd_day.txt",recl = 1500)
           write (2500,*) bsn%name, prog
           write (2500,*) ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
@@ -51,7 +50,7 @@
             !write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_day_new.csv"                  
           end if
         endif
-      !endif
+      endif
       
         if (sp_ob%chandeg > 0) then
           if (pco%sd_chan%m == "y") then  
