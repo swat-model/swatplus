@@ -2,7 +2,7 @@
 
 ## Install Required Software
 
-Install the required packages in the order below, this is important! The Intel compiler requires Visual Studio to be installed **first**. When you get to **Workloads** during the intstall, scroll down and check the box next to **Desktop development with C++** then click on install.  This will include the needed support for `cmake`. The Intel installer will provide the `ifx`  compiler. The `ifort` compiler was deprecated in 2024 and removed from the 2025 version going forward. If you download an older version of Intel Fortran, `ifort` will be available. However, SWAT+ produces the same results using both Intel compilers. 
+Install the required packages in the order below, this is important! The Intel compiler requires Visual Studio to be installed **first**. When you get to **Workloads** during the install, scroll down and check the box next to `Desktop development with C++` then click on install.  This will include the needed support for `cmake`. The Intel installer will provide the `ifx`  compiler. The `ifort` compiler was deprecated in 2024 and removed from the 2025 version going forward. If you download an older version of Intel Fortran, `ifort` will be available. However, SWAT+ produces the same results using both Intel compilers. 
 
 Even though Visual Studio bundles Git, a separate install is needed to support SWAT+ version tagging during the `CMake` build. Install the following, accept the defaults.
 
