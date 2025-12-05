@@ -36,6 +36,7 @@
       
       implicit none
 
+
       real :: chflow_m3 = 0.         !m^3/s         |Runoff in CMS
       real :: sf_area = 0.           !m^2           |area of waterway sides in sheetflow
       real :: surq_remove = 0.       !%             |percent of surface runoff capture in VFS
@@ -47,7 +48,7 @@
       real :: rchdep = 0.            !m             |depth of flow on day
       real :: p = 0.                 !              |
       real :: rh = 0.                !m             |hydraulic radius
-      real :: qman                   !m^3/s or m/s  |flow rate or flow velocity 
+      real, external :: qman         !m^3/s or m/s  |flow rate or flow velocity 
       real :: sedin = 0.             !mg            |Sediment in waterway 
       real :: sf_depth = 0.          !              |
       real :: sedint = 0.            !mg            |Sediment into waterway channel

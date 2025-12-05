@@ -33,7 +33,7 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
+      use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld,        &
          ihru, qp_cms, usle_ei
       use soil_module
       use erosion_module

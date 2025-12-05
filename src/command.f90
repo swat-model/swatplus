@@ -26,6 +26,22 @@
       use gwflow_module
       use soil_module
       implicit none
+      
+      external :: aqu_1d_control, aqu_cs_output, aqu_pesticide_output, aqu_salt_output, aquifer_output, &
+                  ch_cs_output, ch_salt_output, cha_pesticide_output, channel_output, constit_hyd_mult, &
+                  cs_str_output, flow_dur_curve, gwflow_simulate, hru_carbon_output, hru_control, &
+                  hru_cs_output, hru_lte_control, hru_lte_output, hru_output, hru_pathogen_output, &
+                  hru_pesticide_output, hru_salt_output, hydin_output, hydout_output, manure_demand_output, &
+                  manure_source_output, obj_output, recall_nut, recall_output, res_control, res_cs_output, &
+                  res_pesticide_output, res_salt_output, reservoir_output, ru_control, ru_cs_output, &
+                  ru_output, ru_salt_output, sd_chanbud_output, sd_chanmorph_output, sd_channel_control3, &
+                  sd_channel_output, wallo_allo_output, wallo_treat_output, wallo_trn_output, &
+                  wallo_use_output, wet_cs_output, wet_salt_output, wetland_output, basin_aqu_pest_output, &
+                  basin_aquifer_output, basin_ch_pest_output, basin_chanbud_output, basin_chanmorph_output, &
+                  basin_channel_output, basin_ls_pest_output, basin_output, basin_recall_output, &
+                  basin_res_pest_output, basin_reservoir_output, basin_sdchannel_output, cs_balance, &
+                  lsu_output, salt_balance, hyddep_output, recall_salt, recall_cs, soil_nutcarb_write, &
+                  soil_carbvar_write
 
       real, dimension(time%step) :: hyd_flo     !flow hydrograph
       integer :: in = 0               !              | 
@@ -38,8 +54,6 @@
       integer :: ihtyp = 0            !              |
       integer :: iaq = 0              !none          |counter
       integer :: j = 0                !none          |counter
-      integer :: nly = 0
-      integer :: ly = 0
       integer :: ihyd = 0             !              |
       integer :: idr = 0              !              |
       integer :: iwro = 0             !              |
@@ -613,6 +627,5 @@
 102   format(i6,11x,i3,8x,i5,5x,1000(f16.4))
 103   format(4i6,2i8,2x,a,35f12.3)      
 
-      
       return
-      end
+      end subroutine command

@@ -3,7 +3,7 @@
       use reservoir_data_module
       use reservoir_module
       use hru_module, only : hru, sedyld, sanyld, silyld, clayld, sagyld, lagyld, grayld, sedminps, sedminpa,   &
-        surqno3, sedorgn, sedorgp, ihru, pet_day, surfq, tconc, usle_cfac, cklsp, hhsurfq
+        surqno3, sedorgn, sedorgp, ihru, surfq, tconc, usle_cfac, cklsp, hhsurfq
       use conditional_module
       use climate_module
       use hydrograph_module
@@ -19,6 +19,8 @@
       use gwflow_module
       
       implicit none
+      
+      external :: conditions, ero_cfactor, gwflow_wetl, res_hydro, res_nutrient, res_sediment, res_weir_release, wet_cs, wet_salt
      
       real :: bypass = 1.             !              | 
       integer :: j = 0                !none          |counter

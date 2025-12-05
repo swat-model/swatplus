@@ -40,5 +40,4 @@
       end do
       
       return
-      end subroutine dr_ru
-      
+      end subroutine dr_ru   

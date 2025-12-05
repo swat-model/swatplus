@@ -291,4 +291,4 @@
       end type output_salt_hdr_hru      
       type (output_salt_hdr_hru) :: salt_hdr_hru
             
-      end module
+      end module salt_module

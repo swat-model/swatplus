@@ -34,20 +34,20 @@
       
       implicit none
 
-      integer :: j = 0      !none          |HRU number
-      integer :: ipl = 0    !none          |sequential plant number
-      integer :: idp = 0    !none          |plant number in data file - pldb
-      real :: c = 0.        !              |
-      real :: ab_gr_t = 0.  !tons          |above ground biomass of each plant
-      real :: rsd_pctcov = 0. !              |percent of cover by residue
-      real :: rsd_covfact = 0.!              |residue cover factor
-      real :: can_covfact = 0.!              |canopy cover factor
-      real :: can_frcov = 0.  !              |fraction of canopy cover
-      real :: rsd_sumfac = 0. !              |sum of residue cover factor by plant
-      real :: grnd_sumfac = 0.!              |ground cover factor for each plant
-      real :: grnd_covfact = 0.!              |sum of plant ground cover factor by plant
-      real :: bio_covfac = 0.
-      real :: cover = 0.    !kg/ha         |soil cover - sum of residue and biomass
+      integer :: j = 0              !none          |HRU number
+      integer :: ipl = 0            !none          |sequential plant number
+      integer :: idp = 0            !none          |plant number in data file - pldb
+      real :: c = 0.                !              |
+      real :: ab_gr_t = 0.          !tons          |above ground biomass of each plant
+      real :: rsd_pctcov = 0.       !              |percent of cover by residue
+      real :: rsd_covfact = 0.      !              |residue cover factor
+      real :: can_covfact = 0.      !              |canopy cover factor
+      real :: can_frcov = 0.        !              |fraction of canopy cover
+      real :: rsd_sumfac = 0.       !              |sum of residue cover factor by plant
+      real :: grnd_sumfac = 0.      !              |ground cover factor for each plant
+      real :: grnd_covfact = 0.     !              |sum of plant ground cover factor by plant
+      real :: cover = 0.            !kg/ha         |soil cover - sum of residue and biomass
+      
       j = ihru
 
       bsn_cc%cfac = 1

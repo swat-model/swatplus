@@ -10,6 +10,8 @@
       use basin_module
       
       implicit none      
+      
+      external :: rcurv_interp_dep, sd_rating_curve, qman
 
       real :: kh = 0.
       integer :: idb = 0                !             |

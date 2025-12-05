@@ -11,6 +11,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: sq_crackvol
       integer, intent (in) :: hru_id     !       |hru number
       integer :: k = 0                   !       |counter
       integer :: s = 0                   !       |solute counter

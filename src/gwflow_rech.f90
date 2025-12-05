@@ -20,7 +20,6 @@
       integer :: ob_num = 0           !           |object number of the HRU
       integer :: cell_id = 0          !           |id of the gwflow cell
       integer :: cell_count = 0       !           |cell count
-      integer :: dum = 0
       real :: recharge = 0.           !mm         |HRU recharge
       real :: recharge_sol = 0.       !kg/ha      |solute mass in recharge water
       real :: hru_recharge = 0.       !m3         |volume of recharge from the HRU

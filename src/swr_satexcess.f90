@@ -24,6 +24,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: cli_lapse
       integer :: j = 0             !none          |HRU number
       real:: ul_excess = 0.        !              |
       real :: rto = 0.             !              |

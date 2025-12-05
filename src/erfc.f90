@@ -31,4 +31,4 @@
       hru_erfc = 1. - erf
 
       return
-      end function
+      end function hru_erfc

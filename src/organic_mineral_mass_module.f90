@@ -1,6 +1,6 @@
       module organic_mineral_mass_module
     
-      use carbon_module, only: organic_flux, organic_controls, organic_allocations, organic_transformations
+      !use carbon_module, only: organic_flux, organic_controls, organic_allocations, organic_transformations
       use carbon_module
       implicit none 
 

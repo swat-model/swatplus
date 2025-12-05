@@ -20,6 +20,8 @@
       use water_allocation_module
 
       implicit none
+      
+      external :: cond_integer, cond_real, aunif
 
       integer, intent (in)  :: ob_cur         !          |
       integer, intent (in)  :: idtbl          !none      |
@@ -54,7 +56,6 @@
       real :: p_lab_tot = 0.
       real :: p_lab_ppm = 0.
       real :: rto = 0.
-      real :: var_cur = 0.
       character(len=1) :: pl_chk = ""
       
       d_tbl%act_hit = "y"

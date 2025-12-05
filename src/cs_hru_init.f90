@@ -6,7 +6,7 @@
       use organic_mineral_mass_module
       use constituent_mass_module
       use output_ls_pesticide_module
-      use hydrograph_module, only : sp_ob, icmd
+      use hydrograph_module, only : sp_ob
       use plant_module
       use pesticide_data_module
       use cs_module
@@ -19,8 +19,6 @@
       integer :: ics = 0         !none          |counter
       integer :: ics_db = 0      !              | 
       integer :: isp_ini = 0     !              |
-      integer :: ipl = 0
-      real :: wt1 = 0.           !              |
       real :: hru_area_m2 = 0.
       real :: water_volume = 0.
       real :: soil_volume = 0.

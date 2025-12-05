@@ -19,14 +19,13 @@
       use carbon_module
       
       implicit none      
+      
+      external :: curno
    
       integer :: j = 0                       !none          |counter
       integer, intent (in) :: jj             !none          |counter  
       integer, intent (in) :: iburn          !julian date   |date of burning
       real :: cnop = 0.                      !              |updated cn after fire
-      real :: fr_burn = 0.                   !              |fraction burned
-      real :: pburn = 0.                     !              |amount of phosphorus that burns - removed from plant
-                                             !              |phosphorus and added to soil organic phosphorus 
 
       j = jj
 

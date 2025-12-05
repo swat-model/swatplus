@@ -17,4 +17,4 @@
       theta = r20 * thk ** (tmp - 20.)
 
       return
-      end
+      end function theta

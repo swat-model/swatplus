@@ -21,7 +21,7 @@
       real, intent (in) :: frt_kg         !kg/ha          |amount of fertilizer applied
       integer, intent (in) :: fertop      !               | 
       real :: xx = 0.                     !               |surface application fraction 
-      integer :: ics = 0                  !               |constituent counter
+      !integer :: ics = 0                  !               |constituent counter
       integer :: l = 0                    !none           |counter 
 
       !only proceed if constituents are included in simulation

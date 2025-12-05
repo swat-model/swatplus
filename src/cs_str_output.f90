@@ -68,4 +68,4 @@
 100   format(i8,i8,2000e14.6)
       
       return
-      end !cs_str_output
+      end subroutine cs_str_output

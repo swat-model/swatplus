@@ -6,6 +6,8 @@
       use conditional_module
       
       implicit none 
+      
+      external :: actions, conditions
 
       integer, intent (in) :: iwallo            !water allocation object number
       integer, intent (in) :: itrn              !water demand object number

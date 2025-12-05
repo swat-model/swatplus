@@ -8,7 +8,7 @@
       use organic_mineral_mass_module
       use output_landscape_module
       use aquifer_module
-      use hru_module, only : hru,ihru
+      use hru_module, only : hru
       use soil_module
       use time_module
       use constituent_mass_module
@@ -29,14 +29,6 @@
       real :: cssum1 = 0.
       real :: cssum2 = 0.
       real :: cssum3 = 0.
-      real :: hru_area_m2 = 0.
-      real :: sol_thick = 0.
-      real :: soil_volume = 0.
-      real :: soil_mass = 0.
-      real :: aquifer_thickness = 0.
-      real :: aquifer_volume = 0.
-      real :: aquifer_mass = 0.
-      real :: sub_ha = 0.
       real :: cs_basin(87) = 0.
 
       !basin-wide constituent mass balance ------------------------------------------------------------------------------------------------
@@ -692,4 +684,4 @@
 !*** tu Wunused-label: 7002  format(i8,50f16.8)
 
       return
-      end
+      end subroutine cs_balance

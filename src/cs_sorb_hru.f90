@@ -234,6 +234,5 @@
         
       enddo
 
-
       return
-      end !cs_sorb_hru
+      end subroutine cs_sorb_hru

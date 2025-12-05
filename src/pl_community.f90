@@ -42,6 +42,8 @@
       use climate_module
       
       implicit none      
+      
+      external :: pl_waterup
 
       integer :: j = 0          !none          |HRU number
       integer :: idp = 0        !              | 

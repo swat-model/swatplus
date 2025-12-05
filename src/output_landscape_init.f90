@@ -10,6 +10,8 @@
       use output_landscape_module
       use time_module
       implicit none 
+      
+      external :: soil_nutcarb_write
 
       if (sp_ob%hru > 0) then
 !!!  HRU - Water balance

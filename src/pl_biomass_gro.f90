@@ -16,6 +16,8 @@
       
       implicit none 
       
+      external :: pl_nup, pl_pup, pl_tstr, salt_uptake, cs_uptake
+      
       integer :: j = 0          !none               |HRU number
       real :: ruedecl = 0.      !none               |decline in radiation use efficiency for the
                                 !                   |plant

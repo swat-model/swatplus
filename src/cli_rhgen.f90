@@ -27,6 +27,10 @@
 
       implicit none
       
+
+      
+
+      external :: atri, aunif, ee
       real :: vv = 0.             !none          |variable to hold intermediate calculation 
       real :: rhm = 0.            !none          |mean monthly relative humidity adjusted for
                                   !              |wet or dry condiditions

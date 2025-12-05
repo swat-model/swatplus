@@ -24,6 +24,8 @@
       use gwflow_module, only : ncell
       
       implicit none
+      
+      external :: define_unit_elements
 
       !integer, dimension (:), allocatable :: elem_cnt1   !           |  
       character (len=80) :: titldum = ""                  !           |title of file

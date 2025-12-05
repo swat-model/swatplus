@@ -21,6 +21,11 @@
       
       implicit none
       
+      external :: cs_fert, cs_fert_wet, curno, mgt_harvbiomass, mgt_harvgrain, mgt_harvresidue, &
+                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_wet, mgt_plantop, pest_apply, &
+                  pl_burnop, pl_fert, pl_fert_wet, pl_manure, salt_fert, salt_fert_wet, chg_par, &
+                  mgt_transplant
+      
       integer :: icom = 0          !         |  
       integer :: idp = 0           !         |
       integer :: j = 0             !none     |counter

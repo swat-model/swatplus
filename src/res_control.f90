@@ -11,6 +11,8 @@
       use constituent_mass_module  !! added nbs
       
       implicit none
+      
+      external :: conditions, res_cs, res_hydro, res_nutrient, res_pest, res_rel_conds, res_salt, res_sediment, cli_lapse
 
       integer :: ii = 0               !none          |counter 
       integer :: jres                 !none          |reservoir number

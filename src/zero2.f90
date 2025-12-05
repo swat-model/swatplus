@@ -30,4 +30,4 @@
       bss_ex = 0. !rtb gwflow
       
       return
-      end
+      end subroutine zero2

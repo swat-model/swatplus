@@ -16,8 +16,5 @@
         real :: ridge_sp = 0.        !! mm                 |ridge interval (or row spacing)
       end type tillage_db
       type (tillage_db), dimension(:),allocatable, save :: tilldb  
-
       
-
-            
       end module tillage_data_module 

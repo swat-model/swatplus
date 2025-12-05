@@ -46,6 +46,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: ch_rtmusk
       integer :: ii = 0    !none          |counter (hour)
       integer :: jrch = 0  !none          |reach number
       real :: scoef = 0.   !none          |storage coefficient

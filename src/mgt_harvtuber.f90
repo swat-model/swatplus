@@ -22,6 +22,8 @@
       use constituent_mass_module
       
       implicit none
+      
+      external :: pl_rootfr
  
       integer :: j = 0                  !none           |HRU number
       integer :: k = 0                  !none           |pesticide number

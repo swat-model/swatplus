@@ -23,6 +23,8 @@
       
       implicit none 
       
+      external :: flow_hyd_ru_hru
+      
       integer :: iday = 0                !            |
       integer :: ihdmx = 0               !            |
       real :: sumfrac = 0.               !            |

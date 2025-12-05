@@ -93,5 +93,6 @@
       allocate (obcs_alloc(sp_ob%objs), source = 0)
       obcs_alloc = 0
       allocate (obom(sp_ob%objs))
-      return    
+      return   
+      
     end subroutine basin_read_objs

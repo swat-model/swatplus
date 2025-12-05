@@ -7,7 +7,7 @@
       
       use gwflow_module
       use organic_mineral_mass_module, only : soil1
-      use hru_module, only : hru,irrn,irrp
+      use hru_module, only : hru
       use hydrograph_module, only : wet
       use constituent_mass_module
       use res_salt_module, only : wetsalt_d

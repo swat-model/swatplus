@@ -9,7 +9,6 @@
       use organic_mineral_mass_module
       use soil_module
       use carbon_module
-      use hru_module, only : hru
       
       implicit none
       

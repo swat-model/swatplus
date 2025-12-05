@@ -11,7 +11,7 @@
 
       implicit none 
       
-      integer, intent (in)  :: isol     !none       |soil (hru) number
+      integer, intent (in)  :: isol     !none       |unused soil (hru) number
       integer :: nly = 0
       integer :: ly = 0
       integer :: isolt = 0              !counter    |soil plant initialization file pointer
@@ -25,7 +25,10 @@
       real :: actp = 0.
       real :: solp = 0.
       real :: ssp = 0.
-      real :: psp = 0.                  !              | 
+      real :: psp = 0.                  !              |
+
+      !! suppress unused variable warning
+      if (isol < 0) continue
 
       nly = soil(ihru)%nly
 

@@ -16,10 +16,13 @@
       
       implicit none
  
-      integer, intent (in) :: iob   !           |object number
+      integer, intent (in) :: iob   !           |unused object number
       integer :: j = 0              !           |hru number
       integer :: lyr = 0            !           |tile soil layer
       real, intent (in)  :: tile_fr_surf    !m3     |overland tile flow
+
+      !! suppress unused variable warning
+      if (iob < 0) continue
 
       j = ihru
 

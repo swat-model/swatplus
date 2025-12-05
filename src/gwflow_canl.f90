@@ -22,7 +22,6 @@
       integer :: isalt = 0               !       |salt ion counter
       integer :: ics = 0                 !       |constituent counter
       integer :: sol_index = 0
-      integer :: dum = 0
       real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
       real :: width = 0.                 !m      |canal width
       real :: depth = 0.                 !m      |canal depth

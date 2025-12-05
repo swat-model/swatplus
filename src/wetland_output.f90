@@ -8,6 +8,10 @@
       
       implicit none
       
+      
+      
+      
+      external :: soil_carbvar_write, soil_nutcarb_write
       integer :: j             !none          |hru number
       real :: const = 0.       !              |constant used for rate, days, etc
       integer :: iob = 0          !                |

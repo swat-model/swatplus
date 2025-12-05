@@ -15,6 +15,8 @@
       
       implicit none
       
+      external :: search
+      
       integer, intent(in) :: nhyds    !           |
       integer, intent(in) :: ndsave   !           |
       integer, intent(in) :: nspu     !           | 

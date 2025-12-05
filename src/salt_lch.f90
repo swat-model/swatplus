@@ -66,7 +66,6 @@
       real :: water_volume = 0.
       real :: salt_mass_kg = 0.
       real :: ro_mass = 0.
-      real :: wet_ro_mass = 0.
       real :: sro = 0.
       real :: vv = 0.
       real :: ww = 0.
@@ -190,4 +189,4 @@
       enddo
 
       return
-      end
+      end subroutine salt_lch

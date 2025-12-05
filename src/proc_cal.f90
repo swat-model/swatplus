@@ -4,6 +4,11 @@
       use calibration_data_module
    
       implicit none
+      
+      external :: aqu_read_elements, cal_conditions, cal_parm_read, cal_parmchg_read, calsoft_read_codes, &
+                  ch_read_elements, ch_read_orders_cal, ch_read_parms_cal, lcu_read_softcal, &
+                  ls_read_lsparms_cal, pl_read_parms_cal, pl_read_regions_cal, rec_read_elements, &
+                  res_read_elements, cal_cond_read, lsu_read_elements, cal_allo_init
    
       !read calibration data (if included)
       call cal_parm_read
