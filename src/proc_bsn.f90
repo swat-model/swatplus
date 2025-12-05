@@ -11,7 +11,7 @@
      open (9001,file="diagnostics.out", recl=8000)  !!ext to 8000 recl per email 8/2/21 - Kai-Uwe
      write (9001,*) "DIAGNOSTICS.OUT FILE" 
 !!!  open drainage areas output file
-     open (9004,file="area_calc.out", recl=8000)
+     open (9004,file="area_calc.out", recl=80000)  !!ext to 80000 to avoid "End of record" error
                 
       call basin_read_cc
       call basin_read_objs
