@@ -8,6 +8,7 @@
       use landuse_data_module
       use erosion_module
     
+      use output_path_module
       implicit none
       
       integer :: j = 0          !none       |counter
@@ -43,13 +44,13 @@
         
       !! allocate erosion output and open file
       allocate (ero_output(sp_ob%hru))
-      open (4001,file = "erosion.out",recl=1200)
+      call open_output_file(4001, "erosion.out", 1200)
       write (4001,*) bsn%name, prog
       write (4001,*) ero_hdr
       write (4001,*) ero_hdr_units
             
 !!!!! new checker.out file - always prints
-      open (4000,file = "checker.out",recl=1200)
+      call open_output_file(4000, "checker.out", 1200)
       write (4000,*) bsn%name, prog
       write (4000,*) chk_hdr
       write (4000,*) chk_unit
