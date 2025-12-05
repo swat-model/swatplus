@@ -4,11 +4,12 @@
       use hydrograph_module
       use hru_module
       use soil_module
+      use output_path_module
       
       integer :: j = 0                  !none		   |counter
       
       !! checker.out file    
-      open (4000,file = "checker.out",recl=1200)
+      call open_output_file(4000, "checker.out", 1200)
       write (4000,*) bsn%name, prog
       write (4000,*) chk_hdr
       write (4000,*) chk_unit
