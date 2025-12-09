@@ -151,7 +151,7 @@
         if (hru(ielem)%tiledrain == 0) then
         hru(ielem)%hyd%perco = chg_par (hru(ielem)%hyd%perco,           &
                          chg_typ, chg_val, absmin, absmax)
-        if (hru(ielem)%hyd%perco > 1.e-9) then
+        if (hru(ielem)%hyd%perco > 1.e-6) then
           perc_ln_func = 1.0052 * log(-log(hru(ielem)%hyd%perco - 1.e-6)) + 5.6862
           hru(ielem)%hyd%perco_lim = exp(-perc_ln_func)
           hru(ielem)%hyd%perco_lim = amin1 (1., hru(ielem)%hyd%perco_lim)
