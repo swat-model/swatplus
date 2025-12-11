@@ -6,6 +6,8 @@
       use landuse_data_module
       
       implicit none
+      
+      external :: curno
   
       integer, intent (in)  :: j
       integer :: icn = 0             !none       |counter 

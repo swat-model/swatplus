@@ -21,10 +21,8 @@
       integer :: iweir = 0          !none      |weir ID 
       integer :: nstep = 0          !none      |counter
       integer :: tstep = 0          !none      |hru number
-      integer :: iac = 0            !none      |counter 
       integer :: ic = 0             !none      |counter
-      integer :: weir_flg=0         !none      |counter
-      integer,  intent (in) :: id   !none      |hru number
+      integer,  intent (in) :: id   !none      |unused hru number
       integer,  intent (in) :: ihyd !          |
       real :: vol = 0.              !          |
       real :: res_h = 0.            !m         |water depth
@@ -33,6 +31,9 @@
       real :: hgt_above = 0.        !m         |height of water above the above bottom of weir
       real :: vol_above = 0.             !m3        |water volume above the bottom of weir !Jaehak 2024
       
+      !! suppress unused variable warning
+      if (id < 0) continue
+
       !! store initial values
       vol = wbody%flo
       nstep = 1

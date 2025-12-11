@@ -4,7 +4,6 @@
       use reservoir_data_module
       use landuse_data_module
       use hydrology_data_module
-      use hydrograph_module, only : sp_ob
       use topography_data_module
       use soil_data_module
       use input_file_module
@@ -12,6 +11,8 @@
       use constituent_mass_module
       
       implicit none
+      
+      external :: allocate_parms
       
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file

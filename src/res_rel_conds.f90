@@ -5,6 +5,8 @@
        use hydrograph_module
        
        implicit none
+      
+      external :: cond_integer_c, cond_real_c
        
        integer :: icon = 0
        integer :: modu = 0

@@ -4,7 +4,7 @@
       use hydrograph_module
       use ru_module
       use aquifer_module
-      use channel_module
+      ! use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -17,6 +17,8 @@
       use output_landscape_module
       
       implicit none
+      
+      external :: calsoft_plant_zero, re_initialize, time_control
       
       integer :: iter_all = 0  !          |end of loop
       integer :: iterall = 0   !none      |counter

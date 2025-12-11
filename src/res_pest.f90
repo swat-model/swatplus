@@ -21,7 +21,6 @@
       real :: fp1 = 0.              !              |frac of soluble pesticide in benthic column
       real :: fp2 = 0.              !              |frac of sorbed pesticide in benthic column
       real :: depth = 0.            !              |average depth of reservoir
-      real :: bedvol = 0.           !m^3           |volume of river bed sediment
       real :: solpesto = 0.         !mg pst        |soluble pesticide transported out of reservoir
       real :: sorpesto = 0.         !mg pst        |sorbed pesticide transported out of reservoir
       real :: sedmass_watervol = 0. !kg/L or t/m3  |sediment mass divided by water volume in water and benthic

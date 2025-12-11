@@ -44,6 +44,8 @@
       use output_landscape_module
 
       implicit none
+      
+      external :: nuts, pl_nfix
 
       integer :: j = 0       !none      |hru number
       integer :: l = 0       !none      |counter (soil layer)

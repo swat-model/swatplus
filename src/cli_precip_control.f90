@@ -39,6 +39,8 @@
       use maximum_data_module
       
       implicit none
+      
+      external :: cli_bounds_check, cli_pgen, cli_pgenhr
            
       integer, intent (in) :: istart           !none          |0 for initial (first day), 1 for following days
       integer :: iwgn = 0         !              |

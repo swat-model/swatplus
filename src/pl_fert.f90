@@ -28,8 +28,6 @@
       integer, intent (in) :: fertop      !              |fertilizer operation type
       real, intent (in) :: frt_kg         !kg/ha         |total mass of fertilizer applied
       real :: fr_ly = 0.                  !fraction      |fraction of fertilizer applied to layer
-      real :: m_kg                        !kg/ha         |mass of fertilizer applied to layer
-      real :: c_kg                        !kg/ha         |mass of carbon applied to layer
       real :: c_n_rto                     !              |carbon nitrogen ratio
       real :: meta_fr                     !              |fraction of metabolic applied to layer
       real :: pool_fr                     !              |fraction of structural or lignin applied to layer

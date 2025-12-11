@@ -11,7 +11,7 @@
       
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ep_day, ihru 
+      use hru_module, only : ihru 
       use hydrograph_module
       use output_landscape_module
       use cs_module
@@ -22,21 +22,16 @@
       
       implicit none
 
-      integer :: j = 0              !none        |HRU ID
-      integer :: idp = 0            !none        |plant database ID
-      integer :: jj = 0             !none        |soil layer counter
-      integer :: ics = 0            !            |constituent ion counter
-      real    :: depth = 0.         !none        |depth of soil layer, from ground surface
-      real    :: rd = 0.            !mm          |current rooting depth of plant
-      real    :: rm = 0.            !kg          |current root mass of plant
-      real    :: rm_layer = 0.      !kg          |root mass in the soil layer
-      real    :: rm_fract(50) = 0.  !            |fraction of root mass in the soil layer
-      real    :: irrig_mass = 0.    !kg          |total constituent mass in irrigation water
-      real    :: uptake_mass_total = 0.!kg          |total uptake mass in soil layer
-      real    :: uptake_mass = 0.   !kg/ha       |uptake mass in soil layer per unit area
-      integer :: dum = 0
-      
-      
+      integer :: j = 0                 !none        |HRU ID
+      integer :: idp = 0               !none        |plant database ID
+      integer :: jj = 0                !none        |soil layer counter
+      integer :: ics = 0               !            |constituent ion counter
+      real    :: depth = 0.            !none        |depth of soil layer, from ground surface
+      real    :: rd = 0.               !mm          |current rooting depth of plant
+      real    :: rm = 0.               !kg          |current root mass of plant
+      real    :: rm_layer = 0.         !kg          |root mass in the soil layer
+      real    :: rm_fract(50) = 0.     !            |fraction of root mass in the soil layer
+      real    :: uptake_mass = 0.      !kg/ha       |uptake mass in soil layer per unit area
       
       !HRU id
       j = ihru
@@ -83,7 +78,6 @@
         enddo !go to next soil layer
         
       endif !check for rooting depth
-      
       
       return
       end subroutine cs_uptake
