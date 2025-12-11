@@ -13,6 +13,8 @@
       
       implicit none
       
+      external :: ascrv
+      
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
       integer :: eof = 0              !           |end of file
@@ -56,7 +58,7 @@
       real :: ch_len = 0.             !           |
       real :: ch_sl = 0.              !           | 
       real :: sd_sl = 0.              !           |
-      integer :: msd_h = 0            !           | 
+      integer :: msd_h = 0            !           |
       
       eof = 0
       imax = 0

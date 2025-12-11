@@ -8,7 +8,6 @@
       implicit none
       integer, intent (in) :: ichan         !             |
       integer :: iob = 0                    !             |
-      real :: const = 0.                    !             |
        
       iob = sp_ob1%chandeg + ichan - 1
 

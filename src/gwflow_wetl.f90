@@ -25,7 +25,6 @@
       real :: wet_inflow = 0.         !m3             |groundwater inflow to wetland (from all connected cells)
       real :: gwvol_avail = 0.        !m3             |current groundwater volume stored in grid cell
       real :: mass_transfer = 0.      !kg             |solute mass transferred from aquifer to wetland
-      real :: gw_mass = 0.            !kg             |solute mass stored in groundwater cell
       real :: wet_inflow_no3 = 0.     !kg             |groundwater no3 mass to wetland (from all connected cells)
       real :: wet_inflow_solp = 0.    !kg             |groundwater p mass to wetland (from all connected cells)
       real :: solmass(100) = 0.       !g              |solute mass in cell

@@ -6,6 +6,8 @@
       use hydrograph_module, only : sp_ob
       
       implicit none
+      
+      external :: cn2_init
  
       integer :: j = 0               !none       |counter 
       

@@ -7,6 +7,8 @@
       
       implicit none
       
+      external :: pl_partition, pl_root_gro, pl_seed_gro
+      
       integer, intent (in) :: itrans
       integer :: j = 0               !none       |counter
       integer :: icom = 0            !none       |plant community counter 
