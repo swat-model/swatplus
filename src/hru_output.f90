@@ -14,13 +14,14 @@
       
       implicit none
       
+      external :: soil_nutcarb_write
+      
       integer, intent (in) :: ihru             !            |
       integer :: idp = 0                       !            |
       integer :: j = 0
       integer :: iob = 0
       integer :: ipl = 0
 	  integer :: ilu = 0
-      real :: bm_max_d = 0.
       real :: bm_max_m = 0.
       real :: bm_max_y = 0.
       real :: bm_max_a = 0.

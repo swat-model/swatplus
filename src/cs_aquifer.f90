@@ -74,4 +74,4 @@
       end type output_cs_header      
       type (output_cs_header) :: cs_hdr_aqu
       
-      end module
+      end module cs_aquifer

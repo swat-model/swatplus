@@ -10,6 +10,8 @@
       use conditional_module
       
       implicit none 
+      
+      external :: actions, conditions, pl_fert
 
       integer, intent (in) :: imallo     !water allocation object number
       integer :: itrn = 0                   !water demand object number

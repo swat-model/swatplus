@@ -11,6 +11,10 @@
       
       implicit none 
       
+      
+      
+      
+      external :: aunif
       integer, intent (in) :: j     !none               |HRU number
       integer :: idp = 0            !                   |
       real :: ajhi = 0.             !

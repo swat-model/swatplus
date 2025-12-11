@@ -26,7 +26,6 @@
       real :: tot_lyr_p
       real :: tot_prof_n
       real :: tot_prof_p
-      real :: lyr_swc           !mm/mm       |layer soil water content including wilting point moisture content.
       real :: prf_swc = 0.0     !mm/mm       |average profile soil water content including wilting point moisture content.
       real :: prf_depth = 0.0   !mm          |depth of soil profile.
       integer :: iihru = 0      !none        |counter
@@ -36,7 +35,6 @@
       character (len=7) :: freq_label
       logical :: layer_output
       logical :: print_soil_lyr_depths = .true.
-      CHARACTER(LEN=15) :: str
 
       layer_output = .false.
 

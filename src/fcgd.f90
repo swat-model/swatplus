@@ -15,4 +15,5 @@
       qq = (tn - top)/(top - tx)
       fcgd = ((xx-tn)**qq)*(tx-xx)/(((top-tn)**qq)*(tx-top))
       if (fcgd < 0.) fcgd = 0.
-    end function
+      
+    end function fcgd

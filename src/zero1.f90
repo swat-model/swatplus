@@ -9,6 +9,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: soil_nutcarb_write
       real :: sep_opt = 0.              !                |
       real :: filt_w = 0.               !                |
       real :: grwat_veg = 0.            !                |
@@ -73,4 +77,4 @@
       wfsh = 0.
 
       return
-      end
+      end subroutine zero1

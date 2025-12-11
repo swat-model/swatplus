@@ -12,6 +12,10 @@
       
       implicit none 
       
+      
+      
+      
+      external :: ee
       integer :: j = 0            !none          |HRU number
       integer :: k = 0            !none          |counter 
       real :: sw25 = 0.           !              |

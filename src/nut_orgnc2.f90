@@ -56,7 +56,6 @@
       real :: sol_thick = 0.        !              |
       real :: y1 = 0.               !              |
       real :: c_ly1 = 0.
-      real :: ipl                   !              |counter for plant in the community
       
       j = ihru
       

@@ -4,6 +4,8 @@
       use hydrograph_module, only : sp_ob
       
       implicit none
+      
+      external :: hru_lum_init
  
       integer :: iihru = 0          !           |hru number
 
