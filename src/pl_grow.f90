@@ -11,6 +11,9 @@
       
       implicit none 
       
+      external :: pl_biomass_gro, pl_dormant, pl_leaf_gro, pl_leaf_senes, pl_nut_demand, pl_partition, &
+                  pl_root_gro, pl_seed_gro, chg_par, theta, pl_mortality
+      
       integer :: j = 0          !none               |HRU number
       integer :: idp = 0        !none               |plant number from plants.plt
  

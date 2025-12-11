@@ -18,6 +18,8 @@
       use climate_module
       
       implicit none
+      
+      external :: flow_hyd_ru_hru
 
       integer :: j = 0               !none          |same as ihru (hru number)
       real :: cnv_m3 = 0.            !              |

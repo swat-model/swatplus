@@ -19,6 +19,8 @@
       
       implicit none
       
+      external :: curno, re_initialize, time_control
+      
       integer :: iter_all = 0  !none      |counter
       integer :: iterall = 0   !none      |counter
       integer :: isim = 0      !          |

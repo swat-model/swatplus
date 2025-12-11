@@ -16,10 +16,8 @@
       integer :: idp = 0            !              |
       integer :: iob = 0            !              |
       integer :: iwgn = 0           !              |
-      integer :: ly = 0             !              |soil layer number
       real :: rto = 0.              !              |
       real :: lai_init = 0.         !
-      real :: lai_drop = 0.
 
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
