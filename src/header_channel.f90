@@ -3,8 +3,8 @@
       use channel_module
       use basin_module
       use hydrograph_module, only : sp_ob
-
       use output_path_module
+      
       implicit none 
             
 !!!  CHANNEL

@@ -1,8 +1,8 @@
      subroutine header_lu_change
     
      use basin_module
+     use output_path_module
      
-      use output_path_module
      implicit none 
 !!   open lu_change output file 
         call open_output_file(3612, "lu_change_out.txt", 800)

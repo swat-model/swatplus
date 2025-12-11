@@ -3,8 +3,8 @@
       use sd_channel_module
       use basin_module
       use hydrograph_module
-      
       use output_path_module
+      
       implicit none 
 
 !!!  SWAT-DEG CHANNEL - SUBDAILY OUTPUT

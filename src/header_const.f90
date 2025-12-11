@@ -8,8 +8,8 @@
      use res_cs_module
      use cs_module
      use cs_aquifer
+     use output_path_module
      
-      use output_path_module
      implicit none 
 
 
