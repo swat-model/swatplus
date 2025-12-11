@@ -8,8 +8,8 @@
      use res_salt_module
      use salt_module
      use salt_aquifer
+     use output_path_module
      
-      use output_path_module
      implicit none 
 
 

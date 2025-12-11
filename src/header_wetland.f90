@@ -3,8 +3,8 @@
      use basin_module
      use reservoir_module
      use hydrograph_module
+     use output_path_module
      
-      use output_path_module
      implicit none
 
     !! RESERVOIR/WETLAND - DAILY

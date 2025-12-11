@@ -1,8 +1,8 @@
      subroutine header_mgt
     
      use basin_module
+     use output_path_module
      
-      use output_path_module
      implicit none 
 !!   open mgt.out file 
       if (pco%mgtout == "y") then

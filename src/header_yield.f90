@@ -2,8 +2,8 @@
     
      use basin_module
      use hydrograph_module
+     use output_path_module
      
-      use output_path_module
      implicit none 
     
 !!  yield biomass file

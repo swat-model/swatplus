@@ -4,8 +4,8 @@
      use reservoir_module
      !use hydrograph_module, only : res, sp_ob
      use hydrograph_module
+     use output_path_module
      
-      use output_path_module
      implicit none 
 
     !call open_output_file(7777, "reservoir_sed.txt", 1500)

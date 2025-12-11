@@ -1,8 +1,8 @@
       subroutine proc_bsn
 
       use time_module
-      
       use output_path_module
+      
       implicit none
       
       external :: basin_print_codes_read, basin_prm_default, basin_read_cc, basin_read_objs, &

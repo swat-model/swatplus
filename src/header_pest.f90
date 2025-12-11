@@ -8,8 +8,8 @@
      use ch_pesticide_module
      use res_pesticide_module
      use aqu_pesticide_module
+     use output_path_module
      
-      use output_path_module
      implicit none 
 
     !! HRU_PESTICIDE - daily

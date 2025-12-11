@@ -7,8 +7,8 @@
       use constituent_mass_module
       use landuse_data_module
       use erosion_module
-    
       use output_path_module
+      
       implicit none
       
       external :: carbon_read, cn2_init_all, hru_allo, hru_lum_init_all, hru_output_allo, hru_read, &
