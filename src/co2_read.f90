@@ -4,7 +4,8 @@
        use basin_module
        use time_module
        use climate_module
-      
+       use output_path_module
+       
        implicit none
        
        character (len=80) :: titldum = "" !             |title of file
@@ -31,7 +32,7 @@
       type (co2_annual) :: co2_inc
       
       !! output annual CO2 
-      open (2222,file="co2.out")
+      call open_output_file(2222, "co2.out")
       write (2222,*) "         YR    CO2(ppm)"
          
        eof = 0
