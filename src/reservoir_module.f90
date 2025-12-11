@@ -14,7 +14,7 @@
         character(len=13) :: name = "default"
         integer :: ob = 0                           !object number if reservoir object; hru number if hru object
         integer :: props = 0                        !points to res_dat
-        integer :: iweir = 0                !       !weir ID Jaehak 2023 
+        integer :: iweir = 1                !       !weir ID Jaehak 2023 
         character (len=1) :: rel_tbl = "d"          !d == decision table, c == conditions table
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
         real :: pvol = 0.                   !ha-m   |vol of water needed to fill the res to the princ spillway (read in as ha-m and converted to m^3)
@@ -37,7 +37,7 @@
       type (reservoir), dimension(:),allocatable :: res_ob
       
       type wetland
-        integer :: iweir = 0                !       !weir ID   Jaehak 2022
+        integer :: iweir = 1                !       !weir ID   Jaehak 2022
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
         real :: pvol = 0.                   !m^3    |vol of water needed to fill the res to the princ spillway (read in as ha-m and converted to m^3)
         real :: esa = 0.                    !ha     |res surface area when res is filled to emerg spillway 

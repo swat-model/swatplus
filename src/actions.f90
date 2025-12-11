@@ -247,11 +247,17 @@
             ! add irrigation to yearly sum for dtbl conditioning jga 6-25
             hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
             
-            if (pco%mgtout == "y") then
-              write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIGATE", phubase(j),  &
-                  pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
-                  sol_sumno3(j), sol_sumsolp(j), irrig(j)%demand
-            end if
+            if (d_tbl%act(iac)%name=='ponding') then !paddy irrigation
+              if (pco%mgtout == "y") then
+                write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "PADDY IRRIGATION", irrig(j)%applied
+              end if
+            else
+              if (pco%mgtout == "y") then
+                write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IRRIGATE", phubase(j),  &
+                    pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, &
+                    sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied
+              end if
+            endif
             
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
               pcom(j)%dtbl(idtbl)%days_act(iac) = 1                     !reset days since last action
@@ -372,12 +378,19 @@
                     pcom(j)%plcur(ipl)%idorm = "n"
                     if (d_tbl%act_app(iac) > 0) then
                       call mgt_transplant (d_tbl%act_app(iac))
-                    end if
-                    if (pco%mgtout == "y") then
-                    write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm, "    PLANT",   &
-                      phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(ihru)%sw,                     &
-                      pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, sol_sumno3(j),                  &
-                      sol_sumsolp(j), pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
+                      if (pco%mgtout == "y") then
+                        write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm, "TRANSPLANT",   &
+                          phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(ihru)%sw,                     &
+                          pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, sol_sumno3(j),                  &
+                          sol_sumsolp(j), pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
+                      end if
+                    else
+                      if (pco%mgtout == "y") then
+                        write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm, "    PLANT",   &
+                          phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(ihru)%sw,                     &
+                          pl_mass(j)%tot(ipl)%m, soil1(j)%rsd(1)%m, sol_sumno3(j),                  &
+                          sol_sumsolp(j), pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
+                      end if
                     end if
                   else
                     !! don't plant if the crop is already growing
@@ -786,6 +799,9 @@
             hru(j)%dbs%surf_stor = 0
             wet(j) = hz
             wet_wat_d(j) = wbodz
+            if (pco%mgtout == "y") then
+              write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IMPOUND OFF"
+            end if
            
           !turn on hru impounded water - rice paddy or wetland
           case ("impound_on")
@@ -801,6 +817,9 @@
             end do
               
             call wet_initial (iihru)
+            if (pco%mgtout == "y") then
+              write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "IMPOUND ON"
+            end if
          
           !adjust weir height - rice paddy
           case ("weir_height")
@@ -817,6 +836,9 @@
               
             else 
               res_ob(j)%weir_hgt = d_tbl%act(iac)%const / 1000.
+            end if
+            if (pco%mgtout == "y") then
+              write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "RESET WEIR HEIGHT (m)", wet_ob(j)%weir_hgt
             end if
            
           !puddling operation for rice paddies
@@ -851,6 +873,10 @@
                 call mgt_newtillmix(j,0.,idtill) 
               endif
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
+
+              if (pco%mgtout == "y") then
+                 write (2612, *) j, time%yrc, time%mo, time%day_mo, d_tbl%act(iac)%name, "PUDDLE"
+              end if
             endif
             
           !hru area fraction change - update lsu_unit.ele and rout_unit.ele
