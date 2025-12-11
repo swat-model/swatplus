@@ -1,12 +1,16 @@
        subroutine readcio_read 
     
        use input_file_module
+       use output_path_module
 
        implicit none
            
        character (len=80) :: titldum = ""
        character (len=15) :: name = ""
+       character (len=256) :: out_path_value = ""
+       character (len=512) :: line_buffer
        integer :: eof = 0
+       integer :: idx = 0
        logical :: i_exist              !none       |check to determine if file exists
        integer :: i = 0
        
@@ -80,10 +84,32 @@
          read (107,*,iostat=eof) name, in_path_wnd
          if (eof < 0) exit
 !!!!!weather path code
+!!!!!output path code
+         ! Read the whole line to handle spaces and avoid '/' termination in list-directed input
+         read (107,'(A)',iostat=eof) line_buffer
+         if (eof < 0) then
+           out_path_value = ""
+         else
+           ! Parse the line: skip the label (first word), then get the rest
+           line_buffer = adjustl(line_buffer)
+           idx = index(line_buffer, ' ')
+           if (idx > 0) then
+             ! Found space after label, get the rest
+             out_path_value = adjustl(line_buffer(idx+1:))
+           else
+             ! No value found
+             out_path_value = ""
+           end if
+         end if
+!!!!!output path code
          exit
       enddo
       endif
 
-       close (107)     
+       close (107)
+       
+       !! Initialize output path (will use current dir if null/empty)
+       call init_output_path(out_path_value)
+            
        return
       end subroutine readcio_read  
