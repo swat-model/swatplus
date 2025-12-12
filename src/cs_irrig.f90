@@ -8,7 +8,7 @@
       use water_body_module
       use aquifer_module
       use reservoir_data_module
-      use hydrograph_module, only : irrig,res,sp_ob1,ob
+      use hydrograph_module, only : sp_ob1,ob
       use hru_module, only : hru
       use cs_module !rtb cs
       use cs_aquifer !rtb cs
@@ -33,8 +33,6 @@
       integer :: obnum_chan = 0             !channel object number
       integer :: ics = 0                    !constituent counter
       integer :: wetland = 0                !wetland flag
-      real :: irrig_total = 0.              !irrigation removed from source (m3)
-      real :: irrig_fraction = 0.           !fraction of irrigation water
       real :: irrig_volume = 0.             !volume (m3) of irrigation water
       real :: mass_diff = 0.
       real :: ion_mass = 0.
@@ -202,4 +200,4 @@
       enddo !go to next irrigation source
 
       return
-      end !cs_irrig
+      end subroutine cs_irrig

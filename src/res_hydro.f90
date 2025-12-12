@@ -17,26 +17,24 @@
       real,  intent (in) :: evol_m3
       integer,  intent (in) :: jres             !none      |hru number
       integer :: iweir = 0         !none      |weir ID 
-      integer :: nstep = 0        !none      |counter
-      integer :: tstep = 0        !none      |hru number
-      integer :: iac = 0          !none      |counter 
-      integer :: ic = 0          !none      |counter
-      !integer :: weir_flg=0        !none      |counter
-      integer,  intent (in) :: id               !none      |hru number
-      integer :: ial = 0          !none      |counter
-      integer :: irel = 0         !          |
-      integer :: iob = 0          !none      |hru or wro number
-      real :: vol = 0.            !          |
-      real :: vol_above = 0.            !          |
-      real :: b_lo = 0.           !          |
-      character(len=1) :: action = ""!          |
-      real :: res_h = 0.          !m         |water depth
-      real :: demand = 0.         !m3        |irrigation demand by hru or wro
-      real :: wsa1 = 0.           !m2        |water surface area 
-      real :: qout = 0.                !m3        |weir discharge during short time step
-      real :: hgt = 0.                 !m         |height of bottom of weir above bottom of impoundment
-      real :: hgt_above = 0.      !m         |height of water above the above bottom of weir
-      real :: sto_max = 0.             !m3        |maximum storage volume at the bank top
+      integer :: nstep = 0         !none      |counter
+      integer :: tstep = 0         !none      |hru number
+      integer :: iac = 0           !none      |counter 
+      integer :: ic = 0            !none      |counter
+      !integer :: weir_flg=0       !none      |counter
+      integer,  intent (in) :: id  !none      |hru number
+      integer :: ial = 0           !none      |counter
+      integer :: irel = 0          !          |
+      integer :: iob = 0           !none      |hru or wro number
+      real :: vol = 0.             !          |
+      real :: vol_above = 0.       !          |
+      real :: b_lo = 0.            !          |
+      character(len=1) :: action = ""!        |
+      real :: res_h = 0.           !m         |water depth
+      real :: demand = 0.          !m3        |irrigation demand by hru or wro
+      real :: wsa1 = 0.            !m2        |water surface area 
+      real :: qout = 0.            !m3        |weir discharge during short time step
+      real :: hgt_above = 0.       !m         |height of water above the above bottom of weir
       
       !! store initial values
       vol = wbody%flo
@@ -172,14 +170,21 @@
               res_h = vol / wsa1     !m
               hgt_above = max(0., res_h - wet_ob(jres)%weir_hgt)    !m
               if (nstep>1) then !subdaily time interval Jaehak 2025
-                ht2%flo = res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
+                
+                !---------------------------------------------------------------------------------------------------------------
+                !Weir discharge configured for 5m width and 100mm weir height to fully discharge in 3 days
+                ht2%flo = (wbody_wb%area_ha*0.45) * res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s 
                 ht2%flo = max(0.,86400. / nstep * ht2%flo) !m3
+                !---------------------------------------------------------------------------------------------------------------
                 vol = vol - ht2%flo
               else
                 do ic = 1, 24
+                  !---------------------------------------------------------------------------------------------------------------
+                  !Weir discharge configured for 5m width and 100mm weir height to fully discharge in 3 days
                   vol_above = hgt_above * wsa1 !m3 water volume above weir height
-                  qout = res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
+                  qout = (wbody_wb%area_ha*0.45) * res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s Jaehak 2025 updated for Global Modeling
                   qout = 3600. * qout !m3
+                  !---------------------------------------------------------------------------------------------------------------
                   if (qout > vol_above) then
                     ht2%flo = ht2%flo + vol_above !weir discharge volume for the day, m3
                     vol = vol - vol_above

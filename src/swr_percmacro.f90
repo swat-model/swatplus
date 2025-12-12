@@ -27,6 +27,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: layersplit
       integer :: j = 0          !none          |HRU number
       integer :: ly = 0         !none          |counter (soil layer)
       real :: crklch = 0.5      !none          | 

@@ -6,8 +6,6 @@
       use hydrograph_module
       
       implicit none
-
-      real :: const = 0.
                   
       bch_sed_bud_d = ch_sed_budz
 

@@ -17,6 +17,8 @@
       
       implicit none
       
+      external :: pl_partition, pl_root_gro, pl_seed_gro, xmon, jdt
+      
       integer, intent (in) :: init   !           |
       integer, intent (in) :: iihru  !none       |hru number to send to plant_init
       integer :: day_mo = 0
