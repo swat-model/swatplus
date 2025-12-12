@@ -12,8 +12,6 @@
       use hydrograph_module
       use sd_channel_module
       use maximum_data_module
-      use hru_module, only : hru
-      use reservoir_data_module, only : wet_dat
       use cs_data_module
       use constituent_mass_module, only : cs_db
       use input_file_module, only : in_con
@@ -22,7 +20,6 @@
       
       character*10 b(3) 
       !water balance and solute balance output file headers
-      character(len=13) :: gwflow_hdr(19) = ""
       character(len=13) :: gwflow_hdr_day(24) = ""
       character(len=13) :: gwflow_hdr_yr(18) = ""
       character(len=13) :: gwflow_hdr_aa(18) = ""
@@ -36,7 +33,6 @@
       character(len=13) :: header = ""
       character(len=30) :: read_type = ""
       character*100 file_name
-      character(len=13) :: cs_names(20) = ""
       character(len=13) :: name = ""
       logical  i_exist                !          |
       logical  i_exist2               !          |
@@ -49,10 +45,8 @@
       integer :: s = 0                !          |
       integer :: count = 0            !          |
       integer :: cell_num = 0         !          |id of cell (in input files)
-      integer :: sol_index = 0        !          |index to keep track of number of solutes
       integer :: channel = 0          !          |
       integer :: chan_cell = 0        !          |
-      integer :: ob_num = 0           !          |
       integer :: active_cell = 0      !          |
       real :: cell_size = 0.          !          |size of cells in structured grid
       real :: x_coord = 0.            !          |variable to track x coordinate of cell in structured grid
@@ -101,7 +95,6 @@
       real :: stage = 0.              !m         |stage of canal
       !HRU-cell, LSU-cell linkage
       integer :: num_unique = 0       !          |
-      integer :: cell = 0             !          |
       integer :: hru_count = 0        !          |
       integer :: hru_cell = 0         !          |
       integer :: nhru_connected = 0   !          |

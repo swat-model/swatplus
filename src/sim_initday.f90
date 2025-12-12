@@ -46,7 +46,6 @@
       real :: hrupstd = 0.      !varies           |HRU daily pesticide output array
       integer :: j = 0          !none             |HRU number 
       integer :: ly = 0         !none             |counter 
-      integer :: ires = 0       !none             |counter
 
       !!initialize variables at beginning of day
       cbodu = 0.
@@ -129,4 +128,4 @@
           enddo
 
       return
-      end
+      end subroutine sim_initday

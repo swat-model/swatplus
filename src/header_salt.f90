@@ -2,19 +2,20 @@
     
      use basin_module
      use reservoir_module
-     use hydrograph_module, only : res, sp_ob
+     use hydrograph_module, only : sp_ob
      use constituent_mass_module
      use ch_salt_module
      use res_salt_module
      use salt_module
      use salt_aquifer
+     use output_path_module
      
      implicit none 
 
 
      !basin - daily -----------------------------------------------------------------------------------------------------------------------
      if (pco%salt_basin%d == "y" .and. cs_db%num_salts > 0) then
-       open (5080,file="basin_salt_day.txt", recl = 2000)
+       call open_output_file(5080, "basin_salt_day.txt", 2000)
        write(5080,*) bsn%name, prog
        write(5080,*)
        write(5080,*) 'Basin salt fluxes - daily'
@@ -56,7 +57,7 @@
      
      !basin - monthly
      if (pco%salt_basin%m == "y" .and. cs_db%num_salts > 0) then
-       open (5082,file="basin_salt_mon.txt", recl = 2000)
+       call open_output_file(5082, "basin_salt_mon.txt", 2000)
        write(5082,*) bsn%name, prog
        write(5082,*)
        write(5082,*) 'Basin salt fluxes - monthly'
@@ -98,7 +99,7 @@
      
      !basin - yearly
      if (pco%salt_basin%y == "y" .and. cs_db%num_salts > 0) then
-       open (5084,file="basin_salt_yr.txt", recl = 2000)
+       call open_output_file(5084, "basin_salt_yr.txt", 2000)
        write(5084,*) bsn%name, prog
        write(5084,*)
        write(5084,*) 'Basin salt fluxes - yearly'
@@ -140,7 +141,7 @@
      
      !basin - ave annual
      if (pco%salt_basin%a == "y" .and. cs_db%num_salts > 0) then
-       open (5086,file="basin_salt_aa.txt", recl = 2000)
+       call open_output_file(5086, "basin_salt_aa.txt", 2000)
        write(5086,*) bsn%name, prog
        write(5086,*)
        write(5086,*) 'Basin salt fluxes - average annual'
@@ -182,7 +183,7 @@
      
      !hru - daily -------------------------------------------------------------------------------------------------------------------------
      if (pco%salt_hru%d == "y" .and. cs_db%num_salts > 0) then
-       open (5021,file="hru_salt_day.txt", recl = 3000)
+       call open_output_file(5021, "hru_salt_day.txt", 3000)
        write(5021,*) bsn%name, prog
        write(5021,*) 
        write(5021,*) 'HRU salt fluxes and state variables - daily'
@@ -213,7 +214,7 @@
        write(5021,*) 
        write(5021,*) salt_hdr_hru
        if (pco%csvout == "y") then
-         open (5022,file="hru_salt_day.csv", recl = 3000)
+         call open_output_file(5022, "hru_salt_day.csv", 3000)
          write (5022,*) bsn%name, prog
          write (5022,*) 'conc = mg/L; other = kg/ha'
          write (5022,'(*(G0.3,:","))') salt_hdr_hru
@@ -222,7 +223,7 @@
      
      !hru - monthly
      if (pco%salt_hru%m == "y" .and. cs_db%num_salts > 0) then
-       open (5023,file="hru_salt_mon.txt", recl = 3000)
+       call open_output_file(5023, "hru_salt_mon.txt", 3000)
        write(5023,*) bsn%name, prog
        write(5023,*) 
        write(5023,*) 'HRU salt fluxes and state variables - monthly'
@@ -253,7 +254,7 @@
        write(5023,*) 
        write(5023,*) salt_hdr_hru
        if (pco%csvout == "y") then
-         open (5024,file="hru_salt_mon.csv", recl = 3000)
+         call open_output_file(5024, "hru_salt_mon.csv", 3000)
          write (5024,*) bsn%name, prog
          write (5024,*) 'conc = mg/L; other = kg/ha'
          write (5024,'(*(G0.3,:","))') salt_hdr_hru
@@ -262,7 +263,7 @@
      
      !hru - yearly
      if (pco%salt_hru%y == "y" .and. cs_db%num_salts > 0) then
-       open (5025,file="hru_salt_yr.txt", recl = 3000)
+       call open_output_file(5025, "hru_salt_yr.txt", 3000)
        write(5025,*) bsn%name, prog
        write(5025,*) 
        write(5025,*) 'HRU salt fluxes and state variables - yearly'
@@ -293,7 +294,7 @@
        write(5025,*) 
        write(5025,*) salt_hdr_hru
        if (pco%csvout == "y") then
-         open (5026,file="hru_salt_yr.csv", recl = 3000)
+         call open_output_file(5026, "hru_salt_yr.csv", 3000)
          write (5026,*) bsn%name, prog
          write (5026,*) 'conc = mg/L; other = kg/ha'
          write (5026,'(*(G0.3,:","))') salt_hdr_hru
@@ -302,7 +303,7 @@
      
      !hru - ave annual
      if (pco%salt_hru%a == "y" .and. cs_db%num_salts > 0) then
-       open (5027,file="hru_salt_aa.txt", recl = 3000)
+       call open_output_file(5027, "hru_salt_aa.txt", 3000)
        write(5027,*) bsn%name, prog
        write(5027,*) 
        write(5027,*) 'HRU salt fluxes and state variables - average annual'
@@ -333,7 +334,7 @@
        write(5027,*) 
        write(5027,*) salt_hdr_hru
        if (pco%csvout == "y") then
-         open (5028,file="hru_salt_aa.csv", recl = 3000)
+         call open_output_file(5028, "hru_salt_aa.csv", 3000)
          write (5028,*) bsn%name, prog
          write (5028,*) 'conc = mg/L; other = kg/ha'
          write (5028,'(*(G0.3,:","))') salt_hdr_hru
@@ -343,7 +344,7 @@
      !aquifer - daily ---------------------------------------------------------------------------------------------------------------------
      if (sp_ob%aqu > 0) then
        if (pco%salt_aqu%d == "y" .and. cs_db%num_salts > 0) then
-         open (5060,file="aquifer_salt_day.txt",recl=2000)
+         call open_output_file(5060, "aquifer_salt_day.txt", 2000)
          write(5060,*) bsn%name, prog
          write(5060,*) 
          write(5060,*) 'Aquifer salt fluxes and state variables - daily'
@@ -362,7 +363,7 @@
          write(5060,*)
          write(5060,*) salt_hdr_aqu
          if (pco%csvout == "y") then
-           open (5061,file="aquifer_salt_day.csv",recl=2000)
+           call open_output_file(5061, "aquifer_salt_day.csv", 2000)
            write (5061,*) bsn%name, prog
            write (5061,*) 'conc = mg/L; other = kg'
            write (5061,'(*(G0.3,:","))') salt_hdr_aqu
@@ -373,7 +374,7 @@
      !aquifer - monthly     
      if (sp_ob%aqu > 0) then
        if (pco%salt_aqu%m == "y" .and. cs_db%num_salts > 0) then
-         open (5062,file="aquifer_salt_mon.txt",recl=2000)
+         call open_output_file(5062, "aquifer_salt_mon.txt", 2000)
          write(5062,*) bsn%name, prog
          write(5062,*) 
          write(5062,*) 'Aquifer salt fluxes and state variables - monthly'
@@ -392,7 +393,7 @@
          write(5062,*)
          write(5062,*) salt_hdr_aqu
          if (pco%csvout == "y") then
-           open (5063,file="aquifer_salt_mon.csv",recl=2000)
+           call open_output_file(5063, "aquifer_salt_mon.csv", 2000)
            write (5063,*) bsn%name, prog
            write (5063,*) 'conc = mg/L; other = kg'
            write (5063,'(*(G0.3,:","))') salt_hdr_aqu
@@ -403,7 +404,7 @@
      !aquifer - yearly     
      if (sp_ob%aqu > 0) then
        if (pco%salt_aqu%y == "y" .and. cs_db%num_salts > 0) then
-         open (5064,file="aquifer_salt_yr.txt",recl=2000)
+         call open_output_file(5064, "aquifer_salt_yr.txt", 2000)
          write(5064,*) bsn%name, prog
          write(5064,*) 
          write(5064,*) 'Aquifer salt fluxes and state variables - yearly'
@@ -422,7 +423,7 @@
          write(5064,*)
          write(5064,*) salt_hdr_aqu
          if (pco%csvout == "y") then
-           open (5065,file="aquifer_salt_yr.csv",recl=2000)
+           call open_output_file(5065, "aquifer_salt_yr.csv", 2000)
            write (5065,*) bsn%name, prog
            write (5065,*) 'conc = mg/L; other = kg'
            write (5065,'(*(G0.3,:","))') salt_hdr_aqu
@@ -433,7 +434,7 @@
      !aquifer - ave annual     
      if (sp_ob%aqu > 0) then
        if (pco%salt_aqu%a == "y" .and. cs_db%num_salts > 0) then
-         open (5066,file="aquifer_salt_aa.txt",recl=2000)
+         call open_output_file(5066, "aquifer_salt_aa.txt", 2000)
          write(5066,*) bsn%name, prog
          write(5066,*) 
          write(5066,*) 'Aquifer salt fluxes and state variables - average annual'
@@ -452,7 +453,7 @@
          write(5066,*)
          write(5066,*) salt_hdr_aqu
          if (pco%csvout == "y") then
-           open (5067,file="aquifer_salt_aa.csv",recl=2000)
+           call open_output_file(5067, "aquifer_salt_aa.csv", 2000)
            write (5067,*) bsn%name, prog
            write (5067,*) 'conc = mg/L; other = kg'
            write (5067,'(*(G0.3,:","))') salt_hdr_aqu
@@ -463,7 +464,7 @@
      !channel - daily ---------------------------------------------------------------------------------------------------------------------
      if (sp_ob%chandeg > 0) then
        if (pco%salt_chn%d == "y" .and. cs_db%num_salts > 0) then
-         open (5030,file="channel_salt_day.txt",recl=4000)
+         call open_output_file(5030, "channel_salt_day.txt", 4000)
          write(5030,*) bsn%name, prog
          write(5030,*) 
          write(5030,*) 'Channel salt fluxes and state variables - daily'
@@ -482,7 +483,7 @@
          write(5030,*) 
          write(5030,*) chsalt_hdr
          if (pco%csvout == "y") then
-           open (5031,file="channel_salt_day.csv",recl=2000)
+           call open_output_file(5031, "channel_salt_day.csv", 2000)
            write (5031,*) bsn%name, prog
            write (5031,'(*(G0.3,:","))') chsalt_hdr
          endif
@@ -492,7 +493,7 @@
      !channel - monthly     
      if (sp_ob%chandeg > 0) then
        if (pco%salt_chn%m == "y" .and. cs_db%num_salts > 0) then
-         open (5032,file="channel_salt_mon.txt",recl=4000)
+         call open_output_file(5032, "channel_salt_mon.txt", 4000)
          write(5032,*) bsn%name, prog
          write(5032,*) 
          write(5032,*) 'Channel salt fluxes and state variables - monthly'
@@ -511,7 +512,7 @@
          write(5032,*) 
          write(5032,*) chsalt_hdr
          if (pco%csvout == "y") then
-           open (5033,file="channel_salt_mon.csv",recl=2000)
+           call open_output_file(5033, "channel_salt_mon.csv", 2000)
            write (5033,*) bsn%name, prog
            write (5033,'(*(G0.3,:","))') chsalt_hdr
          endif
@@ -521,7 +522,7 @@
      !channel - yearly     
      if (sp_ob%chandeg > 0) then
        if (pco%salt_chn%y == "y" .and. cs_db%num_salts > 0) then
-         open (5034,file="channel_salt_yr.txt",recl=4000)
+         call open_output_file(5034, "channel_salt_yr.txt", 4000)
          write(5034,*) bsn%name, prog
          write(5034,*) 
          write(5034,*) 'Channel salt fluxes and state variables - yearly'
@@ -540,7 +541,7 @@
          write(5034,*) 
          write(5034,*) chsalt_hdr
          if (pco%csvout == "y") then
-           open (5035,file="channel_salt_yr.csv",recl=2000)
+           call open_output_file(5035, "channel_salt_yr.csv", 2000)
            write (5035,*) bsn%name, prog
            write (5035,'(*(G0.3,:","))') chsalt_hdr
          endif
@@ -550,7 +551,7 @@
      !channel - ave annual     
      if (sp_ob%chandeg > 0) then
        if (pco%salt_chn%a == "y" .and. cs_db%num_salts > 0) then
-         open (5036,file="channel_salt_aa.txt",recl=4000)
+         call open_output_file(5036, "channel_salt_aa.txt", 4000)
          write(5036,*) bsn%name, prog
          write(5036,*) 
          write(5036,*) 'Channel salt fluxes and state variables - average annual'
@@ -569,7 +570,7 @@
          write(5036,*) 
          write(5036,*) chsalt_hdr
          if (pco%csvout == "y") then
-           open (5037,file="channel_salt_aa.csv",recl=2000)
+           call open_output_file(5037, "channel_salt_aa.csv", 2000)
            write (5037,*) bsn%name, prog
            write (5037,'(*(G0.3,:","))') chsalt_hdr
          endif
@@ -579,7 +580,7 @@
      !reservoir - daily -------------------------------------------------------------------------------------------------------------------
      if (sp_ob%res > 0) then
        if (pco%salt_res%d == "y" .and. cs_db%num_salts > 0) then
-         open (5040,file="reservoir_salt_day.txt",recl=2000)
+         call open_output_file(5040, "reservoir_salt_day.txt", 2000)
          write(5040,*) bsn%name, prog
          write(5040,*) 
          write(5040,*) 'Reservoir salt fluxes and state variables - daily'
@@ -599,7 +600,7 @@
          write(5040,*) 
          write(5040,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5041,file="reservoir_salt_day.csv",recl=2000)
+           call open_output_file(5041, "reservoir_salt_day.csv", 2000)
            write (5041,*) bsn%name, prog
            write (5041,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -609,7 +610,7 @@
      !reservoir - monthly
      if (sp_ob%res > 0) then
        if (pco%salt_res%m == "y" .and. cs_db%num_salts > 0) then
-         open (5042,file="reservoir_salt_mon.txt",recl=2000)
+         call open_output_file(5042, "reservoir_salt_mon.txt", 2000)
          write(5042,*) bsn%name, prog
          write(5042,*) 
          write(5042,*) 'Reservoir salt fluxes and state variables - monthly'
@@ -629,7 +630,7 @@
          write(5042,*) 
          write(5042,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5043,file="reservoir_salt_mon.csv",recl=2000)
+           call open_output_file(5043, "reservoir_salt_mon.csv", 2000)
            write (5043,*) bsn%name, prog
            write (5043,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -639,7 +640,7 @@
      !reservoir - yearly
      if (sp_ob%res > 0) then
        if (pco%salt_res%y == "y" .and. cs_db%num_salts > 0) then
-         open (5044,file="reservoir_salt_yr.txt",recl=2000)
+         call open_output_file(5044, "reservoir_salt_yr.txt", 2000)
          write(5044,*) bsn%name, prog
          write(5044,*) 
          write(5044,*) 'Reservoir salt fluxes and state variables - yearly'
@@ -659,7 +660,7 @@
          write(5044,*) 
          write(5044,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5045,file="reservoir_salt_yr.csv",recl=2000)
+           call open_output_file(5045, "reservoir_salt_yr.csv", 2000)
            write (5045,*) bsn%name, prog
            write (5045,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -669,7 +670,7 @@
      !reservoir - ave annual
      if (sp_ob%res > 0) then
        if (pco%salt_res%a == "y" .and. cs_db%num_salts > 0) then
-         open (5046,file="reservoir_salt_aa.txt",recl=2000)
+         call open_output_file(5046, "reservoir_salt_aa.txt", 2000)
          write(5046,*) bsn%name, prog
          write(5046,*) 
          write(5046,*) 'Reservoir salt fluxes and state variables - average annual'
@@ -689,7 +690,7 @@
          write(5046,*) 
          write(5046,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5047,file="reservoir_salt_aa.csv",recl=2000)
+           call open_output_file(5047, "reservoir_salt_aa.csv", 2000)
            write (5047,*) bsn%name, prog
            write (5047,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -699,7 +700,7 @@
      !routing unit - daily ----------------------------------------------------------------------------------------------------------------
      if (sp_ob%ru > 0) then
        if (pco%salt_ru%d == "y" .and. cs_db%num_salts > 0) then
-         open (5070,file="rout_unit_salt_day.txt",recl=2000)
+         call open_output_file(5070, "rout_unit_salt_day.txt", 2000)
          write(5070,*) bsn%name, prog
          write(5070,*) 
          write(5070,*) 'Routing unit salt fluxes - daily'
@@ -726,7 +727,7 @@
          write(5070,*) 
          write(5070,*) rusaltb_hdr
          if (pco%csvout == "y") then
-           open (5071,file="rout_unit_salt_day.csv",recl=2000)
+           call open_output_file(5071, "rout_unit_salt_day.csv", 2000)
            write (5071,*) bsn%name, prog
            write (5071,*) 'all values in kg'
            write (5071,'(*(G0.3,:","))') rusaltb_hdr
@@ -737,7 +738,7 @@
      !routing unit - monthly
      if (sp_ob%ru > 0) then
        if (pco%salt_ru%m == "y" .and. cs_db%num_salts > 0) then
-         open (5072,file="rout_unit_salt_mon.txt",recl=2000)
+         call open_output_file(5072, "rout_unit_salt_mon.txt", 2000)
          write(5072,*) bsn%name, prog
          write(5072,*) 
          write(5072,*) 'Routing unit salt fluxes - monthly'
@@ -764,7 +765,7 @@
          write(5072,*) 
          write(5072,*) rusaltb_hdr
          if (pco%csvout == "y") then
-           open (5073,file="rout_unit_salt_mon.csv",recl=2000)
+           call open_output_file(5073, "rout_unit_salt_mon.csv", 2000)
            write (5073,*) bsn%name, prog
            write (5073,*) 'all values in kg'
            write (5073,'(*(G0.3,:","))') rusaltb_hdr
@@ -775,7 +776,7 @@
      !routing unit - yearly
      if (sp_ob%ru > 0) then
        if (pco%salt_ru%y == "y" .and. cs_db%num_salts > 0) then
-         open (5074,file="rout_unit_salt_yr.txt",recl=2000)
+         call open_output_file(5074, "rout_unit_salt_yr.txt", 2000)
          write(5074,*) bsn%name, prog
          write(5074,*) 
          write(5074,*) 'Routing unit salt fluxes - yearly'
@@ -802,7 +803,7 @@
          write(5074,*) 
          write(5074,*) rusaltb_hdr
          if (pco%csvout == "y") then
-           open (5075,file="rout_unit_salt_yr.csv",recl=2000)
+           call open_output_file(5075, "rout_unit_salt_yr.csv", 2000)
            write (5075,*) bsn%name, prog
            write (5075,*) 'all values in kg'
            write (5075,'(*(G0.3,:","))') rusaltb_hdr
@@ -813,7 +814,7 @@
      !routing unit - ave annual
      if (sp_ob%ru > 0) then
        if (pco%salt_ru%a == "y" .and. cs_db%num_salts > 0) then
-         open (5076,file="rout_unit_salt_aa.txt",recl=2000)
+         call open_output_file(5076, "rout_unit_salt_aa.txt", 2000)
          write(5076,*) bsn%name, prog
          write(5076,*) 
          write(5076,*) 'Routing unit salt fluxes - average annual'
@@ -840,7 +841,7 @@
          write(5076,*) 
          write(5076,*) rusaltb_hdr
          if (pco%csvout == "y") then
-           open (5077,file="rout_unit_salt_aa.csv",recl=2000)
+           call open_output_file(5077, "rout_unit_salt_aa.csv", 2000)
            write (5077,*) bsn%name, prog
            write (5077,*) 'all values in kg'
            write (5077,'(*(G0.3,:","))') rusaltb_hdr
@@ -851,7 +852,7 @@
      !wetland - daily -------------------------------------------------------------------------------------------------------------------
      if (sp_ob%res > 0) then
        if (pco%salt_wet%d == "y" .and. cs_db%num_salts > 0) then
-         open (5090,file="wetland_salt_day.txt",recl=2000)
+         call open_output_file(5090, "wetland_salt_day.txt", 2000)
          write(5090,*) bsn%name, prog
          write(5090,*) 
          write(5090,*) 'Wetland salt fluxes and state variables - daily'
@@ -871,7 +872,7 @@
          write(5090,*) 
          write(5090,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5091,file="wetland_salt_day.csv",recl=2000)
+           call open_output_file(5091, "wetland_salt_day.csv", 2000)
            write (5091,*) bsn%name, prog
            write (5091,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -881,7 +882,7 @@
      !wetland - monthly
      if (sp_ob%res > 0) then
        if (pco%salt_wet%m == "y" .and. cs_db%num_salts > 0) then
-         open (5092,file="wetland_salt_mon.txt",recl=2000)
+         call open_output_file(5092, "wetland_salt_mon.txt", 2000)
          write(5092,*) bsn%name, prog
          write(5092,*) 
          write(5092,*) 'Wetland salt fluxes and state variables - monthly'
@@ -901,7 +902,7 @@
          write(5092,*) 
          write(5092,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5093,file="wetland_salt_mon.csv",recl=2000)
+           call open_output_file(5093, "wetland_salt_mon.csv", 2000)
            write (5093,*) bsn%name, prog
            write (5093,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -911,7 +912,7 @@
      !wetland - yearly
      if (sp_ob%res > 0) then
        if (pco%salt_wet%y == "y" .and. cs_db%num_salts > 0) then
-         open (5094,file="wetland_salt_yr.txt",recl=2000)
+         call open_output_file(5094, "wetland_salt_yr.txt", 2000)
          write(5094,*) bsn%name, prog
          write(5094,*) 
          write(5094,*) 'Wetland salt fluxes and state variables - yearly'
@@ -931,7 +932,7 @@
          write(5094,*) 
          write(5094,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5095,file="wetland_salt_yr.csv",recl=2000)
+           call open_output_file(5095, "wetland_salt_yr.csv", 2000)
            write (5095,*) bsn%name, prog
            write (5095,'(*(G0.3,:","))') ressalt_hdr
          endif
@@ -941,7 +942,7 @@
      !wetland - ave annual
      if (sp_ob%res > 0) then
        if (pco%salt_wet%a == "y" .and. cs_db%num_salts > 0) then
-         open (5096,file="wetland_salt_aa.txt",recl=2000)
+         call open_output_file(5096, "wetland_salt_aa.txt", 2000)
          write(5096,*) bsn%name, prog
          write(5096,*) 
          write(5096,*) 'Wetland salt fluxes and state variables - average annual'
@@ -961,7 +962,7 @@
          write(5096,*) 
          write(5096,*) ressalt_hdr
          if (pco%csvout == "y") then
-           open (5097,file="wetland_salt_aa.csv",recl=2000)
+           call open_output_file(5097, "wetland_salt_aa.csv", 2000)
            write (5097,*) bsn%name, prog
            write (5097,'(*(G0.3,:","))') ressalt_hdr
          endif

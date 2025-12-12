@@ -6,20 +6,17 @@
       use climate_module
       
       implicit none
+      
+      external :: cli_initwgn, gcycl
             
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
       integer :: iwgn = 0             !           | 
-      integer :: mwnd_dir = 0         !           | 
-      integer :: iwndir = 0           !none       |counter
-      integer :: imo = 0              !none       |counter 
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists  
       integer :: mo = 0               !none       !counter
-      integer :: idir = 0             !none       !counter
-
-      
+ 
       eof = 0
       imax = 0
 

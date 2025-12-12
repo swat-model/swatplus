@@ -15,20 +15,15 @@
       integer :: eof = 0                !             |end of file
       integer :: imax = 0               !             |determine max number for array (imax) and total number in file
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: i = 0                  !none         |counter
       integer :: iaqu = 0               !none         |counter
       integer :: ictr = 0
       integer :: isp_ini = 0            !             |                    !             |
       integer :: idat = 0               !             |
-      integer :: init = 0
       integer :: iaq = 0
       integer :: iob = 0
-      integer :: idb = 0
-      integer :: ini = 0
       integer :: ipest = 0
       integer :: ipath = 0
       integer :: isalt = 0
-      integer :: init_aqu = 0
       integer :: ics = 0
       integer :: iaqdb = 0
       real :: gw_volume = 0.
@@ -152,8 +147,6 @@
         end do
       
       endif !check for file
-      
-      
+          
       return
-      end subroutine aqu_read_init_cs
-      
+      end subroutine aqu_read_init_cs      

@@ -36,6 +36,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: atri, aunif
       integer :: itime = 0                  !none          |time step during day
       integer :: pt = 0                     !min           |time during day
       integer :: k = 0                      !none          |random number seed, counter

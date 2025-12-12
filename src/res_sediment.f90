@@ -9,9 +9,7 @@
       use water_body_module
       
       implicit none
-
-      real :: trapres = 0.                  !              |
-      real :: velofl = 0.                   !              |  
+                   !              |  
       real :: sed_ppm = 0.
       real :: sil_ppm = 0.
       real :: cla_ppm = 0.

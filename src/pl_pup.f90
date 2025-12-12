@@ -36,6 +36,8 @@
       use utils
 
       implicit none
+      
+      external :: nuts
 
       integer :: j = 0       !none      |hru number
       integer :: l = 0       !none      |counter (soil layer)
