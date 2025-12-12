@@ -2,28 +2,6 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "ifort_debug",
-            "displayName": "ifort debug version",
-            "description": "Preset to builds ifort debug executable for swatplus",
-            "binaryDir": "build/debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "build/debug",
-                "CMAKE_Fortran_COMPILER": "ifort"
-            }
-        },
-        {
-            "name": "ifx_debug",
-            "displayName": "ifx debug version",
-            "description": "Preset to builds a ifx debug executable for swatplus",
-            "binaryDir": "build/debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "build/debug",
-                "CMAKE_Fortran_COMPILER": "ifx"
-            }
-        },
-        {
             "name": "gfortran_debug_windows",
             "displayName": "gfortran debug version",
             "description": "Builds a gfortran debug executable for swatplus for windows",
@@ -78,6 +56,107 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_INSTALL_PREFIX": "build/debug",
                 "CMAKE_Fortran_COMPILER": "gfortran"
+            }
+        },
+        {
+            "name": "ifx_debug",
+            "displayName": "ifx debug version",
+            "description": "Preset to builds a ifx debug executable for swatplus",
+            "binaryDir": "build/debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "build/debug",
+                "CMAKE_Fortran_COMPILER": "ifx"
+            }
+        },
+        {
+            "name": "ifort_debug",
+            "displayName": "ifort debug version",
+            "description": "Preset to builds ifort debug executable for swatplus",
+            "binaryDir": "build/debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "build/debug",
+                "CMAKE_Fortran_COMPILER": "ifort"
+            }
+        },
+        {
+            "name": "gfortran_release_windows",
+            "displayName": "gfortran release version",
+            "description": "Builds a gfortran release executable for swatplus for windows",
+            "binaryDir": "build/release",
+            "generator": "Ninja",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "architecture": {
+                "value": "x86",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x86",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "build/release",
+                "CMAKE_Fortran_COMPILER": "gfortran"
+            }
+        },
+        {
+            "name": "gfortran_release_linux",
+            "displayName": "gfortran release version",
+            "description": "Builds a gfortran release executable for swatplus for linux",
+            "binaryDir": "build/release",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "build/release",
+                "CMAKE_Fortran_COMPILER": "gfortran"
+            }
+        },
+        {
+            "name": "gfortran_release_macbook",
+            "displayName": "gfortran release version",
+            "description": "Builds a gfortran release executable for swatplus for macbook",
+            "binaryDir": "build/release",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "build/release",
+                "CMAKE_Fortran_COMPILER": "gfortran"
+            }
+        },
+        {
+            "name": "ifx_release",
+            "displayName": "ifx release version",
+            "description": "Preset to builds a ifx release executable for swatplus",
+            "binaryDir": "build/release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "build/release",
+                "CMAKE_Fortran_COMPILER": "ifx"
+            }
+        },
+        {
+            "name": "ifort_release",
+            "displayName": "ifort release version",
+            "description": "Preset to builds ifort release executable for swatplus",
+            "binaryDir": "build/release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "build/release",
+                "CMAKE_Fortran_COMPILER": "ifort"
             }
         }
     ]

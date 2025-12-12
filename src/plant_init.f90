@@ -57,6 +57,9 @@
       real :: matur_frac = 0.        !frac       |fraction to maturity - use hu for annuals and years to maturity for perennials
       real :: f = 0.                 !none       |fraction of plant's maximum lai corresponding to a given fraction of phu
       real :: dd = 0.             !none          |relative distance of the earth from the sun
+      real :: rsd_meta_frac
+      real :: rsd_str_frac
+      real :: rsd_lig_frac
       
       j = iihru
 
@@ -131,22 +134,33 @@
           
           if (bsn_cc%cswat == 2) then
             !! metabolic residue
-            rsd_meta%m = 0.85 * pcomdb(icom)%pl(ipl)%rsdin
-            rsd_meta%c = 0.357 * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
+            ! rsd_meta%m = 0.85 * pcomdb(icom)%pl(ipl)%rsdin
+            rsd_meta_frac = pldb(pcomdb(icom)%pl(ipl)%db_num)%res_part_fracs%meta_frac 
+            rsd_meta%m = rsd_meta_frac * pcomdb(icom)%pl(ipl)%rsdin
+            ! rsd_meta%c = 0.357 * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
+            rsd_meta%c = 0.42 * rsd_meta_frac * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
             rsd_meta%n = rsd_meta%c / 10.           !assume 10:1 C:N ratio (EPIC)
             rsd_meta%p = rsd_meta%c / 100.   
             soil1(j)%meta(1) = soil1(j)%meta(1) + rsd_meta
             
             !! structural residue
-            rsd_str%m = 0.15 * pcomdb(icom)%pl(ipl)%rsdin
-            rsd_str%c = 0.063 * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
+            ! rsd_str%m = 0.15 * pcomdb(icom)%pl(ipl)%rsdin
+            rsd_str_frac = pldb(pcomdb(icom)%pl(ipl)%db_num)%res_part_fracs%str_frac 
+            rsd_str%m = rsd_str_frac * pcomdb(icom)%pl(ipl)%rsdin
+            ! rsd_str%c = 0.063 * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
+            rsd_str%c = 0.42 * rsd_str_frac * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
             rsd_str%n = rsd_str%c / 150.             !assume 150:1 C:N ratio (EPIC)
             rsd_str%p = rsd_str%c / 1500.   
             soil1(j)%str(1) = soil1(j)%str(1) + rsd_str
           
             !! lignin residue
-            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
-            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
+            ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
+            ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
+            rsd_lig_frac = pldb(pcomdb(icom)%pl(ipl)%db_num)%res_part_fracs%lig_frac 
+            ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
+            ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
+            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + rsd_lig_frac/rsd_str_frac * rsd_str%m
+            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + rsd_lig_frac/rsd_str_frac * rsd_str%c              !assume 80% Structural C is lig
             soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + 0.2 * rsd_str%n
             soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + 0.02 * rsd_str%p
             
