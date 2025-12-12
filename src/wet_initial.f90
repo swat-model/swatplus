@@ -19,7 +19,7 @@
       integer :: iprop = 0              !           |  
       integer :: init_om = 0
       integer :: init = 0               !           |
-      integer :: iweir = 0              !           |
+      integer :: iweir = 1              !           |
       integer :: icon = 0               !           |
       integer :: isalt = 0              !           |salt ion counter
       real :: x1 = 0.                   !           |
