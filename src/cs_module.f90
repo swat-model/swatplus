@@ -272,5 +272,4 @@
       type (output_cs_hdr_hru) :: cs_hdr_hru
       
       
-      end module
-      
+      end module cs_module  

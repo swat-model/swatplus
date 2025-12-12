@@ -32,7 +32,7 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : rsdco_plcom, i_sep, ihru, isep 
+      use hru_module, only : rsdco_plcom, ihru
       use soil_module
       use plant_module
       use output_landscape_module, only : hnb_d
@@ -50,21 +50,12 @@
       real :: rmp = 0.      !              |to labile(80%) and organic(20%) pools in layer
       real :: xx = 0.       !varies        |variable to hold intermediate calculation result
       real :: csf = 0.      !none          |combined temperature/soil water factor
-      real :: rwn = 0.      !kg N/ha       |amount of nitrogen moving from active organic
-                            !              |to stable organic pool in layer
-      real :: hmn = 0.      !kg N/ha       |amount of nitrogen moving from active organic
-                            !              |nitrogen pool to nitrate pool in layer
-      real :: hmp = 0.      !kg P/ha       |amount of phosphorus moving from the organic
-                            !              |pool to the labile pool in layer
       real :: cnr = 0.      !              |carbon nitrogen ratio
       real :: cnrf = 0.     !              |carbon nitrogen ratio factor 
       real :: cpr = 0.      !              |carbon phosphorus ratio
       real :: cprf = 0.     !              |carbon phosphorus ratio factor
       real :: ca = 0.       !              |
       real :: decr = 0.     !              |
-      !real :: rdc = 0.      !              |
-      real :: wdn = 0.      !kg N/ha       |amount of nitrogen lost from nitrate pool in
-                            !              |layer due to denitrification
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
@@ -149,4 +140,4 @@
       end do        ! k = 1, soil(j)%nly
 
       return
-      end subroutine
+      end subroutine cbn_rsd_decomp

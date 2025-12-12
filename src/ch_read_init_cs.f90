@@ -53,6 +53,6 @@
       enddo
       endif
 
-      return    
-      end subroutine ch_read_init_cs
+      return
       
+      end subroutine ch_read_init_cs 

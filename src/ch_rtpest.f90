@@ -14,6 +14,10 @@
 
       implicit none
       
+
+      
+
+      external :: theta
       integer :: ipest = 0      !none                   |pesticide counter - sequential
       integer :: jpst = 0       !none                   |pesticide counter from data base
       integer :: ipseq = 0      !none                   |sequential basin pesticide number

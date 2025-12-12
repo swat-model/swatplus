@@ -12,6 +12,9 @@
       use water_body_module
       
       implicit none
+      
+      external :: rcurv_interp_flo
+      real, external :: theta, wq_k2m, wq_semianalyt
 
       real :: tday = 0.
       real :: wtmp = 0.
@@ -45,7 +48,6 @@
       real :: thrk3 = 1.024
       real :: thrk4 = 1.060
       real :: soxy = 0.        !mg O2/L       |saturation concetration of dissolved oxygen
-      real :: theta
       real :: rs2_s = 0.
       real :: rs3_s = 0.
       real :: rk4_s = 0.
@@ -55,7 +57,6 @@
       real :: cinn = 0.
       real :: algin = 0.
       real :: factk = 0.
-      real :: wq_semianalyt
       real :: alg_m1 = 0.
       real :: alg_m = 0.
       real :: alg_m2 = 0.
@@ -67,7 +68,6 @@
       real :: cbodo = 0.
       real :: cbodoin = 0.
       real :: rk1_k = 0.
-      real :: wq_k2m 
       real :: rk1_m = 0.
       real :: rk3_k = 0.
       real :: factm = 0.
@@ -340,5 +340,5 @@
       endif
       
       return
-      end subroutine ch_watqual4
       
+      end subroutine ch_watqual4

@@ -11,6 +11,8 @@
       use utils
 
       implicit none     
+      
+      external :: rcurv_interp_flo
 
       integer :: iob = 0            !               |object number
       integer :: ihru = 0
@@ -21,18 +23,13 @@
       real :: trap_eff = 0.         !frac           |trap efficiency in the flood plain
       real :: cohesion = 0.         !               |soil bank cohesion 
       real :: b_exp = 0.            !               |exponent for bank erosion equation
-      real :: vel_fall = 0.         !m/s            |fall velocity of sediment particles in channel
-      real :: dep_fall = 0.         !m              |fall depth of sediment particles in channel
-      real :: del_rto = 0.          !frac           |fraction of sediment deposited in channel
       real :: ebtm_m = 0.           !m              |erosion of bottom of channel
       real :: ebank_m = 0.          !m              |meander cut on one side
       real :: ebtm_t = 0.           !tons           |bottom erosion
       real :: ebank_t = 0.          !tons           |bank erosion
       real :: shear_btm_cr = 0.     !               |
       real :: shear_btm = 0.        !               |  
-      real :: inflo = 0.                 !m^3            |inflow water volume
-      real :: inflo_rate = 0.            !m^3/s          |inflow rate
-      real :: flo_time = 0.              !s              |estimate of total flow time through the channel
+      real :: flo_time = 0.         !s              |estimate of total flow time through the channel
       real :: bf_flow = 0.          !m3/s           |bankfull flow rate * adjustment factor
       real :: pk_rto = 0.           !ratio          |peak to mean flow rate ratio
       real :: bd_fac = 0.           !               |bulk density factor for critical velocity calculation
@@ -57,7 +54,6 @@
       real :: v_vc = 0.
       real :: m_exhaust = 0.
       real :: dur_scale = 0.
-      !!
 
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1

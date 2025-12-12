@@ -2,19 +2,20 @@
     
      use basin_module
      use reservoir_module
-     use hydrograph_module, only : res, sp_ob
+     use hydrograph_module, only : sp_ob
      use constituent_mass_module
      use ch_cs_module
      use res_cs_module
      use cs_module
      use cs_aquifer
+     use output_path_module
      
      implicit none 
 
 
      !basin - daily -----------------------------------------------------------------------------------------------------------------------
      if (pco%cs_basin%d == "y" .and. cs_db%num_cs > 0) then
-       open (6080,file="basin_cs_day.txt", recl = 2000)
+       call open_output_file(6080, "basin_cs_day.txt", 2000)
        write(6080,*) bsn%name, prog
        write(6080,*)
        write(6080,*) 'Basin constituent fluxes - daily'
@@ -57,7 +58,7 @@
      
      !basin - monthly
      if (pco%cs_basin%m == "y" .and. cs_db%num_cs > 0) then
-       open (6082,file="basin_cs_mon.txt", recl = 2000)
+       call open_output_file(6082, "basin_cs_mon.txt", 2000)
        write(6082,*) bsn%name, prog
        write(6082,*)
        write(6082,*) 'Basin constituent fluxes - monthly'
@@ -100,7 +101,7 @@
      
      !basin - yearly
      if (pco%cs_basin%y == "y" .and. cs_db%num_cs > 0) then
-       open (6084,file="basin_cs_yr.txt", recl = 2000)
+       call open_output_file(6084, "basin_cs_yr.txt", 2000)
        write(6084,*) bsn%name, prog
        write(6084,*)
        write(6084,*) 'Basin constituent fluxes - yearly'
@@ -143,7 +144,7 @@
      
      !basin - ave annual
      if (pco%cs_basin%a == "y" .and. cs_db%num_cs > 0) then
-       open (6086,file="basin_cs_aa.txt", recl = 2000)
+       call open_output_file(6086, "basin_cs_aa.txt", 2000)
        write(6086,*) bsn%name, prog
        write(6086,*)
        write(6086,*) 'Basin constituent fluxes - average annual'
@@ -186,7 +187,7 @@
      
      !hru - daily -------------------------------------------------------------------------------------------------------------------------
      if (pco%cs_hru%d == "y" .and. cs_db%num_cs > 0) then
-       open (6021,file="hru_cs_day.txt", recl = 3000)
+       call open_output_file(6021, "hru_cs_day.txt", 3000)
        write(6021,*) bsn%name, prog
        write(6021,*) 
        write(6021,*) 'HRU constituent fluxes and state variables - daily'
@@ -218,7 +219,7 @@
        write(6021,*) 
        write(6021,*) cs_hdr_hru
        if (pco%csvout == "y") then
-         open (6022,file="hru_cs_day.csv", recl = 3000)
+         call open_output_file(6022, "hru_cs_day.csv", 3000)
          write (6022,*) bsn%name, prog
          write (6022,*) 'conc = mg/L; other = kg/ha'
          write (6022,'(*(G0.3,:","))') cs_hdr_hru
@@ -227,7 +228,7 @@
      
      !hru - monthly
      if (pco%cs_hru%m == "y" .and. cs_db%num_cs > 0) then
-       open (6023,file="hru_cs_mon.txt", recl = 3000)
+       call open_output_file(6023, "hru_cs_mon.txt", 3000)
        write(6023,*) bsn%name, prog
        write(6023,*) 
        write(6023,*) 'HRU constituent fluxes and state variables - monthly'
@@ -259,7 +260,7 @@
        write(6023,*) 
        write(6023,*) cs_hdr_hru
        if (pco%csvout == "y") then
-         open (6024,file="hru_cs_mon.csv", recl = 3000)
+         call open_output_file(6024, "hru_cs_mon.csv", 3000)
          write (6024,*) bsn%name, prog
          write (6024,*) 'conc = mg/L; other = kg/ha'
          write (6024,'(*(G0.3,:","))') cs_hdr_hru
@@ -268,7 +269,7 @@
      
      !hru - yearly
      if (pco%cs_hru%y == "y" .and. cs_db%num_cs > 0) then
-       open (6025,file="hru_cs_yr.txt", recl = 3000)
+       call open_output_file(6025, "hru_cs_yr.txt", 3000)
        write(6025,*) bsn%name, prog
        write(6025,*) 
        write(6025,*) 'HRU constituent fluxes and state variables - yearly'
@@ -300,7 +301,7 @@
        write(6025,*) 
        write(6025,*) cs_hdr_hru
        if (pco%csvout == "y") then
-         open (6026,file="hru_cs_yr.csv", recl = 3000)
+         call open_output_file(6026, "hru_cs_yr.csv", 3000)
          write (6026,*) bsn%name, prog
          write (6026,*) 'conc = mg/L; other = kg/ha'
          write (6026,'(*(G0.3,:","))') cs_hdr_hru
@@ -309,7 +310,7 @@
      
      !hru - ave annual
      if (pco%cs_hru%a == "y" .and. cs_db%num_cs > 0) then
-       open (6027,file="hru_cs_aa.txt", recl = 3000)
+       call open_output_file(6027, "hru_cs_aa.txt", 3000)
        write(6027,*) bsn%name, prog
        write(6027,*) 
        write(6027,*) 'HRU constituent fluxes and state variables - average annual'
@@ -341,7 +342,7 @@
        write(6027,*) 
        write(6027,*) cs_hdr_hru
        if (pco%csvout == "y") then
-         open (6028,file="hru_cs_aa.csv", recl = 3000)
+         call open_output_file(6028, "hru_cs_aa.csv", 3000)
          write (6028,*) bsn%name, prog
          write (6028,*) 'conc = mg/L; other = kg/ha'
          write (6028,'(*(G0.3,:","))') cs_hdr_hru
@@ -351,7 +352,7 @@
      !aquifer - daily ---------------------------------------------------------------------------------------------------------------------
      if (sp_ob%aqu > 0) then
        if (pco%cs_aqu%d == "y" .and. cs_db%num_cs > 0) then
-         open (6060,file="aquifer_cs_day.txt",recl=2000)
+         call open_output_file(6060, "aquifer_cs_day.txt", 2000)
          write(6060,*) bsn%name, prog
          write(6060,*) 
          write(6060,*) 'Aquifer constituent fluxes and state variables - daily'
@@ -372,7 +373,7 @@
          write(6060,*)
          write(6060,*) cs_hdr_aqu
          if (pco%csvout == "y") then
-           open (6061,file="aquifer_cs_day.csv",recl=2000)
+           call open_output_file(6061, "aquifer_cs_day.csv", 2000)
            write (6061,*) bsn%name, prog
            write (6061,*) 'conc = mg/L; other = kg'
            write (6061,'(*(G0.3,:","))') cs_hdr_aqu
@@ -383,7 +384,7 @@
      !aquifer - monthly     
      if (sp_ob%aqu > 0) then
        if (pco%cs_aqu%m == "y" .and. cs_db%num_cs > 0) then
-         open (6062,file="aquifer_cs_mon.txt",recl=2000)
+         call open_output_file(6062, "aquifer_cs_mon.txt", 2000)
          write(6062,*) bsn%name, prog
          write(6062,*) 
          write(6062,*) 'Aquifer constituent fluxes and state variables - monthly'
@@ -404,7 +405,7 @@
          write(6062,*)
          write(6062,*) cs_hdr_aqu
          if (pco%csvout == "y") then
-           open (6063,file="aquifer_cs_mon.csv",recl=2000)
+           call open_output_file(6063, "aquifer_cs_mon.csv", 2000)
            write (6063,*) bsn%name, prog
            write (6063,*) 'conc = mg/L; other = kg'
            write (6063,'(*(G0.3,:","))') cs_hdr_aqu
@@ -415,7 +416,7 @@
      !aquifer - yearly     
      if (sp_ob%aqu > 0) then
        if (pco%cs_aqu%y == "y" .and. cs_db%num_cs > 0) then
-         open (6064,file="aquifer_cs_yr.txt",recl=2000)
+         call open_output_file(6064, "aquifer_cs_yr.txt", 2000)
          write(6064,*) bsn%name, prog
          write(6064,*) 
          write(6064,*) 'Aquifer constituent fluxes and state variables - yearly'
@@ -436,7 +437,7 @@
          write(6064,*)
          write(6064,*) cs_hdr_aqu
          if (pco%csvout == "y") then
-           open (6065,file="aquifer_cs_yr.csv",recl=2000)
+           call open_output_file(6065, "aquifer_cs_yr.csv", 2000)
            write (6065,*) bsn%name, prog
            write (6065,*) 'conc = mg/L; other = kg'
            write (6065,'(*(G0.3,:","))') cs_hdr_aqu
@@ -447,7 +448,7 @@
      !aquifer - ave annual     
      if (sp_ob%aqu > 0) then
        if (pco%cs_aqu%a == "y" .and. cs_db%num_cs > 0) then
-         open (6066,file="aquifer_cs_aa.txt",recl=2000)
+         call open_output_file(6066, "aquifer_cs_aa.txt", 2000)
          write(6066,*) bsn%name, prog
          write(6066,*) 
          write(6066,*) 'Aquifer constituent fluxes and state variables - yearly'
@@ -468,7 +469,7 @@
          write(6066,*)
          write(6066,*) cs_hdr_aqu
          if (pco%csvout == "y") then
-           open (6067,file="aquifer_cs_aa.csv",recl=2000)
+           call open_output_file(6067, "aquifer_cs_aa.csv", 2000)
            write (6067,*) bsn%name, prog
            write (6067,*) 'conc = mg/L; other = kg'
            write (6067,'(*(G0.3,:","))') cs_hdr_aqu
@@ -479,7 +480,7 @@
      !channel - daily ---------------------------------------------------------------------------------------------------------------------
      if (sp_ob%chandeg > 0) then
        if (pco%cs_chn%d == "y" .and. cs_db%num_cs > 0) then
-         open (6030,file="channel_cs_day.txt",recl=2000)
+         call open_output_file(6030, "channel_cs_day.txt", 2000)
          write(6030,*) bsn%name, prog
          write(6030,*) 
          write(6030,*) 'Channel constituent fluxes and state variables - daily'
@@ -498,7 +499,7 @@
          write(6030,*) 
          write(6030,*) chcs_hdr
          if (pco%csvout == "y") then
-           open (6031,file="channel_cs_day.csv",recl=2000)
+           call open_output_file(6031, "channel_cs_day.csv", 2000)
            write (6031,*) bsn%name, prog
            write (6031,'(*(G0.3,:","))') chcs_hdr
          endif
@@ -508,7 +509,7 @@
      !channel - monthly     
      if (sp_ob%chandeg > 0) then
        if (pco%cs_chn%m == "y" .and. cs_db%num_cs > 0) then
-         open (6032,file="channel_cs_mon.txt",recl=2000)
+         call open_output_file(6032, "channel_cs_mon.txt", 2000)
          write(6032,*) bsn%name, prog
          write(6032,*) 
          write(6032,*) 'Channel constituent fluxes and state variables - monthly'
@@ -527,7 +528,7 @@
          write(6032,*) 
          write(6032,*) chcs_hdr
          if (pco%csvout == "y") then
-           open (6033,file="channel_cs_mon.csv",recl=2000)
+           call open_output_file(6033, "channel_cs_mon.csv", 2000)
            write (6033,*) bsn%name, prog
            write (6033,'(*(G0.3,:","))') chcs_hdr
          endif
@@ -537,7 +538,7 @@
      !channel - yearly     
      if (sp_ob%chandeg > 0) then
        if (pco%cs_chn%y == "y" .and. cs_db%num_cs > 0) then
-         open (6034,file="channel_cs_yr.txt",recl=2000)
+         call open_output_file(6034, "channel_cs_yr.txt", 2000)
          write(6034,*) bsn%name, prog
          write(6034,*) 
          write(6034,*) 'Channel constituent fluxes and state variables - yearly'
@@ -556,7 +557,7 @@
          write(6034,*) 
          write(6034,*) chcs_hdr
          if (pco%csvout == "y") then
-           open (6035,file="channel_cs_yr.csv",recl=2000)
+           call open_output_file(6035, "channel_cs_yr.csv", 2000)
            write (6035,*) bsn%name, prog
            write (6035,'(*(G0.3,:","))') chcs_hdr
          endif
@@ -566,7 +567,7 @@
      !channel - ave annual     
      if (sp_ob%chandeg > 0) then
        if (pco%cs_chn%a == "y" .and. cs_db%num_cs > 0) then
-         open (6036,file="channel_cs_aa.txt",recl=2000)
+         call open_output_file(6036, "channel_cs_aa.txt", 2000)
          write(6036,*) bsn%name, prog
          write(6036,*) 
          write(6036,*) 'Channel constituent fluxes and state variables - average annual'
@@ -585,7 +586,7 @@
          write(6036,*) 
          write(6036,*) chcs_hdr
          if (pco%csvout == "y") then
-           open (6037,file="channel_cs_aa.csv",recl=2000)
+           call open_output_file(6037, "channel_cs_aa.csv", 2000)
            write (6037,*) bsn%name, prog
            write (6037,'(*(G0.3,:","))') chcs_hdr
          endif
@@ -595,7 +596,7 @@
      !reservoir - daily -------------------------------------------------------------------------------------------------------------------
      if (sp_ob%res > 0) then
        if (pco%cs_res%d == "y" .and. cs_db%num_cs > 0) then
-         open (6040,file="reservoir_cs_day.txt",recl=2000)
+         call open_output_file(6040, "reservoir_cs_day.txt", 2000)
          write(6040,*) bsn%name, prog
          write(6040,*) 
          write(6040,*) 'Reservoir constituent fluxes and state variables - daily'
@@ -618,7 +619,7 @@
          write(6040,*) 
          write(6040,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6041,file="reservoir_cs_day.csv",recl=2000)
+           call open_output_file(6041, "reservoir_cs_day.csv", 2000)
            write (6041,*) bsn%name, prog
            write (6041,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -628,7 +629,7 @@
      !reservoir - monthly
      if (sp_ob%res > 0) then
        if (pco%cs_res%m == "y" .and. cs_db%num_cs > 0) then
-         open (6042,file="reservoir_cs_mon.txt",recl=2000)
+         call open_output_file(6042, "reservoir_cs_mon.txt", 2000)
          write(6042,*) bsn%name, prog
          write(6042,*) 
          write(6042,*) 'Reservoir constituent fluxes and state variables - monthly'
@@ -651,7 +652,7 @@
          write(6042,*) 
          write(6042,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6043,file="reservoir_cs_mon.csv",recl=2000)
+           call open_output_file(6043, "reservoir_cs_mon.csv", 2000)
            write (6043,*) bsn%name, prog
            write (6043,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -661,7 +662,7 @@
      !reservoir - yearly
      if (sp_ob%res > 0) then
        if (pco%cs_res%y == "y" .and. cs_db%num_cs > 0) then
-         open (6044,file="reservoir_cs_yr.txt",recl=2000)
+         call open_output_file(6044, "reservoir_cs_yr.txt", 2000)
          write(6044,*) bsn%name, prog
          write(6044,*) 
          write(6044,*) 'Reservoir constituent fluxes and state variables - yearly'
@@ -684,7 +685,7 @@
          write(6044,*) 
          write(6044,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6045,file="reservoir_cs_yr.csv",recl=2000)
+           call open_output_file(6045, "reservoir_cs_yr.csv", 2000)
            write (6045,*) bsn%name, prog
            write (6045,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -694,7 +695,7 @@
      !reservoir - ave annual
      if (sp_ob%res > 0) then
        if (pco%cs_res%a == "y" .and. cs_db%num_cs > 0) then
-         open (6046,file="reservoir_cs_aa.txt",recl=2000)
+         call open_output_file(6046, "reservoir_cs_aa.txt", 2000)
          write(6046,*) bsn%name, prog
          write(6046,*) 
          write(6046,*) 'Reservoir constituent fluxes and state variables - average annual'
@@ -717,7 +718,7 @@
          write(6046,*) 
          write(6046,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6047,file="reservoir_cs_aa.csv",recl=2000)
+           call open_output_file(6047, "reservoir_cs_aa.csv", 2000)
            write (6047,*) bsn%name, prog
            write (6047,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -727,7 +728,7 @@
      !routing unit - daily ----------------------------------------------------------------------------------------------------------------
      if (sp_ob%ru > 0) then
        if (pco%cs_ru%d == "y" .and. cs_db%num_cs > 0) then
-         open (6070,file="rout_unit_cs_day.txt",recl=2000)
+         call open_output_file(6070, "rout_unit_cs_day.txt", 2000)
          write(6070,*) bsn%name, prog
          write(6070,*) 
          write(6070,*) 'Routing unit constituent fluxes - daily'
@@ -754,7 +755,7 @@
          write(6070,*) 
          write(6070,*) rucsb_hdr
          if (pco%csvout == "y") then
-           open (6071,file="rout_unit_cs_day.csv",recl=2000)
+           call open_output_file(6071, "rout_unit_cs_day.csv", 2000)
            write (6071,*) bsn%name, prog
            write (6071,*) 'all values in kg'
            write (6071,'(*(G0.3,:","))') rucsb_hdr
@@ -765,7 +766,7 @@
      !routing unit - monthly
      if (sp_ob%ru > 0) then
        if (pco%cs_ru%m == "y" .and. cs_db%num_cs > 0) then
-         open (6072,file="rout_unit_cs_mon.txt",recl=2000)
+         call open_output_file(6072, "rout_unit_cs_mon.txt", 2000)
          write(6072,*) bsn%name, prog
          write(6072,*) 
          write(6072,*) 'Routing unit constituent fluxes - monthly'
@@ -792,7 +793,7 @@
          write(6072,*) 
          write(6072,*) rucsb_hdr
          if (pco%csvout == "y") then
-           open (6073,file="rout_unit_cs_mon.csv",recl=2000)
+           call open_output_file(6073, "rout_unit_cs_mon.csv", 2000)
            write (6073,*) bsn%name, prog
            write (6073,*) 'all values in kg'
            write (6073,'(*(G0.3,:","))') rucsb_hdr
@@ -803,7 +804,7 @@
      !routing unit - yearly
      if (sp_ob%ru > 0) then
        if (pco%cs_ru%y == "y" .and. cs_db%num_cs > 0) then
-         open (6074,file="rout_unit_cs_yr.txt",recl=2000)
+         call open_output_file(6074, "rout_unit_cs_yr.txt", 2000)
          write(6074,*) bsn%name, prog
          write(6074,*) 
          write(6074,*) 'Routing unit constituent fluxes - yearly'
@@ -830,7 +831,7 @@
          write(6074,*) 
          write(6074,*) rucsb_hdr
          if (pco%csvout == "y") then
-           open (6075,file="rout_unit_cs_yr.csv",recl=2000)
+           call open_output_file(6075, "rout_unit_cs_yr.csv", 2000)
            write (6075,*) bsn%name, prog
            write (6075,*) 'all values in kg'
            write (6075,'(*(G0.3,:","))') rucsb_hdr
@@ -841,7 +842,7 @@
      !routing unit - ave annual
      if (sp_ob%ru > 0) then
        if (pco%cs_ru%a == "y" .and. cs_db%num_cs > 0) then
-         open (6076,file="rout_unit_cs_aa.txt",recl=2000)
+         call open_output_file(6076, "rout_unit_cs_aa.txt", 2000)
          write(6076,*) bsn%name, prog
          write(6076,*) 
          write(6076,*) 'Routing unit constituent fluxes - average annaul'
@@ -868,7 +869,7 @@
          write(6076,*) 
          write(6076,*) rucsb_hdr
          if (pco%csvout == "y") then
-           open (6077,file="rout_unit_cs_aa.csv",recl=2000)
+           call open_output_file(6077, "rout_unit_cs_aa.csv", 2000)
            write (6077,*) bsn%name, prog
            write (6077,*) 'all values in kg'
            write (6077,'(*(G0.3,:","))') rucsb_hdr
@@ -879,7 +880,7 @@
      !wetland - daily ---------------------------------------------------------------------------------------------------------------------
      if (sp_ob%res > 0) then
        if (pco%cs_res%d == "y" .and. cs_db%num_cs > 0) then
-         open (6090,file="wetland_cs_day.txt",recl=2000)
+         call open_output_file(6090, "wetland_cs_day.txt", 2000)
          write(6090,*) bsn%name, prog
          write(6090,*) 
          write(6090,*) 'Wetland constituent fluxes and state variables - daily'
@@ -901,7 +902,7 @@
          write(6090,*) 
          write(6090,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6091,file="wetland_cs_day.csv",recl=2000)
+           call open_output_file(6091, "wetland_cs_day.csv", 2000)
            write (6091,*) bsn%name, prog
            write (6091,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -911,7 +912,7 @@
      !wetland - monthly
      if (sp_ob%res > 0) then
        if (pco%cs_res%m == "y" .and. cs_db%num_cs > 0) then
-         open (6092,file="wetland_cs_mon.txt",recl=2000)
+         call open_output_file(6092, "wetland_cs_mon.txt", 2000)
          write(6092,*) bsn%name, prog
          write(6092,*) 
          write(6092,*) 'Wetland constituent fluxes and state variables - monthly'
@@ -933,7 +934,7 @@
          write(6092,*) 
          write(6092,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6093,file="wetland_cs_mon.csv",recl=2000)
+           call open_output_file(6093, "wetland_cs_mon.csv", 2000)
            write (6093,*) bsn%name, prog
            write (6093,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -943,7 +944,7 @@
      !wetland - yearly
      if (sp_ob%res > 0) then
        if (pco%cs_res%y == "y" .and. cs_db%num_cs > 0) then
-         open (6094,file="wetland_cs_yr.txt",recl=2000)
+         call open_output_file(6094, "wetland_cs_yr.txt", 2000)
          write(6094,*) bsn%name, prog
          write(6094,*) 
          write(6094,*) 'Wetland constituent fluxes and state variables - yearly'
@@ -965,7 +966,7 @@
          write(6094,*) 
          write(6094,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6095,file="wetland_cs_yr.csv",recl=2000)
+           call open_output_file(6095, "wetland_cs_yr.csv", 2000)
            write (6095,*) bsn%name, prog
            write (6095,'(*(G0.3,:","))') rescs_hdr
          endif
@@ -975,7 +976,7 @@
      !wetland - ave annual
      if (sp_ob%res > 0) then
        if (pco%cs_res%a == "y" .and. cs_db%num_cs > 0) then
-         open (6096,file="wetland_cs_aa.txt",recl=2000)
+         call open_output_file(6096, "wetland_cs_aa.txt", 2000)
          write(6096,*) bsn%name, prog
          write(6096,*) 
          write(6096,*) 'Wetland constituent fluxes and state variables - average annual'
@@ -997,7 +998,7 @@
          write(6096,*) 
          write(6096,*) rescs_hdr
          if (pco%csvout == "y") then
-           open (6097,file="wetland_cs_aa.csv",recl=2000)
+           call open_output_file(6097, "wetland_cs_aa.csv", 2000)
            write (6097,*) bsn%name, prog
            write (6097,'(*(G0.3,:","))') rescs_hdr
          endif

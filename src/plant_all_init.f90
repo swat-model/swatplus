@@ -7,6 +7,8 @@
       use maximum_data_module
             
       implicit none
+      
+      external :: plant_init
 
       integer :: iihru = 0          !none   |hru number to send to plant_init
       integer :: ipl = 0

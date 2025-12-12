@@ -6,7 +6,7 @@
       use hydrograph_module
       use ru_module
       use aquifer_module
-      use channel_module
+      ! use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -18,6 +18,8 @@
       use time_module
       
       implicit none
+      
+      external :: re_initialize, time_control
       
       integer :: isim = 0      !          |
       integer :: ireg = 0      !none      |counter
