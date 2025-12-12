@@ -32,6 +32,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: aunif
       real :: vv = 0.          !none          |random number between 0.0 and 1.0
       real :: pcpgen = 0.      !mm H2O        |generated precipitation value for the day
       real :: v8 = 0.          !none          |random number between 0.0 and 1.0
@@ -39,7 +43,7 @@
       real :: xlv = 0.         !none          |variable to hold intermediate calculation
       real :: aunif            !              |
       real :: xx = 0.          !              |
-      real :: cli_dstn1        !              |  
+      real, external :: cli_dstn1         !              |
       integer :: iwgn          !              |
      
 

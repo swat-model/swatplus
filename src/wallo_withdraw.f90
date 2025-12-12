@@ -8,14 +8,14 @@
       use basin_module, only : bsn_cc
       
       implicit none 
+      
+      external :: gwflow_ppag
 
       integer, intent (in):: iwallo         !water allocation object number
       integer, intent (in) :: itrn          !water demand object number
       integer, intent (in) :: isrc          !source object number
       integer :: isrc_wallo = 0             !source object number
       integer :: j = 0              !none       |hru number
-      integer :: dum = 0
-      integer :: irec = 0           !           |recall id
       real :: res_min = 0.          !m3         |min reservoir volume for withdrawal
       real :: res_vol = 0.          !m3         |reservoir volume after withdrawal
       real :: cha_min = 0.          !m3         |minimum allowable flow in channel after withdrawal
@@ -27,7 +27,6 @@
       real :: hru_demand = 0.   !m3         |demand (copy to pass into gwflow subroutine - rtb)
       real :: withdraw = 0.         !m3
       real :: unmet = 0.            !m3
-      real :: total_trn = 0.        !m3
         
       !! zero withdrawal hyd for the demand source
       wdraw_om = hz

@@ -31,6 +31,11 @@
       use water_allocation_module
 
       implicit none
+      
+      external :: cn2_init, cs_fert, curno, hru_fr_change, hru_lum_init, mgt_harvbiomass, mgt_harvgrain, &
+                  mgt_harvresidue, mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_wet, &
+                  mgt_transplant, pest_apply, pl_burnop, pl_fert, pl_fert_wet, pl_graze, pl_manure, &
+                  plant_init, salt_fert, structure_set_parms, wet_initial, chg_par
 
       integer, intent (in)  :: ob_cur      !none     |sequential number of individual objects
       integer, intent (in)  :: ob_num      !none     |sequential number for all objects
@@ -53,10 +58,6 @@
       integer :: idp = 0                   !         |
       integer :: istr = 0                  !         |
       integer :: istr1 = 0                 !         |
-      integer :: iob_out = 0
-      integer :: inhyd = 0                 !         |
-      integer :: ihyd_in = 0               !         |
-      integer :: icon = 0                  !         |
       integer :: iplt_bsn = 0
       integer :: irrop = 0                 !         |
       integer :: igr = 0
@@ -70,7 +71,6 @@
       integer :: idb = 0
       integer :: imallo = 0
       integer :: itrn = 0
-      integer :: irec = 0
       integer :: iplt = 0
       integer :: num_plts_cur = 0
       integer :: hru_rcv
@@ -79,7 +79,6 @@
       real :: frt_kg = 0.
       real :: harveff = 0.
       real :: wur = 0.                     !         |
-      real :: frac = 0.                    !         |
       real :: rto = 0.                     !         |
       real :: rto1 = 0.                    !         |
       real :: pest_kg = 0.                 !kg/ha    |amount of pesticide applied 

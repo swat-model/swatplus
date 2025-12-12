@@ -10,10 +10,13 @@
       use pesticide_data_module
       use res_salt_module
       use res_cs_module
-      use hru_module, only : hru
       
       implicit none
 
+      
+      
+      
+      external :: search
       character (len=80) :: titldum = "" !           |title of file
       character (len=80) :: header = ""  !           |header of file
       integer :: eof = 0                 !           |end of file

@@ -22,7 +22,7 @@
       use basin_module
       use channel_data_module 
       use reservoir_data_module
-      use hru_module, only : hru, isol, cn2, brt, tconc
+      use hru_module, only : hru, cn2, brt, tconc
       use soil_module
       use channel_module
       use conditional_module
@@ -38,6 +38,8 @@
       use gwflow_module
       
       implicit none
+      
+      external :: curno, soil_awc_init, soil_text_init, chg_par, fcgd
 
       character(len=16), intent (in) :: chg_parm            !                |               
       character(len=16), intent (in) :: chg_typ             !variable        |type of change (absval, abschg, pctchg)
@@ -45,8 +47,8 @@
       real, intent (in) :: absmin                           !                |minimum range for variable 
       real, intent (in) :: absmax                           !                |maximum change for variable
       integer, intent (in) :: ielem                         !                | 
-      integer, intent (in) :: num_db                        !                | 
       integer, intent (in) :: ly                            !                |
+      integer, intent (in) :: num_db                        !                |database number (unused in current implementation)
       integer :: jj = 0                                     !                |soil layer counter
       integer :: ipl = 0                                    !                |soil layer counter
       integer :: ihru = 0                                   !                |hru counter
@@ -57,6 +59,9 @@
       real :: chg_par                                       !variable        |new parameter value
       real :: perc_ln_func = 0.                             !none       |function to convert perco to perc_lim
       real :: rock = 0.                                     !                | 
+
+      !! suppress unused variable warning for num_db parameter
+      if (num_db < 0) continue
 
       select case (chg_parm)
 
@@ -151,7 +156,7 @@
         if (hru(ielem)%tiledrain == 0) then
         hru(ielem)%hyd%perco = chg_par (hru(ielem)%hyd%perco,           &
                          chg_typ, chg_val, absmin, absmax)
-        if (hru(ielem)%hyd%perco > 1.e-9) then
+        if (hru(ielem)%hyd%perco > 1.e-6) then
           perc_ln_func = 1.0052 * log(-log(hru(ielem)%hyd%perco - 1.e-6)) + 5.6862
           hru(ielem)%hyd%perco_lim = exp(-perc_ln_func)
           hru(ielem)%hyd%perco_lim = amin1 (1., hru(ielem)%hyd%perco_lim)

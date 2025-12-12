@@ -45,6 +45,10 @@
       
       implicit none
       
+      
+      
+      
+      external :: ee
       integer :: j = 0             !none          |HRU number            
       integer :: idp = 0           !              |
       integer :: iob = 0           !              |

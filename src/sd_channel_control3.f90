@@ -12,7 +12,6 @@
       use climate_module
       use water_body_module
       use time_module
-      use water_allocation_module, only: wallo
       use ch_salt_module !rtb salt
       use ch_cs_module !rtb cs
       use gwflow_module, only: flood_freq !rtb gwflow
@@ -20,91 +19,30 @@
       use channel_velocity_module
       
       implicit none     
+      
+      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_watqual4, conditions, gwflow_canl, &
+                  gwflow_gwsw, gwflow_satx, gwflow_tile, rcurv_interp_flo, sd_channel_sediment3, &
+                  wallo_control, cli_lapse
     
-      !real :: rcharea                !m^2           |cross-sectional area of flow
-      real :: flo_rt = 0.             !m^3/s         |flow rate in reach for day
       integer :: isd_db = 0           !              |
-      integer :: iob = 0              !              |
-      integer :: idb = 0              !none          |channel data pointer
-      integer :: ihyd = 0             !              |
       integer :: ipest = 0            !              |
       integer :: isalt = 0            !              |salt ion counter (rtb salt)
-      integer :: ihru = 0             !              |
-      integer :: iru = 0              !              |
-      integer :: ise = 0              !              |
-      integer :: ielem = 0            !              |
       integer :: id = 0
-      integer :: iter = 0
       real :: ebtm_m = 0.             !m             |erosion of bottom of channel
       real :: ebank_m = 0.            !m             |meander cut on one side
-      real :: erode_bank_cut = 0.     !cm            |widening caused by downcutting (both sides)
-      real :: ebtm_t = 0.             !tons          |bottom erosion
-      real :: ebank_t = 0.            !tons          |bank erosion
-      real :: sedout = 0.             !mg            |sediment out of waterway channel
-      real :: washld = 0.             !tons          |wash load  
-      real :: bedld = 0.              !tons          |bed load
-      real :: dep = 0.                !tons          |deposition
       real :: hc_sed = 0.             !tons          |headcut erosion
-      real :: chside = 0.             !none          |change in horizontal distance per unit
-                                      !              |change in vertical distance on channel side
-                                      !              |slopes; always set to 2 (slope=1/2)
       real :: a = 0.                  !m^2           |cross-sectional area of channel
-      real :: b = 0.                  !m             |bottom width of channel
-      real :: c = 0.                  !none          |inverse of channel side slope
-      real :: p = 0.                  !m             |wetting perimeter
-
-      real :: rh = 0.                 !m             |hydraulic radius
-      real :: qman = 0.               !m^3/s or m/s  |flow rate or flow velocity
       real :: frac = 0.               !0-1           |fraction of hydrograph 
-      real :: valint = 0.             !              | 
-      integer :: ivalint = 0          !              |
-      real :: tbase = 0.              !none          |flow duration (fraction of 24 hr)
-      real :: tb_pr = 0.              !              |
-      real :: tb = 0.                 !              |
-      real :: vol_ovb = 0.            !              |
-      real :: const = 0.              !              |
       integer :: ics = 0              !none          |counter
-      real :: ob_const = 0.           !              |
-      integer :: ii = 0               !none          |counter
-      real :: sum_vol = 0.            !              |
-      real :: xx = 0.                 !              | 
-      integer :: ic = 0               !              |
-      real :: vol_overmx = 0.         !              |
-      real :: flood_dep = 0.          !              | 
-      real :: dep_e = 0.              !              |
       real :: rto = 0.                !none          |cloud cover factor 
-      real :: sumtime = 0.            !              |
-      real :: vc = 0.                 !m/s           |flow velocity in reach
-      real :: pr_ratio = 0.           !              |
-      real :: shear_btm_cr = 0.       !              |
-      real :: shear_btm = 0.          !              |  
-      real :: hc = 0.                 !m/yr          |head cut advance
-      integer :: max                  !              |  
       integer :: iaq = 0
       integer :: iaq_ch = 0
-      real :: det = 0.                !hr            |time step
       real :: scoef = 0.              !none          |Storage coefficient
-      real :: flo_ls = 0.
-      real :: vel = 0.
-      real :: cohes = 0.
-      real :: vel_cr = 0.
-      real :: b_coef = 0.
-      real :: qcms = 0.
-      real :: veg = 0.
-      real :: rad_curv = 0.
-      real :: cla = 0.
-      real :: pk_rto = 0.
-      real :: vel_bend = 0.
-      real :: vel_rch = 0.
-      real :: arc_len = 0.
-      real :: hyd_radius = 0.
-      real :: prot_len = 0.
       real :: gw_salt_in = 0.         !kg            |salt loading to channel from aquifer
       real :: gw_cs_in = 0.           !kg            |constituent loading to channel from aquifer
       real :: seep_mass = 0.          !kg            |salt mass in seepage water
       real :: salt_conc(8) = 0.       !kg            |salt concentration in channel water
       real :: cs_conc(8) = 0.         !kg            |constituent concentration in channel water
-      real :: bf_flow = 0.            !m3/s          |bankfull flow rate * adjustment factor
       real :: conc_chng = 0.          !              |change in concentration (and mass) in channel sol and org N and P
       real :: inflo_rate = 0.
       real :: aqu_inflo = 0.          !m3            |aquifer inflow if using geomorphic baseflow
