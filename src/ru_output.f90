@@ -6,6 +6,10 @@
       
       implicit none
       
+      
+      
+      
+      external :: soil_carbvar_write, soil_nutcarb_write
       integer, intent (in) :: iru             !             |
       integer :: iob = 0                      !             |
       

@@ -12,6 +12,8 @@
       
       implicit none
       
+      external :: calsoft_hyd, calsoft_hyd_bfr, calsoft_plant, calsoft_sed, caltsoft_hyd, pl_write_parms_cal
+      
       integer :: ireg = 0    !none      |counter
       integer :: ilum = 0    !none      |counter
       integer :: icvmax = 0  !          |

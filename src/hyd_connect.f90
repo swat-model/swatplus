@@ -12,9 +12,11 @@
       use constituent_mass_module
       use ru_module
       use basin_module
-      use gwflow_module, only: nat_model
       
       implicit none
+      
+      external :: aqu2d_read, dr_db_read, gwflow_chan_read, gwflow_read, hyd_read_connect, overbank_read, &
+                  recall_read, recall_read_cs, recall_read_salt, ru_read, ru_read_elements
 
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file

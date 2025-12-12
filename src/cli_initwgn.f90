@@ -72,6 +72,9 @@
       
       implicit none
 
+      
+      
+      
       real :: xx = 0.                       !varies        |variable to hold calculation results
       real :: lattan = 0.                   !none          |Tan(Latitude)
       real :: x1 = 0.                       !none          |variable to hold calculation results
@@ -107,9 +110,9 @@
       integer :: j = 0                      !none          |counter
       integer :: m1 = 0                     !none          |array location (see definition of ndays)
       integer :: nda = 0                    !julian date   |julian date of last day in the month
-      real :: cli_dstn1                     !              |
+      real, external :: cli_dstn1           !              |                     !              |
       real :: pcp_gen = 0.                  !mm H2O        |generated precipitation
-      real :: aunif                         !              |
+      real, external :: aunif               !              |
       integer :: xrnd = 0                   !              |
       integer :: iwgn                       !              |
       integer :: mo_ppet = 0                !              |

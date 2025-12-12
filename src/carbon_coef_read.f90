@@ -14,7 +14,6 @@ subroutine carbon_coef_read
     integer :: soil_test_cntr  = 0    !           |counter for soil test, cannot exceed nmbr_soil_tests 
     logical :: i_exist = .false.      !           |true if file exists
     character (len=80) :: titldum = ""!           |title of file
-    character (len=80) :: header = "" !           |header of file
     character (len=24) :: var_name = "" !
     
     nmbr_soil_tests = 0     ! comes from soil module
@@ -139,4 +138,4 @@ subroutine carbon_coef_read
         endif
     endif
     return
-end subroutine                         
+end subroutine carbon_coef_read                       

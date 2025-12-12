@@ -11,6 +11,8 @@
       use constituent_mass_module !rtb
       
       implicit none 
+      
+      external :: cs_irrig, salt_irrig, wallo_demand, wallo_transfer, wallo_treatment, wallo_use, wallo_withdraw
 
       integer, intent (inout) :: iwallo     !water allocation object number
       integer :: itrn = 0                   !water demand object number
@@ -18,13 +20,8 @@
       integer :: isrc = 0                   !source object number
       integer :: j = 0                      !hru number
       integer :: jj = 0                     !variable for passing
-      integer :: irec = 0                   !recall id
-      integer :: dum = 0
       real :: irr_mm = 0.                   !mm     |irrigation applied
-      real :: div_total = 0.                !m3     |cumulative available diversion water
-      real :: div_daily = 0.                !m3     |daily water diverted for irrigation
-      
-
+    
       !! zero demand, withdrawal, and unmet for entire allocation object
       wallo(iwallo)%tot = walloz
       
