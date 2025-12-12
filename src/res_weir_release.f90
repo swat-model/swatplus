@@ -18,7 +18,7 @@
       real,  intent (in) :: dep       !m 
       real,  intent (in) :: weir_hgt  !m         |height of weir overflow crest from reservoir bottom
       integer,  intent (in) :: jres             !none      |hru number
-      integer :: iweir = 0          !none      |weir ID 
+      integer :: iweir = 1          !none      |weir ID 
       integer :: nstep = 0          !none      |counter
       integer :: tstep = 0          !none      |hru number
       integer :: ic = 0             !none      |counter
@@ -79,8 +79,11 @@
           vol_above = hgt_above * wsa1 !m3
 
           if (nstep>1) then !revised by Jaehak 2023
-            qout = res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
+            !---------------------------------------------------------------------------------------------------------------
+            !Weir discharge configured for 5m width and 100mm weir height to fully discharge in 3 days
+            qout = (wbody_wb%area_ha*0.45) * res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
             qout = max(0.,86400. / nstep * qout) !m3
+            !---------------------------------------------------------------------------------------------------------------
             if (qout > vol_above) then
               ht2%flo = ht2%flo + vol_above !weir discharge volume for the day, m3
               vol = vol - vol_above
@@ -96,8 +99,10 @@
 
           else
             do ic = 1, 24
-              qout = res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
+            !---------------------------------------------------------------------------------------------------------------
+              qout = (wbody_wb%area_ha*0.45) * res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
               qout = 3600. * qout !m3
+            !---------------------------------------------------------------------------------------------------------------
               if (qout > vol_above) then
                 ht2%flo = ht2%flo + vol_above !weir discharge volume for the day, m3
                 vol = vol - vol_above

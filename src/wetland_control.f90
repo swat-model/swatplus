@@ -113,8 +113,8 @@
         if (volseep>0.1) then
           do j1 = 1, soil(j)%nly
             swst(j1) = soil(j)%phys(j1)%st + volseep
-            if (swst(j1)>soil(j)%phys(j1)%ul*0.9) then !oversaturated Jaehak 2022
-              volex = swst(j1) - soil(j)%phys(j1)%ul*0.9  !excess water. soil is assumed to remain saturated Jaehak 2022
+            if (swst(j1)>soil(j)%phys(j1)%ul*0.999) then !oversaturated Jaehak 2022
+              volex = swst(j1) - soil(j)%phys(j1)%ul*0.999  !excess water. soil is assumed to remain saturated Jaehak 2022
               volseep = min(volex, soil(j)%phys(j1)%k*24.)
               swst(j1) = swst(j1) - volseep
             else
@@ -126,8 +126,8 @@
           volex = 0
           do j1 = soil(j)%nly, 1, -1
             swst(j1) = swst(j1) + volex
-            if (swst(j1)>soil(j)%phys(j1)%ul*0.9) then !oversaturated
-              volex = max(0., swst(j1) - soil(j)%phys(j1)%ul*0.9)  !excess water. 
+            if (swst(j1)>soil(j)%phys(j1)%ul*0.999) then !oversaturated
+              volex = max(0., swst(j1) - soil(j)%phys(j1)%ul*0.999)  !excess water. 
               swst(j1) = swst(j1) - volex                         !update soil water
             endif
           end do
