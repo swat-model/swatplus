@@ -15,7 +15,8 @@
      call open_output_file(9001, "diagnostics.out", 8000)  !!ext to 8000 recl per email 8/2/21 - Kai-Uwe
      write (9001,*) "DIAGNOSTICS.OUT FILE" 
 !!!  open drainage areas output file
-     call open_output_file(9004, "area_calc.out", 8000)
+     call open_output_file(9004, "area_calc.out", 80000)
+
                 
       call basin_read_cc
       call basin_read_objs
