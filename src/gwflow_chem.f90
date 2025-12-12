@@ -11,7 +11,6 @@
 
       integer, intent (in) :: cell_id       !       |id of cell passed in
       real, intent (in) :: gw_vol           !m3     |volume of groundwater in the cell
-      integer :: s = 0                      !       |solute counter
       integer :: n = 0                      !       |shale counter
       integer :: isalt = 0                  !            |salt ion counter
       integer :: sol_index = 0              !       |index to keep track of number of solutes
@@ -111,5 +110,4 @@
         
       endif !if constituents are active
 
-      end subroutine gwflow_chem     
-         
+      end subroutine gwflow_chem         

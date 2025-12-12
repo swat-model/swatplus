@@ -41,6 +41,8 @@
       use climate_module
 
       implicit none      
+      
+      external :: pl_nupd, pl_pupd
 
       integer :: j = 0          !none          |HRU number
       integer :: nly = 0        !none          |soil layer number

@@ -17,26 +17,24 @@
       real,  intent (in) :: evol_m3
       integer,  intent (in) :: jres             !none      |hru number
       integer :: iweir = 0         !none      |weir ID 
-      integer :: nstep = 0        !none      |counter
-      integer :: tstep = 0        !none      |hru number
-      integer :: iac = 0          !none      |counter 
-      integer :: ic = 0          !none      |counter
-      !integer :: weir_flg=0        !none      |counter
-      integer,  intent (in) :: id               !none      |hru number
-      integer :: ial = 0          !none      |counter
-      integer :: irel = 0         !          |
-      integer :: iob = 0          !none      |hru or wro number
-      real :: vol = 0.            !          |
-      real :: vol_above = 0.            !          |
-      real :: b_lo = 0.           !          |
-      character(len=1) :: action = ""!          |
-      real :: res_h = 0.          !m         |water depth
-      real :: demand = 0.         !m3        |irrigation demand by hru or wro
-      real :: wsa1 = 0.           !m2        |water surface area 
-      real :: qout = 0.                !m3        |weir discharge during short time step
-      real :: hgt = 0.                 !m         |height of bottom of weir above bottom of impoundment
-      real :: hgt_above = 0.      !m         |height of water above the above bottom of weir
-      real :: sto_max = 0.             !m3        |maximum storage volume at the bank top
+      integer :: nstep = 0         !none      |counter
+      integer :: tstep = 0         !none      |hru number
+      integer :: iac = 0           !none      |counter 
+      integer :: ic = 0            !none      |counter
+      !integer :: weir_flg=0       !none      |counter
+      integer,  intent (in) :: id  !none      |hru number
+      integer :: ial = 0           !none      |counter
+      integer :: irel = 0          !          |
+      integer :: iob = 0           !none      |hru or wro number
+      real :: vol = 0.             !          |
+      real :: vol_above = 0.       !          |
+      real :: b_lo = 0.            !          |
+      character(len=1) :: action = ""!        |
+      real :: res_h = 0.           !m         |water depth
+      real :: demand = 0.          !m3        |irrigation demand by hru or wro
+      real :: wsa1 = 0.            !m2        |water surface area 
+      real :: qout = 0.            !m3        |weir discharge during short time step
+      real :: hgt_above = 0.       !m         |height of water above the above bottom of weir
       
       !! store initial values
       vol = wbody%flo

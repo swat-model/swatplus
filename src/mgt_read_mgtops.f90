@@ -5,6 +5,8 @@
       use mgt_operations_module
       
       implicit none       
+      
+      external :: read_mgtops, mgt_operatn
             
       integer :: nops = 0             !           |end of loop
       character (len=80) :: titldum = ""!           |title of file

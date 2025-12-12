@@ -9,6 +9,8 @@
       
       implicit none
       
+      external :: unit_hyd
+      
       integer :: iihru = 0      !       |hru counter
       integer :: iiru = 0       !       |routing unit counter
       integer :: iob = 0        !       |object counter

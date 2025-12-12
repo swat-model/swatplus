@@ -15,6 +15,8 @@
       use landuse_data_module
       
       implicit none
+      
+      external :: chg_par, cal_parm_select
            
       character(len=25) :: chg_parm = ""                      !                |               
       character(len=16) :: chg_typ = ""                       !variable        |type of change (absval, abschg, pctchg)
@@ -42,7 +44,6 @@
       integer :: cal_lyr1 = 0
       integer :: cal_lyr2 = 0
       integer :: iplant = 0
-      integer :: icom = 0
          
       do ichg_par = 1, db_mx%cal_upd
 

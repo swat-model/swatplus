@@ -8,6 +8,8 @@
       
       implicit none      
       
+      real, external :: theta
+      
       integer, intent (in) :: iob
       real :: nitrok = 0.        !              |
       real :: phosk = 0.         !              |
@@ -24,7 +26,6 @@
       real :: conc_p = 0.        !              |
       real :: conc_soln = 0.     !              |
       real :: conc_solp = 0.     !              |
-      real :: theta              !              |
       
 
       !! if reservoir volume less than 1 m^3, set all nutrient levels to

@@ -34,5 +34,6 @@
       if (wst(iwst)%weat%solrad <= 0.) wst(iwst)%weat%solrad = .05 * wst(iwst)%weat%solradmx
       
       wst(iwst)%weat%solrad = wgn(iwgn)%solarav(time%mo)
+      
       return
       end subroutine cli_slrgen
