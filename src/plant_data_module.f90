@@ -4,6 +4,12 @@
       
       character(len=40), dimension (:), allocatable :: plts_bsn     !none      |plant names simulated in current run
       character(len=25), dimension(:), allocatable :: pl_class      !none      |plant class - row crop, tree, grass, etc
+      type residue_partition_fracs
+        real :: meta_frac = 0.85  !none       |fraction of that is metabolic
+        real :: str_frac = 0.15   !none       |fraction of that is structural
+        real :: lig_frac = 0.12   !none       |fraction of that is lignin
+      end type residue_partition_fracs
+
       type plant_db
         character(len=40) :: plantnm = ""  !none              |crop name
         character(len=18) :: typ = ""    !none              |plant category
@@ -79,6 +85,7 @@
         real :: rsd_pctcov = 0.          !                  |residue factor for percent cover equation
         real :: rsd_covfac = 0.          !                  |residue factor for surface cover (C factor) equation
         !character(len=45) :: desc = "unknown"
+        type (residue_partition_fracs) :: res_part_fracs
       end type plant_db
       type (plant_db), dimension(:),allocatable, target, save :: pldb
       type (plant_db), pointer :: pl_db

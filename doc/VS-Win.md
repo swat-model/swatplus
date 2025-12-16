@@ -2,7 +2,7 @@
 
 ## Install Required Software
 
-Install the required packages in the order below, this is important! The Intel compiler requires Visual Studio to be installed **first**. Include the  C++ workloads in Visual Studio to add needed support for `cmake`. The Intel installer will provide the `ifx`  compiler. The `ifort` compiler was deprecated in 2024 and removed from the 2025 version going forward. If you download an older version of Intel Fortran, `ifort` will be available. However, SWAT+ produces the same results using both Intel compiler. 
+Install the required packages in the order below, this is important! The Intel compiler requires Visual Studio to be installed **first**. When you get to **Workloads** during the install, scroll down and check the box next to `Desktop development with C++` then click on install.  This will include the needed support for `cmake`. The Intel installer will provide the `ifx`  compiler. The `ifort` compiler was deprecated in 2024 and removed from the 2025 version going forward. If you download an older version of Intel Fortran, `ifort` will be available. However, SWAT+ produces the same results using both Intel compilers. 
 
 Even though Visual Studio bundles Git, a separate install is needed to support SWAT+ version tagging during the `CMake` build. Install the following, accept the defaults.
 
@@ -12,7 +12,9 @@ Even though Visual Studio bundles Git, a separate install is needed to support S
 
 3. Install [**Git**](https://git-scm.com/downloads/win) .
 
-Running integrated SWAT+ tests in Visual Studio requires Python. You may optionally Install Python from the Microsoft App Store and the Python workload in Visual Studio.    
+**Important:** After installing all the above, reboot your computer.
+
+**Note:** Running integrated SWAT+ tests in Visual Studio requires Python. You may optionally Install Python from the Microsoft App Store and the Python workload in Visual Studio.    
 
 ## Starting Visual Studio
 
@@ -45,7 +47,7 @@ For the SWAT+ build system,  the `CMake` tool is being used, which is integrated
    C:\Program Files (x86)\Intel\oneAPI> devenv 
    ```
 
-Note: If you start Visual Studio by just clicking on the icon and skipping step 1.  you won't be able to compile and build SWAT+. 
+**Note:** If you start Visual Studio by just clicking on the icon and skipping step 1.  you won't be able to compile and build SWAT+. 
 
 ## Cloning the SWAT+ Repository from GitHub
 
@@ -55,7 +57,7 @@ You can use Visual Studio directly to clone the SWAT+ repository from GitHub and
    
    <img title="" src="StartVS.png" alt="Rer" width="278">
 
-2. Select the GitHub icon on the left side to browse your repositories. Log into GitHub with your credentials, a list of your available repositories will be shown, select your fork of the `swatplus` repository and press `Open`. Adjust the local path if needed. 
+2. Select the GitHub icon on the lower left side to browse your repositories. Log into GitHub with your credentials, a list of your available repositories will be shown, select your fork of the `swatplus` repository and press `Open`. Adjust the local path if needed. 
    
    <img title="" src="CloneRepo.png" alt="Rer" width="278">
 
@@ -83,7 +85,7 @@ The build configuration can always be recreated by <kbd>Right</kbd> + <kbd>Click
 
 Since SWAT+ it is compiled and linked with the Intel compiler and linker, the SWAT+ executable (for Windows) is dynamically linked. Additional run-time libraries (DLLs) are needed for execution on another machine that does not have Visual Studio installed. ([Intel® C++ and Fortran Compilers Redistributable Libraries by Version](https://www.intel.com/content/www/us/en/developer/articles/tool/compilers-redistributable-libraries-by-version.html)) 
 
-**Running/Debugging.**  The created SWAT+ executable can be tested now. The Visual Studio project needs to be configured with the folder containing a SWAT+ inputs to run. <kbd>Right</kbd> + <kbd>Click</kbd> on the file `CMakeLists.txt` in the solution explorer and select the menu item `Add Debug Configuration`. 
+**Running/Debugging.**  The created SWAT+ executable can be tested now. The Visual Studio project needs to be configured with the folder containing a SWAT+ inputs to run. <kbd>Right</kbd> + <kbd>Click</kbd> on the file `CMakeLists.txt` in the solution explorer and select the menu item `Add Debug Configuration`. You may need to close the Co-Pilot chat window to see the solution explorer view.
 
 <img title="" src="AddDebug.png" alt="Rer" width="331" data-align="center">
 

@@ -5,20 +5,15 @@
 	"build": {
 	  "dockerfile": "Dockerfile"
 	},
-	"postCreateCommand": "mkdir -p /workspaces/data_test && cp -r /workspaces/*/data/Ames_sub1 /workspaces/data_test/",
+	//"postCreateCommand": "mkdir -p /workspaces/data_test && cp -r /workspaces/*/data/Ames_sub1 /workspaces/data_test/",
+    "postCreateCommand": "mkdir -p workdata/Ames_sub1 && cp -r refdata/Ames_sub1/* workdata/Ames_sub1 && mkdir -p workdata/my_data",
 	// 2. VS Code customizations
 	"customizations": {
 	  "vscode": {
-		// 2A. Install relevant extensions automatically
-		"extensions": [
-		  "ms-vscode.cmake-tools",
-		  "fortran-lang.linter-gfortran",
-		  "ms-vscode.cpptools",
-		  "mhutchie.git-graph",
-		  "GitHub.remotehub"
-		],
+
 		// 2B. VS Code settings for CMake + ifx
 		"settings": {
+          "extensions.verifySignature": false,
 		  "cmake.cmakePath": "/usr/bin/cmake",
 		  "cmake.configureSettings": {
 			// If you want to always use ifx in your CMake configs
@@ -31,7 +26,15 @@
 			"PATH": "/opt/intel/oneapi/compiler/2025.0/bin:${env:PATH}",
 			"LD_LIBRARY_PATH": "/opt/intel/oneapi/compiler/2025.0/lib:${env:LD_LIBRARY_PATH}"
 		  }
-		}
+		},
+		// 2A. Install relevant extensions automatically
+		"extensions": [
+		  "ms-vscode.cmake-tools",
+		  "fortran-lang.linter-gfortran",
+		  "ms-vscode.cpptools",
+		  "mhutchie.git-graph",
+		  "GitHub.remotehub"
+		]
 	  }
 	}
   }
