@@ -5,7 +5,13 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}" OR
    message(FATAL_ERROR "'in-source' builds not permitted, e.g. use 'cmake -B build' instead.")
 endif()
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22)
+
+# Query the host system information
+cmake_host_system_information(RESULT os_id QUERY DISTRIB_ID)
+cmake_host_system_information(RESULT os_version QUERY DISTRIB_RELEASE)
+cmake_host_system_information(RESULT os_like QUERY DISTRIB_ID_LIKE)
+cmake_host_system_information(RESULT pretty_name QUERY DISTRIB_PRETTY_NAME)
 
 project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
@@ -46,10 +52,17 @@ if (UNIX)
         set(fdebug          "-Wall")
         set(frelease        "-O")
         set(FFC             "gnu")
+        
         if(NOT APPLE)
-            link_libraries("-static")
+            # Check if the OS is not Arch Linux, or is not based on Arch Linux
+            # For non-Arch Linux based systems using gfortran (GNU), set the link_library static flag to build a static executable.")
+            # For Arch Linux based systems using gfortran, omit the link_library static flagt to build a dynamic executable.")
+            if (NOT ("${os_id}" STREQUAL "Arch" OR "${os_like}" MATCHES ".*arch.*"))
+                link_libraries("-static")
+            endif()
         endif()
     endif()
+
 elseif(WIN32)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
         set(fdialect        "/fpp /free /fpe0 /traceback /Qdiag-disable:all /Qdiag-disable:remarks")
@@ -70,6 +83,10 @@ elseif(WIN32)
         set(frelease        "-O")
     endif()
 endif()
+
+# Get linker properties for later output.
+get_property(CURRENT_LINK_LIBS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY LINK_LIBRARIES)
+
 
 string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} ARCH)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -155,19 +172,25 @@ add_test(Ames_sub1   ${Python3_EXECUTABLE} ${spcheck} ctest ${exe_path} ${ref_di
 
 #############################################################################
 # Summary
-message( "-- Verbose Makefile   ${CMAKE_VERBOSE_MAKEFILE}")
-message( "-- Generator          ${CMAKE_GENERATOR_TOOLSET}")
-message( "-- VS Platform        ${CMAKE_VS_PLATFORM_TOOLSET}")
-message( "-- Build Type         ${CMAKE_BUILD_TYPE}")
-message( "-- Compiler           ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
-message( "-- FFLAGS            ${CMAKE_Fortran_FLAGS}")
-message( "--  RELEASE           ${CMAKE_Fortran_FLAGS_RELEASE}")
-message( "--  DEBUG             ${CMAKE_Fortran_FLAGS_DEBUG}")
-message( "-- PROJECT_DIR        ${PROJECT_SOURCE_DIR}")
-message( "-- BINARY_DIR         ${PROJECT_BINARY_DIR}")
-message( "-- Install Prefix     ${CMAKE_INSTALL_PREFIX}")
-message( "-- Executable         ${SWATPLUS_EXE}, rev/tag: ${SWAT_VERSION}")
-message( "-- FORD project       ${PROJECT_SOURCE_DIR}/ford.md")
-message( "-- Test Data Dir      ${ref_dir}")
-message( "--  Abs Error         ${aerr}")
-message( "--  Rel Error         ${rerr}")
+message( "-- Verbose Makefile      ${CMAKE_VERBOSE_MAKEFILE}")
+message( "-- Generator             ${CMAKE_GENERATOR_TOOLSET}")
+message( "-- VS Platform           ${CMAKE_VS_PLATFORM_TOOLSET}")
+message( "-- Detected OS ID:       ${os_id}")
+message( "-- Detected OS Version:  ${os_version}")
+message( "-- Detected OS Like:     ${os_like}")
+message( "-- Detected Pretty Name: ${pretty_name}")
+message( "-- Build Type            ${CMAKE_BUILD_TYPE}")
+message( "-- Compiler              ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
+message( "-- FFLAGS                ${CMAKE_Fortran_FLAGS}")
+message( "--  RELEASE              ${CMAKE_Fortran_FLAGS_RELEASE}")
+message( "--  DEBUG                ${CMAKE_Fortran_FLAGS_DEBUG}")
+message( "-- Link_libraries        ${CURRENT_LINK_LIBS}")
+message( "-- PROJECT_DIR           ${PROJECT_SOURCE_DIR}")
+message( "-- BINARY_DIR            ${PROJECT_BINARY_DIR}")
+message( "-- Install Prefix        ${CMAKE_INSTALL_PREFIX}")
+message( "-- Executable            ${SWATPLUS_EXE}, rev/tag: ${SWAT_VERSION}")
+message( "-- FORD project          ${PROJECT_SOURCE_DIR}/ford.md")
+message( "-- Test Data Dir         ${ref_dir}")
+message( "--  Abs Error            ${aerr}")
+message( "--  Rel Error            ${rerr}")
+
