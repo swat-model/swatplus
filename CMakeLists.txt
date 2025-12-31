@@ -57,7 +57,9 @@ if (UNIX)
             # Check if the OS is not Arch Linux, or is not based on Arch Linux
             # For non-Arch Linux based systems using gfortran (GNU), set the link_library static flag to build a static executable.")
             # For Arch Linux based systems using gfortran, omit the link_library static flagt to build a dynamic executable.")
-            if (NOT ("${os_id}" STREQUAL "Arch" OR "${os_like}" MATCHES ".*arch.*"))
+            if (NOT ("${os_id}" STREQUAL "Arch" OR 
+                     "${os_like}" MATCHES ".*arch.*" OR
+                     "${os_id}" STREQUAL "fedora" ))
                 link_libraries("-static")
             endif()
         endif()
