@@ -127,7 +127,8 @@
         pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - leaf_drop
         
         !! Add leaf drop to surface soil residue
-        soil1(j)%rsd(1) = soil1(j)%rsd(1) + leaf_drop
+        pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + leaf_drop
+        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + leaf_drop
         
         !! update total community masses
         pl_mass(j)%tot_com = pl_mass(j)%tot_com - leaf_drop

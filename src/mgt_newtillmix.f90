@@ -44,6 +44,7 @@
       integer :: l = 0                 !none           |counter
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
+      integer :: ipl = 0               !               |
       real :: prev_depth = 0.
       real :: emix = 0.                !none           |mixing efficiency
       real :: dtil = 0.                !mm             |depth of mixing
@@ -201,7 +202,12 @@
             mix_mn = mix_mn + frac_mixed * soil1(jj)%mn(l)
             mix_mp = mix_mp + frac_mixed * soil1(jj)%mp(l)
             mix_org%tot = mix_org%tot + frac_mixed * soil1(jj)%tot(l)
-            mix_org%rsd = mix_org%rsd + frac_mixed * soil1(jj)%rsd(l)
+            
+            !! mix each plant residue component separately
+            do ipl = 1, pcom(jj)%npl
+              mix_org%rsd(ipl) = mix_org%rsd(ipl) + frac_mixed * pl_mass(jj)%rsd(ipl)
+            end do
+            
             mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
             mix_org%hsta = mix_org%hsta + frac_mixed * soil1(jj)%hsta(l)
             mix_org%hs = mix_org%hs + frac_mixed * soil1(jj)%hs(l)
@@ -223,7 +229,13 @@
             ! print*, "in mgt_newtill_mix", l, soil1(jj)%mn(l)%no3
             soil1(jj)%mp(l) = frac_non_mixed * soil1(jj)%mp(l) + frac_dep(l) * mix_mp
             soil1(jj)%tot(l) = frac_non_mixed * soil1(jj)%tot(l) + frac_dep(l) * mix_org%tot
-            soil1(jj)%rsd(l) = frac_non_mixed * soil1(jj)%rsd(l) + frac_dep(l) * mix_org%rsd
+            
+            !! reconstitute each plant residue component separately
+            do ipl = 1, pcom(jj)%npl
+              soil1(jj)%pl(ipl)%rsd(l) = frac_non_mixed * soil1(jj)%pl(ipl)%rsd(l) +     &
+                                                         frac_dep(l) * mix_org%rsd(ipl)
+            end do
+            
             soil1(jj)%hact(l) = frac_non_mixed * soil1(jj)%hact(l) + frac_dep(l) * mix_org%hact
             soil1(jj)%hsta(l) = frac_non_mixed * soil1(jj)%hsta(l) + frac_dep(l) * mix_org%hsta
             soil1(jj)%hs(l) = frac_non_mixed * soil1(jj)%hs(l) + frac_dep(l) * mix_org%hs

@@ -32,18 +32,16 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : rsdco_plcom, ihru
+      use hru_module, only : ihru, isep 
       use soil_module
       use plant_module
+      use plant_data_module
       use output_landscape_module, only : hnb_d
       
       implicit none 
 
       integer :: j = 0      !none          |HRU number
       integer :: k = 0      !none          |counter (soil layer)
-      ! integer :: kk = 0     !none          |soil layer used to compute soil water and
-      !                       !              |soil temperature factors
-      !integer :: idp = 0
       real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
                             !              |to nitrate(80%) and active organic(20%)
                             !              |pools in layer
@@ -56,6 +54,8 @@
       real :: cprf = 0.     !              |carbon phosphorus ratio factor
       real :: ca = 0.       !              |
       real :: decr = 0.     !              |
+      real :: ipl = 0.      !              |plant number in plant community
+      real :: idp = 0.      !              |plant number in plant data module
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
@@ -71,72 +71,89 @@
       hnb_d(j)%rsd_nitorg_n = 0.
       hnb_d(j)%rsd_laborg_p = 0.
 
+      !! compute root and incorporated residue decomposition
       !! compute humus mineralization of organic soil pools 
       do k = 1, soil(j)%nly
 
-        !! mineralization can occur only if temp above 0 deg
-        if (soil(j)%phys(k)%tmp > 0.) then
-          !! compute soil water factor
-          sut = .1 + .9 * Sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
-          sut = Max(.05, sut)
+        do ipl = 1, pcom(j)%npl
+          !! mineralization can occur only if temp above 0 deg
+          if (soil(j)%phys(k)%tmp > 0.) then
+            !! compute soil water factor
+            sut = .1 + .9 * Sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
+            sut = Max(.05, sut)
 
-          !!compute soil temperature factor
-          xx = soil(j)%phys(k)%tmp
-          cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
-          cdg = Max(.1, cdg)
+            !!compute soil temperature factor
+            xx = soil(j)%phys(k)%tmp
+            cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
+            cdg = Max(.1, cdg)
 
-          !! compute combined factor
-          xx = cdg * sut
-          if (xx < 0.) xx = 0.
-          if (xx > 1.e6) xx = 1.e6
-          csf = Sqrt(xx)
+            !! compute combined factor
+            xx = cdg * sut
+            if (xx < 0.) xx = 0.
+            if (xx > 1.e6) xx = 1.e6
+            csf = Sqrt(xx)
 
-          !! compute residue decomp and mineralization of 
-          !! fresh organic n and p (upper two layers only)
-          rmn1 = 0.
-          rmp = 0.
-          if (soil1(j)%rsd(k)%n > 1.e-4) then
-            cnr = soil1(j)%rsd(k)%c / soil1(j)%rsd(k)%n
-            if (cnr > 500.) cnr = 500.
-            cnrf = Exp(-.693 * (cnr - 25.) / 25.)
-          else
-            cnrf = 1.
-          end if
+            !! compute residue decomp and mineralization of 
+            !! fresh organic n and p (upper two layers only)
+            rmn1 = 0.
+            rmp = 0.
+            if (soil1(j)%pl(ipl)%rsd(k)%n > 1.e-4) then
+              cnr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%n
+              if (cnr > 500.) cnr = 500.
+              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+            else
+              cnrf = 1.
+            end if
             
-          if (soil1(j)%rsd(k)%p > 1.e-4) then
-            cpr = soil1(j)%rsd(k)%c / soil1(j)%rsd(k)%p
-            if (cpr > 5000.) cpr = 5000.
-            cprf = Exp(-.693 * (cpr - 200.) / 200.)
-          else
-            cprf = 1.
-          end if
+            if (soil1(j)%pl(ipl)%rsd(k)%p > 1.e-4) then
+              cpr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%p
+              if (cpr > 5000.) cpr = 5000.
+              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+            else
+              cprf = 1.
+            end if
 
-          ca = Min(cnrf, cprf, 1.)
+            ca = Min(cnrf, cprf, 1.)
             
-          !! compute root and incorporated residue decomposition
-          !! all plant residue in soil is mixed - don't track individual plant residue in soil
-              
-          if (pcom(j)%npl > 0) then
-            decr = rsdco_plcom(j) / pcom(j)%npl * ca * csf
-          else
-            decr = 0.05
-          end if
-          decr = Max(bsn_prm%decr_min, decr)
-          decr = Min(decr, 1.)
-          decomp = decr * soil1(j)%rsd(k)
-          soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
+            idp = pcom(j)%plcur(ipl)%idplt 
+            decr = pldb(idp)%rsdco_pl * ca * csf
+            decr = Max(bsn_prm%decr_min, decr)
+            decr = Min(decr, 1.)
+            decomp = decr * soil1(j)%pl(ipl)%rsd(k)
+            soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - decomp
 
-          ! The following if statements are to prevent runtime underflow errors with gfortran 
-          if (soil1(j)%rsd(k)%m < 1.e-10) soil1(j)%rsd(k)%m = 0.0 
-          if (soil1(j)%rsd(k)%c < 1.e-10) soil1(j)%rsd(k)%c = 0.0 
-          if (soil1(j)%rsd(k)%n < 1.e-10) soil1(j)%rsd(k)%n = 0.0 
-          if (soil1(j)%rsd(k)%p < 1.e-10) soil1(j)%rsd(k)%p = 0.0 
+            ! The following if statements are to prevent runtime underflow errors with gfortran 
+            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
 
-          soil1(j)%meta(k) = soil1(j)%meta(k) + meta_frac * decomp
-          soil1(j)%str(k) = soil1(j)%str(k) + str_frac * decomp
-          soil1(j)%lig(k) = soil1(j)%lig(k) + lig_frac * decomp
-
-        end if
+            !! add mass and carbon to soil organic pools
+            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
+            soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * decomp%m
+            soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * decomp%m
+            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * decomp%c
+            soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
+            soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
+            
+            !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
+            !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
+            !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
+            rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+            soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
+            rsd_str%n = decomp%n - rsd_meta%n
+            soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
+            soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
+            
+            rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+            soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
+            rsd_str%p = decomp%p - rsd_meta%p
+            soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
+            soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            
+          end if    ! soil temp > 0
+          
+        end do      ! ipl = 1, pcom(j)%npl
       end do        ! k = 1, soil(j)%nly
 
       return

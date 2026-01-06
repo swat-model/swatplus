@@ -366,10 +366,13 @@
           end if
         end if
        
+        !! compute surface residue decomposition for each plant in community
+        call rsd_decomp
+        
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
-          call nut_nitvol
+          !call nut_nitvol
         end if
 
         !! compute residue decomposition and nitrogen and phosphorus mineralization
@@ -842,7 +845,7 @@
         if (pl_mass(j)%tot_com%m < 0.) then
           pl_mass(j)%tot_com%m = 0.
         end if
-        hpw_d(j)%residue = soil1(j)%rsd(1)%m
+        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp

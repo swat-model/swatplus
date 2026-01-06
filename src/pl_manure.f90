@@ -152,7 +152,7 @@
           !assuming lignin fraction of the organic fertilizer allocated into structure litter SOM pool to be 0.175;
           !update lignin weight in structural litter.
           soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ * .175
-          soil1(j)%rsd(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
+          !soil1(j)%rsd(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
           
       end if
         !!By Zhang for C/N cycling 

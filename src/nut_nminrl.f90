@@ -32,9 +32,10 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : hru, rsdco_plcom, i_sep, ihru, isep 
+      use hru_module, only : hru, i_sep, ihru, isep, ipl 
       use soil_module
       use plant_module
+      use plant_data_module
       use output_landscape_module, only : hnb_d
       
       implicit none 
@@ -43,7 +44,7 @@
       integer :: k = 0      !none          |counter (soil layer)
       integer :: kk = 0     !none          |soil layer used to compute soil water and
                             !              |soil temperature factors
-      !integer :: idp = 0
+      integer :: idp = 0
       real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
                             !              |to nitrate(80%) and active organic(20%)
                             !              |pools in layer
@@ -137,55 +138,45 @@
           hnb_d(j)%act_nit_n = hnb_d(j)%act_nit_n + hmn
           hnb_d(j)%org_lab_p = hnb_d(j)%org_lab_p + hmp
 
-          !! compute residue decomp and mineralization of 
-          !! fresh organic n and p (upper two layers only)
-          rmn1 = 0.
-          rmp = 0.
-          if (soil1(j)%rsd(k)%n > 1.e-4) then
-            cnr = soil1(j)%rsd(k)%c / soil1(j)%rsd(k)%n
-            if (cnr > 500.) cnr = 500.
-            cnrf = Exp(-.693 * (cnr - 25.) / 25.)
-          else
-            cnrf = 1.
-          end if
+          !! compute residue decomp and mineralization for each plant
+          do ipl = 1, pcom(j)%npl
+            rmn1 = 0.
+            rmp = 0.
+            if (soil1(j)%pl(ipl)%rsd(k)%n > 1.e-4) then
+              cnr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%n
+              if (cnr > 500.) cnr = 500.
+              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+            else
+              cnrf = 1.
+            end if
             
-          if (soil1(j)%rsd(k)%p > 1.e-4) then
-            cpr = soil1(j)%rsd(k)%c / soil1(j)%rsd(k)%p
-            if (cpr > 5000.) cpr = 5000.
-            cprf = Exp(-.693 * (cpr - 200.) / 200.)
-          else
-            cprf = 1.
-          end if
-
-          ca = Min(cnrf, cprf, 1.)
+            if (soil1(j)%pl(ipl)%rsd(k)%p > 1.e-4) then
+              cpr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%p
+              if (cpr > 5000.) cpr = 5000.
+              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+            else
+              cprf = 1.
+            end if
+            ca = Min(cnrf, cprf, 1.)
             
-          !! compute root and incorporated residue decomposition
-          !! all plant residue in soil is mixed - don't track individual plant residue in soil
-              
-          if (pcom(j)%npl > 0) then
-            decr = rsdco_plcom(j) / pcom(j)%npl * ca * csf
-          else
-            decr = 0.05
-          end if
-          decr = Max(bsn_prm%decr_min, decr)
-          decr = Min(decr, 1.)
-          decomp = decr * soil1(j)%rsd(k)
-          soil1(j)%rsd(k) = soil1(j)%rsd(k) - decomp
+            idp = pcom(j)%plcur(ipl)%idplt
+            decr = pldb(idp)%rsdco_pl * ca * csf
+            decr = Max(bsn_prm%decr_min, decr)
+            decr = Min(decr, 1.)
+            soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - decomp
 
-          ! The following if statements are to prevent runtime underflow errors with gfortran 
-          if (soil1(j)%rsd(k)%m < 1.e-10) soil1(j)%rsd(k)%m = 0.0 
-          if (soil1(j)%rsd(k)%c < 1.e-10) soil1(j)%rsd(k)%c = 0.0 
-          if (soil1(j)%rsd(k)%n < 1.e-10) soil1(j)%rsd(k)%n = 0.0 
-          if (soil1(j)%rsd(k)%p < 1.e-10) soil1(j)%rsd(k)%p = 0.0 
-
+            ! The following if statements are to prevent runtime underflow errors with gfortran 
+            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
+          end do
+          
           soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * decomp%n
           soil1(j)%hact(k)%n = soil1(j)%hact(k)%n + .2 * decomp%n
           soil1(j)%mp(k)%lab = soil1(j)%mp(k)%lab + .8 * decomp%p
           soil1(j)%hsta(k)%p = soil1(j)%hsta(k)%p + .2 * decomp%p
 
-          hnb_d(j)%rsd_nitorg_n = hnb_d(j)%rsd_nitorg_n + .8 * decomp%n
-          hnb_d(j)%rsd_laborg_p = hnb_d(j)%rsd_laborg_p + .8 * decomp%p
-            
           !!  compute denitrification
           wdn = 0.   
           if (i_sep(j) /= k .or. sep(isep)%opt  /= 1) then

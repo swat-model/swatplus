@@ -31,13 +31,15 @@
       type transfer_receiving_objects
         character (len=10) :: typ = ""          !receiving object type
         integer :: num = 0                      !number of the receiving object
+        character (len=25) :: dtbl_rob = ""     !decision table name to set fraction to each receiving object
+        real :: frac = 0.                       !fraction of transfer sent to the receiving object
       end type transfer_receiving_objects
         
       !! water transfer objects
       type water_transfer_objects
         integer :: num = 0                      !transfer object number
         character (len=10) :: trn_typ = ""      !transfer type - decision table, recall, ave daily
-        character (len=10) :: trn_typ_name = "" !transfer type name of table or recall
+        character (len=40) :: trn_typ_name = "" !transfer type name of table or recall
         integer :: dtbl_num = 0                 !number of decision table for demand amount (if used)
         integer :: rec_num = 0                  !number of recall file for demand amount (if used)
         real :: amount = 0.                     !m3 per day for urban objects and mm for hru
@@ -47,6 +49,8 @@
         integer :: dtbl_src_num = 0             !number of source allocation decision table
         type (transfer_source_objects), dimension(:), allocatable :: src      !sequential source objects as listed in wallo object
         integer, dimension(:), allocatable :: src_wal
+        integer :: rcv_num = 0                  !number of receiving objects
+        character (len=25) :: dtbl_rcv = ""     !decision table name to allocate receiving objects
         type (transfer_receiving_objects) :: rcv  !receiving object
         real :: unmet_m3 = 0.                   !m3     |unmet demand for the object
         real :: withdr_tot = 0.                 !m3     |total withdrawal of demand object from all sources
@@ -95,6 +99,7 @@
         character (len=25) :: org_min = ""      !sediment, carbon, and nutrients
         character (len=25) :: pests = ""        !pesticides - ppm
         character (len=25) :: paths = ""        !pathogens - cfu
+        character (len=25) :: hmets = ""        !heavy metals - ppm
         character (len=25) :: salts = ""        !salt ions - ppm
         character (len=25) :: constit = ""      !other constituents - ppm
         character (len=80) :: descrip = ""      !description
@@ -106,7 +111,20 @@
       end type water_treatment_use_data        
       type (water_treatment_use_data), dimension(:), allocatable :: wtp
       type (water_treatment_use_data), dimension(:), allocatable :: wuse
-      type (water_treatment_use_data), dimension(:), allocatable :: osrc
+      
+      !! outside basin data
+      type outside_basin_data
+        character (len=25) :: name = ""         !name of the water treatment plant
+        real :: stor_mx                   !m3   !maximum storage in plant
+        real :: lag_days                  !days !treatement time - lag outflow
+        real :: loss_fr                         !water loss during treament
+        integer :: iorg_min = 0                 !sediment, carbon, and nutrients - pointer to om_use.wal
+        integer :: ipests = 0                   !pesticides
+        integer :: ipaths = 0                   !pathogens
+        integer :: isalts = 0                   !salt ions
+        integer :: iconstit = 0                 !other constituents
+      end type outside_basin_data        
+      type (outside_basin_data), dimension(:), allocatable :: osrc
       
       type aquifer_loss
         real :: aqu_num                         !aquifer number

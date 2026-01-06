@@ -44,7 +44,6 @@
 
 !!    arrays for plant communities
       allocate (cvm_com(mhru), source = 0.)
-      allocate (rsdco_plcom(mhru), source = 0.)
       allocate (percn(mhru), source = 0.)
 
 !! septic changes added 1/28/09 gsm
