@@ -23,6 +23,7 @@
       real, intent (in) :: harveff      !0-1            |harvest efficiency
       real              :: eff          !0-1            |local scoope harvest efficiency
       integer, intent (in) :: iharvop   !               |harvest operation type
+      integer :: ipl = 0                !none           |sequential plant number
       
       j = jj
       !! prevent the harvest efficiency from being too small
@@ -35,17 +36,14 @@
       !! zero stover harvest
       hrc_d(j)%harv_stov_c = 0.
       
+      pl_mass(j)%rsd_tot = orgz
       !! harvest plant surface residue
-      soil1(j)%rsd(1) = (1. - eff) * soil1(j)%rsd(1)
-      !! the partitioning is handleed in the cbn_rds_decomp subroutine
-      ! soil1(j)%meta(1) = (1. - harveff) * soil1(j)%meta(1)
-      ! soil1(j)%str(1) = (1. - harveff) * soil1(j)%str(1)
-      ! soil1(j)%lig(1) = (1. - harveff) * soil1(j)%lig(1)
-      
-      !! compute carbon in harvested residue
-      ! hrc_d(j)%harv_stov_c = hrc_d(j)%harv_stov_c + 0.42 * (1. - harveff) * soil1(j)%rsd(1)%c
-      !! carbon residue is not accumulated for harvested residue 
-      hrc_d(j)%harv_stov_c = 0.42 * soil1(j)%rsd(1)%c
+      do ipl = 1, pcom(j)%npl
+        pl_mass(j)%rsd(ipl) = (1. - eff) * pl_mass(j)%rsd(ipl) 
+        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(ipl)
+        !! compute carbon in harvested residue
+        hrc_d(j)%harv_stov_c = pl_mass(j)%rsd_tot%c / eff - pl_mass(j)%rsd_tot%c
+      end do
       
       return
       end  subroutine mgt_harvresidue

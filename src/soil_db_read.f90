@@ -72,9 +72,10 @@
                 soildb(isol)%ly(j)%awc, soildb(isol)%ly(j)%k, soildb(isol)%ly(j)%cbn,        &           
                 soildb(isol)%ly(j)%clay, soildb(isol)%ly(j)%silt, soildb(isol)%ly(j)%sand,   &
                 soildb(isol)%ly(j)%rock, soildb(isol)%ly(j)%alb, soildb(isol)%ly(j)%usle_k,  &           
-                soildb(isol)%ly(j)%ec, soildb(isol)%ly(j)%cal, soildb(isol)%ly(j)%ph     
+                soildb(isol)%ly(j)%ec, soildb(isol)%ly(j)%cal, soildb(isol)%ly(j)%ph
             if (eof < 0) exit
           end do
+          if (soildb(isol)%ly(1)%z < 20.) soildb(isol)%ly(1)%z = 20.
         end do
         exit
         enddo

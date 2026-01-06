@@ -43,6 +43,8 @@
       call proc_read
 
       call hyd_connect
+      call recalldb_read
+      call recall_read
       call exco_db_read
       call dr_db_read
       
@@ -91,8 +93,10 @@
       ! read water treatment and water allocation files - before hru lum tables
       call om_treat_read
       call om_use_read
+      call om_osrc_read
       call water_treatment_read
       call water_use_read
+      !call water_osrc_read
       call water_tower_read
       call water_pipe_read
       call water_allocation_read
