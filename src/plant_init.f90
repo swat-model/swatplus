@@ -57,9 +57,7 @@
       real :: matur_frac = 0.        !frac       |fraction to maturity - use hu for annuals and years to maturity for perennials
       real :: f = 0.                 !none       |fraction of plant's maximum lai corresponding to a given fraction of phu
       real :: dd = 0.             !none          |relative distance of the earth from the sun
-      real :: rsd_meta_frac
-      real :: rsd_str_frac
-      real :: rsd_lig_frac
+
       
       j = iihru
 

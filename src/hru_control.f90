@@ -47,7 +47,7 @@
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
                   pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_fert, &
                   pl_graze, pl_grow, rls_routeaqu, rls_routesoil, rls_routesurf, rls_routetile, &
-                  salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
+                  rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
                   sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer

@@ -24,7 +24,6 @@
       integer :: j = 0            !none          |counter
       integer :: nly = 0          !              |end of loop
       integer :: ly = 0           !none          |counter
-      integer :: ipl = 0          !none          |counter
       integer :: npl = 0          !none          |counter
       integer :: csld = 0         !mm            |current custom soil layer depth in millimeters
       integer :: pcd = 0          !mm            |previous custom depth in millimeters

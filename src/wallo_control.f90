@@ -12,7 +12,7 @@
       
       implicit none 
       
-      external :: cs_irrig, salt_irrig, wallo_demand, wallo_transfer, wallo_treatment, wallo_use, wallo_withdraw
+      external :: cs_irrig, recall_nut, salt_irrig, wallo_demand, wallo_transfer, wallo_treatment, wallo_use, wallo_withdraw
 
       integer, intent (inout) :: iwallo     !water allocation object number
       integer :: itrn = 0                   !water demand object number
