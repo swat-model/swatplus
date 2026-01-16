@@ -51,7 +51,8 @@
       
       !! allocate remaining dead roots, N, P to soil layers
       do ly = 1, soil(j)%nly
-        soil1(j)%rsd(ly) = soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl) + soil1(j)%rsd(ly)
+        pl_mass(j)%rsd(ipl) = soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)   &
+                                                   + pl_mass(j)%rsd(ipl)
       end do
       
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
@@ -71,7 +72,8 @@
       end do   
 
       !! add above ground mass to residue pool
-      soil1(j)%rsd(1) = soil1(j)%rsd(1) + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
 
       !! zero all plant components - assume tuber harvest kills plant
       pl_mass(j)%tot(ipl) = plt_mass_z

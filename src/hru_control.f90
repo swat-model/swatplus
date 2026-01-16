@@ -47,7 +47,7 @@
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
                   pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_fert, &
                   pl_graze, pl_grow, rls_routeaqu, rls_routesoil, rls_routesurf, rls_routetile, &
-                  salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
+                  rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
                   sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer
@@ -366,10 +366,13 @@
           end if
         end if
        
+        !! compute surface residue decomposition for each plant in community
+        call rsd_decomp
+        
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
           call nut_nminrl
-          call nut_nitvol
+          !call nut_nitvol
         end if
 
         !! compute residue decomposition and nitrogen and phosphorus mineralization
@@ -842,7 +845,7 @@
         if (pl_mass(j)%tot_com%m < 0.) then
           pl_mass(j)%tot_com%m = 0.
         end if
-        hpw_d(j)%residue = soil1(j)%rsd(1)%m
+        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp

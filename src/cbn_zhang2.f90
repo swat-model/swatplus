@@ -427,7 +427,7 @@
             xbm = 1.
             ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (soil1(j)%rsd(1)%n + soil1(j)%meta(1)%n) / (soil1(j)%rsd(1)%c / 1000. + 1.e-5)
+            rsdn_pct = 0.1 * (pl_mass(j)%rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%rsd_tot%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
               org_ratio%ncbm = .1
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
@@ -442,7 +442,7 @@
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
               org_allo(cf_lyr)%abp = .003 + .00032 * soil(j)%phys(k)%clay
             end if    
-          else
+          else    !  if (k == 1)  
             ! set nitrogen carbon ratios for lower layers
             org_allo(cf_lyr)%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
             !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
@@ -467,7 +467,7 @@
               org_ratio%nchp = 1. / (10. - .42 * min_n_ppm)
             end if
             org_allo(cf_lyr)%abp = .003 + .00032 * soil(j)%phys(k)%clay
-          end if          
+          end if    !  if (k == 1)        
 
           !coef in century eq allocating slow to passive humus(0.001_0.05) original value = 0.003,
               if (.not. ufc) carbdb(cf_lyr)%hs_hp = 5.0000001e-02
@@ -897,11 +897,11 @@
               if (k == 1) then
                 !! surface residue
                 hrc_d(j)%rsd_surfdecay_c = lmcta + lscta
-                ! soil1(j)%rsd(1)%c = soil1(j)%rsd(1)%c - hrc_d(j)%rsd_surfdecay_c
+                !soil1(j)%rsd(k)%c = soil1(j)%rsd(k)%c - hrc_d(j)%rsd_surfdecay_c
               else
                 !! subsurface and root residue
                 hrc_d(j)%rsd_rootdecay_c = lmcta + lscta
-                ! soil1(j)%rsd(k)%c = soil1(j)%rsd(k)%c - hrc_d(j)%rsd_rootdecay_c
+                !soil1(j)%rsd(k)%c = soil1(j)%rsd(k)%c - hrc_d(j)%rsd_rootdecay_c
               end if 
                       
               if (soil1(j)%mn(k)%no3 < 0.0) soil1(j)%mn(k)%no3 = 0.0

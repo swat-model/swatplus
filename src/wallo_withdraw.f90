@@ -37,9 +37,9 @@
       !! outside the basin source
       case ("osrc")
         j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = osrc_om_out(j)%flo
+        wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = osrc_om(j)%flo
         wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = 0.
-        wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = osrc_om_out(j)
+        wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = osrc_om(j)
         
       !! water treatment plant source
       case ("wtp")

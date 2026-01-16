@@ -26,7 +26,7 @@
         select case (wallo(iwallo)%trn(itrn)%src(1)%typ)
         !! source object is an out of basin source
         case ("osrc")
-          wallod_out(iwallo)%trn(itrn)%trn_flo = osrc_om_out(isrc)%flo
+          wallod_out(iwallo)%trn(itrn)%trn_flo = osrc_om(isrc)%flo
         !! source object is a water treatment plant
         case ("wtp")
           wallod_out(iwallo)%trn(itrn)%trn_flo = wtp_om_out(isrc)%flo
@@ -47,16 +47,22 @@
         wallod_out(iwallo)%trn(itrn)%trn_flo = 86400. * wallo(iwallo)%trn(itrn)%amount
           
       !! use recall object for transfer
-      case ("rec")
+      case ("recall")
         !! use recall object for transfer
         irec = wallo(iwallo)%trn(itrn)%rec_num
         select case (recall(irec)%typ)
           case (1)    !daily
             wallod_out(iwallo)%trn(itrn)%trn_flo = recall(irec)%hd(time%day,time%yrs)%flo
+            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = recall(irec)%hd(time%day,time%yrs)
           case (2)    !monthly
             wallod_out(iwallo)%trn(itrn)%trn_flo = recall(irec)%hd(time%mo,time%yrs)%flo
+            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = recall(irec)%hd(time%mo,time%yrs)
           case (3)    !annual
             wallod_out(iwallo)%trn(itrn)%trn_flo = recall(irec)%hd(1,time%yrs)%flo
+            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = recall(irec)%hd(1,time%yrs)
+          case (4)    !average annual
+            wallod_out(iwallo)%trn(itrn)%trn_flo = recall(irec)%hd(1,time%yrs)%flo
+            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = recall(irec)%hd(1,1)
           end select
         
       !! for wallo transfer amount, source available, and source and receiving allocating
@@ -71,7 +77,7 @@
 
       !! for hru irrigation
       case ("dtbl_lum")
-        j = wallo(iwallo)%trn(itrn)%num
+        j = wallo(iwallo)%trn(itrn)%rcv%num
         !! if there is demand, use amount from water allocation file
         if (irrig(j)%demand > 0.) then
           if (hru(j)%irr_hmax > 0.) then

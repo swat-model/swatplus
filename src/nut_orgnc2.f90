@@ -20,11 +20,12 @@
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      use hru_module, only : enratio, hru, ihru, sedorgn, sedyld, surfq
+      use hru_module, only : enratio, hru, ihru, sedorgn, sedyld, surfq, ipl
       use soil_module
       use organic_mineral_mass_module
       use carbon_module
       use plant_module
+      use plant_data_module
       
       implicit none
 
@@ -56,6 +57,7 @@
       real :: sol_thick = 0.        !              |
       real :: y1 = 0.               !              |
       real :: c_ly1 = 0.
+      !real :: ipl                   !              |counter for plant in the community
       
       j = ihru
       
@@ -65,7 +67,7 @@
       er = 0.   !! enrichment ratio
       
       !! total carbon in surface residue and soil humus
-      c_ly1 = soil1(j)%hp(1)%n + soil1(j)%hs(1)%n + soil1(j)%meta(1)%n + soil1(j)%str(1)%n
+      c_ly1 = soil1(j)%hp(1)%n + soil1(j)%hs(1)%n + pl_mass(j)%rsd_tot%n
       !! wt = sol_bd(1,j) * sol_z(1,j) * 10. (tons/ha) -> wt1 = wt/1000
       wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
@@ -86,7 +88,9 @@
         soil1(j)%tot(1)%n = soil1(j)%tot(1)%n * xx1
         soil1(j)%hs(1)%n = soil1(j)%hs(1)%n * xx1
         soil1(j)%hp(1)%n = soil1(j)%hp(1)%n * xx1
-        soil1(j)%rsd(1)%n = soil1(j)%rsd(1)%n * xx1
+        do ipl = 1, pcom(j)%npl
+          pl_mass(j)%rsd(1)%n =   pl_mass(j)%rsd(1)%n * xx1
+        end do
         soil1(j)%meta(1)%n = soil1(j)%meta(1)%n * xx1
         soil1(j)%str(1)%n = soil1(j)%str(1)%n * xx1
         soil1(j)%lig(1)%n = soil1(j)%lig(1)%n * xx1
@@ -114,10 +118,9 @@
       soil1(j)%tot(1)%c = soil1(j)%tot(1)%c * X1
       soil1(j)%hs(1)%c = soil1(j)%hs(1)%c * X1
       soil1(j)%hp(1)%c = soil1(j)%hp(1)%c * X1
-      soil1(j)%rsd(1)%c = soil1(j)%rsd(1)%c * X1
-      soil1(j)%str(1)%c = soil1(j)%str(1)%c * X1
-      soil1(j)%meta(1)%c = soil1(j)%meta(1)%c * X1
-      soil1(j)%lig(1)%c = soil1(j)%lig(1)%c * X1
+      do ipl = 1, pcom(j)%npl
+        pl_mass(j)%rsd(ipl)%c =   pl_mass(j)%rsd(ipl)%c * X1
+      end do
           
         
       if (soil1(j)%microb(1)%c > .01) then
