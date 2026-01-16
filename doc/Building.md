@@ -95,6 +95,12 @@ Call the build target `clean` to remove all generated object files (`.o`) and mo
 
 Building the swat model is supported for various platforms and compilers as described in the `Readme.md` file. It contains the specific instructions for Windows and Mac builds.
 
+<!-- TODO: remove after OS specific flags are implemented -->
+Note: For Linux, if your distribution does not come with static library for gfortran (`libgfortran.a`), then you can compile it using the dynamic library `libgfortran.so` by removing the corresponding `link_libraries("static")` line in `CMakeLists.txt`. Doing so will require the dynamic libraries to be present in the system while running the compiled binary (other libraries like `libm`, `libc` etc will also be needed). Run the `ldd <binary>` command to see which dynamic libraries are needed if you need to package it.
+
+
+If you run into compilation issues specific to your OS (or you find a manual fix), please make an issue on GitHub (or a pull request) with details about your OS, compilation errors and any fixes you found.
+
 ### Installing
 
 Finally, you can install the `swatplus` executable by using the `--install` CMake option. Specify the installation directory that will receive a copy of the SWAT+ executable, generated in `build`. The `--prefix` option takes as an argument the base of the binary directory. Not using `--prefix` will copy `swatplus` into the system default binary directory. You don't have to use this step if you want to manage moving the swat executable yourself.
