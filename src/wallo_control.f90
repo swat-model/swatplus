@@ -12,12 +12,13 @@
       
       implicit none 
       
-      external :: cs_irrig, salt_irrig, wallo_demand, wallo_transfer, wallo_treatment, wallo_use, wallo_withdraw
+      external :: cs_irrig, recall_nut, salt_irrig, wallo_demand, wallo_transfer, wallo_treatment, wallo_use, wallo_withdraw
 
       integer, intent (inout) :: iwallo     !water allocation object number
       integer :: itrn = 0                   !water demand object number
       integer :: iosrc = 0                  !source object number
       integer :: isrc = 0                   !source object number
+      integer :: irec = 0                   !recall object number
       integer :: j = 0                      !hru number
       integer :: jj = 0                     !variable for passing
       real :: irr_mm = 0.                   !mm     |irrigation applied
@@ -45,11 +46,45 @@
             iosrc = wallo(iwallo)%src(isrc)%ob_num
             select case (wallo(iwallo)%src(isrc)%lim_typ)
             case ("mon_lim")
-              osrc_om_out(iosrc)%flo = wallo(iwallo)%src(isrc)%limit_mon(time%mo)
+              osrc_om(iosrc)%flo = wallo(iwallo)%src(isrc)%limit_mon(time%mo)
             case ("dtbl")
               !! use decision table for outflow
             case ("recall")
               !! use recall for outflow
+              !wallo(iwallo)%trn(itrn)%src(iosrc)%num
+              irec = osrc(iosrc)%iorg_min
+            select case (recall(irec)%typ)
+              case (0)    !subdaily
+                !ts1 = (time%day - 1) * time%step + 1
+                !ts2 = time%day * time%step
+                !ob(icmd)%hyd_flo(ob(icmd)%day_cur,:) = recall(irec)%hyd_flo(ts1:ts2,time%yrs)
+                !ob(icmd)%hd(1) = recall(irec)%hd(time%day,time%yrs)
+              case (1)    !daily
+                if (time%yrc >= recall(irec)%start_yr .and. time%yrc <= recall(irec)%end_yr) then 
+                  osrc_om(irec) = recall(irec)%hd(time%day,time%yrs)
+                  !if negative flow (diversion), then remove nutrient mass
+                  if(recall(irec)%hd(time%day,time%yrs)%flo < 0) then
+                    call recall_nut(irec)
+                  endif
+                else
+                  osrc_om(irec) = hz
+                end if
+              case (2)    !monthly
+                if (time%yrc >= recall(irec)%start_yr .and. time%yrc <= recall(irec)%end_yr) then 
+                    osrc_om(irec) = recall(irec)%hd(time%mo,time%yrs)
+                else
+                    osrc_om(irec) = hz
+                end if
+              case (3)    !annual
+                if (time%yrc >= recall(irec)%start_yr .or. time%yrc <= recall(irec)%end_yr) then
+                  osrc_om(irec) = recall(irec)%hd(1,time%yrs)
+                else
+                  osrc_om(irec) = hz
+                end if
+              case (4)    !average annual
+                osrc_om(irec) = recall(irec)%hd(1,1)
+              end select
+              
             end select
           end if
         end do
@@ -132,7 +167,7 @@
             
               if (pco%mgtout == "y") then
                 write (2612, *) j, time%yrc, time%mo, time%day_mo, wallo(iwallo)%name, "IRRIGATE", phubase(j),  &
-                  pcom(j)%plcur(1)%phuacc, soil(j)%sw, pl_mass(j)%tot(1)%m, soil1(j)%rsd(1)%m,           &
+                  pcom(j)%plcur(1)%phuacc, soil(j)%sw, pl_mass(j)%tot(1)%m, pl_mass(j)%rsd_tot%m,      &
                   sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied
               end if
             end if

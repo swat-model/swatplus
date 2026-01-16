@@ -1,6 +1,6 @@
       subroutine plant_init (init, iihru)
 
-      use hru_module, only : cvm_com, hru, ipl, rsdco_plcom
+      use hru_module, only : cvm_com, hru, ipl
       use soil_module
       use plant_module
       use hydrograph_module
@@ -57,9 +57,7 @@
       real :: matur_frac = 0.        !frac       |fraction to maturity - use hu for annuals and years to maturity for perennials
       real :: f = 0.                 !none       |fraction of plant's maximum lai corresponding to a given fraction of phu
       real :: dd = 0.             !none          |relative distance of the earth from the sun
-      real :: rsd_meta_frac
-      real :: rsd_str_frac
-      real :: rsd_lig_frac
+
       
       j = iihru
 
@@ -82,6 +80,8 @@
             deallocate (pl_mass(j)%yield_yr)
             deallocate (pcom(j)%plstr) 
             deallocate (pcom(j)%plcur)
+            deallocate (pl_mass(j)%rsd)
+            deallocate (soil1(j)%pl)
           end if
         
         pcom(j)%npl = pcomdb(icom)%plants_com
@@ -99,24 +99,30 @@
         allocate (pl_mass(j)%yield_yr(ipl))
         allocate (pcom(j)%plstr(ipl))
         allocate (pcom(j)%plcur(ipl))
+        allocate (pl_mass(j)%rsd(ipl))
+        allocate (soil1(j)%pl(ipl))
         !! allocate water uptake by layer
         do ipl = 1, pcom(j)%npl
           allocate (pcom(j)%plcur(ipl)%uptake(soil(j)%nly), source = 0.)
           pcom(j)%plcur(ipl)%uptake = 0.
         end do
-
+        !! allocate residue for each plant by soil layer
+        do ipl = 1, pcom(j)%npl
+          allocate (soil1(j)%pl(ipl)%rsd(soil(j)%nly))
+        end do
+        
         pcom(j)%rsd_covfac = 0.
         cvm_com(j) = 0.
-        rsdco_plcom(j) = 0.
         pcom(j)%pcomdb = icom
         pcom(j)%rot_yr = 1
         pcom(j)%laimx_sum = 0.
         
-        ! !zero residue litter pools
-        soil1(j)%rsd(1) = plt_mass_z
-        soil1(j)%meta(1) = plt_mass_z
-        soil1(j)%str(1) = plt_mass_z
-        soil1(j)%lig(1) = plt_mass_z
+        !!zero surface residue litter pool for each plant and total
+        pl_mass(j)%rsd(:) = plt_mass_z
+        pl_mass(j)%rsd_tot = plt_mass_z
+        !soil1(j)%meta(1) = plt_mass_z
+        !soil1(j)%str(1) = plt_mass_z
+        !soil1(j)%lig(1) = plt_mass_z
                          
         do ipl = 1, pcom(j)%npl
           pcom(j)%pl(ipl) = pcomdb(icom)%pl(ipl)%cpnm
@@ -124,48 +130,37 @@
           pcom(j)%plcur(ipl)%idorm = "y"
           idp = pcomdb(icom)%pl(ipl)%db_num
           
-          !! initialize static and century fresh organic carbon pools
-          if (bsn_cc%cswat == 0) then
-            soil1(j)%rsd(1)%m = soil1(j)%rsd(1)%m + pcomdb(icom)%pl(ipl)%rsdin
-            soil1(j)%rsd(1)%c = soil1(j)%rsd(1)%c + 0.42 * pcomdb(icom)%pl(ipl)%rsdin
-            soil1(j)%rsd(1)%n = soil1(j)%rsd(1)%n + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 10.
-            soil1(j)%rsd(1)%p = soil1(j)%rsd(1)%p + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 100.
-          end if
+          !! initialize surface residue litter pools - same for static and century pools
+          pl_mass(j)%rsd(ipl)%m = pl_mass(j)%rsd(ipl)%m + pcomdb(icom)%pl(ipl)%rsdin
+          pl_mass(j)%rsd(ipl)%c = pl_mass(j)%rsd(ipl)%c + 0.42 * pcomdb(icom)%pl(ipl)%rsdin
+          pl_mass(j)%rsd(ipl)%n = pl_mass(j)%rsd(ipl)%n + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 10.
+          pl_mass(j)%rsd(ipl)%p = pl_mass(j)%rsd(ipl)%p + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 100.
+          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(ipl)
           
           if (bsn_cc%cswat == 2) then
+            !! done in cbn_rsd_decomp subroutine
             !! metabolic residue
-            ! rsd_meta%m = 0.85 * pcomdb(icom)%pl(ipl)%rsdin
-            rsd_meta_frac = pldb(pcomdb(icom)%pl(ipl)%db_num)%res_part_fracs%meta_frac 
-            rsd_meta%m = rsd_meta_frac * pcomdb(icom)%pl(ipl)%rsdin
-            ! rsd_meta%c = 0.357 * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
-            rsd_meta%c = 0.42 * rsd_meta_frac * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
-            rsd_meta%n = rsd_meta%c / 10.           !assume 10:1 C:N ratio (EPIC)
-            rsd_meta%p = rsd_meta%c / 100.   
-            soil1(j)%meta(1) = soil1(j)%meta(1) + rsd_meta
+            !rsd_meta%m = 0.85 * pcomdb(icom)%pl(ipl)%rsdin
+            !rsd_meta%c = 0.357 * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
+            !rsd_meta%n = rsd_meta%c / 10.           !assume 10:1 C:N ratio (EPIC)
+            !rsd_meta%p = rsd_meta%c / 100.   
+            !soil1(j)%meta(1) = soil1(j)%meta(1) + rsd_meta
             
             !! structural residue
-            ! rsd_str%m = 0.15 * pcomdb(icom)%pl(ipl)%rsdin
-            rsd_str_frac = pldb(pcomdb(icom)%pl(ipl)%db_num)%res_part_fracs%str_frac 
-            rsd_str%m = rsd_str_frac * pcomdb(icom)%pl(ipl)%rsdin
-            ! rsd_str%c = 0.063 * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
-            rsd_str%c = 0.42 * rsd_str_frac * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
-            rsd_str%n = rsd_str%c / 150.             !assume 150:1 C:N ratio (EPIC)
-            rsd_str%p = rsd_str%c / 1500.   
-            soil1(j)%str(1) = soil1(j)%str(1) + rsd_str
+            !rsd_str%m = 0.15 * pcomdb(icom)%pl(ipl)%rsdin
+            !rsd_str%c = 0.063 * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
+            !rsd_str%n = rsd_str%c / 150.             !assume 150:1 C:N ratio (EPIC)
+            !rsd_str%p = rsd_str%c / 1500.   
+            !soil1(j)%str(1) = soil1(j)%str(1) + rsd_str
           
             !! lignin residue
-            ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
-            ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
-            rsd_lig_frac = pldb(pcomdb(icom)%pl(ipl)%db_num)%res_part_fracs%lig_frac 
-            ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
-            ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
-            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + rsd_lig_frac/rsd_str_frac * rsd_str%m
-            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + rsd_lig_frac/rsd_str_frac * rsd_str%c              !assume 80% Structural C is lig
-            soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + 0.2 * rsd_str%n
-            soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + 0.02 * rsd_str%p
+            !soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
+            !soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
+            !soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + 0.2 * rsd_str%n
+            !soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + 0.02 * rsd_str%p
             
             !! total residue pools
-            soil1(j)%rsd(1) = soil1(j)%rsd(1) + rsd_meta + rsd_str
+            !soil1(j)%rsd(1) = soil1(j)%rsd(1) + rsd_meta + rsd_str
           end if
           
           ! set heat units to maturity
@@ -345,7 +340,6 @@
             
           cvm_com(j) = plcp(idp)%cvm + cvm_com(j)
           pcom(j)%rsd_covfac = pcom(j)%rsd_covfac + pldb(idp)%rsd_covfac
-          rsdco_plcom(j) = rsdco_plcom(j) + pldb(idp)%rsdco_pl
           pcom(j)%plcur(ipl)%idplt = pcomdb(icom)%pl(ipl)%db_num
           
           !! set initial n and p contents in total plant

@@ -93,13 +93,13 @@
 
         !! for stable carbon - add n and p to active humus pool
         if (bsn_cc%cswat == 0) then
-          soil1(j)%rsd(l)%n = soil1(j)%rsd(l)%n + rtof * fr_ly * &
+          soil1(j)%pl(1)%rsd(l)%n = soil1(j)%pl(1)%rsd(l)%n + rtof * fr_ly *            &
                        frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%rsd(l)%p = soil1(j)%rsd(l)%p + rtof * fr_ly * frt_kg *           &
+          soil1(j)%pl(1)%rsd(l)%p = soil1(j)%pl(1)%rsd(l)%p + rtof * fr_ly * frt_kg *   &
                        fertdb(ifrt)%forgp
-          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *           &
+          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *               &
                        frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%hact(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * fr_ly * frt_kg *  &
+          soil1(j)%hact(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * fr_ly * frt_kg *      &
                        fertdb(ifrt)%forgp
         end if
         

@@ -136,6 +136,7 @@
         integer :: transplant = 0
         integer :: pudl_db = 0
         integer :: recall_max = 0
+        integer :: recalldb_max = 0
         integer :: object_prt = 0
         integer :: ctbl_res = 0
         integer :: ch_sednut = 0
@@ -144,6 +145,7 @@
         integer :: water_use = 0
         integer :: om_treat = 0
         integer :: om_use = 0
+        integer :: outside_src = 0
       end type data_files_max_elements
       type (data_files_max_elements), save :: db_mx
                                  

@@ -127,6 +127,9 @@
       ! water use effluent concentrations
       type (constituent_mass), dimension (:), allocatable :: wuse_cs_efflu
       
+      ! outside source constituents
+      type (constituent_mass), dimension (:), allocatable :: osrc_cs
+      
       ! canal storage
       type (constituent_mass), dimension (:), allocatable :: canal_cs_stor
       

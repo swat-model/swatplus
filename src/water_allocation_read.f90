@@ -8,6 +8,7 @@
       use sd_channel_module
       use conditional_module
       use constituent_mass_module
+      use recall_module
       use hru_module, only : hru
       
       implicit none 
@@ -30,8 +31,9 @@
       integer :: idb = 0
       integer :: idb_irr = 0
       integer :: ihru = 0
-      !integer :: isrc_wallo = 0
-      !integer :: div_found = 0
+      integer :: iom
+      integer :: isrc_wallo = 0
+      integer :: div_found = 0
       
       eof = 0
       imax = 0
@@ -84,7 +86,7 @@
           allocate (wtp_cs_stor(wallo(iwro)%wtp))
           allocate (wtow_cs_stor(wallo(iwro)%stor))
           allocate (canal_cs_stor(wallo(iwro)%canal))
-          allocate (osrc_om_out(wallo(iwro)%out_src))
+          !allocate (osrc_om(wallo(iwro)%out_src))
           num_objs = wallo(iwro)%src_obs
           allocate (wallo(iwro)%src(num_objs))
           num_objs = wallo(iwro)%trn_obs
@@ -116,9 +118,21 @@
               read (107,*,iostat=eof) k, wallo(iwro)%src(i)%ob_typ, wallo(iwro)%src(i)%ob_num,    &
                                       wallo(iwro)%src(i)%lim_typ, wallo(iwro)%src(i)%lim_name,    &
                                       (wallo(iwro)%src(i)%limit_mon(k), k=1,12)
+              
+            !! recall option for daily, monthly, or annual mass
+            if (wallo(iwro)%trn(i)%trn_typ == "recall") then
+              !! xwalk with recall database
+              do idb = 1, db_mx%recall_max
+                if (wallo(iwro)%trn(i)%trn_typ_name == recall(idb)%name) then
+                  wallo(iwro)%trn(i)%rec_num = idb
+                  exit
+                end if
+              end do
+            end if
+            
           end do
           
-          !! read demand object data
+          !! read transfer object data
           read (107,*,iostat=eof) header
           if (eof < 0) exit
           do itrn = 1, num_objs
@@ -127,8 +141,7 @@
             if (eof < 0) exit
             backspace (107)
             read (107,*,iostat=eof) k, wallo(iwro)%trn(i)%trn_typ, wallo(iwro)%trn(i)%trn_typ_name,   &
-              wallo(iwro)%trn(i)%amount, wallo(iwro)%trn(i)%right, wallo(iwro)%trn(i)%src_num,            &
-              wallo(iwro)%trn(i)%dtbl_src, wallo(iwro)%trn(i)%num
+              wallo(iwro)%trn(i)%amount, wallo(iwro)%trn(i)%right, wallo(iwro)%trn(i)%src_num
             
             num_src = wallo(iwro)%trn(i)%src_num
             allocate (wallo(iwro)%trn(i)%src(num_src))
@@ -144,7 +157,7 @@
             allocate (walloa_out(iwro)%trn(i)%src(num_src))
             
             !! for hru irrigation, need to xwalk with irrigation demand decision table
-            if (wallo(iwro)%trn(i)%trn_typ == "dtbl_irr") then
+            if (wallo(iwro)%trn(i)%trn_typ == "dtbl_lum") then
               !! xwalk with lum decision table
               do idb = 1, db_mx%dtbl_lum
                 if (wallo(iwro)%trn(i)%trn_typ_name == dtbl_lum(idb)%name) then
@@ -176,15 +189,22 @@
             !! for municipal treatment - recall option for daily, monthly, or annual mass
             if (wallo(iwro)%trn(i)%trn_typ == "recall") then
               !! xwalk with recall database
-              do idb = 1, db_mx%recall_max
-                if (wallo(iwro)%trn(i)%trn_typ_name == recall(idb)%name) then
+              do idb = 1, db_mx%recalldb_max
+                if (wallo(iwro)%trn(i)%trn_typ_name == recall_db(idb)%name) then
                   wallo(iwro)%trn(i)%rec_num = idb
+                    !! crosswalk organic mineral with recall data file
+                    do iom = 1, db_mx%recall_max
+                      if (recall_db(idb)%org_min%name == recall(iom)%filename) then
+                        wallo(iwro)%trn(i)%rec_num = iom
+                        exit
+                      end if
+                    end do
+                    !! crosswalk pest, path, hmet, salt, constit with recall data file
                   exit
                 end if
               end do
             end if
             
-            backspace (107)
             backspace (107)
             !read (107,*,iostat=eof) k
             read (107,*,iostat=eof) k, wallo(iwro)%trn(i)%trn_typ, wallo(iwro)%trn(i)%trn_typ_name,   &
@@ -223,3 +243,4 @@
 
       return
     end subroutine water_allocation_read
+

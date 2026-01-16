@@ -96,7 +96,7 @@
         wet_fr = max(wet_fr,0.01)
         
         !wetland water surface area, not applicable to paddies Jaehak 2025
-		    if (wet_dat_c(ires)%hyd.ne.'paddy') wet_wat_d(j)%area_ha = hru(j)%area_ha * wet_fr
+        if (wet_dat_c(ires)%hyd .ne. 'paddy') wet_wat_d(j)%area_ha = hru(j)%area_ha * wet_fr
 
         !calculate seepage and groundwater interactions
         if(bsn_cc%gwflow == 1) then !rtb gwflow
@@ -187,7 +187,10 @@
 
        !! weir discharge (ht2) by decision tables
         call conditions (j, irel)
+        
+        !if (wet(j)%flo > pvol_m3) then
         call res_hydro (j, irel, pvol_m3, evol_m3)
+        !end if
         
         if (hru(j)%area_ha > 1.e-6) then
           !dep = wbody%flo / wet_ob(j)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
@@ -196,10 +199,11 @@
           dep = 0.
         end if
         !! weir discharge by manual operation Jaehak 2025
-        if (sched(isched)%num_autos == 0.and.dep>0.01) then
+        !if (sched(isched)%num_autos == 0 .and. dep > 0.01) then
+        if (wet_dat_c(ires)%hyd == 'paddy') then 
           call res_weir_release (j, irel, ihyd, evol_m3, dep, weir_hgt)
           wet(j)%flo = wbody%flo
-        endif
+        end if
         
       !endif
         !! subtract outflow from storage
@@ -254,9 +258,6 @@
         sedppm=0
         no3ppm=0
       endif
-      
-
-  
       
       !! perform reservoir pesticide transformations
       !call res_pest (ires)

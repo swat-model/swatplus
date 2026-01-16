@@ -84,7 +84,7 @@
 
 !! calculate lagging factor for soil cover impact on soil surface temp
 !! SWAT manual equation 2.3.11
-      cover = pl_mass(j)%ab_gr_com%m + soil1(j)%rsd(1)%m
+      cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
       bcv = cover / (cover + Exp(7.563 - 1.297e-4 * cover))
       if (hru(j)%sno_mm /= 0.) then
         if (hru(j)%sno_mm <= 120.) then

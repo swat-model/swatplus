@@ -24,6 +24,7 @@
       integer :: j = 0            !none          |counter
       integer :: nly = 0          !              |end of loop
       integer :: ly = 0           !none          |counter
+      integer :: npl = 0          !none          |counter
       integer :: csld = 0         !mm            |current custom soil layer depth in millimeters
       integer :: pcd = 0          !mm            |previous custom depth in millimeters
       integer :: prev_depth = 0   !mm            |previous custom depth in millimeters
@@ -348,10 +349,12 @@
    
         !! allocate soil1 arrays - carbon/nutrients
         nly = soil(ihru)%nly
+        npl = pcom(ihru)%npl
         !allocate (cs_soil(ihru)%ly(nly))
         allocate (soil1(ihru)%sw(nly), source = 0.)
         allocate (soil1(ihru)%cbn(nly), source = 0.)
         allocate (soil1(ihru)%sed(nly))
+        allocate (soil1(ihru)%rsd_tot(nly))
         allocate (soil1(ihru)%mn(nly))
         allocate (soil1(ihru)%mp(nly))
         allocate (soil1(ihru)%tot(nly))
@@ -364,7 +367,6 @@
         allocate (soil1(ihru)%org_flx_cum_lr(nly))
         allocate (soil1(ihru)%hact(nly))
         allocate (soil1(ihru)%hsta(nly))
-        allocate (soil1(ihru)%rsd(nly))
         allocate (soil1(ihru)%str(nly))
         allocate (soil1(ihru)%lig(nly))
         allocate (soil1(ihru)%meta(nly))
@@ -382,7 +384,6 @@
         allocate (soil1_init(ihru)%seq(nly))
         allocate (soil1_init(ihru)%hact(nly))
         allocate (soil1_init(ihru)%hsta(nly))
-        allocate (soil1_init(ihru)%rsd(nly))
         allocate (soil1_init(ihru)%str(nly))
         allocate (soil1_init(ihru)%lig(nly))
         allocate (soil1_init(ihru)%meta(nly))

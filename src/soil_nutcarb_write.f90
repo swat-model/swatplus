@@ -16,6 +16,7 @@
       use calibration_data_module
       use carbon_module
       use basin_module
+      use plant_module
       
       implicit none
       
@@ -30,6 +31,7 @@
       real :: prf_depth = 0.0   !mm          |depth of soil profile.
       integer :: iihru = 0      !none        |counter
       integer :: j = 0          !none        |counter
+      integer :: ipl = 0        !none        |counter
       integer :: iob = 0
       integer :: profile_depth
       character (len=7) :: freq_label
@@ -132,7 +134,11 @@
             soil_prof_seq_hs = soil_prof_seq_hs + soil1(j)%hs(ly)
             soil_prof_seq_hp = soil_prof_seq_hp + soil1(j)%hp(ly)
             soil_prof_seq_microb = soil_prof_seq_microb + soil1(j)%microb(ly)
-            soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
+            soil1(j)%rsd_tot(ly) = orgz
+            do ipl = 1, pcom(j)%npl
+              soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+            end do
+            soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd_tot(ly)
             soil_prof_str = soil_prof_str + soil1(j)%str(ly)
             soil_prof_hact = soil_prof_hact + soil1(j)%hact(ly)
             soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
@@ -220,21 +226,21 @@
               profile_depth = int(soil(j)%phys(soil(j)%nly)%d)
               do ly = 1, soil(j)%nly
                 write (4561,10) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                    soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
-                    soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
+                    pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+                    soil1(j)%rsd_tot(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
               enddo
             endif
             write (4561,10) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+                pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                 soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
             if (pco%csvout == "y") then
               do ly = 1, soil(j)%nly
                 write (4564,'(*(G0.7,:,","))') freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                    soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
-                    soil1(j)%rsd(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
+                    pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+                    soil1(j)%rsd_tot(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
               enddo
               write (4564,'(*(G0.7,:,","))') freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                soil1(j)%rsd(1)%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
+                pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                 soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
             end if
 
@@ -319,7 +325,7 @@
             if (layer_output) then
               do ly = 1, soil(j)%nly
                 write (4572,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
+                              soil1(j)%rsd_tot(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
                               soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%phys(ly)%tot_sw
               enddo
             endif
@@ -330,7 +336,7 @@
               if (layer_output) then
                 do ly = 1, soil(j)%nly
                   write (4573,'(*(G0.7,:,","))'), freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                soil1(j)%rsd(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
+                                soil1(j)%rsd_tot(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
                                 soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, soil(j)%phys(ly)%tot_sw
                 enddo
               endif
@@ -342,20 +348,20 @@
             !write n and p pool values for the soil profile file = "hru_n_p_pool_stat.txt/csv"
             if (layer_output) then
               do ly = 1, soil(j)%nly
-                tot_lyr_n = soil1(j)%rsd(ly)%n + soil1(j)%str(ly)%n + soil1(j)%meta(ly)%n + soil1(j)%hs(ly)%n + soil1(j)%hp(ly)%n + &
+                tot_lyr_n = soil1(j)%rsd_tot(ly)%n + soil1(j)%str(ly)%n + soil1(j)%meta(ly)%n + soil1(j)%hs(ly)%n + soil1(j)%hp(ly)%n + &
                               soil1(j)%microb(ly)%n + soil1(j)%lig(ly)%n + soil1(j)%water(ly)%n + soil1(j)%man(ly)%n 
-                tot_lyr_p = soil1(j)%rsd(ly)%p + soil1(j)%str(ly)%p + soil1(j)%meta(ly)%p + soil1(j)%hs(ly)%p + soil1(j)%hp(ly)%p + &
+                tot_lyr_p = soil1(j)%rsd_tot(ly)%p + soil1(j)%str(ly)%p + soil1(j)%meta(ly)%p + soil1(j)%hs(ly)%p + soil1(j)%hp(ly)%p + &
                               soil1(j)%microb(ly)%p + soil1(j)%lig(ly)%p + soil1(j)%water(ly)%p + soil1(j)%man(ly)%p
                 write (4582,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              tot_lyr_n, soil1(j)%rsd(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
+                              tot_lyr_n, soil1(j)%rsd_tot(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
                               soil1(j)%microb(ly)%n, soil1(j)%lig(ly)%n, soil1(j)%water(ly)%n, soil1(j)%man(ly)%n, &
-                              tot_lyr_p, soil1(j)%rsd(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
+                              tot_lyr_p, soil1(j)%rsd_tot(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
                               soil1(j)%microb(ly)%p, soil1(j)%lig(ly)%p, soil1(j)%water(ly)%p, soil1(j)%man(ly)%p
                 if (pco%csvout == "y") then
                   write (4583,'(*(G0.7,:,","))'), freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                tot_lyr_n, soil1(j)%rsd(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
+                                tot_lyr_n, soil1(j)%rsd_tot(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
                                 soil1(j)%microb(ly)%n, soil1(j)%lig(ly)%n, soil1(j)%water(ly)%n, soil1(j)%man(ly)%n,  &
-                                tot_lyr_p, soil1(j)%rsd(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
+                                tot_lyr_p, soil1(j)%rsd_tot(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
                                 soil1(j)%microb(ly)%p, soil1(j)%lig(ly)%p, soil1(j)%water(ly)%p, soil1(j)%man(ly)%p
                 endif
               enddo
@@ -389,7 +395,7 @@
             if (lsu_elem(iihru)%obtyp == "hru") then
               bsn_org_soil = bsn_org_soil + const * soil1(iihru)%tot_org
               bsn_org_pl = bsn_org_pl + const * pl_mass(iihru)%tot_com
-              bsn_org_rsd = bsn_org_rsd + const * soil1(iihru)%rsd(1)
+              bsn_org_rsd = bsn_org_rsd + const * soil_prof_rsd + pl_mass(iihru)%rsd_tot
               bsn_mn = bsn_mn + const * soil1(iihru)%tot_mn
               bsn_mp = bsn_mp + const * soil1(iihru)%tot_mp
             end if
