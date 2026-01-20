@@ -99,6 +99,10 @@
           real :: resp               !                 |co2 respiration
           ! real :: xbmt = 0.          !               |control on transformation of microbial biomass by soil texture and structure
           ! real :: xlslf = 0.         !               |control on potential transformation of structural litter by lignin fraction
+          ! The following three parameters resolve the shape of the temperature effect equation:  
+          real :: tn = -5.           ! celsius         |minimum temperature bound
+          real :: top = 35.          ! celsius         |peak (optimum) temperature 
+          real :: tx = 50.           ! celsius         |maximum temperature bound
       end type organic_controls
       type (organic_controls) :: org_con
       type (organic_controls) :: org_con_zero
