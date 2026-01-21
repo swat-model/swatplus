@@ -139,17 +139,28 @@
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
-            rsd_str%n = decomp%n - rsd_meta%n
-            soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
-            soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
-            
-            rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
-            rsd_str%p = decomp%p - rsd_meta%p
-            soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
-            soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            if (soil1(j)%meta(k)%c > 1.e-12) then
+              rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+              soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
+              rsd_str%n = decomp%n - rsd_meta%n
+              soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
+              soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
+
+              rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+              soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
+              rsd_str%p = decomp%p - rsd_meta%p
+              soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
+              soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            else
+              rsd_meta%n = 0.0
+              rsd_meta%p = 0.0
+              rsd_str%n = decomp%n
+              rsd_str%p = decomp%p
+              soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
+              soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
+              soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
+              soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            end if
             
           end if    ! soil temp > 0
           
