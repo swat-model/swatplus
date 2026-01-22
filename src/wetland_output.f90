@@ -60,8 +60,8 @@
           wet_in_a(j) = wet_in_a(j) + wet_in_y(j)
           wet_out_a(j) = wet_out_a(j) + wet_out_y(j)
           wet_wat_a(j) = wet_wat_a(j) + wet_wat_y(j)
-          wet_in_y(j)%flo = wet_in_y(j)%flo / 12.
-          wet_out_y(j)%flo = wet_out_y(j)%flo / 12.
+          !wet_in_y(j)%flo = wet_in_y(j)%flo / 12.
+          !wet_out_y(j)%flo = wet_out_y(j)%flo / 12.
           if (pco%res%y == "y") then
             write (2550,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_y(j), wet(j), &
             wet_in_y(j), wet_out_y(j)
