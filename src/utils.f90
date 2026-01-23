@@ -16,11 +16,12 @@ module utils
         character(len=:), allocatable :: min_cols! string of minimum required column names
         character (len=80)     :: titldum = ""       ! first line in data file that that will be ignored 
         integer                :: nrow = 0           ! data row number
+        integer                :: lrow = 0           ! row number of the of line in the raw input data file to be read next
         integer                :: ncols = 0          ! number of header columns   
         integer                :: nfields = 0        ! number of data columns/fields in a data row
-        integer                :: skipped_rows = 0   ! number of rows skipped (empty or comment lines)
         integer                :: start_row_numbr = 1! the number of the row in the file to start reading table data
                                                      ! This number cannot greater than the line number of the header row.
+        integer                :: start_data_row_numbr = 3 ! The line number that the actual data starts.
         integer                :: unit = 0           ! file unit number
         logical                :: found_header_row = .false. ! flag to indicate if header row has been found
         logical, allocatable   :: col_okay(:)        ! array used to track if warning message has already
@@ -42,12 +43,13 @@ module utils
 
 contains
 
-subroutine init(self, unit, file_name, start_row_numbr)
+subroutine init(self, unit, file_name, start_row_numbr, start_data_row_numbr)
     class(table_reader), intent(inout) :: self
     integer, intent(in), optional                       :: unit          
     ! character(len=:), allocatable, intent(in), optional :: file_name
     character(len=*), optional :: file_name
     integer, intent(in), optional                       :: start_row_numbr    
+    integer, intent(in), optional                       :: start_data_row_numbr    
 
     self%left_str  = ''
     self%file_name = ''
@@ -60,6 +62,7 @@ subroutine init(self, unit, file_name, start_row_numbr)
             self%start_row_numbr = 1
         end if
     end if
+    if (present(start_data_row_numbr)) self%start_data_row_numbr = start_data_row_numbr
     !! read all curve number data from cn.tbl
     inquire (file=self%file_name, exist=self%file_exists)
     if (.not. self%file_exists .or. trim(self%file_name) == "null") then
@@ -531,24 +534,30 @@ function get_num_data_lines(self) result(imax)
     class(table_reader), intent(inout) :: self
     integer :: imax
     integer :: eof = 0              !           |end of file
-    integer :: i
+    integer :: i              !           |end of file
+    logical                     :: ignore_last_col
 
     imax = 0
     self%found_header_row = .false.
+    ignore_last_col = .false.
+    self%lrow = 1
     open (self%unit,file=self%file_name)
 
     if (self%start_row_numbr == 1) then
         read (self%unit,*,iostat=eof) self%titldum
+        self%lrow = self%lrow + 1
     else
         ! Skip to the specified starting row number
-        do i = 1, self%start_row_numbr - 1
+        do i = 1,  self%start_row_numbr - 1
             read(self%unit, '(A)', iostat=eof) self%line
+            self%lrow = self%lrow + 1
             if (eof /= 0) exit
         end do
     end if
     if (eof == 0) then 
         do
             read(self%unit, '(A)', iostat=eof) self%line
+            self%lrow = self%lrow + 1
             if (eof /= 0) exit  ! EOF
             self%line = adjustl(trim(self%line))
             call left_of_delim(self%line, '#', self%left_str)    ! remove comments
@@ -558,14 +567,21 @@ function get_num_data_lines(self) result(imax)
             if (.not. self%found_header_row) then                ! check to see if the header row has not yet been processed
                 self%found_header_row = .true.
                 call split_line(self%line, self%row_field, self%ncols) ! process header row into header columns
+                if (self%row_field(self%ncols) == "description") then
+                    ignore_last_col = .true.
+                endif
+                if (ignore_last_col) self%ncols = self%ncols -1
                 cycle
             end if
+            if (self%lrow <= self%start_data_row_numbr) cycle
             call split_line(self%line, self%row_field, self%nfields)    ! split data row into fields
+            if (self%ncols > self%nfields) cycle
+            ! if (ignore_last_col) self%nfields = self%nfields - 1
 
             ! Ignore datarow if the number of data fields does not match the number of header columns
-            if (self%ncols /= self%nfields) then
-                cycle
-            end if
+            ! if (self%ncols /= self%nfields) then
+            !     cycle
+            ! end if
             imax = imax + 1
         end do
     endif
@@ -623,7 +639,6 @@ subroutine get_header_columns(self, eof)
 !     - Converts each column name to lowercase and trims whitespace
 !     - Stores the cleaned column names in tblr%header_cols(:)
 !     - Sets tblr%ncols to the number of columns found
-!     - Updates tblr%skipped_rows to reflect how many lines were skipped before the header
 !     - Sets tblr%found_header_row = .true. upon successful header detection
 !
 !   The subroutine leaves the file positioned immediately after the header row.
@@ -638,7 +653,7 @@ subroutine get_header_columns(self, eof)
 ! Side effects:
 !   - Rewinds and reads from tblr%unit
 !   - Modifies: tblr%found_header_row, tblr%ncols, tblr%header_cols,
-!               tblr%skipped_rows, tblr%line, tblr%left_str
+!               tblr%line, tblr%left_str
 !   - Calls external routines: left_of_delim(), split_line(), to_lower()
 !
 ! Notes:
@@ -657,15 +672,19 @@ subroutine get_header_columns(self, eof)
 !     1,Alice,10.5
 !
 !   → After call: tblr%ncols = 3, tblr%header_cols = ['id','name','value'],
-!     tblr%skipped_rows incremented by 4 (title + comment + blank + header)
+!     tblr%lrow incremented by 4 (title + comment + blank + header)
 !
 !============================================o===================================
 
     class(table_reader), intent(inout) :: self
     integer                     :: i
     integer                     :: eof
+    logical                     :: ignore_last_col
+
 
     eof = 0
+    ignore_last_col = .false.
+    self%lrow = 1
 
     rewind (self%unit)  ! reset file position to beginning
 
@@ -673,12 +692,12 @@ subroutine get_header_columns(self, eof)
     ! If start_row_numbr=1, read and skip the title line.
     if (self%start_row_numbr == 1) then
         read (self%unit,*,iostat=eof) self%titldum
-        self%skipped_rows = self%skipped_rows + 1
+        self%lrow = self%lrow + 1
     else
         ! Skip to the specified starting row number
         do i = 1, self%start_row_numbr - 1
             read(self%unit, '(A)', iostat=eof) self%line
-            self%skipped_rows = self%skipped_rows + 1
+            self%lrow = self%lrow + 1
             if (eof /= 0) exit
         end do
     end if
@@ -688,12 +707,12 @@ subroutine get_header_columns(self, eof)
     if (eof == 0) then 
         do
             read(self%unit, '(A)', iostat=eof) self%line
+            self%lrow = self%lrow + 1
             if (eof /= 0) exit  ! EOF
             self%line = trim(adjustl(self%line))
             call left_of_delim(self%line, '#', self%left_str)    ! remove comments
             self%left_str = trim(adjustl(self%left_str))
             if ( len(self%left_str) == 0) then              ! skip empty lines 
-                self%skipped_rows = self%skipped_rows + 1
                 cycle                  
             end if
             self%line = self%left_str
@@ -703,7 +722,10 @@ subroutine get_header_columns(self, eof)
                 do i = 1 , self%ncols
                     self%header_cols(i) = to_lower(trim(adjustl(self%header_cols(i))))
                 end do
-                self%skipped_rows = self%skipped_rows + 1
+                if (self%header_cols(self%ncols) == "description") then
+                    ignore_last_col = .true.
+                endif
+                if (ignore_last_col) self%ncols = self%ncols -1
                 exit
             end if
         end do
@@ -742,7 +764,6 @@ subroutine get_row_fields(self, eof)
 !   tblr%left_str     - line content left of comment delimiter
 !   tblr%row_field    - array of trimmed fields from the current valid row
 !   tblr%nfields      - number of fields found in current row
-!   tblr%skipped_rows    - counter of skipped rows (blank + wrong column count)
 !   tblr%nrow         - assumed to be updated outside (current data row count)
 !
 ! Dependencies:
@@ -757,7 +778,9 @@ subroutine get_row_fields(self, eof)
     self%nfields = 0
     do
         read(self%unit, '(A)', iostat=eof) self%line
+        self%lrow = self%lrow + 1
         if (eof /= 0) exit
+        if (self%lrow <= self%start_data_row_numbr) cycle
         self%line = adjustl(trim(self%line))
 
         ! get portion of line left of comment delimiter '#'
@@ -767,7 +790,6 @@ subroutine get_row_fields(self, eof)
 
         ! skip empty lines
         if (len(self%left_str) == 0 ) then
-            self%skipped_rows = self%skipped_rows + 1
             cycle ! get next line
         endif
         
@@ -777,12 +799,13 @@ subroutine get_row_fields(self, eof)
             self%row_field(i) = trim(adjustl(self%row_field(i)))
         end do
         
+        if (self%nfields > self%ncols) self%nfields = self%ncols
+
         ! check for correct number of columns and if incorrect skip row with warning
-        if (self%ncols /= self%nfields) then
-            self%skipped_rows = self%skipped_rows + 1
-            write(9001,'(A,I3, 3A)') 'Warning: Row ', self%nrow + self%skipped_rows, ' in the input file ', &
+        if (self%ncols > self%nfields) then
+            write(9001,'(A,I3, 3A)') 'Warning: Row ', self%lrow - 1, ' in the input file ', &
                                       self%file_name, ' has the wrong number of columns: skipping'
-            print('(A,I3, 3A)'), 'Warning: Row ', self%nrow + self%skipped_rows, ' in the input file ', & 
+            print('(A,I3, 3A)'), 'Warning: Row ', self%lrow - 1, ' in the input file ', & 
                                       self%file_name, ' has the wrong number of columns: skipping'
             cycle
         end if
