@@ -19,7 +19,7 @@ subroutine soils_test_adjust(isol, mlyr)
     first_lr = .true.
 
     ! Adjust bulk density based on soil test
-    do test = 1, nmbr_soil_tests
+    do test = 1, nmbr_soil_test_layers
         if (sol_test(test)%snam == sol(isol)%s%snam) then
             if (first_lr) then
                 prev_depth = 0.
@@ -38,7 +38,7 @@ subroutine soils_test_adjust(isol, mlyr)
                                 if (sol_test(test)%cbn /= -1.0 ) sol(isol)%phys(i)%cbn = sol_test(test)%cbn 
                                 if (sol_test(test)%sand /= -1.0 ) sol(isol)%phys(i)%sand = sol_test(test)%sand 
                                 if (sol_test(test)%silt /= -1.0 ) sol(isol)%phys(i)%silt = sol_test(test)%silt 
-                                if (sol_test(test)%clay /= -1.0 ) sol(isol)%phys(i)%silt = sol_test(test)%clay
+                                if (sol_test(test)%clay /= -1.0 ) sol(isol)%phys(i)%clay = sol_test(test)%clay
                                 prev_depth = sol(isol)%phys(i)%d
                             else
                                 soil_layer_thickness = sol(isol)%phys(i)%d - prev_depth

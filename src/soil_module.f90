@@ -64,7 +64,7 @@
         real :: clay = 0.             !! %            | percent clay
       end type soil_test
       type (soil_test), dimension(:), allocatable :: sol_test
-      integer :: nmbr_soil_tests = 0 !! none         |number of soil carbon tests 
+      integer :: nmbr_soil_test_layers = 0 !! none         |number of soil carbon tests 
 
       type soil_profile
         character(len=16) :: snam = ""     !! NA            soil series name  
