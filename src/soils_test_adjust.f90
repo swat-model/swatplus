@@ -27,37 +27,52 @@ subroutine soils_test_adjust(isol, mlyr)
     real :: adjust_frac_clay = 0. !            |computed  weigted average adjustment factor for soil carbon
     real :: adjust_frac_sand = 0. !            |computed  weigted average adjustment factor for soil carbon
     integer :: i                !              |index to array
-    integer :: prev_depth = 0   !mm            |previous custom depth in millimeters
+    real :: prev_depth = 0   !mm            |previous custom depth in millimeters
     integer :: soil_lyr_thickness !            |temporary variable to store layer thickness
     integer :: test             !              |soil test index
+    logical :: first_lr
 
+    first_lr = .true.
 
     do test = 1, nmbr_soil_tests
         if (sol_test(test)%snam == sol(isol)%s%snam) then
+            if (first_lr) then
+                prev_depth = 0.
+            else
+                prev_depth =  sol_test(test-1)%d
+            endif
             ! adjust bulk density first if it is provided in soil test data because 
             ! the other soil test values are weighted by bulk density and layer thickness.
-            if (sol_test(test)%bd > 0.00001) then
-                prev_depth = 0
+            if (sol_test(test)%bd /= -1.0 ) then
                 sum_bd = 0.0 
                 sum_thick = 0.0 
                 do i = 1, mlyr
                     if (sol_test(test)%d > prev_depth) then
-                        soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
-                        ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
-                        sum_bd = sum_bd + ltxbd
-                        sum_thick = sum_thick + soil_lyr_thickness
-                        prev_depth = sol(isol)%phys(i)%d
+                        if (sol(isol)%phys(i)%d > prev_depth) then
+                            soil_lyr_thickness = sol(isol)%phys(i)%d - prev_depth 
+                            ltxbd = soil_lyr_thickness * sol(isol)%phys(i)%bd
+                            sum_bd = sum_bd + ltxbd
+                            sum_thick = sum_thick + soil_lyr_thickness
+                            prev_depth = sol(isol)%phys(i)%d
+                        endif
                     else 
                         exit
                     endif
                 enddo
                 wavg_bd = sum_bd/sum_thick
                 adjust_frac_bd = sol_test(test)%bd / wavg_bd 
-                prev_depth = 0.0
+                if (first_lr) then
+                    first_lr = .false.
+                    prev_depth = 0.0
+                else
+                    prev_depth = sol_test(test-1)%d
+                endif
                 do i = 1, mlyr
                     if (sol_test(test)%d > prev_depth) then
-                        sol(isol)%phys(i)%bd = adjust_frac_bd * sol(isol)%phys(i)%bd 
-                        prev_depth = sol(isol)%phys(i)%d
+                        if (sol(isol)%phys(i)%d > prev_depth) then
+                            sol(isol)%phys(i)%bd = adjust_frac_bd * sol(isol)%phys(i)%bd 
+                            prev_depth = sol(isol)%phys(i)%d
+                        endif
                     else 
                         exit
                     endif
