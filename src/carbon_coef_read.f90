@@ -16,9 +16,8 @@ subroutine carbon_coef_read
     character (len=80) :: titldum = ""!           |title of file
     character (len=24) :: var_name = "" !
     
-    nmbr_soil_tests = 0     ! comes from soil module
+    nmbr_soil_test_layers = 0     ! comes from soil module
     soil_test_cntr  = 0     ! local variable
-    ! soil_phys_test_cntr  = 0
 
     if (bsn_cc%cswat == 2) then
         inquire (file='carb_coefs.cbn', exist=i_exist)
@@ -98,23 +97,22 @@ subroutine carbon_coef_read
                 case("tx")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tx
-                case("nmbr_soil_tests")
+                case("nmbr_soil_test_layers")
                     backspace (107)
-                    read (107,*,iostat=eof) var_name, nmbr_soil_tests
-                    allocate(sol_test(nmbr_soil_tests))
+                    read (107,*,iostat=eof) var_name, nmbr_soil_test_layers
+                    allocate(sol_test(nmbr_soil_test_layers))
                 case("soil_test")
                     soil_test_cntr = soil_test_cntr + 1
-                    if (nmbr_soil_tests == 0) then
-                        write(*, fmt="(a)", advance="yes") "Error: The number of soil tests (nmbr_soil_tests) has not been specified"
+                    if (nmbr_soil_test_layers == 0) then
+                        write(*, fmt="(a)", advance="yes") "Error: The number of nmbr_soil_test_layers has not been specified"
                         write(*, fmt="(a)", advance="yes") "       in the input file carb_coefs.cbn."
                         write(*, fmt="(a)")                "       The soil_test values cannot be processed."
                         print*
                         error stop
                     endif
-                    if (soil_test_cntr > nmbr_soil_tests) then
-                        write(*, fmt="(a,i3,a)", advance="yes") "Error: The number of soil_test exceeds the input nmbr_soil_tests ", nmbr_soil_tests
-                        write(*, fmt="(a)", advance="yes")      "       in the input file carb_coefs.cbn."
-                        write(*, fmt="(a)")                     "       The soil_test values cannot be processed."
+                    if (soil_test_cntr > nmbr_soil_test_layers) then
+                        write(*, fmt="(a,i3)", advance="yes") "Error: The number input soil test layers exceeds nmbr_soil_test_layers of ", nmbr_soil_test_layers
+                        write(*, fmt="(a)")                   "       The soil layer test values cannot be processed."
                         print*
                         error stop
                     endif
@@ -137,8 +135,8 @@ subroutine carbon_coef_read
             close (107)
             exit
           enddo
-          if (nmbr_soil_tests > 0 .and. nmbr_soil_tests /= soil_test_cntr ) then
-            write(*, fmt="(a,I3,a,i3)", advance="yes")   "Error: The nmbr_soil_tests of",  nmbr_soil_tests, " does not match the input number of soil_tests of", soil_test_cntr
+          if (nmbr_soil_test_layers > 0 .and. nmbr_soil_test_layers /= soil_test_cntr ) then
+            write(*, fmt="(a,I3,a,i3)", advance="yes")   "Error: The nmbr_soil_tests of",  nmbr_soil_test_layers, " does not match the input number of soil_tests of", soil_test_cntr
             write(*, fmt="(a)", advance="yes")           "       in the input file carb_coefs.soil."
             write(*, fmt="(a)")                          "       The soil_test values cannot be processed."
             print*
