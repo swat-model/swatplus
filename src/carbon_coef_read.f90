@@ -89,6 +89,15 @@ subroutine carbon_coef_read
                 case("lig_frac")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, lig_frac 
+                case("tn")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_con%tn 
+                case("top")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_con%top 
+                case("tx")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_con%tx
                 case("nmbr_soil_tests")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, nmbr_soil_tests

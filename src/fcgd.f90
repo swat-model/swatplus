@@ -1,17 +1,19 @@
     function fcgd(xx)
+
+      use carbon_module, only : org_con
     
       implicit none
       
       real :: fcgd          !             |
-      real :: tn = 0.       !             |
-      real :: top = 0.      !             |
-      real :: tx = 0.       !             |
+      real :: tn            !             |
+      real :: top           !             |
+      real :: tx            !             |
       real :: qq = 0.       !             |
       real :: xx            !             |
       
-      tn = -5.
-      top = 35.
-      tx = 50.
+      tn  = org_con%tn
+      top = org_con%top
+      tx  = org_con%tx
       qq = (tn - top)/(top - tx)
       fcgd = ((xx-tn)**qq)*(tx-xx)/(((top-tn)**qq)*(tx-top))
       if (fcgd < 0.) fcgd = 0.

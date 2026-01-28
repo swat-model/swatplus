@@ -139,13 +139,20 @@
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+            if (soil1(j)%meta(k)%c < 1.0e-9) then
+              rsd_meta%n = decomp%n
+            else
+              rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+            endif
             soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
             rsd_str%n = decomp%n - rsd_meta%n
             soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
             soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
-            
-            rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+            if (soil1(j)%meta(k)%c < 1.0e-9) then
+              rsd_meta%p = decomp%p
+            else
+              rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
+            endif
             soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
             rsd_str%p = decomp%p - rsd_meta%p
             soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
