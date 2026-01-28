@@ -50,7 +50,8 @@
                   rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
-                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer
+                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
+                  pl_rootfr
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
@@ -440,6 +441,9 @@
         
         !! compute plant biomass, leaf, root and seed growth
         call pl_grow
+
+        !! Distribute roots
+        call pl_rootfr
 
         !! reset harvested biomass and number of harvests for yearly yield output
         if (time%end_yr == 1) then
