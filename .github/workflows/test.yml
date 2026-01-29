@@ -16,7 +16,7 @@ jobs:
 
   build:
     runs-on: ${{ matrix.os }}
-    if: endsWith(github.ref_name, 'main') == true
+    if: endsWith(github.ref_name, 'main') == true || github.ref_name == 'NAM_BRANCH_MAIN' || startsWith(github.ref, 'refs/tags/NAM')
     strategy:
       fail-fast: false
       matrix:
