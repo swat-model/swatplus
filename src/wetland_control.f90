@@ -3,7 +3,7 @@
       use reservoir_data_module
       use reservoir_module
       use hru_module, only : hru, sedyld, sanyld, silyld, clayld, sagyld, lagyld, grayld, sedminps, sedminpa,   &
-        surqno3, sedorgn, sedorgp, ihru, pet_day, surfq, tconc, usle_cfac, cklsp, hhsurfq
+        surqno3, sedorgn, sedorgp, ihru, surfq, tconc, usle_cfac, cklsp, hhsurfq
       use conditional_module
       use climate_module
       use hydrograph_module
@@ -19,6 +19,8 @@
       use gwflow_module
       
       implicit none
+      
+      external :: conditions, ero_cfactor, gwflow_wetl, res_hydro, res_nutrient, res_sediment, res_weir_release, wet_cs, wet_salt
      
       real :: bypass = 1.             !              | 
       integer :: j = 0                !none          |counter
@@ -94,7 +96,7 @@
         wet_fr = max(wet_fr,0.01)
         
         !wetland water surface area, not applicable to paddies Jaehak 2025
-		    if (wet_dat_c(ires)%hyd.ne.'paddy') wet_wat_d(j)%area_ha = hru(j)%area_ha * wet_fr
+        if (wet_dat_c(ires)%hyd .ne. 'paddy') wet_wat_d(j)%area_ha = hru(j)%area_ha * wet_fr
 
         !calculate seepage and groundwater interactions
         if(bsn_cc%gwflow == 1) then !rtb gwflow
@@ -111,8 +113,8 @@
         if (volseep>0.1) then
           do j1 = 1, soil(j)%nly
             swst(j1) = soil(j)%phys(j1)%st + volseep
-            if (swst(j1)>soil(j)%phys(j1)%ul*0.9) then !oversaturated Jaehak 2022
-              volex = swst(j1) - soil(j)%phys(j1)%ul*0.9  !excess water. soil is assumed to remain saturated Jaehak 2022
+            if (swst(j1)>soil(j)%phys(j1)%ul*0.999) then !oversaturated Jaehak 2022
+              volex = swst(j1) - soil(j)%phys(j1)%ul*0.999  !excess water. soil is assumed to remain saturated Jaehak 2022
               volseep = min(volex, soil(j)%phys(j1)%k*24.)
               swst(j1) = swst(j1) - volseep
             else
@@ -124,8 +126,8 @@
           volex = 0
           do j1 = soil(j)%nly, 1, -1
             swst(j1) = swst(j1) + volex
-            if (swst(j1)>soil(j)%phys(j1)%ul*0.9) then !oversaturated
-              volex = max(0., swst(j1) - soil(j)%phys(j1)%ul*0.9)  !excess water. 
+            if (swst(j1)>soil(j)%phys(j1)%ul*0.999) then !oversaturated
+              volex = max(0., swst(j1) - soil(j)%phys(j1)%ul*0.999)  !excess water. 
               swst(j1) = swst(j1) - volex                         !update soil water
             endif
           end do
@@ -185,7 +187,10 @@
 
        !! weir discharge (ht2) by decision tables
         call conditions (j, irel)
+        
+        !if (wet(j)%flo > pvol_m3) then
         call res_hydro (j, irel, pvol_m3, evol_m3)
+        !end if
         
         if (hru(j)%area_ha > 1.e-6) then
           !dep = wbody%flo / wet_ob(j)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
@@ -194,10 +199,11 @@
           dep = 0.
         end if
         !! weir discharge by manual operation Jaehak 2025
-        if (sched(isched)%num_autos == 0.and.dep>0.01) then
+        !if (sched(isched)%num_autos == 0 .and. dep > 0.01) then
+        if (wet_dat_c(ires)%hyd == 'paddy') then 
           call res_weir_release (j, irel, ihyd, evol_m3, dep, weir_hgt)
           wet(j)%flo = wbody%flo
-        endif
+        end if
         
       !endif
         !! subtract outflow from storage
@@ -252,9 +258,6 @@
         sedppm=0
         no3ppm=0
       endif
-      
-
-  
       
       !! perform reservoir pesticide transformations
       !call res_pest (ires)
