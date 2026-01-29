@@ -355,6 +355,7 @@
         allocate (soil1(ihru)%cbn(nly), source = 0.)
         allocate (soil1(ihru)%sed(nly))
         allocate (soil1(ihru)%rsd_tot(nly))
+        allocate (soil1(ihru)%root_tot(nly))
         allocate (soil1(ihru)%mn(nly))
         allocate (soil1(ihru)%mp(nly))
         allocate (soil1(ihru)%tot(nly))
