@@ -85,6 +85,7 @@
         type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
         type (plant_residue), dimension(:), allocatable :: pl       !       |fresh surface residue dimensioned by plant and by layer
         type (organic_mass), dimension(:), allocatable :: rsd_tot   !       |total fresh surface residue dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: root_tot   !       |total live roots dimensioned by layer
         !! humus pools for old mineralization model (static carbon)
         type (organic_controls),    dimension(:), allocatable :: org_con_lr  !      |organic contral variables by layer
         type (organic_allocations), dimension(:), allocatable :: org_allo_lr !      |organic allocation variables by layer
@@ -112,6 +113,8 @@
       type (soil_profile_mass), dimension(:), allocatable, target :: soil1
       type (soil_profile_mass), dimension(:), allocatable :: soil1_init
       type (organic_mass) :: soil_prof_tot                          !       |total organic pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_root                         !       |total live roots for profile (summed by lower layers)
+      real                :: soil_prof_root_frac = 0.0              !       |total live root fraction for profile (summed by lower layers)
       type (organic_mass) :: soil_prof_rsd                          !       |total fresh organic residue pool for profile (summed by lower layers)
       type (organic_mass) :: soil_prof_srsd                         !       |total fresh organic residue pool for surface
       type (organic_mass) :: soil_prof_hact                         !       |total active humus pool for profile (summed by layer)
