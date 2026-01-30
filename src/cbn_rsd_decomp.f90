@@ -78,6 +78,13 @@
         do ipl = 1, pcom(j)%npl
           !! mineralization can occur only if temp above 0 deg
           if (soil(j)%phys(k)%tmp > 0.) then
+
+            ! The following if statements are to prevent runtime underflow errors with gfortran 
+            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
+            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
+
             !! compute soil water factor
             sut = .1 + .9 * Sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
             sut = Max(.05, sut)
@@ -121,12 +128,6 @@
             decr = Min(decr, 1.)
             decomp = decr * soil1(j)%pl(ipl)%rsd(k)
             soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - decomp
-
-            ! The following if statements are to prevent runtime underflow errors with gfortran 
-            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
 
             !! add mass and carbon to soil organic pools
             soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
