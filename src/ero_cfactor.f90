@@ -31,6 +31,7 @@
       use organic_mineral_mass_module
       use time_module
       use erosion_module
+      use utils
       
       implicit none
 
@@ -56,10 +57,10 @@
         !! old method using minimum c factor (average of each plant in community)
         cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
         if (pcom(j)%npl > 0) then
-          c = Exp((-.2231 - cvm_com(j)) * Exp(-.00115 * cover) + cvm_com(j))
+          c = exp_w((-.2231 - cvm_com(j)) * Exp(-.00115 * cover) + cvm_com(j))
         else
           if (cover > 1.e-4) then
-            c = Exp(-.2231 * Exp(-.00115 * cover))               
+            c = exp_w(-.2231 * exp_w(-.00115 * cover))               
           else
             c = .8
           end if
@@ -79,19 +80,19 @@
           grnd_sumfac = 10.
         end if
         
-        rsd_pctcov = 100. * (1. - Exp(-rsd_sumfac))
+        rsd_pctcov = 100. * (1. - exp_w(-rsd_sumfac))
         rsd_pctcov = amin1 (100., rsd_pctcov)
         rsd_pctcov = max (0., rsd_pctcov)
-        rsd_covfact = Exp (-pcom(j)%rsd_covfac * rsd_pctcov)
+        rsd_covfact = exp_w (-pcom(j)%rsd_covfac * rsd_pctcov)
         
         can_frcov = amin1 (1., pcom(j)%lai_sum)
         can_frcov = amin1 (1., pcom(j)%lai_sum / 3.)
-        can_covfact = 1. - can_frcov * Exp(-.328 * pcom(j)%cht_mx)
+        can_covfact = 1. - can_frcov * exp_w(-.328 * pcom(j)%cht_mx)
         can_covfact = amin1 (1., can_covfact)
         can_covfact = max (0., can_covfact)
         
         grnd_sumfac = Min (10., grnd_sumfac)
-        grnd_covfact = (1. - Exp(-grnd_sumfac))
+        grnd_covfact = (1. - exp_w(-grnd_sumfac))
         grnd_covfact = amin1 (1., grnd_covfact)
         grnd_covfact = max (0., grnd_covfact)
         
@@ -112,12 +113,12 @@
           can_covfact = amin1 (can_covfact, pcom(j)%plg(ipl)%cht)
         end do
         !grnd_covfact = grnd_sumfac / (grnd_sumfac + exp(1.175 - 1.748 * grnd_sumfac))
-        rsd_covfact = exp(-bsn_prm%rsd_covco * rsd_sumfac)
+        rsd_covfact = exp_w(-bsn_prm%rsd_covco * rsd_sumfac)
         
         can_frcov = amin1 (1., pcom(j)%lai_sum / 3.)
-        can_covfact = 1. - can_frcov * Exp(-.328 * pcom(j)%cht_mx)
+        can_covfact = 1. - can_frcov * exp_w(-.328 * pcom(j)%cht_mx)
         
-        grnd_covfact = exp(-pldb(idp)%usle_c * grnd_sumfac)
+        grnd_covfact = exp_w(-pldb(idp)%usle_c * grnd_sumfac)
         !! bio_covfac = 1. - grnd_covfact * exp(-0.1 * can_covfact)
         c = Max(1.e-10, rsd_covfact * grnd_covfact)  ! * can_covfact)
         
