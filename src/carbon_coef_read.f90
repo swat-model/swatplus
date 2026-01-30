@@ -125,10 +125,10 @@ subroutine carbon_coef_read
                                                       sol_test(soil_test_cntr)%silt,    &
                                                       sol_test(soil_test_cntr)%clay   
                 case default
-                    write(*, fmt="(a,a,a)", advance="yes") "Error: The variable ", var_name, "in the input file carb_coefs.cbn is not a recognized variable."
-                    write(*, fmt="(a)")                    "       and cannot be processed."
-                    print*
-                    error stop
+                    write(9001, fmt="(a,a,a)", advance="yes") "WARNING: The variable ", var_name, "in the input file carb_coefs.cbn is not a recognized variable."
+                    write(9001, fmt="(a)", advance="yes")     "and cannot be processed. Ignoring this variable."
+                    print*, "WARNING: The variable ", var_name, "in the input file carb_coefs.cbn is not a recognized variable."
+                    print*, "and cannot be processed. Ignoring this variable."
               end select
             enddo
             carbon_coef_file = .true.
