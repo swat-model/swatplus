@@ -2498,6 +2498,7 @@
             gwsol_ss(i)%solute(s)%totl = 0.
           enddo
         enddo
+        hru_soil = 0.
         mass_adv = 0.
         mass_dsp = 0.
         mass_rct = 0.

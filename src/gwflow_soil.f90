@@ -74,7 +74,7 @@
                   if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                     solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                   endif
-                  gwsol_ss(cell_id)%solute(s)%soil = solmass(s) * (-1) !negative = leaving the aquifer
+                  gwsol_ss(cell_id)%solute(s)%soil = gwsol_ss(cell_id)%solute(s)%soil + solmass(s) * (-1) !negative = leaving the aquifer
                   gwsol_ss_sum(cell_id)%solute(s)%soil = gwsol_ss_sum(cell_id)%solute(s)%soil + (solmass(s)*(-1))
                 enddo  
               endif !end solutes
