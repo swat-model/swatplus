@@ -33,9 +33,44 @@
       real :: res_h = 0.           !m         |water depth
       real :: demand = 0.          !m3        |irrigation demand by hru or wro
       real :: wsa1 = 0.            !m2        |water surface area 
-      real :: qout = 0.            !m3        |weir discharge during short time step
-      real :: hgt_above = 0.       !m         |height of water above the above bottom of weir
-      
+      real :: qout = 0.                !m3        |weir discharge during short time step
+      real :: hgt = 0.                 !m         |height of bottom of weir above bottom of impoundment
+      real :: hgt_above = 0.      !m         |height of water above the above bottom of weir
+      real :: sto_max = 0.             !m3        |maximum storage volume at the bank top
+
+
+      !! Jose T 2025 |  Doell method
+      real :: sto               = 0.                                          !m3         |Current lake storage
+      real :: smax              = 0.                                          !m3         |Maximum lake stirage
+      real :: so                = 0.                                          !m3         |Dead lake storage
+      real :: kr                = 0.                                          !1/d        |Release coefficient
+      real :: alpha             = 0.                                          !none       |Exponent
+
+      !! Jose T 2025 |  Hanazaki method
+      real :: er                = 1.00                                        !           |Release rate
+      real :: I_mon             = 0.00                                        !m3         |Monthly inflow
+      real :: d_mon             = 0.00                                        !m3         |Monthly demand
+      real :: beta              = 0.10                                        !none       |Environmental flow req coefficient
+      real :: target_rel        = 0.                                          !m3         |Target release
+
+
+      !! Jose T 2025 |  HYPE model for HP method
+      real :: pi                = 3.14159265358979323846                      !Pi :)
+      real :: a_amp             = 0.                                          !none       |Amplitude of the sine function
+      real :: b_phase           = 0.                                          !none       |Phase of the sine function
+      real :: s_min_hype        = 0.                                          !m3         |Storage at turbine intake (no release below this)
+      real :: s_lim_hype        = 0.                                          !m3         |Storage at which energy production starts being limited (below 'desired' hydraulic head for turbines)
+      real :: F_sin             = 0.                                          !none       |Seasonal demand factor
+      real :: F_lin             = 0.                                           !none       |Storage limiting factor
+
+      integer :: dom            = 0                                           !           |Day of month
+      integer :: mon            = 0                                           !           |Month of year
+      integer :: end_of_mo      = 0                                           !           |End of month flag
+
+      dom          = time%day_mo
+      mon          = time%mo
+      end_of_mo    = time%end_mo
+
       !! store initial values
       vol = wbody%flo
       nstep = 1
@@ -170,10 +205,10 @@
               res_h = vol / wsa1     !m
               hgt_above = max(0., res_h - wet_ob(jres)%weir_hgt)    !m
               if (nstep>1) then !subdaily time interval Jaehak 2025
-                
+
                 !---------------------------------------------------------------------------------------------------------------
                 !Weir discharge configured for 5m width and 100mm weir height to fully discharge in 3 days
-                ht2%flo = (wbody_wb%area_ha*0.45) * res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s 
+                ht2%flo = (wbody_wb%area_ha*0.45) * res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k !m3/s
                 ht2%flo = max(0.,86400. / nstep * ht2%flo) !m3
                 !---------------------------------------------------------------------------------------------------------------
                 vol = vol - ht2%flo
@@ -189,7 +224,7 @@
                     ht2%flo = ht2%flo + vol_above !weir discharge volume for the day, m3
                     vol = vol - vol_above
                   else
-                    ht2%flo = ht2%flo + qout 
+                    ht2%flo = ht2%flo + qout
                     vol = vol - qout
                   end if
                   res_h = vol / wsa1 !m
@@ -215,7 +250,110 @@
                 ht2%flo = ht2%flo + recall(irel)%hd(1,time%yrs)%flo / nstep
               end select
               ht2%flo = max(0.,ht2%flo)
-              
+
+            case ("natlake")
+                !! Jose T | release as natural lake based on Doell (2003) formilation
+
+                so    = dtbl_res(id)%act(iac)%const * pvol_m3                                   ! Inactive storage (% of Pvol)
+                smax  = pvol_m3                                                                 ! Max lake storage coefficient (% of Pvol) - defined on dtl
+                sto   = vol - so                                                                ! Current effective storage
+                kr    = dtbl_res(id)%act(iac)%const2                                            ! 0.01 ! 1/d  Release coefficient
+                alpha = 1.50                                                                    ! Exponent
+
+                ht2%flo = ht2%flo + ((sto/(smax - so)) ** alpha) * sto * kr
+
+            case ("nonirr-h06")
+                !! Jose T | Time-variant parametric scheme [h06] (Hanazaki et al. 2006) for non-irrigation reservoirs
+                !! release as non-irrigation reservoir
+                smax                 = max(pvol_m3,evol_m3)
+                alpha                = dtbl_res(id)%act(iac)%const
+                I_mon                = res_ob(jres)%I_mon_past(12*(res_ob(jres)%N_memory))            ! m3/day
+                res_ob(jres)%I_mean  = sum(res_ob(jres)%I_mon_past)/size(res_ob(jres)%I_mon_past)     ! Long term mean inflow from rolling window (m3/day)
+
+                res_ob(jres)%c_ratio = smax/(res_ob(jres)%I_mean*365.25)                              ! Update capacity ratio
+
+                !! Verify if new operational year is starting
+                if (dom == 1) then                                                                    ! This update only occurs at the beginning of the month
+                    if (I_mon<res_ob(jres)%I_mean) then
+                        res_ob(jres)%S_ini = vol                                                      ! Current storage is now S_ini
+                    end if
+
+                    !! If storage getting close to pvol, update S_ini to increase release rate (Not in the original method)
+                    if (vol > pvol_m3) then
+                        res_ob(jres)%S_ini = vol
+                    end if
+
+                end if
+
+                !! Update release rate
+                er = res_ob(jres)%S_ini/(alpha*smax)
+
+                !! Define release target
+                target_rel =  res_ob(jres)%I_mean
+
+                !! Calculate release
+                if (res_ob(jres)%c_ratio >= 0.5) then
+                    ht2%flo = ht2%flo + er * target_rel
+                else
+                    ht2%flo = er*target_rel*(2*res_ob(jres)%c_ratio)**2 + (1-(2*res_ob(jres)%c_ratio)**2)*I_mon
+                end if
+
+            case ("irr-h06")
+                !! Jose T | Time-variant parametric scheme (Hanazaki et al. 2006) for irrigation reservoirs
+                !! release as irrigation reservoir
+                smax                 = max(pvol_m3,evol_m3)
+                alpha                = dtbl_res(id)%act(iac)%const
+                beta                 = dtbl_res(id)%act(iac)%const2
+                I_mon                = res_ob(jres)%I_mon_past(12*(res_ob(jres)%N_memory))                ! m3/day
+                d_mon                = res_ob(jres)%d_mon_past(12*(res_ob(jres)%N_memory))                ! m3/day
+                res_ob(jres)%I_mean  = sum(res_ob(jres)%I_mon_past)/size(res_ob(jres)%I_mon_past)         ! Long term mean inflow from rolling window (m3/day)
+                res_ob(jres)%d_mean  = sum(res_ob(jres)%d_mon_past)/size(res_ob(jres)%d_mon_past)         ! Long term mean demand from rolling window (m3/day)
+                res_ob(jres)%c_ratio = smax/(res_ob(jres)%I_mean*365.25)                                  ! Update capacity ratio
+                !! Verify if new operational year is starting
+                if (dom == 1) then                                                                        ! This update only occurs at the beginning of the month
+                    if (I_mon<res_ob(jres)%I_mean) then
+                        res_ob(jres)%S_ini = vol                                                          ! Current storage is now S_ini
+                    end if
+                    !! If storage getting close to pvol, update S_ini to increase release rate (Not in the original method)
+                    if (vol > pvol_m3) then
+                        res_ob(jres)%S_ini = vol
+                    end if
+                end if
+
+                !! Update release rate
+                er = res_ob(jres)%S_ini/(alpha*smax)
+
+                !! Determine release target (Condition depends on wether the irrigation demand surpassess environmental flow requirements)
+                if (res_ob(jres)%d_mean >= beta*res_ob(jres)%I_mean) then
+                    target_rel = 0.10*res_ob(jres)%I_mean + 0.9*(d_mon/res_ob(jres)%d_mean)
+
+                else
+                    target_rel = res_ob(jres)%I_mean + d_mon - res_ob(jres)%d_mean
+
+                end if
+
+                !! Calculate release
+                if (res_ob(jres)%c_ratio >= 0.5) then
+                    ht2%flo = ht2%flo + er * target_rel
+                else
+                    ht2%flo = er*target_rel*(2*res_ob(jres)%c_ratio)**2 + (1-(2*res_ob(jres)%c_ratio)**2)*I_mon
+                end if
+
+            case ("hydrop")
+                !! HYPE Model Hydroelectric Power Reservoir release scheme (Scheme by Arheimer et al, 2019 and implementation by Gahari et al, 2024)
+                a_amp       = dtbl_res(id)%act(iac)%const
+                b_phase     = dtbl_res(id)%act(iac)%const2
+                s_min_hype  = 0.20 * pvol_m3
+                s_lim_hype  = 0.50 * pvol_m3
+                res_ob(jres)%I_mean  = sum(res_ob(jres)%I_mon_past)/size(res_ob(jres)%I_mon_past)           ! Long term mean inflow from rolling window (m3/day)
+
+                F_lin  = min(1.,max(0.,(vol-s_min_hype)/(s_lim_hype-s_min_hype)))                           ! Linear factor based on storage limitations for energy
+                F_sin  = max(0.,1.0 + a_amp *((2*pi*time%day + b_phase)/(365.)))                            ! Sinusoidal factor based on demand per day of the year
+
+                target_rel =  res_ob(jres)%I_mean
+
+                ht2%flo = ht2%flo + F_lin*F_sin*target_rel
+
             end select
           
           end if    ! if action hit
