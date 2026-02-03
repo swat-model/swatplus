@@ -477,7 +477,7 @@
           strstmp_av = strstmp_av / npl_gro
         end if
 
-        !! compute aoil water content to 300 mm depth
+        !! compute soil water content to 300 mm depth
         soil(j)%sw_300 = 0.
         do ly = 1, soil(j)%nly
           if (ly == 1) then
