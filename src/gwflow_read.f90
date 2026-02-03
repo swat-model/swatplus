@@ -118,7 +118,7 @@
       real :: usgs_long = 0.          !          |
       real(8) :: usgs_site_id = 0.d0  !          |
       !national model variables
-      integer :: huc12_connect(1000) = 0!          |huc12 catchments that are in connection with cells
+      integer :: huc12_connect(1000) = 0!        |huc12 catchments that are in connection with cells
       real(8) :: huc12_id = 0.d0      !          |
       real(8) :: huc12_dum = 0.d0     !          |
       !dummy variables for reading
@@ -170,7 +170,7 @@
       write(out_gw,*) '     reading basic information...'
       read(in_gw,*) grid_type                       !structured or unstructured
       if (grid_type == "structured") then
-        read(in_gw,*) cell_size                     !area (m2) of each grid cell
+        read(in_gw,*) cell_size                     !cell size (m) of each grid cell
         read(in_gw,*) grid_nrow,grid_ncol           !number of rows and columns in the gwflow grid
       else if (grid_type == "unstructured") then
         read(in_gw,*) ncell                         !number of gwflow cells
