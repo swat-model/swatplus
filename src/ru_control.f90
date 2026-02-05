@@ -232,11 +232,10 @@
           case ("hru")
             do ii = 1, time%step
               !! conversion from mm to m3 and apply delivery ratio
-              cnv = ru_elem(ise)%frac * ob(icmd)%area_ha * delrto%flo
+              cnv = ru_elem(ise)%frac * ob(icmd)%area_ha * delrto%flo * 10. / (time%dtm * 60.0)
               ts_flo_mm = cnv * hhsurfq(ihru,ii)
               iday_cur = ob(icmd)%day_cur
               !! hru hyd_flo in m3
-              rto = (ru_elem(ise)%frac * ob(icmd)%area_ha) / ob(iob)%area_ha
               ob(icmd)%hyd_flo(iday_cur,ii) = ob(iob)%hyd_flo(iday_cur,ii) + ts_flo_mm
             end do
             case ("res")
