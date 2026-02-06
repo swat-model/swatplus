@@ -198,7 +198,7 @@
       if (time%step > 1) then
         if (bsn_cc%gampt == 1) then
           !! hhsurfq from sq_greenampt - mm
-          ob(icmd)%hyd_flo(day_cur,:) = ob(icmd)%hyd_flo(day_cur,:) + hhsurfq(j,:) * cnv_m3
+          ob(icmd)%hyd_flo(day_cur,:) = ob(icmd)%hyd_flo(day_cur,:) + hhsurfq(j,:) * cnv_m3 / time%dtm * 60.
           
           !! translate the hydrogrpah by time of concentration - no attenuation
           ob(icmd)%hyd_flo(day_next,:) = 0.
