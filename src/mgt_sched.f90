@@ -92,7 +92,7 @@
               if (mgt%op_char == pcomdb(icom)%pl(ipl)%cpnm) then
                 !! check to see if the crop is already growing
                 if (pcom(j)%plcur(ipl)%gro == "n") then
-                !! plant if the crop is not growing
+                  !! plant if the crop is not growing
                   pcom(j)%plcur(ipl)%gro = "y"
                   pcom(j)%plcur(ipl)%idorm = "n"
                   call mgt_plantop
@@ -111,13 +111,13 @@
                           pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
                           sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
                       end if
-                    else
-                      if (pco%mgtout ==  "y") then
-                        write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "    PLANT ",    &
-                          phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
-                          pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
-                          sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
-                      end if
+                    endif
+                  else
+                    if (pco%mgtout ==  "y") then
+                      write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "    PLANT ",    &
+                        phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
+                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
+                        sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
                     end if
                   end if
                 else
