@@ -169,14 +169,14 @@
                               + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
           
           !write all organic carbon for the plant community file = "hru_plc_stat.txt"
-          write (4560,*) freq_label, time%day, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+          write (4560,*) freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
               pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                 &
-              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
+              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
           ! file = "hru_plc_stat.csv"
           if (pco%csvout == "y") then
-              write (4563,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              write (4563,'(*(G0.7,:,","))') freq_label, time%day, time%day_mo, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
               pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
-              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
+              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
           end if
             
           !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
