@@ -367,8 +367,11 @@
           end if
         end if
        
-        !! compute surface residue decomposition for each plant in community
-        call rsd_decomp
+        !! compute surface residue decomposition for each plant in community 
+        !! if cswat not equal to 2
+        if (bsn_cc%cswat /= 2) then
+          call rsd_decomp
+        end if
         
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
@@ -477,7 +480,7 @@
           strstmp_av = strstmp_av / npl_gro
         end if
 
-        !! compute aoil water content to 300 mm depth
+        !! compute soil water content to 300 mm depth
         soil(j)%sw_300 = 0.
         do ly = 1, soil(j)%nly
           if (ly == 1) then

@@ -38,10 +38,16 @@ tn             -0.5
 top            35.0
 tx             50.0
 
-# Soil Test Values (sname and depth_mm are required, enter 0.0 for missing values).
-# If sand, silt, clay are not 0.0 they must total to 100.0
-# data are assumed to be weighted average values down to depth_mm
-nmbr_soil_tests  2
+# Soil Test Values for each layer
+# soil_name and depth_mm are required, enter -1 for other values if missing.
+# The order of entry must be asending depths for each soil.
+# If sand, silt, clay are not -1 they must total to 100.0
+# Their should be a unique mapping between the soil_name below and in hru_data.hru 
+# and soils.sol file to prevent overwiting soil information for other
+# hrus.
+nmbr_soil_test_layers 4
 #         soil_name      depth_mm  bulk_density carbon %sand    %silt   %clay
 soil_test soil_01-h1     150        2.0         4.0     30.0     30.0    40.0 
-soil_test soil_03-h3     150        1.6         3.0     40.0     30.0    30.0
+soil_test soil_01-h1     250        1.5         3.0     25.0     35.0    40.0 
+soil_test soil_03-h3     125        1.6         3.0     40.0     30.0    30.0
+soil_test soil_03-h3     150        2.0         3.0     15.0     45.0    40.0
