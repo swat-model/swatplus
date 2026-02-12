@@ -236,6 +236,7 @@
       type (object_deposition_cs), dimension (:), allocatable :: atmodep_cs
       
       !rtb salt
+      integer :: salt_road_flag = 0
       type road_salt
         real :: road = 0.                            !! ave annual salt ion loading via road salt application (kg/ha)
         real, dimension(:,:), allocatable :: roadday !! daily salt ion loading via road salt application (kg/ha)
