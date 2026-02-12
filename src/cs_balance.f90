@@ -112,8 +112,8 @@
       cssum1 = 0.
       cssum2 = 0.
       cssum3 = 0.
-      if (bsn_cc%gwflow == 1) then !gwflow is active; loop through cells (add to tile flow from HRUs)
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then !gwflow is active; loop through cells (add to tile flow from HRUs)
+        if(gw_solute_flag) then
           do i=1,ncell
             sol_index = 2 + cs_db%num_salts
             cssum1 = cssum1 + (gwsol_ss(i)%solute(sol_index+1)%tile * (-1) / 1000.) !kg seo4  
@@ -350,8 +350,8 @@
       cssum1 = 0.
       cssum2 = 0.
       cssum3 = 0.
-      if (bsn_cc%gwflow == 1) then !gwflow is active; loop through cells
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then !gwflow is active; loop through cells
+        if(gw_solute_flag) then
           do i=1,ncell
             sol_index = 2 + cs_db%num_salts
             !seo4
@@ -383,8 +383,8 @@
       cssum1 = 0.
       cssum2 = 0.
       cssum3 = 0.
-      if (bsn_cc%gwflow == 1) then !gwflow is active
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then !gwflow is active
+        if(gw_solute_flag) then
           do i=1,ncell
             sol_index = 2 + cs_db%num_salts
             cssum1 = cssum1 + (gwsol_ss(i)%solute(sol_index+1)%rech / 1000.) !kg seo4
@@ -420,8 +420,8 @@
       cssum1 = 0.
       cssum2 = 0.
       cssum3 = 0.
-      if (bsn_cc%gwflow == 1) then !gwflow is active
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then !gwflow is active
+        if(gw_solute_flag) then
           do i=1,ncell
             sol_index = 2 + cs_db%num_salts
             cssum1 = cssum1 + ((gwsol_ss(i)%solute(sol_index+1)%rcti+gwsol_ss(i)%solute(sol_index+1)%rcto) / 1000.) !kg seo4 
@@ -444,8 +444,8 @@
       cssum1 = 0.
       cssum2 = 0.
       cssum3 = 0.
-      if (bsn_cc%gwflow == 1) then !gwflow is active
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then !gwflow is active
+        if(gw_solute_flag) then
           do i=1,ncell
             sol_index = 2 + cs_db%num_salts
             cssum1 = cssum1 + (gwsol_ss(i)%solute(sol_index+1)%sorb / 1000.) !kg seo4 
@@ -468,8 +468,8 @@
       cssum1 = 0.
       cssum2 = 0.
       cssum3 = 0.
-      if (bsn_cc%gwflow == 1) then !gwflow is active
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then !gwflow is active
+        if(gw_solute_flag) then
           do i=1,ncell
             if(gw_state(i)%stat > 0) then
               sol_index = 2 + cs_db%num_salts
@@ -670,8 +670,8 @@
       enddo
       
       !if gwflow active: zero out daily cell values for recharge, reactions, and sorption (others are zeroed out in gwflow_simulate)
-      if (bsn_cc%gwflow == 1) then
-        if (gw_solute_flag == 1) then
+      if(bsn_cc%gwflow == 1) then
+        if(gw_solute_flag) then
           sol_index = 2 + cs_db%num_salts + 1
           do m=1,cs_db%num_cs
             do i=1,ncell
@@ -682,14 +682,15 @@
               gwsol_ss(i)%solute(sol_index)%sorb = 0.
             enddo
             sol_index = sol_index + 1
-                    enddo   !go to next constituent
+					enddo	!go to next constituent
         endif
       endif
       
       
 7000  format(i8,i8,i8,100e16.8)
-!*** tu Wunused-label: 7001  format(20e16.8)
-!*** tu Wunused-label: 7002  format(i8,50f16.8)
+7001  format(20e16.8)
+7002  format(i8,50f16.8)
 
       return
       end
+			
