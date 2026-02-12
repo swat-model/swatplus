@@ -13,23 +13,24 @@
       character (len=80) :: file = "" !           |filename
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
+      character (len=12) :: first_word = ""
       character (len=4) :: salt_ion = ""!           |
       character (len=15) :: station_name = "" !       |
       integer :: eof = 0              !           |end of file
-      integer :: iadep = 0            !           |counter
-      integer :: imo = 0              !           |counter
-      integer :: iyr = 0              !           |counter
-      integer :: imo_atmo = 0         !           |
+      integer :: iwst = 0             !           |weather station counter
+      integer :: num_wth = 0          !           |number of weather stations
+      integer :: iyr = 0              !           |counter       !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo = 0        !           |
       integer :: isalt = 0            !           |salt ion counter
-      integer :: imonth = 0           !           |month counter
       integer :: year_index = 0
       integer :: yr_weat = 0
       integer :: year_days = 0
       integer :: iday = 0
       integer :: day_flag(366) = 0
       integer :: dum = 0
+      integer :: start_year = 0
+      integer :: end_year = 0
+      integer :: num_yr = 0
       real    :: day_precip = 0.
       real    :: day_temp = 0.
       real    :: year_precip = 0.
@@ -44,101 +45,90 @@
       inquire (file='salt_road',exist=i_exist)
       if(i_exist) then
         
+		!set flag
+		salt_road_flag = 1
+			
         !open the file; skip first two lines (commentary)
         open(5051,file='salt_road')
         read(5051,*)
         read(5051,*)
-        read(5051,*)
-        read(5051,*)
+        read(5051,*) first_word,start_year
+				read(5051,*) first_word,end_year
+				num_yr = end_year - start_year
       
+				!number of weather stations
+				num_wth = db_mx%wst
+				
         !allocate arrays
-        allocate (rdapp_salt(0:atmodep_cont%num_sta))
+        allocate(rdapp_salt(0:num_wth))
 
-        !loop through the stations (num_sta is set in cli_read_atmodep subroutine)
-        do iadep = 1, atmodep_cont%num_sta
+        !loop through the weather stations (listed in weather-sta.cli)
+        do iwst=1,num_wth
           
           !allocate arrays
-          allocate (rdapp_salt(iadep)%salt(cs_db%num_salts))
+          allocate(rdapp_salt(iwst)%salt(cs_db%num_salts))
           
-          !average annual values
-          if (atmodep_cont%timestep == "aa") then
-            read(5051,*) station_name !station name --> already read in cli_read_atmodep
-            do isalt=1,cs_db%num_salts
-              read(5051,*) salt_ion,rdapp_salt(iadep)%salt(isalt)%road
-            enddo  
-          endif
-          
-          !monthly values
-          if (atmodep_cont%timestep == "mo") then
-            read(5051,*) station_name !station name
-            do isalt=1,cs_db%num_salts
-              allocate (rdapp_salt(iadep)%salt(isalt)%roadmo(atmodep_cont%num), source = 0.)
-              read(5051,*) salt_ion,(rdapp_salt(iadep)%salt(isalt)%roadmo(imo),imo=1,atmodep_cont%num)
-            enddo 
-          end if
-                              
           !yearly values
-          if (atmodep_cont%timestep == "yr") then
-            read(5051,*) station_name !station name
-            do isalt=1,cs_db%num_salts
-              allocate (rdapp_salt(iadep)%salt(isalt)%roadyr(atmodep_cont%num), source = 0.)
-              read(5051,*) salt_ion,(rdapp_salt(iadep)%salt(isalt)%roadyr(iyr),iyr=1,atmodep_cont%num)
-            enddo 
-            !loop through the years, partitioning annual salt load to daily salt loadings
-            !(based on precipitation and temperature)
-            do isalt=1,cs_db%num_salts
-              allocate (rdapp_salt(iadep)%salt(isalt)%roadday(366,atmodep_cont%num), source = 0.)
-              rdapp_salt(iadep)%salt(isalt)%roadday = 0.
-                                    enddo
-            year_index = atmodep_cont%yr_init
-            yr_weat = 1 !weather year index
-            do iyr=1,atmodep_cont%num
-              !number of days in the year
-              if(mod(year_index,4) == 0) then
-                year_days = 366
-              else
-                year_days = 365
-              endif
-              if(year_index .ge. time%yrc_start) then
-                year_precip = 0.
-                day_flag = 0
-                !first, determine days of snow, and total precipitation on days of snow
-                do iday=1,year_days
-                  !determine if there is snow (likely) 
-                  day_precip = pcp(iadep)%ts(iday,yr_weat) !mm
-                  day_temp = (tmp(iadep)%ts(iday,yr_weat) + tmp(iadep)%ts2(iday,yr_weat)) / 2 !average daily temp (oC)
-                  if(day_temp.ne.-99) then
-                    if(day_precip > 0 .and. day_temp < 0) then
-                      day_flag(iday) = 1
-                      year_precip = year_precip + day_precip !mm
-                    endif
+          read(5051,*) station_name !station name
+          do isalt=1,cs_db%num_salts
+            allocate(rdapp_salt(iwst)%salt(isalt)%roadyr(num_yr))
+            read(5051,*) salt_ion,(rdapp_salt(iwst)%salt(isalt)%roadyr(iyr),iyr=1,num_yr)
+          enddo 
+          !loop through the years, partitioning annual salt load to daily salt loadings
+          !(based on precipitation and temperature)
+          do isalt=1,cs_db%num_salts
+            allocate(rdapp_salt(iwst)%salt(isalt)%roadday(366,num_yr))
+            rdapp_salt(iwst)%salt(isalt)%roadday = 0.
+					enddo
+          yr_weat = 1
+          year_index = start_year
+          do iyr=1,num_yr
+            !number of days in the year
+            if(mod(year_index,4) == 0) then
+              year_days = 366
+            else
+              year_days = 365
+            endif
+            if(year_index .ge. time%yrc_start) then
+              year_precip = 0.
+              day_flag = 0
+              !first, determine days of snow, and total precipitation on days of snow
+              do iday=1,year_days
+                !determine if there is snow (likely, based on precipitation and temperature) 
+                day_precip = pcp(iwst)%ts(iday,yr_weat) !mm
+                day_temp = (tmp(iwst)%ts(iday,yr_weat) + tmp(iwst)%ts2(iday,yr_weat)) / 2 !average daily temp (oC)
+                if(day_temp.ne.-99) then
+                  if(day_precip > 0 .and. day_temp < 0) then
+                    day_flag(iday) = 1
+                    year_precip = year_precip + day_precip !mm
                   endif
-                enddo
-                !second, calculate daily salt loading (using  fractions (fraction of yearly snow that falls on each day)
-                do iday=1,year_days
-                  if(day_flag(iday) == 1) then
-                    day_fraction = pcp(iadep)%ts(iday,yr_weat) / year_precip
-                    do isalt=1,cs_db%num_salts
-                      rdapp_salt(iadep)%salt(isalt)%roadday(iday,iyr) = rdapp_salt(iadep)%salt(isalt)%roadyr(iyr) * day_fraction !kg/ha
-                    enddo
-                  endif
-                enddo
-                yr_weat = yr_weat + 1
-              else !no precipitation data --> set daily values to 0
-                do iday=1,year_days
+                endif
+              enddo
+              !second, calculate daily salt loading (using  fractions (fraction of yearly snow that falls on each day)
+              do iday=1,year_days
+                if(day_flag(iday) == 1) then
+                  day_fraction = pcp(iwst)%ts(iday,yr_weat) / year_precip
                   do isalt=1,cs_db%num_salts
-                    rdapp_salt(iadep)%salt(isalt)%roadday(iday,iyr) = 0.
+                    rdapp_salt(iwst)%salt(isalt)%roadday(iday,yr_weat) = rdapp_salt(iwst)%salt(isalt)%roadyr(yr_weat) * day_fraction !kg/ha
                   enddo
+                endif
+              enddo
+			        yr_weat = yr_weat + 1
+            else !no precipitation data --> set daily values to 0
+              do iday=1,year_days
+                do isalt=1,cs_db%num_salts
+                  rdapp_salt(iwst)%salt(isalt)%roadday(iday,iyr) = 0.
                 enddo
-              endif
-              year_index = year_index + 1
-            enddo 
-          end if
+              enddo
+            endif
+            year_index = year_index + 1
+          enddo 
           
-        end do !go to next station
+        enddo !go to next weather station
       
       endif
       endif
            
       return
-      end subroutine salt_roadsalt_read
+    end subroutine salt_roadsalt_read
+    

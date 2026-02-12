@@ -33,14 +33,15 @@
       real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
       real :: chan_csol(100) = 0.        !g/m3   |solute concentration in channel water
       real :: solmass(100) = 0.          !g      |solute mass transferred
-      
+      real :: heat_flux = 0.             !J      |heat in water transfer
+      real :: chan_heat = 0.             !J      |heat in channel water
       
       
       !record starting channel volume (m3)
       chan_volume = ch_stor(chan_id)%flo
       
       !only proceed if floodplain option is activated
-      if (gw_fp_flag == 1) then
+      if(gw_fp_flag) then
       
         !loop through the cells connected to the current channel
         do k=1,gw_fpln_info(chan_id)%ncon
@@ -49,7 +50,7 @@
           cell_id = gw_fpln_info(chan_id)%cells(k)
           
           !only proceed if the cell is active
-          if (gw_state(cell_id)%stat == 1) then 
+          if(gw_state(cell_id)%stat.eq.1) then 
           
             !characteristics of channel
             chan_depth = sd_ch(chan_id)%chd !depth (m) of water in channel
@@ -62,7 +63,7 @@
             !derived values
             chan_stage = bed_elev + chan_depth !stage of water in channel (m)
             
-                  !adjust flow area, if necessary (if floodplain cell is also a river cell; exchange already calculated for main channel)
+						!adjust flow area, if necessary (if floodplain cell is also a river cell; exchange already calculated for main channel)
             if(gw_fpln_info(chan_id)%mtch(k) > 0) then
               chan_cell = gw_fpln_info(chan_id)%mtch(k)
               riv_flow_area = sd_ch(chan_id)%chw * gw_chan_len(chan_cell) !width * length = river cell exchange flow area
@@ -82,10 +83,8 @@
             
             !compare potential Q to available water in cell or channel
             if(Q < 0) then !leaving aquifer
-              !if ((Q*-1 == 1) >= gw_state(cell_id)%stor) then !can only remove what is there
-              if (-Q >= gw_state(cell_id)%stor) then !can only remove what is there              
-                !Q = gw_state(cell_id)%stor * (-1)
-                Q = -gw_state(cell_id)%stor
+              if((Q*-1) >= gw_state(cell_id)%stor) then !can only remove what is there
+                Q = gw_state(cell_id)%stor * (-1)
               endif
               gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !remove discharged groundwater
             else !entering aquifer
@@ -96,14 +95,47 @@
             endif
 
             !store for channel object (positive value = water added to channel)
-            ch_stor(chan_id)%flo = ch_stor(chan_id)%flo + (Q*(-1))
+            ch_stor(chan_id)%flo = ch_stor(chan_id)%flo + (Q*(-1)) 
             
             !add to gwflow source/sink arrays
             gw_ss(cell_id)%fpln = gw_ss(cell_id)%fpln + Q
-            gw_ss_sum(cell_id)%fpln = gw_ss_sum(cell_id)%fpln + Q
+            gw_ss_sum(cell_id)%fpln = gw_ss_sum(cell_id)%fpln + Q !store for annual water
+            gw_ss_sum_mo(cell_id)%fpln = gw_ss_sum_mo(cell_id)%fpln + Q !store for monthly water
+            
+            !heat
+            if(gw_heat_flag) then
+              !current heat in channel
+              chan_heat = ch_stor(chan_id)%temp * gw_rho * gw_cp * ch_stor(chan_id)%flo !J in channel
+              if(Q < 0) then !leaving the cell (aquifer --> channel)
+                heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * Q !J
+                if(-heat_flux >= gwheat_state(cell_id)%stor) then
+                  heat_flux = -gwheat_state(cell_id)%stor
+                endif
+                gwheat_state(cell_id)%stor = gwheat_state(cell_id)%stor + heat_flux
+              else !entering cell (channel --> aquifer)
+                heat_flux = 0.
+                if(ch_stor(chan_id)%temp > 0) then
+                  heat_flux = ch_stor(chan_id)%temp * gw_rho * gw_cp * Q !J
+                  if(heat_flux > chan_heat) then
+                    heat_flux = chan_heat
+                  endif
+                  gwheat_state(cell_id)%stor = gwheat_state(cell_id)%stor + heat_flux
+                endif
+              endif
+              !update channel heat and temperature
+              chan_heat = chan_heat + (heat_flux*(-1))
+              if(ch_stor(chan_id)%flo > 0) then
+                ch_stor(chan_id)%temp = chan_heat / (gw_rho * gw_cp * ch_stor(chan_id)%flo)
+              else
+                ch_stor(chan_id)%temp = 0.
+              endif
+              !add to heat balance arrays
+              gw_heat_ss(cell_id)%fpln = gw_heat_ss(cell_id)%fpln + heat_flux
+              gw_heat_ss_sum(cell_id)%fpln = gw_heat_ss_sum(cell_id)%fpln + heat_flux !J 
+            endif
             
             !calculate solute mass (g/day) transported to/from cell
-            if (gw_solute_flag == 1) then
+            if(gw_solute_flag) then
               chan_csol = 0.
               solmass = 0.
               if(Q < 0) then !mass leaving the cell (aquifer --> channel)
@@ -114,20 +146,21 @@
                   endif
                   gwsol_ss(cell_id)%solute(s)%fpln = solmass(s)
                   gwsol_ss_sum(cell_id)%solute(s)%fpln = gwsol_ss_sum(cell_id)%solute(s)%fpln + solmass(s)
+									gwsol_ss_sum_mo(cell_id)%solute(s)%fpln = gwsol_ss_sum_mo(cell_id)%solute(s)%fpln + solmass(s)
                 enddo    
                 !add solute to channel
                 ch_stor(chan_id)%no3 = ch_stor(chan_id)%no3 + (solmass(1)*(-1)/1000.) !kg
                 ch_stor(chan_id)%solp = ch_stor(chan_id)%solp + (solmass(2)*(-1)/1000.) !kg
                 sol_index = 2
                 !salts
-                if (gwsol_salt == 1) then
+                if(gwsol_salt) then
                   do isalt=1,cs_db%num_salts
                     sol_index = sol_index + 1
                     ch_water(chan_id)%salt(isalt) = ch_water(chan_id)%salt(isalt) + (solmass(sol_index)*(-1)/1000.) !kg   
                   enddo
                 endif
                 !constituents
-                if (gwsol_cons == 1) then
+                if(gwsol_cons) then
                   do ics=1,cs_db%num_cs
                     sol_index = sol_index + 1
                     ch_water(chan_id)%cs(ics) = ch_water(chan_id)%cs(ics) + (solmass(sol_index)*(-1)/1000.) !kg  
@@ -140,14 +173,14 @@
                   chan_csol(2) = (ch_stor(chan_id)%solp * 1000.) / chan_volume !g/m3 in channel  
                   sol_index = 2
                   !salts
-                  if (gwsol_salt == 1) then
+                  if(gwsol_salt) then
                     do isalt=1,cs_db%num_salts
                       sol_index = sol_index + 1
                       chan_csol(sol_index) = (ch_water(chan_id)%salt(isalt) * 1000.) / chan_volume !g/m3 in channel        
                     enddo
                   endif
                   !constituents
-                  if (gwsol_cons == 1) then
+                  if(gwsol_cons) then
                     do ics=1,cs_db%num_cs
                       sol_index = sol_index + 1
                       chan_csol(sol_index) = (ch_water(chan_id)%cs(ics) * 1000.) / chan_volume !g/m3 in channel        
@@ -171,7 +204,7 @@
                 ch_stor(chan_id)%solp = ch_stor(chan_id)%solp - (solmass(2)/1000.) !kg
                 sol_index = 2
                 !salts
-                if (gwsol_salt == 1) then
+                if(gwsol_salt) then
                   do isalt=1,cs_db%num_salts
                     sol_index = sol_index + 1
                     if((solmass(sol_index)/1000.) > ch_water(chan_id)%salt(isalt)) then
@@ -181,7 +214,7 @@
                   enddo
                 endif
                 !constituents
-                if (gwsol_cons == 1) then
+                if(gwsol_cons) then
                   do ics=1,cs_db%num_cs
                     sol_index = sol_index + 1
                     if((solmass(sol_index)/1000.) > ch_water(chan_id)%cs(ics)) then
@@ -194,6 +227,7 @@
                 do s=1,gw_nsolute !loop through the solutes
                   gwsol_ss(cell_id)%solute(s)%fpln = solmass(s)
                   gwsol_ss_sum(cell_id)%solute(s)%fpln = gwsol_ss_sum(cell_id)%solute(s)%fpln + solmass(s)
+									gwsol_ss_sum_mo(cell_id)%solute(s)%fpln = gwsol_ss_sum_mo(cell_id)%solute(s)%fpln + solmass(s)
                 enddo
               endif
 
@@ -205,5 +239,9 @@
       
       endif
       
+      
       return
-      end subroutine gwflow_fpln  
+      end subroutine gwflow_fpln
+      
+           
+      

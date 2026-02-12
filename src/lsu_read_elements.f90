@@ -36,15 +36,13 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) header
         if (eof < 0) exit
-        
-        !allocate subbasin (landscape unit) inputs and outputs
-        allocate (lsu_out(0:mlsu))
                 
         !allocate subbasin (landscape unit) inputs and outputs
         allocate (ruwb_d(0:mlsu))
         allocate (ruwb_m(0:mlsu))
         allocate (ruwb_y(0:mlsu))
         allocate (ruwb_a(0:mlsu))
+				allocate (lsu_wb_d(0:mlsu)) 
         allocate (runb_d(0:mlsu))
         allocate (runb_m(0:mlsu))
         allocate (runb_y(0:mlsu))
@@ -57,6 +55,7 @@
         allocate (rupw_m(0:mlsu))
         allocate (rupw_y(0:mlsu))
         allocate (rupw_a(0:mlsu))
+				allocate (lsu_out(1:mlsu))
         
       do i = 1, mlsu
 

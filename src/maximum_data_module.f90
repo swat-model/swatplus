@@ -99,6 +99,7 @@
         integer :: ch_sed = 0
         integer :: ch_nut = 0
         integer :: ch_temp = 0
+				integer :: shf = 0
         integer :: path = 0
         integer :: exco = 0
         integer :: exco_om = 0
@@ -136,6 +137,7 @@
         integer :: transplant = 0
         integer :: pudl_db = 0
         integer :: recall_max = 0
+				integer :: w_temp = 0
         integer :: object_prt = 0
         integer :: ctbl_res = 0
         integer :: ch_sednut = 0

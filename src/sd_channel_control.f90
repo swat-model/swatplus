@@ -193,7 +193,7 @@
       !if gwflow is active, calculate aquifer interactions (ht1 is updated)
       if(bsn_cc%gwflow.eq.1) then
         call gwflow_gwsw(ich) !channel <--> groundwater
-        call gwflow_canl(ich) !channel --> canal seepage
+        call gwflow_canl_chan(ich) !channel --> canal seepage
         call gwflow_tile(ich) !groundwater --> channel
         call gwflow_satx(ich) !groundwater --> channel
       endif

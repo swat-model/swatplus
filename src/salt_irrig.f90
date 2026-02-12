@@ -72,7 +72,7 @@
             if(ion_mass.gt.res_mass) then
               mass_diff = ion_mass - res_mass
             endif  
-            ion_mass = ion_mass - mass_diff
+					  ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove salt mass from the reservoir
             res_water(ires)%salt(isalt) = res_water(ires)%salt(isalt) - ion_mass
@@ -100,7 +100,7 @@
             if(ion_mass.gt.cs_aqu(iaq)%salt(isalt)) then
               mass_diff = ion_mass - cs_aqu(iaq)%salt(isalt)
             endif  
-            ion_mass = ion_mass - mass_diff
+					  ion_mass = ion_mass - mass_diff
             if(ion_mass.lt.0) ion_mass = 0.
             !remove salt from aquifer
             cs_aqu(iaq)%salt(isalt) = cs_aqu(iaq)%salt(isalt) - ion_mass !kg
@@ -137,7 +137,7 @@
               if(ion_mass.gt.ch_water(ichan)%salt(isalt)) then
                 mass_diff = ion_mass - ch_water(ichan)%salt(isalt) 
               endif  
-              ion_mass = ion_mass - mass_diff
+						  ion_mass = ion_mass - mass_diff
               if(ion_mass.lt.0) ion_mass = 0.
               ch_water(ichan)%salt(isalt) = ch_water(ichan)%salt(isalt) - ion_mass !kg - remove from storage
               chsalt_d(ichan)%salt(isalt)%irr = chsalt_d(ichan)%salt(isalt)%irr + ion_mass !kg - include in channel salt balance
@@ -150,7 +150,7 @@
                 cs_soil(ihru)%ly(1)%salt(isalt) = cs_soil(ihru)%ly(1)%salt(isalt) + (ion_mass/hru(ihru)%area_ha) !kg/ha - add to soil layer
                 hsaltb_d(ihru)%salt(isalt)%irsw = hsaltb_d(ihru)%salt(isalt)%irsw + (ion_mass/hru(ihru)%area_ha) !kg/ha - include in soil salt balance 
               endif
-            endif
+					  endif
           enddo
         
         !canal diversion sources  
@@ -163,6 +163,9 @@
             !add to soil profile; include in daily salt mass balance
             if(ob(obnum_chan)%hd(1)%flo > 10.) then !only proceed if channel has water
             do isalt=1,cs_db%num_salts
+						
+						  
+						
               !concentration of source channel water
               salt_conc = (ch_water(ichan)%salt(isalt)*1000.)/ob(obnum_chan)%hd(1)%flo !g/m3
               ion_mass = (salt_conc*irrig_volume) / 1000. !kg/day  
@@ -203,4 +206,5 @@
       enddo !go to next irrigation source
 
       return
-      end !salt_irrig
+    end !salt_irrig
+    

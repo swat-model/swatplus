@@ -41,7 +41,7 @@
           allocate (salt_cha_ini(imax))
 
           do isalt=1,imax
-            allocate (salt_cha_ini(isalt)%conc(cs_db%num_salts), source = 0.)
+            allocate (salt_cha_ini(isalt)%conc(cs_db%num_salts))
           enddo
           
           rewind (107)
@@ -60,4 +60,5 @@
       end if
 
       return
-      end subroutine salt_cha_read
+    end subroutine salt_cha_read
+    

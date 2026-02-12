@@ -8,6 +8,8 @@
       use hru_module, only : hru
       use water_body_module
       use reservoir_module
+      use gwflow_module, only: flood_freq !rtb gwflow
+			use channel_velocity_module
     
       implicit none     
     
@@ -85,7 +87,10 @@
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
       vel = peakrate / rcurv%xsec_area
       rttime = sd_ch(ich)%chl / (3.6 * vel)
-                
+      
+			sd_ch_vel(ich)%vel = vel   !added new variable to store velocity from this subroutine to use it in ch_temp
+      sd_ch_vel(ich)%rttime = rttime   !added new variable to store rttime from this subroutine to use it in ch_temp
+			
       !! add precip to inflow - km * m * 1000 m/km * ha/10000 m2 = ha
       ch_wat_d(ich)%area_ha = sd_ch(ich)%chl * sd_ch(ich)%chw / 10.
       !! m3 = 10. * mm * ha
@@ -102,6 +107,11 @@
       florate_ob = ave_rate - bf_flow
       if (florate_ob > 0.) then
         flo_time = 2. * ht1%flo / ave_rate
+        !floodplain exchange with aquifer (rtb gwflow)
+        if(bsn_cc%gwflow.eq.1) then
+          flood_freq(ich) = 1 !flag to indicate the water is in the floodplain
+          call gwflow_fpln(ich)
+		endif
         !! assume a triangular distribution
         if (flo_time < 86400.) then
           !! flow is over within the day

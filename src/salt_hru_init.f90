@@ -4,7 +4,7 @@
 !!    this subroutine calls subroutines which read input data for the 
 !!    databases and the HRUs
 
-      use hru_module, only : hru, sol_plt_ini
+      use hru_module, only : hru, sol_plt_ini_cs
       use soil_module
       use organic_mineral_mass_module
       use constituent_mass_module
@@ -25,23 +25,25 @@
       real :: wt1 = 0.           !              |
       real :: hru_area_m2 = 0.
       real :: water_volume = 0.
+      real :: init_conc = 0.
         
         
       !! allocate hru salts
       npmx = cs_db%num_salts
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
+          allocate(cs_soil(ihru)%ly(soil(ihru)%nly))  
           do ly = 1, soil(ihru)%nly
-            allocate (cs_soil(ihru)%ly(ly)%salt(npmx), source = 0.)
-            allocate (cs_soil(ihru)%ly(ly)%salt_min(5), source = 0.)
-            allocate (cs_soil(ihru)%ly(ly)%saltc(npmx), source = 0.)
+            allocate (cs_soil(ihru)%ly(ly)%salt(npmx))
+            allocate (cs_soil(ihru)%ly(ly)%salt_min(5))
+            allocate (cs_soil(ihru)%ly(ly)%saltc(npmx))
           end do
           !allocate (cs_pl(ihru)%salt(npmx))
-          allocate (cs_irr(ihru)%saltc(npmx), source = 0.)
+          allocate (cs_irr(ihru)%saltc(npmx))
         end if
 
         isp_ini = hru(ihru)%dbs%soil_plant_init
-        isalt_db = sol_plt_ini(isp_ini)%salt
+        isalt_db = sol_plt_ini_cs(isp_ini)%salt
         
         !prepare for g/m3 --> kg/ha conversion
         hru_area_m2 = hru(ihru)%area_ha * 10000.
@@ -50,21 +52,22 @@
         do isalt=1,npmx
           !cs_pl(ihru)%salt(isalt) = salt_soil_ini(isalt_db)%plt(isalt)
           do ly = 1, soil(ihru)%nly
+            init_conc = salt_soil_ini(isalt_db)%soil(isalt)
             !soil water salt ion concentration (mg/L)
-            cs_soil(ihru)%ly(ly)%saltc(isalt) = salt_soil_ini(isalt_db)%soil(isalt) !g/m3 concentration
+            cs_soil(ihru)%ly(ly)%saltc(isalt) = init_conc !g/m3 concentration
             !soil water salt mass (kg/ha)
             water_volume = (soil(ihru)%phys(ly)%st/1000.) * hru_area_m2
-            cs_soil(ihru)%ly(ly)%salt(isalt) = (salt_soil_ini(isalt_db)%soil(isalt)/1000.) * water_volume / hru(ihru)%area_ha !g/m3 --> kg/ha
-          end do
+            cs_soil(ihru)%ly(ly)%salt(isalt) = (init_conc/1000.) * water_volume / hru(ihru)%area_ha !g/m3 --> kg/ha
+          enddo
           cs_irr(ihru)%saltc(isalt) = salt_water_irr(isalt_db)%water(isalt) !g/m3 concentration
-        end do
+        enddo
         
         ! loop for salt mineral fractions
         do isalt = 1,5
           do ly = 1,soil(ihru)%nly
             cs_soil(ihru)%ly(ly)%salt_min(isalt) = salt_soil_ini(isalt_db)%soil(npmx+isalt)
-          end do
-        end do
+          enddo
+        enddo
 
       end do !hru loop
                                    

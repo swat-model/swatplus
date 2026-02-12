@@ -40,7 +40,7 @@
         enddo
 
         !allocate urban salt arrays
-        allocate (salt_urban_conc(imax,cs_db%num_salts), source = 0.)
+        allocate(salt_urban_conc(imax,cs_db%num_salts))
         salt_urban_conc = 0.
         
         !loop through each land use type; verify match with types listed in urban.urb        
@@ -65,4 +65,5 @@
       close (5054)
   
       return
-      end subroutine salt_urban_read  
+    end subroutine salt_urban_read  
+    

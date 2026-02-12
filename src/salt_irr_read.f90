@@ -38,7 +38,7 @@
           !allocate salt irrigation array
           allocate (salt_water_irr(imax))
           do isalti=1,imax
-            allocate (salt_water_irr(isalti)%water(cs_db%num_salts), source = 0.)
+            allocate(salt_water_irr(isalti)%water(cs_db%num_salts))
           end do
            
           !read in values

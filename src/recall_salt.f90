@@ -12,17 +12,21 @@
       implicit none 
 
       !incoming variables
-      integer :: irec
+      integer, intent (in) :: irec	    !  |recall object number
       
       !local variables
       integer :: isalt = 0    !            |salt ion counter
       integer :: ichan = 0    !            |id of source channel
       real :: salt_conc = 0.  !g/m3        |concentration of salt ion in source channel
       real :: div_mass = 0.   !kg          |mass of salt ion in diversion water
+			real :: salt_mass = 0.
       
       
       !depending on the point source type, add/remove salt mass to object
       obcs(icmd)%hd(1)%salt = 0.
+	  do isalt=1,cs_db%num_salts
+		div_conc_salt(isalt,irec) = 0.
+	  enddo
       if (cs_db%num_salts > 0) then
         select case (rec_salt(irec)%typ)  
           case (1)    !daily
@@ -33,7 +37,8 @@
                   ichan = ob(icmd)%obtypno_out(1) !channel from which water is diverted
                   if(ch_stor(ichan)%flo > 10.) then !only proceed if channel has water
                     salt_conc = (ch_water(ichan)%salt(isalt)*1000.) / ch_stor(ichan)%flo !g/m3 in channel water
-                    div_mass = (salt_conc * recall(irec)%hd(time%day,time%yrs)%flo) / 1000. !kg/day  
+                    div_conc_salt(isalt,irec) = salt_conc
+										div_mass = (salt_conc * recall(irec)%hd(time%day,time%yrs)%flo) / 1000. !kg/day  
                     if((div_mass*(-1)) > ch_water(ichan)%salt(isalt)) then
                       div_mass = ch_water(ichan)%salt(isalt) * (-1) !only take what is there
                     endif
@@ -43,7 +48,7 @@
                 else
                   !source: add mass
                   obcs(icmd)%hd(1)%salt(isalt) = rec_salt(irec)%hd_salt(time%day,time%yrs)%salt(isalt)
-                endif
+								endif
               enddo
               if(rec_salt(irec)%pts_type.eq.1) then
                 do isalt=1,cs_db%num_salts
@@ -77,11 +82,12 @@
           case (3)    !annual
             if (time%yrc >= rec_salt(irec)%start_yr .or. time%yrc <= rec_salt(irec)%end_yr) then
               do isalt=1,cs_db%num_salts
+								salt_mass = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
                 obcs(icmd)%hd(1)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
               enddo
               if(rec_salt(irec)%pts_type.eq.1) then
                 do isalt=1,cs_db%num_salts
-                                  recsaltb_d(irec)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
+								  recsaltb_d(irec)%salt(isalt) = rec_salt(irec)%hd_salt(1,time%yrs)%salt(isalt)
                 enddo
               else
                 do isalt=1,cs_db%num_salts

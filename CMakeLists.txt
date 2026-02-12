@@ -12,7 +12,7 @@ project(swatplus VERSION 0.2 LANGUAGES Fortran)
 include(CTest)
 
 if(NOT TAG)
-    find_package(Git REQUIRED)
+    # find_package(Git REQUIRED)
     execute_process(
       COMMAND ${GIT_EXECUTABLE} describe --tags
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -58,9 +58,9 @@ elseif(WIN32)
         set(FFC             "ifo")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
-        set(fdialect        "/fpp free /fpe0 /traceback")
+        set(fdialect        "/fpp /free /fpe0 /traceback")
         set(fdebug          "/warn:all")
-        set(frelease        "/O")
+        set(frelease        "/O2 /libs:static /threads")
         set(FFC             "ifx")
         # link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)

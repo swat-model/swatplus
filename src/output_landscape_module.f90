@@ -59,6 +59,7 @@
       type (output_waterbal), dimension (:), allocatable :: hltwb_y
       type (output_waterbal), dimension (:), allocatable :: hltwb_a
       
+			type (output_waterbal), dimension (:), allocatable :: lsu_wb_d    !output for using components of lsus in ch_temp 
       type (output_waterbal), dimension (:), allocatable :: ruwb_d
       type (output_waterbal), dimension (:), allocatable :: ruwb_m
       type (output_waterbal), dimension (:), allocatable :: ruwb_y

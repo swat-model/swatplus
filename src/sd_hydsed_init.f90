@@ -31,6 +31,7 @@
       integer :: icha = 0
       integer :: isalt = 0
       integer :: ics = 0
+			real :: chan_temp
       
       real :: aa = 0.                 !none         |area/area=1 (used to calculate velocity with
                                       !             |Manning"s equation)
@@ -239,7 +240,8 @@
             ch_stor(ich) = rto * tot_stor(ich)
             rto1 = 1. - rto
             fp_stor(ich) = rto1 * tot_stor(ich)
-          end if
+					end if
+					chan_temp = ch_stor(ich)%temp
         else
           ch_stor(ich) = hz
           fp_stor(ich) = hz

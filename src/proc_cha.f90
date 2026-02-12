@@ -15,6 +15,7 @@
       call ch_read_hyd
       call ch_read_sed
       call ch_read_nut
+			call ch_read_temp 
       call ch_read
       call sd_channel_read
       call sd_hydsed_init

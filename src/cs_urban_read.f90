@@ -40,7 +40,7 @@
         enddo
 
         !allocate urban constituent arrays
-        allocate (cs_urban_conc(imax,cs_db%num_cs), source = 0.)
+        allocate(cs_urban_conc(imax,cs_db%num_cs))
         cs_urban_conc = 0.
         
         !loop through each land use type; verify match with types listed in urban.urb        

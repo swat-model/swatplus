@@ -277,6 +277,12 @@
       end type input_regions
       type (input_regions) :: in_regs
       
+			!! shade factor
+      type shade_factor
+          character(len=25) :: ssff_shf = "shade_factor.shf"
+      end type shade_factor
+      type (shade_factor) :: in_shf
+			
       type input_path_pcp
         character(len=80) :: pcp = " "
       end type input_path_pcp

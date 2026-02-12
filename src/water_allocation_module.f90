@@ -25,14 +25,7 @@
         real :: frac = 0.                       !fraction of demand supplied by the source
         character (len=1) :: comp = ""          !compensate from source if other sources are limiting (y/n)
       end type water_demand_sources
-      
-      !canal diversion source object (rtb)
-      real, dimension (:), allocatable :: div_volume_daily   !daily volume of canal water added to total
-      real, dimension (:), allocatable :: div_volume_total   !volume of canal water available for irrigation
-      real, dimension (:), allocatable :: div_volume_used    !volume of canal water used for irrigation
-      real :: div_delay = 0.                                 !number of days that diverted irrigation water can be used
-      
-          
+        
       !demand source objects
       type water_demand_source_objects
         character (len=10) :: ob_typ = ""       !hru (for irrigation) or muni (municipal) or divert (interbasin diversion)

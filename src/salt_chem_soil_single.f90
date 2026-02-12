@@ -88,7 +88,7 @@
       BiCar_Conc(1) = ion8*((1.0/1000)*(1.0/61.01)) !bicarbonate
 
       !define the activity coefficient using Extended Debye-Huckel equation
-      call Ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),&                    
+      call salt_ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),&                    
           BiCar_Conc(1),Mg_Conc(1),Sod_Conc(1),Pot_Conc(1))
       IonStr = IS_temp
       I_Prep_in = IonStr
@@ -101,7 +101,7 @@
       salt_c4 = 1
       c5 = 1
 
-      call activity_coefficient(I_Prep_in)
+      call salt_act_coeff(I_Prep_in)
 
       !update the K values 
       K_ADJ1 = LAMDA(1)*LAMDA(3)
@@ -112,40 +112,40 @@
 
       if(K_ADJ1.gt.0.) then
         salt_K1 = Ksp11/K_ADJ1
-    else
+	else
         salt_K1 = 0.
-    endif
+	endif
       if(K_ADJ2.gt.0.) then
         salt_K2 = Ksp21/K_ADJ2
-    else
+	else
         salt_K2 = 0.
-    endif
+	endif
       if(K_ADJ3.gt.0.) then
         salt_K3 = Ksp31/K_ADJ3
-    else
+	else
         salt_K3 = 0.
-    endif
+	endif
       if(K_ADJ4.gt.0.) then
         salt_K4 = Ksp41/K_ADJ4
-    else
+	else
         salt_K4 = 0.
-    endif
+	endif
       if(K_ADJ5.gt.0.) then
         salt_K5 = Ksp51/K_ADJ5
-    else
+	else
         salt_K5 = 0.
-    endif
+	endif
           
       errorTotal = 1
 
       !Precipitation-Dissolution package ----------------------------------------------------------------
       iter_count = 1
       do while (errorTotal.GE.1e-3)
-        call CaCO3
-        call MgCO3
-        call CaSO4
-        call MgSO4
-        call NaCl
+        call salt_minl_caco3
+        call salt_minl_mgco3
+        call salt_minl_caso4
+        call salt_minl_mgso4
+        call salt_minl_nacl
 
         !check the errors
         error1ST = Car_Conc(c22+1)-Car_Conc(c22+2)
@@ -191,4 +191,5 @@
       soil_salt_conc(8) = BiCar_Conc(1)*(61.01*1000.0) 
 
       return
-      end !salt_chem_soil_single
+    end !salt_chem_soil_single
+    

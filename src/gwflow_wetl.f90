@@ -29,11 +29,13 @@
       real :: wet_inflow_no3 = 0.     !kg             |groundwater no3 mass to wetland (from all connected cells)
       real :: wet_inflow_solp = 0.    !kg             |groundwater p mass to wetland (from all connected cells)
       real :: solmass(100) = 0.       !g              |solute mass in cell
+      real :: heat_flux = 0.          !J              |heat transport in groundwater inflow to wetland
+      real :: wet_depth = 0.          !m
       
       
       
       !only proceed if groundwater-wetland exchange is active
-      if (gw_wet_flag == 1) then
+      if(gw_wet_flag) then
       
         !wetland id
         ires = hru(hru_id)%dbs%surf_stor
@@ -51,38 +53,55 @@
           !loop through the cells connected to the HRU
           do icell=1,hru_num_cells(hru_id)
           
-            !retrieve water table elevation and wetland stage
+            !retrieve water table elevation
             cell_id = hru_cells(hru_id,icell)
             wt = gw_state(cell_id)%head !water table elevation (m)
-            wet_stage = ob(sp_ob1%hru + hru_id - 1)%elev !hru elevation (m)
+						
+			!calculate wetland stage = hru elevation + wetland depth
+			wet_depth = wet(hru_id)%flo / (wet_wat_d(hru_id)%area_ha * 10000.) !m
+			wet_stage = ob(sp_ob1%hru+hru_id-1)%elev + wet_depth !m
+
+			!wetland hydraulic conductivity and area
             wet_k = hru(hru_id)%wet_hc * 24 / 1000. !mm/hr --> m/day
             wet_area = hru_cells_fract(hru_id,icell) * (wet_wat_d(hru_id)%area_ha * 10000.) !m2
             
             !compute groundwater inflow to wetland, if water table > wetland stage (Darcy's law)
             gw_inflow = 0.
             if(wt > wet_stage) then !groundwater inflow to wetland
+              
               gw_inflow = wet_area * wet_k * ((wt-wet_stage)/wet_thick(ires)) !m3/day
               !check against available groundwater storage (m3) in the grid cell
               if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then !if water table is above bedrock
                 gwvol_avail = ((gw_state(cell_id)%head - gw_state(cell_id)%botm) * &
                                 gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
-              else
+				      else
                 gwvol_avail = 0.
               endif
               !if storage is less than wetland inflow, remove all groundwater
               if(gw_inflow > gwvol_avail) then
                 gw_inflow = gwvol_avail
-              endif
+							endif
               !include in groundwater source-sink array (will be removed in gwflow_simulate)
               gw_ss(cell_id)%wetl = gw_ss(cell_id)%wetl + (gw_inflow*(-1)) !m3 negative = leaving the aquifer
-              gw_ss_sum(cell_id)%wetl = gw_ss_sum(cell_id)%wetl + (gw_inflow*(-1))
-              !add groundwater inflow to wetland; include in wetland water balance
-              wet(hru_id)%flo = wet(hru_id)%flo + gw_inflow !m3
+              gw_ss_sum(cell_id)%wetl = gw_ss_sum(cell_id)%wetl + (gw_inflow*(-1)) !store for annual water
+              gw_ss_sum_mo(cell_id)%wetl = gw_ss_sum_mo(cell_id)%wetl + (gw_inflow*(-1)) !store for monthly water
+              !track total inflow (for wetland water balance)
               wet_inflow = wet_inflow + gw_inflow !m3 --> track total inflow (for wetland water balance)
+              
+              !heat
+              if(gw_heat_flag) then
+                heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * gwvol_avail !J  
+                if(heat_flux >= gwheat_state(cell_id)%stor) then
+                  heat_flux = gwheat_state(cell_id)%stor
+                endif
+                gw_heat_ss(cell_id)%wetl = gw_heat_ss(cell_id)%wetl + (heat_flux*(-1))
+                gw_heat_ss_sum(cell_id)%wetl = gw_heat_ss_sum(cell_id)%wetl + (heat_flux*(-1))
+              endif
+              
               !add solute mass to wetland
               !(mass is removed from the aquifer via mass balance equation in gwflow_simulate.f)
               mass_transfer = 0.
-              if (gw_solute_flag == 1) then
+              if(gw_solute_flag) then
                 solmass = 0.
                 !remove solute mass from gwflow cell
                 do s=1,gw_nsolute
@@ -92,6 +111,7 @@
                   endif
                   gwsol_ss(cell_id)%solute(s)%wetl = solmass(s)
                   gwsol_ss_sum(cell_id)%solute(s)%wetl = gwsol_ss_sum(cell_id)%solute(s)%wetl + solmass(s)
+									gwsol_ss_sum_mo(cell_id)%solute(s)%wetl = gwsol_ss_sum_mo(cell_id)%solute(s)%wetl + solmass(s)
                 enddo
                 !add solute mass to wetland object
                 !no3
@@ -103,8 +123,12 @@
                 !salts
                 !constituents
               endif
-            else !wetland seepage to soil layers (add for all connected cells)
-              wet_seep = wet_seep + (wet_area * wet_k * ((wet_stage-wt)/wet_thick(ires))) !m3/day  
+						else !wetland seepage to soil layers (add for all connected cells)
+              if(wet_thick(ires) > 0) then
+						    wet_seep = wet_seep + (wet_area * wet_k * ((wet_stage-wt)/wet_thick(ires))) !m3/day  
+							else
+							  wet_seep = wet_seep + (wet_area * wet_k * ((wet_stage-wt)/0.10)) !m3/day  
+							endif
             endif
             
           enddo !go to next cell connected to the HRU
@@ -112,9 +136,12 @@
         endif !if hru is connected to gwflow grid cells
         
         !copy values into the wetland object
-        wet_wat_d(hru_id)%seep = wet_seep
-        wet_in_d(hru_id)%flo = wet_in_d(hru_id)%flo + wet_inflow
-        if (gw_solute_flag == 1) then
+				!add groundwater inflow to wetland water volume
+				wet(hru_id)%flo = wet(hru_id)%flo + wet_inflow !m3
+				wet_in_d(hru_id)%flo = wet_in_d(hru_id)%flo + wet_inflow
+				!store seepage volume
+				wet_wat_d(hru_id)%seep = min(wet(hru_id)%flo, wet_seep)
+        if(gw_solute_flag) then
           wet_in_d(hru_id)%no3 = wet_in_d(hru_id)%no3 + wet_inflow_no3
           wet_in_d(hru_id)%solp = wet_in_d(hru_id)%solp + wet_inflow_solp
           !salts
@@ -122,6 +149,8 @@
         endif
         
       endif !check if groundwater-wetland exchange is active
-          
+      
+      
       return
-      end subroutine gwflow_wetl    
+      end subroutine gwflow_wetl
+      

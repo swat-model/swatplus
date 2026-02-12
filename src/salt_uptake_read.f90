@@ -42,7 +42,7 @@
         read(5054,*) header
         
         !allocate array
-        allocate (salt_uptake_kg(db_mx%plantparm,cs_db%num_salts), source = 0.)
+        allocate(salt_uptake_kg(db_mx%plantparm,cs_db%num_salts))
         salt_uptake_kg = 0.
         
         !loop through the plant communities

@@ -9,6 +9,7 @@
       implicit none
       
       integer, intent (in) :: ichan         !             |
+			integer i_count
       integer :: iob = 0                    !             |
       integer :: ii = 0                     !             
       real :: const = 0.                    !             |
@@ -33,6 +34,11 @@
           write (2500,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,       &
             ch_wat_d(ichan)%area_ha, ch_wat_d(ichan)%precip, ch_wat_d(ichan)%evap, ch_wat_d(ichan)%seep,        &                
             ch_stor(ichan), ch_in_d(ichan), ch_out_d(ichan), wtemp
+					!! new hyd_sep output file 
+          ! write (2509,100)  time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,    &
+          !    ch_out_d(ichan)%flo, ob(ichan)%hdsep
+          write (2509,100)  time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,    &
+              ch_out_d(ichan)%flo, (hyd_sep_array(ichan,i_count),i_count=1,7)
            if (pco%csvout == "y") then
              write (2504,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,  &
                ch_wat_d(ichan)%area_ha, ch_wat_d(ichan)%precip, ch_wat_d(ichan)%evap, ch_wat_d(ichan)%seep,     &

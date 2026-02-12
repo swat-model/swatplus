@@ -41,8 +41,8 @@
           
           allocate (salt_soil_ini(imax))
           do isalt = 1, imax
-            allocate (salt_soil_ini(isalt)%soil(cs_db%num_salts+5), source = 0.)
-            allocate (salt_soil_ini(isalt)%plt(cs_db%num_salts+5), source = 0.)
+            allocate (salt_soil_ini(isalt)%soil(cs_db%num_salts+5))
+            allocate (salt_soil_ini(isalt)%plt(cs_db%num_salts+5))
           end do
            
           rewind (107)

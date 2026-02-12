@@ -11,7 +11,7 @@
       
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ep_day, ihru 
+      use hru_module, only : ep_day, ihru, hru
       use hydrograph_module
       use output_landscape_module
       use salt_module
@@ -32,10 +32,12 @@
       real    :: rm_layer = 0.      !kg          |root mass in the soil layer
       real    :: rm_fract(50) = 0.  !            |fraction of root mass in the soil layer
       real    :: irrig_mass = 0.    !kg          |total salt mass in irrigation water
-      real    :: uptake_mass_total = 0.!kg          |total uptake mass in soil layer
+      real    :: uptake_mass_total = 0.!kg       |total uptake mass in soil layer
       real    :: uptake_mass = 0.   !kg/ha       |uptake mass in soil layer per unit area
       integer :: dum = 0
-      
+      real    :: salt_mass_kg = 0.  !kg          |salt ion mass in soil layer
+	  real    :: water_mm = 0.      !mm    	     |water in soil layer (including wilting point water)
+	  real    :: water_volume = 0.  !m3			 |volume of soil water in soil layer
       
       
       !HRU id
@@ -63,7 +65,7 @@
           endif
           if(rm_layer > 0) then
             rm_fract(jj) = rm_layer / rm 
-          endif
+					endif
         enddo !go to next soil layer
          
         !determine the salt ion mass uptake in each layer
@@ -76,11 +78,16 @@
               uptake_mass = cs_soil(j)%ly(jj)%salt(isalt)
             endif
             !store uptake mass in daily mass balance array
-            hsaltb_d(j)%salt(isalt)%uptk = hsaltb_d(j)%salt(isalt)%uptk + uptake_mass !kg/ha
+            hsaltb_d(j)%salt(isalt)%uptk = hsaltb_d(j)%salt(isalt)%uptk + (uptake_mass*hru(j)%area_ha) !kg/ha
             !remove salt ion mass from soil water
             cs_soil(j)%ly(jj)%salt(isalt) = cs_soil(j)%ly(jj)%salt(isalt) - uptake_mass !kg/ha
-          enddo !go to next salt ion
-        enddo !go to next soil layer
+						!re-calculate salt ion concentration
+						water_mm = soil(j)%phys(jj)%st + soil(j)%phys(jj)%wpmm !total soil water
+						water_volume = (water_mm/1000.) * (hru(j)%area_ha * 10000.) !m3
+						salt_mass_kg = cs_soil(j)%ly(jj)%salt(isalt) * hru(j)%area_ha !kg
+						cs_soil(j)%ly(jj)%saltc(isalt) = (salt_mass_kg * 1000.) / water_volume !g/m3 = mg/L
+          enddo !go to next soil layer
+        enddo !go to next salt ion
         
       endif !check for rooting depth
       

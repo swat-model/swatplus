@@ -10,13 +10,13 @@
 
       implicit none
       
-      character (len=80) :: titldum = ""  !             |title of file
-      character (len=80) :: header = "" !             |header of file
-      integer :: i = 0                  !             |counter
-      integer :: eof = 0                !             |end of file
-      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
-      logical :: i_exist                !none         |check to determine if file exists
-      integer :: ires = 0               !none         |counter
+      character (len=80) :: titldum = ""    !             |title of file
+      character (len=80) :: header = ""     !             |header of file
+      integer :: i = 0                      !             |counter
+      integer :: eof = 0                    !             |end of file
+      integer :: imax = 0                   !             |determine max number for array (imax) and total number in file
+      logical :: i_exist                    !none         |check to determine if file exists
+      integer :: ires = 0                   !none         |counter
       
       eof = 0
       imax = 0
@@ -68,4 +68,5 @@
       close(105)
        
       return
-      end subroutine res_read_cs
+    end subroutine res_read_cs
+    

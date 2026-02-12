@@ -23,7 +23,10 @@
       
       !depending on the point source type, add/remove constituent mass to object
       obcs(icmd)%hd(1)%cs = 0.
-      if (cs_db%num_cs > 0) then
+      do ics=1,cs_db%num_cs
+			  div_conc_cs(ics,irec) = 0.
+			enddo
+			if (cs_db%num_cs > 0) then
         select case (rec_cs(irec)%typ)  
           case (1)    !daily
             if (time%yrc >= recall(irec)%start_yr .and. time%yrc <= recall(irec)%end_yr) then 
@@ -33,6 +36,7 @@
                   ichan = ob(icmd)%obtypno_out(1) !channel from which water is diverted
                   if(ch_stor(ichan)%flo > 10.) then !only proceed if channel has water
                     cs_conc = (ch_water(ichan)%cs(ics)*1000.) / ch_stor(ichan)%flo !g/m3 in channel water
+										div_conc_cs(ics,irec) = cs_conc !g/m3
                     div_mass = (cs_conc * recall(irec)%hd(time%day,time%yrs)%flo) / 1000. !kg/day 
                     if((div_mass*(-1)) > ch_water(ichan)%cs(ics)) then
                       div_mass = ch_water(ichan)%cs(ics) * (-1) !only take what is there
@@ -42,8 +46,8 @@
                   endif
                 else
                   !source: add mass
-                  obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(time%day,time%yrs)%cs(ics)
-                endif
+								  obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(time%day,time%yrs)%cs(ics)
+								endif
               enddo
               if(rec_cs(irec)%pts_type.eq.1) then
                 reccsb_d(irec)%cs = obcs(icmd)%hd(1)%cs
@@ -72,7 +76,7 @@
                 obcs(icmd)%hd(1)%cs(ics) = rec_cs(irec)%hd_cs(1,time%yrs)%cs(ics)
               enddo
               if(rec_cs(irec)%pts_type.eq.1) then
-                reccsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
+								reccsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
               else
                 recoutcsb_d(irec)%cs = rec_cs(irec)%hd_cs(1,time%yrs)%cs
               endif
@@ -95,4 +99,5 @@
 
       
       return
-      end subroutine recall_cs
+    end subroutine recall_cs
+    

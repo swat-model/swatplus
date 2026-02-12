@@ -143,21 +143,21 @@
       end do
       do ipath = 1, cs_db%num_paths
         obcs(icmd)%hd(5)%path(ipath) = 0.
-      end do
+			end do
       
       !water temperature calculations
       !percolate temperature
-      ob(icmd)%hd(2)%temp = w_temp%sur_lat
+      !ob(icmd)%hd(2)%temp = w_temp%sur_lat
       !surface runoff temperature
-      if (snomlt > 0.1) then
-        ob(icmd)%hd(3)%temp = w_temp%sno_mlt
-      else
-        ob(icmd)%hd(3)%temp = w_temp%sur_lat
-      end if
+      !if (snomlt > 0.1) then
+      !  ob(icmd)%hd(3)%temp = w_temp%sno_mlt
+      !else
+      !  ob(icmd)%hd(3)%temp = w_temp%sur_lat
+      !end if
       !lateral soil flow temperature
-      ob(icmd)%hd(4)%temp = w_temp%sur_lat
+      !ob(icmd)%hd(4)%temp = w_temp%sur_lat
       !tile flow temperature
-      ob(icmd)%hd(5)%temp = w_temp%sur_lat
+      !ob(icmd)%hd(5)%temp = w_temp%sur_lat
       do isalt = 1, cs_db%num_salts !rtb salt
         obcs(icmd)%hd(5)%salt(isalt) = tilesalt(j,isalt) * cnv_kg !kg of each salt ion
       enddo

@@ -193,28 +193,6 @@
             
           end do
           
-          !if canal diversions are used as source water, read in the number of days that diversion water can be
-          !available for irrigation (rtb)
-          div_found = 0
-          do isrc = 1, wallo(iwro)%src_obs
-            if(wallo(iwro)%src(isrc)%ob_typ == "div") then
-              div_found = 1
-            endif
-          enddo
-          if(div_found == 1) then
-            !prepare array
-            allocate (div_volume_daily(sp_ob%recall), source = 0.)
-            allocate (div_volume_total(sp_ob%recall), source = 0.)
-            allocate (div_volume_used(sp_ob%recall), source = 0.)
-            div_volume_daily = 0.
-            div_volume_total = 0.
-            div_volume_used = 0.
-            !read the days parameter
-            read(107,*)
-            read(107,*) div_delay
-            div_delay = Exp(-1./(div_delay + 1.e-6))
-          endif
-          
         end do
 
         exit

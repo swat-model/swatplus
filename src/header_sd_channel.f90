@@ -32,6 +32,12 @@
           write (2500,*) ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
           write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_day.txt"
           
+					open (2509,file="channel_sd_day_hydsep.txt",recl = 1500)
+          write (2509,*) bsn%name, prog
+          write (2509,*) hyd_sep_hdr
+          write (2509,*) hyd_sep_hdr_unit
+          write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_day_hydsep.txt"
+					
           !open (2509,file="channel_sd_day_new.txt",recl = 1500)
           !write (2509,*) bsn%name, prog
           !write (2509,*) ch_wbod_inouthdr,  hyd_inout_hdr

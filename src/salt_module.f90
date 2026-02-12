@@ -1,6 +1,4 @@
       module salt_module
-    
-      implicit none
 
       !soil -------------------------------------------------------------------------------------------------------------------------------
       
@@ -10,7 +8,7 @@
         real :: diss = 0.            !! |kg/ha       |salt ion mass transferred from sorbed phase to dissolved phase
         real :: surq = 0.            !! |kg/ha       |salt ion mass lost in surface runoff in HRU
         real :: latq = 0.            !! |kg/ha       |salt ion mass in lateral flow in HRU
-        real :: urbq = 0.            !! |kg/ha       |salt ion mass in urban runoff
+        real :: urbq = 0.            !! |kg/ha			 |salt ion mass in urban runoff
         real :: wetq = 0.            !! |kg/ha       |salt ion mass in wetland runoff
         real :: tile = 0.            !! |kg/ha       |salt ion mass in tile flow in HRU
         real :: perc = 0.            !! |kg/ha       |salt ion mass leached past bottom of soil
@@ -25,7 +23,7 @@
         real :: fert = 0.            !! |kg/ha       |salt ion mass added to soil via fertilizer 
         real :: amnd = 0.            !! |kg/ha       |salt ion mass added to soil via salt amendments
         real :: uptk = 0.            !! |kg/ha       |salt ion mass taken up by crop roots
-        real :: conc = 0.            !! |mg/L        |salt ion concentration in soil water (averaged over all soil layers)
+        real :: conc = 0.						 !! |mg/L        |salt ion concentration in soil water (averaged over all soil layers)
       end type salt_balance
       
       type object_salt_balance
@@ -66,7 +64,7 @@
       
       !salt uptake
       real, dimension(:,:), allocatable :: salt_uptake_kg       !specified daily salt mass taken up by crop roots (kg/ha)
-      integer :: salt_uptake_on = 0                             !flag for simulating salt uptake
+      integer :: salt_uptake_on                                 !flag for simulating salt uptake
       
       !urban salt concentrations
       real, dimension(:,:), allocatable :: salt_urban_conc      !salt ion conc in suspended solid load from imp areas (mg salt / kg sed)
@@ -75,7 +73,7 @@
       type output_saltbal_header
          character (len=8) :: yrc =        "      yr"
          character (len=8) :: mon =        "      mo"
-         character (len=8) :: day =        "    jday"
+         character (len=8) :: day =        "    jday"  
          character(len=16) :: lat =        "     lat_kg"
          character(len=16) :: gw =         "      gw_kg"
          character(len=16) :: sur =        "     sur_kg"
@@ -178,15 +176,6 @@
          character(len=15) :: clpc =       "perc_cl"
          character(len=15) :: co3pc =      "perc_co3"
          character(len=15) :: hco3pc =     "perc_hco3"
-         !groundwater transfer
-         character(len=15) :: so4gt =      "gwup_so4"
-         character(len=15) :: cagt =       "gwup_ca"
-         character(len=15) :: mggt =       "gwup_mg"
-         character(len=15) :: nagt =       "gwup_na"
-         character(len=15) :: kgt =        "gwup_k"
-         character(len=15) :: clgt =       "gwup_cl"
-         character(len=15) :: co3gt =      "gwup_co3"
-         character(len=15) :: hco3gt =     "gwup_hco3"
          !wetland seepage to soil
          character(len=15) :: so4ws =      "wtsp_so4"
          character(len=15) :: caws =       "wtsp_ca"
@@ -290,5 +279,20 @@
          character(len=15) :: dssl =       "dssl_total"
       end type output_salt_hdr_hru      
       type (output_salt_hdr_hru) :: salt_hdr_hru
-            
+      
+      !header for salt object output (see object_read_output and obj_output)
+      type hyd_header_salt                                      
+        character (len=15) ::  so4  =    "         so4_kg"        !! kg so4
+        character (len=15) ::   ca  =    "          ca_kg"        !! kg ca
+        character (len=15) ::   mg  =    "          mg_kg"        !! kg mg
+        character (len=15) ::   na  =    "          na_kg"        !! kg na
+        character (len=15) ::    k  =    "           k_kg"        !! kg k
+        character (len=15) ::   cl  =    "          cl_kg"        !! kg cl
+        character (len=15) ::  co3  =    "         co3_kg"        !! kg co3
+        character (len=15) :: hco3  =    "        hco3_kg"        !! kg hco3
+      end type hyd_header_salt
+      type (hyd_header_salt) :: hyd_hdr_salt
+      
+      
       end module
+      

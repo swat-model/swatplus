@@ -29,22 +29,6 @@
       
       !! check if canal or inflow diversions and set available water from recall object
       do isrc = 1,wallo(iwallo)%src_obs
-        !! set total volumes of canal diversions (source = "div") - rtb
-        if (wallo(iwallo)%src(isrc)%ob_typ == "div") then  
-          irec = wallo(iwallo)%src(isrc)%ob_num !number in recall.rec
-          !calculate newly available canal water
-          div_daily = recall(irec)%hd(time%day,time%yrs)%flo * (-1) !m3; make positive
-          if(div_daily > 0) then
-            dum = 10
-          endif
-          div_total = div_volume_daily(irec) !m3
-          div_volume_daily(irec) = ((1.-div_delay)*div_daily) + (div_delay*div_total) !m3
-          if (div_volume_daily(irec) < 1.e-6) then
-            div_volume_daily(irec) = 0.
-          endif
-          !total available canal water for irrigation
-          div_volume_total(irec) = div_volume_total(irec) + div_volume_daily(irec) !m3
-        endif
         
         !! set total volumes of inflow diversions from recall file
         if (wallo(iwallo)%src(isrc)%ob_typ == "div_rec") then  

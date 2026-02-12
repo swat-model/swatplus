@@ -2,7 +2,7 @@
 
       implicit none
     
-      real :: testing_aquifer = 0.
+      real :: testing_aquifer
       
       type salt_balance_aqu
         real :: diss = 0.            !! |kg       |salt ion mass transferred from sorbed phase to dissolved phase
@@ -100,4 +100,5 @@
       end type output_salt_header      
       type (output_salt_header) :: salt_hdr_aqu
       
-      end module     
+    end module     
+    

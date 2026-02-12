@@ -135,11 +135,13 @@
         character(len=16) :: hydc = ""
         character(len=16) :: sedc = ""
         character(len=16) :: nutc = ""
+				character(len=16) :: tempc = ""
         integer :: init = 1
         integer :: hyd = 1
         integer :: sed = 1
         integer :: nut = 1
         integer :: sednut = 1
+				integer :: temp = 1
       end type swatdeg_datafiles
       type (swatdeg_datafiles), dimension(:),allocatable :: sd_dat
       

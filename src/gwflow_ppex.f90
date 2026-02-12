@@ -17,6 +17,7 @@
       integer :: pumpex_end_date = 0        !       |ending date of pumping period
       real :: Q = 0.                        !m3     |pumping rate
       real :: solmass(100) = 0.             !g      |solute mass in pumped groundwater
+      real :: heat_flux = 0.                !J      |heat in pumped groundwater
       
       
       !only proceed if external pumping has been specified
@@ -38,22 +39,37 @@
               pumpex_start_date = gw_pumpex_dates(i,1,j)
               pumpex_end_date = gw_pumpex_dates(i,2,j)
               if(gw_daycount.ge.pumpex_start_date .and. gw_daycount.le.pumpex_end_date) then
+                
                 !check to make sure there is enough groundwater to satisfy the pumping rate
                 Q = gw_pumpex_rates(i,j)
                 if(Q.ge.gw_state(cell_id)%stor) then
                   Q = gw_state(cell_id)%stor
                   gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q
-                endif
+							  endif
                 gw_ss(cell_id)%ppex = gw_ss(cell_id)%ppex - Q !negative = leaving the aquifer
-                gw_ss_sum(cell_id)%ppex = gw_ss_sum(cell_id)%ppex - Q 
+                gw_ss_sum(cell_id)%ppex = gw_ss_sum(cell_id)%ppex - Q !store for annual water
+                gw_ss_sum_mo(cell_id)%ppex = gw_ss_sum_mo(cell_id)%ppex - Q !store for monthly water
+                
+                !heat
+                if(gw_heat_flag) then
+                  heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * Q !J
+                  if(heat_flux >= gwheat_state(cell_id)%stor) then
+                    heat_flux = gwheat_state(cell_id)%stor
+                  endif
+                  gw_heat_ss(cell_id)%ppex = gw_heat_ss(cell_id)%ppex - heat_flux !negative = leaving the aquifer
+                  gw_heat_ss_sum(cell_id)%ppex = gw_heat_ss_sum(cell_id)%ppex - heat_flux
+                endif
+                
                 !if chemical transport simulated, calculate the mass of N and P removed via pumping
                 if (gw_solute_flag == 1) then
                   do s=1,gw_nsolute !loop through the solutes
                     solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
                     gwsol_ss(cell_id)%solute(s)%ppex = gwsol_ss(cell_id)%solute(s)%ppex - solmass(s)
                     gwsol_ss_sum(cell_id)%solute(s)%ppex = gwsol_ss_sum(cell_id)%solute(s)%ppex - solmass(s)
+										gwsol_ss_sum_mo(cell_id)%solute(s)%ppex = gwsol_ss_sum_mo(cell_id)%solute(s)%ppex - solmass(s)
                   enddo
                 endif
+                
               endif
               
             enddo !go to next pumping period
@@ -65,3 +81,4 @@
       endif
        
       end subroutine gwflow_ppex     
+    

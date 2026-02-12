@@ -273,6 +273,12 @@
         ob(icmd)%hdsep%flo_surq = ob(icmd)%hdsep%flo_surq + ob(iob)%hdsep%flo_surq !surface runoff (m3)
         ob(icmd)%hdsep%flo_latq = ob(icmd)%hdsep%flo_latq + ob(iob)%hdsep%flo_latq !lateral flow (m3)
         
+				! JK added:
+        ob(icmd)%hdsep%flo_gwsw = ob(icmd)%hdsep%flo_gwsw + ob(iob)%hdsep%flo_gwsw
+        ob(icmd)%hdsep%flo_swgw = ob(icmd)%hdsep%flo_swgw + ob(iob)%hdsep%flo_swgw
+        ob(icmd)%hdsep%flo_satex = ob(icmd)%hdsep%flo_satex + ob(iob)%hdsep%flo_satex 
+        ob(icmd)%hdsep%flo_satexsw = ob(icmd)%hdsep%flo_satexsw + ob(iob)%hdsep%flo_satexsw 
+        ob(icmd)%hdsep%flo_tile = ob(icmd)%hdsep%flo_tile + ob(iob)%hdsep%flo_tile
 
       end do  !element loop
       

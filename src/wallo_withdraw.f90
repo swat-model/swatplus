@@ -16,6 +16,8 @@
       integer :: j = 0              !none       |hru number
       integer :: dum = 0
       integer :: irec = 0           !           |recall id
+      integer :: ob_num_src = 0     !           |object designated as the water source
+	  integer :: ob_num_dmd = 0     !           |object that has a water demand
       real :: res_min = 0.          !m3         |min reservoir volume for withdrawal
       real :: res_vol = 0.          !m3         |reservoir volume after withdrawal
       real :: cha_min = 0.          !m3         |minimum allowable flow in channel after withdrawal
@@ -109,35 +111,16 @@
           elseif(bsn_cc%gwflow == 1) then !gwflow is active; determine pumping amounts from grid cells
             extracted = 0.
             dmd_unmet = 0.
-            hru_demand = dmd_m3
-            call gwflow_ppag(wallo(iwallo)%dmd(idmd)%ob_num,dmd_m3,extracted,dmd_unmet)
+			!pumping can be for irrigation (HRU demand) or municipal supply (muni demand)
+			!the source of pumping can be either a specified cell or all cells connected to the HRU
+			isrc_wallo = wallo(iwallo)%dmd(idmd)%src(isrc)%src
+			ob_num_src = wallo(iwallo)%src(isrc_wallo)%ob_num
+			ob_num_dmd = wallo(iwallo)%dmd(idmd)%ob_num
+            call gwflow_ppag(ob_num_src,ob_num_dmd,dmd_m3,extracted,dmd_unmet,wallo(iwallo)%dmd(idmd)%ob_typ)
             wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr = wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr + extracted
             wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet + dmd_unmet
-            wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = Min (wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%dmd(idmd)%src(isrc)%demand)
           endif
         
-          !! canal diversion source (water removed from channel using point source)
-          case ("div")
-            !determine the point source
-            irec = wallo(iwallo)%dmd(idmd)%src_ob(isrc)%ob_num !number in recall.rec
-            !determine if water is available
-            total_dmd = div_volume_used(irec) + dmd_m3 !m3
-            if(total_dmd > div_volume_total(irec)) then
-              withdraw = div_volume_total(irec) - div_volume_used(irec)
-              unmet = total_dmd - div_volume_total(irec)  
-            else
-              withdraw = dmd_m3
-              unmet = 0.
-            endif
-            !update water used for irrigation
-            div_volume_used(irec) = div_volume_used(irec) + withdraw
-            !store values
-            wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr = wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr + withdraw
-            wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet + unmet
-            wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet = Min (wallod_out(iwallo)%dmd(idmd)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%dmd(idmd)%src(isrc)%demand)
-            
           !! unlimited source
           case ("unl")
             ht5%flo = dmd_m3

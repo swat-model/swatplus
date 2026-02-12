@@ -47,8 +47,13 @@
         real :: lag = 0.               !! tons          |detached large ag
         real :: grv = 0.               !! tons          |gravel
         real :: temp = 0.              !! deg c         |temperature
-      end type hyd_output
-      
+			end type hyd_output
+			
+      type w_temp_trib
+        real :: temp = 0.
+        real:: flo = 0.
+			end type w_temp_trib
+			
       !rtb gwflow - hydrograph separation
       type hyd_sep
         real :: flo_surq = 0.          !! m3           |volume of water from surface runoff
@@ -170,6 +175,8 @@
       type (hyd_output) :: bch_out_a
       type (hyd_output) :: chomz
 
+			type (w_temp_trib), dimension(:), allocatable :: trib
+			
       type object_output
         character (len=10) :: name = ""
         character (len=10) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
@@ -216,7 +223,7 @@
         real, dimension (27) :: p = 0.   !probabilities for all points on the fdc
       end type duration_curve_points
 
-      type water_temperature_data
+      type water_temperature_data1
         character(len=16) :: name = ""
         real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
         real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
@@ -224,8 +231,15 @@
         integer :: airlag_d = 6     ! days          |average air temperature lag
         real :: hex_coef1 = .67     ! 1/hour        |heat transfer coefficient 1
         real :: hex_coef2 = 1.16    ! 1/hour        |heat transfer coefficient 2
-      end type water_temperature_data
-      type (water_temperature_data) :: w_temp
+      end type water_temperature_data1
+      type (water_temperature_data1) :: wa_temp
+      
+      type shade_factor_data
+        integer :: jday = 0            ! none          |day of the year
+        integer :: lsu  = 0               ! none          |landscape unit
+        real :: value = 0.                  ! none          |shade factor value
+      end type shade_factor_data
+      type (shade_factor_data), dimension (:), allocatable :: shf_db
 
       integer :: fdc_npts = 27
       real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,97.,98.,99./) !percent        |output percent on the fdc (input)
@@ -578,7 +592,7 @@
         character (len=15) :: sag_out  =    "        sag_out"        !! tons         |detached small ag out
         character (len=15) :: lag_out  =    "        lag_out"        !! tons         |detached large ag out
         character (len=15) :: grv_out  =    "        grv_out"        !! tons         |gravel out
-        character (len=15) :: temp_out =    "           null"        !! deg c        |temperature out
+        character (len=15) :: temp_out =    "        tmp_out"        !! deg c        |temperature out
       end type hyd_out_header
       type (hyd_out_header) :: hyd_out_hdr
       
@@ -608,6 +622,44 @@
       end type hyd_inout_header
       type (hyd_inout_header) :: hyd_inout_hdr
       
+			type hyd_sep_header        
+        character (len=6) :: day           = "  jday"       
+        character (len=6) :: mo            = "   mon"
+        character (len=6) :: day_mo        = "   day"
+        character (len=6) :: yrc           = "    yr"       
+        character (len=9) :: isd           = "     unit"        
+        character (len=9) :: id            = "   gis_id"       
+        character (len=15) :: name         = "   name        " 
+        character (len=15) :: flo_out  =    "       flo_out"        !! m^3/s        |water out
+        character (len=15) :: flo_surq  =    "      flo_surq"            !! degC  
+        character (len=15) :: flo_latq  =    "      flo_latq"            !! degC    
+        character (len=15) :: flo_gwsw  =    "      flo_gwsw"            !! degC 
+        character (len=15) :: flo_swgw  =    "      flo_swgw"            !! degC 
+        character (len=15) :: flo_satex =    "      flo_satex"           !! degC  
+        character (len=15) :: flo_satexsw =    "    flo_satexsw"         !! degC 
+        character (len=15) :: flo_tile =    "       flo_tile"            !! degC 
+      end type hyd_sep_header
+      type (hyd_sep_header) :: hyd_sep_hdr
+
+      type hyd_sep_unit        
+        character (len=6) :: day           = "      "
+        character (len=6) :: mo            = "      "
+        character (len=6) :: day_mo        = "      "
+        character (len=6) :: yrc           = "      "       
+        character (len=9) :: isd           = "         "                                            
+        character (len=9) :: id            = "         "       
+        character (len=15) :: name         = "              " 
+        character (len=15) :: flo_out  =    "       m^3/s"        !! m^3/s        |water out
+        character (len=15) :: flo_surq  =    "      m^3/s"         !! m^3/s        |water out   
+        character (len=15) :: flo_latq  =    "      m^3/s"         !! m^3/s        |water out    
+        character (len=15) :: flo_gwsw  =    "      m^3/s"         !! m^3/s        |water out 
+        character (len=15) :: flo_swgw  =    "      m^3/s"         !! m^3/s        |water out 
+        character (len=15) :: flo_satex =    "      m^3/s"         !! m^3/s        |water out  
+        character (len=15) :: flo_satexsw =    "    m^3/s"         !! m^3/s        |water out 
+        character (len=15) :: flo_tile =    "       m^3/s"         !! m^3/s        |water out   
+      end type hyd_sep_unit
+      type (hyd_sep_unit) :: hyd_sep_hdr_unit
+			
       type wtmp_out_header
         character (len=15) :: water_temp =    "     water_temp"        !! deg c        |temperature
         end type wtmp_out_header

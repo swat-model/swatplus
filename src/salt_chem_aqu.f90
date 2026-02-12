@@ -57,8 +57,6 @@
       real :: mass_after = 0.
       double precision IonStr,IS_temp,K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,error1ST,error2ND,error3RD,errorTotal
 
-      SkipedIEX = 0.
-      
       !aquifer ID
       iaq = ob(icmd)%num
       
@@ -88,10 +86,10 @@
       do m=1,cs_db%num_salts
         if(cs_aqu(iaq)%salt(m).lt.0) then
           cs_aqu(iaq)%salt(m) = 0.
-        endif
+		endif
         if(cs_aqu(iaq)%saltc(m).lt.0) then
           cs_aqu(iaq)%saltc(m) = 0.
-        endif
+		endif
         mass_before = mass_before + cs_aqu(iaq)%salt(m) !kg of salt
         if(gw_volume.gt.0) then
           cs_aqu(iaq)%saltc(m) = (cs_aqu(iaq)%salt(m) * 1000.) / gw_volume !g/m3 = mg/L
@@ -119,7 +117,7 @@
       BiCar_Conc(1) = ion8*((1.0/1000)*(1.0/61.01)) !bicarbonate
 
       !define the activity coefficient using Extended Debye-Huckel equation
-      call Ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),BiCar_Conc(1),Mg_Conc(1),Sod_Conc(1),&                    
+      call salt_ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),BiCar_Conc(1),Mg_Conc(1),Sod_Conc(1),&                    
         Pot_Conc(1))
       IonStr = IS_temp
       I_Prep_in = IonStr
@@ -136,7 +134,7 @@
       !(I_diff<0.001), it will go to the next row
       !do while (I_diff.ge.1e-2)
         
-        call activity_coefficient(I_Prep_in)
+        call salt_act_coeff(I_Prep_in)
 
         !update the K values 
         K_ADJ1 = LAMDA(1)*LAMDA(3)
@@ -156,11 +154,11 @@
         !Precipitation-Dissolution package ----------------------------------------------------------------
         iter_count = 1
         do while (errorTotal.GE.1e-3)
-          call CaCO3
-          call MgCO3
-          call CaSO4
-          call MgSO4
-          call NaCl
+          call salt_minl_caco3
+          call salt_minl_mgco3
+          call salt_minl_caso4
+          call salt_minl_mgso4
+          call salt_minl_nacl
 
           !check the errors
           error1ST = Car_Conc(c22+1)-Car_Conc(c22+2)
@@ -207,7 +205,7 @@
       upion8= BiCar_Conc(1)*(61.01*1000.0) 
 
       !Cation Exchange package --------------------------------------------------------------------------
-      call cationexchange
+      call salt_cationexchange
 
       !skipping cation exchange if: 
       if (upion2.le.0 .or. upion3.le.0 .or. upion4.le.0 .or. upion5.le.0) then
@@ -262,4 +260,5 @@
       asaltb_d(iaq)%salt(1)%diss = mass_after - mass_before
       
       return
-      end
+    end
+    

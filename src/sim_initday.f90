@@ -34,6 +34,7 @@
       use reservoir_module
       use maximum_data_module
       use res_cs_module
+      use gwflow_module, only : hru_soil
 
       !!initialize variables at beginning of day
       ! initialising wetland by Ann 
@@ -104,6 +105,7 @@
       irgwcs = 0.
       
       !rtb gwflow
+      hru_soil = 0.
       gwsoilq = 0.
       gwsoiln = 0.
       gwsoilp = 0.

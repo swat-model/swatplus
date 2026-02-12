@@ -48,7 +48,7 @@
         
         allocate (res_salt_data(0:imax))
         do isalti=1,imax
-          allocate (res_salt_data(isalti)%c_init(cs_db%num_salts), source = 0.)
+          allocate(res_salt_data(isalti)%c_init(cs_db%num_salts))
         end do
         rewind (105)
         read (105,*,iostat=eof) titldum

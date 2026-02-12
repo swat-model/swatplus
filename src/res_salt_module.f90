@@ -6,7 +6,7 @@
         real :: inflow = 0.             ! kg        !salt entering the reservoir via streamflow
         real :: outflow = 0.            ! kg        !salt leaving the reservoir via streamflow
         real :: seep = 0.               ! kg        !salt leaving the reservoir via seepage to aquifer
-        real :: fert = 0.                ! kg        !salt added to reservoir (wetland) via fertilizer
+        real :: fert = 0.								! kg        !salt added to reservoir (wetland) via fertilizer
         real :: irrig = 0.              ! kg        !salt removed from the reservoir via irrigation diversion
         real :: div = 0.                ! kg        !salt mass removed or added via diversion
         real :: mass = 0.               ! kg        !salt in reservoir water at end of day
@@ -24,7 +24,7 @@
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_m
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_y
       type (res_salt_output), dimension(:), allocatable, save :: ressalt_a
-            
+			
       !arrays for wetland mass balance output
       type (res_salt_output), dimension(:), allocatable, save :: wetsalt_d
       type (res_salt_output), dimension(:), allocatable, save :: wetsalt_m
@@ -33,7 +33,7 @@
       
       !reservoir constituent parameters
       type reservoir_salt_data
-        character(len=25) :: name = ""
+        character(len=25) :: name
         real, dimension (:), allocatable :: c_init    !g/m3       |initial concentration of each salt ion
       end type reservoir_salt_data
       type (reservoir_salt_data), dimension(:), allocatable :: res_salt_data
@@ -45,7 +45,7 @@
           character (len=6) :: day_mo =     "   day"
           character (len=6) :: yrc =        "    yr"
           character (len=8) :: isd =        "   unit "
-          character (len=12) :: id =         " gis_id "
+          character (len=12) :: id =         " gis_id "           
           character(len=15) :: so4in =      "so4_in "
           character(len=15) :: cain =       "ca_in  "
           character(len=15) :: mgin =       "mg_in  "
@@ -99,7 +99,7 @@
           character(len=15) :: mg =         "mg_mass  "
           character(len=15) :: na =         "na_mass  "
           character(len=15) :: k =          "k_mass   "
-          character(len=15) :: cl =         "cl_mass  "
+          character(len=15) :: cl =         "cl_mass  " 
           character(len=15) :: co3 =        "co3_mass "
           character(len=15) :: hco3 =       "hco3_mass"
           character(len=15) :: so4c =       "so4_conc"
@@ -114,4 +114,5 @@
       end type res_salt_header
       type (res_salt_header) :: ressalt_hdr
 
-      end module res_salt_module
+    end module res_salt_module
+    

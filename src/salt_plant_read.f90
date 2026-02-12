@@ -37,10 +37,12 @@
         read(107,*)
         read(107,*)
         read(107,*) header
-        allocate (salt_stress_a(db_mx%plantparm), source = 0.)
-        allocate (salt_stress_b(db_mx%plantparm), source = 0.)
+        allocate(salt_stress_a(db_mx%plantparm))
+        allocate(salt_stress_b(db_mx%plantparm))
         do iplant=1,db_mx%plantparm
           read(107,*) plant_name,salt_stress_a(iplant),salt_stress_b(iplant)
+					salt_stress_a(iplant) = salt_stress_a(iplant)
+					salt_stress_b(iplant) = salt_stress_b(iplant)
         enddo
 
         !close the file
@@ -48,5 +50,8 @@
 
       endif
  
+
+			
       return
-      end subroutine salt_plant_read
+    end subroutine salt_plant_read
+    

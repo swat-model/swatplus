@@ -136,7 +136,11 @@
           cseo4_new = 0.
         endif
         ccseo4_new = (mass_seo4_sorb/volume)/(soil(j)%phys(jj)%bd*1000) !mg/kg
-        ratio = ccseo4_new / cseo4_new !this should equal Kd
+        if(cseo4_new > 0) then
+				  ratio = ccseo4_new / cseo4_new !this should equal Kd
+				else
+				  ratio = 0.
+				endif
 
         !store in global arrays
         cs_soil(j)%ly(jj)%csc(1) = cseo4_new !mg/L
@@ -165,7 +169,11 @@
           cseo3_new = 0.
         endif
         ccseo3_new = (mass_seo3_sorb/volume)/(soil(j)%phys(jj)%bd*1000) !mg/kg
-        ratio = ccseo3_new / cseo3_new !this should equal Kd
+        if(cseo3_new > 0) then
+				  ratio = ccseo3_new / cseo3_new !this should equal Kd
+				else
+				  ratio = 0.
+				endif
 
         !store in global arrays
         cs_soil(j)%ly(jj)%csc(2) = cseo3_new !mg/L
@@ -194,7 +202,11 @@
           cborn_new = 0.
         endif
         ccborn_new = (mass_born_sorb/volume)/(soil(j)%phys(jj)%bd*1000) !mg/kg
-        ratio = ccborn_new / cborn_new !this should equal Kd
+				if(cborn_new > 0) then
+          ratio = ccborn_new / cborn_new !this should equal Kd
+				else
+				  ratio = 0.
+				endif
 
         !store in global arrays
         cs_soil(j)%ly(jj)%csc(3) = cborn_new !mg/L

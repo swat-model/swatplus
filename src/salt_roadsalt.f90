@@ -27,56 +27,36 @@
       integer :: isalt = 0        !            |salt ion counter
       integer :: dum = 0
       real :: const = 0.          !            |constant used for rate, days, etc
+      real :: salt_mass = 0.      !kg/ha 
 
       j = ihru
       
-      if(cs_db%num_salts > 0) then
+	  !only proceed if road salt is included 
+      if(salt_road_flag == 1) then
+			
+	  if(cs_db%num_salts > 0) then
       
+	  !determine the hru's weather station
       iob = hru(j)%obj_no
       iwst = ob(iob)%wst
-      iadep = wst(iwst)%wco%atmodep
-      ist = atmodep_cont%ts
         
-      !add applied road salt to the soil profile
-      if (ist > 0 .and. ist <= atmodep_cont%num) then
-      
-        !monthly values
-        if (atmodep_cont%timestep == "mo") then
-          const = float (ndays(time%mo + 1) - ndays(time%mo))
-          !loop through the salt ions
-          do isalt=1,cs_db%num_salts 
-            !add to salt balance arrays
-            hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iadep)%salt(isalt)%roadmo(ist) / const  !kg/ha
-            !add both to soil profile  
-            cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
-          enddo
-        endif 
-        
-        !yearly values
-        if (atmodep_cont%timestep == "yr") then
-          !loop through the salt ions
-          do isalt=1,cs_db%num_salts 
-            !add to salt balance arrays
-            hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iadep)%salt(isalt)%roadday(time%day,ist)  !kg/ha
-            !add both to soil profile  
-            cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
-          enddo
+      !daily values (based on yearly road salt applications) 
+      !loop through the salt ions
+      do isalt=1,cs_db%num_salts 
+        !add to salt balance arrays
+        salt_mass = rdapp_salt(iwst)%salt(isalt)%roadday(time%day,time%yrs)
+        if(salt_mass > 0) then
+				  dum = 0
         endif
+        hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iwst)%salt(isalt)%roadday(time%day,time%yrs)  !kg/ha
+        !add both to soil profile  
+        cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
+	    enddo
         
       endif
-      
-      !annual average values
-      if (atmodep_cont%timestep == "aa") then
-        !loop through the salt ions
-        do isalt=1,cs_db%num_salts 
-          !add to salt balance arrays
-          hsaltb_d(j)%salt(isalt)%road = rdapp_salt(iadep)%salt(isalt)%road / 365.  !kg/ha
-          !add both to soil profile  
-          cs_soil(j)%ly(1)%salt(isalt) = cs_soil(j)%ly(1)%salt(isalt) + hsaltb_d(j)%salt(isalt)%road
-        enddo
-      endif
-       
-      endif
+			
+      endif !check if active
       
       return
-      end subroutine salt_roadsalt
+    end subroutine salt_roadsalt
+    

@@ -44,6 +44,7 @@
       real :: ion8 = 0.
       real :: hru_area_m2 = 0.
       real :: water_volume = 0.
+      real :: water_mm = 0.
       real :: sol_water = 0.
       real :: sol_thick = 0.
       real :: waterC = 0.
@@ -70,8 +71,6 @@
       double precision IonStr,IS_temp,&                 
           K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,&                 
           error1ST,error2ND,error3RD,errorTotal
-      
-      SkipedIEX = 0.
       
       !hru ID
       j = ihru
@@ -127,14 +126,15 @@
             (sol_bd/(waterC*58.44))*1000.0 
         
         !get concentration of salt ions in the layer
-        water_volume = (soil(j)%phys(jj)%st/1000.) * hru_area_m2
+				water_mm = soil(j)%phys(jj)%st + soil(j)%phys(jj)%wpmm !total soil water		 
+        water_volume = (water_mm/1000.) * hru_area_m2 !m3
         do m=1,cs_db%num_salts
           if(cs_soil(j)%ly(jj)%salt(m).lt.0) then
             cs_soil(j)%ly(jj)%salt(m) = 0.
-          endif
+			endif
           if(cs_soil(j)%ly(jj)%saltc(m).lt.0) then
             cs_soil(j)%ly(jj)%saltc(m) = 0.
-          endif
+			endif
           salt_mass_kg = cs_soil(j)%ly(jj)%salt(m) * hru(j)%area_ha !kg of salt
           mass_before = mass_before + salt_mass_kg
           if(water_volume.gt.0) then
@@ -171,7 +171,7 @@
         BiCar_Conc(1) = ion8*((1.0/1000)*(1.0/61.01)) !bicarbonate
 
         !define the activity coefficient using Extended Debye-Huckel equation
-        call Ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),&                      
+        call salt_ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),&                      
             BiCar_Conc(1),Mg_Conc(1),Sod_Conc(1),&                      
             Pot_Conc(1))
         IonStr = IS_temp
@@ -188,7 +188,7 @@
         !This while loop compares I from precipitation loop with I from complexation. If they are about the same
         !(I_diff<0.001), it will go to the next row
         !do while (I_diff.ge.1e-2)
-          call activity_coefficient(I_Prep_in)
+          call salt_act_coeff(I_Prep_in)
 
           !update the K values 
           K_ADJ1 = LAMDA(1)*LAMDA(3)
@@ -199,40 +199,40 @@
 
           if(K_ADJ1.gt.0.) then
             salt_K1 = Ksp11/K_ADJ1
-            else
+			else
             salt_K1 = 0.
-            endif
+			endif
           if(K_ADJ2.gt.0.) then
             salt_K2 = Ksp21/K_ADJ2
-            else
+			else
             salt_K2 = 0.
-            endif
+			endif
           if(K_ADJ3.gt.0.) then
             salt_K3 = Ksp31/K_ADJ3
-            else
+			else
             salt_K3 = 0.
-            endif
+			endif
           if(K_ADJ4.gt.0.) then
             salt_K4 = Ksp41/K_ADJ4
-            else
+			else
             salt_K4 = 0.
-            endif
+			endif
           if(K_ADJ5.gt.0.) then
             salt_K5 = Ksp51/K_ADJ5
-            else
+			else
             salt_K5 = 0.
-            endif
+			endif
           
           errorTotal = 1
 
           !Precipitation-Dissolution package ----------------------------------------------------------------
           iter_count = 1
           do while (errorTotal.GE.1e-3)
-            call CaCO3
-            call MgCO3
-            call CaSO4
-            call MgSO4
-            call NaCl
+            call salt_minl_caco3
+            call salt_minl_mgco3
+            call salt_minl_caso4
+            call salt_minl_mgso4
+            call salt_minl_nacl
 
             !check the errors
             error1ST = Car_Conc(c22+1)-Car_Conc(c22+2)
@@ -280,7 +280,7 @@
         upion8= BiCar_Conc(1)*(61.01*1000.0) 
 
         !Cation Exchange package --------------------------------------------------------------------------
-        call cationexchange
+        call salt_cationexchange
 
         !skipping cation exchange if: 
         if (upion2.le.0 .or. upion3.le.0 .or. upion4.le.0 .or. &      
@@ -309,10 +309,11 @@
 
         !convert to kg/ha, for regular SWAT+ routines
         hru_area_m2 = hru(j)%area_ha * 10000. !ha --> m2
-        water_volume = (soil(j)%phys(jj)%st/1000.) * hru_area_m2
+        water_mm = soil(j)%phys(jj)%st + soil(j)%phys(jj)%wpmm  !total soil water
+        water_volume = (water_mm/1000.) * hru_area_m2
         do m=1,cs_db%num_salts
           cs_soil(j)%ly(jj)%salt(m) = &                 
-              (cs_soil(j)%ly(jj)%saltc(m)/1000.) * water_volume&                 
+              (cs_soil(j)%ly(jj)%saltc(m)/1000.) * water_volume &                 
               / hru(j)%area_ha   
         enddo
 
@@ -365,424 +366,79 @@
       mass_before = mass_before / hru(j)%area_ha !kg/ha
       mass_after = mass_after / hru(j)%area_ha !kg/ha
       hsaltb_d(j)%salt(1)%diss = mass_after - mass_before
-
-!*** tu Wunused-label: 101   format(i8,i8,i8,i8,50(e13.4)) 
       
       return
-      end
-
-      
-
-
-      ! Calculate Ionic Strength of Water *******************************************************************
-      subroutine Ionic_Strength(IS_temp,A,B,C,D,E,F,G)
-      
-      use salt_data_module
-      
-      implicit none
-
-      double precision IS_temp,A,B,C,D,E,F,G
-      real :: CharBal(7)
-      
-      DATA CharBal/2.0, -2.0, -2.0, -1.0, 2.0, 1.0, 1.0/     
-      
-      IS_temp = 0.5*(CharBal(1)**2*A&
-          +CharBal(2)**2*B&
-          +CharBal(3)**2*C&
-          +CharBal(4)**2*D&
-          +CharBal(5)**2*E&
-          +CharBal(6)**2*F&
-          +CharBal(7)**2*G)
-     
-      return
-      end
-      
-      
-
-      
-      
-      ! Calculate Activity Coefficient **********************************************************************
-      subroutine activity_coefficient(I_Prep_in)
-      
-      use salt_data_module
-      use organic_mineral_mass_module
-
-      real :: CharBal(7)
-      real :: a_size(7)
-      real :: I_Prep_in
-      DATA CharBal/2.0, -2.0, -2.0, -1.0, 2.0, 1.0, 1.0/
-      DATA a_size/6.0, 4.0, 4.5, 4.0, 8.0, 4.5, 3.0/
-      integer :: ii = 0
-      real :: A = 0.
-      real :: B = 0.
-      A = 0.5 !at 298 K
-      B = 0.33 !at 298 K
-      
-      if (I_Prep_in.LE.1e-1) then
-        do ii = 1,7
-          LAMDA(ii)= 10.0**(-A*CharBal(ii)**2.0  &       
-              *(I_Prep_in**0.5/(1+B*a_size(ii)*I_Prep_in**0.5)))
-        enddo
-      elseif (I_Prep_in.GE.5) then
-        I_Prep_in = 0.5
-        do ii = 1,7
-          LAMDA(ii)= 10.0**(-A*CharBal(ii)**2.0  &    
-              *(I_Prep_in**0.5/(1+I_Prep_in**0.5)-0.3*I_Prep_in))
-        enddo
-      else
-        do ii = 1,7
-          LAMDA(ii)= 10.0**(-A*CharBal(ii)**2.0  &    
-              *(I_Prep_in**0.5/(1+I_Prep_in**0.5)-0.3*I_Prep_in))
-        enddo
-      endif
-      
-      return
-      end
-           
-      
+    end
+    
 
 
+        ! Calculate Activity Coefficient **********************************************************************
+        subroutine salt_act_coeff(I_Prep_in)
 
-      ! CaSO4 ***********************************************************************************************
-      !disp('**************************************************************')
-      !disp('The reaction is: CaSO4(s)<--> Ca2+(aq) + SO42-(aq)')
-      !disp('The Ksp(Solubility Product Constants) of CaSO4(s) is 4.93*10^-5')
-      !disp('**************************************************************') 
-      subroutine CaSO4
+        use salt_data_module
+        use organic_mineral_mass_module
 
-      use organic_mineral_mass_module
-      use salt_data_module
-      
-      implicit none
-
-      Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
-          PosSolv,CalSul_Prep,Solid_CaSO4,Dissolved_Solid,& 
-          Calcium_Conc,Sulfate_Conc
-      
-      M1 = Sol_CaSO4(c5)
-      M2 = Cal_Conc(c11+1)
-      M3 = Sul_Conc(salt_c4)
-      Ksp = salt_K3
-      
-      Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
-      Trial_Ksp = M2 * M3
-
-      if (Trial_Ksp.gt.Ksp) then
-        !disp('precipitation WILL form')
-        ! Defining temporary parameter PosSolve
-        PosSolv = abs(Solv)
-        CalSul_Prep = PosSolv 
-        Solid_CaSO4 = M1+CalSul_Prep
-        Dissolved_Solid = 0
-        Calcium_Conc = M2-CalSul_Prep
-        Sulfate_Conc = M3-CalSul_Prep
-      
-      elseif (M1.gt.Solv) then
-        !disp('Dissolution WILL form')
-        !Defining temporary parameter PosSolv
-        PosSolv = Solv
-      
-        !disp('****************************************')
-        !disp('Portion of the solid will be dissolved')
-        !disp('****************************************')
-        Calcium_Conc = (M2+PosSolv)
-        Sulfate_Conc = (M3+PosSolv)
-        Dissolved_Solid = PosSolv
-        Solid_CaSO4 = (M1-PosSolv)
-      
-      else 
-        !disp('****************************************')
-        !disp('Solid will be compeletly dissolved')
-        !disp('****************************************')
-        Calcium_Conc = (M1+M2)
-        Sulfate_Conc = (M1+M3)
-        Dissolved_Solid = M1
-        Solid_CaSO4 = 0
-      endif
-      
-      Sol_CaSO4(c5+1) = Solid_CaSO4
-      Cal_Conc(c11+2) = Calcium_Conc
-      Sul_Conc(salt_c4+1) = Sulfate_Conc
-
-      return
-      end
-
-
-
-
-
-      ! MgCO3 ***********************************************************************************************
-      !disp('**************************************************************')
-      !disp('The reaction is: MgCO3(s)<--> Mg2+(aq) + CO32-(aq)')
-      !disp('The Ksp(Solubility Product Constants) of MgCO3(s) is 4.7937*10^-6')
-      !disp('**************************************************************') 
-      subroutine MgCO3
-
-      use organic_mineral_mass_module
-      use salt_data_module
-
-      implicit none
-
-      Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
-          PosSolv,MgCar_Prep,Solid_MgCO3,Dissolved_Solid,& 
-          Mag_Conc,Carbonate_Conc
-      
-      M1 = Sol_MgCO3(c5)
-      M2 = Mg_Conc(salt_c3)
-      M3 = Car_Conc(c22+1)
-      Ksp = salt_K2
-      Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
-      Trial_Ksp=M2*M3
-
-      if (Trial_Ksp.GT.Ksp) then   
-        !disp('precipitation WILL form')
-        ! Defining temporary parameter PosSolve
-        PosSolv = abs(Solv)
-        MgCar_Prep = PosSolv 
-        Solid_MgCO3 = M1+MgCar_Prep
-        Dissolved_Solid = 0
-        Mag_Conc = M2-MgCar_Prep
-        Carbonate_Conc = M3-MgCar_Prep
-      
-      elseif(M1.GT.Solv) then   
-        !disp('Dissolution WILL form')
-        !Defining temporary parameter PosSolv
-        PosSolv = Solv
-        ! IF (M1.GT.PosSolv) THEN 
-        !disp('****************************************')
-        !disp('Portion of the solid will be dissolved')
-        !disp('****************************************')
-        Mag_Conc = (M2+PosSolv)
-        Carbonate_Conc = (M3+PosSolv)
-        Dissolved_Solid = PosSolv
-        Solid_MgCO3 = (M1-PosSolv)
-      
-      else 
-        !disp('****************************************')
-        !disp('Solid will be compeletly dissolved')
-        !disp('****************************************')
-        Mag_Conc = (M1+M2)
-        Carbonate_Conc = (M1+M3)
-        Dissolved_Solid = M1
-        Solid_MgCO3= 0
-      
-      endif
-
-      Sol_MgCO3(c5+1) = Solid_MgCO3
-      Mg_Conc(salt_c3+1) =   Mag_Conc
-      Car_Conc(c22+2) =  Carbonate_Conc  
-         
-      return
-      end
-
-
-
-
-
-      ! NaCl ************************************************************************************************
-      !disp('**************************************************************')
-      !disp('The reaction is: NaCl(s)<--> Na+(aq) + Cl-(aq)')
-      !disp('The Ksp(Solubility Product Constants) of NaCl(s) is 37.3')
-      !disp('**************************************************************')  
-      subroutine NaCl
-
-      use organic_mineral_mass_module
-      use salt_data_module
-
-      implicit none
-
-      Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
-          PosSolv,SodiumChloride_Prep,Solid_NaCl,Dissolved_Solid,& 
-          Sodium_Conc,Chloride_Conc
-      
-      M1 = Sol_NaCl(c5)
-      M2 = Sod_Conc(c5)
-      M3 = Cl_Conc(c5)
-      Ksp = salt_K5
-      
-      Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
-      Trial_Ksp=M2*M3
-
-      if (Trial_Ksp.GT.Ksp) then    
-        !disp('precipitation WILL form')
-        ! Defining temporary parameter PosSolve
-        PosSolv = abs(Solv)
-        SodiumChloride_Prep = PosSolv 
-        Solid_NaCl = M1+SodiumChloride_Prep
-        Dissolved_Solid = 0
-        Sodium_Conc = M2-SodiumChloride_Prep
-        Chloride_Conc  = M3-SodiumChloride_Prep
-      
-      elseif(M1.GT.Solv) then
-        !disp('Dissolution WILL form')
-        !Defining temporary parameter PosSolv
-        PosSolv = Solv
-        !  IF (M1.GT.PosSolv) THEN 
-        !disp('****************************************')
-        !disp('Portion of the solid will be dissolved')
-        !disp('****************************************')
-        Sodium_Conc = (M2+PoSSolv)
-        Chloride_Conc  = (M3+PosSolv)
-        Dissolved_Solid = PosSolv
-        Solid_NaCl = (M1-PosSolv)
-      
-      else
-        !disp('****************************************')
-        !disp('Solid will be compeletly dissolved')
-        !disp('****************************************')
-        Sodium_Conc = (M1+M2)
-        Chloride_Conc  = (M1+M3)
-        Dissolved_Solid = M1
-        Solid_NaCl= 0
-      
-      endif
-
-      Sol_NaCl(c5+1) = Solid_NaCl
-      Sod_Conc(c5+1) = Sodium_Conc
-      Cl_Conc(c5+1) = Chloride_Conc
-      
-      return
-      end
-
-
-
-
-
-      ! MgSO4 ***********************************************************************************************
-      !disp('**************************************************************')
-      !disp('The reaction is: MgSO4(s)<--> Mg2+(aq) + SO42-(aq)')
-      !disp('The Ksp(Solubility Product Constants) of MgSO4(s) is ?')
-       !disp('**************************************************************')    
-      subroutine MgSO4
-
-      use organic_mineral_mass_module
-      use salt_data_module
-
-      implicit none
-
-      Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
-          PosSolv,MgSul_Prep,Solid_MgSO4,Dissolved_Solid,& 
-          Mag_Conc,Sulfate_Conc
-      
-      M1 = Sol_MgSO4(c5)
-      M2 = Mg_Conc(salt_c3+1)
-      M3 = Sul_Conc(salt_c4+1)
-      Ksp = salt_K4
-      
-      Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
-      Trial_Ksp=M2*M3
-
-      if (Trial_Ksp.GT.Ksp) then  
-        !disp('precipitation WILL form')
-        ! Defining temporary parameter PosSolve
-        PosSolv = abs(Solv)
-        MgSul_Prep = PosSolv 
-        Solid_MgSO4 = M1+MgSul_Prep
-        Dissolved_Solid = 0
-        Mag_Conc = M2-MgSul_Prep
-        Sulfate_Conc = M3-MgSul_Prep
-
-      elseif(M1.GT.Solv) then
-        !disp('Dissolution WILL form')
-        !Defining temporary parameter PosSolv
-        PosSolv = Solv
-        !IF (M1.GT.PosSolv) THEN 
-        !disp('****************************************')
-        !disp('Portion of the solid will be dissolved')
-        !disp('****************************************')
-        Mag_Conc = (M2+PosSolv)
-        Sulfate_Conc = (M3+PosSolv)
-        Dissolved_Solid = PosSolv
-        Solid_MgSO4 = (M1-PosSolv)
-
-      else
-        !disp('****************************************')
-        !disp('Solid will be compeletly dissolved')
-        !disp('****************************************')
-        Mag_Conc = (M1+M2)
-        Sulfate_Conc = (M1+M3)
-        Dissolved_Solid = M1
-        Solid_MgSO4= 0
-      
-      endif
+        implicit none
         
-      Sol_MgSO4(c5+1) = Solid_MgSO4
-      Mg_Conc(salt_c3+2) = Mag_Conc
-      Sul_Conc(salt_c4+2) = Sulfate_Conc
-      
-      return
-      end
+        real :: CharBal(7)
+        real :: a_size(7)
+        real :: I_Prep_in
+        DATA CharBal/2.0, -2.0, -2.0, -1.0, 2.0, 1.0, 1.0/
+        DATA a_size/6.0, 4.0, 4.5, 4.0, 8.0, 4.5, 3.0/
+        integer :: ii = 0
+        real :: A = 0.
+        real :: B = 0.
+        A = 0.5 !at 298 K
+        B = 0.33 !at 298 K
 
+        if (I_Prep_in.LE.1e-1) then
+          do ii = 1,7
+            LAMDA(ii)= 10.0**(-A*CharBal(ii)**2.0  &       
+                *(I_Prep_in**0.5/(1+B*a_size(ii)*I_Prep_in**0.5)))
+          enddo
+        elseif (I_Prep_in.GE.5) then
+          I_Prep_in = 0.5
+          do ii = 1,7
+            LAMDA(ii)= 10.0**(-A*CharBal(ii)**2.0  &    
+                *(I_Prep_in**0.5/(1+I_Prep_in**0.5)-0.3*I_Prep_in))
+          enddo
+        else
+          do ii = 1,7
+            LAMDA(ii)= 10.0**(-A*CharBal(ii)**2.0  &    
+                *(I_Prep_in**0.5/(1+I_Prep_in**0.5)-0.3*I_Prep_in))
+          enddo
+        endif
 
+        return
+        end
+    
+    
+    
+        ! Calculate Ionic Strength of Water *******************************************************************
+        subroutine salt_ionic_strength(IS_temp,A,B,C,D,E,F,G)
 
+        use salt_data_module
 
+        implicit none
 
-      ! CaCO3 ***********************************************************************************************
-      !disp('**************************************************************')
-      !disp('The reaction is: CaCO3(s)<--> Ca2+(aq) + CO32-(aq)')
-      !disp('The Ksp(Solubility Product Constants) of CaCO3(s) is 3.0702*10^-9')
-      !disp('**************************************************************')     
-      subroutine CaCO3
-      
-      use organic_mineral_mass_module
-      use salt_data_module
-       
-      Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
-          PosSolv,CalCar_Prep,Solid_CaCO3,Dissolved_Solid,& 
-          Calcium_Conc,Carbonate_Conc
-            
-      M1 = Sol_CaCO3(c5)
-      M2 = Cal_Conc(c11)
-      M3 = Car_Conc(c22)
-      Ksp = salt_K1
-      Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
-      Trial_Ksp=M2*M3
+        double precision IS_temp,A,B,C,D,E,F,G
+        real :: CharBal(7)
 
-      if (Trial_Ksp.GT.Ksp) then
-        !disp('precipitation WILL form')
-        ! Defining temporary parameter PosSolve
-        PosSolv = abs(Solv)
-        CalCar_Prep = PosSolv 
-        Solid_CaCO3 = M1+CalCar_Prep
-        Dissolved_Solid = 0
-        Calcium_Conc = M2-CalCar_Prep
-        Carbonate_Conc = M3-CalCar_Prep
+        DATA CharBal/2.0, -2.0, -2.0, -1.0, 2.0, 1.0, 1.0/     
 
-      elseif(M1.GT.Solv) then
-        !disp('Dissolution WILL form')
-        !Defining temporary parameter PosSolv
-        PosSolv = Solv
-        !IF (M1.GT.PosSolv) THEN 
-        !disp('****************************************')
-        !disp('Portion of the solid will be dissolved')
-        !disp('****************************************')
-        Calcium_Conc = (M2+Solv)
-        Carbonate_Conc = (M3+Solv)
-        Dissolved_Solid = Solv
-        Solid_CaCO3 = (M1-Solv)
+        IS_temp = 0.5*(CharBal(1)**2*A&
+            +CharBal(2)**2*B&
+            +CharBal(3)**2*C&
+            +CharBal(4)**2*D&
+            +CharBal(5)**2*E&
+            +CharBal(6)**2*F&
+            +CharBal(7)**2*G)
+     
+        return
+    end subroutine salt_ionic_strength
+    
 
-      else
-        !disp('****************************************')
-        !disp('Solid will be compeletly dissolved')
-        !disp('****************************************')
-        Calcium_Conc = (M1+M2)
-        Carbonate_Conc = (M1+M3)
-        Dissolved_Solid = M1
-        Solid_CaCO3= 0
-
-      endif
-
-      Sol_CaCO3(c5+1) = Solid_CaCO3 
-      Cal_Conc(c11+1) =  Calcium_Conc
-      Car_Conc(c22+1) = Carbonate_Conc 
-      
-      return
-      end
-
-
-
-
-
+    
       ! Calculate Cation Exchange ***************************************************************************   
       ! Developed by Saman Tavakoli 
       ! At Colorado State University 
@@ -792,7 +448,7 @@
       !Assumption for CEC: constant for a given soil, independent of of pH, ion type and concentration
       !Sel_K1 through Sel_K6 stands for selectivity coefficient of exchange reaction
       !XCAINI and others stands for initial ion which attached to the soil particle
-      subroutine cationexchange
+      subroutine salt_cationexchange
       
       use organic_mineral_mass_module
       use salt_data_module
@@ -901,4 +557,336 @@
       endif
 
       return 
-      end ! end subroutine cation exchange 
+    end ! end subroutine cation exchange 
+      
+    
+    
+            ! CaCO3 ***********************************************************************************************
+        !disp('**************************************************************')
+        !disp('The reaction is: CaCO3(s)<--> Ca2+(aq) + CO32-(aq)')
+        !disp('The Ksp(Solubility Product Constants) of CaCO3(s) is 3.0702*10^-9')
+        !disp('**************************************************************')     
+        subroutine salt_minl_caco3
+
+        use organic_mineral_mass_module
+        use salt_data_module
+ 
+        Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
+            PosSolv,CalCar_Prep,Solid_CaCO3,Dissolved_Solid,& 
+            Calcium_Conc,Carbonate_Conc
+      
+        M1 = Sol_CaCO3(c5)
+        M2 = Cal_Conc(c11)
+        M3 = Car_Conc(c22)
+        Ksp = salt_K1
+        Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
+        Trial_Ksp=M2*M3
+
+        if (Trial_Ksp.GT.Ksp) then
+          !disp('precipitation WILL form')
+          ! Defining temporary parameter PosSolve
+          PosSolv = abs(Solv)
+          CalCar_Prep = PosSolv 
+          Solid_CaCO3 = M1+CalCar_Prep
+          Dissolved_Solid = 0
+          Calcium_Conc = M2-CalCar_Prep
+          Carbonate_Conc = M3-CalCar_Prep
+
+        elseif(M1.GT.Solv) then
+          !disp('Dissolution WILL form')
+          !Defining temporary parameter PosSolv
+          PosSolv = Solv
+          !IF (M1.GT.PosSolv) THEN 
+          !disp('****************************************')
+          !disp('Portion of the solid will be dissolved')
+          !disp('****************************************')
+          Calcium_Conc = (M2+Solv)
+          Carbonate_Conc = (M3+Solv)
+          Dissolved_Solid = Solv
+          Solid_CaCO3 = (M1-Solv)
+
+        else
+          !disp('****************************************')
+          !disp('Solid will be compeletly dissolved')
+          !disp('****************************************')
+          Calcium_Conc = (M1+M2)
+          Carbonate_Conc = (M1+M3)
+          Dissolved_Solid = M1
+          Solid_CaCO3= 0
+
+        endif
+
+        Sol_CaCO3(c5+1) = Solid_CaCO3 
+        Cal_Conc(c11+1) =  Calcium_Conc
+        Car_Conc(c22+1) = Carbonate_Conc 
+
+        return
+    end
+
+    
+    
+            ! CaSO4 ***********************************************************************************************
+        !disp('**************************************************************')
+        !disp('The reaction is: CaSO4(s)<--> Ca2+(aq) + SO42-(aq)')
+        !disp('The Ksp(Solubility Product Constants) of CaSO4(s) is 4.93*10^-5')
+        !disp('**************************************************************') 
+        subroutine salt_minl_caso4
+
+        use organic_mineral_mass_module
+        use salt_data_module
+
+        implicit none
+
+        Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
+            PosSolv,CalSul_Prep,Solid_CaSO4,Dissolved_Solid,& 
+            Calcium_Conc,Sulfate_Conc
+
+        M1 = Sol_CaSO4(c5)
+        M2 = Cal_Conc(c11+1)
+        M3 = Sul_Conc(salt_c4)
+        Ksp = salt_K3
+
+        Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
+        Trial_Ksp = M2 * M3
+
+        if (Trial_Ksp.gt.Ksp) then
+          !disp('precipitation WILL form')
+          ! Defining temporary parameter PosSolve
+          PosSolv = abs(Solv)
+          CalSul_Prep = PosSolv 
+          Solid_CaSO4 = M1+CalSul_Prep
+          Dissolved_Solid = 0
+          Calcium_Conc = M2-CalSul_Prep
+          Sulfate_Conc = M3-CalSul_Prep
+
+        elseif (M1.gt.Solv) then
+          !disp('Dissolution WILL form')
+          !Defining temporary parameter PosSolv
+          PosSolv = Solv
+
+          !disp('****************************************')
+          !disp('Portion of the solid will be dissolved')
+          !disp('****************************************')
+          Calcium_Conc = (M2+PosSolv)
+          Sulfate_Conc = (M3+PosSolv)
+          Dissolved_Solid = PosSolv
+          Solid_CaSO4 = (M1-PosSolv)
+
+        else 
+          !disp('****************************************')
+          !disp('Solid will be compeletly dissolved')
+          !disp('****************************************')
+          Calcium_Conc = (M1+M2)
+          Sulfate_Conc = (M1+M3)
+          Dissolved_Solid = M1
+          Solid_CaSO4 = 0
+        endif
+
+        Sol_CaSO4(c5+1) = Solid_CaSO4
+        Cal_Conc(c11+2) = Calcium_Conc
+        Sul_Conc(salt_c4+1) = Sulfate_Conc
+
+        return
+    end
+
+    
+    
+        ! MgCO3 ***********************************************************************************************
+        !disp('**************************************************************')
+        !disp('The reaction is: MgCO3(s)<--> Mg2+(aq) + CO32-(aq)')
+        !disp('The Ksp(Solubility Product Constants) of MgCO3(s) is 4.7937*10^-6')
+        !disp('**************************************************************') 
+        subroutine salt_minl_mgco3
+
+        use organic_mineral_mass_module
+        use salt_data_module
+
+        implicit none
+
+        Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
+            PosSolv,MgCar_Prep,Solid_MgCO3,Dissolved_Solid,& 
+            Mag_Conc,Carbonate_Conc
+
+        M1 = Sol_MgCO3(c5)
+        M2 = Mg_Conc(salt_c3)
+        M3 = Car_Conc(c22+1)
+        Ksp = salt_K2
+        Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
+        Trial_Ksp=M2*M3
+
+        if (Trial_Ksp.GT.Ksp) then   
+          !disp('precipitation WILL form')
+          ! Defining temporary parameter PosSolve
+          PosSolv = abs(Solv)
+          MgCar_Prep = PosSolv 
+          Solid_MgCO3 = M1+MgCar_Prep
+          Dissolved_Solid = 0
+          Mag_Conc = M2-MgCar_Prep
+          Carbonate_Conc = M3-MgCar_Prep
+
+        elseif(M1.GT.Solv) then   
+          !disp('Dissolution WILL form')
+          !Defining temporary parameter PosSolv
+          PosSolv = Solv
+          ! IF (M1.GT.PosSolv) THEN 
+          !disp('****************************************')
+          !disp('Portion of the solid will be dissolved')
+          !disp('****************************************')
+          Mag_Conc = (M2+PosSolv)
+          Carbonate_Conc = (M3+PosSolv)
+          Dissolved_Solid = PosSolv
+          Solid_MgCO3 = (M1-PosSolv)
+
+        else 
+          !disp('****************************************')
+          !disp('Solid will be compeletly dissolved')
+          !disp('****************************************')
+          Mag_Conc = (M1+M2)
+          Carbonate_Conc = (M1+M3)
+          Dissolved_Solid = M1
+          Solid_MgCO3= 0
+
+        endif
+
+        Sol_MgCO3(c5+1) = Solid_MgCO3
+        Mg_Conc(salt_c3+1) =   Mag_Conc
+        Car_Conc(c22+2) =  Carbonate_Conc  
+   
+        return
+    end
+
+    
+    
+        ! MgSO4 ***********************************************************************************************
+        !disp('**************************************************************')
+        !disp('The reaction is: MgSO4(s)<--> Mg2+(aq) + SO42-(aq)')
+        !disp('The Ksp(Solubility Product Constants) of MgSO4(s) is ?')
+         !disp('**************************************************************')    
+        subroutine salt_minl_mgso4
+
+        use organic_mineral_mass_module
+        use salt_data_module
+
+        implicit none
+
+        Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
+            PosSolv,MgSul_Prep,Solid_MgSO4,Dissolved_Solid,& 
+            Mag_Conc,Sulfate_Conc
+
+        M1 = Sol_MgSO4(c5)
+        M2 = Mg_Conc(salt_c3+1)
+        M3 = Sul_Conc(salt_c4+1)
+        Ksp = salt_K4
+
+        Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
+        Trial_Ksp=M2*M3
+
+        if (Trial_Ksp.GT.Ksp) then  
+          !disp('precipitation WILL form')
+          ! Defining temporary parameter PosSolve
+          PosSolv = abs(Solv)
+          MgSul_Prep = PosSolv 
+          Solid_MgSO4 = M1+MgSul_Prep
+          Dissolved_Solid = 0
+          Mag_Conc = M2-MgSul_Prep
+          Sulfate_Conc = M3-MgSul_Prep
+
+        elseif(M1.GT.Solv) then
+          !disp('Dissolution WILL form')
+          !Defining temporary parameter PosSolv
+          PosSolv = Solv
+          !IF (M1.GT.PosSolv) THEN 
+          !disp('****************************************')
+          !disp('Portion of the solid will be dissolved')
+          !disp('****************************************')
+          Mag_Conc = (M2+PosSolv)
+          Sulfate_Conc = (M3+PosSolv)
+          Dissolved_Solid = PosSolv
+          Solid_MgSO4 = (M1-PosSolv)
+
+        else
+          !disp('****************************************')
+          !disp('Solid will be compeletly dissolved')
+          !disp('****************************************')
+          Mag_Conc = (M1+M2)
+          Sulfate_Conc = (M1+M3)
+          Dissolved_Solid = M1
+          Solid_MgSO4= 0
+
+        endif
+  
+        Sol_MgSO4(c5+1) = Solid_MgSO4
+        Mg_Conc(salt_c3+2) = Mag_Conc
+        Sul_Conc(salt_c4+2) = Sulfate_Conc
+
+        return
+    end
+
+    
+    
+        ! NaCl ************************************************************************************************
+        !disp('**************************************************************')
+        !disp('The reaction is: NaCl(s)<--> Na+(aq) + Cl-(aq)')
+        !disp('The Ksp(Solubility Product Constants) of NaCl(s) is 37.3')
+        !disp('**************************************************************')  
+        subroutine salt_minl_nacl
+
+        use organic_mineral_mass_module
+        use salt_data_module
+
+        implicit none
+
+        Double Precision M1,M2,M3,Ksp,Solv,Trial_Ksp,& 
+            PosSolv,SodiumChloride_Prep,Solid_NaCl,Dissolved_Solid,& 
+            Sodium_Conc,Chloride_Conc
+
+        M1 = Sol_NaCl(c5)
+        M2 = Sod_Conc(c5)
+        M3 = Cl_Conc(c5)
+        Ksp = salt_K5
+
+        Solv = 0.5*(-(M2+M3)+sqrt((M2+M3)**2-4*(M2*M3-Ksp)))
+        Trial_Ksp=M2*M3
+
+        if (Trial_Ksp.GT.Ksp) then    
+          !disp('precipitation WILL form')
+          ! Defining temporary parameter PosSolve
+          PosSolv = abs(Solv)
+          SodiumChloride_Prep = PosSolv 
+          Solid_NaCl = M1+SodiumChloride_Prep
+          Dissolved_Solid = 0
+          Sodium_Conc = M2-SodiumChloride_Prep
+          Chloride_Conc  = M3-SodiumChloride_Prep
+
+        elseif(M1.GT.Solv) then
+          !disp('Dissolution WILL form')
+          !Defining temporary parameter PosSolv
+          PosSolv = Solv
+          !  IF (M1.GT.PosSolv) THEN 
+          !disp('****************************************')
+          !disp('Portion of the solid will be dissolved')
+          !disp('****************************************')
+          Sodium_Conc = (M2+PoSSolv)
+          Chloride_Conc  = (M3+PosSolv)
+          Dissolved_Solid = PosSolv
+          Solid_NaCl = (M1-PosSolv)
+
+        else
+          !disp('****************************************')
+          !disp('Solid will be compeletly dissolved')
+          !disp('****************************************')
+          Sodium_Conc = (M1+M2)
+          Chloride_Conc  = (M1+M3)
+          Dissolved_Solid = M1
+          Solid_NaCl= 0
+
+        endif
+
+        Sol_NaCl(c5+1) = Solid_NaCl
+        Sod_Conc(c5+1) = Sodium_Conc
+        Cl_Conc(c5+1) = Chloride_Conc
+
+        return
+    end
+
+    

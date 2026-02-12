@@ -10,21 +10,27 @@
       
       implicit none
 
-      character(len=20) :: col_head_con(17) = ""
+	  character*30 :: header
+      character(len=8) :: col_head_con(17)
       integer :: i = 0
       integer :: j = 0
       integer :: k = 0
       integer :: in_chan = 0
       integer :: in_con = 0
-      integer :: cell_ID = 0
+      integer :: cell_id = 0
       integer :: channel = 0
       integer :: chan_zone = 0
+      integer :: dep_zone = 0
       integer :: dum1 = 0
       integer :: dum2 = 0
       integer :: chan_cell = 0
+      integer :: yr_int = 0
+      integer :: day_int = 0
       real :: bed_elev = 0.
       real :: chan_length = 0.
       real :: dum3 = 0.
+      logical :: i_exist
+			
 
       !message to record file
       write(out_gw,*) 'reading cell-channel connections in gwflow.chancells...'
@@ -39,26 +45,49 @@
       num_chancells = sp_ob%gwflow
       
       !allocate global arrays for channel cells
-      allocate (gw_chan_id(num_chancells), source = 0)
-      allocate (gw_chan_chan(num_chancells), source = 0)
-      allocate (gw_chan_len(num_chancells), source = 0.)
-      allocate (gw_chan_elev(num_chancells), source = 0.)
-      allocate (gw_chan_zone(num_chancells), source = 0)
+      allocate(gw_chan_id(num_chancells))
+      allocate(gw_chan_chan(num_chancells))
+      allocate(gw_chan_len(num_chancells))
+      allocate(gw_chan_elev(num_chancells))
+      allocate(gw_chan_zone(num_chancells))
       gw_chan_len = 0.
       
       !read in channel-cell connection information
+      read(1280,*) header
       read(1280,*)
-      read(1280,*)
-      read(1280,*)
+      read(1280,*) header
       do k=1,num_chancells
-        read(1280,*) cell_ID,bed_elev,channel,chan_length,chan_zone
-        gw_chan_id(k) = cell_ID
+        read(1280,*) cell_id,bed_elev,channel,chan_length,chan_zone
+        gw_chan_id(k) = cell_id
         gw_chan_elev(k) = bed_elev
         gw_chan_chan(k) = channel
         gw_chan_len(k) = chan_length
         gw_chan_zone(k) = chan_zone
       enddo
       
+			!read in daily channel depths (for specified depth zones)
+			inquire(file='gwflow.chancells_depth',exist=i_exist)
+      if(i_exist) then
+			  gw_chan_dep_flag = 1
+				allocate(gw_chan_dpzn(num_chancells))
+				open(1421,file='gwflow.chancells_depth')
+				read(1421,*) header
+				read(1421,*) header
+				!depth zone for each channel cell
+				read(1421,*) header
+				read(1421,*) header
+				do k=1,num_chancells
+				  read(1421,*) cell_id,dep_zone
+					gw_chan_dpzn(k) = dep_zone
+				enddo
+				!depth for each zone (read in for each day of the simulation)
+				read(1421,*) header
+				read(1421,*) gw_chan_ndpzn
+				allocate(gw_chan_dep(gw_chan_ndpzn))
+				read(1421,*) header
+				!read(1421,*) yr_int,day_int,(gw_chan_dep(j),j=1,gw_chan_ndpzn) !read first day
+			endif
+			
       !write out gwflow.con input file (connection file)
       write(out_gw,*) 'writing gwflow.con file...'
       write(1281,*) 'gwflow.con: channel-cell spatial connections'
@@ -76,4 +105,5 @@
  103  format(30(a10))   
  107  format(i5,i5,i6,i5,i4,i5,i5,i10,i4,i6,i5,i5,i8,a12,i13,a11,f6.2)
  
-      end subroutine gwflow_chan_read      
+    end subroutine gwflow_chan_read      
+    

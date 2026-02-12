@@ -45,7 +45,7 @@
         salt_mass_beg = wet_water(ihru)%salt(isalt) !kg
         if(wet(ihru)%flo > 0.) then
           salt_conc_beg = (salt_mass_beg * 1000.) / wet(ihru)%flo !g/m3
-        else
+				else
           salt_conc_beg = 0.
         endif
         mass_avail = salt_mass_beg
@@ -72,7 +72,7 @@
         salt_mass_end = salt_mass_beg + (salt_inflow - salt_outflow - salt_seep) !kg
         if(wet(ihru)%flo > 0.) then
           salt_conc_end = (salt_mass_end * 1000.) / wet(ihru)%flo !g/m3
-        else
+				else
           salt_conc_end = 0.
         endif
           
@@ -99,4 +99,5 @@
       enddo !go to next salt ion
      
       return
-      end subroutine wet_salt
+    end subroutine wet_salt
+    
