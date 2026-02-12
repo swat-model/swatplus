@@ -47,7 +47,7 @@
               allocate (wst(iwst)%weat%ts(time%step), source = 0.)
               allocate (wst(iwst)%weat%ts_next(time%step), source = 0.)
               wst(iwst)%weat%precip_prior_day = "dry"
-              allocate (wst(iwst)%tlag(w_temp%airlag_d), source = 0.)
+              allocate (wst(iwst)%tlag(wa_temp%airlag_d), source = 0.)
               iwgn = wst(iwst)%wco%wgn
               wst(iwst)%tlag = (wgn(iwgn)%tmpmn(1) + wgn(iwgn)%tmpstdmx(1)) / 2.
             end do
