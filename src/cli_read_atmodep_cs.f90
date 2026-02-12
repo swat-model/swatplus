@@ -40,13 +40,13 @@
         read(5050,*)
       
         !allocate arrays
-        allocate (atmodep_cs(0:atmodep_cont%num_sta))
+        allocate(atmodep_cs(0:atmodep_cont%num_sta))
         
         !loop through the stations (num_sta is set in cli_read_atmodep subroutine)
         do iadep = 1, atmodep_cont%num_sta
           
           !allocate arrays
-          allocate (atmodep_cs(iadep)%cs(cs_db%num_cs))
+          allocate(atmodep_cs(iadep)%cs(cs_db%num_cs))
           
           !average annual values
           if (atmodep_cont%timestep == "aa") then
@@ -66,33 +66,33 @@
             read(5050,*) station_name !station name
             !wet deposition
             do ics=1,cs_db%num_cs
-              allocate (atmodep_cs(iadep)%cs(ics)%rfmo(atmodep_cont%num), source = 0.)
+              allocate(atmodep_cs(iadep)%cs(ics)%rfmo(atmodep_cont%num))
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%rfmo(imo),imo=1,atmodep_cont%num)
             enddo
             !dry deposition
             do ics=1,cs_db%num_cs
-              allocate (atmodep_cs(iadep)%cs(ics)%drymo(atmodep_cont%num), source = 0.)
+              allocate(atmodep_cs(iadep)%cs(ics)%drymo(atmodep_cont%num))
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%drymo(imo),imo=1,atmodep_cont%num)
             enddo
           end if
-                    
+					
           !yearly values
           if (atmodep_cont%timestep == "yr") then
             read(5050,*) station_name !station name
             !wet deposition
             do ics=1,cs_db%num_cs
-              allocate (atmodep_cs(iadep)%cs(ics)%rfyr(atmodep_cont%num), source = 0.)
+              allocate(atmodep_cs(iadep)%cs(ics)%rfyr(atmodep_cont%num)) 
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%rfyr(iyr),iyr=1,atmodep_cont%num)
             enddo
             !dry deposition
             do ics=1,cs_db%num_cs
-              allocate (atmodep_cs(iadep)%cs(ics)%dryyr(atmodep_cont%num), source = 0.)
+              allocate(atmodep_cs(iadep)%cs(ics)%dryyr(atmodep_cont%num))
             enddo
             do ics=1,cs_db%num_cs
               read(5050,*) (atmodep_cs(iadep)%cs(ics)%dryyr(iyr),iyr=1,atmodep_cont%num)
