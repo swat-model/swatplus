@@ -23,6 +23,9 @@
       use water_body_module
       use hru_module, only : hru
       use conditional_module
+      use ch_salt_module, only : salt_conc_in,chsalt_d
+      use ch_cs_module, only : cs_conc_in,chcs_d
+      use constituent_mass_module
       
       implicit none
       
@@ -35,6 +38,8 @@
       integer :: ires = 0
       integer :: ihyd = 0
       integer :: irel = 0
+      integer :: isalt = 0
+      integer :: ics = 0
       
       real :: ch_stor_init = 0. !m3             |storage in channel at beginning of day
       real :: fp_stor_init = 0. !m3             |storage in flood plain above wetlands emergency spillway at beginning of day
@@ -72,6 +77,7 @@
       real :: wet_evol = 0. 
       real :: bf_flow = 0.               !m3/s           |bankfull flow rate * adjustment factor
       real :: pk_rto = 0.                !ratio          |peak to mean flow rate ratio
+      real :: seep_mass                  !kg             |salt or constituent mass in channel seepage water
 
       jrch = isdch
       jhyd = sd_dat(jrch)%hyd
@@ -137,6 +143,19 @@
           rto = Max(0., rto)
           rto = Min(1., rto)
           tot_stor(jrch) = tot_stor(jrch) + rto * ht1
+          
+          !! rtb: subdaily input of salt and constituent mass
+          if(cs_db%num_salts > 0) then
+            do isalt=1,cs_db%num_salts
+              ch_water(jrch)%salt(isalt) = ch_water(jrch)%salt(isalt) + (rto * hcs1%salt(isalt))
+            enddo
+          endif
+          if(cs_db%num_cs > 0) then
+            do ics=1,cs_db%num_cs
+              ch_water(jrch)%cs(ics) = ch_water(jrch)%cs(ics) + (rto * hcs1%cs(ics))
+            enddo
+          endif
+          
         end if    ! ht1%flo > 1.e-6
         
         !! interpolate rating curve using inflow rates
@@ -183,7 +202,20 @@
           ob(icmd)%hyd_flo(1,irtstep) = ob(icmd)%hyd_flo(1,irtstep) + outflo
           !! subtract outflow from total storage
           tot_stor(jrch) = (1. - rto) * tot_stor(jrch)
-        
+          !! rtb: add salt and constituent mass to outflow; then subtract from channel mass storage
+          if(cs_db%num_salts > 0) then
+            do isalt=1,cs_db%num_salts
+              hcs2%salt(isalt) = hcs2%salt(isalt) + (rto * ch_water(jrch)%salt(isalt))
+              ch_water(jrch)%salt(isalt) = ch_water(jrch)%salt(isalt) - hcs2%salt(isalt)
+            enddo
+          endif
+          if(cs_db%num_cs > 0) then
+            do ics=1,cs_db%num_cs
+              hcs2%cs(ics) = hcs2%cs(ics) + (rto * ch_water(jrch)%cs(ics))
+              ch_water(jrch)%cs(ics) = ch_water(jrch)%cs(ics) - hcs2%cs(ics)
+            enddo
+          endif
+          
           !! set rating curve for next time step
           ch_rcurv(jrch)%in1 = ch_rcurv(jrch)%in2
           ch_rcurv(jrch)%out1 = ch_rcurv(jrch)%out2
@@ -216,8 +248,34 @@
         rto = trans_loss / ch_stor(jrch)%flo
         ch_stor(jrch) = (1. - rto) * ch_stor(jrch)
       end if
-      ch_wat_d(ich)%seep = trans_loss
-
+      ch_wat_d(jrch)%seep = trans_loss
+      !rtb gwflow: if gwflow active, compute seepage in gwflow routine
+      if(bsn_cc%gwflow == 0) then
+	    ch_wat_d(jrch)%seep = trans_loss
+	  else
+        ch_wat_d(jrch)%seep = 0.
+      endif
+      !rtb: salt and constituent mass in seepage
+      do isalt=1,cs_db%num_salts
+        seep_mass = salt_conc_in(isalt) * ch_wat_d(jrch)%seep !g/m3 * m3 = g
+        seep_mass = seep_mass / 1000. !kg
+        if(seep_mass > ch_water(jrch)%salt(isalt)) then
+          seep_mass = ch_water(jrch)%salt(isalt)
+        endif
+        ch_water(jrch)%salt(isalt) = ch_water(jrch)%salt(isalt) - seep_mass !kg
+        chsalt_d(jrch)%salt(isalt)%seep = seep_mass !kg (channel salt output)
+      enddo
+      !constituent mass in seepage
+      do ics=1,cs_db%num_cs
+        seep_mass = cs_conc_in(ics) * ch_wat_d(jrch)%seep !g/m3 * m3 = g
+        seep_mass = seep_mass / 1000. !kg
+        if(seep_mass > ch_water(jrch)%cs(ics)) then
+          seep_mass = ch_water(jrch)%cs(ics)
+        endif
+        ch_water(jrch)%cs(ics) = ch_water(jrch)%cs(ics) - seep_mass !kg
+        chcs_d(jrch)%cs(ics)%seep = seep_mass !kg (channel consituent output)
+      enddo
+      
       !! calculate evaporation losses
       if (ch_stor(jrch)%flo > 1.e-6) then
         !! calculate width of channel at water level - flood plain evap calculated in wetlands
@@ -233,7 +291,7 @@
         rto = evap / ch_stor(jrch)%flo
         ch_stor(jrch)%flo = (1. - rto) * ch_stor(jrch)%flo
       end if
-      ch_wat_d(ich)%evap = evap
+      ch_wat_d(jrch)%evap = evap
       
       tot_stor(jrch) = ch_stor(jrch) + fp_stor(jrch)
 
@@ -260,6 +318,7 @@
       ch_fp_wb(jrch)%tot_stor = tot_stor(jrch)%flo
       ch_fp_wb(jrch)%wet_stor_init = wet_stor_init
       ch_fp_wb(jrch)%wet_stor = wet_stor(jrch)%flo
+      
       
       return
       end subroutine ch_rtmusk
