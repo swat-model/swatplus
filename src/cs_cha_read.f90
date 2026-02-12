@@ -42,7 +42,7 @@
           allocate (cs_cha_ini(imax))
 
           do ics=1,imax
-            allocate (cs_cha_ini(ics)%conc(cs_db%num_cs), source = 0.)
+            allocate (cs_cha_ini(ics)%conc(cs_db%num_cs))
           enddo
           
           rewind (107)
@@ -62,11 +62,12 @@
 
       !determine if daily channel concentrations and loads should be output
       inquire (file="cs_streamobs", exist=i_exist)
-      if (cs_obs_file == 1) then
+      if (i_exist) then
+			  cs_obs_file = 1
         open(107,file='cs_streamobs')
         read(107,*)
         read(107,*) cs_str_nobs
-        allocate (cs_str_obs(cs_str_nobs), source = 0)
+        allocate(cs_str_obs(cs_str_nobs))
         do i=1,cs_str_nobs
           read(107,*) cs_str_obs(i)
         enddo
@@ -89,4 +90,5 @@
 100   format(a10,100i8)   
 
       return
-      end subroutine cs_cha_read
+    end subroutine cs_cha_read
+    
