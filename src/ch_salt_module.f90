@@ -24,7 +24,11 @@
       type (ch_salt_output), dimension(:), allocatable, save :: chsalt_m
       type (ch_salt_output), dimension(:), allocatable, save :: chsalt_y
       type (ch_salt_output), dimension(:), allocatable, save :: chsalt_a
-                 
+      
+      real :: salt_conc_in(8) = 0.         !kg         !salt concentration in channel water
+      
+      real, allocatable :: div_conc_salt(:,:)  !g/m3  |salt ion concentration in diverted water
+      
       type ch_salt_header
           character (len=6) :: day =        "  jday"
           character (len=6) :: mo =         "   mon"
