@@ -36,6 +36,7 @@
       real :: aqu_bd = 0.
       real :: aqu_mass = 0.
       real :: mass_sorbed = 0.
+      real :: init_conc = 0.
       eof = 0
       imax = 0
             
@@ -100,19 +101,15 @@
           enddo
            
           !! initial pathogens
-          do isp_ini = 1, imax
-            if (aqu_init_dat_c_cs(isp_ini)%name == aqudb(iaq)%aqu_ini) then
-              do ics = 1, db_mx%pathw_ini
-                if (aqu_init_dat_c_cs(isp_ini)%path == path_init_name(ics)) then
-                  !! initialize pathogens in aquifer water and benthic from input data
-                  do ipath = 1, cs_db%num_paths
-                    cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
-                  end do
-                  exit
-                end if
-              end do  
-            endif
-          enddo
+          do ics = 1, db_mx%pathw_ini
+            if (aqu_init_dat_c_cs(iaq)%path == path_init_name(ics)) then
+              !! initialize pathogens in aquifer water and benthic from input data
+              do ipath = 1, cs_db%num_paths
+                cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
+              end do
+              exit
+            end if
+          end do
             
           !! initial salts !rtb salt
           if(cs_db%num_salts > 0) then
@@ -120,8 +117,9 @@
             if (aqu_init_dat_c_cs(iaq)%salt == salt_aqu_ini(ics)%name) then
               !loop for salt ions
               do isalt = 1,cs_db%num_salts
-                cs_aqu(iaq)%saltc(isalt) = salt_aqu_ini(ics)%conc(isalt) !g/m3 (mg/L)
-                cs_aqu(iaq)%salt(isalt) = (salt_aqu_ini(ics)%conc(isalt)*gw_volume) / 1000. !g/m3 --> kg
+                init_conc = salt_aqu_ini(ics)%conc(isalt)
+                cs_aqu(iaq)%saltc(isalt) = init_conc !g/m3 (mg/L)
+                cs_aqu(iaq)%salt(isalt) = (init_conc*gw_volume) / 1000. !g/m3 --> kg
               enddo
               ! loop for salt mineral fractions
               do isalt = 1,5

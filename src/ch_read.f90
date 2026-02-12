@@ -21,6 +21,7 @@
       integer :: ihyd = 0               !none          |counter
       integer :: ised = 0               !none          |counter
       integer :: inut = 0               !none          |counter
+      integer :: itemp = 0              !none          |counter
       
       eof = 0
       imax = 0
@@ -90,10 +91,18 @@
            end if
          end do   
 
+         do itemp = 1, db_mx%w_temp 
+           if (w_temp(itemp)%name == ch_dat_c(ichi)%temp) then
+             ch_dat(ichi)%temp = itemp
+             exit
+           end if
+         end do 
+
        if (ch_dat(ichi)%init == 0) write (9001,*) ch_dat_c(ichi)%init, " not found (initial.cha)"
        if (ch_dat(ichi)%hyd == 0) write (9001,*) ch_dat_c(ichi)%hyd, " not found (hydrology.cha)"
        if (ch_dat(ichi)%sed == 0) write (9001,*) ch_dat_c(ichi)%sed, " not found (sediment.cha)"
        if (ch_dat(ichi)%nut == 0) write (9001,*) ch_dat_c(ichi)%nut, " not found (nutrients.cha)"      
+       if (ch_dat(ichi)%nut == 0) write (9001,*) ch_dat_c(ichi)%temp, " not found (temperature.cha)"      
        
        end do
               
@@ -104,4 +113,5 @@
       
       return
       
-    end subroutine ch_read
+	end subroutine ch_read
+	

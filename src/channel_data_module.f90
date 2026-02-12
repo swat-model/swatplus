@@ -33,6 +33,7 @@
         character(len=16) :: hyd = ""                   !points to hydrology.res for hydrology inputs
         character(len=16) :: sed = ""                   !sediment inputs-points to sediment.res
         character(len=16) :: nut = ""                   !nutrient inputs-points to nutrient.res
+				character(len=16) :: temp  = ""                 !temperature input 
       end type channel_data_char_input
       type (channel_data_char_input), dimension(:), allocatable :: ch_dat_c
 
@@ -63,6 +64,7 @@
         integer :: hyd = 0                    !points to hydrology.res for hydrology inputs
         integer :: sed = 0                    !sediment inputs-points to sediment.res
         integer :: nut = 0                    !nutrient inputs-points to nutrient.res
+				integer :: temp = 0                   !temperature input  
       end type channel_data
       type (channel_data), dimension(:), allocatable :: ch_dat
             
@@ -156,14 +158,32 @@
       end type channel_nut_data
       type (channel_nut_data), dimension(:), allocatable :: ch_nut
 
-      type channel_temperature_data
-        character(len=16) :: name = ""
+       type water_temperature_data   
+        character(len=13) :: name 
         real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
-        real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
+        real :: gw = 1.             ! none          |coefficient influencing groundwater temperature contributions
         real :: sur_lat = 1.        ! none          |coefficient influencing surface and lateral flow temperature contributions
-        real :: bulk_co = .0025     ! 1/hour        |bulk coefficient of heat transfer
-        real :: air_lag = 6.        ! days          |average air temperature lag
-      end type channel_temperature_data
-      type (channel_temperature_data), dimension(:), allocatable :: ch_temp
+        real :: sno_lag = 2         ! days          |average air temperature lag to snowmelt (1-3)
+        real :: gw_lag = 250        ! days          |average air temperature lag to gw flow (200-365)
+        real :: surf_lag = 5        ! days          |average air temperature lag to surface runoff (2-5)
+        real :: lat_lag = 10        ! days          |average air temperature lag to lateral flow  (5-10)
+        real :: lat_lag_coef = 0.75 ! none          |lat air lag coefficient
+        real :: surf_lag_coef = 0.75 ! none         |surf air lag coefficient (used also for snow)
+        real :: gw_lag_coef = 0.75  ! none          |gw air lag coefficient
+        real :: hex_coef1 = 0.75       ! none       |calibrate dew point
+        real :: hex_coef2 = 1.5        !none        |calibrate channel geometry
+        integer :: sf_on = 0        ! none          |shade factor file activation, 1= file, 0= take value from cal file
+        real :: ssff = 0.5          ! none          |ssff value default 0.5, range 0-1
+      end type water_temperature_data
+      type (water_temperature_data), dimension (:), allocatable ::  w_temp
+      !type channel_temperature_data
+      !  character(len=16) :: name
+      !  real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
+      !  real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
+      !  real :: sur_lat = 1.        ! none          |coefficient influencing suface and lateral flow temperature contributions
+      !  real :: bulk_co = .0025     ! 1/hour        |bulk coefficient of heat transfer
+      !  real :: air_lag = 6.        ! days          |average air temperature lag
+      !end type channel_temperature_data
+      !type (channel_temperature_data), dimension(:), allocatable :: ch_temp
        
       end module channel_data_module 

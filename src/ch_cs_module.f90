@@ -19,7 +19,11 @@
         type (ch_cs_balance), dimension (:), allocatable :: cs         !cs hydrographs
       end type ch_cs_output
       type (ch_cs_balance) :: ch_csbz
-           
+
+      real :: cs_conc_in(8) = 0.        !kg         !constituent concentration in channel water
+      
+      real, allocatable :: div_conc_cs(:,:)  !g/m3  |solute concentration in diverted water
+      
       type (ch_cs_output), dimension(:), allocatable, save :: chcs_d
       type (ch_cs_output), dimension(:), allocatable, save :: chcs_m
       type (ch_cs_output), dimension(:), allocatable, save :: chcs_y
