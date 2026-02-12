@@ -14,16 +14,18 @@
       character (len=80) :: file = "" !           |filename
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
+      character (len=12) :: first_word = ""
       character (len=4) :: salt_ion = ""!           |
       character (len=15) :: station_name = ""!       |
       integer :: eof = 0              !           |end of file
-      integer :: iadep = 0            !           |counter
-      integer :: imo = 0              !           |counter
+      integer :: iwst = 0             !           |weather station counter
+      integer :: num_wth = 0          !           |number of weather stations
       integer :: iyr = 0              !           |counter
-      integer :: imo_atmo = 0         !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iyrc_atmo = 0        !           |
       integer :: isalt = 0            !           |salt ion counter
+      integer :: start_year = 0
+      integer :: end_year = 0
+      integer :: num_yr = 0
       
       eof = 0
 
@@ -40,58 +42,36 @@
         read(5050,*)
         read(5050,*)
         read(5050,*)
-        read(5050,*)
-        read(5050,*)
-      
+				read(5050,*) first_word,start_year
+				read(5050,*) first_word,end_year
+				num_yr = end_year - start_year + 1
+        
+				!number of weather stations
+				num_wth = db_mx%wst
+				
         !allocate arrays
-        allocate (atmodep_salt(0:atmodep_cont%num_sta))
+        allocate(atmodep_salt(0:num_wth))
         
         !loop through the stations (num_sta is set in cli_read_atmodep subroutine)
-        do iadep = 1, atmodep_cont%num_sta
+        do iwst=1,num_wth
           
           !allocate arrays
-          allocate (atmodep_salt(iadep)%salt(cs_db%num_salts))
+          allocate(atmodep_salt(iwst)%salt(cs_db%num_salts))
           
-          !average annual values
-          if (atmodep_cont%timestep == "aa") then
-            read(5050,*) station_name !station name --> already read in cli_read_atmodep
-            !wet (rainfall) concentrations (mg/L)
-            do isalt=1,cs_db%num_salts
-              read(5050,*) salt_ion,atmodep_salt(iadep)%salt(isalt)%rf
-            enddo 
-            !dry deposition (kg/ha)
-            do isalt=1,cs_db%num_salts
-              read(5050,*) salt_ion,atmodep_salt(iadep)%salt(isalt)%dry
-            enddo 
-          endif
-          
-          !monthly values
-          if (atmodep_cont%timestep == "mo") then
-            read(5050,*) station_name !station name
-            do isalt=1,cs_db%num_salts
-              allocate (atmodep_salt(iadep)%salt(isalt)%rfmo(atmodep_cont%num), source = 0.)
-              read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%rfmo(imo),imo=1,atmodep_cont%num)
-            enddo 
-            do isalt=1,cs_db%num_salts
-              allocate (atmodep_salt(iadep)%salt(isalt)%drymo(atmodep_cont%num), source = 0.)
-              read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%drymo(imo),imo=1,atmodep_cont%num)
-            enddo 
-          end if
-                    
           !yearly values
-          if (atmodep_cont%timestep == "yr") then
-            read(5050,*) station_name !station name
-            do isalt=1,cs_db%num_salts
-              allocate (atmodep_salt(iadep)%salt(isalt)%rfyr(atmodep_cont%num), source = 0.)
-              read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%rfyr(iyr),iyr=1,atmodep_cont%num)
-            enddo 
-            do isalt=1,cs_db%num_salts
-              allocate (atmodep_salt(iadep)%salt(isalt)%dryyr(atmodep_cont%num), source = 0.)
-              read(5050,*) salt_ion,(atmodep_salt(iadep)%salt(isalt)%dryyr(iyr),iyr=1,atmodep_cont%num)
-            enddo 
-          end if
+          read(5050,*) station_name !station name
+					!wet (rain) deposition
+          do isalt=1,cs_db%num_salts
+            allocate(atmodep_salt(iwst)%salt(isalt)%rfyr(num_yr))
+            read(5050,*) salt_ion,(atmodep_salt(iwst)%salt(isalt)%rfyr(iyr),iyr=1,num_yr)
+          enddo 
+					!dry deposition
+          do isalt=1,cs_db%num_salts
+            allocate(atmodep_salt(iwst)%salt(isalt)%dryyr(num_yr))
+            read(5050,*) salt_ion,(atmodep_salt(iwst)%salt(isalt)%dryyr(iyr),iyr=1,num_yr)
+          enddo 
           
-        end do !go to next station
+        enddo !go to next station
       
       endif
       endif
@@ -99,4 +79,5 @@
       close(5050)
       
       return
-      end subroutine cli_read_atmodep_salt
+    end subroutine cli_read_atmodep_salt
+    
