@@ -19,6 +19,7 @@
          real :: leaf_frac = 0.         !! none             |fraction of above ground tree biomass that is leaf
          real :: root_dep = 0.          !! mm               |root depth
          real :: root_frac = 0.         !! kg/ha            |root fraction of total plant mass
+         real, dimension(:), allocatable :: rtfr   !! none  |root fraction for each plant in community
       end type plant_growth
       
       type plant_mass
@@ -125,7 +126,6 @@
       end type plant_community
       type (plant_community), dimension (:), allocatable :: pcom
       type (plant_community), dimension (:), allocatable :: pcom_init
-      type (plant_growth) :: plgz
       type (plant_mass) :: plmz
       type (plant_mass) :: o_m1, o_m2, o_m3
       type (plant_stress) :: plstrz
@@ -145,5 +145,27 @@
         real :: root = .46      !none   |carbon fraction in roots
       end type plant_carbon
       type (plant_carbon) :: c_frac
-            
+              
+      contains
+
+      !! function to zero plant growth variables for a kill operation
+      subroutine plg_zero (plg)
+        type (plant_growth), intent (inout) :: plg
+        plg%cht = 0.               !! m                |canopy height 
+        plg%lai = 0.               !! m**2/m**2        |leaf area index
+        plg%plet = 0.              !! mm H2O           |actual ET simulated during life of plant
+        plg%plpet = 0.             !! mm H2O           |potential ET simulated during life of plant
+        plg%laimxfr = 0.           !! 
+        plg%laimxfr_p = 0.         !! 
+        plg%hi_adj = 0.            !! (kg/ha)/(kg/ha)  |temperature adjusted harvest index for current time during growing season
+        plg%hi_prev = 0.           !! (kg/ha)/(kg/ha)  |optimal harvest index for current time during growing season
+        plg%olai = 0.              !!                  |leaf area index (0-1) when leaf area decline begins
+        plg%dphu = 0.              !!                  |phu accumulated (0-1) when leaf area decline begins
+        plg%d_senes = 0.           !! days             !days since start of senescence
+        plg%leaf_frac = 0.         !! none             |fraction of above ground tree biomass that is leaf
+        plg%root_dep = 0.          !! mm               |root depth
+        plg%root_frac = 0.         !! kg/ha            |root fraction of total plant mass
+        plg%rtfr(:) = 0.           !! frac             |root fraction for each plant in community
+      end subroutine plg_zero
+      
      end module plant_module
