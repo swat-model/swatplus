@@ -23,10 +23,10 @@
       integer :: ly = 0                !none           |soil layer
 
       j = jj
-      ! ipl = iplant
+      ipl = iplant
 
       !! update root fractions in each layer
-      call pl_rootfr
+      call pl_rootfr(j)
       
       !! add above ground biomass to surface residue pools
       pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
@@ -39,8 +39,8 @@
       
       !! add dead roots to soil residue pools
       do ly = 1, soil(j)%nly
-        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)
-        soil(j)%ly(ly)%rtfr = 0.0
+        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly)  &
+                                                                  * pl_mass(j)%root(ipl)
       end do
       
       !! sum total community masses
@@ -72,7 +72,7 @@
       end do
 
       !! reset plant variables
-      pcom(j)%plg(ipl) = plgz
+      call plg_zero (pcom(j)%plg(ipl))
       pcom(j)%plm(ipl) = plmz
       pcom(j)%plstr(ipl) = plstrz
       !! can't reset entire plcur - harv_num can't be zero'd

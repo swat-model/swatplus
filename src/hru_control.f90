@@ -50,8 +50,7 @@
                   rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
-                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
-                  pl_rootfr
+                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
@@ -367,14 +366,11 @@
           end if
         end if
        
-        !! compute surface residue decomposition for each plant in community 
-        !! if cswat not equal to 2
-        if (bsn_cc%cswat /= 2) then
-          call rsd_decomp
-        end if
-        
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
+          !! compute surface residue decomposition for each plant in community
+          call rsd_decomp
+          !! compute soil residue (roots and tilled in) decomposition and nitrogen and phosphorus mineralization
           call nut_nminrl
           !call nut_nitvol
         end if
@@ -382,7 +378,11 @@
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 2) then
           if (bmix_eff > 1.e-6) call mgt_newtillmix (ihru, bmix_eff, 0)
+          !! compute surface residue decomposition for each plant in community
+          call cbn_surfrsd_decomp
+          !! compute soil residue (roots and tilled in) decomposition
           call cbn_rsd_decomp      ! added by JC and FG, modified from nut_minrln.f90
+          !! compute mineralization and carbon pool transformations
           call cbn_zhang2
         end if
 
@@ -445,9 +445,6 @@
         !! compute plant biomass, leaf, root and seed growth
         call pl_grow
 
-        !! Distribute roots
-        call pl_rootfr
-
         !! reset harvested biomass and number of harvests for yearly yield output
         if (time%end_yr == 1) then
           do ipl = 1, pcom(j)%npl
@@ -480,7 +477,7 @@
           strstmp_av = strstmp_av / npl_gro
         end if
 
-        !! compute soil water content to 300 mm depth
+        !! compute aoil water content to 300 mm depth
         soil(j)%sw_300 = 0.
         do ly = 1, soil(j)%nly
           if (ly == 1) then

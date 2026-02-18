@@ -40,8 +40,8 @@
         
         !! add dead roots to soil residue pools
         do ly = 1, soil(j)%nly
-          soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + rto * soil(j)%ly(ly)%rtfr &
-                                                                    * pl_mass(j)%root(ipl)
+          soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + rto * pcom(j)%plg(ipl)%rtfr(ly) &
+                                                                          * pl_mass(j)%root(ipl)
         end do
 
         ! Reduce remaining living biomass  

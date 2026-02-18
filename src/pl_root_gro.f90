@@ -47,8 +47,5 @@
         pcom(j)%plg(ipl)%root_frac = pldb(idp)%rsr1 - (pldb(idp)%rsr1 - pldb(idp)%rsr2) * phumax
       end if
       
-      !! root mass
-      !pl_mass(j)%root(ipl)%m = pcom(j)%plg(ipl)%root_frac * pl_mass(j)%tot(ipl)%m
-
       return
       end subroutine pl_root_gro

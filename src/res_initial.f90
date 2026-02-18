@@ -33,13 +33,35 @@
         res_ob(ires)%psa = res_hyd(ires)%psa
         !! set initial weir height to principal depth - m
         res_ob(ires)%weir_hgt = res_ob(ires)%pvol / (res_ob(ires)%psa * 10000.)
-        
+
+        !! set initial values for Hanazaki parameters   |Jose T 2025
+        !!! Non-irrigation
+        res_ob(ires)%I_mean               = 0.0
+        res_ob(ires)%S_ini                = MAX(res_ob(ires)%evol, res_ob(ires)%pvol)
+        res_ob(ires)%N_memory             = 5                                                   !For now it will be fixed to 5
+        allocate(res_ob(ires)%I_mon_past(12*res_ob(ires)%N_memory))
+        res_ob(ires)%I_mon_past           = 0.0                                                 !At the beggining of the simulation this is a 1D array of N*12 zeros
+        allocate(res_ob(ires)%daily_inflow_array(1))
+        res_ob(ires)%daily_inflow_array   = 0.0                                                 !Same as above, 1d array with zeros
+        res_ob(ires)%c_ratio              = 0.51
+
+        !!! Irrigation
+        res_ob(ires)%d_mean               = 0.0
+        allocate(res_ob(ires)%d_mon_past(12*res_ob(ires)%N_memory))                             !Same logic as for inflow arrays
+        res_ob(ires)%d_mon_past           = 0.0
+        allocate(res_ob(ires)%daily_demand_array(1))
+        res_ob(ires)%daily_demand_array   = 0.0
+        res_ob(ires)%d_irrig_day          = 0.0
+        res_ob(ires)%irrig_track          = 0
+
         !! use br1 as lag - then compute actual br1 (no option to input actual br1)
-        res_ob(ires)%lag_up = res_hyd(ires)%br1
+        res_ob(ires)%lag_up   = res_hyd(ires)%br1
         res_ob(ires)%lag_down = res_hyd(ires)%br2
-        
+
         !! calculate shape parameters for surface area equation
         resdif = res_hyd(ires)%evol - res_hyd(ires)%pvol
+
+        !! For now it is normal procedure
         if ((res_hyd(ires)%esa - res_hyd(ires)%psa) > 0. .and. resdif > 0.) then
           lnvol = Log10(res_ob(ires)%evol) - Log10(res_ob(ires)%pvol)
           if (lnvol > 1.e-4) then

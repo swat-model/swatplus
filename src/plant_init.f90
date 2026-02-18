@@ -101,10 +101,11 @@
         allocate (pcom(j)%plcur(ipl))
         allocate (pl_mass(j)%rsd(ipl))
         allocate (soil1(j)%pl(ipl))
-        !! allocate water uptake by layer
+        !! allocate water uptake and root fraction by layer
         do ipl = 1, pcom(j)%npl
           allocate (pcom(j)%plcur(ipl)%uptake(soil(j)%nly), source = 0.)
           pcom(j)%plcur(ipl)%uptake = 0.
+          allocate (pcom(j)%plg(ipl)%rtfr(soil(j)%nly), source = 0.)
         end do
         !! allocate residue for each plant by soil layer
         do ipl = 1, pcom(j)%npl
@@ -136,32 +137,6 @@
           pl_mass(j)%rsd(ipl)%n = pl_mass(j)%rsd(ipl)%n + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 10.
           pl_mass(j)%rsd(ipl)%p = pl_mass(j)%rsd(ipl)%p + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 100.
           pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(ipl)
-          
-          if (bsn_cc%cswat == 2) then
-            !! done in cbn_rsd_decomp subroutine
-            !! metabolic residue
-            !rsd_meta%m = 0.85 * pcomdb(icom)%pl(ipl)%rsdin
-            !rsd_meta%c = 0.357 * pcomdb(icom)%pl(ipl)%rsdin !0.357=0.42*0.85
-            !rsd_meta%n = rsd_meta%c / 10.           !assume 10:1 C:N ratio (EPIC)
-            !rsd_meta%p = rsd_meta%c / 100.   
-            !soil1(j)%meta(1) = soil1(j)%meta(1) + rsd_meta
-            
-            !! structural residue
-            !rsd_str%m = 0.15 * pcomdb(icom)%pl(ipl)%rsdin
-            !rsd_str%c = 0.063 * pcomdb(icom)%pl(ipl)%rsdin   !0.063=0.42*0.15
-            !rsd_str%n = rsd_str%c / 150.             !assume 150:1 C:N ratio (EPIC)
-            !rsd_str%p = rsd_str%c / 1500.   
-            !soil1(j)%str(1) = soil1(j)%str(1) + rsd_str
-          
-            !! lignin residue
-            !soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + 0.8 * rsd_str%m
-            !soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + 0.8 * rsd_str%c              !assume 80% Structural C is lig
-            !soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + 0.2 * rsd_str%n
-            !soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + 0.02 * rsd_str%p
-            
-            !! total residue pools
-            !soil1(j)%rsd(1) = soil1(j)%rsd(1) + rsd_meta + rsd_str
-          end if
           
           ! set heat units to maturity
           ! first compute base0 units for entire year
@@ -366,6 +341,8 @@
             call pl_root_gro(j)
             call pl_seed_gro(j)
             call pl_partition(j, 1)
+            call pl_root_gro(j)
+            call pl_rootfr(j)
           end if
 
         end do   ! ipl loop

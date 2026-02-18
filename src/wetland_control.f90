@@ -61,13 +61,11 @@
       !! zero outgoing flow 
       ht2 = resz
       
-      
       !! set water body pointer to res
       wbody => wet(j)
       wbody_wb => wet_wat_d(j)
       wbody_prm => wet_prm(j)
       
-
       !! initialize variables for wetland daily simulation
       hru(j)%water_seep = 0.
       wet_ob(j)%depth = wet(j)%flo / wsa1 / 1000. !m
@@ -166,59 +164,43 @@
         wet(j)%solp = wet(j)%solp - wet_seep_day(j)%solp
         wet(j)%sedp = wet(j)%sedp - wet_seep_day(j)%sedp
       end if 
-        
-      !! if not a floodplain wetland
-      !if (hru(j)%wet_fp == "n") then
-		  !! calc release from decision table
-		  d_tbl => dtbl_res(irel)
-		  wbody => wet(j)
-		  wbody_wb => wet_wat_d(j)
-		  pvol_m3 = wet_ob(j)%pvol
-		  evol_m3 = wet_ob(j)%evol
-		  !if (wet_ob(j)%area_ha > 1.e-6) then
-		  if (hru(j)%area_ha > 1.e-6) then
-		    !dep = wbody%flo / wet_ob(j)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
-		    dep = wet(j)%flo / wsa1 / 1000.    !m 
-		  else
-		    dep = 0.
-		  end if
-		  weir_hgt = wet_ob(j)%weir_hgt   !m
-		  wet_ob(j)%depth = dep           !m
+                      
+      !! compute depth and set weir_hgt
+      if (hru(j)%area_ha > 1.e-6) then
+        dep = wet(j)%flo / wsa1 / 1000.    !m = m3 / (ha*10) / 1000.
+      else
+        dep = 0.
+      end if
+      weir_hgt = wet_ob(j)%weir_hgt   !m
+      wet_ob(j)%depth = dep           !m
 
-       !! weir discharge (ht2) by decision tables
-        call conditions (j, irel)
-        
-        !if (wet(j)%flo > pvol_m3) then
-        call res_hydro (j, irel, pvol_m3, evol_m3)
-        !end if
-        
-        if (hru(j)%area_ha > 1.e-6) then
-          !dep = wbody%flo / wet_ob(j)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
-          dep = wet(j)%flo / wsa1 / 1000.    !m 
-        else
-          dep = 0.
-        end if
+      !! wetland outflow using weir equation or decision table
+      if (wet_dat_c(ires)%hyd == "paddy") then
         !! weir discharge by manual operation Jaehak 2025
-        !if (sched(isched)%num_autos == 0 .and. dep > 0.01) then
-        if (wet_dat_c(ires)%hyd == 'paddy') then 
-          call res_weir_release (j, irel, ihyd, evol_m3, dep, weir_hgt)
-          wet(j)%flo = wbody%flo
-        end if
-        
-      !endif
-        !! subtract outflow from storage
-        !wet(j)%flo =  wet(j)%flo - ht2%flo
-        surfq(j) = ht2%flo / wsa1 !mm
-        
-        if (time%step > 1) then
-          do ii = 1, time%step
-            !! daily total runoff
-            hhsurfq(j,ii) = surfq(j) / real(time%step)
-          end do
-        end if
- 
+        call res_weir_release (j, irel, ihyd, evol_m3, dep, weir_hgt)
+        wet(j)%flo = wbody%flo
+      else
+        !! discharge (ht2) by decision tables
+        d_tbl => dtbl_res(irel)
+        wbody => wet(j)
+        wbody_wb => wet_wat_d(j)
+        pvol_m3 = wet_ob(j)%pvol
+        evol_m3 = wet_ob(j)%evol
+        call conditions (j, irel)
+        call res_hydro (j, irel, pvol_m3, evol_m3)
+      end if 
       
-      wet_ob(j)%depth = wet(j)%flo / wsa1 / 1000. !m                       
+      !! surface runoff from wetland is discharge (outflow) ht2
+      surfq(j) = ht2%flo / wsa1 !mm
+        
+      if (time%step > 1) then
+        do ii = 1, time%step
+          !! daily total runoff
+          hhsurfq(j,ii) = surfq(j) / real(time%step)
+        end do
+      end if
+ 
+      wet_ob(j)%depth = wet(j)%flo / wsa1 / 1000. !m                   
        
       !! compute sediment deposition
       call res_sediment
