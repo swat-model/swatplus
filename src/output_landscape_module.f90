@@ -784,8 +784,8 @@
      type output_plc_header     
          character (len=7) ::  freq          =    "freq   "
          character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
          character (len=11) :: day_mo        =    "        day"
+         character (len=11) :: mo            =    "        mon"
          character (len=11) :: yrc           =    "         yr"
          character (len=16) :: isd           =    "            unit"
          character (len=21) :: id            =    "              gis_id "
@@ -796,14 +796,15 @@
          character(len=15)  :: stem_c    =    "         stem_c"
          character(len=15)  :: seed_c    =    "         seed_c"
          character(len=15)  :: root_c    =    "         root_c"
+         character(len=15)  :: rsd_c     =    "          rsd_c"
          end type output_plc_header       
       type (output_plc_header) :: plc_hdr
       
       type output_plc_header_units      
          character (len=7) ::  freq         =    "       "
          character (len=11) :: day          =    "           "
-         character (len=11) :: mo           =    "           "
          character (len=11) :: day_mo       =    "           "
+         character (len=11) :: mo           =    "           "
          character (len=11) :: yrc          =    "           "
          character (len=16)  :: isd         =  "           "
          character (len=21) :: id           =  "                "
@@ -814,6 +815,7 @@
          character(len=15)  :: stem_c    =    "          kg/ha"
          character(len=15)  :: seed_c    =    "          kg/ha"
          character(len=15)  :: root_c    =    "          kg/ha"
+         character(len=15)  :: rsd_c     =    "          kg/ha"
         end type output_plc_header_units         
       type (output_plc_header_units) :: plc_hdr_units
 
@@ -1152,7 +1154,7 @@
          character(len=15)  :: meta_c        =    "    metabolic_c"         
          character(len=15)  :: hs_c          =    "           hs_c"         
          character(len=15)  :: hp_c          =    "           hp_c"         
-         character(len=15)  :: microb_c      =    "    microbial_c"         
+         character(len=15)  :: microb_c      =    "   microbrial_c"         
          character(len=15)  :: lig_c         =    "       lignin_c"      
          character(len=15)  :: water_c       =    "        water_c"
          character(len=15)  :: manure_c      =    "       manure_c"  
@@ -1201,7 +1203,7 @@
          character(len=15)  :: meta_n        =    "    metabolic_n"         
          character(len=15)  :: hs_n          =    "           hs_n"         
          character(len=15)  :: hp_n          =    "           hp_n"         
-         character(len=15)  :: microb_n      =    "    microbial_n"         
+         character(len=15)  :: microb_n      =    "   microbrial_n"         
          character(len=15)  :: lig_n         =    "       lignin_n"      
          character(len=15)  :: water_n       =    "        water_n"
          character(len=15)  :: manure_n      =    "       manure_n"  

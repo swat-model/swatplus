@@ -329,6 +329,6 @@
 103   format (4i6,i8,4x,a,5x,4f12.3)
 104   format (4i6,2i8,2x,a8,4f12.3,15f17.3,7x,a16,a30)
 107   format (4i6,2i8,2x,a,12f12.3,3x,a16,a30,f12.3)
-108   format (4i6,2i8,2x,a,12(1x,f16.3),3x,a16,a30,f12.3)
+108   format (4i6,2i8,2x,a,12(1x,f16.3),3x,a16,a30,1x,f16.3)
        
       end subroutine hru_output
