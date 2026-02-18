@@ -60,7 +60,6 @@ Resources/R*
 src/main.f90
 ford.md
 /.vs/SWAT_PLUS_DEV
-/.vscode
 /.vs/github/config
 /.vs/github/FileContentIndex
 /.vs/github/v17
@@ -69,6 +68,7 @@ ford.md
 /.vs/cmake.db
 /.vs/slnx.sqlite
 /.vs
+/.vscode
 /refdata/Osu_1hru/lsunit_ls_aa.txt
 /refdata/Osu_1hru/lsunit_nb_aa.txt
 /refdata/Osu_1hru/lsunit_pw_aa.txt
