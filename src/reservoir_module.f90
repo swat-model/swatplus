@@ -14,7 +14,7 @@
         character(len=13) :: name = "default"
         integer :: ob = 0                           !object number if reservoir object; hru number if hru object
         integer :: props = 0                        !points to res_dat
-        integer :: iweir = 1                !       !weir ID Jaehak 2023 
+        integer :: iweir = 1                !       !weir ID Jaehak 2023
         character (len=1) :: rel_tbl = "d"          !d == decision table, c == conditions table
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
         real :: pvol = 0.                   !ha-m   |vol of water needed to fill the res to the princ spillway (read in as ha-m and converted to m^3)
@@ -33,6 +33,19 @@
         real :: lag_down = 0                !       !lag parameter for decreasing outflow - prevents sudden drops
         real, dimension (:), allocatable :: kd      !           |aquatic mixing velocity (diffusion/dispersion)-using mol_wt
         real, dimension (:), allocatable :: aq_mix  ! m/day     |aquatic mixing velocity (diffusion/dispersion)-using mol_wt
+
+        !! Additions to include hanazaki_06 release method	        |Jose T 2025
+        real, dimension(:), allocatable :: I_mon_past               !m3     |Monthly mean inflow for the last N*12 months
+        real :: I_mean  = 0.                                        !m3     |Annual mean inflow for the last N years
+        real :: S_ini   = 0.                                        !m3     |Storage at the beginning of the operational year
+        integer :: N_memory   = 5                                   !m3     |Number of years in the memory (by default 1 year)
+        real, dimension(:), allocatable :: daily_inflow_array       !m3     |Array to store daily inflow for the month
+        real :: c_ratio   = 0.51                                    !       |Capacity ratio
+        real :: d_mean    = 0.0                                     !m3     |Annual mean irrigation demand
+        real, dimension(:), allocatable :: d_mon_past               !m3     |Monthly mean irrigation demand for the last N*12 months
+        real, dimension(:), allocatable :: daily_demand_array       !m3     |Array to store daily irrigation demand for the month
+        real :: d_irrig_day = 0.0                                   !m3     |Daily irrigation demand
+        integer :: irrig_track = 0
       end type reservoir          
       type (reservoir), dimension(:),allocatable :: res_ob
       
