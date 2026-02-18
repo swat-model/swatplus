@@ -60,7 +60,7 @@
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
-
+      k = 1
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
