@@ -47,12 +47,12 @@
       pl_mass(j)%root(ipl) = pl_mass(j)%root(ipl) - pl_yield
       
       !! update root fractions in each layer
-      call pl_rootfr
+      call pl_rootfr(j)
       
       !! allocate remaining dead roots, N, P to soil layers
       do ly = 1, soil(j)%nly
-        pl_mass(j)%rsd(ipl) = soil(j)%ly(ly)%rtfr * pl_mass(j)%root(ipl)   &
-                                                   + pl_mass(j)%rsd(ipl)
+        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly) *  &
+                                                                      pl_mass(j)%root(ipl)
       end do
       
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
