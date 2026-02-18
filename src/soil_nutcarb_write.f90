@@ -236,7 +236,8 @@
                     soil(j)%ly(ly)%rtfr, soil1(j)%root_tot(ly)%m, soil1(j)%rsd_tot(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
               enddo
             endif
-            write (4561,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+            ! write (4561,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+            write (4561,*) freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                 soil_prof_root_frac, soil_prof_root%m, soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
             if (pco%csvout == "y") then
@@ -245,7 +246,7 @@
                     pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                     soil(j)%ly(ly)%rtfr, soil1(j)%root_tot(ly)%m, soil1(j)%rsd_tot(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
               enddo
-              write (4564,'(*(G0.7,:,","))') freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              write (4564,'(*(G0.7,:,","))') freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                 soil_prof_root_frac, soil_prof_root%m, soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
             end if
