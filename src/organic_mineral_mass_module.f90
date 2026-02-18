@@ -16,9 +16,10 @@
       end type organic_mass
       type (organic_mass) :: orgz
 
-      type organic_mixing_mass
+      type organic_mixing_mass           !       |used for each layer in mgt_newtillmix
         type (organic_mass) :: tot       !       |total organic pool
-        type (organic_mass), dimension(12) :: rsd   !   |fresh residue
+        type (organic_mass) :: surf_rsd  !   |fresh surface residue mixed into layers
+        type (organic_mass), dimension(12) :: rsd   !   |fresh soil residue (max 12 plants)
         !! humus pools for old mineralization model (static carbon)
         type (organic_mass) :: hact      !       |active humus for old mineralization model
         type (organic_mass) :: hsta      !       |stable humus for old mineralization model
