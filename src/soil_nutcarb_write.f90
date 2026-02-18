@@ -177,14 +177,14 @@
                               + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
           
           !write all organic carbon for the plant community file = "hru_plc_stat.txt"
-          write (4560,*) freq_label, time%day, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+          write (4560,*) freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
               pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                 &
-              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
+              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
           ! file = "hru_plc_stat.csv"
           if (pco%csvout == "y") then
-              write (4563,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+              write (4563,'(*(G0.7,:,","))') freq_label, time%day, time%day_mo, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
               pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
-              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c
+              pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
           end if
             
           !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
@@ -246,12 +246,12 @@
                   end do
                   root_frac_ly = root_frac_ly / real(pcom(j)%npl)
                 end if
-                write (4561,10) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                write (4561,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                     pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                     root_frac_ly, soil1(j)%root_tot(ly)%m, soil1(j)%rsd_tot(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%str(ly)%c, soil1(j)%lig(ly)%c
               enddo
             endif
-            write (4561,10) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+            write (4561,*) freq_label, -1, int(profile_depth), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 pl_mass(j)%rsd_tot%c, soil1(j)%meta(1)%c, soil1(j)%str(1)%c, soil1(j)%lig(1)%c,              &
                 soil_prof_root_frac, soil_prof_root%m, soil_prof_rsd%c, soil_prof_meta%c, soil_prof_str%c, soil_prof_lig%c
             if (pco%csvout == "y") then
