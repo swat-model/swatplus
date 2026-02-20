@@ -65,8 +65,8 @@
         end if
         soil1(ihru)%mn(ly)%no3 =  soil1(ihru)%mn(ly)%no3 * wt1      !! mg/kg => kg/ha
 
-        !set initial labile P pool
-        if (solt_db(isolt)%lab_p > 1.e-9) then
+        !set initial labile P pool, use only for top 2 layers, otherwise use 5 mg/kg as default
+        if (solt_db(isolt)%lab_p > 1.e-9 .and. ly < 3) then
           soil1(ihru)%mp(ly)%lab = solt_db(isolt)%lab_p * dep_frac
         else
           !! assume initial concentration of 5 mg/kg
