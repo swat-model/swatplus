@@ -74,8 +74,8 @@
         end if
         soil1(ihru)%mp(ly)%lab = soil1(ihru)%mp(ly)%lab * wt1   !! mg/kg => kg/ha
 
-        !! set active mineral P pool based on dynamic PSP MJW, use only for top 2 layers, otherwise use 5 mg/kg as default
-        if (solt_db(isolt)%lab_p > 1.e-9 .and. ly < 3) then  !! mjw 2026 
+        !! set active mineral P pool based on dynamic PSP MJW
+        if (bsn_cc%sol_P_model == 1) then 
           !! Allow Dynamic PSP Ratio
           !! convert to concentration
           solp = soil1(ihru)%mp(ly)%lab / wt1
