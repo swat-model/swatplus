@@ -118,6 +118,7 @@
             decr = Min(decr, 1.)
             decomp = decr * pl_mass(j)%rsd(ipl)
             pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
+            pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - decomp
 
             ! The following if statements are to prevent runtime underflow errors with gfortran 
             if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
