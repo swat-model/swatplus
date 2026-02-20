@@ -238,6 +238,7 @@
               mix_org%surf_rsd = emix * frac_dep(l) * pl_mass(jj)%rsd(ipl)
               soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
               pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
+              pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
             end do
             
             soil1(jj)%hact(l) = frac_non_mixed * soil1(jj)%hact(l) + frac_dep(l) * mix_org%hact
