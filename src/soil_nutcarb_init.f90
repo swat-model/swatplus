@@ -132,7 +132,9 @@
         tot_mass = 10000. * soil(ihru)%phys(ly)%thick * soil(ihru)%phys(ly)%bd
         !! total mass of soil organic matter - cbn in %, and assume SOM is 58% carbon
         soil1(ihru)%tot(ly)%m = tot_mass * (soil1(ihru)%cbn(ly) / 100.) / 0.58
-        soil1(ihru)%tot(ly)%c = soil1(ihru)%tot(ly)%m * soil1(ihru)%cbn(ly) / 100.
+        soil1(ihru)%tot(ly)%c = tot_mass * (soil1(ihru)%cbn(ly) / 100.)
+
+        ! soil1(ihru)%tot(ly)%c = soil1(ihru)%tot(ly)%m * soil1(ihru)%cbn(ly) / 100.
         soil1(ihru)%tot(ly)%n = soil1(ihru)%tot(ly)%c / 10.     !assume 10:1 C:N ratio
         soil1(ihru)%tot(ly)%p = soil1(ihru)%tot(ly)%c / 100.    !assume 100:1 C:P ratio
            
