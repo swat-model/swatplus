@@ -157,7 +157,7 @@
           soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         end if
         
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
           frac_hum_microb = 0.02
           frac_hum_slow = 0.54

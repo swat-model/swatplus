@@ -147,7 +147,7 @@
           hpw_d(j)%c_gro = hpw_d(j)%c_gro + pl_mass_up%c
                 
           !! increase in plant c
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             hpc_d(j)%npp_c = hpc_d(j)%npp_c + pl_mass_up%c
           end if
 
