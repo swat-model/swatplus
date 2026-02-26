@@ -48,7 +48,6 @@
       integer :: ipl = 0               !               |
       integer :: idp = 0               !               |
       real :: prev_depth = 0.
-      real :: tmp
       real :: emix = 0.                !none           |mixing efficiency
       real :: dtil = 0.                !mm             |depth of mixing
       real :: frac_mixed = 0.          !               |
@@ -232,18 +231,20 @@
             soil1(jj)%mp(l) = frac_non_mixed * soil1(jj)%mp(l) + frac_dep(l) * mix_mp
             soil1(jj)%tot(l) = frac_non_mixed * soil1(jj)%tot(l) + frac_dep(l) * mix_org%tot
             
-            !! reconstitute each plant residue component separately
+            !! reconstitute each soil plant residue component separately
             do ipl = 1, pcom(jj)%npl
               soil1(jj)%pl(ipl)%rsd(l) = frac_non_mixed * soil1(jj)%pl(ipl)%rsd(l) +        &
                                                          frac_dep(l) * mix_org%rsd(ipl)
               !! mix surface residue into soil layers
               mix_org%surf_rsd = emix * frac_dep(l) * pl_mass(jj)%rsd(ipl)
-            !   soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
-              
+
+              ! soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
+              ! Instead of the above commented out line, the following four lines were added by fg to add mixed
+              ! mix surface residue straight into to soil meta, str, lig pools.
               idp = pcom(jj)%plcur(ipl)%idplt
-              soil1(jj)%meta(l) = soil1(jj)%meta(l) + pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd
-              soil1(jj)%str(l) = soil1(jj)%str(l) + pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd
-              soil1(jj)%lig(l) = soil1(jj)%lig(l)+ pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd
+              soil1(jj)%meta(l) = soil1(jj)%meta(l) + pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd  ! fg added
+              soil1(jj)%str(l) = soil1(jj)%str(l) + pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd  ! fg added
+              soil1(jj)%lig(l) = soil1(jj)%lig(l)+ pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd  ! fg added
 
               pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
               pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
