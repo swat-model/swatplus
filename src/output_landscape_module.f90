@@ -796,7 +796,7 @@
          character(len=15)  :: stem_c    =    "         stem_c"
          character(len=15)  :: seed_c    =    "         seed_c"
          character(len=15)  :: root_c    =    "         root_c"
-         character(len=15)  :: rsd_c     =    "          rsd_c"
+         character(len=15)  :: rsd_c     =    "     surf_rsd_c"
          end type output_plc_header       
       type (output_plc_header) :: plc_hdr
       
