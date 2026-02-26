@@ -1154,7 +1154,7 @@
          character(len=15)  :: meta_c        =    "    metabolic_c"         
          character(len=15)  :: hs_c          =    "           hs_c"         
          character(len=15)  :: hp_c          =    "           hp_c"         
-         character(len=15)  :: microb_c      =    "    microbial_c"         
+         character(len=15)  :: microb_c      =    "   microbrial_c"         
          character(len=15)  :: lig_c         =    "       lignin_c"      
          character(len=15)  :: water_c       =    "        water_c"
          character(len=15)  :: manure_c      =    "       manure_c"  

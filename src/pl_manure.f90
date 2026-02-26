@@ -92,7 +92,7 @@
 
         !!By Zhang for C/N cycling 
         !!===========================
-      if (bsn_cc%cswat == 2) then
+      if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
         soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx *           &
             frt_kg * fertdb(ifrt)%forgp
         soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * xx *      &
