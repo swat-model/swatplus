@@ -494,7 +494,7 @@
             write (9000,*) "HRU                       hru_plc_stat.csv"
           end if
     
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             call open_output_file(4561, "hru_rsdc_stat.txt", 1500)
             write (4561,*)  bsn%name, prog
             write (4561,*) rsdc_hdr
@@ -590,7 +590,7 @@
         endif
 
         !! write carbon variables headers to hru_carbvars
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
             call open_output_file(4574, "hru_carbvars.txt", 1500)
             write (4574,*)  bsn%name, prog
@@ -606,7 +606,7 @@
         endif
 
         !! write org_allo variable headers to hru_org_allo_vars
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
             call open_output_file(4576, "hru_org_allo_vars.txt", 1500)
             write (4576,*)  bsn%name, prog
@@ -622,7 +622,7 @@
         endif
 
         !! write org_ratio variable headers to hru_org_ratio_vars
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           if (pco%cb_vars_hru%d == "y" .or. pco%cb_vars_hru%m == "y"  .or. pco%cb_vars_hru%y == "y" ) then
             call open_output_file(4578, "hru_org_ratio_vars.txt", 1500)
             write (4578,*)  bsn%name, prog
@@ -638,7 +638,7 @@
         endif
 
         !! write end of simulation soil properties headers to hru_endsim_soil_prop
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
             call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
             write (4584,*)  bsn%name, prog
@@ -654,7 +654,7 @@
         endif
 
         !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
             call open_output_file(4586, "hru_begsim_soil_prop.txt", 1500)
             write (4586,*)  bsn%name, prog
