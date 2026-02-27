@@ -29,6 +29,7 @@
       real :: tot_prof_p
       real :: prf_swc = 0.0     !mm/mm       |average profile soil water content including wilting point moisture content.
       real :: prf_depth = 0.0   !mm          |depth of soil profile.
+      real :: frac_above_300 = 1.0
       integer :: iihru = 0      !none        |counter
       integer :: j = 0          !none        |counter
       integer :: ipl = 0        !none        |counter
@@ -211,25 +212,42 @@
           end if
 
           !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
-          if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then
-            do ly = 1, soil(j)%nly
+
+          ! calc total sequesterd C above or equal to 300mm
+          soil1(j)%seq_tot_300_c = 0.0
+          do ly = 1, soil(j)%nly
+            if (soil(j)%phys(ly)%d <= 300.0) then
+              frac_above_300 = 1.0
+            else if (ly == 1) then
+              frac_above_300 = 300.0 / soil(j)%phys(ly)%d 
+            else if (soil(j)%phys(ly-1)%d < 300.0) then
+              frac_above_300 = (300.0 -  soil(j)%phys(ly-1)%d)/ (soil(j)%phys(ly)%d - soil(j)%phys(ly-1)%d) 
+            else
+              frac_above_300 = 0.0
+            endif
+            if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then
+              soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
               soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
-            end do
-          end if
+            endif
+            if(bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+              soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300 
+            endif
+          end do
+          
           if (print_soil_lyr_depths) then
           write (4558,*)                                     &
-              "freq           jday         mon         day        year        unit hru     name           ", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+              "freq           jday         mon         day        year        unit hru     name           Seq_300mm_c", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
           endif 
           write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                  (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
+                                                  soil1(j)%seq_tot_300_c/1000., (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
           if (pco%csvout == "y") then
 
             if (print_soil_lyr_depths) then
               write (4559,*)                                     &
-                  "freq,jday,mon,day,year,unit,hru,name,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                  "freq,jday,mon,day,year,unit,hru,name,Seq_300mm_c", soil1(j)%seq_tot_300_c, (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
             endif 
             write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                  (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
+                                                  soil1(j)%seq_tot_300_c/1000., (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
           end if
           print_soil_lyr_depths = .false.
           
