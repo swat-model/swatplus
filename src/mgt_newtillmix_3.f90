@@ -242,9 +242,9 @@
               ! Instead of the above commented out line, the following four lines were added by fg to add mixed
               ! mix surface residue straight into to soil meta, str, lig pools.
               idp = pcom(jj)%plcur(ipl)%idplt
-              soil1(jj)%meta(l) = soil1(jj)%meta(l) + pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd  ! fg added
-              soil1(jj)%str(l) = soil1(jj)%str(l) + pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd  ! fg added
-              soil1(jj)%lig(l) = soil1(jj)%lig(l)+ pldb(idp)%res_part_fracs%meta_frac * mix_org%surf_rsd  ! fg added
+              soil1(jj)%meta(l) = soil1(jj)%meta(l) + cswat_3_part_fracs(idp)%meta_frac_abg * mix_org%surf_rsd  ! fg added
+              soil1(jj)%str(l)  = soil1(jj)%str(l)  + cswat_3_part_fracs(idp)%str_frac_abg  * mix_org%surf_rsd  ! fg added
+              soil1(jj)%lig(l)  = soil1(jj)%lig(l)  + cswat_3_part_fracs(idp)%lig_frac_abg  * mix_org%surf_rsd  ! fg added
 
               pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
               pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
