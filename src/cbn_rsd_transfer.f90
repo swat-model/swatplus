@@ -32,7 +32,7 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru, isep 
+      use hru_module, only : ihru 
       use soil_module
       use plant_module
       use plant_data_module
@@ -42,22 +42,9 @@
 
       integer :: j = 0      !none          |HRU number
       integer :: k = 0      !none          |counter (soil layer)
-      real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
-                            !              |to nitrate(80%) and active organic(20%)
-                            !              |pools in layer
-      real :: rmp = 0.      !              |to labile(80%) and organic(20%) pools in layer
-      real :: xx = 0.       !varies        |variable to hold intermediate calculation result
-      real :: csf = 0.      !none          |combined temperature/soil water factor
-      real :: cnr = 0.      !              |carbon nitrogen ratio
-      real :: cnrf = 0.     !              |carbon nitrogen ratio factor 
-      real :: cpr = 0.      !              |carbon phosphorus ratio
-      real :: cprf = 0.     !              |carbon phosphorus ratio factor
-      real :: ca = 0.       !              |
       real :: decr = 0.     !              |
       real :: ipl = 0.      !              |plant number in plant community
       real :: idp = 0.      !              |plant number in plant data module
-      real :: cdg = 0.      !none          |soil temperature factor
-      real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
 
