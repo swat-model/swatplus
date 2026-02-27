@@ -1,4 +1,4 @@
-      subroutine cbn_rsd_transfer
+      subroutine cbn_surfrsd_decomp_3
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine estimates daily nitrogen and phosphorus
@@ -60,7 +60,7 @@
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
-
+      k = 1
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
@@ -73,64 +73,92 @@
 
       !! compute root and incorporated residue decomposition
       !! compute humus mineralization of organic soil pools 
-      do k = 1, soil(j)%nly
-
         do ipl = 1, pcom(j)%npl
           !! mineralization can occur only if temp above 0 deg
-          if (soil(j)%phys(k)%tmp > 0.) then
+          if (soil(j)%phys(1)%tmp > 0.) then
+            !! compute soil water factor
+            sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
+            sut = Max(.05, sut)
+
+            !!compute soil temperature factor
+            xx = soil(j)%phys(1)%tmp
+            cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
+            cdg = Max(.1, cdg)
+
+            !! compute combined factor
+            xx = cdg * sut
+            if (xx < 0.) xx = 0.
+            if (xx > 1.e6) xx = 1.e6
+            csf = Sqrt(xx)
+
+            !! compute residue decomp and mineralization of surface residue
+            rmn1 = 0.
+            rmp = 0.
+            if (pl_mass(j)%rsd(ipl)%n > 1.e-4) then
+              cnr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%n
+              if (cnr > 500.) cnr = 500.
+              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+            else
+              cnrf = 1.
+            end if
+            
+            if (pl_mass(j)%rsd(ipl)%p > 1.e-4) then
+              cpr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%p
+              if (cpr > 5000.) cpr = 5000.
+              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+            else
+              cprf = 1.
+            end if
+
+            ca = Min(cnrf, cprf, 1.)
+            
             idp = pcom(j)%plcur(ipl)%idplt 
-            decr = 1.0 ! added by fg to move all soil rsd into soil meta, str, lig pools
-            transfer = decr * soil1(j)%pl(ipl)%rsd(k)
-            soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - transfer
+            decr = pldb(idp)%rsdco_pl * ca * csf
+            decr = Max(bsn_prm%decr_min, decr)
+            decr = Min(decr, 1.)
+            decomp = decr * pl_mass(j)%rsd(ipl)
+            pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
+            pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - decomp
 
             ! The following if statements are to prevent runtime underflow errors with gfortran 
-            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
+            if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
+            if (pl_mass(j)%rsd(ipl)%c < 1.e-10) pl_mass(j)%rsd(ipl)%c = 0.0 
+            if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
+            if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
 
             !! add mass and carbon to soil organic pools
-            ! soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * transfer%m
-            ! soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * transfer%m
-            ! soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * transfer%m
-            ! soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * transfer%c
-            ! soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * transfer%c
-            ! soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * transfer%c
+            ! soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
+            ! soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * decomp%m
+            ! soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * decomp%m
+            ! soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * decomp%c
+            ! soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
+            ! soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
             
-            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_blg * transfer%m
-            soil1(j)%str(k)%m  = soil1(j)%str(k)%m  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer%m
-            soil1(j)%lig(k)%m  = soil1(j)%lig(k)%m  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer%m
-            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_blg * transfer%c
-            soil1(j)%str(k)%c  = soil1(j)%str(k)%c  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer%c
-            soil1(j)%lig(k)%c  = soil1(j)%lig(k)%c  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer%c
+            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%m
+            soil1(j)%str(k)%m = soil1(j)%str(k)%m + cswat_3_part_fracs(idp)%str_frac_abg * decomp%m
+            soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%m
+            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%c
+            soil1(j)%str(k)%c = soil1(j)%str(k)%c + cswat_3_part_fracs(idp)%str_frac_abg * decomp%c
+            soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%c
             
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            if (soil1(j)%meta(k)%c > 1.e-6) then
-              rsd_meta%n = transfer%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            else
-              rsd_meta%n = 0. 
-            end if
+            rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
             soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
-            rsd_str%n = transfer%n - rsd_meta%n
+            rsd_str%n = decomp%n - rsd_meta%n
             soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
             soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
             
-            if (soil1(j)%meta(k)%c > 1.e-6) then
-              rsd_meta%p = transfer%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            else
-              rsd_meta%p = 0.  
-            end if
+            rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
             soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
-            rsd_str%p = transfer%p - rsd_meta%p
+            rsd_str%p = decomp%p - rsd_meta%p
             soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
             soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
             
           end if    ! soil temp > 0
           
         end do      ! ipl = 1, pcom(j)%npl
-      end do        ! k = 1, soil(j)%nly
 
       return
-      end subroutine cbn_rsd_transfer
+      end subroutine cbn_surfrsd_decomp_3

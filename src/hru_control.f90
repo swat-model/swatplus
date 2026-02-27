@@ -390,7 +390,7 @@
         if (bsn_cc%cswat == 3) then
           if (bmix_eff > 1.e-6) call mgt_newtillmix_3 (ihru, bmix_eff, 0)
           !! compute surface residue decomposition for each plant in community
-          call cbn_surfrsd_decomp
+          call cbn_surfrsd_decomp_3
           !! compute soil residue (roots and tilled in) decomposition
           call cbn_rsd_transfer      ! added by JC and FG, modified from nut_minrln.f90 and modified by fg to transfer soil residue to meta, str, lig
           !! compute mineralization and carbon pool transformations
