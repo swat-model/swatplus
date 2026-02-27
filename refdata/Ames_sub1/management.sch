@@ -614,7 +614,7 @@ mgt_01A                              305         1
 						    till         11         10    0.0    chisplow        null     0.000
 						    fert         12          2    0.0        null    11_52_00   142.700
                                                     skip          0          0      0        null        null         0		                                                    												
-mgt_02                              245         0
+mgt_02                              246         0
                                                     plnt          4         28    0.0        corn        null         0
                                                     irrm          5         15    0.0        sprinkler_ilm    null     0.000
                                                     fert          6          1    0.0        null      elem_n   181.400

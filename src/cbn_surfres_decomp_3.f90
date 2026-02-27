@@ -1,4 +1,4 @@
-      subroutine cbn_surfrsd_decomp
+      subroutine cbn_surfrsd_decomp_3
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine estimates daily nitrogen and phosphorus
@@ -127,12 +127,19 @@
             if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
 
             !! add mass and carbon to soil organic pools
-            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
-            soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * decomp%m
-            soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * decomp%m
-            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * decomp%c
-            soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
-            soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
+            ! soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
+            ! soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * decomp%m
+            ! soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * decomp%m
+            ! soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * decomp%c
+            ! soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
+            ! soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
+            
+            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%m
+            soil1(j)%str(k)%m = soil1(j)%str(k)%m + cswat_3_part_fracs(idp)%str_frac_abg * decomp%m
+            soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%m
+            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%c
+            soil1(j)%str(k)%c = soil1(j)%str(k)%c + cswat_3_part_fracs(idp)%str_frac_abg * decomp%c
+            soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%c
             
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
@@ -154,4 +161,4 @@
         end do      ! ipl = 1, pcom(j)%npl
 
       return
-      end subroutine cbn_surfrsd_decomp
+      end subroutine cbn_surfrsd_decomp_3
