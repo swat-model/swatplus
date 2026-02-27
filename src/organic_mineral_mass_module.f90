@@ -84,6 +84,7 @@
         !! tot and rsd used for both carbon methods
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
+        real :: seq_tot_300_c                                       !       |total sequestered equal to or above 300mm soil depth
         type (plant_residue), dimension(:), allocatable :: pl       !       |fresh surface residue dimensioned by plant and by layer
         type (organic_mass), dimension(:), allocatable :: rsd_tot   !       |total fresh surface residue dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: root_tot   !       |total live roots dimensioned by layer
@@ -146,6 +147,7 @@
       real :: bsn_mn = 0.                                           !       |total mineral n pool (no3+nh4) in basin
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in basin
       type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
+      type (organic_mass) :: transfer                               !       |temporary storage for residue decomp
       type (organic_mass) :: pl_burn                                !       |residue and plant mass burned in fire
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter
       type (organic_mass) :: rsd_str                                !       |temporary storage for initial structural litter
