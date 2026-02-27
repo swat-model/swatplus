@@ -255,6 +255,7 @@
         real :: fp_dep_mm = 0.         !! basin flood plain deposition - mm/year
         real :: res_dep_t = 0.         !! total reservoir deposition - all reservoirs - tons
         real :: res_trap_eff = 0.      !! average reservoir trap efficiency - all reservoirs
+        real :: fp_dep_fr_km = 0.      !! basin flood plain deposition - frac of incoming sediment per km
       end type basin_sediment_budget
       type (basin_sediment_budget) :: bsn_sedbud
       

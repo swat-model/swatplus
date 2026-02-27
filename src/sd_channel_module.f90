@@ -105,8 +105,9 @@
         real :: ebtm_m = 0.         !m          |bed down cutting
         real :: ebank_t = 0.        !tons       |bank cutting  
         real :: ebtm_t = 0.         !tons       |bed down cutting
-        real :: fp_t = 0.           !mm/yr      |flood plain deposition
-        real :: t_ha = 0.           !tons/ha    |sediment load in t/ha  
+        real :: fp_t = 0.           !tons       |flood plain deposition
+        real :: t_ha = 0.           !tons/ha    |sediment load in t/ha
+        real :: fp_fr_km = 0.       !frac/km    |flood plain deposition - fraction of incoming sediment per km
       end type channel_morphology_output
       type (channel_morphology_output), dimension (:), allocatable :: ch_morph
       type (channel_morphology_output), dimension (12) :: ch_morph_ord

@@ -383,6 +383,7 @@
         !! mm = t / (3.*bd*w*l) -> assume fp width = 3*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
         ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (3. * sd_ch(ich)%chw *           &
                                                 sd_ch(ich)%chl) / time%yrs_prt
+        ch_morph(ich)%fp_fr_km = ch_morph(ich)%fp_t / (ch_sed_bud_a(ich)%in_sed * time%yrs_prt) / sd_ch(ich)%chl
         
         !! basin flood plain deposition and bank erosion
         bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t + ch_morph(ich)%fp_t
@@ -394,8 +395,10 @@
         ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr + ch_morph(ich)%w_yr
         ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr + ch_morph(ich)%d_yr
         ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm + ch_morph(ich)%fp_mm
+        ch_morph_ord(iord)%fp_fr_km = ch_morph_ord(iord)%fp_fr_km + ch_morph(ich)%fp_fr_km
         ch_morph_ord(iord)%t_ha = ch_out_a(ich)%sed / ob(iob)%area_ha
         bsn_sedbud%fp_dep_mm = bsn_sedbud%fp_dep_mm + ch_morph(ich)%fp_mm
+        bsn_sedbud%fp_dep_fr_km = bsn_sedbud%fp_dep_fr_km + ch_morph(ich)%fp_fr_km
         bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr + ch_morph(ich)%w_yr
         
         iob = sp_ob1%chandeg + ich - 1
@@ -404,7 +407,7 @@
         !! ch_budget.txt
         write (8000,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chw,  &
                 ch_morph(ich)%w_yr, sd_ch(ich)%chd, ch_morph(ich)%d_yr,      &
-                ch_morph(ich)%fp_mm, ch_morph(ich)%t_ha
+                ch_morph(ich)%fp_mm, ch_morph(ich)%fp_fr_km, ch_morph(ich)%t_ha
       end do
       
       !! average and write by stream order
@@ -414,6 +417,7 @@
             ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / ch_morph_ord(iord)%num
             ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / ch_morph_ord(iord)%num
             ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / ch_morph_ord(iord)%num
+            ch_morph_ord(iord)%fp_fr_km = ch_morph_ord(iord)%fp_fr_km / ch_morph_ord(iord)%num
           end if
         end do
       end if
@@ -421,8 +425,9 @@
       !! write ch_order_sed.txt
       if (sp_ob%chandeg > 0) then
         do iord = 1, 12
-          write (8001,*) iord, ch_morph_ord(iord)%num, ch_morph_ord(iord)%ebank_t,     &
-            ch_morph_ord(iord)%w_yr, ch_morph_ord(iord)%fp_t, ch_morph_ord(iord)%fp_mm
+          write (8001,*) iord, ch_morph_ord(iord)%num, ch_morph_ord(iord)%ebank_t,      &
+            ch_morph_ord(iord)%w_yr, ch_morph_ord(iord)%fp_t, ch_morph_ord(iord)%fp_mm, &
+            ch_morph_ord(iord)%fp_fr_km
         end do
       end if
       
@@ -447,8 +452,9 @@
         bsn_sedbud%up_ch_rto = bsn_sedbud%upland_t / bsn_sedbud%ch_ebank_t
         bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr / sp_ob%chandeg
       end if
-      bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t / time%yrs_prt 
+      bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t / time%yrs_prt
       bsn_sedbud%fp_dep_mm = bsn_sedbud%fp_dep_mm / sp_ob%chandeg
+      bsn_sedbud%fp_dep_fr_km = bsn_sedbud%fp_dep_fr_km / sp_ob%chandeg
       bsn_sedbud%res_dep_t = bsn_sedbud%res_dep_t / time%yrs_prt
       bsn_sedbud%res_trap_eff = bsn_sedbud%res_trap_eff / time%yrs_prt
         

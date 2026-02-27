@@ -118,12 +118,12 @@
         !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
         !! flood plain area per km (1000 m) of length
-        fp_m2 = 4.3 * (sd_ch(ich)%chw ** 1.12) * 1000.
-        exp_co = 0.0001 * fp_m2 / florate_ob
-        trap_eff =  sd_ch(ich)%chl * (florate_ob / ave_rate) * (1. - exp(-exp_co))
+        !fp_m2 = 4.3 * (sd_ch(ich)%chw ** 1.12) * 1000.
+        !exp_co = 0.0001 * fp_m2 / florate_ob
+        !trap_eff =  sd_ch(ich)%chl * (florate_ob / ave_rate) * (1. - exp(-exp_co))
         !! adjustment for calibration
         !sd_ch(ich)%fp_inun_days = 0.2         ***jga 
-        trap_eff = sd_ch(ich)%fp_inun_days * trap_eff 
+        trap_eff = 1. - exp(-sd_ch(ich)%chl / sd_ch(ich)%fp_inun_days)
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
         

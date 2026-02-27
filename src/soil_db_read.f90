@@ -75,6 +75,7 @@
                 soildb(isol)%ly(j)%ec, soildb(isol)%ly(j)%cal, soildb(isol)%ly(j)%ph     
             if (eof < 0) exit
           end do
+          if (soildb(isol)%ly(1)%z < 20.) soildb(isol)%ly(1)%z = 20.
         end do
         exit
         enddo
