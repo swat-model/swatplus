@@ -112,7 +112,7 @@
           
           !!By Zhang for C/N cycling
           !!===============================  
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 + manure_kg *        &   
                        (1. - fertdb(it)%fnh3n) * fertdb(it)%fminn
           !sol_fon(l,j) = sol_fon(l,j) + manure_kg(j) * forgn(it)

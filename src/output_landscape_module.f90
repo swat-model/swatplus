@@ -796,7 +796,7 @@
          character(len=15)  :: stem_c    =    "         stem_c"
          character(len=15)  :: seed_c    =    "         seed_c"
          character(len=15)  :: root_c    =    "         root_c"
-         character(len=15)  :: rsd_c     =    "          rsd_c"
+         character(len=15)  :: rsd_c     =    "     surf_rsd_c"
          end type output_plc_header       
       type (output_plc_header) :: plc_hdr
       
@@ -1154,7 +1154,7 @@
          character(len=15)  :: meta_c        =    "    metabolic_c"         
          character(len=15)  :: hs_c          =    "           hs_c"         
          character(len=15)  :: hp_c          =    "           hp_c"         
-         character(len=15)  :: microb_c      =    "    microbial_c"         
+         character(len=15)  :: microb_c      =    "   microbrial_c"         
          character(len=15)  :: lig_c         =    "       lignin_c"      
          character(len=15)  :: water_c       =    "        water_c"
          character(len=15)  :: manure_c      =    "       manure_c"  
