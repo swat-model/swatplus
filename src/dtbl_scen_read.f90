@@ -8,6 +8,7 @@
       use fertilizer_data_module
       use input_file_module
       use conditional_module
+      use hru_module, only : snodb
       
       implicit none
                   
@@ -52,6 +53,7 @@
             allocate (dtbl_scen(i)%act_typ(dtbl_scen(i)%acts), source = 0)
             allocate (dtbl_scen(i)%act_app(dtbl_scen(i)%acts), source = 0)
             allocate (dtbl_scen(i)%lu_chg_mx(dtbl_scen(i)%acts), source = 0)
+            allocate (dtbl_scen(i)%snow_chg_mx(dtbl_scen(i)%acts), source = 0)
 
             allocate (dtbl_scen(i)%act_outcomes(dtbl_scen(i)%acts,dtbl_scen(i)%alts))
             
@@ -79,6 +81,13 @@
                 case ("lu_change")
                   do ilum = 1, db_mx%landuse
                     if (dtbl_scen(i)%act(iac)%file_pointer == lum(ilum)%name) then
+                      dtbl_scen(i)%act_typ(iac) = ilum
+                      exit
+                    end if
+                  end do
+                case ("snow_change")
+                  do ilum = 1, db_mx%sno
+                    if (dtbl_scen(i)%act(iac)%file_pointer == snodb(ilum)%name) then
                       dtbl_scen(i)%act_typ(iac) = ilum
                       exit
                     end if
