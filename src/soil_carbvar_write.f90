@@ -27,9 +27,15 @@
         select case(out_freq)
             case ("d")
             freq_label = "day"
+            case ("dl")
+            freq_label = "day"
             case ("m")
             freq_label = "mon"
+            case ("ml")
+            freq_label = "mon"
             case ("y")
+            freq_label = "year"
+            case ("yl")
             freq_label = "year"
             case ("a")
             freq_label = "av_ann"
