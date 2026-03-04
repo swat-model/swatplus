@@ -85,6 +85,7 @@
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
         real :: seq_tot_300_c                                       !       |total sequestered equal to or above 300mm soil depth
+        real :: tot_300_c                                           !       |total carbon equal to or above 300mm soil depth
         type (plant_residue), dimension(:), allocatable :: pl       !       |fresh surface residue dimensioned by plant and by layer
         type (organic_mass), dimension(:), allocatable :: rsd_tot   !       |total fresh surface residue dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: root_tot   !       |total live roots dimensioned by layer
