@@ -92,6 +92,10 @@
                ob_out(i)%hydno = 7
             case ("solnut_pr")  !soil n and p for profile 
                ob_out(i)%hydno = 8
+            case ("solnut_yr")  !soil n and p by layer, end-of-year snapshot
+               ob_out(i)%hydno = 12
+            case ("solnut_ini")  !soil n and p by layer, start-of-simulation snapshot
+               ob_out(i)%hydno = 13
             case ("plant")  !plants status  
                ob_out(i)%hydno = 9
             case ("cha_fp")  !channel and flood plain water balance  
@@ -115,6 +119,10 @@
            write (iunit+i, '(1X4A,16(4XA),2A,14(4XA))') hyd_hdr_time, plt_hdr, plt_hdr
          case (10)
            write (iunit+i,*) hyd_hdr_time, fp_hdr
+         case (12)
+           write (iunit+i,*) hyd_hdr_time, solnut_hdr
+         case (13)
+           write (iunit+i,*) hyd_hdr_time, solnut_hdr
          end select
          
         end do  ! mobj_out  
