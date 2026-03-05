@@ -34,7 +34,7 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) imax
         read (107,*,iostat=eof) header
-        !db_mx%water_treat = imax
+        db_mx%pipe = imax
         if (eof < 0) exit
         
         allocate (pipe(imax))
@@ -43,13 +43,13 @@
           read (107,*,iostat=eof) header
           if (eof < 0) exit 
           read (107,*,iostat=eof) i, pipe(ipipe)%name, pipe(ipipe)%stor_mx,                &
-                                     pipe(ipipe)%lag_days, pipe(ipipe)%loss_fr, num_aqu
+                                     pipe(ipipe)%ddown_days, pipe(ipipe)%loss_fr, num_aqu
           if (eof < 0) exit
           
           !! allocate and read aquifer loss data
           allocate (pipe(ipipe)%aqu_loss(num_aqu))
           
-          read (107,*,iostat=eof) i, pipe(ipipe)%name, pipe(ipipe)%stor_mx, pipe(ipipe)%lag_days,   &
+          read (107,*,iostat=eof) i, pipe(ipipe)%name, pipe(ipipe)%stor_mx, pipe(ipipe)%ddown_days,     &
                 pipe(ipipe)%loss_fr, pipe(ipipe)%num_aqu, (pipe(ipipe)%aqu_loss(iaq), iaq = 1, num_aqu)
         end do
         

@@ -33,10 +33,17 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) imax
         read (107,*,iostat=eof) header
-        db_mx%water_treat = imax
+        db_mx%treat = imax
         if (eof < 0) exit
         
         allocate (wtp(imax))
+        allocate (wtp_om_stor(imax))
+        allocate (wtp_cs_stor(imax))
+        allocate (wtp_om_out(imax))
+        allocate (wal_tr_omd(imax))
+        allocate (wal_tr_omm(imax))
+        allocate (wal_tr_omy(imax))
+        allocate (wal_tr_oma(imax))
 
         do iwtp = 1, imax
           read (107,*,iostat=eof) i, wtp(iwtp)%name, wtp(iwtp)%stor_mx,    &

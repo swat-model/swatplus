@@ -33,8 +33,8 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld,        &
-          usle, ihru, qp_cms, usle_ei
+      use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, usle,       &
+         ihru, qp_cms, usle_ei
       use soil_module
       use erosion_module
       use climate_module
@@ -42,6 +42,7 @@
       implicit none
 
       integer :: j = 0       !none                   |HRU number
+      !real :: usle = 0.      !metric tons/ha         | daily soil loss predicted with USLE equation
       real :: rock = 0.      !percent                |rock fragments
 
       j = ihru

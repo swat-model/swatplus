@@ -34,10 +34,17 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) imax
         read (107,*,iostat=eof) header
-        db_mx%water_use = imax
+        db_mx%uses = imax
         if (eof < 0) exit
         
-        allocate (wuse(imax))
+        allocate (wuse(imax))          
+        allocate (wuse_om_stor(imax))
+        allocate (wuse_om_out(imax))
+        allocate (wuse_cs_stor(imax))
+        allocate (wal_use_omd(imax))
+        allocate (wal_use_omm(imax))
+        allocate (wal_use_omy(imax))
+        allocate (wal_use_oma(imax))
 
         do iwuse = 1, imax
           read (107,*,iostat=eof) i, wuse(iwuse)%name, wuse(iwuse)%stor_mx,     &

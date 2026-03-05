@@ -141,6 +141,14 @@
                     end if
                   end do
                        
+                case ("irr_wallo")
+                  do idb = 1, db_mx%irrop_db
+                    if (dtbl_lum(i)%act(iac)%option == irrop_db(idb)%name) then
+                      dtbl_lum(i)%act_typ(iac) = idb
+                      exit
+                    end if
+                  end do
+                       
                 case ("irrigate")
                   do idb = 1, db_mx%irrop_db
                     if (dtbl_lum(i)%act(iac)%option == irrop_db(idb)%name) then

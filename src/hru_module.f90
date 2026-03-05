@@ -249,7 +249,6 @@
         real :: snocov2 = 0.
         integer :: cur_op = 1
         integer :: irr = 0                      !none       |set to 1 if irrigated during simulation - for wb soft cal
-        integer :: irr_trn_dtbl = 0
         integer :: man_trn_dtbl = 0
         integer :: irr_trn_iauto = 0
         integer :: man_trn_iauto = 0

@@ -99,6 +99,7 @@
       !call water_osrc_read
       call water_tower_read
       call water_pipe_read
+      call water_canal_read
       call water_allocation_read
       
       call hru_dtbl_actions_init

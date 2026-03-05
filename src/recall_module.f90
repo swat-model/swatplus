@@ -5,7 +5,7 @@
       type constituent_file_data
         character(len=25) :: name = ""
         character(len=13) :: units = ""          !mass, conc
-        character(len=13) :: tstep = ""          !day, mo, yr, aa
+        character(len=13) :: tstep = ""          !day, mo, yr
       end type constituent_file_data
       
       type recall_databases
