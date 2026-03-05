@@ -4,7 +4,7 @@
       use time_module
       use aquifer_module
       use hru_module, only : hru, cn2, fertno3, fertnh3, fertorgn, fertorgp, fertsolp,   &
-        ihru, ipl, isol,  phubase, sol_sumno3, sol_sumsolp, qtile
+        ihru, ipl, isol,  phubase, sol_sumno3, sol_sumsolp, qtile, snodb
       use soil_module
       use plant_module
       use plant_data_module
@@ -91,6 +91,7 @@
       real :: stor_m3 = 0.
       character(len=1) :: action = ""      !         |
       character(len=40) :: lu_prev = ""    !         |
+      character(len=40) :: snow_prev = ""  !         |
 
       do iac = 1, d_tbl%acts
         action = "n"
@@ -944,6 +945,22 @@
               end do
               !pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
             !end if
+            
+          !snow change - change snow parameters for HRU
+          case ("snow_change")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
+            d_tbl%snow_chg_mx(iac) = d_tbl%snow_chg_mx(iac) + 1
+            ilu = d_tbl%act_typ(iac)
+            hru(j)%dbs%snow = ilu
+            
+            snow_prev = hru(j)%dbsc%snow
+            hru(j)%dbsc%snow = d_tbl%act(iac)%file_pointer
+            hru(j)%sno = snodb(ilu)
+            !! write to lu_change output file
+            write (3612,*) j, time%yrc, time%mo, time%day_mo,  " SNOW_CHANGE ",        &
+                    snow_prev, hru(j)%dbsc%snow, "   0   0"
+                            
           !land use change - contouring
           case ("p_factor")
             j = d_tbl%act(iac)%ob_num
