@@ -109,6 +109,8 @@
          !write (iunit+i,*) hyd_hdr_time, hyd_hdr
          case (6)
            write (iunit+i,*) hyd_hdr_time, sol_hdr
+         case (7)
+           write (iunit+i,*) hyd_hdr_time, solnut_hdr
          case (9)
            write (iunit+i, '(1X4A,16(4XA),2A,14(4XA))') hyd_hdr_time, plt_hdr, plt_hdr
          case (10)

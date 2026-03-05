@@ -58,8 +58,9 @@
             case (7)    ! soil layer nutrients
               if (iob == 0) then
                 do j = 1, sp_ob%hru
-                  do nly = 1, soil(iob)%nly
+                  do nly = 1, soil(j)%nly
                     write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,      &    
+                     nly,                                                                                         &
                      soil1(j)%mn(nly), soil1(j)%hact(nly)%n, soil1(j)%hsta(nly)%n, soil1(j)%hs(nly)%n,         &
                      soil1(j)%hp(nly)%n, soil1(j)%rsd(nly)%n, soil1(j)%mp(nly), soil1(j)%hact(nly)%p,          &
                      soil1(j)%hsta(nly)%p, soil1(j)%hs(nly)%p, soil1(j)%hp(nly)%p, soil1(j)%rsd(nly)%p
@@ -67,10 +68,11 @@
                 end do
               else
                 do nly = 1, soil(iob)%nly
-                  write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,     &    
-                   soil1(j)%mn(nly), soil1(j)%hact(nly)%n, soil1(j)%hsta(nly)%n, soil1(j)%hs(nly)%n,        &
-                   soil1(j)%hp(nly)%n, soil1(j)%rsd(nly)%n, soil1(j)%mp(nly), soil1(j)%hact(nly)%p,         &
-                   soil1(j)%hsta(nly)%p, soil1(j)%hs(nly)%p, soil1(j)%hp(nly)%p, soil1(j)%rsd(nly)%p
+                  write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ,     &    
+                   nly,                                                                                           &
+                   soil1(iob)%mn(nly), soil1(iob)%hact(nly)%n, soil1(iob)%hsta(nly)%n, soil1(iob)%hs(nly)%n,   &
+                   soil1(iob)%hp(nly)%n, soil1(iob)%rsd(nly)%n, soil1(iob)%mp(nly), soil1(iob)%hact(nly)%p,    &
+                   soil1(iob)%hsta(nly)%p, soil1(iob)%hs(nly)%p, soil1(iob)%hp(nly)%p, soil1(iob)%rsd(nly)%p
                 end do
               end if
               
