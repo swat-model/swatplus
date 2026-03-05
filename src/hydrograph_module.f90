@@ -409,17 +409,6 @@
       end type object_connectivity
       type (object_connectivity), dimension(:), allocatable, save :: ob
       
-      !water rights elements (objects) within the water rights object
-      type water_rights_elements
-        integer :: num = 0
-        character (len=16) :: ob_typ = ""       !object type - hru, channel, reservoir, etc
-        integer :: ob_num = 0                   !object number
-        character (len=16) :: irr_typ = ""      !character from irr.ops - was irr demand, minimum flow, flow fraction, etc
-        integer :: irr_no = 0                   !irrigation number from irr.ops - walk irr_typ
-        real :: amount = 0.                     !0 for irr demand; ha-m for min_flo; frac for min_frac
-        integer :: rights = 0                   !0-100 scale
-      end type water_rights_elements
-
       !water allocation
       type irrigation_water_transfer
         real :: demand = 0.                     !irrigation demand          |m3
@@ -436,10 +425,6 @@
       
       !recall hydrograph inputs
       type recall_hydrograph_inputs
-        character (len=25) :: name = ""
-        integer :: num = 0                    !number of elements
-        integer :: typ = -1                   !recall type - 0=subdaily, 1=day, 2=mon, 3=year
-        character(len=25) :: filename = ""    !filename
         !hd and hyd_flo units are in cms and mg/L
         type (hyd_output), dimension (:,:), allocatable :: hd   !m3/s for flow  |input total hyd for daily, monthly, annual and exco
         real, dimension (:,:), allocatable :: hyd_flo           !m3/s           |input total flow hyd only for subdaily recall
@@ -1264,6 +1249,30 @@
         hyd1%lag = hyd1%lag * hyd1%flo / 1000000.
         hyd1%grv = hyd1%grv * hyd1%flo / 1000000.
       end subroutine hyd_convert_conc_to_mass
+      
+      !! function to find minimum for wwtp plants
+      subroutine hyd_min (hyd1, hyd2)
+        type (hyd_output), intent (inout) :: hyd1
+        type (hyd_output), intent (in) :: hyd2 
+        
+        hyd1%flo = hyd1%flo
+        hyd1%sed = amin1 (hyd1%sed, hyd2%sed)
+        hyd1%orgn = amin1 (hyd1%orgn, hyd2%orgn)
+        hyd1%sedp = amin1 (hyd1%sedp, hyd2%sedp)
+        hyd1%no3 = amin1 (hyd1%no3, hyd2%no3)
+        hyd1%solp = amin1 (hyd1%solp, hyd2%solp)
+        hyd1%chla = amin1 (hyd1%chla, hyd2%chla)
+        hyd1%nh3 = amin1 (hyd1%nh3, hyd2%nh3)
+        hyd1%no2 = amin1 (hyd1%no2, hyd2%no2)
+        hyd1%cbod = amin1 (hyd1%cbod, hyd2%cbod)
+        hyd1%dox = amin1 (hyd1%dox, hyd2%dox)
+        hyd1%san = amin1 (hyd1%san, hyd2%san)
+        hyd1%sil = amin1 (hyd1%sil, hyd2%sil)
+        hyd1%cla = amin1 (hyd1%cla, hyd2%cla)
+        hyd1%sag = amin1 (hyd1%sag, hyd2%sag)
+        hyd1%lag = amin1 (hyd1%lag, hyd2%lag)
+        hyd1%grv = amin1 (hyd1%grv, hyd2%grv)
+      end subroutine hyd_min
       
       !! function to convert concentration to mass
       subroutine res_convert_mass (hyd1, pvol)

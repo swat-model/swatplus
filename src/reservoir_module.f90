@@ -14,6 +14,7 @@
         character(len=13) :: name = "default"
         integer :: ob = 0                           !object number if reservoir object; hru number if hru object
         integer :: props = 0                        !points to res_dat
+        integer :: wallo_call = 0           !       !0 if not called from wallo on the current day; 1 if already called
         integer :: iweir = 1                !       !weir ID Jaehak 2023
         character (len=1) :: rel_tbl = "d"          !d == decision table, c == conditions table
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
