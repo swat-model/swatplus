@@ -1,4 +1,4 @@
-      subroutine mgt_newtillmix (jj, bmix, idtill)
+      subroutine mgt_newtillmix_3 (jj, bmix, idtill)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine mixes residue and nutrients during tillage and 
@@ -32,6 +32,7 @@
       use soil_module
       use constituent_mass_module
       use plant_module
+      use plant_data_module
       use tillage_data_module
       
       implicit none
@@ -45,6 +46,7 @@
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
       integer :: ipl = 0               !               |
+      integer :: idp = 0               !               |
       real :: prev_depth = 0.
       real :: emix = 0.                !none           |mixing efficiency
       real :: dtil = 0.                !mm             |depth of mixing
@@ -104,14 +106,14 @@
         tillage_event = .false.
         emix = bmix 
         kk = soil(jj)%nly
-        if (bsn_cc%cswat == 2) then                                       
+        if (bsn_cc%cswat == 3) then                                       
           dtil = Min(soil(jj)%phys(kk)%d, bmix_depth) ! bmix_depth as read from tillage.till
         else
           dtil = Min(soil(jj)%phys(kk)%d, 50.) ! it was 300.  MJW (rev 412)
         endif
 
         ! if Test soil layers down to dtil are above freezing
-        if (bsn_cc%cswat == 2) then                                       
+        if (bsn_cc%cswat == 3) then                                       
           prev_depth = 0.
           do l = 1, soil(jj)%nly
             if ( prev_depth < dtil) then
@@ -137,7 +139,7 @@
 
       !!by zhang DSSAT tillage
       !!=======================
-      if (bsn_cc%cswat == 2) then
+      if (bsn_cc%cswat == 3) then
         if (bio_mix_event .eqv. .true.) then
           if (tillage_switch(jj) .eq. 1 .and. tillage_days(jj) .le. till_eff_days) then
             if (bio_mix_event) then
@@ -226,17 +228,24 @@
             frac_mixed = 1. - frac_non_mixed
             
             soil1(jj)%mn(l) = frac_non_mixed * soil1(jj)%mn(l) + frac_dep(l) * mix_mn
-            ! print*, "in mgt_newtill_mix", l, soil1(jj)%mn(l)%no3
             soil1(jj)%mp(l) = frac_non_mixed * soil1(jj)%mp(l) + frac_dep(l) * mix_mp
             soil1(jj)%tot(l) = frac_non_mixed * soil1(jj)%tot(l) + frac_dep(l) * mix_org%tot
             
-            !! reconstitute each plant residue component separately
+            !! reconstitute each soil plant residue component separately
             do ipl = 1, pcom(jj)%npl
               soil1(jj)%pl(ipl)%rsd(l) = frac_non_mixed * soil1(jj)%pl(ipl)%rsd(l) +        &
                                                          frac_dep(l) * mix_org%rsd(ipl)
               !! mix surface residue into soil layers
               mix_org%surf_rsd = emix * frac_dep(l) * pl_mass(jj)%rsd(ipl)
-              soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
+
+              ! soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
+              ! Instead of the above commented out line, the following four lines were added by fg to add mixed
+              ! mix surface residue straight into to soil meta, str, lig pools.
+              idp = pcom(jj)%plcur(ipl)%idplt
+              soil1(jj)%meta(l) = soil1(jj)%meta(l) + cswat_3_part_fracs(idp)%meta_frac_abg * mix_org%surf_rsd  ! fg added
+              soil1(jj)%str(l)  = soil1(jj)%str(l)  + cswat_3_part_fracs(idp)%str_frac_abg  * mix_org%surf_rsd  ! fg added
+              soil1(jj)%lig(l)  = soil1(jj)%lig(l)  + cswat_3_part_fracs(idp)%lig_frac_abg  * mix_org%surf_rsd  ! fg added
+
               pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
               pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
             end do
@@ -278,4 +287,4 @@
         endif
       end if
       return
-      end subroutine mgt_newtillmix
+      end subroutine mgt_newtillmix_3

@@ -27,9 +27,15 @@
         select case(out_freq)
             case ("d")
             freq_label = "day"
+            case ("dl")
+            freq_label = "day"
             case ("m")
             freq_label = "mon"
+            case ("ml")
+            freq_label = "mon"
             case ("y")
+            freq_label = "year"
+            case ("yl")
             freq_label = "year"
             case ("a")
             freq_label = "av_ann"
@@ -37,7 +43,7 @@
 
         
         ! Carbon variable output file = hru_carbvar.(txt/csv)
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
@@ -56,7 +62,7 @@
         end if
 
         ! Carbon organinic allocation variable output file = hru_org_allo_vars.(txt/csv)
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
@@ -69,7 +75,7 @@
         end if
 
         ! Carbon organinic ratio variable output file = hru_org_ratio_vars.(txt/csv)
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
@@ -82,7 +88,7 @@
         end if
 
         ! Potential organinic transformation values file = hru_org_tran_vars.(txt/csv)
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             do j = 1, sp_ob%hru
                 iob = sp_ob1%hru + j - 1
                 do k = 1, soil(j)%nly
