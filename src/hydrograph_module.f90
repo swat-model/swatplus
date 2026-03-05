@@ -682,7 +682,28 @@
         character (len=15) :: layer10 = "       st_mm_10"        !!mm H2O       |amt of water stored in layer 10
       end type sol_header
       type (sol_header) :: sol_hdr
-      
+
+      type solnut_header        
+        character (len=15) :: layer  = "          layer" !!none   |soil layer number
+        character (len=15) :: no3    = "            no3" !!kg/ha  |nitrate
+        character (len=15) :: nh4    = "            nh4" !!kg/ha  |ammonium
+        character (len=15) :: hact_n = "         hact_n" !!kg/ha  |active humus N
+        character (len=15) :: hsta_n = "         hsta_n" !!kg/ha  |stable humus N
+        character (len=15) :: hs_n   = "           hs_n" !!kg/ha  |slow humus N
+        character (len=15) :: hp_n   = "           hp_n" !!kg/ha  |passive humus N
+        character (len=15) :: rsd_n  = "          rsd_n" !!kg/ha  |fresh residue N
+        character (len=15) :: mp_wsol = "        mp_wsol" !!kg/ha  |water soluble P
+        character (len=15) :: mp_lab  = "         mp_lab" !!kg/ha  |labile P
+        character (len=15) :: mp_act  = "         mp_act" !!kg/ha  |active mineral P
+        character (len=15) :: mp_sta  = "         mp_sta" !!kg/ha  |stable mineral P
+        character (len=15) :: hact_p = "         hact_p" !!kg/ha  |active humus P
+        character (len=15) :: hsta_p = "         hsta_p" !!kg/ha  |stable humus P
+        character (len=15) :: hs_p   = "           hs_p" !!kg/ha  |slow humus P
+        character (len=15) :: hp_p   = "           hp_p" !!kg/ha  |passive humus P
+        character (len=15) :: rsd_p  = "          rsd_p" !!kg/ha  |fresh residue P
+      end type solnut_header
+      type (solnut_header) :: solnut_hdr
+
       type plant_header        
         character (len=17) :: name =  "     name        "       !!none         |plant name 
         character (len=15) :: growing =  "growing"              !!none         |plant growing             
