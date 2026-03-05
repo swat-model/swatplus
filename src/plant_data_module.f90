@@ -5,10 +5,21 @@
       character(len=40), dimension (:), allocatable :: plts_bsn     !none      |plant names simulated in current run
       character(len=25), dimension(:), allocatable :: pl_class      !none      |plant class - row crop, tree, grass, etc
       type residue_partition_fracs
-        real :: meta_frac = 0.85  !none       |fraction of that is metabolic
-        real :: str_frac = 0.15   !none       |fraction of that is structural
-        real :: lig_frac = 0.12   !none       |fraction of that is lignin
+        real :: meta_frac = 0.85      !none       |fraction of that is metabolic
+        real :: str_frac = 0.15       !none       |fraction of that is structural
+        real :: lig_frac = 0.12       !none       |fraction of that is lignin    
       end type residue_partition_fracs
+      
+      type lignin_derived_partition_fracs
+        real :: meta_frac_abg = 0.85  !none       |fraction of above ground (abg) biomass that is metabolic 
+        real :: str_frac_abg = 0.15   !none       |fraction of above ground (abg) biomass that is structural
+        real :: lig_frac_abg = 0.12   !none       |fraction of above ground (abg) biomass that is lignin    
+        real :: meta_frac_blg = 0.85  !none       |fraction of below ground (blg) biomass that is metabolic
+        real :: str_frac_blg = 0.15   !none       |fraction of below ground (blg) biomass that is structural
+        real :: lig_frac_blg = 0.12   !none       |fraction of below ground (blg) biomass that is lignin    
+      end type lignin_derived_partition_fracs
+      type(lignin_derived_partition_fracs), dimension(:),allocatable, target, save ::  cswat_3_part_fracs
+
 
       type plant_db
         character(len=40) :: plantnm = ""  !none              |crop name

@@ -136,7 +136,7 @@
 
             !!by zhang
             !!============== 
-          if (bsn_cc%cswat == 2) then         
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then         
               smix(20+npmx+1) = smix(20+npmx+1) + soil1(jj)%str(l)%c * frac_mixed
               smix(20+npmx+2) = smix(20+npmx+2) + soil1(jj)%lig(l)%c * frac_mixed
               smix(20+npmx+3) = smix(20+npmx+3) + soil1(jj)%lig(l)%n* frac_mixed
@@ -195,21 +195,22 @@
             cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
           end do
 
-          if (bsn_cc%cswat == 2) then
-          soil1(jj)%str(l)%c = soil1(jj)%str(l)%c * frac_non_mixed + smix(20+npmx+1) * frac_dep(l)
-          soil1(jj)%lig(l)%c = soil1(jj)%lig(l)%c * frac_non_mixed + smix(20+npmx+2) * frac_dep(l)
-          soil1(jj)%lig(l)%n = soil1(jj)%lig(l)%n * frac_non_mixed + smix(20+npmx+3) * frac_dep(l)
-          soil1(jj)%meta(l)%c = soil1(jj)%meta(l)%c * frac_non_mixed + smix(20+npmx+4) * frac_dep(l)
-          soil1(jj)%meta(l)%m = soil1(jj)%meta(l)%m * frac_non_mixed + smix(20+npmx+5) * frac_dep(l)
-          soil1(jj)%lig(l)%m = soil1(jj)%lig(l)%m * frac_non_mixed + smix(20+npmx+6) * frac_dep(l)
-          soil1(jj)%str(l)%m = soil1(jj)%str(l)%m * frac_non_mixed + smix(20+npmx+7)* frac_dep(l)
-          soil1(jj)%str(l)%n = soil1(jj)%str(l)%n * frac_non_mixed + smix(20+npmx+8) * frac_dep(l)
-          soil1(jj)%meta(l)%n = soil1(jj)%meta(l)%n * frac_non_mixed + smix(20+npmx+9) * frac_dep(l)
-          soil1(jj)%microb(l)%n = soil1(jj)%microb(l)%n * frac_non_mixed + smix(20 + npmx + 10) * frac_dep(l)
-          soil1(jj)%hact(l)%n = soil1(jj)%hact(l)%n * frac_non_mixed + smix(20 + npmx + 11) * frac_dep(l)
-          soil1(jj)%hsta(l)%n = soil1(jj)%hsta(l)%n * frac_non_mixed + smix(20 + npmx+12) * frac_dep(l)
+
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then         
+            soil1(jj)%str(l)%c = soil1(jj)%str(l)%c * frac_non_mixed + smix(20+npmx+1) * frac_dep(l)
+            soil1(jj)%lig(l)%c = soil1(jj)%lig(l)%c * frac_non_mixed + smix(20+npmx+2) * frac_dep(l)
+            soil1(jj)%lig(l)%n = soil1(jj)%lig(l)%n * frac_non_mixed + smix(20+npmx+3) * frac_dep(l)
+            soil1(jj)%meta(l)%c = soil1(jj)%meta(l)%c * frac_non_mixed + smix(20+npmx+4) * frac_dep(l)
+            soil1(jj)%meta(l)%m = soil1(jj)%meta(l)%m * frac_non_mixed + smix(20+npmx+5) * frac_dep(l)
+            soil1(jj)%lig(l)%m = soil1(jj)%lig(l)%m * frac_non_mixed + smix(20+npmx+6) * frac_dep(l)
+            soil1(jj)%str(l)%m = soil1(jj)%str(l)%m * frac_non_mixed + smix(20+npmx+7)* frac_dep(l)
+            soil1(jj)%str(l)%n = soil1(jj)%str(l)%n * frac_non_mixed + smix(20+npmx+8) * frac_dep(l)
+            soil1(jj)%meta(l)%n = soil1(jj)%meta(l)%n * frac_non_mixed + smix(20+npmx+9) * frac_dep(l)
+            soil1(jj)%microb(l)%n = soil1(jj)%microb(l)%n * frac_non_mixed + smix(20 + npmx + 10) * frac_dep(l)
+            soil1(jj)%hact(l)%n = soil1(jj)%hact(l)%n * frac_non_mixed + smix(20 + npmx + 11) * frac_dep(l)
+            soil1(jj)%hsta(l)%n = soil1(jj)%hsta(l)%n * frac_non_mixed + smix(20 + npmx+12) * frac_dep(l)
           end if
-           end do
+        end do
     
         !if (bsn_cc%cswat == 1) then
         !    call mgt_tillfactor(jj,bmix,emix,dtil)

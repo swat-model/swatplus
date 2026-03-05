@@ -79,7 +79,7 @@
           
           !!add by zhang
           !!========================
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
             org_c = hsc_d(j)%sed_c * hru(j)%area_ha
           end if
           !!add by zhang

@@ -45,7 +45,7 @@
       
       rtof = man_coef%rtof
       !! calculate c:n ratio for manure applications for SWAT-C
-      if (bsn_cc%cswat == 2) then
+      if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
         if (fertdb(ifrt)%forgn > 0. .or. fertdb(ifrt)%forgp > 0. ) then
           manure_flag = .true.
         endif
@@ -111,7 +111,7 @@
         end if
 
         !! for SWAT-C add to slow humus pool and fresh residue pools
-        if (bsn_cc%cswat == 2 .and. manure_flag) then
+        if ((bsn_cc%cswat == 2  .or. bsn_cc%cswat == 3 ) .and. manure_flag) then
           
           !! add 1-rtof to slow humus pool
           pool_fr = (1. - rtof) * fr_ly

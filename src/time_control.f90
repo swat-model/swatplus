@@ -325,7 +325,7 @@
           end if
         
           !! compute biological mixing at the end of every year
-          if (bsn_cc%cswat /= 2) then                                       !! fg added this because so that cbn_zhang2 can handle bio mixing directly
+          if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then  !! fg added this because so that cbn_zhang2 can handle bio mixing directlyn
             if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
           end if
 
