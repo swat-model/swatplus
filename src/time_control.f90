@@ -383,7 +383,11 @@
         !! mm = t / (3.*bd*w*l) -> assume fp width = 3*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
         ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (3. * sd_ch(ich)%chw *           &
                                                 sd_ch(ich)%chl) / time%yrs_prt
-        ch_morph(ich)%fp_fr_km = ch_morph(ich)%fp_t / (ch_sed_bud_a(ich)%in_sed * time%yrs_prt) / sd_ch(ich)%chl
+        if (ch_sed_bud_a(ich)%in_sed > 1.e-6) then
+          ch_morph(ich)%fp_fr_km = ch_morph(ich)%fp_t / (ch_sed_bud_a(ich)%in_sed * time%yrs_prt) / sd_ch(ich)%chl
+        else
+          ch_morph(ich)%fp_fr_km = 0.
+        end if
         
         !! basin flood plain deposition and bank erosion
         bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t + ch_morph(ich)%fp_t
