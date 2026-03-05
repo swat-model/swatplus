@@ -261,11 +261,14 @@
       do iobj_out = 1, mobj_out
         !write (107,*) irec, recall(irec)%name, "   4   ", recall(irec)%name
         
+        !! skip non-hydrograph output types (soil layer, plant, etc.) and all-object entries
+        iob = ob_out(iobj_out)%objno
+        ihyd = ob_out(iobj_out)%hydno
+        if (iob == 0 .or. ihyd > ob(iob)%nhyds) cycle
+        
         !! write to each object print file
         open (108,file="SWIFT/object_prt.swf",recl = 1500)
         write (108,*) " AVE ANNUAL OBJECT OUTPUT FILE  ", ob_out(iobj_out)%filename
-        iob = ob_out(iobj_out)%objno
-        ihyd = ob_out(iobj_out)%hydno
         ob(iob)%hd_aa(ihyd) = ob(iob)%hd_aa(ihyd) / yrs_print
         write (108,*) "     1    1    1     1    ", ob_out(iobj_out)%name, ob_out(iobj_out)%name,       &
                         ob(iob)%hd_aa(ihyd)%flo, ob(iob)%hd_aa(ihyd)%sed, ob(iob)%hd_aa(ihyd)%orgn,     &
