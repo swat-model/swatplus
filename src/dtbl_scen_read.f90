@@ -21,7 +21,8 @@
       integer :: ial = 0              !none       |counter 
       integer :: iac = 0              !none       !counter 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ilum = 0             !none       |counter      
+      integer :: ilum = 0             !none       |counter
+      integer :: iburn = 0            !none       |counter
       
       mdtbl = 0
       eof = 0
@@ -89,6 +90,13 @@
                   do ilum = 1, db_mx%sno
                     if (dtbl_scen(i)%act(iac)%file_pointer == snodb(ilum)%name) then
                       dtbl_scen(i)%act_typ(iac) = ilum
+                      exit
+                    end if
+                  end do
+                case ("burn")
+                  do iburn = 1, db_mx%fireop_db
+                    if (dtbl_scen(i)%act(iac)%option == fire_db(iburn)%name) then
+                      dtbl_scen(i)%act_typ(iac) = iburn
                       exit
                     end if
                   end do
