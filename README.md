@@ -71,6 +71,7 @@ __The following sections are emphasizing various development aspects.__
 
 * [Configuring, Building, Installing SWAT+ using cmake](doc/Building.md)
 - [Scenario Testing](doc/Testing.md)
+- [Simulating Fire / Burning](doc/Burning.md)
 
 - [Tagging and Versioning](doc/Tagging.md)
 
