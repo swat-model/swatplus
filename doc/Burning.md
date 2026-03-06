@@ -5,6 +5,39 @@ differences helps you choose the right method for your scenario.
 
 ---
 
+## Workflow overview
+
+### Method 1 — `lu_change` + burn in the new management schedule
+
+```
+Each time step
+  └─ scen.dtl conditions evaluated
+       └─ [conditions met] → lu_change action fires
+            ├─ HRU reassigned to new LUM (landuse.lum)
+            ├─ Plant community deallocated & rebuilt (plant_init)
+            ├─ CN2 recalculated from new LUM's CN table (cn2_init)
+            ├─ USLE composite recalculated
+            └─ Management schedule reset to operation 1
+                 └─ [scheduled date / HU threshold reached] → burn operation
+                      └─ pl_burnop: remove biomass, residue, surface humus; adjust CN2
+```
+
+### Method 2 — Direct `burn` action
+
+```
+Each time step
+  └─ management.sch  OR  lum.dtl / scen.dtl conditions evaluated
+       └─ [scheduled date / HU threshold OR conditions met] → burn action fires
+            └─ pl_burnop: remove biomass, residue, surface humus; adjust CN2
+               (land use, plant species, schedule, USLE — all unchanged)
+```
+
+The key difference: **Method 1 first transforms the HRU** (land use, plants, CN, USLE,
+schedule all reset), then the burn fires later within the new schedule. **Method 2 applies
+the burn immediately** without changing anything about the HRU's identity or management.
+
+---
+
 ## Method 1 — `scen.dtl` with `lu_change` to a landuse that contains a burn in its management schedule
 
 ### How it works
