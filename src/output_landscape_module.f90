@@ -1274,6 +1274,7 @@
          character(len=15)  :: nh4           =    "            nh4"         
          character(len=15)  :: resp          =    "       co2_resp"         
          character(len=15)  :: soil_tmp      =    "      soil_temp"         
+         character(len=15)  :: emix          =    "           emix"         
          end type output_carb_vars_header
       type (output_carb_vars_header) :: carbvars_hdr
       
