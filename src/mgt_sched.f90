@@ -327,7 +327,11 @@
           case ("till")   !! tillage operation
             idtill = mgt%op1
             ipl = Max(1, mgt%op2)
-            call mgt_newtillmix(j, 0., idtill)
+            if (bsn_cc%cswat == 3) then
+              call mgt_newtillmix_3(j, 0., idtill)
+            else
+              call mgt_newtillmix(j, 0., idtill)
+            endif
             
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, tilldb(idtill)%tillnm, "    TILLAGE ", &
@@ -588,7 +592,11 @@
             if (wet_ob(j)%depth > 0.001) then
               call mgt_newtillmix_wet(j,idtill) 
             else
-              call mgt_newtillmix(j,0.,idtill) 
+              if (bsn_cc%cswat == 3) then
+                call mgt_newtillmix_3(j, 0., idtill)
+              else
+                call mgt_newtillmix(j, 0., idtill)
+              endif
             endif
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "PUDDLE"

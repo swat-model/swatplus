@@ -37,11 +37,12 @@
       
       implicit none
       
-      external :: mgt_tillfactor
+      external :: mgt_tillfactor,  fcgd
 
       integer, intent (in) :: jj       !none           |HRU number
       integer, intent (in) :: idtill   !none           |tillage type
       real, intent (in) :: bmix        !               | 
+       real :: fcgd              !                     |
       integer :: l = 0                 !none           |counter
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
@@ -137,18 +138,6 @@
         dtil = tilldb(idtill)%deptil
       end if
 
-      !!by zhang DSSAT tillage
-      !!=======================
-      if (bsn_cc%cswat == 3) then
-        if (bio_mix_event .eqv. .true.) then
-          if (tillage_switch(jj) .eq. 1 .and. tillage_days(jj) .le. till_eff_days) then
-            if (bio_mix_event) then
-              dtil = 0.
-              bio_mix_event = .false.
-            endif
-          endif
-        endif
-      endif
       if (tillage_event .eqv. .true.) then
         tillage_days(jj) = 0
         tillage_depth(jj) = dtil
@@ -163,7 +152,11 @@
         !! incorporate pathogens
       end if
 
+
       if (dtil > 0.) then
+        do l = 1, soil(jj)%nly
+          soil1(jj)%emix(l) = 0.
+        enddo
         if (bio_mix_event .or. tillage_event) then
           do l = 1, soil(jj)%nly
             sol_mass(l) = (soil(jj)%phys(l)%thick / 1000.) * 10000. *                    &
@@ -175,6 +168,12 @@
           if (dtil < 10.0) dtil = 11.0
           do l = 1, soil(jj)%nly
             if (soil(jj)%phys(l)%d <= dtil) then
+              if (bio_mix_event) then
+                emix = bmix
+                emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+              endif
+              soil1(jj)%emix(l) = emix
+
               !! msm = mass of soil mixed for the layer
               !! msn = mass of soil not mixed for the layer       
               sol_msm(l) = emix * sol_mass(l) 
