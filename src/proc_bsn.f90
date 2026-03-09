@@ -17,6 +17,7 @@
 !!!  open drainage areas output file
      call open_output_file(9004, "area_calc.out", 80000)
 
+      call readcio_read
                 
       call basin_read_cc
       call basin_read_objs
@@ -25,8 +26,6 @@
       !if (time%step > 0) then
         time%dtm = 1440. / time%step
       !end if
-      
-      call readcio_read
              
       call basin_read_prm
       call basin_prm_default
