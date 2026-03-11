@@ -25,19 +25,19 @@
 
         ! print*, "In soil_carbvar_write.f90 ", out_freq
         select case(out_freq)
-            case ("d")
+            case (" d")
             freq_label = "day"
             case ("dl")
             freq_label = "day"
-            case ("m")
+            case (" m")
             freq_label = "mon"
             case ("ml")
             freq_label = "mon"
-            case ("y")
+            case (" y")
             freq_label = "year"
             case ("yl")
             freq_label = "year"
-            case ("a")
+            case (" a")
             freq_label = "av_ann"
         end select
 
