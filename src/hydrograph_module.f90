@@ -226,6 +226,9 @@
       !! outside source outflow
       type (hyd_output), dimension (:), allocatable :: osrc_om
       
+      !! outside receiving inflow
+      type (hyd_output), dimension (:), allocatable :: orcv_om
+      
       !! canal storage and outflow
       type (hyd_output), dimension (:), allocatable :: canal_om_stor
       type (hyd_output), dimension (:), allocatable :: canal_om_out

@@ -1,4 +1,4 @@
-    subroutine recalldb_read
+  subroutine recalldb_read
 
       use water_allocation_module
       use maximum_data_module

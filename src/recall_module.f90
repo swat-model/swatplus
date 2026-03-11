@@ -16,6 +16,12 @@
         type (constituent_file_data) :: hmet
         type (constituent_file_data) :: salt
         type (constituent_file_data) :: constit
+        integer :: iorg_min
+        integer :: ipest
+        integer :: ipath
+        integer :: ihmet
+        integer :: isalt
+        integer :: iconstit
       end type recall_databases
       
       !! use this type for all recall objects including exco and dr
