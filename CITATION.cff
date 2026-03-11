@@ -10,6 +10,7 @@ type: software
 authors:
   - given-names: Jeffrey G.
     family-names: Arnold
+    email: jeff.arnold@usda.gov
     affiliation: >-
       Grassland Soil and Water Research Laboratory, USDA
       Agricultural Research Service (ARS)
