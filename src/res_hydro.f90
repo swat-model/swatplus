@@ -9,6 +9,7 @@
       use water_body_module
       use soil_module
       use hru_module
+      use recall_module
       use water_allocation_module
       
       implicit none
@@ -241,12 +242,12 @@
             case ("meas")
               !! measured outflow or release
               irel = int(d_tbl%act_typ(iac))
-              select case (recall(irel)%typ)
-              case (1)    !daily
+              select case (recall_db(irel)%org_min%tstep)
+              case ("day")    !daily
                 ht2%flo = ht2%flo + recall(irel)%hd(time%day,time%yrs)%flo / nstep
-              case (2)    !monthly
+              case ("mo")    !monthly
                 ht2%flo = ht2%flo + recall(irel)%hd(time%mo,time%yrs)%flo / nstep
-              case (3)    !annual
+              case ("yr")    !annual
                 ht2%flo = ht2%flo + recall(irel)%hd(1,time%yrs)%flo / nstep
               end select
               ht2%flo = max(0.,ht2%flo)

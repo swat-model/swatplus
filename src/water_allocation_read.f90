@@ -9,6 +9,7 @@
       use conditional_module
       use constituent_mass_module
       use recall_module
+      use exco_module
       use hru_module, only : hru
       
       implicit none 
@@ -21,19 +22,17 @@
       integer :: i = 0                !none       |counter
       integer :: k = 0                !none       |counter
       integer :: isrc = 0             !none       |counter
-      integer :: jsrc = 0             !none       |counter  
-      !integer :: ircv = 0             !none       |counter
       integer :: iwro = 0             !none       |number of water allocation objects
       integer :: num_objs = 0
       integer :: num_src = 0
-      !integer :: num_rcv = 0
       integer :: itrn = 0
       integer :: idb = 0
       integer :: idb_irr = 0
       integer :: ihru = 0
-      integer :: iom
-      integer :: isrc_wallo = 0
-      integer :: div_found = 0
+      integer :: iexco = 0
+      integer :: iexco_om = 0
+      integer :: irec = 0
+      integer :: iom = 0
       
       eof = 0
       imax = 0
@@ -65,30 +64,12 @@
         do iwro = 1, imax
           read (107,*,iostat=eof) header
           if (eof < 0) exit
-          read (107,*,iostat=eof) wallo(iwro)%name, wallo(iwro)%rule_typ, wallo(iwro)%src_obs, &
-            wallo(iwro)%trn_obs, wallo(iwro)%out_src, wallo(iwro)%out_rcv, wallo(iwro)%wtp,    &
-            wallo(iwro)%uses, wallo(iwro)%stor, wallo(iwro)%pipe, wallo(iwro)%canal,           &
-            wallo(iwro)%pump, wallo(iwro)%cha_ob
+          read (107,*,iostat=eof) wallo(iwro)%name, wallo(iwro)%rule_typ, wallo(iwro)%trn_obs
           
           if (eof < 0) exit
           read (107,*,iostat=eof) header
           if (eof < 0) exit
           
-          allocate (wuse_om_stor(wallo(iwro)%uses))
-          allocate (wtp_om_stor(wallo(iwro)%wtp))
-          allocate (wtow_om_stor(wallo(iwro)%stor))
-          allocate (canal_om_stor(wallo(iwro)%canal))
-          allocate (wuse_om_out(wallo(iwro)%uses))
-          allocate (wtp_om_out(wallo(iwro)%wtp))
-          allocate (wtow_om_out(wallo(iwro)%stor))
-          allocate (canal_om_out(wallo(iwro)%canal))
-          allocate (wuse_cs_stor(wallo(iwro)%uses))
-          allocate (wtp_cs_stor(wallo(iwro)%wtp))
-          allocate (wtow_cs_stor(wallo(iwro)%stor))
-          allocate (canal_cs_stor(wallo(iwro)%canal))
-          !allocate (osrc_om(wallo(iwro)%out_src))
-          num_objs = wallo(iwro)%src_obs
-          allocate (wallo(iwro)%src(num_objs))
           num_objs = wallo(iwro)%trn_obs
           allocate (wallo(iwro)%trn(num_objs))
           allocate (wal_omd(iwro)%trn(num_objs))
@@ -100,40 +81,8 @@
           allocate (walloy_out(iwro)%trn(num_objs))
           allocate (walloa_out(iwro)%trn(num_objs))
           
-          allocate (wal_tr_omd(wallo(iwro)%wtp))
-          allocate (wal_tr_omm(wallo(iwro)%wtp))
-          allocate (wal_tr_omy(wallo(iwro)%wtp))
-          allocate (wal_tr_oma(wallo(iwro)%wtp))
-          allocate (wal_use_omd(wallo(iwro)%uses))
-          allocate (wal_use_omm(wallo(iwro)%uses))
-          allocate (wal_use_omy(wallo(iwro)%uses))
-          allocate (wal_use_oma(wallo(iwro)%uses))
-                    
-          !! read source object data
-          do isrc = 1, wallo(iwro)%src_obs
-            read (107,*,iostat=eof) i
-            wallo(iwro)%src(i)%num = i
-            if (eof < 0) exit
-            backspace (107)
-              read (107,*,iostat=eof) k, wallo(iwro)%src(i)%ob_typ, wallo(iwro)%src(i)%ob_num,    &
-                                      wallo(iwro)%src(i)%lim_typ, wallo(iwro)%src(i)%lim_name,    &
-                                      (wallo(iwro)%src(i)%limit_mon(k), k=1,12)
               
-            !! recall option for daily, monthly, or annual mass
-            if (wallo(iwro)%trn(i)%trn_typ == "recall") then
-              !! xwalk with recall database
-              do idb = 1, db_mx%recall_max
-                if (wallo(iwro)%trn(i)%trn_typ_name == recall(idb)%name) then
-                  wallo(iwro)%trn(i)%rec_num = idb
-                  exit
-                end if
-              end do
-            end if
-            
-          end do
-          
           !! read transfer object data
-          read (107,*,iostat=eof) header
           if (eof < 0) exit
           do itrn = 1, num_objs
             read (107,*,iostat=eof) i
@@ -141,12 +90,11 @@
             if (eof < 0) exit
             backspace (107)
             read (107,*,iostat=eof) k, wallo(iwro)%trn(i)%trn_typ, wallo(iwro)%trn(i)%trn_typ_name,   &
-              wallo(iwro)%trn(i)%amount, wallo(iwro)%trn(i)%right, wallo(iwro)%trn(i)%src_num
-            
+                    wallo(iwro)%trn(i)%amount, wallo(iwro)%trn(i)%right, wallo(iwro)%trn(i)%src_num
+          
             num_src = wallo(iwro)%trn(i)%src_num
             allocate (wallo(iwro)%trn(i)%src(num_src))
-            allocate (wallo(iwro)%trn(i)%src_wal(num_src))
-            wallo(iwro)%trn(i)%src_wal = 0
+            allocate (wallo(iwro)%trn(i)%osrc(num_src))
             allocate (wal_omd(iwro)%trn(i)%src(num_src))
             allocate (wal_omm(iwro)%trn(i)%src(num_src))
             allocate (wal_omy(iwro)%trn(i)%src(num_src))
@@ -162,7 +110,7 @@
               do idb = 1, db_mx%dtbl_lum
                 if (wallo(iwro)%trn(i)%trn_typ_name == dtbl_lum(idb)%name) then
                   ihru = wallo(iwro)%trn(i)%rcv%num
-                  hru(ihru)%irr_trn_dtbl = idb
+                  wallo(iwro)%trn(itrn)%dtbl_lum = idb
                   do idb_irr = 1, db_mx%irrop_db
                     if (dtbl_lum(idb)%act(1)%option == irrop_db(idb_irr)%name) then
                       wallo(iwro)%trn(itrn)%irr_eff = irrop_db(idb_irr)%eff
@@ -186,44 +134,43 @@
               end do
             end if
             
-            !! for municipal treatment - recall option for daily, monthly, or annual mass
-            if (wallo(iwro)%trn(i)%trn_typ == "recall") then
-              !! xwalk with recall database
-              do idb = 1, db_mx%recalldb_max
-                if (wallo(iwro)%trn(i)%trn_typ_name == recall_db(idb)%name) then
-                  wallo(iwro)%trn(i)%rec_num = idb
-                    !! crosswalk organic mineral with recall data file
-                    do iom = 1, db_mx%recall_max
-                      if (recall_db(idb)%org_min%name == recall(iom)%filename) then
-                        wallo(iwro)%trn(i)%rec_num = iom
-                        exit
-                      end if
-                    end do
-                    !! crosswalk pest, path, hmet, salt, constit with recall data file
-                  exit
-                end if
-              end do
-            end if
-            
             backspace (107)
             !read (107,*,iostat=eof) k
             read (107,*,iostat=eof) k, wallo(iwro)%trn(i)%trn_typ, wallo(iwro)%trn(i)%trn_typ_name,   &
               wallo(iwro)%trn(i)%amount, wallo(iwro)%trn(i)%right, wallo(iwro)%trn(i)%src_num,        &
               wallo(iwro)%trn(i)%dtbl_src, & !wallo(iwro)%trn(i)%num,                                 &
               (wallo(iwro)%trn(i)%src(isrc), isrc = 1, num_src), wallo(iwro)%trn(i)%rcv
-            
-            !! set src_wal links to main source objects
+          
+            !! check if a channel is a source
             do isrc = 1, num_src
-              !! find the corresponding source object in the main source list
-              do jsrc = 1, wallo(iwro)%src_obs
-                if (wallo(iwro)%trn(i)%src(isrc)%typ == wallo(iwro)%src(jsrc)%ob_typ .and.    &
-                      wallo(iwro)%trn(i)%src(isrc)%num == wallo(iwro)%src(jsrc)%ob_num) then
-                  wallo(iwro)%trn(i)%src_wal(isrc) = jsrc
-                  exit
-                end if
-              end do
+              if (wallo(iwro)%trn(i)%src(isrc)%typ == "cha") then
+                wallo(iwro)%trn(i)%ch_src = wallo(iwro)%trn(i)%src(isrc)%num
+                exit
+              end if
             end do
-            
+        
+            !! xwalk with recall file to get sequential number
+            do isrc = 1, num_src
+              irec = wallo(iwro)%trn(i)%src(isrc)%num
+              if (wallo(iwro)%trn(i)%src(isrc)%typ == "osrc") then
+                wallo(iwro)%trn(i)%osrc(isrc)%daymoyr  = recall_db(irec)%iorg_min
+                exit
+              end if
+            end do
+                
+            !! xwalk with exco file to get sequential number
+            do isrc = 1, num_src
+              if (wallo(iwro)%trn(i)%src(isrc)%typ == "osrc_a") then
+                iexco = wallo(iwro)%trn(i)%src(isrc)%num
+                do iexco_om = 1, db_mx%exco_om
+                  if (exco_db(iexco)%om_file == exco_om_name(iexco_om)) then
+                    wallo(iwro)%trn(i)%osrc(isrc)%aa = iexco_om
+                    exit
+                  end if
+                end do
+              end if
+            end do
+                
             !! zero output variables for summing
             do isrc = 1, num_src
               wallod_out(iwro)%trn(i)%src(isrc) = walloz
@@ -243,4 +190,3 @@
 
       return
     end subroutine water_allocation_read
-

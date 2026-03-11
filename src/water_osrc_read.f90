@@ -31,12 +31,12 @@
         allocate (osrc(0:0))
       else
       do 
-        open (107,file='outside_src.wal')
+        open (107,file='out_src.wal')
         read (107,*,iostat=eof) titldum
         if (eof < 0) exit
         read (107,*,iostat=eof) imax
         read (107,*,iostat=eof) header
-        db_mx%outside_src = imax
+        db_mx%out_src = imax
         if (eof < 0) exit
         
         allocate (osrc(imax))
@@ -47,19 +47,6 @@
           if (eof < 0) exit
         end do
           
-        do isrc = 1, imax
-          !! crosswalk organic mineral with 
-          do irec = 1, db_mx%recalldb_max
-            if (osrc(isrc)%name == recall_db(irec)%name) then
-              do iom = 1, db_mx%recall_max
-                if (recall_db(irec)%org_min%name == recall(iom)%filename) then
-                  osrc(isrc)%iorg_min = iom
-                  exit
-                end if
-              end do
-            end if
-          end do
-            
           !! read pseticide concentrations of treated water
           if (cs_db%num_pests > 0) then
             allocate (osrc_cs(isrc)%pest(cs_db%num_pests))
@@ -74,7 +61,6 @@
             read (107,*,iostat=eof) osrc_cs(isrc)%path
           end if
           
-        end do
       end do
       end if
       close(107)
