@@ -45,8 +45,8 @@
         do iwtow = 1, imax
           read (107,*,iostat=eof) header
           if (eof < 0) exit 
-          read (107,*,iostat=eof) i, wtow(iwtow)%name, wtow(iwtow)%stor_mx,         &
-                                        wtow(iwtow)%lag_days, wtow(iwtow)%loss_fr
+          read (107,*,iostat=eof) i, wtow(iwtow)%name, wtow(iwtow)%stor_mx,          &
+                                        wtow(iwtow)%ddown_days, wtow(iwtow)%loss_fr
           if (eof < 0) exit
         end do
       end do

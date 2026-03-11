@@ -44,7 +44,6 @@
 
       call hyd_connect
       call recalldb_read
-      call recall_read
       call exco_db_read
       call dr_db_read
       
