@@ -75,7 +75,12 @@
                 soildb(isol)%ly(j)%ec, soildb(isol)%ly(j)%cal, soildb(isol)%ly(j)%ph
             if (eof < 0) exit
           end do
-          if (soildb(isol)%ly(1)%z < 20.) soildb(isol)%ly(1)%z = 20.
+          !! if the first layer is less than 20 cm, adjust to 20 cm if only one layer or second layer is greater than 20 cm
+          if (soildb(isol)%ly(1)%z < 20.) then
+            if (soildb(isol)%s%nly == 1 .or. soildb(isol)%ly(2)%z > 20.) then
+                soildb(isol)%ly(1)%z = 20.
+            end if
+          end if
         end do
         exit
         enddo
