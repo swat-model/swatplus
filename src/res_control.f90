@@ -255,8 +255,9 @@
         ob(icmd)%hd(1) = ob(icmd)%hin
         if (cs_db%num_tot > 0) obcs(icmd)%hd(1) = obcs(icmd)%hin(1)
       end if
-
-
+      
+      !! if called from water allocation, set flag to indicate reservoir has been processed for the day
+      res_ob(jres)%wallo_call = 1
 
       return
       end subroutine res_control
