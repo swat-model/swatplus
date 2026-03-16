@@ -26,12 +26,6 @@
         isched = hru(ihru)%mgt_ops
         m_autos = sched(isched)%num_autos
         
-        !! add decision table for water allocation irrigation demand
-        if (hru(ihru)%irr_trn_dtbl > 0) then
-          m_autos = m_autos + 1
-          hru(ihru)%irr_trn_iauto = m_autos
-        end if
-        
         !! add decision table for manure allocation demand
         if (hru(ihru)%man_trn_dtbl > 0) then
           m_autos = m_autos + 1
@@ -45,10 +39,10 @@
             if (iauto /= hru(ihru)%irr_trn_iauto .and. iauto /= hru(ihru)%man_trn_iauto) then
               id = sched(isched)%num_db(iauto)
             end if
-            if (iauto == hru(ihru)%irr_trn_iauto) then
-              !! dtbl from water allocation for irrigation demand
-              id = hru(ihru)%irr_trn_dtbl
-            end if
+            !if (iauto == hru(ihru)%irr_trn_iauto) then
+            !  !! dtbl from water allocation for irrigation demand
+            !  id = hru(ihru)%irr_trn_dtbl
+            !end if
             if (iauto == hru(ihru)%man_trn_iauto) then
               !! dtbl from water allocation for irrigation demand
               id = hru(ihru)%man_trn_dtbl
