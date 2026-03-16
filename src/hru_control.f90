@@ -427,17 +427,6 @@
         !  write (7778,*) time%day, j, sedyld(j)/hru(j)%area_ha, usle_cfac(j), surfq(j), qp_cms
         !end if
 
-        !! check irrigation demand decision table for water allocation (after adding irrigation)
-        if (hru(j)%irr_trn_dtbl > 0) then
-          id = hru(j)%irr_trn_dtbl
-          jj = j
-          d_tbl => dtbl_lum(id)
-          !! iauto points to pcom(j)%dtbl(iauto) for days between operation
-          iauto = hru(j)%irr_trn_iauto
-          call conditions (jj, iauto)
-          call actions (jj, iob, iauto)
-        end if
-
         soil_prof_labp = 0.
         do ly = 1, soil(j)%nly
           soil_prof_labp = soil_prof_labp + soil1(j)%mp(ly)%lab

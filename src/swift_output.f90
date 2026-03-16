@@ -11,6 +11,7 @@
       use input_file_module
       use sd_channel_module
       use time_module
+      use recall_module
 
       implicit none
       
@@ -259,13 +260,13 @@
       !! write recal_swift.rec --> change files to average annual and use the object name for the file name
       open (107,file="SWIFT/recall.swf",recl = 1500)
       write (107,*)           "         ID            NAME              REC_TYP         FILENAME"
-      do irec = 1, db_mx%recall_max
-        write (107,*) irec, recall(irec)%name, recall(irec)%typ, recall(irec)%name
+      do irec = 1, db_mx%recalldb_max
+        write (107,*) irec, recall_db(irec)%org_min%name, recall_db(irec)%org_min%units, recall_db(irec)%org_min%tstep
         
         !! write to each recall file
-        open (108,file="SWIFT/" // trim(adjustl(recall(irec)%name)),recl = 1500)
-        write (108,*) " AVE ANNUAL RECALL FILE  ", recall(irec)%filename
-        write (108,*) "     1    1    1     1    type    ", recall(irec)%filename, rec_a(irec)%flo,     &
+        open (108,file="SWIFT/" // trim(adjustl(recall_db(irec)%name)),recl = 1500)
+        write (108,*) " AVE ANNUAL RECALL FILE  ", recall_db(irec)%name
+        write (108,*) "     1    1    1     1    type    ", recall_db(irec)%name, rec_a(irec)%flo,     &
                 rec_a(irec)%sed, rec_a(irec)%orgn, rec_a(irec)%sedp, rec_a(irec)%no3, rec_a(irec)%solp, &
                 rec_a(irec)%nh3, rec_a(irec)%no2
         close (108)

@@ -31,9 +31,6 @@
       use time_module
       
       implicit none
-
-      
-      
       
       external :: aunif
       real :: vv = 0.          !none          |random number between 0.0 and 1.0
@@ -45,7 +42,6 @@
       real :: xx = 0.          !              |
       real, external :: cli_dstn1         !              |
       integer :: iwgn          !              |
-     
 
       pcpgen = 0.
       vv = Aunif(rndseed(idg(1),iwgn))

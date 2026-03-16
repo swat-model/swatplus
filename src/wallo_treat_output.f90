@@ -3,6 +3,7 @@
       use time_module
       use hydrograph_module
       use water_allocation_module
+      use maximum_data_module
       
       implicit none
       
@@ -10,7 +11,7 @@
       integer :: itrt
 
       !! loop through and print each water treatment object
-      do itrt = 1, wallo(iwallo)%wtp
+      do itrt = 1, db_mx%wtp
       
 !!!!! daily print
         if (pco%water_allo%d == "y") then

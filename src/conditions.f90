@@ -613,7 +613,7 @@
           if (ob_num == 0) ob_num = ob_cur
           !ob_num is channel number - need object number
           iob = sp_ob1%chandeg + ob_num - 1
-          flo_m3 = ob(iob)%hd(1)%flo / 86400. 
+          flo_m3 = ht2%flo / 86400. 
           call cond_real (ic, flo_m3, d_tbl%cond(ic)%lim_const, idtbl)
                 
         !tile flow
