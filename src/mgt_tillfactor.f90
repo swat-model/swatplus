@@ -47,35 +47,42 @@
            emix = emix * (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
         else
             emix = 0.
+            soil(jj)%ly(l)%tillagef = 0.
         end if
             
         ! to save computation time if emix = 0 here then the other layers can be avoided
         ! tillage always proceeds from top to bottom
-        if (emix == 0.) exit
+        if (emix > 1.e-6) then
 
-        xx = 0.
-        zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(1)%clay/100.)
-        yy = soil(jj)%ly(l)%tillagef / zz
-        m1 = 1
-        m2 = 2
-
-        ! empirical solution for x when y is known and y=x/(x+exp(m1-m2*x)) 
-        if (yy > 0.01) then
-         xx1 = yy ** exp_w(-0.13 + 1.06 * yy)
-         ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmatic error that is ignored by intel but not by gfortran
-         xx2 = exp_w(0.64 + 0.64 * yy ** 10.)
-         xx = xx1 * xx2
-        end if
-
-        csdr = xx + emix
-        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then                                       !! fg added this to do bio_mixing on a daily basis
-          if (soil(jj)%phys(l)%tmp <= 0. .and. bio_mix_event) then 
+          xx = 0.
+          zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(1)%clay/100.)
+          if (bio_mix_event) then
+            yy = 0.
             soil(jj)%ly(l)%tillagef = 0.
+          else
+            yy = soil(jj)%ly(l)%tillagef / zz
+          endif
+          m1 = 1
+          m2 = 2
+
+          ! empirical solution for x when y is known and y=x/(x+exp(m1-m2*x)) 
+          if (yy > 0.01) then
+          xx1 = yy ** exp_w(-0.13 + 1.06 * yy)
+          ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmatic error that is ignored by intel but not by gfortran
+          xx2 = exp_w(0.64 + 0.64 * yy ** 10.)
+          xx = xx1 * xx2
+          end if
+
+          csdr = xx + emix
+          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then                                       !! fg added this to do bio_mixing on a daily basis
+            if (soil(jj)%phys(l)%tmp <= 0. .and. bio_mix_event) then 
+              soil(jj)%ly(l)%tillagef = 0.
+            else
+              soil(jj)%ly(l)%tillagef = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
+            endif
           else
             soil(jj)%ly(l)%tillagef = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
           endif
-        else
-          soil(jj)%ly(l)%tillagef = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
         endif
       end do        
     end if

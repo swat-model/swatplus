@@ -113,36 +113,16 @@
           dtil = Min(soil(jj)%phys(kk)%d, 50.) ! it was 300.  MJW (rev 412)
         endif
 
-        ! if Test soil layers down to dtil are above freezing
-        if (bsn_cc%cswat == 3) then                                       
-          prev_depth = 0.
-          do l = 1, soil(jj)%nly
-            if ( prev_depth < dtil) then
-              if (soil(jj)%phys(l)%tmp > 0.) then
-                bio_mix_event = .true.
-              else 
-                bio_mix_event = .false.
-                exit
-              endif
-            else 
-              exit
-            endif
-            prev_depth = soil(jj)%phys(l)%d
-          enddo
-        endif
       else 
         !! tillage operation
         tillage_event = .true.
         bio_mix_event = .false.
         emix = tilldb(idtill)%effmix
         dtil = tilldb(idtill)%deptil
-      end if
-
-      if (tillage_event .eqv. .true.) then
         tillage_days(jj) = 0
         tillage_depth(jj) = dtil
         tillage_switch(jj) = 1
-      endif
+      end if
 
       !!by zhang DSSAT tillage
       !!=======================
@@ -153,7 +133,7 @@
       end if
 
 
-      if (dtil > 0.) then
+      if (dtil > 1.e-6) then
         do l = 1, soil(jj)%nly
           soil1(jj)%emix(l) = 0.
         enddo
@@ -169,8 +149,13 @@
           do l = 1, soil(jj)%nly
             if (soil(jj)%phys(l)%d <= dtil) then
               if (bio_mix_event) then
-                emix = bmix
-                emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                if (soil(jj)%phys(l)%tmp > 0.) then
+                  emix = bmix
+                  emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                else
+                  emix = 0.
+                  soil(jj)%ly(l)%tillagef = 0.
+                endif
               endif
               soil1(jj)%emix(l) = emix
 
@@ -180,11 +165,21 @@
               sol_msn(l) = sol_mass(l) - sol_msm(l)
               frac_dep(l) = soil(jj)%phys(l)%thick / dtil
             else if (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
+              if (bio_mix_event) then
+                if (soil(jj)%phys(l)%tmp > 0.) then
+                  emix = bmix
+                  emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                else
+                  emix = 0.
+                  soil(jj)%ly(l)%tillagef = 0.
+                endif
+              endif
               sol_msm(l) = emix * sol_mass(l) * (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
               sol_msn(l) =  sol_mass(l) - sol_msm(l)
               frac_dep(l) = (dtil - soil(jj)%phys(l-1)%d) / dtil
             else
               sol_msm(l) = 0.
+              soil(jj)%ly(l)%tillagef = 0.
               sol_msn(l) = sol_mass(l)
               frac_dep(l) = 0.
             end if
