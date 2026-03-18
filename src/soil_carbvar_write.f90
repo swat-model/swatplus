@@ -25,19 +25,19 @@
 
         ! print*, "In soil_carbvar_write.f90 ", out_freq
         select case(out_freq)
-            case ("d")
+            case (" d")
             freq_label = "day"
             case ("dl")
             freq_label = "day"
-            case ("m")
+            case (" m")
             freq_label = "mon"
             case ("ml")
             freq_label = "mon"
-            case ("y")
+            case (" y")
             freq_label = "year"
             case ("yl")
             freq_label = "year"
-            case ("a")
+            case (" a")
             freq_label = "av_ann"
         end select
 
@@ -47,12 +47,12 @@
             iob = sp_ob1%hru + j - 1
             do k = 1, soil(j)%nly
                 write (4574,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
+                                soil1(j)%org_con_lr(k)%sut, soil(j)%ly(k)%tillagef, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
                                 soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, soil1(j)%org_con_lr(k)%no3, &
                                 soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp, soil1(j)%emix(k) 
                 if (pco%csvout == "y") then
                     write (4575,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                    soil1(j)%org_con_lr(k)%sut, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
+                                    soil1(j)%org_con_lr(k)%sut, soil(j)%ly(k)%tillagef, soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, &
                                     soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, soil1(j)%org_con_lr(k)%no3, &
                                     soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp, soil1(j)%emix(k)
                 end if

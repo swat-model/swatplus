@@ -3,6 +3,7 @@
       use time_module
       use hydrograph_module
       use water_allocation_module
+      use maximum_data_module
       
       implicit none
       
@@ -10,7 +11,7 @@
       integer :: iuse
 
       !! loop through and print each use object
-      do iuse = 1, wallo(iwallo)%uses
+      do iuse = 1, db_mx%uses
       
 !!!!! daily print
         if (pco%water_allo%d == "y") then

@@ -135,17 +135,21 @@
         integer :: mallo_db = 0
         integer :: transplant = 0
         integer :: pudl_db = 0
-        integer :: recall_max = 0
         integer :: recalldb_max = 0
         integer :: object_prt = 0
         integer :: ctbl_res = 0
         integer :: ch_sednut = 0
         integer :: sat_buff = 0
-        integer :: water_treat = 0
-        integer :: water_use = 0
+        integer :: canal = 0
+        integer :: pipe = 0
+        integer :: wtp = 0
+        integer :: treat = 0
+        integer :: uses = 0
+        integer :: stor = 0
         integer :: om_treat = 0
         integer :: om_use = 0
-        integer :: outside_src = 0
+        integer :: out_src = 0
+        integer :: out_rcv = 0
       end type data_files_max_elements
       type (data_files_max_elements), save :: db_mx
                                  

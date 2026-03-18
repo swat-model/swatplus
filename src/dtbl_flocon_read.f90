@@ -64,17 +64,6 @@
             do iac = 1, dtbl_flo(i)%acts
               read (107,*,iostat=eof) dtbl_flo(i)%act(iac), (dtbl_flo(i)%act_outcomes(iac,ial), ial = 1, dtbl_flo(i)%alts)
               if (eof < 0) exit
-              
-              !! if divert action, xwalk fp with flo_con decision table
-              if (dtbl_flo(i)%act(iac)%typ == "divert" .and. dtbl_flo(i)%act(iac)%option == "recall") then
-                do idb = 1, db_mx%recall_max
-                  if (dtbl_flo(i)%act(iac)%file_pointer == recall(idb)%filename) then
-                    dtbl_flo(i)%act_typ(iac) = idb
-                    exit
-                  end if
-                end do
-              end if
-                
             end do
             read (107,*,iostat=eof)
             if (eof < 0) exit

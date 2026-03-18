@@ -22,6 +22,10 @@
       
       !! convert concentration to mass
       call hyd_convert_conc_to_mass (outflo_om)
+      
+      !! treated mass can't be higher than inflow mass
+      call hyd_min (outflo_om, wal_omd(iwallo)%trn(itrn)%h_tot)
+      
       wtp_om_out(itrt) = wtp_om_out(itrt) + outflo_om
       
       !! amount that is removed
