@@ -149,6 +149,7 @@
       real :: bsn_mn = 0.                                           !       |total mineral n pool (no3+nh4) in basin
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in basin
       type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
+      type (organic_mass) :: photo_decomp                           !       |temporary storage for photo_residue decomp
       type (organic_mass) :: transfer                               !       |temporary storage for residue decomp
       type (organic_mass) :: pl_burn                                !       |residue and plant mass burned in fire
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter

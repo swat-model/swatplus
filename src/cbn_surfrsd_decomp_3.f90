@@ -75,6 +75,9 @@
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
           !! mineralization can occur only if temp above 0 deg
+          photo_decomp = .01 * pl_mass(j)%rsd(ipl) 
+          pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
+          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
           if (soil(j)%phys(1)%tmp > 0.) then
             !! compute soil water factor
             sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
