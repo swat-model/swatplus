@@ -1266,6 +1266,7 @@
          character (len=22) :: id            =    "                gis_id"
          character (len=13) :: name          =    "    name     "
          character(len=15)  :: sut           =    "            sut"
+         character(len=15)  :: tillagef      =    "       tillagef"  
          character(len=15)  :: till_eff      =    "       till_eff"  
          character(len=15)  :: cdg           =    "            cdg"         
          character(len=15)  :: ox            =    "             ox"         
