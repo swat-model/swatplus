@@ -474,7 +474,7 @@
         character (len=17)  :: sedminp  =  "          sedminp"
         character (len=17)  :: tileno3  =  "          tileno3"
         character (len=17)  :: lchlabp  =  "          lchlabp"
-        character (len=17)  :: tilelabp =  "          tilelabp"
+        character (len=17)  :: tilelabp =  "         tilelabp"
         character (len=17)  :: satexn   =  "           satexn"
         character (len=16)  :: plt_cov  =  "    plant_cov    "
         character (len=30)  :: mgt_ops  =  "    mgt_ops      "
