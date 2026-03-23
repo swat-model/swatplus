@@ -181,6 +181,7 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
+       real :: tf = 0.           !varies    |variable to hold calculation results
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -342,14 +343,17 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
+
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 ! Kemanian method    ----having modi
-                org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
+                ! org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
+                org_con%till_eff = 1. + tf
               else
                 ! Changed by fg to always have some bio mixing
                 if (soil(j)%phys(k)%d <= bmix_depth) then            
                   ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
-                  org_con%till_eff = 1.0 + soil(j)%ly(k)%tillagef
+                  ! org_con%till_eff = 1.0 + soil(j)%ly(k)%tillagef
+                  org_con%till_eff = 1.0 + tf
                 else
 
                   if (k == 1) then
@@ -359,7 +363,8 @@
                   end if
 
                   if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (soil(j)%ly(k)%tillagef * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    ! org_con%till_eff = 1.0 + (soil(j)%ly(k)%tillagef * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
+                    org_con%till_eff = 1.0 + (tf * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
                   else
                     org_con%till_eff = 1.0
                   end if

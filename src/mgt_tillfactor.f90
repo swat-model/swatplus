@@ -55,12 +55,14 @@
         if (emix > 1.e-6) then
 
           xx = 0.
-          zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(1)%clay/100.)
+          ! zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
           if (bio_mix_event) then
             yy = 0.
             soil(jj)%ly(l)%tillagef = 0.
+            zz = 3. + (1.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
           else
             yy = soil(jj)%ly(l)%tillagef / zz
+            zz = 3. + (18. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
           endif
           m1 = 1
           m2 = 2
