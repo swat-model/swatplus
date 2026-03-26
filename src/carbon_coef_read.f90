@@ -7,6 +7,7 @@ subroutine carbon_coef_read
     use tillage_data_module 
     use soil_module
     use organic_mineral_mass_module
+    use plant_data_module
     
     implicit none
 
@@ -88,6 +89,15 @@ subroutine carbon_coef_read
                 case("tx")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tx
+                case("zz_bmix_coefs")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, zz_bmix_coef_a, zz_bmix_coef_b, zz_bmix_coef_c
+                case("zz_emix_coefs")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, zz_emix_coef_a, zz_emix_coef_b, zz_emix_coef_c
+                case("photo_degrade_factor")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, photo_degrade_factor
                 case("nmbr_soil_test_layers")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, nmbr_soil_test_layers
