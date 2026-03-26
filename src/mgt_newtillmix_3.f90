@@ -47,8 +47,6 @@
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
       integer :: ipl = 0               !               |
-      integer :: idp = 0               !               |
-      real :: prev_depth = 0.
       real :: emix = 0.                !none           |mixing efficiency
       real :: dtil = 0.                !mm             |depth of mixing
       real :: frac_mixed = 0.          !               |
@@ -149,7 +147,7 @@
           do l = 1, soil(jj)%nly
             if (soil(jj)%phys(l)%d <= dtil) then
               if (bio_mix_event) then
-                if (soil(jj)%phys(l)%tmp > 0.) then
+                if (soil(jj)%phys(l)%tmp > 1.e-6) then
                   emix = bmix
                   emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
                 else
@@ -231,15 +229,7 @@
                                                          frac_dep(l) * mix_org%rsd(ipl)
               !! mix surface residue into soil layers
               mix_org%surf_rsd = emix * frac_dep(l) * pl_mass(jj)%rsd(ipl)
-
-              ! soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
-              ! Instead of the above commented out line, the following four lines were added by fg to add mixed
-              ! mix surface residue straight into to soil meta, str, lig pools.
-              idp = pcom(jj)%plcur(ipl)%idplt
-              soil1(jj)%meta(l) = soil1(jj)%meta(l) + cswat_3_part_fracs(idp)%meta_frac_abg * mix_org%surf_rsd  ! fg added
-              soil1(jj)%str(l)  = soil1(jj)%str(l)  + cswat_3_part_fracs(idp)%str_frac_abg  * mix_org%surf_rsd  ! fg added
-              soil1(jj)%lig(l)  = soil1(jj)%lig(l)  + cswat_3_part_fracs(idp)%lig_frac_abg  * mix_org%surf_rsd  ! fg added
-
+              soil1(jj)%pl(ipl)%rsd(l) = soil1(jj)%pl(ipl)%rsd(l) + mix_org%surf_rsd
               pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
               pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
             end do
