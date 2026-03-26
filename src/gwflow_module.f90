@@ -329,6 +329,7 @@
       
       !variables for observation wells --------------------------------------------------------------------------------
       integer :: gw_num_obs_wells = 0                           !     |
+      integer, dimension (:), allocatable :: gw_obs_cells_init  !     |
       integer, dimension (:), allocatable :: gw_obs_cells       !     |
       real, dimension (:), allocatable :: gw_obs_head           !     |
       integer :: gw_cell_obs_ss = 0                             !     |
