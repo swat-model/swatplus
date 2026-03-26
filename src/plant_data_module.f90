@@ -4,6 +4,8 @@
       
       character(len=40), dimension (:), allocatable :: plts_bsn     !none      |plant names simulated in current run
       character(len=25), dimension(:), allocatable :: pl_class      !none      |plant class - row crop, tree, grass, etc
+      real :: photo_degrade_factor = .01   ! none  |fraction to reduce surface residue due to photo degradation
+
       type residue_partition_fracs
         real :: meta_frac = 0.85      !none       |fraction of that is metabolic
         real :: str_frac = 0.15       !none       |fraction of that is structural
