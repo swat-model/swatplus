@@ -33,6 +33,13 @@ tn             -0.5
 top            35.0
 tx             50.0
 
+# bio and tillage mixing coeffients in mgt_tillfactor.f90
+zz_bmix_coefs   3.0   5.0    -5.5
+zz_emix_coefs   3.0   10.0   -5.5
+
+# Surface residue photo degradtion factor.
+photo_degrade_factor    .01
+
 # Soil Test Values for each layer
 # soil_name and depth_mm are required, enter -1 for other values if missing.
 # The order of entry must be asending depths for each soil.
