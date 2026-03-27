@@ -16,6 +16,7 @@
 
     use soil_module
     use basin_module
+    use tillage_data_module
     use utils
     
     implicit none
@@ -55,12 +56,15 @@
         if (emix > 1.e-6) then
 
           xx = 0.
-          zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(1)%clay/100.)
+          ! zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
           if (bio_mix_event) then
             yy = 0.
             soil(jj)%ly(l)%tillagef = 0.
+            zz = zz_bmix_coef_a + (zz_bmix_coef_b)*exp(zz_bmix_coef_c*soil(jj)%phys(l)%clay/100.)
           else
             yy = soil(jj)%ly(l)%tillagef / zz
+            ! zz = 3. + (15. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
+            zz = zz_emix_coef_a + (zz_emix_coef_b)*exp(zz_emix_coef_c*soil(jj)%phys(l)%clay/100.)
           endif
           m1 = 1
           m2 = 2

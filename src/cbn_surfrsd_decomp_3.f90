@@ -32,7 +32,7 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru, isep 
+      use hru_module, only : ihru 
       use soil_module
       use plant_module
       use plant_data_module
@@ -74,8 +74,8 @@
       !! compute root and incorporated residue decomposition
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
-          !! mineralization can occur only if temp above 0 deg
-          photo_decomp = .01 * pl_mass(j)%rsd(ipl) 
+          ! mineralization can occur only if temp above 0 deg
+          photo_decomp = photo_degrade_factor * pl_mass(j)%rsd(ipl) 
           pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
           pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
           if (soil(j)%phys(1)%tmp > 0.) then
@@ -129,14 +129,6 @@
             if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
             if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
 
-            !! add mass and carbon to soil organic pools
-            ! soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
-            ! soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * decomp%m
-            ! soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * decomp%m
-            ! soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * decomp%c
-            ! soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
-            ! soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
-            
             soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%m
             soil1(j)%str(k)%m = soil1(j)%str(k)%m + cswat_3_part_fracs(idp)%str_frac_abg * decomp%m
             soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%m

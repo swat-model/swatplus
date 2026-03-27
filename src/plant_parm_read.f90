@@ -63,10 +63,9 @@
             cswat_3_part_fracs(ic)%lig_frac_abg = pldb(ic)%res_part_fracs%str_frac
             cswat_3_part_fracs(ic)%str_frac_blg = cswat_3_part_fracs(ic)%lig_frac_blg / .80 
             cswat_3_part_fracs(ic)%str_frac_abg = cswat_3_part_fracs(ic)%lig_frac_abg / .80 
-            cswat_3_part_fracs(ic)%meta_frac_blg = 1.0 - cswat_3_part_fracs(ic)%str_frac_blg  &
-                                                           - cswat_3_part_fracs(ic)%lig_frac_blg
-            cswat_3_part_fracs(ic)%meta_frac_abg = 1.0 - cswat_3_part_fracs(ic)%str_frac_abg  &
-                                                           - cswat_3_part_fracs(ic)%lig_frac_abg
+            cswat_3_part_fracs(ic)%meta_frac_blg = 1.0 - cswat_3_part_fracs(ic)%str_frac_blg 
+            cswat_3_part_fracs(ic)%meta_frac_abg = 1.0 - cswat_3_part_fracs(ic)%str_frac_abg  
+
           else
             pldb(ic)%res_part_fracs%meta_frac = 0.85
             pldb(ic)%res_part_fracs%str_frac = 0.15 

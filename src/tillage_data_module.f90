@@ -6,6 +6,12 @@
       integer :: till_eff_days = 30  !!              |none          |length of days a tillage operation will have an effect
       real    :: bmix_eff = 0.      !!              |none          |biological mixing efficieny
       real    :: bmix_depth = 0.    !!              |none          |biological mixing depth
+      real    :: zz_bmix_coef_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for biomixing
+      real    :: zz_bmix_coef_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for biomixing 
+      real    :: zz_bmix_coef_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for biomixing
+      real    :: zz_emix_coef_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for tillage mixing
+      real    :: zz_emix_coef_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for tillage mixing 
+      real    :: zz_emix_coef_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for tillage mixing
 
       type tillage_db
         character(len=16) :: tillnm = " "
