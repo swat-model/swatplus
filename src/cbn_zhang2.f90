@@ -344,6 +344,7 @@
 
             case(3)
 
+              tf = soil(j)%ly(k)%tillagef 
               if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
                 ! Kemanian method    ----having modi
                 ! org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
