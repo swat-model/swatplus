@@ -32,7 +32,7 @@
       pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
           
       !! update total surface residue pool
-      ! pl_mass(j)%rsd_tot = orgz
+      pl_mass(j)%rsd_tot = orgz
       do npl = 1, pcom(j)%npl
         pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(npl)
       end do
