@@ -133,6 +133,15 @@
       type (groundwater_ss) :: gw_hyd_grid_yr                                !yearly grid total
       type (groundwater_ss) :: gw_hyd_grid_aa                                !accumulates simulation total; divided by nbyr at end
 
+      !--- shared grid totals for end-of-day / end-of-sim (computed in output_day, used in output_aa) ---
+      real*8 :: vbef_grid = 0.d0                                              !m3 total GW volume at start of day
+      real*8 :: vaft_grid = 0.d0                                              !m3 total GW volume at end of day
+      real*8 :: heat_hbef_grid = 0.d0                                         !J total heat at start of day
+      real*8 :: heat_haft_grid = 0.d0                                         !J total heat at end of day
+      real :: sol_grid_mbef = 0.                                              !kg total solute mass at start of day
+      real :: sol_grid_maft = 0.                                              !kg total solute mass at end of day
+      integer :: sim_month = 0                                                !month counter for simulation
+
       !--- heat fluxes: per-cell arrays (Joule / MJ) ---
       type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss        !daily
       type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss_mo     !monthly sums
@@ -542,6 +551,7 @@
         real :: wetl = 0.           !g            |solute mass exchanged with wetland
         real :: fpln = 0.           !g            |solute mass exchanged with channel in floodplain
         real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
+        real :: pond = 0.           !g            |solute mass in recharge pond seepage water
         real :: advn = 0.           !g            |solute mass advected to/from cell
         real :: disp = 0.           !g            |solute mass dispersed to/from cell
         real :: rcti = 0.           !g            |solute mass of chemical reaction (input)
@@ -569,6 +579,7 @@
         real :: wetl = 0.           !g            |solute mass exchanged with wetland
         real :: fpln = 0.           !g            |solute mass exchanged with channel in floodplain
         real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
+        real :: pond = 0.           !g            |solute mass in recharge pond seepage water
         real :: advn = 0.           !g            |solute mass advected to/from cell
         real :: disp = 0.           !g            |solute mass dispersed to/from cell
         real :: rcti = 0.           !g            |solute mass produced by chemical reaction
@@ -709,7 +720,7 @@
       integer :: out_head_yr = 1289
       integer :: out_conc_mo = 1290
       integer :: out_conc_yr = 1291
-      !solute fluxes
+      !solute fluxes (yearly)
       integer :: out_sol_rech = 1292
       integer :: out_sol_gwsw = 1293
       integer :: out_sol_soil = 1294
@@ -725,6 +736,7 @@
       integer :: out_sol_rcto = 1304
       integer :: out_sol_minl = 1305
       integer :: out_sol_sorb = 1306
+      integer :: out_sol_pond = 1307
       !solute fluxes (monthly)
       integer :: out_sol_rech_mo = 1430
       integer :: out_sol_gwsw_mo = 1431
