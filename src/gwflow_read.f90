@@ -734,46 +734,46 @@
       write(out_gw,*) '     allocate and prepare source-sink arrays...'
       
       !allocate cell source/sink arrays
-      allocate (gw_ss(ncell))
+      allocate (gw_hyd_ss(ncell))
       do i=1,ncell
-        gw_ss(i)%rech = 0.
-        gw_ss(i)%gwet = 0.
-        gw_ss(i)%gwsw = 0.
-        gw_ss(i)%swgw = 0.
-        gw_ss(i)%satx = 0.
-        gw_ss(i)%soil = 0.
-        gw_ss(i)%latl = 0.
-        gw_ss(i)%bndr = 0.
-        gw_ss(i)%ppag = 0.
-        gw_ss(i)%ppdf = 0.
-        gw_ss(i)%ppex = 0.
-        gw_ss(i)%tile = 0.
-        gw_ss(i)%resv = 0.
-        gw_ss(i)%wetl = 0.
-        gw_ss(i)%fpln = 0.
-        gw_ss(i)%canl = 0.
-        gw_ss(i)%totl = 0.
+        gw_hyd_ss(i)%rech = 0.
+        gw_hyd_ss(i)%gwet = 0.
+        gw_hyd_ss(i)%gwsw = 0.
+        gw_hyd_ss(i)%swgw = 0.
+        gw_hyd_ss(i)%satx = 0.
+        gw_hyd_ss(i)%soil = 0.
+        gw_hyd_ss(i)%latl = 0.
+        gw_hyd_ss(i)%bndr = 0.
+        gw_hyd_ss(i)%ppag = 0.
+        gw_hyd_ss(i)%ppdf = 0.
+        gw_hyd_ss(i)%ppex = 0.
+        gw_hyd_ss(i)%tile = 0.
+        gw_hyd_ss(i)%resv = 0.
+        gw_hyd_ss(i)%wetl = 0.
+        gw_hyd_ss(i)%fpln = 0.
+        gw_hyd_ss(i)%canl = 0.
+        gw_hyd_ss(i)%totl = 0.
       enddo
       
       !allocate grid source/sink arrays
-      allocate (gw_ss_sum(ncell))
+      allocate (gw_hyd_ss_yr(ncell))
       do i=1,ncell
-        gw_ss_sum(i)%rech = 0.
-        gw_ss_sum(i)%gwet = 0.
-        gw_ss_sum(i)%gwsw = 0.
-        gw_ss_sum(i)%swgw = 0.
-        gw_ss_sum(i)%satx = 0.
-        gw_ss_sum(i)%soil = 0.
-        gw_ss_sum(i)%latl = 0.
-        gw_ss_sum(i)%bndr = 0.
-        gw_ss_sum(i)%ppag = 0.
-        gw_ss_sum(i)%ppdf = 0.
-        gw_ss_sum(i)%ppex = 0.
-        gw_ss_sum(i)%tile = 0.
-        gw_ss_sum(i)%resv = 0.
-        gw_ss_sum(i)%wetl = 0.
-        gw_ss_sum(i)%fpln = 0.
-        gw_ss_sum(i)%canl = 0.
+        gw_hyd_ss_yr(i)%rech = 0.
+        gw_hyd_ss_yr(i)%gwet = 0.
+        gw_hyd_ss_yr(i)%gwsw = 0.
+        gw_hyd_ss_yr(i)%swgw = 0.
+        gw_hyd_ss_yr(i)%satx = 0.
+        gw_hyd_ss_yr(i)%soil = 0.
+        gw_hyd_ss_yr(i)%latl = 0.
+        gw_hyd_ss_yr(i)%bndr = 0.
+        gw_hyd_ss_yr(i)%ppag = 0.
+        gw_hyd_ss_yr(i)%ppdf = 0.
+        gw_hyd_ss_yr(i)%ppex = 0.
+        gw_hyd_ss_yr(i)%tile = 0.
+        gw_hyd_ss_yr(i)%resv = 0.
+        gw_hyd_ss_yr(i)%wetl = 0.
+        gw_hyd_ss_yr(i)%fpln = 0.
+        gw_hyd_ss_yr(i)%canl = 0.
       enddo
       
       !recharge

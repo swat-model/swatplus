@@ -1,4 +1,4 @@
-      subroutine gwflow_gwsw(chan_id) !rtb gwflow
+      subroutine gwflow_channel_exch(chan_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the water exchange volume between the channel and the connected grid cells
@@ -83,15 +83,15 @@
               !Q = gw_state(cell_id)%stor * (-1)
               Q = -gw_state(cell_id)%stor
             endif
-            gw_ss(cell_id)%gwsw = gw_ss(cell_id)%gwsw + Q
+            gw_hyd_ss(cell_id)%gwsw = gw_hyd_ss(cell_id)%gwsw + Q
             gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell
           else !channel --> aquifer 
             if(Q > ch_stor(chan_id)%flo) then !can only remove what is there
               Q = ch_stor(chan_id)%flo
             endif
-            gw_ss(cell_id)%swgw = gw_ss(cell_id)%swgw + Q
+            gw_hyd_ss(cell_id)%swgw = gw_hyd_ss(cell_id)%swgw + Q
           endif
-          gw_ss_sum(cell_id)%gwsw = gw_ss_sum(cell_id)%gwsw + Q !track for annual values
+          gw_hyd_ss_yr(cell_id)%gwsw = gw_hyd_ss_yr(cell_id)%gwsw + Q !track for annual values
           
           !store for channel object (positive value = water added to channel)
           ch_stor(chan_id)%flo = ch_stor(chan_id)%flo + (Q*(-1))
@@ -201,4 +201,4 @@
       enddo !go to next cell 
           
       return
-      end subroutine gwflow_gwsw      
+      end subroutine gwflow_channel_exch      

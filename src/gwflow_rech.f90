@@ -81,8 +81,8 @@
               cell_id = gw_bound_near(cell_id)
             endif
             cell_rech_volume = rech_volume * lsu_cells_fract(k,i)
-            gw_ss(cell_id)%rech = gw_ss(cell_id)%rech + cell_rech_volume
-            gw_ss_sum(cell_id)%rech = gw_ss_sum(cell_id)%rech + cell_rech_volume
+            gw_hyd_ss(cell_id)%rech = gw_hyd_ss(cell_id)%rech + cell_rech_volume
+            gw_hyd_ss_yr(cell_id)%rech = gw_hyd_ss_yr(cell_id)%rech + cell_rech_volume
             if(gw_solute_flag == 1) then
               do s=1,gw_nsolute !loop through the solutes
                 cell_rech_solmass(s) = rech_solmass(s) * lsu_cells_fract(k,i)  
@@ -125,8 +125,8 @@
                 cell_received(cell_id) = 1
                 cell_rech_volume = rech_volume * hru_cells_fract(hru_id,i)
                 hru_cell_total = hru_cell_total + cell_rech_volume
-                gw_ss(cell_id)%rech = gw_ss(cell_id)%rech + cell_rech_volume
-                gw_ss_sum(cell_id)%rech = gw_ss_sum(cell_id)%rech + cell_rech_volume
+                gw_hyd_ss(cell_id)%rech = gw_hyd_ss(cell_id)%rech + cell_rech_volume
+                gw_hyd_ss_yr(cell_id)%rech = gw_hyd_ss_yr(cell_id)%rech + cell_rech_volume
                 if (gw_solute_flag == 1) then
                   do s=1,gw_nsolute !loop through the solutes
                     cell_rech_solmass(s) = rech_solmass(s) * hru_cells_fract(hru_id,i)
@@ -173,9 +173,9 @@
               cell_id = gw_bound_near(cell_id)
             endif
               if(cell_received(cell_id).eq.0) then !has not been given recharge from an HRU
-                gw_ss(cell_id)%rech = cell_rech_volume
+                gw_hyd_ss(cell_id)%rech = cell_rech_volume
                 huc12_cell_total = huc12_cell_total + cell_rech_volume
-                gw_ss_sum(cell_id)%rech = gw_ss_sum(cell_id)%rech + cell_rech_volume    
+                gw_hyd_ss_yr(cell_id)%rech = gw_hyd_ss_yr(cell_id)%rech + cell_rech_volume    
                 if (gw_solute_flag == 1) then
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_ss(cell_id)%solute(s)%rech = cell_rech_solmass(s)
@@ -201,8 +201,8 @@
              cell_id = gw_bound_near(cell_id)
             endif
             cell_rech_volume = rech_volume * hru_cells_fract(k,i)
-            gw_ss(cell_id)%rech = gw_ss(cell_id)%rech + cell_rech_volume
-            gw_ss_sum(cell_id)%rech = gw_ss_sum(cell_id)%rech + cell_rech_volume
+            gw_hyd_ss(cell_id)%rech = gw_hyd_ss(cell_id)%rech + cell_rech_volume
+            gw_hyd_ss_yr(cell_id)%rech = gw_hyd_ss_yr(cell_id)%rech + cell_rech_volume
             if (gw_solute_flag == 1) then
               do s=1,gw_nsolute !loop through the solutes
                 cell_rech_solmass(s) = rech_solmass(s) * hru_cells_fract(k,i)

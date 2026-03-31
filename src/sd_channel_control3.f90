@@ -22,8 +22,8 @@
       
       implicit none     
       
-      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_watqual4, conditions, gwflow_canl, &
-                  gwflow_gwsw, gwflow_satx, gwflow_tile, rcurv_interp_flo, sd_channel_sediment3, &
+      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_watqual4, conditions, gwflow_canal, &
+                  gwflow_channel_exch, gwflow_satexcess, gwflow_tile, rcurv_interp_flo, sd_channel_sediment3, &
                   wallo_control, cli_lapse
     
       integer :: isd_db = 0           !              |
@@ -138,10 +138,10 @@
       
       !if gwflow is active, calculate aquifer interactions (ht1 is updated)
       if(bsn_cc%gwflow.eq.1) then
-        call gwflow_gwsw(ich) !channel <--> groundwater
-        call gwflow_canl(ich) !channel --> canal seepage
+        call gwflow_channel_exch(ich) !channel <--> groundwater
+        call gwflow_canal(ich) !channel --> canal seepage
         call gwflow_tile(ich) !groundwater --> channel
-        call gwflow_satx(ich) !groundwater --> channel
+        call gwflow_satexcess(ich) !groundwater --> channel
       end if
       
       !! set inflow hyds for printing

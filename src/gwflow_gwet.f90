@@ -68,8 +68,8 @@
             else
               gwet_volume = 0.
             endif
-            gw_ss(cell_id)%gwet = gw_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
-            gw_ss_sum(cell_id)%gwet = gw_ss_sum(cell_id)%gwet + (gwet_volume*(-1))
+            gw_hyd_ss(cell_id)%gwet = gw_hyd_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
+            gw_hyd_ss_yr(cell_id)%gwet = gw_hyd_ss_yr(cell_id)%gwet + (gwet_volume*(-1))
             gw_state(cell_id)%stor = gw_state(cell_id)%stor - gwet_volume 
           enddo
         enddo !go to next LSU
@@ -106,8 +106,8 @@
           else
             gwet_volume = 0.
           endif
-          gw_ss(cell_id)%gwet = gw_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
-          gw_ss_sum(cell_id)%gwet = gw_ss_sum(cell_id)%gwet + (gwet_volume*(-1))
+          gw_hyd_ss(cell_id)%gwet = gw_hyd_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
+          gw_hyd_ss_yr(cell_id)%gwet = gw_hyd_ss_yr(cell_id)%gwet + (gwet_volume*(-1))
           gw_state(cell_id)%stor = gw_state(cell_id)%stor - gwet_volume 
         enddo
         ob_num = ob_num + 1

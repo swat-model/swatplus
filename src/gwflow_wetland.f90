@@ -1,4 +1,4 @@
-      subroutine gwflow_wetl(hru_id) !rtb gwflow
+      subroutine gwflow_wetland(hru_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the volume of groundwater exchanged with wetlands
@@ -73,8 +73,8 @@
                 gw_inflow = gwvol_avail
               endif
               !include in groundwater source-sink array (will be removed in gwflow_simulate)
-              gw_ss(cell_id)%wetl = gw_ss(cell_id)%wetl + (gw_inflow*(-1)) !m3 negative = leaving the aquifer
-              gw_ss_sum(cell_id)%wetl = gw_ss_sum(cell_id)%wetl + (gw_inflow*(-1))
+              gw_hyd_ss(cell_id)%wetl = gw_hyd_ss(cell_id)%wetl + (gw_inflow*(-1)) !m3 negative = leaving the aquifer
+              gw_hyd_ss_yr(cell_id)%wetl = gw_hyd_ss_yr(cell_id)%wetl + (gw_inflow*(-1))
               !add groundwater inflow to wetland; include in wetland water balance
               wet(hru_id)%flo = wet(hru_id)%flo + gw_inflow !m3
               wet_inflow = wet_inflow + gw_inflow !m3 --> track total inflow (for wetland water balance)
@@ -123,4 +123,4 @@
       endif !check if groundwater-wetland exchange is active
           
       return
-      end subroutine gwflow_wetl    
+      end subroutine gwflow_wetland    

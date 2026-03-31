@@ -1,4 +1,4 @@
-      subroutine gwflow_satx(chan_id) !rtb gwflow
+      subroutine gwflow_satexcess(chan_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the groundwater volume that enters the channel via saturation excess flow
@@ -44,8 +44,8 @@
               satx_volume = (gw_state(cell_id)%area * satx_depth) * gw_state(cell_id)%spyd !m3 of groundwater above ground surface 
               
               !store for water balance calculations (in gwflow_simulate)
-              gw_ss(cell_id)%satx = satx_volume * (-1) !negative = leaving the aquifer
-              gw_ss_sum(cell_id)%satx = gw_ss_sum(cell_id)%satx + (satx_volume * (-1))
+              gw_hyd_ss(cell_id)%satx = satx_volume * (-1) !negative = leaving the aquifer
+              gw_hyd_ss_yr(cell_id)%satx = gw_hyd_ss_yr(cell_id)%satx + (satx_volume * (-1))
               
               !store for channel object (positive value = water added to channel)
               ch_stor(chan_id)%flo = ch_stor(chan_id)%flo + satx_volume
@@ -90,4 +90,4 @@
       endif !check if saturation excess flow is being simulated
                             
       return
-      end subroutine gwflow_satx      
+      end subroutine gwflow_satexcess      

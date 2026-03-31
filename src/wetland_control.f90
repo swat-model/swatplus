@@ -20,7 +20,7 @@
       
       implicit none
       
-      external :: conditions, ero_cfactor, gwflow_wetl, res_hydro, res_nutrient, res_sediment, res_weir_release, wet_cs, wet_salt
+      external :: conditions, ero_cfactor, gwflow_wetland, res_hydro, res_nutrient, res_sediment, res_weir_release, wet_cs, wet_salt
      
       real :: bypass = 1.             !              | 
       integer :: j = 0                !none          |counter
@@ -98,7 +98,7 @@
 
         !calculate seepage and groundwater interactions
         if(bsn_cc%gwflow == 1) then !rtb gwflow
-          call gwflow_wetl(j)
+          call gwflow_wetland(j)
         else !original seepage calculations
           !! infiltration of the standing water to the topsoil layer. 
           !! Any excess infiltration volume estimated here is reverted (back to waterbody) in swr_satexcess.
