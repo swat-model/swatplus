@@ -1,4 +1,4 @@
-      subroutine gwflow_canl(chan_id) !rtb gwflow
+      subroutine gwflow_canal(chan_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
@@ -128,18 +128,18 @@
                   if (-Q .ge. gw_state(cell_id)%stor) then !can only remove what is there                  
                     Q = -gw_state(cell_id)%stor 
                   endif
-                  gw_ss(cell_id)%canl = gw_ss(cell_id)%canl + Q
+                  gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q
                   gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell 
                 else !canal --> groundwater (seepage)
                   if(Q > 0) then !canal seepage; remove water from channel
                     if(Q > ch_stor(chan_id)%flo) then !can only remove what is there
                       Q = ch_stor(chan_id)%flo
                     endif
-                    gw_ss(cell_id)%canl = gw_ss(cell_id)%canl + Q !store for water balance calculations
+                    gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q !store for water balance calculations
                     ch_stor(chan_id)%flo = ch_stor(chan_id)%flo - Q !remove water from channel 
                   endif
                 endif
-                gw_ss_sum(cell_id)%canl = gw_ss_sum(cell_id)%canl + Q !store for annual water 
+                gw_hyd_ss_yr(cell_id)%canl = gw_hyd_ss_yr(cell_id)%canl + Q !store for annual water 
                 
                 !calculate solute mass (g/day) transported between cell and channel
                 if (gw_solute_flag == 1) then
@@ -230,4 +230,4 @@
       endif !check if canal-cell exchange is active
           
       return
-      end subroutine gwflow_canl      
+      end subroutine gwflow_canal      

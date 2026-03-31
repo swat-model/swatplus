@@ -1,4 +1,4 @@
-      subroutine gwflow_canl_out !rtb gwflow
+      subroutine gwflow_canal_ext !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
@@ -75,8 +75,8 @@
                 endif
                 gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell 
               endif  
-              gw_ss(cell_id)%canl = gw_ss(cell_id)%canl + Q  
-              gw_ss_sum(cell_id)%canl = gw_ss_sum(cell_id)%canl + Q !store for annual water 
+              gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q  
+              gw_hyd_ss_yr(cell_id)%canl = gw_hyd_ss_yr(cell_id)%canl + Q !store for annual water 
               
               !calculate solute mass (g/day) transported between cell and channel
               if (gw_solute_flag == 1) then
@@ -109,4 +109,4 @@
       endif !check if canal-cell exchange is active
        
       return
-      end subroutine gwflow_canl_out      
+      end subroutine gwflow_canal_ext      

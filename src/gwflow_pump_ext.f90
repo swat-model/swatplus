@@ -1,4 +1,4 @@
-      subroutine gwflow_ppex !rtb gwflow
+      subroutine gwflow_pump_ext !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the volume of groundwater that is extracted
@@ -44,8 +44,8 @@
                   Q = gw_state(cell_id)%stor
                   gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q
                 endif
-                gw_ss(cell_id)%ppex = gw_ss(cell_id)%ppex - Q !negative = leaving the aquifer
-                gw_ss_sum(cell_id)%ppex = gw_ss_sum(cell_id)%ppex - Q 
+                gw_hyd_ss(cell_id)%ppex = gw_hyd_ss(cell_id)%ppex - Q !negative = leaving the aquifer
+                gw_hyd_ss_yr(cell_id)%ppex = gw_hyd_ss_yr(cell_id)%ppex - Q 
                 !if chemical transport simulated, calculate the mass of N and P removed via pumping
                 if (gw_solute_flag == 1) then
                   do s=1,gw_nsolute !loop through the solutes
@@ -64,4 +64,4 @@
         
       endif
        
-      end subroutine gwflow_ppex     
+      end subroutine gwflow_pump_ext     

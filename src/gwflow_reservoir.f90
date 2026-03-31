@@ -1,4 +1,4 @@
-      subroutine gwflow_resv(res_id) !rtb gwflow
+      subroutine gwflow_reservoir(res_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the water exchange volume between the reservoir and the connected grid cells
@@ -79,8 +79,8 @@
               endif
 
               !store for gwflow water balance calculations (in gwflow_simulate)
-              gw_ss(cell_id)%resv = gw_ss(cell_id)%resv + Q 
-              gw_ss_sum(cell_id)%resv = gw_ss_sum(cell_id)%resv + Q
+              gw_hyd_ss(cell_id)%resv = gw_hyd_ss(cell_id)%resv + Q 
+              gw_hyd_ss_yr(cell_id)%resv = gw_hyd_ss_yr(cell_id)%resv + Q
               
               !store seepage value for reservoir object
               res_wat_d(res_id)%seep = Q
@@ -197,4 +197,4 @@
       endif !if reservoir-cell connection is active in the simulation
       
       return
-      end subroutine gwflow_resv         
+      end subroutine gwflow_reservoir         

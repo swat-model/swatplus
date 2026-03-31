@@ -41,22 +41,22 @@
           if(gw_state(cell_id)%stat == 1) then 
           
             !get elevation of the subsurface drain (m)
-            tile_elev = gw_state(cell_id)%elev - gw_tile_depth 
+            tile_elev = gw_state(cell_id)%elev - gw_tile_depth(cell_id) 
           
             !only perform calculation if water table is above tile drain            
             if(gw_state(cell_id)%head > tile_elev) then
               
               !calculate tile drainage outflow rate using Darcy's Law
               head_diff = gw_state(cell_id)%head - tile_elev
-              Q = gw_tile_drain_area * gw_tile_K * head_diff !m3/day
+              Q = gw_tile_drain_area(cell_id) * gw_tile_K(cell_id) * head_diff !m3/day
               
               !check for available groundwater in the cell - can only remove what is there
               if(Q > gw_state(cell_id)%stor) then
                 Q = gw_state(cell_id)%stor
               endif
               gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q !update available groundwater in the cell 
-              gw_ss(cell_id)%tile = Q * (-1) !leaving aquifer
-              gw_ss_sum(cell_id)%tile = gw_ss_sum(cell_id)%tile + (Q*(-1)) !leaving aquifer
+              gw_hyd_ss(cell_id)%tile = Q * (-1) !leaving aquifer
+              gw_hyd_ss_yr(cell_id)%tile = gw_hyd_ss_yr(cell_id)%tile + (Q*(-1)) !leaving aquifer
               
               !add water to channel
               ch_stor(chan_id)%flo = ch_stor(chan_id)%flo + Q

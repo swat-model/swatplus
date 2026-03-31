@@ -1,4 +1,4 @@
-      subroutine gwflow_ppag(hru_id,hru_demand,extracted,trn_unmet) !rtb gwflow
+      subroutine gwflow_pump_allo(hru_id,hru_demand,extracted,trn_unmet) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the volume of groundwater that is extracted
@@ -75,15 +75,15 @@
           trn_unmet = trn_unmet + gwvol_unmet
           
           !save the pumping volume (m3), for use in gwflow_simulate
-          gw_ss(cell_id)%ppag = gwvol_removed * (-1) !m3 negative = leaving the aquifer
-          gw_ss_sum(cell_id)%ppag = gw_ss_sum(cell_id)%ppag + (gwvol_removed * (-1))
+          gw_hyd_ss(cell_id)%ppag = gwvol_removed * (-1) !m3 negative = leaving the aquifer
+          gw_hyd_ss_yr(cell_id)%ppag = gw_hyd_ss_yr(cell_id)%ppag + (gwvol_removed * (-1))
           
           !sum the pumping for the current HRU
           sum_pump = sum_pump + gwvol_removed
           
           !save the unsatisfied pumping volume (m3), for output
-          gw_ss(cell_id)%ppdf = gwvol_unmet
-          gw_ss_sum(cell_id)%ppdf = gw_ss_sum(cell_id)%ppdf + gwvol_unmet
+          gw_hyd_ss(cell_id)%ppdf = gwvol_unmet
+          gw_hyd_ss_yr(cell_id)%ppdf = gw_hyd_ss_yr(cell_id)%ppdf + gwvol_unmet
           
           !add solute mass in irrigation water to HRU soil profile
           !(mass is removed from the aquifer via mass balance equation in gwflow_simulate.f)     
@@ -158,4 +158,4 @@
       !store pumping (m3) for the HRU
       hru_pump(hru_id) = sum_pump
       
-      end subroutine gwflow_ppag     
+      end subroutine gwflow_pump_allo     

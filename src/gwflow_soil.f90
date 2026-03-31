@@ -63,8 +63,8 @@
               hru_Q = (hru_soilz - vadose_z) * poly_area * gw_state(cell_id)%spyd !m3 of groundwater to transfer to the soil profile 
 
               !store for water balance calculations (in gwflow_simulate)
-              gw_ss(cell_id)%soil = gw_ss(cell_id)%soil + (hru_Q*(-1)) !negative = leaving the aquifer
-              gw_ss_sum(cell_id)%soil = gw_ss_sum(cell_id)%soil + (hru_Q*(-1))
+              gw_hyd_ss(cell_id)%soil = gw_hyd_ss(cell_id)%soil + (hru_Q*(-1)) !negative = leaving the aquifer
+              gw_hyd_ss_yr(cell_id)%soil = gw_hyd_ss_yr(cell_id)%soil + (hru_Q*(-1))
 
             !solutes
               if (gw_solute_flag == 1) then

@@ -201,7 +201,7 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
             extracted = 0.
             trn_unmet = 0.
             hru_demand = trn_m3
-            call gwflow_ppag(wallo(iwallo)%trn(itrn)%num,trn_m3,extracted,trn_unmet)
+            call gwflow_pump_allo(wallo(iwallo)%trn(itrn)%num,trn_m3,extracted,trn_unmet)
             wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + extracted
             wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_unmet
             wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
