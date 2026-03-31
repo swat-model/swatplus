@@ -57,6 +57,24 @@
       type (groundwater_state), dimension (:), allocatable :: gw_state
       
       
+      !groundwater transit time variables for each cell ---------------------------------------------------------------
+      integer :: gw_ttime = 0
+      integer :: gw_transit_num = 0
+      integer, dimension (:), allocatable :: gw_transit_cells
+      integer, dimension (:), allocatable :: gw_cell_chan_flag
+      real, dimension (:), allocatable :: gw_cell_chan_time
+      real, dimension (:), allocatable :: gw_cell_tile_time
+      type groundwater_transit
+        real*8 :: x = 0.             !m            |x coordinate
+        real*8 :: y = 0.             !m            |y coordinate
+        integer :: cell = 0          !             |current cell where groundwater is located
+        real :: t = 0.               !d            |cumulative groundwater travel time from recharge area
+        real :: t_chan = 0.          !d            |time for groundwater to reach a channel
+        real :: t_tile = 0.          !d            |time for groundwater to reach a tile drain
+        real :: t_well = 0.          !d            |time for groundwater to reach pumping well
+      end type groundwater_transit
+      type (groundwater_transit), dimension (:), allocatable :: gw_transit
+
       !variables for HRU (and LSU) linkage to grid cells --------------------------------------------------------------
       !variables for linking HRUs to grid cells
       integer :: hru_cells_link = 0                                          !        |
@@ -67,6 +85,7 @@
       real, dimension (:,:), allocatable :: hru_cells_fract                  !        |
       real, dimension (:,:), allocatable :: cells_fract                      !        |
       real, dimension (:,:), allocatable :: cell_hrus_fract                  !        |
+      integer, dimension (:), allocatable :: hrus_connected                  !        |flag: which HRUs are connected to cells
       !variables for linking LSUs (landscape units) to grid cells
       integer :: lsu_cells_link = 0                                          !        |
       integer :: in_lsu_cell = 0                                             !        |
@@ -410,37 +429,10 @@
       
       !variables for observation wells --------------------------------------------------------------------------------
       integer :: gw_num_obs_wells = 0                           !     |
-      integer, dimension (:), allocatable :: gw_obs_cells_init  !     |
       integer, dimension (:), allocatable :: gw_obs_cells       !     |
       real, dimension (:), allocatable :: gw_obs_head           !     |
       integer :: gw_cell_obs_ss = 0                             !     |
       real, dimension (:), allocatable :: gw_cell_obs_ss_vals   !     |
-      !logical :: usgs_obs!     |
-      integer :: usgs_obs = 0
-      real(8), dimension (:), allocatable :: usgs_id            !     |
-      real, dimension (:,:), allocatable :: usgs_head_vals      !     |
-      real, dimension (:,:), allocatable :: gw_obs_head_annual  !     |
-      real, dimension (:,:), allocatable :: sim_head_vals       !     |
-      real, dimension (:,:), allocatable :: gw_obs_sat_annual   !     |
-      real, dimension (:,:), allocatable :: sim_sat_vals        !     |
-      
-      
-      !variables for streamflow testing and output --------------------------------------------------------------------
-      !logical stream_obs!     |
-      integer :: stream_obs = 0
-      integer :: gw_num_obs_chan = 0                            !     |
-      integer :: num_months = 0                                 !     |
-      integer :: sim_month = 0                                  !     |
-      integer, dimension (:), allocatable :: obs_channels       !     |
-      real, dimension (:,:), allocatable :: stream_nse          !     |
-      real, dimension (:,:), allocatable :: stream_nse1         !     |
-      real, dimension (:,:), allocatable :: stream_nnse         !     |
-      real, dimension (:,:), allocatable :: stream_kg           !     |
-      real, dimension (:,:), allocatable :: stream_pbias        !     |
-      real, dimension (:,:), allocatable :: obs_flow_vals       !     |
-      real, dimension (:,:), allocatable :: sim_flow_vals       !     |
-      integer :: gw_flow_cal_yrs = 0                            !     |
-      integer :: gw_flow_cal = 0                                !     |
       
 
       !variables for hydrograph separation ----------------------------------------------------------------------------
@@ -528,6 +520,11 @@
         real, dimension (:), allocatable :: shale_sseratio  !        |sulfur:se ratio in shale
         real, dimension (:), allocatable :: shale_o2a       !1/day   |o2 oxidation rate in presence of shale
         real, dimension (:), allocatable :: shale_no3a      !1/day   |no3 oxidation rate in presence of shale
+        integer :: bed_flag = 0     !             |flag (0,1) for presence of shale in bedrock
+        real :: bed_sse = 0.        !             |sulfur:se ratio in bedrock shale
+        real :: bed_o2a = 0.        !1/day        |o2 oxidation rate in presence of bedrock shale
+        real :: bed_no3a = 0.       !1/day        |no3 oxidation rate in presence of bedrock shale
+        integer :: ripar = 0        !             |flag: 1=cell in riparian area; 0=not
       end type solute_chem
       type (solute_chem), dimension (:), allocatable :: gwsol_chem
       
@@ -583,6 +580,7 @@
         type (solute_ss_sum), dimension (:), allocatable :: solute
       end type object_solute_ss_sum
       type (object_solute_ss_sum), dimension (:), allocatable :: gwsol_ss_sum
+      type (object_solute_ss_sum), dimension (:), allocatable :: gwsol_ss_sum_mo
       
       !percolation and recharge arrays
       real, dimension (:,:), allocatable :: gwflow_percsol         !kg/ha    |solute mass leaving the soil profile
@@ -640,21 +638,6 @@
       real, dimension (:,:), allocatable :: gw_obs_solute          !         |                                 
                                           
       
-      !variables specific to national model (NAM) ---------------------------------------------------------------------
-      !logical  nat_model!         |
-      integer :: nat_model = 0
-      integer, dimension (:), allocatable :: huc12_nhru            !         |
-      integer, dimension (:), allocatable :: huc12_ncell           !         |
-      integer, dimension (:), allocatable :: hrus_connected        !         |
-      integer, dimension (:,:), allocatable :: huc12_hrus          !         |
-      integer, dimension (:), allocatable :: cell_received         !         |
-      integer, dimension (:,:), allocatable :: huc12_cells         !         |
-      integer, dimension (:), allocatable :: cell_included_huc12   !         |
-      real(8), dimension (:), allocatable :: huc12                 !         |
-      real, dimension (:,:), allocatable :: gw_huc12_wb            !         |
-      real, dimension (:,:), allocatable :: gw_huc12_wb_mo         !         |
-      
-      
       !reading and writing --------------------------------------------------------------------------------------------
       integer :: out_gw = 1228
       integer :: in_wet_cell = 1239
@@ -686,14 +669,39 @@
       integer :: out_gw_wet = 1310
       integer :: out_gw_pumpag = 1272
       integer :: out_gw_pumpex = 1273
-      integer :: out_gwobs_usgs = 1274
-      integer :: out_strobs = 1275
-      integer :: out_huc12wb = 1276
-      integer :: out_huc12wb_mo = 1312
       integer :: out_gw_pumpdef = 1277
       integer :: out_gw_canal = 1278
       integer :: out_gw_fp = 1283
       integer :: out_gw_chem = 1284
+      !yearly water flux component output
+      integer :: out_gw_gwet = 1311
+      integer :: out_gw_gwsw = 1312
+      integer :: out_gw_satx = 1314
+      integer :: out_gw_ppag = 1315
+      integer :: out_gw_ppex = 1316
+      integer :: out_gw_resv = 1318
+      integer :: out_gw_wetl = 1319
+      integer :: out_gw_fpln = 1320
+      integer :: out_gw_canl = 1321
+      integer :: out_gw_pond = 1322
+      integer :: out_gw_phyt = 1325
+      !canal and pond balance output
+      integer :: out_canal_bal = 1328
+      integer :: out_canal_sol = 1329
+      integer :: out_pond_bal = 1323
+      integer :: out_pond_sol = 1324
+      integer :: out_pond_mass = 1326
+      integer :: out_pond_conc = 1327
+      !temperature output
+      integer :: out_gwtemps = 1370
+      !transit time output
+      integer :: out_gw_transit = 1410
+      integer :: out_gw_transit_chan = 1411
+      integer :: out_gw_transit_tile = 1412
+      !channel cell groups and observation output
+      integer :: out_gwsw_groups = 1413
+      integer :: out_gwsw_chanobs_flow = 1414
+      integer :: out_gwsw_chanobs_no3 = 1415
       integer :: out_hru_pump_mo = 1285
       integer :: out_hru_pump_yr = 1286
       integer :: out_hru_pump_obs = 1287
@@ -741,6 +749,21 @@
       integer :: out_solbal_aa = 7300
       !solute observation cell concentrations
       integer :: out_gwobs_sol = 1308
+      !water flux component output (monthly grids)
+      integer :: out_gw_rech_mo = 1330
+      integer :: out_gw_gwet_mo = 1331
+      integer :: out_gw_gwsw_mo = 1332
+      integer :: out_gw_soil_mo = 1333
+      integer :: out_gw_satx_mo = 1334
+      integer :: out_gw_ppag_mo = 1335
+      integer :: out_gw_ppex_mo = 1336
+      integer :: out_gw_tile_mo = 1337
+      integer :: out_gw_resv_mo = 1338
+      integer :: out_gw_wetl_mo = 1339
+      integer :: out_gw_fpln_mo = 1340
+      integer :: out_gw_canl_mo = 1341
+      integer :: out_gw_pond_mo = 1342
+      integer :: out_gw_phyt_mo = 1343
       !heat transport output
       integer :: out_heatbal_dy = 1360
       integer :: out_heatbal_yr = 1361

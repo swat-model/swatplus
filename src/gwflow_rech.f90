@@ -96,97 +96,8 @@
       else !proceed with HRU-cell connection
       
       !map recharge from the HRUs to the grid cells
-      if (nat_model == 1) then !national model application
-        !loop through the HUC12 subwatersheds
-        cell_received = 0
-        ob_num = sp_ob1%hru  !object number of first HRU
-        hru_total = 0.
-        hru_cell_total = 0.
-        huc12_cell_total = 0.
-        do n=1,sp_ob%outlet
-          !loop through the HRUs in the subwatershed - assign recharge to any connected cells
-          sub_recharge = 0.
-          sub_solmass = 0.
-          do k=1,huc12_nhru(n)
-            hru_id = huc12_hrus(n,k)
-            rech_volume = (gw_rech(hru_id)/1000.) * (ob(ob_num)%area_ha * 10000.) !m * m2 = m3
-            hru_total = hru_total + rech_volume
-            if (gw_solute_flag == 1) then
-              do s=1,gw_nsolute !loop through the solutes
-                rech_solmass(s) = gw_rechsol(hru_id,s) * ob(ob_num)%area_ha * 1000. !g
-              enddo
-            endif
-            if(hrus_connected(hru_id).eq.1) then
-              do i=1,hru_num_cells(hru_id)
-                cell_id = hru_cells(hru_id,i)
-            if(gw_state(cell_id)%stat == 2) then !if boundary cell, give recharge to nearest active cell
-             cell_id = gw_bound_near(cell_id)
-            endif
-                cell_received(cell_id) = 1
-                cell_rech_volume = rech_volume * hru_cells_fract(hru_id,i)
-                hru_cell_total = hru_cell_total + cell_rech_volume
-                gw_hyd_ss(cell_id)%rech = gw_hyd_ss(cell_id)%rech + cell_rech_volume
-                gw_hyd_ss_yr(cell_id)%rech = gw_hyd_ss_yr(cell_id)%rech + cell_rech_volume
-                if (gw_solute_flag == 1) then
-                  do s=1,gw_nsolute !loop through the solutes
-                    cell_rech_solmass(s) = rech_solmass(s) * hru_cells_fract(hru_id,i)
-                    gwsol_ss(cell_id)%solute(s)%rech = gwsol_ss(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-                    gwsol_ss_sum(cell_id)%solute(s)%rech = gwsol_ss_sum(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-                  enddo
-                endif
-              enddo      
-            else
-              sub_recharge = sub_recharge + rech_volume
-              if (gw_solute_flag == 1) then
-                do s=1,gw_nsolute !loop through the solutes
-                  sub_solmass(s) = sub_solmass(s) + rech_solmass(s)  
-                enddo
-              endif
-            endif
-            ob_num = ob_num + 1
-          enddo
-          !loop through the cells in the subwatershed - assign remaining recharge to unconnected cells
-          !first: count the number of cells in each subwatershed that did not receive recharge from an HRU
-          cell_count = 0
-          do k=1,huc12_ncell(n)
-            cell_id = huc12_cells(n,k)
-          if(gw_state(cell_id)%stat == 2) then !if boundary cell, give recharge to nearest active cell
-            cell_id = gw_bound_near(cell_id)
-          endif
-            if(cell_received(cell_id).eq.0) then !has not been given recharge from an HRU
-              cell_count = cell_count + 1
-            endif
-          enddo
-          !second: calculate the recharge that should go to each grid cell
-          !only proceed if there are unconnected cells (i.e. cell_count > 0)
-          if(cell_count.gt.0) then
-            cell_rech_volume = sub_recharge / cell_count
-            if (gw_solute_flag == 1) then
-              do s=1,gw_nsolute !loop through the solutes
-                cell_rech_solmass(s) = sub_solmass(s) / cell_count
-              enddo
-            endif
-            !third: assign the average cell recharge to each cell
-            do k=1,huc12_ncell(n)
-              cell_id = huc12_cells(n,k)
-            if(gw_state(cell_id)%stat == 2) then !if boundary cell, give recharge to nearest active cell
-              cell_id = gw_bound_near(cell_id)
-            endif
-              if(cell_received(cell_id).eq.0) then !has not been given recharge from an HRU
-                gw_hyd_ss(cell_id)%rech = cell_rech_volume
-                huc12_cell_total = huc12_cell_total + cell_rech_volume
-                gw_hyd_ss_yr(cell_id)%rech = gw_hyd_ss_yr(cell_id)%rech + cell_rech_volume    
-                if (gw_solute_flag == 1) then
-                  do s=1,gw_nsolute !loop through the solutes
-                    gwsol_ss(cell_id)%solute(s)%rech = cell_rech_solmass(s)
-                    gwsol_ss_sum(cell_id)%solute(s)%rech = gwsol_ss_sum(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-                  enddo
-                endif            
-              endif
-            enddo
-          endif
-        enddo
-      else !proceed with normal mapping routine
+      !map recharge from the HRUs to the grid cells
+      !national model (HUC12) recharge mapping removed
         ob_num = sp_ob1%hru  !object number of first HRU
         do k=1,sp_ob%hru
           rech_volume = (gw_rech(k)/1000.) * (ob(ob_num)%area_ha * 10000.) !m * m2 = m3
@@ -213,7 +124,6 @@
           enddo
           ob_num = ob_num + 1
         enddo
-      endif
       
       endif !check for LSU-cell connection
        
