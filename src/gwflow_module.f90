@@ -345,6 +345,9 @@
       integer :: gw_canal_ncells_out = 0                 !     |number of cells connected to canals that receive outside water
       real, allocatable :: canal_out_info(:,:)           !     |characteristics for canals that receive outside water
       real, allocatable :: canal_out_conc(:)             !     |solute concentration in canals that receive outside water
+      !temporary: diversion water quality arrays (to be replaced by wallo transfer hydrograph in Phase 7)
+      real, allocatable :: div_conc_salt(:,:)            !g/m3 |salt ion concentration in diverted water
+      real, allocatable :: div_conc_cs(:,:)              !g/m3 |constituent concentration in diverted water
       !canal-cell connection for canals that receive water from a point source diversion
       type cell_canal_div_info
         integer :: cell_id = 0
