@@ -224,7 +224,7 @@
         wst(iwst)%tlag(wst(iwst)%tlag_mne) = wst(iwst)%weat%tave
         !! lag day is the next variable in array
         wst(iwst)%tlag_mne = wst(iwst)%tlag_mne + 1
-        if (wst(iwst)%tlag_mne > w_temp%airlag_d) wst(iwst)%tlag_mne = 1
+        if (wst(iwst)%tlag_mne > 6) wst(iwst)%tlag_mne = 1  !6-day lag default (was w_temp%airlag_d)
         wst(iwst)%airlag_temp = wst(iwst)%tlag(wst(iwst)%tlag_mne)
       end do
             
