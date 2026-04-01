@@ -22,9 +22,9 @@
       
       implicit none     
       
-      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_watqual4, conditions, gwflow_canal, &
-                  gwflow_channel_exch, gwflow_satexcess, gwflow_tile, rcurv_interp_flo, sd_channel_sediment3, &
-                  wallo_control, cli_lapse
+      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_temp, ch_watqual4, conditions, gwflow_canal, &
+                  gwflow_channel_exch, gwflow_floodplain, gwflow_satexcess, gwflow_tile, rcurv_interp_flo, &
+                  sd_channel_sediment3, wallo_control, cli_lapse
     
       integer :: isd_db = 0           !              |
       integer :: ipest = 0            !              |
@@ -360,10 +360,8 @@
         end do
       end if
       
-      !! calculate stream temperature
-      ob(icmd)%hd(1)%temp = 5. + .75 * wst(iwst)%weat%tave
-      ht2%temp = 5. + .75 * wst(iwst)%weat%tave
-      ch_stor(isdch)%temp = 5. + .75 * wst(iwst)%weat%tave
+      !! calculate stream temperature (component mixing model)
+      call ch_temp
       
       !! set constituents for routing
       if (cs_db%num_pests > 0) then
