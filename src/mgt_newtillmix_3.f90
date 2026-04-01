@@ -149,7 +149,7 @@
               if (bio_mix_event) then
                 if (soil(jj)%phys(l)%tmp > 1.e-6) then
                   emix = bmix
-                  emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                  ! emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
                 else
                   emix = 0.
                   soil(jj)%ly(l)%tillagef = 0.
@@ -166,7 +166,7 @@
               if (bio_mix_event) then
                 if (soil(jj)%phys(l)%tmp > 0.) then
                   emix = bmix
-                  emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                  ! emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
                 else
                   emix = 0.
                   soil(jj)%ly(l)%tillagef = 0.
@@ -199,7 +199,9 @@
             
             !! mix each plant residue component separately
             do ipl = 1, pcom(jj)%npl
-              mix_org%rsd(ipl) = mix_org%rsd(ipl) + frac_mixed * pl_mass(jj)%rsd(ipl)
+              ! mix_org%rsd(ipl) = mix_org%rsd(ipl) + frac_mixed * pl_mass(jj)%rsd(ipl)
+              mix_org%rsd(ipl) = frac_mixed * pl_mass(jj)%rsd(ipl)
+              ! This is a test.
             end do
             
             mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
