@@ -1888,6 +1888,9 @@
         !read in solute parameters
         allocate(canal_out_conc(gw_nsolute))
         canal_out_conc = 0.
+        !temporary diversion concentration arrays (to be replaced by wallo transfer in Phase 7)
+        allocate(div_conc_salt(20,1000), source = 0.)
+        allocate(div_conc_cs(20,1000), source = 0.)
         read(in_gw,*) header
         do s=1,gw_nsolute
           read(in_gw,*) name,gwsol_sorb(s),gwsol_rctn(s),canal_out_conc(s)
