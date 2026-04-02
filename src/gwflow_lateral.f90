@@ -166,6 +166,16 @@
           gw_state(i)%head = gw_state(i)%hnew
         enddo
 
+        !heat transport (within each flow time step)
+        if(gw_heat_flag == 1) then
+          call gwflow_heat
+        endif
+
+        !solute transport (within each flow time step)
+        if(gw_solute_flag == 1) then
+          call gwflow_solute
+        endif
+
       enddo !go to next flow time step
 
       !update groundwater travel time; write out xy coordinates and cumulative time for selected cells
