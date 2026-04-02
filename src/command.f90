@@ -68,6 +68,7 @@
       integer :: i_count = 0          !rtb gwflow
       integer :: i_mfl = 0            !rtb gwflow    |counter
       integer :: i_chan = 0           !rtb gwflow    |counter
+      integer :: iob_chan = 0        !rtb gwflow    |ob index for channel
       real :: sumflo = 0.
 
       icmd = sp_ob1%objs
@@ -628,11 +629,14 @@
       gw_daycount = gw_daycount + 1
       
       !rtb hydrograph separation
-      !write out hydrograph components for selected channels
+      !write out hydrograph components for all channels
       if (bsn_cc%gwflow == 1) then
       do i_chan=1,sp_ob%chandeg
         if(hydsep_flag(i_chan) == 1) then
-          write(out_hyd_sep,102) time%yrc,time%day,i_chan,(hyd_sep_array(i_chan,i_count),i_count=1,7)
+          iob_chan = sp_ob1%chandeg + i_chan - 1
+          write(out_hyd_sep,8102) time%day,time%mo,time%day_mo,time%yrc, &
+            i_chan,ob(iob_chan)%gis_id,ob(iob_chan)%name, &
+            (hyd_sep_array(i_chan,i_count),i_count=1,7)
         endif
       enddo
       endif
@@ -657,7 +661,8 @@
       enddo
       
 102   format(i6,11x,i3,8x,i5,5x,1000(f16.4))
-103   format(4i6,2i8,2x,a,35f12.3)      
+103   format(4i6,2i8,2x,a,35f12.3)
+8102  format(4i6,2i8,a18,7e13.4)      
 
       return
       end subroutine command

@@ -20,6 +20,7 @@
 
       integer :: i = 0                       !       |cell counter
 	  integer :: j = 0
+      character(len=18) :: canal_name = ''   !       |constructed canal name
       integer :: s = 0                       !       |counter of groundwater solutes
       integer :: cell_id = 0                 !       |cell in connection with the canal
 	  integer :: irec = 0                    !       |recall ID for canal diversion
@@ -220,12 +221,17 @@
 					endif
 
 				  !write out daily volumes and fluxes for the canal
-					write(out_canal_bal,100) time%yrc,time%mo,time%day,i,gw_canl_div_info(i)%div, &
-					                                                     gw_canl_div_info(i)%stor, &
-																															 gw_canl_div_info(i)%out_pond, &
-																															 gw_canl_div_info(i)%out_seep, &
-																															 gw_canl_div_info(i)%out_irrg, &
-																															 gw_canl_div_info(i)%div_ret
+          write(canal_name,'(a6,i4.4)') 'canal_',i
+          if(gwflag_flux == 1) then
+					write(out_canal_bal,8100) time%day,time%mo,time%day_mo,time%yrc, &
+					    i,i,canal_name, &
+					    gw_canl_div_info(i)%div, &
+					    gw_canl_div_info(i)%stor, &
+					    gw_canl_div_info(i)%out_pond, &
+					    gw_canl_div_info(i)%out_seep, &
+					    gw_canl_div_info(i)%out_irrg, &
+					    gw_canl_div_info(i)%div_ret
+          endif !gwflag_flux
 
 					!add solute mass to fields (soil layer)
 					if (gw_solute_flag == 1) then
@@ -256,7 +262,11 @@
 								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000. !kg
 								mass_irrg = (gw_canl_div_info(i)%out_irrg * canal_conc) / 1000. !kg
 								mass_ret = (gw_canl_div_info(i)%div_ret * canal_conc) / 1000. !kg
-								write(out_canal_sol,101) time%yrc,time%mo,time%day,i,gwsol_nm(sol_index),mass_div,mass_stor,mass_pond,mass_seep,mass_irrg,mass_ret
+								if(gwflag_flux == 1) then
+								write(out_canal_sol,8101) time%day,time%mo,time%day_mo,time%yrc, &
+								    i,i,canal_name,gwsol_nm(sol_index), &
+								    mass_div,mass_stor,mass_pond,mass_seep,mass_irrg,mass_ret
+								endif
               enddo
             endif
 						!constituents
@@ -281,7 +291,11 @@
 								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000. !kg
 								mass_irrg = (gw_canl_div_info(i)%out_irrg * canal_conc) / 1000. !kg
 								mass_ret = (gw_canl_div_info(i)%div_ret * canal_conc) / 1000. !kg
-								write(out_canal_sol,101) time%yrc,time%mo,time%day,i,gwsol_nm(sol_index),mass_div,mass_stor,mass_pond,mass_seep,mass_irrg,mass_ret
+								if(gwflag_flux == 1) then
+								write(out_canal_sol,8101) time%day,time%mo,time%day_mo,time%yrc, &
+								    i,i,canal_name,gwsol_nm(sol_index), &
+								    mass_div,mass_stor,mass_pond,mass_seep,mass_irrg,mass_ret
+								endif
               enddo
             endif
 					enddo
@@ -293,8 +307,10 @@
 
 
 
-100   format (4i8,10(e15.7))
-101   format (4i8,5x,a10,10(e15.7))
+      !standard SWAT+ data row: water balance (6 data cols)
+8100  format(4i6,2i8,a18,50e13.4)
+      !standard SWAT+ data row: solute balance (solute name + 6 data cols)
+8101  format(4i6,2i8,a18,a13,50e13.4)
 
       return
       end subroutine gwflow_canal_div
