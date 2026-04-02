@@ -16,6 +16,7 @@
 
       implicit none
 
+      character(len=18) :: pond_name = ''     !       |constructed pond name
       integer :: r = 0                       !       |counter for number of recharge ponds
 	    integer :: k = 0                       !       |counter for the number of cells connected to the recharge pond
 	    integer :: s = 0						 !       |solute counter
@@ -325,28 +326,36 @@
 					endif
 
 					!recharge pond water balance - output
-					write(out_pond_bal,100) time%yrc,time%mo,time%day,r,gw_pond_info(r)%area, &
-					                                                    gw_pond_info(r)%stor, &
-																															pond_rain, &
-																															div_added, &
-																															pond_evap, &
-																															pond_recharge, &
-																															gw_pond_info(r)%div, &
-																															gw_pond_info(r)%div_uns
+          write(pond_name,'(a5,i4.4)') 'pond_',r
+          if(gwflag_flux == 1) then
+					write(out_pond_bal,8100) time%day,time%mo,time%day_mo,time%yrc, &
+					    r,r,pond_name, &
+					    gw_pond_info(r)%area, &
+					    gw_pond_info(r)%stor, &
+					    pond_rain, &
+					    div_added, &
+					    pond_evap, &
+					    pond_recharge, &
+					    gw_pond_info(r)%div, &
+					    gw_pond_info(r)%div_uns
 
 					!recharge pond solute mass balance - output
-					do s=1,gw_nsolute !loop through the solutes
-					  write(out_pond_sol,101) time%yrc,time%mo,time%day,r,gw_pond_info(r)%area, &
-					                                                    gw_pond_info(r)%stor, &
-																															gwsol_nm(s), &
-																															gw_pond_info(r)%sol_mass(s), &
-																															div_mass(s), &
-																															rech_mass(s)
+					do s=1,gw_nsolute
+					  write(out_pond_sol,8101) time%day,time%mo,time%day_mo,time%yrc, &
+					      r,r,pond_name, &
+					      gw_pond_info(r)%area, &
+					      gw_pond_info(r)%stor, &
+					      gwsol_nm(s), &
+					      gw_pond_info(r)%sol_mass(s), &
+					      div_mass(s), &
+					      rech_mass(s)
 					enddo
+          endif !gwflag_flux
 
 10  	  enddo !go to next recharge pond
 
         !write out mass (kg) and concentration (g/m3) for each pond
+        if(gwflag_flux == 1) then
 				!no3
 				write(out_pond_mass,102) time%yrc,time%mo,time%day,gwsol_nm(1),(gw_pond_info(r)%sol_mass(1),r=1,gw_npond)
 				do r=1,gw_npond
@@ -398,13 +407,17 @@
 						write(out_pond_conc,102) time%yrc,time%mo,time%day,gwsol_nm(sol_index),(gw_pond_info(r)%sol_conc(sol_index),r=1,gw_npond)
 					enddo
 				endif
+        endif !gwflag_flux
 
 
       endif !check if recharge pond seepage is active
 
 
-100   format (4i8,10(e15.7))
-101   format (4i8,e15.4,e15.4,5x,a10,e15.4,e15.4,e15.4)
+      !standard SWAT+ data row: water balance
+8100  format(4i6,2i8,a18,50e13.4)
+      !standard SWAT+ data row: solute balance (area, storage real; solute name string; mass values)
+8101  format(4i6,2i8,a18,2e13.4,a13,50e13.4)
+      !wide format: pond mass/conc per pond
 102   format (3i8,5x,a10,5000(e15.4))
 
 
