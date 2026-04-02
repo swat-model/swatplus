@@ -218,7 +218,7 @@
         if (wgn_pms(iwgn)%pet_sum > 1.e-6) then
           wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / wgn_pms(iwgn)%pet_sum
         else
-          wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / 1.e-6
+          wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / 1.e-6 !fix
         end if
         wgn_pms(iwgn)%precip_mce(ppet_mce) = wst(iwst)%weat%precip
         wgn_pms(iwgn)%pet_mce(ppet_mce) = wst(iwst)%weat%pet
