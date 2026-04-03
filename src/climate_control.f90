@@ -215,7 +215,13 @@
         iwgn = wst(iwst)%wco%wgn
         wgn_pms(iwgn)%precip_sum = wgn_pms(iwgn)%precip_sum + wst(iwst)%weat%precip - wgn_pms(iwgn)%precip_mce(ppet_mce)
         wgn_pms(iwgn)%pet_sum = wgn_pms(iwgn)%pet_sum + wst(iwst)%weat%pet - wgn_pms(iwgn)%pet_mce(ppet_mce)
-        wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / wgn_pms(iwgn)%pet_sum
+        !! update precip/pet ratio using 30 day moving sums
+        if (wgn_pms(iwgn)%pet_sum > 1.e-6) then
+          wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / wgn_pms(iwgn)%pet_sum
+        else
+          !! use a minimum PET sum to avoid divide by zero
+          wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / 1.e-6
+        end if
         wgn_pms(iwgn)%precip_mce(ppet_mce) = wst(iwst)%weat%precip
         wgn_pms(iwgn)%pet_mce(ppet_mce) = wst(iwst)%weat%pet
         
