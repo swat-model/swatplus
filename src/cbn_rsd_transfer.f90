@@ -69,6 +69,7 @@
             decr = 1.0 ! added by fg to move all soil rsd into soil meta, str, lig pools
             transfer = decr * soil1(j)%pl(ipl)%rsd(k)
             soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - transfer
+            soil1(j)%rsd_tot(k) = soil1(j)%rsd_tot(k) - transfer
 
             ! The following if statements are to prevent runtime underflow errors with gfortran 
             if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
