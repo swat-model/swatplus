@@ -121,7 +121,7 @@
             decr = Min(decr, 1.)
             decomp = decr * soil1(j)%pl(ipl)%rsd(k)
             soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - decomp
-            soil1(j)%rsd_tot(k) = soil1(j)%rsd_tot(k) - transfer
+            soil1(j)%rsd_tot(k) = soil1(j)%rsd_tot(k) - decomp
 
             ! The following if statements are to prevent runtime underflow errors with gfortran 
             if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
@@ -137,12 +137,12 @@
             ! soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
             ! soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
             
-            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_blg * transfer%m
-            soil1(j)%str(k)%m  = soil1(j)%str(k)%m  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer%m
-            soil1(j)%lig(k)%m  = soil1(j)%lig(k)%m  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer%m
-            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_blg * transfer%c
-            soil1(j)%str(k)%c  = soil1(j)%str(k)%c  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer%c
-            soil1(j)%lig(k)%c  = soil1(j)%lig(k)%c  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer%c
+            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_blg * decomp%m
+            soil1(j)%str(k)%m  = soil1(j)%str(k)%m  + cswat_3_part_fracs(idp)%str_frac_blg  * decomp%m
+            soil1(j)%lig(k)%m  = soil1(j)%lig(k)%m  + cswat_3_part_fracs(idp)%lig_frac_blg  * decomp%m
+            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_blg * decomp%c
+            soil1(j)%str(k)%c  = soil1(j)%str(k)%c  + cswat_3_part_fracs(idp)%str_frac_blg  * decomp%c
+            soil1(j)%lig(k)%c  = soil1(j)%lig(k)%c  + cswat_3_part_fracs(idp)%lig_frac_blg  * decomp%c
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
