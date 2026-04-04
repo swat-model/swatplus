@@ -190,102 +190,42 @@
         enddo !go to next canal cell
 
 
-				!second: calculate irrigation for each HRU --------------------------------------------------------------------
-				!(using daily diversion volume: return, pond inflow, and seepage already accounted for)
+				!(irrigation removed -- handled by wallo water allocation system)
 
-				!loop through each canal; for each canal, calculate daily irrigation and runoff for each
-				!HRU within the canal command area
-				do i=1,gw_ncanal
-
-				  !calculate irrigation depths for each HRU
-				  !first: calculate total command area (m2)
-				  canal_area = 0.
-				  do j=1,gw_canl_div_info(i)%nhru
-				    hru_id = gw_canl_div_info(i)%hrus(j)
-					  canal_area = canal_area + (hru(hru_id)%area_ha * 10000.)
-					enddo
-
-					!second: calculate irrigation depth (mm); then apply depth and runoff to each HRU
-					irrig_depth = 0.
-					if(canal_area > 0) then
-						irrig_depth = (gw_canl_div_info(i)%stor / canal_area) * 1000.
-						do j=1,gw_canl_div_info(i)%nhru
-							hru_id = gw_canl_div_info(i)%hrus(j)
-							irrig(hru_id)%applied = irrig_depth * (1. - gw_canl_div_info(i)%hru_ro(j))
-							irrig(hru_id)%runoff = irrig_depth * gw_canl_div_info(i)%hru_ro(j)
-							irrig_volm = (irrig_depth/1000.) * (hru(hru_id)%area_ha * 10000.) !m3
-							gw_canl_div_info(i)%out_irrg = gw_canl_div_info(i)%out_irrg + irrig_volm
-							gw_canl_div_info(i)%stor = gw_canl_div_info(i)%stor - irrig_volm
-						enddo
-					endif
-
-				  !write out daily volumes and fluxes for the canal
+        !write out daily volumes and fluxes for each canal
+        do i=1,gw_ncanal
 					write(out_canal_bal,100) time%yrc,time%mo,time%day,i,gw_canl_div_info(i)%div, &
 					                                                     gw_canl_div_info(i)%stor, &
 																															 gw_canl_div_info(i)%out_pond, &
-																															 gw_canl_div_info(i)%out_seep, &
-																															 gw_canl_div_info(i)%out_irrg, &
-																															 gw_canl_div_info(i)%div_ret
+																															 gw_canl_div_info(i)%out_seep
 
-					!add solute mass to fields (soil layer)
+					!write solute mass balance (seepage mass only, irrigation handled by wallo)
 					if (gw_solute_flag == 1) then
-					do j=1,gw_canl_div_info(i)%nhru
-					  hru_id = gw_canl_div_info(i)%hrus(j)
-					  irrig_volm = irrig_depth * (hru(hru_id)%area_ha * 10000.) !m3
 						irec = gw_canl_div_info(i)%divr
 						sol_index = 2
-						!salt ions
 						if (gwsol_salt == 1) then
 							do isalt=1,cs_db%num_salts
                 sol_index = sol_index + 1
-                irrig_conc = div_conc_salt(isalt,irec)
-								irrig_mass = (irrig_volm * irrig_conc) / 1000. !m3 * g/m3 = g --> kg
-								wetland = hru(hru_id)%dbs%surf_stor !check if HRU is a wetland
-								if(wetland > 0) then !add to wetland
-									wet_water(hru_id)%salt(isalt) = wet_water(hru_id)%salt(isalt) + irrig_mass !kg
-									wetsalt_d(hru_id)%salt(isalt)%irrig = wetsalt_d(hru_id)%salt(isalt)%irrig + irrig_mass !kg
-								else !add to soil profile
-									cs_soil(hru_id)%ly(1)%salt(isalt) = cs_soil(hru_id)%ly(1)%salt(isalt) + (irrig_mass/hru(hru_id)%area_ha) !kg/ha - add to soil layer
-									hsaltb_d(hru_id)%salt(isalt)%irsw = hsaltb_d(hru_id)%salt(isalt)%irsw + (irrig_mass/hru(hru_id)%area_ha) !kg/ha - include in soil salt balance
-								endif
-								!write out daily solute mass balance
 								canal_conc = div_conc_salt(isalt,irec)
-								mass_div = (gw_canl_div_info(i)%div * canal_conc) / 1000. !kg
-								mass_stor = (gw_canl_div_info(i)%stor * canal_conc) / 1000. !kg
-								mass_pond = (gw_canl_div_info(i)%out_pond * canal_conc) / 1000. !kg
-								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000. !kg
-								mass_irrg = (gw_canl_div_info(i)%out_irrg * canal_conc) / 1000. !kg
-								mass_ret = (gw_canl_div_info(i)%div_ret * canal_conc) / 1000. !kg
-								write(out_canal_sol,101) time%yrc,time%mo,time%day,i,gwsol_nm(sol_index),mass_div,mass_stor,mass_pond,mass_seep,mass_irrg,mass_ret
+								mass_div = (gw_canl_div_info(i)%div * canal_conc) / 1000.
+								mass_stor = (gw_canl_div_info(i)%stor * canal_conc) / 1000.
+								mass_pond = (gw_canl_div_info(i)%out_pond * canal_conc) / 1000.
+								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000.
+								write(out_canal_sol,101) time%yrc,time%mo,time%day,i,gwsol_nm(sol_index),mass_div,mass_stor,mass_pond,mass_seep
               enddo
             endif
-						!constituents
 						if (gwsol_cons == 1) then
 							do ics=1,cs_db%num_cs
                 sol_index = sol_index + 1
-                irrig_conc = div_conc_cs(ics,irec)
-								irrig_mass = (irrig_volm * irrig_conc) / 1000. !m3 * g/m3 = g --> kg
-								wetland = hru(hru_id)%dbs%surf_stor !check if HRU is a wetland
-								if(wetland > 0) then !add to wetland
-									wet_water(hru_id)%cs(ics) = wet_water(hru_id)%cs(ics) + irrig_mass !kg
-									wetcs_d(hru_id)%cs(ics)%irrig = wetcs_d(hru_id)%cs(ics)%irrig + irrig_mass !kg
-								else !add to soil profile
-									cs_soil(hru_id)%ly(1)%cs(ics) = cs_soil(hru_id)%ly(1)%cs(ics) + (irrig_mass/hru(hru_id)%area_ha) !kg/ha - add to soil layer
-									hcsb_d(hru_id)%cs(ics)%irsw = hcsb_d(hru_id)%cs(ics)%irsw + (irrig_mass/hru(hru_id)%area_ha) !kg/ha - include in soil cs balance
-								endif
-								!write out daily solute mass balance
 								canal_conc = div_conc_cs(ics,irec)
-								mass_div = (gw_canl_div_info(i)%div * canal_conc) / 1000. !kg
-								mass_stor = (gw_canl_div_info(i)%stor * canal_conc) / 1000. !kg
-								mass_pond = (gw_canl_div_info(i)%out_pond * canal_conc) / 1000. !kg
-								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000. !kg
-								mass_irrg = (gw_canl_div_info(i)%out_irrg * canal_conc) / 1000. !kg
-								mass_ret = (gw_canl_div_info(i)%div_ret * canal_conc) / 1000. !kg
-								write(out_canal_sol,101) time%yrc,time%mo,time%day,i,gwsol_nm(sol_index),mass_div,mass_stor,mass_pond,mass_seep,mass_irrg,mass_ret
+								mass_div = (gw_canl_div_info(i)%div * canal_conc) / 1000.
+								mass_stor = (gw_canl_div_info(i)%stor * canal_conc) / 1000.
+								mass_pond = (gw_canl_div_info(i)%out_pond * canal_conc) / 1000.
+								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000.
+								write(out_canal_sol,101) time%yrc,time%mo,time%day,i,gwsol_nm(sol_index),mass_div,mass_stor,mass_pond,mass_seep
               enddo
             endif
-					enddo
-					endif !if solute transport is active
+					endif
 
 				enddo !go to next canal
 

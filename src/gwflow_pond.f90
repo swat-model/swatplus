@@ -31,7 +31,6 @@
       integer :: isalt = 0                   !       |salt ion counter
       integer :: ics = 0					 !       |constituent counter
       integer :: canal_id = 0
-      real :: div_vol(5000) = 0.			 !m3     |daily water volume diverted to each recharge pond
       real :: chan_volume = 0.               !m3     |starting volume in the source channel
       real :: cell_recharge = 0.             !m3     |recharge from the pond to the aquifer, for a single cell
       real :: pond_recharge = 0.			 !m3     |total recharge from the pond to the aquifer

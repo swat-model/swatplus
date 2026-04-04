@@ -226,7 +226,7 @@
             endif
           endif
           !determine if the current cell is a tile cell, and if there is drainage to tile
-          if(gw_tile_flag) then
+          if(gw_tile_flag == 1) then
             cell_id = gw_transit(i)%cell
             if(gw_state(cell_id)%tile == 1) then !tile cell
               if(gw_cell_tile_time(i) == 0.) then !only if not already stored

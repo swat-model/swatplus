@@ -33,6 +33,7 @@
       !general
       character(len=13) :: header = ""
       character*100 file_name(50)
+      character*100 file_name_scalar
       integer :: i = 0
       integer :: j = 0
       integer :: n = 0
@@ -79,9 +80,9 @@
         write(out_gwbal,*) 'wtdep:        m    average depth to water table for watershed'
         write(out_gwbal,*) 'ppdf:         mm   groundwater demand not satisfied for irrigation'
         write(out_gwbal,*)
-        gwflow_hdr_day = (/"year","day","ts","vbef","vaft","rech","gwet","gwsw","swgw","satx","soil", &
-                                             "latl","bndr","ppag","ppex","tile","resv","wetl","canl", &
-                                             "fpln","pond","phyt","error","satfr","wtdepth","ppdf"/)
+        gwflow_hdr_day = (/"   year","    day","     ts","   vbef","   vaft","   rech","   gwet","   gwsw","   swgw","   satx","   soil", &
+                                             "   latl","   bndr","   ppag","   ppex","   tile","   resv","   wetl","   canl", &
+                                             "   fpln","   pond","   phyt","  error","  satfr","wtdepth","   ppdf"/)
         write(out_gwbal,119) (gwflow_hdr_day(j),j=1,26)
       endif
 
@@ -115,9 +116,9 @@
         write(out_gwbal_mon,*) 'phyt:         mm   phreatophyte transpiration'
         write(out_gwbal_mon,*) 'ppdf:         mm   groundwater demand not satisfied for irrigation'
         write(out_gwbal_mon,*)
-        gwflow_hdr_mon = (/"year","month","dvol","rech","gwet","gwsw","swgw","satx","soil", &
-                                          "latl","bndr","ppag","ppex","tile","resv","wetl","canl", &
-                                          "fpln","pond","phyt","ppdf"/)
+        gwflow_hdr_mon = (/" year","month"," dvol"," rech"," gwet"," gwsw"," swgw"," satx"," soil", &
+                                          " latl"," bndr"," ppag"," ppex"," tile"," resv"," wetl"," canl", &
+                                          " fpln"," pond"," phyt"," ppdf"/)
         write(out_gwbal_mon,132) (gwflow_hdr_mon(j),j=1,21)
       endif
 
@@ -151,8 +152,8 @@
         write(out_gwbal_yr,*) 'phyt:      mm   phreatophyte transpiration'
         write(out_gwbal_yr,*) 'ppdf:      mm   groundwater demand not satisfied for irrigation'
         write(out_gwbal_yr,*)
-        gwflow_hdr_yr = (/"  year","dvol","rech","gwet","gwsw","swgw","satx","soil","latl","bndr","ppag","ppex", &
-                                   "tile","resv","wetl","canl","fpln","pond","phyt","ppdf"/)
+        gwflow_hdr_yr = (/"  year","  dvol","  rech","  gwet","  gwsw","  swgw","  satx","  soil","  latl","  bndr","  ppag","  ppex", &
+                                   "  tile","  resv","  wetl","  canl","  fpln","  pond","  phyt","  ppdf"/)
         write(out_gwbal_yr,120) (gwflow_hdr_yr(j),j=1,20)
       endif
 
@@ -186,8 +187,8 @@
         write(out_gwbal_aa,*) 'phyt:      mm   phreatophyte transpiration'
         write(out_gwbal_aa,*) 'ppdf:      mm   groundwater demand not satisfied for irrigation'
         write(out_gwbal_aa,*)
-        gwflow_hdr_aa = (/"  year","dvol","rech","gwet","gwsw","swgw","satx","soil","latl","bndr","ppag","ppex", &
-                                   "tile","resv","wetl","canl","fpln","pond","phyt","ppdf"/)
+        gwflow_hdr_aa = (/"  year","  dvol","  rech","  gwet","  gwsw","  swgw","  satx","  soil","  latl","  bndr","  ppag","  ppex", &
+                                   "  tile","  resv","  wetl","  canl","  fpln","  pond","  phyt","  ppdf"/)
         write(out_gwbal_aa,120) (gwflow_hdr_aa(j),j=1,20)
         endif
 
@@ -222,8 +223,8 @@
           enddo
           !open the water balance output file
           write(aString,1091) i
-          file_name = 'gwflow_group_wb_day_'//aString
-          open(out_gwbal_grp+i,file=file_name)
+          file_name_scalar = 'gwflow_group_wb_day_'//aString
+          open(out_gwbal_grp+i,file=file_name_scalar)
           write(out_gwbal_grp+i,*) 'Groundwater fluxes for each day'
           write(out_gwbal_grp+i,*) 'Cell Group:',i
           write(out_gwbal_grp+i,*)
@@ -256,9 +257,9 @@
           write(out_gwbal_grp+i,*) 'wtdep:        m    average depth to water table for watershed'
           write(out_gwbal_grp+i,*) 'ppdf:         m3   groundwater demand not satisfied for irrigation'
           write(out_gwbal_grp+i,*)
-          gwflow_hdr_day_grp = (/"year","day","ts","vbef","vaft","rech","gwet","gwsw","swgw","satx","soil", &
-                                              "latl","bndr","ppag","ppex","tile","resv","wetl","canl", &
-                                              "fpln","pond","phyt","error","wtdepth","ppdf"/)
+          gwflow_hdr_day_grp = (/"   year","    day","     ts","   vbef","   vaft","   rech","   gwet","   gwsw","   swgw","   satx","   soil", &
+                                              "   latl","   bndr","   ppag","   ppex","   tile","   resv","   wetl","   canl", &
+                                              "   fpln","   pond","   phyt","  error","wtdepth","   ppdf"/)
           write(out_gwbal_grp+i,119) (gwflow_hdr_day_grp(j),j=1,25)
         enddo !go to next cell group
         close(in_gw)
@@ -305,9 +306,9 @@
         write(out_heatbal_dy,*) 'error:        --   heat balance error for aquifer'
         write(out_heatbal_dy,*) 'tavg:         C   average groundwater temperature'
         write(out_heatbal_dy,*)
-        heat_hdr_day = (/"year","day","ts","hbef","haft","rech","gwet","gwsw","swgw","satx","soil", &
-                                           "latl","disp","bndr","ppag","ppex","tile","resv","wetl","canl", &
-                                           "fpln","pond","error","tavg"/)
+        heat_hdr_day = (/" year","  day","   ts"," hbef"," haft"," rech"," gwet"," gwsw"," swgw"," satx"," soil", &
+                                           " latl"," disp"," bndr"," ppag"," ppex"," tile"," resv"," wetl"," canl", &
+                                           " fpln"," pond","error"," tavg"/)
         write(out_heatbal_dy,133) (heat_hdr_day(j),j=1,24)
       endif
 
@@ -342,9 +343,9 @@
         write(out_heatbal_yr,*) 'pond:         MJ   groundwater heat in recharge pond seepage'
         write(out_heatbal_yr,*) 'error:        --   heat balance error for aquifer'
         write(out_heatbal_yr,*)
-        heat_hdr_yr = (/"year","day","ts","hdel","rech","gwet","gwsw","swgw","satx","soil", &
-                                          "latl","disp","bndr","ppag","ppex","tile","resv","wetl","canl", &
-                                          "fpln","pond","error"/)
+        heat_hdr_yr = (/" year","  day","   ts"," hdel"," rech"," gwet"," gwsw"," swgw"," satx"," soil", &
+                                          " latl"," disp"," bndr"," ppag"," ppex"," tile"," resv"," wetl"," canl", &
+                                          " fpln"," pond","error"/)
         write(out_heatbal_yr,120) (heat_hdr_yr(j),j=1,22)
       endif
 
@@ -379,9 +380,9 @@
         write(out_heatbal_aa,*) 'pond:         MJ   groundwater heat in recharge pond seepage'
         write(out_heatbal_aa,*) 'error:        --   heat balance error for aquifer'
         write(out_heatbal_aa,*)
-        heat_hdr_aa = (/"year","day","ts","hdel","rech","gwet","gwsw","swgw","satx","soil", &
-                                          "latl","disp","bndr","ppag","ppex","tile","resv","wetl","canl", &
-                                          "fpln","pond","error"/)
+        heat_hdr_aa = (/" year","  day","   ts"," hdel"," rech"," gwet"," gwsw"," swgw"," satx"," soil", &
+                                          " latl"," disp"," bndr"," ppag"," ppex"," tile"," resv"," wetl"," canl", &
+                                          " fpln"," pond","error"/)
         write(out_heatbal_aa,120) (heat_hdr_aa(j),j=1,22)
       endif
 
@@ -510,8 +511,8 @@
             write(out_solbal_dy+n,*) 'pond:      kg   solute mass in recharge pond seepage'
             write(out_solbal_dy+n,*) 'error:     --   mass balance error for aquifer'
             write(out_solbal_dy+n,*)
-            sol_hdr_day = (/"  year","   day","ts","mbef","maft","rech","gwsw","swgw","satx","soil","advn", &
-                            "disp","rcti","rcto","minl","sorb","ppag","ppex","tile","resv","wetl","canl","fpln","pond","error"/)
+            sol_hdr_day = (/"  year","   day","    ts","  mbef","  maft","  rech","  gwsw","  swgw","  satx","  soil","  advn", &
+                            "  disp","  rcti","  rcto","  minl","  sorb","  ppag","  ppex","  tile","  resv","  wetl","  canl","  fpln","  pond"," error"/)
             write(out_solbal_dy+n,119) (sol_hdr_day(j),j=1,25)
           endif
 
@@ -562,8 +563,8 @@
             write(out_solbal_mo+n,*) 'fpln:     kg   solute mass in floodplain exchange'
             write(out_solbal_mo+n,*) 'pond:     kg   solute mass in recharge pond seepage'
             write(out_solbal_mo+n,*)
-            sol_hdr_mo = (/"  year","month","delm","rech","gwsw","swgw","satx","soil","advn","disp","rcti","rcto","minl", &
-                           "sorb","ppag","ppex","tile","resv","wetl","canl","fpln","pond"/)
+            sol_hdr_mo = (/"  year"," month","  delm","  rech","  gwsw","  swgw","  satx","  soil","  advn","  disp","  rcti","  rcto","  minl", &
+                           "  sorb","  ppag","  ppex","  tile","  resv","  wetl","  canl","  fpln","  pond"/)
             write(out_solbal_mo+n,132) (sol_hdr_mo(j),j=1,22)
             !zero out monthly arrays
             sol_grid_chng_mo(n) = 0.
@@ -635,7 +636,7 @@
             write(out_solbal_yr+n,*) 'fpln:     kg   solute mass in floodplain exchange'
             write(out_solbal_yr+n,*) 'pond:     kg   solute mass in recharge pond seepage'
             write(out_solbal_yr+n,*)
-            sol_hdr_yr = (/"  year","delm","rech","gwsw","swgw","satx","soil","advn","disp","rcti","rcto","minl", &
+            sol_hdr_yr = (/"year","delm","rech","gwsw","swgw","satx","soil","advn","disp","rcti","rcto","minl", &
                            "sorb","ppag","ppex","tile","resv","wetl","canl","fpln","pond"/)
             write(out_solbal_yr+n,120) (sol_hdr_yr(j),j=1,21)
             !zero out yearly arrays
@@ -708,7 +709,7 @@
             write(out_solbal_aa+n,*) 'fpln:      kg   solute mass in floodplain exchange'
             write(out_solbal_aa+n,*) 'pond:      kg   solute mass in recharge pond seepage'
             write(out_solbal_aa+n,*)
-            sol_hdr_aa = (/"  year","delm","rech","gwsw","swgw","satx","soil","advn","disp","rcti","rcto","minl", &
+            sol_hdr_aa = (/"year","delm","rech","gwsw","swgw","satx","soil","advn","disp","rcti","rcto","minl", &
                                "sorb","ppag","ppex","tile","resv","wetl","canl","fpln","pond"/)
             write(out_solbal_aa+n,120) (sol_hdr_aa(j),j=1,21)
             !zero out yearly arrays
@@ -1409,8 +1410,8 @@
 103   format(i8,i8,f10.3,e18.9,e18.9,1000(e18.9))
 105   format(i8,1000(e13.4))
 119   format(i8,i8,i8,1000(f12.3))
-120   format(<out_cols>(f12.3))
-121   format(<out_cols>(e12.6))
+120   format(10000(f12.3))
+121   format(10000(e12.6))
 130   format(i8,i8,1000(e13.4))
 
       return
@@ -2237,8 +2238,8 @@
 100   format(10000(f12.3))
 101   format(10000(e12.3))
 105   format(i8,i8,1000(e13.4))
-120   format(<out_cols>(f12.3))
-121   format(<out_cols>(e12.6))
+120   format(10000(f12.3))
+121   format(10000(e12.6))
 
       return
       end subroutine gwflow_output_mon
@@ -2864,7 +2865,7 @@
       write(out_gw_pumpdef,*)
 
       !pumping (user specified) -----------------------------------------------------------------
-      if(gw_pumpex_flag) then
+      if(gw_pumpex_flag == 1) then
       write(out_gw_ppex,*) 'Pumping rates (m3/day) for year:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -2925,7 +2926,7 @@
       endif
 
       !groundwater-reservoir exchange -----------------------------------------------------------
-      if(gw_res_flag) then
+      if(gw_res_flag == 1) then
       write(out_gw_resv,*) 'Groundwater-Reservoir Exchange rates (m3/day) for:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -2986,7 +2987,7 @@
       endif
 
       !groundwater-wetland exchange -------------------------------------------------------------
-      if(gw_wet_flag) then
+      if(gw_wet_flag == 1) then
       write(out_gw_wetl,*) 'Groundwater outflow rates (m3/day) to wetlands for:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -3047,7 +3048,7 @@
       endif
 
       !groundwater-canal exchange ---------------------------------------------------------------
-      if(gw_canal_flag) then
+      if(gw_canal_flag == 1) then
       write(out_gw_canl,*) 'Groundwater-Canal Exchange rates (m3/day) for:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -3108,7 +3109,7 @@
       endif
 
       !floodplain exchange ----------------------------------------------------------------------
-      if(gw_fp_flag) then
+      if(gw_fp_flag == 1) then
       write(out_gw_fpln,*) 'Groundwater-Floodplain Exchange rates (m3/day) for:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -3169,7 +3170,7 @@
       endif
 
       !recharge pond seepage --------------------------------------------------------------------
-      if(gw_pond_flag) then
+      if(gw_pond_flag == 1) then
       write(out_gw_pond,*) 'Recharge seepage rates (m3/day) for:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -3230,7 +3231,7 @@
       endif
 
       !phreatophyte transpiration ---------------------------------------------------------------
-      if(gw_phyt_flag) then
+      if(gw_phyt_flag == 1) then
       write(out_gw_phyt,*) 'Phreatophyte transpiration rates (m3/day) for:',time%yrc
       if(grid_type == "structured") then
         grid_val = 0.
@@ -3515,7 +3516,7 @@
 100   format(10000(f12.3))
 101   format(10000(e12.3))
 105   format(i8,1000(e13.4))
-122   format(<out_cols>(e12.6))
+122   format(10000(e12.6))
 
       return
       end subroutine gwflow_output_yr
@@ -3643,7 +3644,7 @@
 
       !write out groundwater transit time to channels and tiles
       !channels
-      if(gw_ttime) then
+      if(gw_ttime == 1) then
         if(grid_type == "structured") then
           grid_val = 0.
           do i=1,grid_nrow
@@ -3660,7 +3661,7 @@
           write(out_gw_transit_chan,121) (gw_cell_chan_time(i),i=1,ncell)
         endif
         !tiles
-        if(gw_tile_flag) then
+        if(gw_tile_flag == 1) then
           if(grid_type == "structured") then
             grid_val = 0.
             do i=1,grid_nrow
@@ -3682,8 +3683,8 @@
       !format statements
 101   format(10000(e12.3))
 105   format(i8,1000(e13.4))
-121   format(<out_cols>(e12.3))
-122   format(<out_cols>(e12.6))
+121   format(10000(e12.3))
+122   format(10000(e12.6))
 
       return
       end subroutine gwflow_output_aa

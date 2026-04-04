@@ -17,6 +17,7 @@
       use reservoir_data_module, only : wet_dat
       use cs_data_module
       use constituent_mass_module, only : cs_db
+      use water_allocation_module, only : canal
 
       implicit none
 
@@ -29,8 +30,8 @@
       character(len=13) :: gwflow_hdr_yr(20) = ""
       character(len=13) :: gwflow_hdr_aa(20) = ""
       character(len=13) :: gwflow_hdr_day_grp(25) = ""
-      character(len=13) :: gwflow_hdr_canal(10) = ""
-      character(len=13) :: gwflow_hdr_canal_sol(11) = ""
+      character(len=13) :: gwflow_hdr_canal(8) = ""
+      character(len=13) :: gwflow_hdr_canal_sol(9) = ""
       character(len=13) :: gwflow_hdr_pond(12) = ""
       character(len=13) :: gwflow_hdr_pond_sol(10) = ""
       character(len=13) :: sol_hdr_day(25) = ""
@@ -58,6 +59,7 @@
       integer :: s = 0
       integer :: isalt = 0
       integer :: count = 0
+      integer :: eof = 0
       integer :: cell_num = 0
       integer :: sol_index = 0
       integer :: div = 0
@@ -110,11 +112,14 @@
       integer :: res_id = 0
       real :: res_stage = 0.
       !canal information
-      integer :: canal_out(5000) = 0
-      integer :: canal_div(5000) = 0
+      integer, allocatable :: canal_out(:)
+      integer, allocatable :: canal_div(:)
+      real, allocatable :: con_row_buf(:)
       integer :: day_beg = 0
       integer :: day_end = 0
-      integer :: canal = 0
+      integer :: canal_id = 0
+      integer :: ic = 0
+      integer :: obj_tot = 0
       real :: thick = 0.
       real :: depth = 0.
       real :: width = 0.
@@ -171,6 +176,8 @@
       real :: dum6 = 0.
       real :: single_value = 0.
       integer :: max_num = 0
+      integer :: max_cells = 0
+      integer :: max_hrus = 0
       integer :: wb_cell = 0
       real :: group_area = 0.
 
@@ -1357,254 +1364,182 @@
 
 
       !groundwater seepage from canals ------------------------------------------------------------
-      !canal seepage information (these are for cells that are connected to irrigation canals)
+      !canal properties come from canal() array (read by water_canal_read from water_canal.wal)
+      !cell connections come from gwflow_canal.con
       if(gw_canal_flag == 1) then
-      inquire(file='gwflow.canals',exist=i_exist)
+      inquire(file='gwflow_canal.con',exist=i_exist)
       if(i_exist) then
-        write(out_gw,*) '          canal-->groundwater seepage (gwflow.canals found)'
-        open(in_canal_cell,file='gwflow.canals')
-        read(in_canal_cell,*) header
-        !read in the number of canals for each channel
-        allocate(gw_chan_canl_info(sp_ob%chandeg)) !number of canals for each channel
-        canal_out = 0
-        read(in_canal_cell,*) gw_ncanal
-        do i=1,11
-          read(in_canal_cell,*)
-        enddo
+        write(out_gw,*) '          canal-->groundwater seepage (gwflow_canal.con found)'
+
+        !get number of canals from the canal database
+        gw_ncanal = db_mx%canal
+
+        !classify each canal and populate property arrays from canal()
+        allocate(gw_chan_canl_info(sp_ob%chandeg))
         allocate(gw_canl_div_info(gw_ncanal))
         allocate(canal_out_info(gw_ncanal,6))
+        allocate(canal_out(gw_ncanal))
+        allocate(canal_div(gw_ncanal))
         canal_out_info = 0.
-        do i=1,gw_ncanal
-          read(in_canal_cell,*) canal,div,channel,width,depth,thick,bed_K,day_beg,day_end,frc_ret
-          if(div > 0) then !canal water from point source diversion
-            canal_div(i) = 1
-            gw_canl_div_info(i)%canal_id = canal
-            gw_canl_div_info(i)%divr = div
-            gw_canl_div_info(i)%width = width
-            gw_canl_div_info(i)%depth = depth
-            gw_canl_div_info(i)%thick = thick
-            gw_canl_div_info(i)%bed_K = bed_K
-            gw_canl_div_info(i)%frc_ret = frc_ret
-          elseif(div == 0 .and. channel == 0) then !canal water originates from outside the model domain
-            canal_out(i) = 1
-            canal_out_info(i,1) = width
-            canal_out_info(i,2) = depth
-            canal_out_info(i,3) = thick
-            canal_out_info(i,4) = day_beg
-            canal_out_info(i,5) = day_end
-            canal_out_info(i,6) = bed_K
-          else
-            gw_chan_canl_info(channel)%ncanal = gw_chan_canl_info(channel)%ncanal + 1
+        canal_div = 0
+        canal_out = 0
+        do ic=1,gw_ncanal
+          if(canal(ic)%div_id > 0) then
+            !canal water from point source diversion
+            canal_div(ic) = 1
+            gw_canl_div_info(ic)%canal_id = ic
+            gw_canl_div_info(ic)%divr = canal(ic)%div_id
+            gw_canl_div_info(ic)%width = canal(ic)%w
+            gw_canl_div_info(ic)%depth = canal(ic)%d
+            gw_canl_div_info(ic)%thick = canal(ic)%bed_thick
+            gw_canl_div_info(ic)%bed_K = canal(ic)%sat_con
+          elseif(canal(ic)%div_id == 0 .and. canal(ic)%day_beg > 0) then
+            !canal water originates from outside the model domain
+            canal_out(ic) = 1
+            canal_out_info(ic,1) = canal(ic)%w
+            canal_out_info(ic,2) = canal(ic)%d
+            canal_out_info(ic,3) = canal(ic)%bed_thick
+            canal_out_info(ic,4) = real(canal(ic)%day_beg)
+            canal_out_info(ic,5) = real(canal(ic)%day_end)
+            canal_out_info(ic,6) = canal(ic)%sat_con
           endif
         enddo
-        !allocate arrays for canal attributes
-        do i=1,sp_ob%chandeg
-          allocate(gw_chan_canl_info(i)%canals(gw_chan_canl_info(i)%ncanal))
-          allocate(gw_chan_canl_info(i)%wdth(gw_chan_canl_info(i)%ncanal))
-          allocate(gw_chan_canl_info(i)%dpth(gw_chan_canl_info(i)%ncanal))
-          allocate(gw_chan_canl_info(i)%thck(gw_chan_canl_info(i)%ncanal))
-          allocate(gw_chan_canl_info(i)%hydc(gw_chan_canl_info(i)%ncanal))
-          allocate(gw_chan_canl_info(i)%dayb(gw_chan_canl_info(i)%ncanal))
-          allocate(gw_chan_canl_info(i)%daye(gw_chan_canl_info(i)%ncanal))
-          gw_chan_canl_info(i)%ncanal = 0
-        enddo
-        !read in and store canal attributes
-        rewind(in_canal_cell)
-        read(in_canal_cell,*) header
-        read(in_canal_cell,*) gw_ncanal
-        do i=1,11
-          read(in_canal_cell,*)
-        enddo
-        do i=1,gw_ncanal
-          read(in_canal_cell,*) canal,div,channel,width,depth,thick,bed_K,day_beg,day_end,frc_ret
-          if(canal_out(canal) == 0 .and. div == 0) then !channel source; no diversion
-            gw_chan_canl_info(channel)%ncanal = gw_chan_canl_info(channel)%ncanal + 1
-            gw_chan_canl_info(channel)%canals(gw_chan_canl_info(channel)%ncanal) = canal
-            gw_chan_canl_info(channel)%wdth(gw_chan_canl_info(channel)%ncanal) = width
-            gw_chan_canl_info(channel)%dpth(gw_chan_canl_info(channel)%ncanal) = depth
-            gw_chan_canl_info(channel)%thck(gw_chan_canl_info(channel)%ncanal) = thick
-            gw_chan_canl_info(channel)%hydc(gw_chan_canl_info(channel)%ncanal) = bed_K
-            gw_chan_canl_info(channel)%dayb(gw_chan_canl_info(channel)%ncanal) = day_beg
-            gw_chan_canl_info(channel)%daye(gw_chan_canl_info(channel)%ncanal) = day_end
-          endif
-        enddo
-        !read the runoff fraction for each irrigation type
-        read(in_canal_cell,*) header
-        read(in_canal_cell,*) irrig_type,fld_ro !flood irrigation
-        read(in_canal_cell,*) irrig_type,spk_ro !sprinkler irrigation
-        read(in_canal_cell,*) irrig_type,drp_ro !drip irrigation
-        !read the HRUs serviced (irrigated) by each canal, with the accompanying irrigation type
-        read(in_canal_cell,*) header
-        do i=1,gw_ncanal
-          read(in_canal_cell,*) header
-          read(in_canal_cell,*) num_hru
-          gw_canl_div_info(i)%nhru = num_hru
-          if(num_hru > 0) then
-            allocate(gw_canl_div_info(i)%hrus(gw_canl_div_info(i)%nhru))
-            allocate(gw_canl_div_info(i)%hru_ro(gw_canl_div_info(i)%nhru))
-            do j=1,num_hru
-              read(in_canal_cell,*) hru_id,irrig_type
-              gw_canl_div_info(i)%hrus(j) = hru_id
-              if(irrig_type == "flood") then
-                gw_canl_div_info(i)%hru_ro(j) = fld_ro
-              elseif(irrig_type == "sprinkler") then
-                gw_canl_div_info(i)%hru_ro(j) = spk_ro
-              elseif(irrig_type == "drip") then
-                gw_canl_div_info(i)%hru_ro(j) = drp_ro
-              else
-                gw_canl_div_info(i)%hru_ro(j) = 0.
-              endif
-            enddo
-          endif
-        enddo !go to next canal
-        !determine the number of cells that are connected to canals that receive outside water; that receive water from diversions
+
+        !--- read gwflow_canal.con for cell connections ---
+        open(in_canal_cell,file='gwflow_canal.con')
+        read(in_canal_cell,*) header  !file title line
+
+        !first pass: count cells per canal, and totals for div/out/channel categories
         gw_canal_ncells_div = 0
         gw_canal_ncells_out = 0
-        read(in_canal_cell,*) header
-        read(in_canal_cell,*) gw_canal_ncells
-        read(in_canal_cell,*) header
-        do i=1,gw_canal_ncells
-          read(in_canal_cell,*) cell_num,canal
-          if(canal_div(canal) == 1) then
-            gw_canal_ncells_div = gw_canal_ncells_div + 1
+        allocate(gw_canl_info(gw_ncanal))
+        do
+          read(in_canal_cell,*,iostat=eof) canal_id, obj_tot
+          if(eof /= 0) exit
+          !classify by canal type and accumulate cell counts
+          if(canal_div(canal_id) == 1) then
+            gw_canal_ncells_div = gw_canal_ncells_div + obj_tot
+          elseif(canal_out(canal_id) == 1) then
+            gw_canal_ncells_out = gw_canal_ncells_out + obj_tot
+          else
+            gw_canl_info(canal_id)%ncon = obj_tot
           endif
-          if(canal_out(canal) == 1) then
-            gw_canal_ncells_out = gw_canal_ncells_out + 1
-          endif
+        enddo
+
+        !allocate cell arrays for channel-connected canals
+        do ic=1,gw_ncanal
+          allocate(gw_canl_info(ic)%cells(gw_canl_info(ic)%ncon))
+          allocate(gw_canl_info(ic)%leng(gw_canl_info(ic)%ncon))
+          allocate(gw_canl_info(ic)%elev(gw_canl_info(ic)%ncon))
+          allocate(gw_canl_info(ic)%hydc(gw_canl_info(ic)%ncon))
+          gw_canl_info(ic)%ncon = 0  !reset counter for second pass
         enddo
         allocate(gw_canl_div_cell(gw_canal_ncells_div))
         allocate(gw_canl_out_info(gw_canal_ncells_out))
-        !rewind file to beginning line
-        rewind(in_canal_cell)
-        read(in_canal_cell,*) header
-        read(in_canal_cell,*) gw_ncanal
-        do i=1,11
-          read(in_canal_cell,*)
-        enddo
-        do i=1,gw_ncanal
-          read(in_canal_cell,*)
-        enddo
-        do i=1,4
-          read(in_canal_cell,*)
-        enddo
-        read(in_canal_cell,*) header
-        do i=1,gw_ncanal
-          read(in_canal_cell,*) header
-          read(in_canal_cell,*)
-          do j=1,gw_canl_div_info(i)%nhru
-            read(in_canal_cell,*)
-          enddo
-        enddo
-        !read in the number of cells for each canal
-        read(in_canal_cell,*) header
-        allocate(gw_canl_info(gw_ncanal)) !allocate number of cells connected to each canal
-        read(in_canal_cell,*) gw_canal_ncells
-        read(in_canal_cell,*) header
-        do i=1,gw_canal_ncells
-          read(in_canal_cell,*) cell_num,canal,length,stage
-          if(canal_out(canal) == 0) then
-            gw_canl_info(canal)%ncon = gw_canl_info(canal)%ncon + 1
+
+        !count channel-connected canals per channel (for gw_chan_canl_info allocation)
+        do ic=1,gw_ncanal
+          if(canal_div(ic) == 0 .and. canal_out(ic) == 0) then
+            !this is a channel-connected canal -- need to find its channel
+            !channel association will be set when wallo routes water; here just track the canal
           endif
         enddo
-        !allocate arrays holding cell attributes
-        do i=1,gw_ncanal
-          allocate(gw_canl_info(i)%cells(gw_canl_info(i)%ncon))
-          allocate(gw_canl_info(i)%leng(gw_canl_info(i)%ncon))
-          allocate(gw_canl_info(i)%elev(gw_canl_info(i)%ncon))
-          allocate(gw_canl_info(i)%hydc(gw_canl_info(i)%ncon))
-          gw_canl_info(i)%ncon = 0
+        !allocate channel-canal arrays (channels that have canals are populated by wallo routing)
+        do i=1,sp_ob%chandeg
+          allocate(gw_chan_canl_info(i)%canals(0))
+          allocate(gw_chan_canl_info(i)%wdth(0))
+          allocate(gw_chan_canl_info(i)%dpth(0))
+          allocate(gw_chan_canl_info(i)%thck(0))
+          allocate(gw_chan_canl_info(i)%hydc(0))
+          allocate(gw_chan_canl_info(i)%dayb(0))
+          allocate(gw_chan_canl_info(i)%daye(0))
         enddo
-        !read in and store cell attributes (canal length, stage, K)
+
+        !second pass: read cell connections and populate arrays
         rewind(in_canal_cell)
-        read(in_canal_cell,*) header
-        read(in_canal_cell,*) gw_ncanal
-        do i=1,11
-          read(in_canal_cell,*)
-        enddo
-        do i=1,gw_ncanal
-          read(in_canal_cell,*)
-        enddo
-        do i=1,4
-          read(in_canal_cell,*)
-        enddo
-        read(in_canal_cell,*) header
-        do i=1,gw_ncanal
-          read(in_canal_cell,*) header
-          read(in_canal_cell,*)
-          do j=1,gw_canl_div_info(i)%nhru
-            read(in_canal_cell,*)
-          enddo
-        enddo
-        read(in_canal_cell,*) header
-        read(in_canal_cell,*) gw_canal_ncells
-        read(in_canal_cell,*) header
+        read(in_canal_cell,*) header  !file title line
         gw_canal_ncells_div = 0
         gw_canal_ncells_out = 0
-        do i=1,gw_canal_ncells
-          read(in_canal_cell,*) cell_num,canal,length,stage
-          if(grid_type == "structured") then
-            cell_num = cell_id_list(cell_num)
-          endif
-          if(cell_num > 0) then
-            if(canal_div(canal) == 1) then !canal water from a point source diversion
-              gw_canal_ncells_div = gw_canal_ncells_div + 1
-              gw_canl_div_cell(gw_canal_ncells_div)%cell_id = cell_num
-              gw_canl_div_cell(gw_canal_ncells_div)%canal_id = canal
-              gw_canl_div_cell(gw_canal_ncells_div)%leng = length
-              gw_canl_div_cell(gw_canal_ncells_div)%elev = stage
-            elseif(canal_out(canal) == 1) then !canal water from outside the model domain
-              gw_canal_ncells_out = gw_canal_ncells_out + 1
-              gw_canl_out_info(gw_canal_ncells_out)%cell_id = cell_num
-              gw_canl_out_info(gw_canal_ncells_out)%wdth = canal_out_info(canal,1)
-              gw_canl_out_info(gw_canal_ncells_out)%dpth = canal_out_info(canal,2)
-              gw_canl_out_info(gw_canal_ncells_out)%thck = canal_out_info(canal,3)
-              gw_canl_out_info(gw_canal_ncells_out)%leng = length
-              gw_canl_out_info(gw_canal_ncells_out)%elev = stage
-              gw_canl_out_info(gw_canal_ncells_out)%hydc = canal_out_info(canal,6)
-              gw_canl_out_info(gw_canal_ncells_out)%dayb = canal_out_info(canal,4)
-              gw_canl_out_info(gw_canal_ncells_out)%daye = canal_out_info(canal,5)
-            else
-              gw_canl_info(canal)%ncon = gw_canl_info(canal)%ncon + 1
-              gw_canl_info(canal)%cells(gw_canl_info(canal)%ncon) = cell_num
-              gw_canl_info(canal)%leng(gw_canl_info(canal)%ncon) = length
-              gw_canl_info(canal)%elev(gw_canl_info(canal)%ncon) = stage
-              gw_canl_info(canal)%hydc(gw_canl_info(canal)%ncon) = canal_out_info(canal,6)
+        gw_canal_ncells = 0
+        do
+          read(in_canal_cell,*,iostat=eof) canal_id, obj_tot
+          if(eof /= 0) exit
+          backspace(in_canal_cell)
+          !allocate temporary buffer to hold the row data
+          allocate(con_row_buf(obj_tot*3))
+          read(in_canal_cell,*) canal_id, obj_tot, (con_row_buf(j),j=1,obj_tot*3)
+          !process each cell group
+          do j=1,obj_tot
+            cell_num = int(con_row_buf((j-1)*3 + 1))
+            length   = con_row_buf((j-1)*3 + 2)
+            stage    = con_row_buf((j-1)*3 + 3)
+            if(grid_type == "structured") then
+              cell_num = cell_id_list(cell_num)
             endif
-          endif
-        enddo !go to next canal cell
+            gw_canal_ncells = gw_canal_ncells + 1
+            if(cell_num > 0) then
+              if(canal_div(canal_id) == 1) then
+                !diversion canal cell
+                gw_canal_ncells_div = gw_canal_ncells_div + 1
+                gw_canl_div_cell(gw_canal_ncells_div)%cell_id = cell_num
+                gw_canl_div_cell(gw_canal_ncells_div)%canal_id = canal_id
+                gw_canl_div_cell(gw_canal_ncells_div)%leng = length
+                gw_canl_div_cell(gw_canal_ncells_div)%elev = stage
+              elseif(canal_out(canal_id) == 1) then
+                !outside-source canal cell
+                gw_canal_ncells_out = gw_canal_ncells_out + 1
+                gw_canl_out_info(gw_canal_ncells_out)%cell_id = cell_num
+                gw_canl_out_info(gw_canal_ncells_out)%wdth = canal_out_info(canal_id,1)
+                gw_canl_out_info(gw_canal_ncells_out)%dpth = canal_out_info(canal_id,2)
+                gw_canl_out_info(gw_canal_ncells_out)%thck = canal_out_info(canal_id,3)
+                gw_canl_out_info(gw_canal_ncells_out)%leng = length
+                gw_canl_out_info(gw_canal_ncells_out)%elev = stage
+                gw_canl_out_info(gw_canal_ncells_out)%hydc = canal_out_info(canal_id,6)
+                gw_canl_out_info(gw_canal_ncells_out)%dayb = int(canal_out_info(canal_id,4))
+                gw_canl_out_info(gw_canal_ncells_out)%daye = int(canal_out_info(canal_id,5))
+              else
+                !channel-connected canal cell
+                gw_canl_info(canal_id)%ncon = gw_canl_info(canal_id)%ncon + 1
+                gw_canl_info(canal_id)%cells(gw_canl_info(canal_id)%ncon) = cell_num
+                gw_canl_info(canal_id)%leng(gw_canl_info(canal_id)%ncon) = length
+                gw_canl_info(canal_id)%elev(gw_canl_info(canal_id)%ncon) = stage
+                gw_canl_info(canal_id)%hydc(gw_canl_info(canal_id)%ncon) = canal(canal_id)%sat_con
+              endif
+            endif
+          enddo
+          deallocate(con_row_buf)
+        enddo
+        close(in_canal_cell)
+
         !flux output file
         open(out_gw_canl,file='gwflow_cell_wb_canl_yr.txt')
         write(out_gw_canl,*) 'Annual groundwater-canal exchange (m3/day)'
         open(out_gw_canl_mo,file='gwflow_cell_wb_canl_mon.txt')
         write(out_gw_canl_mo,*) 'Monthly groundwater-canal exchange (m3/day)'
         !canal water balance file (daily)
-        open(out_canal_bal,file='gwflow_canal_water_balance')
-        write(out_canal_bal,*) 'daily water balance for recharge ponds'
+        open(out_canal_bal,file='gwflow_canal_wb_day.txt')
+        write(out_canal_bal,*) 'daily water balance for canals'
         write(out_canal_bal,*)
         write(out_canal_bal,*) 'div:       m3   water diverted into canal'
         write(out_canal_bal,*) 'stor:      m3   water storage at end of day'
         write(out_canal_bal,*) 'pond:      m3   water transferred to recharge ponds'
         write(out_canal_bal,*) 'seep:      m3   water seeped to aquifer'
-        write(out_canal_bal,*) 'irrg:      m3   water transferred to irrigated fields'
-        write(out_canal_bal,*) 'retn:      m3   water left in canal, to return to river'
         write(out_canal_bal,*)
-        gwflow_hdr_canal = (/"year","month","day","canal","div","stor","pond","seep","irrg","retn"/)
-        write(out_canal_bal,131) (gwflow_hdr_canal(j),j=1,10)
+        gwflow_hdr_canal = (/" year","month","  day","canal","  div"," stor"," pond"," seep"/)
+        write(out_canal_bal,131) (gwflow_hdr_canal(j),j=1,8)
         !canal solute mass balance file (daily)
-        open(out_canal_sol,file='gwflow_canal_mass_balance')
-        write(out_canal_sol,*) 'daily solute mass balance for recharge ponds'
+        open(out_canal_sol,file='gwflow_canal_sol_day.txt')
+        write(out_canal_sol,*) 'daily solute mass balance for canals'
         write(out_canal_sol,*)
         write(out_canal_sol,*) 'div:       kg   solute mass diverted into canal'
         write(out_canal_sol,*) 'stor:      kg   solute mass at end of day'
         write(out_canal_sol,*) 'pond:      kg   solute mass transferred to recharge ponds'
         write(out_canal_sol,*) 'seep:      kg   solute mass leached to aquifer'
-        write(out_canal_sol,*) 'irrg:      kg   solute mass transferred to irrigated fields'
-        write(out_canal_sol,*) 'retn:      kg   solute mass left in canal, to return to river'
         write(out_canal_sol,*)
-        gwflow_hdr_canal_sol = (/"year","month","day","canal","solute","div","stor","pond","seep","irrg","retn"/)
-        write(out_canal_sol,131) (gwflow_hdr_canal_sol(j),j=1,11)
+        gwflow_hdr_canal_sol = (/"  year"," month","   day"," canal","solute","   div","  stor","  pond","  seep"/)
+        write(out_canal_sol,131) (gwflow_hdr_canal_sol(j),j=1,9)
       else
-        write(out_gw,*) '          gwflow.canals not found (canal seepage not simulated)'
+        write(out_gw,*) '          gwflow_canal.con not found (canal seepage not simulated)'
       endif
       endif !end canal seepage
 
@@ -1889,8 +1824,8 @@
         allocate(canal_out_conc(gw_nsolute))
         canal_out_conc = 0.
         !temporary diversion concentration arrays (to be replaced by wallo transfer in Phase 7)
-        allocate(div_conc_salt(20,1000), source = 0.)
-        allocate(div_conc_cs(20,1000), source = 0.)
+        allocate(div_conc_salt(cs_db%num_salts,sp_ob%recall), source = 0.)
+        allocate(div_conc_cs(cs_db%num_cs,sp_ob%recall), source = 0.)
         read(in_gw,*) header
         do s=1,gw_nsolute
           read(in_gw,*) name,gwsol_sorb(s),gwsol_rctn(s),canal_out_conc(s)
@@ -1933,8 +1868,9 @@
         endif
         !if salts active: read in salt mineral data (if provided)
         if(gwsol_salt == 1) then
-          inquire(file='gwflow.solutes.minerals',exist=gwsol_minl)
-          if(gwsol_minl) then
+          inquire(file='gwflow.solutes.minerals',exist=i_exist)
+          if(i_exist) then
+            gwsol_minl = 1
             open(in_gw_minl,file='gwflow.solutes.minerals')
             read(in_gw_minl,*) header
             read(in_gw_minl,*) gw_nminl
@@ -2312,7 +2248,7 @@
         write(out_pond_bal,*) 'div_spec:  m3   specified diversion water'
         write(out_pond_bal,*) 'div_uns:   m3   unsatisfied diversion water'
         write(out_pond_bal,*)
-        gwflow_hdr_pond = (/"year","month","day","pond_id","area","stor","rain","div_add","evap","recharge","div_spec","div_uns"/)
+        gwflow_hdr_pond = (/"    year","   month","     day"," pond_id","    area","    stor","    rain"," div_add","    evap","recharge","div_spec"," div_uns"/)
         write(out_pond_bal,131) (gwflow_hdr_pond(j),j=1,12)
         !pond solute mass balance file
         open(out_pond_sol,file='gwflow_pond_mass_balance')
@@ -2325,7 +2261,7 @@
         write(out_pond_sol,*) 'div_added: kg   solute mass added to recharge pond via diversion'
         write(out_pond_sol,*) 'recharge:  m3   solute mass leaching from pond to aquifer'
         write(out_pond_sol,*)
-        gwflow_hdr_pond_sol = (/"year","month","day","pond_id","area","stor","solute","mass","div_add","recharge"/)
+        gwflow_hdr_pond_sol = (/"    year","   month","     day"," pond_id","    area","    stor","  solute","    mass"," div_add","recharge"/)
         write(out_pond_sol,131) (gwflow_hdr_pond_sol(j),j=1,10)
         !pond mass for each day
         open(out_pond_mass,file='gwflow_pond_daily_mass')
@@ -2344,7 +2280,7 @@
       !if LSU-cell connection is active (i.e., file is provided), it supercedes HRU-cell connection
       write(out_gw,*)
       write(out_gw,*) '     read and prepare connection (HRU-cell or LSU-cell)'
-      if(lsu_cells_link) then
+      if(lsu_cells_link == 1) then
         write(out_gw,*) '          LSU-cell connections (gwflow.lsucell)'
         open(in_lsu_cell,file='gwflow.lsucell')
         read(in_lsu_cell,*) header
@@ -2361,8 +2297,35 @@
         read(in_lsu_cell,*) header
         read(in_lsu_cell,*) header
         allocate(lsu_num_cells(nlsu))
-        allocate(lsu_cells(nlsu,5000))
-        allocate(lsu_cells_fract(nlsu,5000))
+        lsu_num_cells = 0
+        !first pass: count cells per LSU to determine max dimension
+        do k=1,nlsu
+          if(lsus_connected(k).eq.1) then
+          lsu = k
+          cell_count = 0
+          do while (lsu.eq.k)
+            cell_count = cell_count + 1
+            read(in_lsu_cell,*) lsu
+            read(in_lsu_cell,*,end=26) lsu
+            backspace(in_lsu_cell)
+          enddo
+  26      lsu_num_cells(k) = cell_count
+          endif
+        enddo
+        max_cells = maxval(lsu_num_cells(1:nlsu))
+        !rewind to start of connection data and re-read headers
+        rewind(in_lsu_cell)
+        read(in_lsu_cell,*) header
+        read(in_lsu_cell,*) nlsu
+        read(in_lsu_cell,*) nlsu_connected
+        do i=1,nlsu_connected
+          read(in_lsu_cell,*) lsu_id
+        enddo
+        read(in_lsu_cell,*) header
+        read(in_lsu_cell,*) header
+        !second pass: allocate with exact max and fill arrays
+        allocate(lsu_cells(nlsu,max_cells))
+        allocate(lsu_cells_fract(nlsu,max_cells))
         lsu_num_cells = 0
         lsu_cells = 0
         lsu_cells_fract = 0.
@@ -2408,9 +2371,37 @@
       read(in_hru_cell,*)
       read(in_hru_cell,*)
       allocate(hru_num_cells(sp_ob%hru))
-      allocate(hru_cells(sp_ob%hru,20000))
-      allocate(hru_cells_fract(sp_ob%hru,20000))
-      allocate(cells_fract(sp_ob%hru,20000))
+      hru_num_cells = 0
+      !first pass: count cells per HRU to determine max dimension
+      do k=1,sp_ob%hru
+        if(hrus_connected(k).eq.1) then
+        hru_id = k
+        cell_count = 0
+        do while (hru_id.eq.k)
+          cell_count = cell_count + 1
+          read(in_hru_cell,*) hru_id
+          read(in_hru_cell,*,end=11) hru_id
+          backspace(in_hru_cell)
+        enddo
+11      hru_num_cells(k) = cell_count
+        endif
+      enddo
+      max_cells = maxval(hru_num_cells(1:sp_ob%hru))
+      !rewind to start of connection data and re-read headers
+      rewind(in_hru_cell)
+      read(in_hru_cell,*)
+      read(in_hru_cell,*)
+      read(in_hru_cell,*)
+      read(in_hru_cell,*) nhru_connected
+      do i=1,nhru_connected
+        read(in_hru_cell,*) hru_id
+      enddo
+      read(in_hru_cell,*)
+      read(in_hru_cell,*)
+      !second pass: allocate with exact max and fill arrays
+      allocate(hru_cells(sp_ob%hru,max_cells))
+      allocate(hru_cells_fract(sp_ob%hru,max_cells))
+      allocate(cells_fract(sp_ob%hru,max_cells))
       hru_num_cells = 0
       hru_cells = 0
       hru_cells_fract = 0.
@@ -2445,13 +2436,45 @@
       if(i_exist) then
       write(out_gw,*) '          HRU-cell connections (gwflow.cellhru)'
       allocate(cell_num_hrus(ncell), source = 0)
-      allocate(cell_hrus(ncell,100), source = 0)
-      allocate(cell_hrus_fract(ncell,100), source = 0.)
       open(in_cell_hru,file='gwflow.cellhru')
       read(in_cell_hru,*)
       read(in_cell_hru,*)
       read(in_cell_hru,*) num_unique !number of cells that intersect HRUs
       read(in_cell_hru,*)
+      !first pass: count HRUs per cell to determine max dimension
+      do k=1,num_unique
+        read(in_cell_hru,*) hru_cell
+        if(grid_type == "structured") then
+          hru_cell = cell_id_list(hru_cell)
+        endif
+        cell_num = hru_cell
+        backspace(in_cell_hru)
+        hru_count = 0
+        do while (cell_num.eq.hru_cell)
+          hru_count = hru_count + 1
+          read(in_cell_hru,*) cell_num
+          if(grid_type == "structured") then
+            cell_num = cell_id_list(cell_num)
+          endif
+          read(in_cell_hru,*,end=31) cell_num
+          if(grid_type == "structured") then
+            cell_num = cell_id_list(cell_num)
+          endif
+          backspace(in_cell_hru)
+        enddo
+31      cell_num_hrus(cell_num) = hru_count
+      enddo
+      max_hrus = maxval(cell_num_hrus(1:ncell))
+      !rewind and re-read headers
+      rewind(in_cell_hru)
+      read(in_cell_hru,*)
+      read(in_cell_hru,*)
+      read(in_cell_hru,*) num_unique
+      read(in_cell_hru,*)
+      !second pass: allocate with exact max and fill arrays
+      cell_num_hrus = 0
+      allocate(cell_hrus(ncell,max_hrus), source = 0)
+      allocate(cell_hrus_fract(ncell,max_hrus), source = 0.)
       do k=1,num_unique
         read(in_cell_hru,*) hru_cell
         if(grid_type == "structured") then
@@ -2765,7 +2788,7 @@
       write(out_hyd_sep,*) 'chan_satexsw:  channel flow contributed from saturation excess runoff'
       write(out_hyd_sep,*) 'chan_tile:     channel flow contributed from tile drain flow'
       write(out_hyd_sep,*)
-      hydsep_hdr = (/"  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw","chan_satexgw","chan_satexsw","chan_tile"/)
+      hydsep_hdr = (/"        year","         day","     channel","   chan_surf","    chan_lat","   chan_gwsw","   chan_swgw","chan_satexgw","chan_satexsw","   chan_tile"/)
       write(out_hyd_sep,121) (hydsep_hdr(j),j=1,10)
 
       !gwflow record file (skip line)
@@ -2786,8 +2809,8 @@
 
 100   format(i6,i6,10(f10.2))
       !output files for all cells
-101   format(<out_cols>(f12.4))
-102   format(<out_cols>(i4))
+101   format(10000(f12.4))
+102   format(10000(i4))
       !other formats
 103   format(10000(i8))
 111   format(1x,a, 5x,"Time",2x,i2,":",i2,":",i2)
