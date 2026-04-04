@@ -10,9 +10,13 @@
       integer :: gwflag_mon = 0     !               !flag for writing monthly mass balance file
       integer :: gwflag_yr = 0      !               !flag for writing yearly mass balance file
       integer :: gwflag_aa = 0      !               !flag for writing average annual mass balance file
+      integer :: gwflag_obs = 1     !               !flag for writing observation well output (default on)
+      integer :: gwflag_pump = 1    !               !flag for writing HRU pumping output (default on)
+      integer :: gwflag_heat = 1    !               !flag for writing heat balance output (default on if heat active)
+      integer :: gwflag_solute = 1  !               !flag for writing solute balance output (default on if solute active)
+      integer :: gwflag_flux = 1    !               !flag for writing specialty diagnostic output (default on)
       integer :: bc_type = 0        !               !boundary conditions (1=constant head; 2=no-flow)
       integer :: conn_type = 0      !               !recharge/ET connections (1=HRU; 2=LSU)
-      integer :: out_cols = 0       !               !number of columns used in writing output variables
       integer :: gw_daycount = 0    !               !simulation day counter (for pumping time series)
       real*8  :: gwflow_area = 0.d0 !m2             !area of the watershed occupied by active gwflow cells
       real, dimension (:), allocatable :: bc_type_array !generic array for reading in values for structured grid
@@ -26,7 +30,10 @@
       integer, dimension (:,:), allocatable :: grid_status    !cell status for structured grid
       integer, dimension (:,:), allocatable :: grid_int       !generic array for reading in values for structured grid
       real, dimension (:,:), allocatable :: grid_val          !generic array for reading in values for structured grid
-      
+      integer, dimension (:), allocatable :: cell_row          !structured grid row for each cell (for cell definition output)
+      integer, dimension (:), allocatable :: cell_col          !structured grid column for each cell (for cell definition output)
+      integer :: out_gw_celldef = 1416                         !file unit for cell definition output
+
       !groundwater state variables for each cell ----------------------------------------------------------------------
       type groundwater_state
         real :: elev = 0.           !m            |ground surface elevation
@@ -127,6 +134,8 @@
       type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss         !daily
       type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss_mo      !monthly sums
       type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss_yr      !yearly sums
+      type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss_aa      !average annual sums
+      real, dimension (:), allocatable :: gw_head_sum_aa                     !head sum across all years for AA avg
 
       !--- hydrology (water) fluxes: grid-wide totals (mm) ---
       type (groundwater_ss) :: gw_hyd_grid_mo                                !monthly grid total
@@ -226,11 +235,10 @@
       type (cell_connections), dimension(:), allocatable :: cell_con
       
       !ppag: variables for irrigation pumping -----------------------------------------------------
-      real, dimension (:), allocatable :: hru_pump          !           |
-      real, dimension (:), allocatable :: hru_pump_mo       !           |
-      real, dimension (:), allocatable :: hru_pump_yr       !           |
-      real, dimension (:,:), allocatable :: hru_pump_mo_all !           |
-      real, dimension (:,:), allocatable :: hru_pump_yr_all !           |
+      real, dimension (:), allocatable :: hru_pump          !m3/day     |daily pumping per HRU
+      real, dimension (:), allocatable :: hru_pump_mo       !m3         |monthly accumulator
+      real, dimension (:), allocatable :: hru_pump_yr       !m3         |yearly accumulator
+      real, dimension (:), allocatable :: hru_pump_aa       !m3         |average annual accumulator (sum of yearly totals)
       !logical :: hru_pump_flag !           |
       integer :: hru_pump_flag = 0
       integer :: in_hru_pump_obs = 0                        !           |
@@ -452,6 +460,8 @@
       real :: gw_cp = 4182.               !J/(kg C)     |specific heat of groundwater
       real, dimension (:), allocatable :: gw_rechheat   !J            |heat in daily recharge (reaching water table)
       real, dimension (:), allocatable :: gw_obs_temp   !deg C        |temperature in observation cells
+      real, dimension (:), allocatable :: gw_obs_temp_aa !deg C       |AA temperature accumulator for obs wells
+      real, dimension (:,:), allocatable :: gw_obs_sol_aa  !mg/L      |AA solute conc accumulator for obs wells
       real, dimension (:), allocatable :: heat_cell     !J            |heat storage for current day (before heat change loop)
       type groundwater_heat_state
         real :: stor = 0.           !Joule        |current heat stored in groundwater
@@ -649,7 +659,10 @@
       !reading and writing --------------------------------------------------------------------------------------------
       integer :: out_gw = 1228
       integer :: in_wet_cell = 1239
-      integer :: out_gwobs = 1240
+      integer :: out_gwobs = 1457       !merged obs well long-format file (day)
+      integer :: out_gwobs_mon = 1458
+      integer :: out_gwobs_yr = 1459
+      integer :: out_gwobs_aa = 1460
       integer :: out_gwconnect = 1241
       integer :: out_gwheads = 1242
       integer :: out_gwbal = 1243
@@ -710,8 +723,10 @@
       integer :: out_gwsw_groups = 1413
       integer :: out_gwsw_chanobs_flow = 1414
       integer :: out_gwsw_chanobs_no3 = 1415
-      integer :: out_hru_pump_mo = 1285
-      integer :: out_hru_pump_yr = 1286
+      integer :: out_hru_pump_day = 1285
+      integer :: out_hru_pump_mo = 1454
+      integer :: out_hru_pump_yr = 1455
+      integer :: out_hru_pump_aa = 1456
       integer :: out_hru_pump_obs = 1287
       integer :: out_head_mo = 1288
       integer :: out_head_yr = 1289
@@ -794,5 +809,11 @@
       integer :: out_heat_fpln = 1390
       integer :: out_heat_canl = 1391
       integer :: out_heat_pond = 1392
+
+      !cell-level long-format output file units
+      integer :: out_gwcell_day = 1450
+      integer :: out_gwcell_mon = 1451
+      integer :: out_gwcell_yr  = 1452
+      integer :: out_gwcell_aa  = 1453
 
       end module gwflow_module

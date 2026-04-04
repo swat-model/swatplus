@@ -104,7 +104,7 @@
         hru_pump_mo(i) = hru_pump_mo(i) + hru_pump(i)
         hru_pump_yr(i) = hru_pump_yr(i) + hru_pump(i)
       enddo
-      if(hru_pump_flag == 1) then !pumping output for specified HRUs
+      if(hru_pump_flag == 1 .and. gwflag_pump == 1) then
         do i=1,num_hru_pump_obs
           hru_pump_obs(i) = hru_pump(hru_pump_ids(i))
         enddo
@@ -149,14 +149,16 @@
               endif
             endif
           enddo
-          if(gw_solute_flag == 1) then
-            write(out_tile_cells,102) time%day,time%yrc, &
-                                     (sum_tile(i),i=1,gw_tile_num_group), &
-                                     (c_tile(i,1),i=1,gw_tile_num_group), &
-                                     (c_tile(i,2),i=1,gw_tile_num_group) !only no3 and p
-          else
-            write(out_tile_cells,102) time%day,time%yrc, &
-                                     (sum_tile(i),i=1,gw_tile_num_group)
+          if(gwflag_flux == 1) then
+            if(gw_solute_flag == 1) then
+              write(out_tile_cells,8130) time%day,time%mo,time%day_mo,time%yrc, &
+                                       (sum_tile(i),i=1,gw_tile_num_group), &
+                                       (c_tile(i,1),i=1,gw_tile_num_group), &
+                                       (c_tile(i,2),i=1,gw_tile_num_group)
+            else
+              write(out_tile_cells,8130) time%day,time%mo,time%day_mo,time%yrc, &
+                                       (sum_tile(i),i=1,gw_tile_num_group)
+            endif
           endif
         endif
       endif
@@ -221,7 +223,9 @@
             gwsw_sum(i) = gwsw_sum(i) + gw_hyd_ss(cell_id)%gwsw + gw_hyd_ss(cell_id)%swgw
           enddo
         enddo
-        write(out_gwsw_groups,130) time%yrc,time%mo,time%day,(gwsw_sum(i),i=1,gw_gwsw_ngroup)
+        if(gwflag_flux == 1) then
+          write(out_gwsw_groups,8130) time%day,time%mo,time%day_mo,time%yrc,(gwsw_sum(i),i=1,gw_gwsw_ngroup)
+        endif
       endif
 
       !write out channel cell values, for specified channel cells
@@ -232,14 +236,15 @@
           cell_id = gw_chan_obs_cell(i)
           obs_vals(i) = gw_hyd_ss(cell_id)%gwsw + gw_hyd_ss(cell_id)%swgw + gw_hyd_ss(cell_id)%satx
         enddo
-        write(out_gwsw_chanobs_flow,130) time%yrc,time%mo,time%day,(obs_vals(i),i=1,gw_chan_nobs)
-        if(gw_solute_flag == 1) then
-          !no3
-          do i=1,gw_chan_nobs
-            cell_id = gw_chan_obs_cell(i)
-            obs_vals(i) = gwsol_ss(cell_id)%solute(1)%gwsw + gwsol_ss(cell_id)%solute(1)%swgw + gwsol_ss(cell_id)%solute(1)%satx
-          enddo
-          write(out_gwsw_chanobs_no3,130) time%yrc,time%mo,time%day,(obs_vals(i),i=1,gw_chan_nobs)
+        if(gwflag_flux == 1) then
+          write(out_gwsw_chanobs_flow,8130) time%day,time%mo,time%day_mo,time%yrc,(obs_vals(i),i=1,gw_chan_nobs)
+          if(gw_solute_flag == 1) then
+            do i=1,gw_chan_nobs
+              cell_id = gw_chan_obs_cell(i)
+              obs_vals(i) = gwsol_ss(cell_id)%solute(1)%gwsw + gwsol_ss(cell_id)%solute(1)%swgw + gwsol_ss(cell_id)%solute(1)%satx
+            enddo
+            write(out_gwsw_chanobs_no3,8130) time%day,time%mo,time%day_mo,time%yrc,(obs_vals(i),i=1,gw_chan_nobs)
+          endif
         endif
       endif
 
@@ -375,68 +380,9 @@
         enddo
       endif
 
-      !print out new head values and solute concentration values, if requested
+      !(specified-time head/temp/conc grid dump removed -- cell data now in long-format output)
       if(gw_output_index.le.gw_num_output) then
       if(gw_output_yr(gw_output_index).eq.time%yrc .and. gw_output_day(gw_output_index).eq.time%day) then
-        write(out_gwheads,*) 'Groundwater Head for:',time%yrc,time%day
-        if(grid_type == "structured") then
-          grid_val = 0.
-          do i=1,grid_nrow
-            do j=1,grid_ncol
-              if(cell_id_usg(i,j) > 0) then
-                grid_val(i,j) = gw_state(cell_id_usg(i,j))%head
-              endif
-            enddo
-          enddo
-          do i=1,grid_nrow
-            write(out_gwheads,100) (grid_val(i,j),j=1,grid_ncol)
-          enddo
-        else
-          write(out_gwheads,120) (gw_state(i)%head,i=1,ncell)
-        endif
-        write(out_gwheads,*)
-        !temperature
-        if(gw_heat_flag == 1) then
-          write(out_gwtemps,*) 'Groundwater Temperature for:',time%yrc,time%day
-          if(grid_type == "structured") then
-            grid_val = 0.
-            do i=1,grid_nrow
-              do j=1,grid_ncol
-                if(cell_id_usg(i,j) > 0) then
-                  grid_val(i,j) = gwheat_state(cell_id_usg(i,j))%temp
-                endif
-              enddo
-            enddo
-            do i=1,grid_nrow
-              write(out_gwtemps,100) (grid_val(i,j),j=1,grid_ncol)
-            enddo
-          else
-            write(out_gwtemps,120) (gwheat_state(i)%temp,i=1,ncell)
-          endif
-          write(out_gwtemps,*)
-        endif
-        !solute concentrations
-        if(gw_solute_flag == 1) then
-          do s=1,gw_nsolute !loop through the solutes
-            write(out_gwconc,*) gwsol_nm(s),'concentration for:',time%yrc,time%day
-            if(grid_type == "structured") then
-              grid_val = 0.
-              do i=1,grid_nrow
-                do j=1,grid_ncol
-                  if(cell_id_usg(i,j) > 0) then
-                    grid_val(i,j) = gwsol_state(cell_id_usg(i,j))%solute(s)%conc
-                  endif
-                enddo
-              enddo
-              do i=1,grid_nrow
-                write(out_gwconc,101) (grid_val(i,j),j=1,grid_ncol)
-              enddo
-            else
-              write(out_gwconc,120) (gwsol_state(i)%solute(s)%conc,i=1,ncell)
-            endif
-            write(out_gwconc,*)
-          enddo
-        endif
         gw_output_index = gw_output_index + 1
       endif
       endif
@@ -477,15 +423,7 @@
           enddo
         endif
       enddo
-      write(out_gwobs,118) time%yrc,time%day,(gw_obs_head(k),k=1,gw_num_obs_wells)
-      if(gw_heat_flag == 1) then
-        write(out_gwobs_temp,118) time%yrc,time%day,(gw_obs_temp(k),k=1,gw_num_obs_wells)
-      endif
-      if(gw_solute_flag == 1) then
-        do k=1,gw_num_obs_wells
-          write(out_gwobs_sol,119) time%yrc,time%day,k,(gw_obs_solute(k,s),s=1,gw_nsolute)
-        enddo
-      endif
+      !(obs well writes moved to gwflow_output_day)
 
       !compute groundwater volumes at the end of the day
       do i=1,ncell
@@ -527,13 +465,6 @@
 
       !9. last day of the simulation reached: print out average annual values
       if(time%yrc == time%yrc_end .and. time%day == time%day_end) then
-
-        !pumping for HRUs
-        num_months = time%nbyr * 12
-        do i=1,sp_ob%hru
-           write(out_hru_pump_mo,105) i,(hru_pump_mo_all(i,j),j=1,num_months)
-           write(out_hru_pump_yr,105) i,(hru_pump_yr_all(i,j),j=1,time%nbyr)
-        enddo
 
         call gwflow_output_aa
 
@@ -669,10 +600,9 @@
 119   format(i8,i8,i8,1000(f12.3))
 130   format(i8,i8,i8,1000(e13.4))
 131   format(i8,i8,1000(e13.4))
+      !wide-format with standard 4-int time prefix (jday,mon,day,yr)
+8130  format(4i6,1000(e13.4))
 
-120   format(10000(f12.3))
-121   format(10000(e12.3))
-122   format(10000(e12.6))
 125   format(3x,i8,2x,i8,7x,f15.1,50(e13.4))
 126   format(i8,i8,e18.9,e18.9,1000(e18.9))
 127   format(i8,i8,f10.3,e18.9,e18.9,1000(e18.9))
