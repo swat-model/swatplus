@@ -360,21 +360,15 @@
       !canal diversion characteristics
       type canal_info
         integer :: canal_id = 0
-        integer :: divr = 0
-        real :: width = 0.
-        real :: depth = 0.
-        real :: thick = 0.
-        real :: bed_K = 0.
-        real :: frc_ret = 0.                             !     |fraction of diverted volume that should not be used
+        integer :: divr = 0                              !     |recall diversion ID (0 = no recall)
+        real :: width = 0.                               !m    |canal width
+        real :: depth = 0.                               !m    |canal water depth
+        real :: thick = 0.                               !m    |canal bed thickness
+        real :: bed_K = 0.                               !m/day|canal bed hydraulic conductivity
         real :: div = 0.                                 !m3   |volume of water diverted from channel source
         real :: stor = 0.                                !m3   |current volume of canal water
-        real :: div_ret = 0.                             !m3   |volume of diversion water not used (return)
         real :: out_seep = 0.                            !m3   |volume of canal water seeped to aquifer
         real :: out_pond = 0.                            !m3   |volume of canal water routed to recharge pond
-        real :: out_irrg = 0.                            !m3   |volume of canal water applied to fields as irrigation
-        integer :: nhru = 0                              !     |number of HRUs that receive irrigation water from diversion
-        integer, allocatable :: hrus(:)                  !     |HRUs that receive irrigation water from diversion
-        real, allocatable :: hru_ro(:)                   !     |runoff fraction for each HRU
       end type canal_info
       type (canal_info), dimension (:), allocatable :: gw_canl_div_info
 

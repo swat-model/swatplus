@@ -32,7 +32,7 @@
         real :: gw_heat = 0.
         real :: gw_temp = 0.
         real :: gwsw_sum(100) = 0.
-        real :: obs_vals(5000) = 0.
+        real, allocatable, save :: obs_vals(:)
         !tile drainage outflow
         real :: sum_tile(50) = 0.
         real :: sum_mass(50,100) = 0.
@@ -187,14 +187,9 @@
           gw_canl_div_info(i)%div = 0.
         endif
         gw_canl_div_info(i)%stor = gw_canl_div_info(i)%div
-        !current day's volume of diversion water not used (return); adjust available diversion volume
-        !for seepage and irrigation
-        gw_canl_div_info(i)%div_ret = gw_canl_div_info(i)%div * gw_canl_div_info(i)%frc_ret
-        gw_canl_div_info(i)%stor = gw_canl_div_info(i)%stor - gw_canl_div_info(i)%div_ret
         !zero out for daily water balance
         gw_canl_div_info(i)%out_pond = 0.
         gw_canl_div_info(i)%out_seep = 0.
-        gw_canl_div_info(i)%out_irrg = 0.
       enddo
 
       !seepage from recharge ponds to groundwater -----------------------------
@@ -231,6 +226,7 @@
 
       !write out channel cell values, for specified channel cells
       if(gw_chan_obs_flag == 1) then
+        if(.not.allocated(obs_vals)) allocate(obs_vals(gw_chan_nobs))
         !flow
         do i=1,gw_chan_nobs
           cell_id = gw_chan_obs_cell(i)
@@ -674,9 +670,9 @@
 130   format(i8,i8,i8,1000(e13.4))
 131   format(i8,i8,1000(e13.4))
 
-120   format(<out_cols>(f12.3))
-121   format(<out_cols>(e12.3))
-122   format(<out_cols>(e12.6))
+120   format(10000(f12.3))
+121   format(10000(e12.3))
+122   format(10000(e12.6))
 125   format(3x,i8,2x,i8,7x,f15.1,50(e13.4))
 126   format(i8,i8,e18.9,e18.9,1000(e18.9))
 127   format(i8,i8,f10.3,e18.9,e18.9,1000(e18.9))
