@@ -187,9 +187,6 @@
             ! now add the amount of surface residue that is mixed into each layer.
             mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%rsd(ipl)
             mix_org%rsd(ipl)= mix_org%rsd(ipl) + mix_org%surf_rsd
-            ! subtract the amount of surface residue added to the soil from the surface residue.
-            pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
-            pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
           enddo
         end do
 
@@ -207,6 +204,10 @@
           do ipl = 1, pcom(jj)%npl
             soil1(jj)%pl(ipl)%rsd(l) = frac_non_mixed * soil1(jj)%pl(ipl)%rsd(l) +        &
                                                         frac_dep(l) * mix_org%rsd(ipl)
+            ! subtract the amount of surface residue added to the soil from the surface residue.
+            mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%rsd(ipl)
+            pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
+            pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
           enddo
 
           soil1(jj)%hact(l) = frac_non_mixed * soil1(jj)%hact(l) + frac_dep(l) * mix_org%hact
