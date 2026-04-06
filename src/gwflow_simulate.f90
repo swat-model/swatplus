@@ -13,9 +13,10 @@
 
         implicit none
 
-        external :: gwflow_canal_ext, gwflow_chem, gwflow_gwet, &
+        external :: gwflow_canal_ext, gwflow_gwet, &
                     gwflow_pump_ext, gwflow_rech, gwflow_phreatophyte, &
-                    gwflow_pond, gwflow_output_day, gwflow_output_mon, &
+                    gwflow_pond, gwflow_lateral, gwflow_canal_div, &
+                    gwflow_output_day, gwflow_output_mon, &
                     gwflow_output_yr, gwflow_output_aa
 
         !counters and general information
@@ -31,25 +32,32 @@
         real :: gw_storage = 0.
         real :: gw_heat = 0.
         real :: gw_temp = 0.
-        real :: gwsw_sum(100) = 0.
+        real, allocatable, save :: gwsw_sum(:)
         real, allocatable, save :: obs_vals(:)
         !tile drainage outflow
-        real :: sum_tile(50) = 0.
-        real :: sum_mass(50,100) = 0.
-        real :: c_tile(50,100) = 0.
+        real, allocatable, save :: sum_tile(:)
+        real, allocatable, save :: sum_mass(:,:)
+        real, allocatable, save :: c_tile(:,:)
         !flow time stepping
         integer :: num_ts = 0
         integer :: count = 0
         real :: depth_wt_avg = 0.
         real :: temp_avg = 0.
-        !solute transport (needed for beginning-of-day prep)
-        real :: gw_trans_time_step = 0.
-        real :: mass_adv(100) = 0.
-        real :: mass_dsp(100) = 0.
-        real :: mass_sorb(100) = 0.
+        logical, save :: arrays_allocated = .false.
 
 
 
+
+      !allocate local save arrays on first call
+      if(.not.arrays_allocated) then
+        if(gw_gwsw_ngroup > 0) allocate(gwsw_sum(gw_gwsw_ngroup), source=0.)
+        if(gw_tile_num_group > 0) then
+          allocate(sum_tile(gw_tile_num_group), source=0.)
+          allocate(sum_mass(gw_tile_num_group, max(gw_nsolute,1)), source=0.)
+          allocate(c_tile(gw_tile_num_group, max(gw_nsolute,1)), source=0.)
+        endif
+        arrays_allocated = .true.
+      endif
 
       !record file
       write(out_gw,*) 'gwflow subroutine called:',time%yrc,time%day
@@ -328,11 +336,8 @@
         enddo
       endif
 
-      !determine number of flow time steps; determine size of transport time step
+      !determine number of flow time steps
       num_ts = int(1./gw_time_step)
-      if(gw_solute_flag == 1) then
-        gw_trans_time_step = gw_time_step / num_ts_transport
-      endif
 
       !prepare arrays
       do i=1,ncell
@@ -567,10 +572,7 @@
             gwsol_ss(i)%solute(s)%totl = 0.
           enddo
         enddo
-        mass_adv = 0.
-        mass_dsp = 0.
         mass_rct = 0.
-        mass_sorb = 0.
       endif
 
       !read channel depths for next day
@@ -578,34 +580,9 @@
         read(1421,*) dum,dum,(gw_chan_dep(j),j=1,gw_chan_ndpzn)
       endif
 
-
-
-100   format(10000(f12.3))
-101   format(10000(e12.3))
-102   format(i8,i8,f10.3,e16.7,e16.7,1000(e13.4))
-103   format(i8,i8,i8,i8,i8,i8,i8,50(f15.3))
-104   format(10000(f12.2))
-105   format(i8,1000(e13.4))
-106   format(i8,i8,i8,50(f12.3))
-108   format(i8,2x,50(e12.4))
-109   format(i8,i8,1000(e12.3))
-110   format(i8,f20.1,i8,f12.3,f12.3,f12.3)
-111   format(f20.1,f12.3,f12.3,i8)
-112   format(f15.1,50(e13.4))
-113   format(i8,1000(f12.3))
-114   format(i8,i8,1000(e12.3))
-115   format(f12.3,f12.3,f12.3,f12.3,i8,i8)
-116   format(f20.1,f12.3,f12.3,f12.3,f12.3,i8,i8)
-118   format(i8,i8,1000(f12.3))
 119   format(i8,i8,i8,1000(f12.3))
-130   format(i8,i8,i8,1000(e13.4))
-131   format(i8,i8,1000(e13.4))
       !wide-format with standard 4-int time prefix (jday,mon,day,yr)
 8130  format(4i6,1000(e13.4))
-
-125   format(3x,i8,2x,i8,7x,f15.1,50(e13.4))
-126   format(i8,i8,e18.9,e18.9,1000(e18.9))
-127   format(i8,i8,f10.3,e18.9,e18.9,1000(e18.9))
 
 
       return

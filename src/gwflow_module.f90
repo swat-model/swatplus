@@ -492,10 +492,10 @@
       integer :: gwsol_minl = 0                               !    |flag for simulating salt mineral precipitation-dissolution
       integer :: gw_nminl = 0                                 !    |number of salt minerals (set to 5)
        
-      !main attributes of solutes
-      character (len=16) :: gwsol_nm(100) = ""
-      real :: gwsol_rctn(100) = 0.
-      real :: gwsol_sorb(100) = 0.
+      !main attributes of solutes (allocated in gwflow_read to gw_nsolute)
+      character (len=16), allocatable :: gwsol_nm(:)
+      real, allocatable :: gwsol_rctn(:)
+      real, allocatable :: gwsol_sorb(:)
       
       !solute cell state variables
       type solute_state
@@ -513,8 +513,8 @@
       end type object_solute_state
       type (object_solute_state), dimension (:), allocatable :: gwsol_state
 
-      !salt mineral cell state variables
-      real :: mass_min(100) = 0.                         !g       |solute mass added/removed from cell via precipitation-dissolution
+      !salt mineral cell state variables (allocated in gwflow_read to gw_nsolute)
+      real, allocatable :: mass_min(:)                   !g       |solute mass added/removed from cell via precipitation-dissolution
       type minl_state
         real, dimension (:), allocatable :: fract        !        |fraction of cell that is the salt mineral
       end type minl_state
@@ -522,7 +522,7 @@
       
       !solute cell chemical reaction variables
       integer, dimension (:), allocatable :: cell_int
-      real :: mass_rct(100) = 0.    !g            |solute mass added/removed from cell via chemical reaction
+      real, allocatable :: mass_rct(:)    !g            |solute mass added/removed from cell via chemical reaction (allocated in gwflow_read)
       type solute_chem
         real :: ino3 = 0.           !             |selenium reduction inhibition factor
         real :: oxyg = 0.           !g/m3         |oxygen concentration in groundwater

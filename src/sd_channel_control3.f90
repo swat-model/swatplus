@@ -318,9 +318,7 @@
       hyd_sep_array(ich,4) = hdsep2%flo_swgw / 86400.
       hyd_sep_array(ich,5) = hdsep2%flo_satex / 86400.
       hyd_sep_array(ich,6) = hdsep2%flo_satexsw / 86400.
-      hyd_sep_array(ich,7) = 0. !hdsep2%flo_tile / 86400.
-      !rtb hydrograph separation
-      !end if
+      hyd_sep_array(ich,7) = hdsep2%flo_tile / 86400.
 
       ich = isdch
             

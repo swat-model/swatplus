@@ -23,9 +23,9 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
       real :: cha_div = 0.          !m3         |maximum amount of flow that can be diverted
       real :: rto = 0.              !none       |ratio of channel withdrawal to determine hydrograph removed
       real :: avail = 0.            !m3         |water available to withdraw from an aquifer
+      external :: gwflow_pump_allo
       real :: extracted = 0.        !m3         |water extracted from the aquifer object (gwflow - rtb)
       real :: trn_unmet = 0.        !m3         |demand that is unmet (gwflow - rtb)
-      real :: hru_demand = 0.   !m3         |demand (copy to pass into gwflow subroutine - rtb)
       real :: withdraw = 0.         !m3
       real :: unmet = 0.            !m3
         
@@ -200,7 +200,6 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
           elseif(bsn_cc%gwflow == 1) then !gwflow is active; determine pumping amounts from grid cells
             extracted = 0.
             trn_unmet = 0.
-            hru_demand = trn_m3
             call gwflow_pump_allo(wallo(iwallo)%trn(itrn)%num,trn_m3,extracted,trn_unmet)
             wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + extracted
             wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_unmet
