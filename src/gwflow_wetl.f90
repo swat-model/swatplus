@@ -63,8 +63,9 @@
               gw_inflow = wet_area * wet_k * ((wt-wet_stage)/wet_thick(ires)) !m3/day
               !check against available groundwater storage (m3) in the grid cell
               if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then !if water table is above bedrock
-                gwvol_avail = ((gw_state(cell_id)%head - gw_state(cell_id)%botm) * &
-                                gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
+                !gwvol_avail = ((gw_state(cell_id)%head - gw_state(cell_id)%botm) * &
+                !                gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
+                gwvol_avail = gw_state(cell_id)%stor
               else
                 gwvol_avail = 0.
               endif
@@ -73,6 +74,7 @@
                 gw_inflow = gwvol_avail
               endif
               !include in groundwater source-sink array (will be removed in gwflow_simulate)
+              gw_state(cell_id)%stor = gw_state(cell_id)%stor + (gw_inflow*(-1))
               gw_ss(cell_id)%wetl = gw_ss(cell_id)%wetl + (gw_inflow*(-1)) !m3 negative = leaving the aquifer
               gw_ss_sum(cell_id)%wetl = gw_ss_sum(cell_id)%wetl + (gw_inflow*(-1))
               !add groundwater inflow to wetland; include in wetland water balance
@@ -89,8 +91,8 @@
                   if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                     solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                   endif
-                  gwsol_ss(cell_id)%solute(s)%wetl = solmass(s)
-                  gwsol_ss_sum(cell_id)%solute(s)%wetl = gwsol_ss_sum(cell_id)%solute(s)%wetl + solmass(s)
+                  gwsol_ss(cell_id)%solute(s)%wetl = gwsol_ss(cell_id)%solute(s)%wetl + (solmass(s)*(-1))
+                  gwsol_ss_sum(cell_id)%solute(s)%wetl = gwsol_ss_sum(cell_id)%solute(s)%wetl + (solmass(s)*(-1))
                 enddo
                 !add solute mass to wetland object
                 !no3
