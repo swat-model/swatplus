@@ -42,8 +42,8 @@
                 Q = gw_pumpex_rates(i,j)
                 if(Q.ge.gw_state(cell_id)%stor) then
                   Q = gw_state(cell_id)%stor
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q
                 endif
+                gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q
                 gw_ss(cell_id)%ppex = gw_ss(cell_id)%ppex - Q !negative = leaving the aquifer
                 gw_ss_sum(cell_id)%ppex = gw_ss_sum(cell_id)%ppex - Q 
                 !if chemical transport simulated, calculate the mass of N and P removed via pumping

@@ -92,10 +92,10 @@
                 if(Q < 0) then !mass leaving the cell (aquifer --> reservoir)
                   do s=1,gw_nsolute !loop through the solutes
                     solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
-                    if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
-                      solmass(s) = gwsol_state(cell_id)%solute(s)%mass
+                    if(-solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
+                      solmass(s) = -gwsol_state(cell_id)%solute(s)%mass
                     endif
-                    gwsol_ss(cell_id)%solute(s)%resv = solmass(s)
+                    gwsol_ss(cell_id)%solute(s)%resv = gwsol_ss(cell_id)%solute(s)%resv + solmass(s)
                     gwsol_ss_sum(cell_id)%solute(s)%resv = gwsol_ss_sum(cell_id)%solute(s)%resv + solmass(s)
                   enddo    
                   !add solute to reservoir
@@ -181,7 +181,7 @@
                   endif
                   !store for mass balance calculations (in gwflow_simulate)
                   do s=1,gw_nsolute !loop through the solutes
-                    gwsol_ss(cell_id)%solute(s)%resv = solmass(s)
+                    gwsol_ss(cell_id)%solute(s)%resv = gwsol_ss(cell_id)%solute(s)%resv + solmass(s)
                     gwsol_ss_sum(cell_id)%solute(s)%resv = gwsol_ss_sum(cell_id)%solute(s)%resv + solmass(s)
                   enddo
                 endif
