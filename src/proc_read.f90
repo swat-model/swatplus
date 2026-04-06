@@ -12,7 +12,8 @@
                   dtbl_flocon_read, dtbl_lum_read, dtbl_res_read, dtbl_scen_read, hru_dtbl_actions_init, &
                   hru_lte_read, lsu_read_elements, manure_allocation_read, om_treat_read, om_use_read, &
                   path_cha_res_read, pest_cha_res_read, salt_cha_read, water_allocation_read, &
-                  water_pipe_read, water_tower_read, water_treatment_read, water_use_read, cs_uptake
+                  water_pipe_read, water_tower_read, water_treatment_read, water_use_read, cs_uptake, &
+                  shade_factor_read
              
       call ch_read_temp
       call cli_read_atmodep
@@ -51,7 +52,9 @@
       call topo_read
       call field_read
       call hydrol_read
-      
+
+      call shade_factor_read
+
       call snowdb_read
       call soil_db_read
       call soil_lte_db_read

@@ -1,0 +1,256 @@
+      subroutine gwflow_canal_div !rtb gwflow
+
+!!    ~ ~ ~ PURPOSE ~ ~ ~
+!!    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
+!!    for canals that are connected to a point source diversion (recall object); seepage water should be
+!!    removed from the diverted water volume.
+
+      use gwflow_module
+      use hydrograph_module, only : irrig
+      use time_module
+      use constituent_mass_module
+			use hru_module, only : hru
+			!div_conc_cs and div_conc_salt now in gwflow_module (temporary, pending wallo integration)
+			use res_salt_module, only : wetsalt_d
+			use res_cs_module, only : wetcs_d
+			use salt_module, only : hsaltb_d
+			use cs_module, only : hcsb_d
+
+      implicit none
+
+      integer :: i = 0                       !       |cell counter
+	  integer :: j = 0
+      character(len=18) :: canal_name = ''   !       |constructed canal name
+      integer :: s = 0                       !       |counter of groundwater solutes
+      integer :: cell_id = 0                 !       |cell in connection with the canal
+	  integer :: irec = 0                    !       |recall ID for canal diversion
+	  integer :: sol_index = 0
+	  integer :: ics = 0
+	  integer :: isalt = 0
+	  integer :: hru_id = 0
+      integer :: canal_id = 0
+			integer :: wetland = 0                 !       |wetland flag
+			integer :: dum = 0
+      real :: width = 0.                      !m      |canal width
+      real :: depth = 0.                      !m      |canal depth
+      real :: thick = 0.                      !m      |canal bed thickness
+      real :: length = 0.                     !m      |length of canal in the cell
+      real :: stage = 0.                      !m      |stage of canal in the cell
+      real :: bed_K = 0.											 !m/day  |hydraulic conductivity of canal bed in the cell
+			real :: reduc = 0.
+			real :: daycount_real = 0.
+      real :: flow_area = 0.                  !m2     |groundwater flow area of water exchange, in cell
+      real :: canal_bed = 0.                  !m      |canal bed elevation in the cell
+      real :: head_diff = 0.                  !m      |head difference between canal stage and groundwater head
+      real :: Q = 0.                          !m3/day |water exchange flow rate, calculated by Darcy's Law
+      real :: solmass(100) = 0.               !g      |solute mass transferred
+      real :: heat_flux = 0.                  !J      |heat in groundawter-canal exchange water
+			real :: canal_area = 0.								 !m2     |total area irrigated by canal
+			real :: irrig_depth = 0.                !mm     |depth of irrigation water for the HRUs irrigated by a canal
+			real :: irrig_volm = 0.
+			real :: irrig_conc = 0.
+			real :: irrig_mass = 0.
+			real :: canal_conc = 0.
+			real :: mass_div = 0.
+            real :: mass_stor = 0.
+            real :: mass_pond = 0.
+            real :: mass_seep = 0.
+            real :: mass_irrg = 0.
+            real :: mass_ret = 0.
+
+
+
+      !only proceed if canal-cell exchange is active
+      if (gw_canal_flag == 1) then
+
+
+			  !first: calculate seepage from each canal ---------------------------------------------------------------------
+			  !(seepage only occurs if the canal has water; based on point diversions)
+
+        !loop through the canal cells
+        do i=1,gw_canal_ncells_div
+
+				  !canal associated with grid cell
+				  canal_id = gw_canl_div_cell(i)%canal_id
+
+					!only proceed if the canal has water
+					if(gw_canl_div_info(canal_id)%stor > 0) then
+
+            cell_id = gw_canl_div_cell(i)%cell_id
+            if (gw_state(cell_id)%stat == 1) then !if cell is active
+              !canal attributes
+						  width = gw_canl_div_info(canal_id)%width
+              depth = gw_canl_div_info(canal_id)%depth
+              thick = gw_canl_div_info(canal_id)%thick
+							bed_K = gw_canl_div_info(canal_id)%bed_K
+						  !cell attributes
+              length = gw_canl_div_cell(i)%leng
+              canal_bed = gw_canl_div_cell(i)%elev
+							stage = canal_bed + depth
+              !calculate exchange rate Q (m3/day)
+              flow_area = length * width !m2 = area of seepage
+              Q = 0.
+              if(gw_state(cell_id)%head < canal_bed) then
+                head_diff = depth
+                Q =  bed_K * (head_diff / thick) * flow_area !canal seepage (positive Q: entering aquifer)
+              elseif (gw_state(cell_id)%head > stage) then
+                head_diff = gw_state(cell_id)%head - stage
+                Q = bed_K * (head_diff / thick) * flow_area * (-1) !gw discharge (negative Q: leaving aquifer)
+              elseif (gw_state(cell_id)%head > canal_bed .and. gw_state(cell_id)%head < stage) then
+                head_diff = stage - gw_state(cell_id)%head
+                Q = bed_K * (head_diff / thick) * flow_area !canal seepage (positive Q: entering aquifer)
+              endif
+              !store values in gwflow source/sink arrays;
+							!if the seepage is positive, then water is taken from the volume of water already diverted from
+							!channels (point source diversion = recall object)
+              if(Q < 0) then !groundwater --> canal
+                if (-Q .ge.gw_state(cell_id)%stor) then !can only remove what is there
+                  Q = -gw_state(cell_id)%stor
+                endif
+							elseif(Q > 0) then !canal --> groundwater
+							  !remove seepage water from the diversion volume
+								if(Q > gw_canl_div_info(canal_id)%stor) then
+								  Q = gw_canl_div_info(canal_id)%stor
+								endif
+								gw_canl_div_info(canal_id)%stor = gw_canl_div_info(canal_id)%stor - Q
+								gw_canl_div_info(canal_id)%out_seep = gw_canl_div_info(canal_id)%out_seep + Q
+							endif
+							gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell
+              gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q
+              gw_hyd_ss_yr(cell_id)%canl = gw_hyd_ss_yr(cell_id)%canl + Q !store for annual water
+              gw_hyd_ss_mo(cell_id)%canl = gw_hyd_ss_mo(cell_id)%canl + Q !store for monthly water
+
+              !heat
+              if(gw_heat_flag == 1) then
+                if(Q < 0) then
+                  heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * Q !J
+                  if(-heat_flux >= gwheat_state(cell_id)%stor) then
+                    heat_flux = -gwheat_state(cell_id)%stor
+                  endif
+                  gw_heat_ss(cell_id)%canl = gw_heat_ss(cell_id)%canl + heat_flux
+                  gw_heat_ss_yr(cell_id)%canl = gw_heat_ss_yr(cell_id)%canl + heat_flux
+                endif
+              endif
+
+              !calculate solute mass (g/day) transported between cell and channel
+              if (gw_solute_flag == 1) then
+                if(Q < 0) then !mass is leaving the cell --> canal
+                  do s=1,gw_nsolute !loop through the solutes
+                    solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
+                    if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
+                      solmass(s) = gwsol_state(cell_id)%solute(s)%mass
+                    endif
+                  enddo
+                else !mass entering the cell from the canal (i.e., from the diverted solute mass)
+								  !calculate mass (g)
+								  solmass(1) = Q * canal_out_conc(1) !no3
+									solmass(2) = Q * canal_out_conc(2) !p
+									sol_index = 2
+                  !salts
+                  if (gwsol_salt == 1) then
+									  irec = gw_canl_div_info(canal_id)%divr
+									  if(irec > 0) then
+										  do isalt=1,cs_db%num_salts
+                        sol_index = sol_index + 1
+                        solmass(sol_index) = Q * div_conc_salt(isalt,irec)
+                      enddo
+										else
+                      do isalt=1,cs_db%num_salts
+                        sol_index = sol_index + 1
+                        solmass(sol_index) = Q * canal_out_conc(sol_index)
+                      enddo
+										endif
+                  endif
+                  !constituents
+                  if (gwsol_cons == 1) then
+									  irec = gw_canl_div_info(canal_id)%divr
+									  if(irec > 0) then
+										  do ics=1,cs_db%num_cs
+                        sol_index = sol_index + 1
+                        solmass(sol_index) = Q * div_conc_cs(ics,irec)
+                      enddo
+										else
+                      do ics=1,cs_db%num_cs
+                        sol_index = sol_index + 1
+                        solmass(sol_index) = Q * canal_out_conc(sol_index)
+                      enddo
+										endif
+                  endif
+                endif
+                !store in mass balance arrays
+                do s=1,gw_nsolute !loop through the solutes
+                  gwsol_ss(cell_id)%solute(s)%canl = gwsol_ss(cell_id)%solute(s)%canl + solmass(s)
+                  gwsol_ss_sum(cell_id)%solute(s)%canl = gwsol_ss_sum(cell_id)%solute(s)%canl + solmass(s)
+									gwsol_ss_sum_mo(cell_id)%solute(s)%canl = gwsol_ss_sum_mo(cell_id)%solute(s)%canl + solmass(s)
+                enddo
+              endif !end solutes
+
+            endif !check if cell is active
+          endif !check if canal has water
+
+        enddo !go to next canal cell
+
+
+				!(irrigation removed -- handled by wallo water allocation system)
+
+        !write out daily volumes and fluxes for each canal
+        do i=1,gw_ncanal
+          write(canal_name,'(a6,i4.4)') 'canal_',i
+          if(gwflag_flux == 1) then
+					write(out_canal_bal,8100) time%day,time%mo,time%day_mo,time%yrc, &
+					    i,i,canal_name, &
+					    gw_canl_div_info(i)%div, &
+					    gw_canl_div_info(i)%stor, &
+					    gw_canl_div_info(i)%out_pond, &
+					    gw_canl_div_info(i)%out_seep
+          endif !gwflag_flux
+
+					!write solute mass balance (seepage mass only, irrigation handled by wallo)
+					if (gw_solute_flag == 1) then
+						irec = gw_canl_div_info(i)%divr
+						sol_index = 2
+						if (gwsol_salt == 1) then
+							do isalt=1,cs_db%num_salts
+                sol_index = sol_index + 1
+								canal_conc = div_conc_salt(isalt,irec)
+								mass_div = (gw_canl_div_info(i)%div * canal_conc) / 1000.
+								mass_stor = (gw_canl_div_info(i)%stor * canal_conc) / 1000.
+								mass_pond = (gw_canl_div_info(i)%out_pond * canal_conc) / 1000.
+								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000.
+								if(gwflag_flux == 1) then
+								write(out_canal_sol,8101) time%day,time%mo,time%day_mo,time%yrc, &
+								    i,i,canal_name,gwsol_nm(sol_index), &
+								    mass_div,mass_stor,mass_pond,mass_seep
+								endif
+              enddo
+            endif
+						if (gwsol_cons == 1) then
+							do ics=1,cs_db%num_cs
+                sol_index = sol_index + 1
+								canal_conc = div_conc_cs(ics,irec)
+								mass_div = (gw_canl_div_info(i)%div * canal_conc) / 1000.
+								mass_stor = (gw_canl_div_info(i)%stor * canal_conc) / 1000.
+								mass_pond = (gw_canl_div_info(i)%out_pond * canal_conc) / 1000.
+								mass_seep = (gw_canl_div_info(i)%out_seep * canal_conc) / 1000.
+								if(gwflag_flux == 1) then
+								write(out_canal_sol,8101) time%day,time%mo,time%day_mo,time%yrc, &
+								    i,i,canal_name,gwsol_nm(sol_index), &
+								    mass_div,mass_stor,mass_pond,mass_seep
+								endif
+              enddo
+            endif
+					endif
+
+				enddo !go to next canal
+
+      endif !check if canal-cell exchange is active
+
+
+
+      !standard SWAT+ data row: water balance (6 data cols)
+8100  format(4i6,2i8,a18,50e13.4)
+      !standard SWAT+ data row: solute balance (solute name + 6 data cols)
+8101  format(4i6,2i8,a18,a13,50e13.4)
+
+      return
+      end subroutine gwflow_canal_div
