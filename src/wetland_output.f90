@@ -60,8 +60,8 @@
           wet_in_a(j) = wet_in_a(j) + wet_in_y(j)
           wet_out_a(j) = wet_out_a(j) + wet_out_y(j)
           wet_wat_a(j) = wet_wat_a(j) + wet_wat_y(j)
-          wet_in_y(j)%flo = wet_in_y(j)%flo / 12.
-          wet_out_y(j)%flo = wet_out_y(j)%flo / 12.
+          !wet_in_y(j)%flo = wet_in_y(j)%flo / 12.
+          !wet_out_y(j)%flo = wet_out_y(j)%flo / 12.
           if (pco%res%y == "y") then
             write (2550,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_y(j), wet(j), &
             wet_in_y(j), wet_out_y(j)
@@ -70,15 +70,15 @@
                 wet_wat_y(j), wet(j), wet_in_y(j), wet_out_y(j)
               end if
           end if
-          !wet_in_y(j) = resmz
-          !wet_out_y(j) = resmz
-          !wet_wat_y(j) = wbodz
+          wet_in_y(j) = resmz
+          wet_out_y(j) = resmz
+          wet_wat_y(j) = wbodz
        end if
 
 !!!!! average annual print
         if (time%end_sim == 1 .and. pco%res%a == "y") then
-          wet_in_a(j) = wet_in_y(j) / time%yrs_prt
-          wet_out_a(j) = wet_out_y(j) / time%yrs_prt
+          wet_in_a(j) = wet_in_a(j) / time%yrs_prt
+          wet_out_a(j) = wet_out_a(j) / time%yrs_prt
           wet_wat_a(j) = wet_wat_a(j) / time%yrs_prt
           write (2551,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_a(j), wet(j), &
           wet_in_a(j), wet_out_a(j)
