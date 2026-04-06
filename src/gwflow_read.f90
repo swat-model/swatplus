@@ -1772,7 +1772,21 @@
         !open the file
         open(in_gw,file='gwflow.solutes')
 
-        !include no3 and p (default)
+        !pre-compute total solute count and allocate arrays
+        gw_nsolute = 2 !no3 + p always
+        inquire(file="constituents.cs", exist=i_exist2)
+        if(i_exist2) then
+          if(cs_db%num_salts > 0) gw_nsolute = gw_nsolute + cs_db%num_salts
+          if(cs_db%num_cs > 0) gw_nsolute = gw_nsolute + cs_db%num_cs
+        endif
+        allocate(gwsol_nm(gw_nsolute))
+        gwsol_nm = ""
+        allocate(gwsol_rctn(gw_nsolute), source=0.)
+        allocate(gwsol_sorb(gw_nsolute), source=0.)
+        allocate(mass_rct(gw_nsolute), source=0.)
+        allocate(mass_min(gw_nsolute), source=0.)
+
+        !include no3 and p (default); reset counter for incremental fill
         gw_nsolute = 2
         gwsol_nm(1) = 'no3'
         gwsol_nm(2) = 'p'

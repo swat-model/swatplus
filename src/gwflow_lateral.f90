@@ -25,7 +25,7 @@
 
       !local variables - transit time output
       integer :: cell_transit, line_num
-      real :: line_vals(50000)
+      real, allocatable, save :: line_vals(:)
 
 
       !determine number of flow time steps
@@ -236,6 +236,7 @@
           endif
         enddo
         !write out results for specified cells
+        if(.not.allocated(line_vals)) allocate(line_vals(gw_transit_num*4), source=0.)
         line_vals = 0.
         line_num = 1
         do i=1,gw_transit_num
@@ -251,5 +252,5 @@
       endif
 
       return
-100   format(50000(f20.4))
+100   format(99999(f20.4))
       end subroutine gwflow_lateral

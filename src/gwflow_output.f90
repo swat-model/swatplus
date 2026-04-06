@@ -2227,27 +2227,11 @@
         write(iunit,103) (values(i), i=1,ncell_in)
       end select
 
-101   format(10000(f12.3))
-102   format(10000(e12.3))
-103   format(10000(e12.6))
+101   format(99999(f12.3))
+102   format(99999(e12.3))
+103   format(99999(e12.6))
 
       return
       end subroutine gwflow_write_cell_array
 
 
-      subroutine gwflow_write_cell_header(iunit, label, yr, mo)
-!!    Writes a standard header line before grid output.
-      implicit none
-      integer, intent(in) :: iunit
-      character(len=*), intent(in) :: label
-      integer, intent(in) :: yr
-      integer, intent(in), optional :: mo
-
-      if(present(mo)) then
-        write(iunit,*) trim(label), ' for:', yr, mo
-      else
-        write(iunit,*) trim(label), ' for:', yr
-      endif
-
-      return
-      end subroutine gwflow_write_cell_header
