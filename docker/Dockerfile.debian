@@ -1,0 +1,127 @@
+##
+# <username>/swatplus:debian-<SWATPLUSVER>
+#
+# This debian-based SWAT+ image includes SWAT+ models compiled by 
+#   user-specified compilers (gfortran, ifx) and optimization levels
+#
+# Usage: 
+#   > cd <path/to/swatplus_official>
+#   # Example: 
+#   # docker build \
+#     -t crazyzlj/swatplus:debian-61.0.1 \
+#     --build-arg SWATPLUSVER=61.0.1 \
+#     --build-arg BUILD_COMPILERS="gfortran" \
+#     --build-arg RELEASE_OPT_LEVELS="O1 O2" \
+#     -f docker/Dockerfile.debian .
+#
+#   # 1. SWATPLUSVER can be specified mannually, like "-t crazyzlj/swatplus:debian-61.0.1 --build-arg SWATPLUSVER=61.0.1",
+#   #                or read from the "VERSION" file:
+#   #                   Bash/Zsh/sh (Linux/macOS):
+#   #                       -t crazyzlj/swatplus:debian-$(cat VERSION) --build-arg SWATPLUSVER=$(cat VERSION)
+#   #                   PowerShell (Windows):
+#   #                       -t "crazyzlj/swatplus:debian-$(Get-Content VERSION)" --build-arg "SWATPLUSVER=$(Get-Content VERSION)"
+#   # 2. BUILD_COMPILERS can be "gfortran", "ifx", or "gfortran ifx"
+#   # 3. RELEASE_OPT_LEVELS can be one or several optimization levels, including O0, O1, O2, and O3, e.g., "O1 O2"
+#
+# Copyright 2025-2026 Liang-Jun Zhu <zlj@lreis.ac.cn>
+#
+# Use debian as the builder and runner containers, which is used for continuumio/miniconda3
+# https://github.com/ContinuumIO/docker-images/blob/main/miniconda3/debian/Dockerfile
+ARG DEBIAN_VER=12.11-slim@sha256:6ac2c08566499cc2415926653cf2ed7c3aedac445675a013cc09469c9e118fdd
+# ===================================================================
+# STAGE 1: builder
+# ===================================================================
+FROM debian:${DEBIAN_VER} AS builder
+
+LABEL maintainer="Liang-Jun Zhu <zlj@lreis.ac.cn>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# change the shell to use "source" command
+SHELL ["/bin/bash", "-c"]
+
+# install gfortran and Intel Fortran compilers
+RUN apt-get update && apt-get install -y wget gpg \
+    cmake ninja-build \
+    ca-certificates \
+    build-essential \
+    gfortran \
+    && \
+    wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
+        | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" \
+        | tee /etc/apt/sources.list.d/oneAPI.list \
+    && apt-get update \
+    && apt-get install -y intel-oneapi-compiler-fortran \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy source directory
+WORKDIR /swatplus_official
+COPY . .
+
+# Build SWAT+, the executable name will be swatplus-<SWATPLUSVER>-gnu/ifx-lin_x86_64-Rel/Dbg-<OPT_LEVEL>
+ARG SWATPLUSVER
+ARG INSTALL_DIR=/swatplus_official/dist
+ARG RELEASE_OPT_LEVELS="O0 O1 O2"
+ARG BUILD_COMPILERS="ifx gfortran"
+
+RUN set -exo pipefail; \
+    source /opt/intel/oneapi/setvars.sh; \
+    build_one() { \
+      local fc="$1"; \
+      local cfg="$2"; \
+      local opt="${3:-}"; \
+      if [ -n "$opt" ]; then \
+        bdir="/swatplus_official/build_${fc}_${cfg}_${opt}"; \
+      else \
+        bdir="/swatplus_official/build_${fc}_${cfg}"; \
+      fi; \
+      local cmake_args=( \
+        -G Ninja \
+        -S /swatplus_official \
+        -B "${bdir}" \
+        -DCMAKE_Fortran_COMPILER="${fc}" \
+        -DCMAKE_BUILD_TYPE="${cfg}" \
+        -DTAG="${SWATPLUSVER}" \
+        -DINSTALL_PREFIX="${INSTALL_DIR}" \
+      ); \
+      if [[ "${cfg}" != "Debug" && -n "${opt}" ]]; then \
+        cmake_args+=(-DOPT_LEVEL="${opt}"); \
+      fi; \
+      cmake "${cmake_args[@]}"; \
+      cmake --build "${bdir}" -j"$(nproc)"; \
+      cmake --install "${bdir}"; \
+    }; \
+    for fc in ${BUILD_COMPILERS}; do \
+      build_one "${fc}" Debug; \
+      if [ -n "${RELEASE_OPT_LEVELS}" ]; then \
+        for opt in ${RELEASE_OPT_LEVELS}; do \
+          build_one "${fc}" Release "$opt"; \
+        done; \
+      fi; \
+    done
+
+# ===================================================================
+# STAGE 2: runner
+# ===================================================================
+FROM debian:${DEBIAN_VER} AS runner
+
+# install Intel GPG key and the runtimes of Intel Fortran and gfortran
+ARG DEBIAN_FRONTEND=noninteractive
+
+# copy entrypoint to set Intel environment before running this container
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# copy executable from the builder stage
+ARG SWATPLUSVER
+ARG INSTALL_DIR=/swatplus_official/dist
+COPY --from=builder ${INSTALL_DIR}/bin/ /usr/local/bin/
+
+
+# set Intel environment
+ENTRYPOINT ["/entrypoint.sh"]
+
+# run swatplus compiled by Intel, by default
+ENV SWATPLUSEXEC="swatplus-${SWATPLUSVER}-ifx-lin_x86_64-Rel-o1"
+CMD ["${SWATPLUSEXEC}"]
