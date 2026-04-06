@@ -41,7 +41,6 @@
       implicit none 
 
       integer :: j = 0      !none          |HRU number
-      integer :: k = 0      !none          |counter (soil layer)
       real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
                             !              |to nitrate(80%) and active organic(20%)
                             !              |pools in layer
@@ -60,7 +59,6 @@
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
-      k = 1
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
@@ -129,27 +127,27 @@
             if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
             if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
 
-            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%m
-            soil1(j)%str(k)%m = soil1(j)%str(k)%m + cswat_3_part_fracs(idp)%str_frac_abg * decomp%m
-            soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%m
-            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%c
-            soil1(j)%str(k)%c = soil1(j)%str(k)%c + cswat_3_part_fracs(idp)%str_frac_abg * decomp%c
-            soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%c
+            soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%m
+            soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_3_part_fracs(idp)%str_frac_abg * decomp%m
+            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%m
+            soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%c
+            soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_3_part_fracs(idp)%str_frac_abg * decomp%c
+            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%c
             
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
+            rsd_meta%n = decomp%n - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
+            soil1(j)%meta(1)%n = soil1(j)%meta(1)%n + rsd_meta%n
             rsd_str%n = decomp%n - rsd_meta%n
-            soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
-            soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
+            soil1(j)%str(1)%n = soil1(j)%str(1)%n + rsd_str%n
+            soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + lig_frac * rsd_str%n
             
-            rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
+            rsd_meta%p = decomp%p - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
+            soil1(j)%meta(1)%p = soil1(j)%meta(1)%p + rsd_meta%p
             rsd_str%p = decomp%p - rsd_meta%p
-            soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
-            soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            soil1(j)%str(1)%p = soil1(j)%str(1)%p + rsd_str%p
+            soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + lig_frac * rsd_str%p
             
           end if    ! soil temp > 0
           
