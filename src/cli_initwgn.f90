@@ -244,7 +244,11 @@
       end do
 
       wgn_pms(iwgn)%pcp_an = summm_p
-      wgn_pms(iwgn)%ppet_an = summm_p / summm_pet
+      if (summm_pet > 1.e-3) then
+        wgn_pms(iwgn)%ppet_an = summm_p / summm_pet
+      else
+        wgn_pms(iwgn)%ppet_an = summm_p / 1.e-3
+      end if
       wgn_pms(iwgn)%tmp_an = (summx_t + summn_t) / 24.
 
       !! calculate initial temperature of soil layers
