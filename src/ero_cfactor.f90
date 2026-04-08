@@ -38,15 +38,12 @@
       integer :: j = 0              !none          |HRU number
       integer :: ipl = 0            !none          |sequential plant number
       integer :: idp = 0            !none          |plant number in data file - pldb
-      real :: c = 0.                !              |
-      real :: ab_gr_t = 0.          !tons          |above ground biomass of each plant
-      real :: rsd_pctcov = 0.       !              |percent of cover by residue
+      real :: c = 0.                !              |usle c factor
+      real :: ab_gr_t = 0.          !tons          |total above ground biomass of plant community
       real :: rsd_covfact = 0.      !              |residue cover factor
-      real :: can_covfact = 0.      !              |canopy cover factor
-      real :: can_frcov = 0.        !              |fraction of canopy cover
-      real :: rsd_sumfac = 0.       !              |sum of residue cover factor by plant
-      real :: grnd_sumfac = 0.      !              |ground cover factor for each plant
-      real :: grnd_covfact = 0.     !              |sum of plant ground cover factor by plant
+      real :: rsd_sumfac = 0.       !tons          |sum of residue cover factor by plant
+      real :: grcov_frac = 0.       !frac          |fraction of ground cover factor for all plants
+      real :: bio_covfact = 0.      !              |growing biomass factor
       real :: cover = 0.            !kg/ha         |soil cover - sum of residue and biomass
       
       j = ihru
@@ -66,73 +63,27 @@
           end if
         end if
       else
-        !! new method using residue and biomass cover
-        grnd_sumfac = 0.
-        rsd_sumfac = pldb(idp)%rsd_pctcov * (pl_mass(j)%rsd_tot%m +1.) / 1000.
-        do ipl = 1, pcom(j)%npl
-          idp = pcom(j)%plcur(ipl)%idplt
-          if (pl_mass(j)%ab_gr(ipl)%m > 1.e-6) then
-            ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
-            grnd_sumfac = grnd_sumfac + 100. * pldb(idp)%usle_c / ab_gr_t
-          end if
-        end do
-        if (grnd_sumfac < 1.e-6) then
-          grnd_sumfac = 10.
-        end if
         
-        rsd_pctcov = 100. * (1. - exp_w(-rsd_sumfac))
-        rsd_pctcov = amin1 (100., rsd_pctcov)
-        rsd_pctcov = max (0., rsd_pctcov)
-        rsd_covfact = exp_w (-pcom(j)%rsd_covfac * rsd_pctcov)
-        
-        can_frcov = amin1 (1., pcom(j)%lai_sum)
-        can_frcov = amin1 (1., pcom(j)%lai_sum / 3.)
-        can_covfact = 1. - can_frcov * exp_w(-.328 * pcom(j)%cht_mx)
-        can_covfact = amin1 (1., can_covfact)
-        can_covfact = max (0., can_covfact)
-        
-        grnd_sumfac = Min (10., grnd_sumfac)
-        grnd_covfact = (1. - exp_w(-grnd_sumfac))
-        grnd_covfact = amin1 (1., grnd_covfact)
-        grnd_covfact = max (0., grnd_covfact)
-        
-        !grnd_covfact = 1.34 + 0.225 * log(pldb(idp)%usle_c)
-        !grnd_covfact = amin1 (1., grnd_covfact)
-        !grnd_covfact = max (0., grnd_covfact)
-        c = Max(1.e-10, rsd_covfact * can_covfact * grnd_covfact)
-        
-        !! newer method using residue and biomass cover
-        rsd_sumfac = (pl_mass(j)%rsd_tot%m +1.) / 1000.
-        grnd_sumfac = 0.
-        can_covfact = 10000.
-        do ipl = 1, pcom(j)%npl
-          idp = pcom(j)%plcur(ipl)%idplt
-          ab_gr_t = pl_mass(j)%ab_gr(ipl)%m / 1000.
-          grnd_sumfac = grnd_sumfac + ab_gr_t
-          !! grnd_covfact = grnd_covfact + pldb(idp)%usle_c * ab_gr_t / (ab_gr_t + exp(1.175 - 1.748 * ab_gr_t))
-          can_covfact = amin1 (can_covfact, pcom(j)%plg(ipl)%cht)
-        end do
-        !grnd_covfact = grnd_sumfac / (grnd_sumfac + exp(1.175 - 1.748 * grnd_sumfac))
+        !! new method using residue and biomass cover - from APEX
+        rsd_sumfac = (pl_mass(j)%rsd_tot%m + 1.) / 1000.
         rsd_covfact = exp_w(-bsn_prm%rsd_covco * rsd_sumfac)
         
-        can_frcov = amin1 (1., pcom(j)%lai_sum / 3.)
-        can_covfact = 1. - can_frcov * exp_w(-.328 * pcom(j)%cht_mx)
+        ab_gr_t = pl_mass(j)%ab_gr_com%m / 1000.
+        grcov_frac = ab_gr_t / (ab_gr_t + exp_w(1.175 - 1.748 * ab_gr_t))
+        bio_covfact = 1. - grcov_frac * exp_w(-.328 * pcom(j)%cht_mx)
+        bio_covfact = Max(1.e-10, bio_covfact)
+        bio_covfact = Min(1., bio_covfact)
         
-        grnd_covfact = exp_w(-pldb(idp)%usle_c * grnd_sumfac)
-        !! bio_covfac = 1. - grnd_covfact * exp(-0.1 * can_covfact)
-        c = Max(1.e-10, rsd_covfact * grnd_covfact)  ! * can_covfact)
+        c = Max(1.e-10, rsd_covfact * bio_covfact)
         
         !! erosion output variables
         ero_output(j)%ero_d%c = c
         ero_output(j)%ero_d%rsd_m = pl_mass(j)%rsd_tot%m
-        ero_output(j)%ero_d%rsd_pctcov = rsd_pctcov
-        ero_output(j)%ero_d%rsd_cfac = rsd_covfact
-        ero_output(j)%ero_d%can_lai3 = can_frcov
-        ero_output(j)%ero_d%canhgt = pcom(j)%cht_mx
-        ero_output(j)%ero_d%can_cfac = can_covfact
+        ero_output(j)%ero_d%grcov_frac = grcov_frac
+        ero_output(j)%ero_d%rsd_covfact = rsd_covfact
+        ero_output(j)%ero_d%bio_covfact = bio_covfact
         
       end if
-
       
       usle_cfac(ihru) = c
       
