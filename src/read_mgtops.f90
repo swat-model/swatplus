@@ -118,8 +118,8 @@
 
         case ("manu")
           !xwalk fert name with fertilizer data base
-          do idb = 1, db_mx%fertparm
-            if (sched(isched)%mgt_ops(iop)%op_char == fertdb(idb)%fertnm) then
+          do idb = 1, db_mx%manureparm
+            if (sched(isched)%mgt_ops(iop)%op_char == manure_db(idb)%name) then
               sched(isched)%mgt_ops(iop)%op1 = idb
               exit
             endif

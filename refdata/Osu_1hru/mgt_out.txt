@@ -1,0 +1,857 @@
+ Osu                       SWAT+ 2026-04-09        MODULAR Rev 2026.61.0.2.5-743-g5be4e4f                 
+         hru        year         mon         day crop/fert/pest operation  phubase        phuplant  soil_water      plant_bioms   surf_rsd       soil_no3      soil_solp         op_var           var1          var2             var3             var4            var5            var6           var7 
+         ---         ---         ---         ---       ---         ---       deg_c           deg_c          mm            kg/ha      kg/ha          kg/ha          kg/ha          ---              ---           ---              ---              ---             ---             ---            ---
+           1        2010           2          21 beef_salt                                   FERT   9.4828252E-03  0.0000000E+00   49.62746      0.0000000E+00  0.0000000E+00   66.34174       47.33059       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2010           2          21 beef_salt                                   FERT   9.4828252E-03  0.0000000E+00   49.62746      0.0000000E+00  0.0000000E+00   66.34174       47.33059       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2010           3          24 fldcult             TILLAGE  4.9909610E-02  0.0000000E+00   88.87787      0.0000000E+00  0.0000000E+00   161.4448       52.88976      0.3000000    
+           1        2010           5           1 beef_salt                                MANURE   0.1233335      0.0000000E+00   104.5591      0.0000000E+00  0.0000000E+00   121.1430       50.67161       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2010           5           4 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2010           5           4 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           5           5 ponding                  PADDY IRRIGATION   12.00000    
+           1        2010           5           5 puddle                   PUDDLE
+           1        2010           5           6 ponding                  PADDY IRRIGATION   13.48267    
+           1        2010           5           7 ponding                  PADDY IRRIGATION   9.796124    
+           1        2010           5           8 ponding                  PADDY IRRIGATION   13.87625    
+           1        2010           5           8 rice140                                 TRANSPLANT  0.1473241      0.2000000       143.6136      0.2000000      0.0000000E+00   111.2614       51.19865      0.0000000E+00   4.950495    
+           1        2010           5           9 ponding                  PADDY IRRIGATION   13.38940    
+           1        2010           5          10 ponding                  PADDY IRRIGATION   13.29435    
+           1        2010           5          11 ponding                  PADDY IRRIGATION   13.90927    
+           1        2010           5          12 ponding                  PADDY IRRIGATION   12.34128    
+           1        2010           5          13 ponding                  PADDY IRRIGATION   3.242779    
+           1        2010           5          14 ponding                  PADDY IRRIGATION   2.845779    
+           1        2010           5          15 ponding                  PADDY IRRIGATION   3.063942    
+           1        2010           5          16 ponding                  PADDY IRRIGATION   2.382214    
+           1        2010           5          17 ponding                  PADDY IRRIGATION   3.200428    
+           1        2010           5          18 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           5          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           5          20 ponding                  PADDY IRRIGATION   1.048042    
+           1        2010           5          21 ponding                  PADDY IRRIGATION   3.431446    
+           1        2010           5          22 ponding                  PADDY IRRIGATION   3.325680    
+           1        2010           5          23 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           5          24 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           5          25 ponding                  PADDY IRRIGATION  0.7532578    
+           1        2010           5          26 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           5          27 ponding                  PADDY IRRIGATION   3.461868    
+           1        2010           5          28 ponding                  PADDY IRRIGATION   3.013790    
+           1        2010           5          29 ponding                  PADDY IRRIGATION   2.183537    
+           1        2010           5          30 ponding                  PADDY IRRIGATION   3.385273    
+           1        2010           5          31 ponding                  PADDY IRRIGATION   3.015141    
+           1        2010           6           1 ponding                  PADDY IRRIGATION   3.227295    
+           1        2010           6           2 ponding                  PADDY IRRIGATION   2.945972    
+           1        2010           6           3 ponding                  PADDY IRRIGATION   2.905956    
+           1        2010           6           4 ponding                  PADDY IRRIGATION   3.122032    
+           1        2010           6           5 ponding                  PADDY IRRIGATION   2.838936    
+           1        2010           6           6 ponding                  PADDY IRRIGATION   3.202724    
+           1        2010           6           7 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           6           8 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           6           9 ponding                  PADDY IRRIGATION   3.636864    
+           1        2010           6          10 ponding                  PADDY IRRIGATION   3.647362    
+           1        2010           6          11 ponding                  PADDY IRRIGATION   3.354324    
+           1        2010           6          12 ponding                  PADDY IRRIGATION   2.819664    
+           1        2010           6          13 ponding                  PADDY IRRIGATION   1.198254    
+           1        2010           6          14 ponding                  PADDY IRRIGATION   2.678448    
+           1        2010           6          15 ponding                  PADDY IRRIGATION   60.00000    
+           1        2010           6          16 ponding                  PADDY IRRIGATION  0.1849060    
+           1        2010           6          17 ponding                  PADDY IRRIGATION   3.138912    
+           1        2010           6          18 ponding                  PADDY IRRIGATION   3.145920    
+           1        2010           6          19 ponding                  PADDY IRRIGATION   2.623028    
+           1        2010           6          20 ponding                  PADDY IRRIGATION   1.750259    
+           1        2010           6          21 ponding                  PADDY IRRIGATION   2.991867    
+           1        2010           6          22 ponding                  PADDY IRRIGATION   3.368649    
+           1        2010           6          29 beef_salt                                FERT-WET  0.3830110      0.5073060       205.3688       881.9262      0.0000000E+00  6.0199999E-04   49.52429       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2010           9           4 rice140                                     HARV/KILL  0.7838984      0.0000000E+00   207.6161       3293.991       1219.194      0.7222540       48.10719       1290.749      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2010          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2010          10           3 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2011           2          28 beef_salt                                   FERT   8.9723859E-03  0.0000000E+00   136.9458      0.0000000E+00   359.8678       1.114190       48.97063       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2011           2          28 beef_salt                                   FERT   8.9723859E-03  0.0000000E+00   136.9458      0.0000000E+00   359.8678       1.114190       48.97063       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2011           4          12 fldcult             TILLAGE  4.9365140E-02  0.0000000E+00   112.5861      0.0000000E+00   165.4059       74.43909       54.08824      0.3000000    
+           1        2011           5           1 beef_salt                                MANURE   9.5372729E-02  0.0000000E+00   107.1731      0.0000000E+00   136.6531       59.42696       53.20834       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2011           5           9 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2011           5           9 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           5          10 ponding                  PADDY IRRIGATION   6.000000    
+           1        2011           5          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           5          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           5          13 ponding                  PADDY IRRIGATION   9.000000    
+           1        2011           5          13 puddle                   PUDDLE
+           1        2011           5          14 ponding                  PADDY IRRIGATION   13.67182    
+           1        2011           5          15 ponding                  PADDY IRRIGATION   13.61961    
+           1        2011           5          16 ponding                  PADDY IRRIGATION   13.45984    
+           1        2011           5          17 ponding                  PADDY IRRIGATION   13.22980    
+           1        2011           5          17 rice140                                 TRANSPLANT  0.1469611      0.2000000       180.8924      0.2000000       116.3544       48.02230       53.78170      0.0000000E+00   4.950495    
+           1        2011           5          18 ponding                  PADDY IRRIGATION   11.58670    
+           1        2011           5          19 ponding                  PADDY IRRIGATION   3.234463    
+           1        2011           5          20 ponding                  PADDY IRRIGATION   3.670967    
+           1        2011           5          21 ponding                  PADDY IRRIGATION   3.133926    
+           1        2011           5          22 ponding                  PADDY IRRIGATION  0.2567520    
+           1        2011           5          23 ponding                  PADDY IRRIGATION   1.536777    
+           1        2011           5          24 ponding                  PADDY IRRIGATION  0.1112099    
+           1        2011           5          25 ponding                  PADDY IRRIGATION   3.288700    
+           1        2011           5          26 ponding                  PADDY IRRIGATION   2.938370    
+           1        2011           5          27 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           5          28 ponding                  PADDY IRRIGATION   2.691429    
+           1        2011           5          29 ponding                  PADDY IRRIGATION   3.345627    
+           1        2011           5          30 ponding                  PADDY IRRIGATION   3.505859    
+           1        2011           5          31 ponding                  PADDY IRRIGATION   3.168533    
+           1        2011           6           1 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           6           2 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           6           3 ponding                  PADDY IRRIGATION   3.894405    
+           1        2011           6           4 ponding                  PADDY IRRIGATION   3.285526    
+           1        2011           6           5 ponding                  PADDY IRRIGATION   2.977333    
+           1        2011           6           6 ponding                  PADDY IRRIGATION   3.488251    
+           1        2011           6           7 ponding                  PADDY IRRIGATION   2.812374    
+           1        2011           6           8 ponding                  PADDY IRRIGATION   3.368820    
+           1        2011           6           9 ponding                  PADDY IRRIGATION   3.141445    
+           1        2011           6          10 ponding                  PADDY IRRIGATION   2.498692    
+           1        2011           6          11 ponding                  PADDY IRRIGATION   2.126308    
+           1        2011           6          12 ponding                  PADDY IRRIGATION   3.149208    
+           1        2011           6          13 ponding                  PADDY IRRIGATION   3.116173    
+           1        2011           6          14 ponding                  PADDY IRRIGATION   3.040684    
+           1        2011           6          15 ponding                  PADDY IRRIGATION   2.735985    
+           1        2011           6          16 ponding                  PADDY IRRIGATION   2.844650    
+           1        2011           6          17 ponding                  PADDY IRRIGATION   3.359634    
+           1        2011           6          18 ponding                  PADDY IRRIGATION   2.545708    
+           1        2011           6          19 ponding                  PADDY IRRIGATION   2.824062    
+           1        2011           6          20 ponding                  PADDY IRRIGATION   2.905327    
+           1        2011           6          21 ponding                  PADDY IRRIGATION   3.373974    
+           1        2011           6          22 ponding                  PADDY IRRIGATION   3.284313    
+           1        2011           6          23 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           6          24 ponding                  PADDY IRRIGATION   1.385509    
+           1        2011           6          25 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           6          26 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           6          27 ponding                  PADDY IRRIGATION   60.00000    
+           1        2011           7           3 beef_salt                                FERT-WET  0.3698076      0.5033974       205.1088       721.0583       72.54992      6.0199999E-04   52.21936       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2011           9          17 rice140                                     HARV/KILL  0.7926667      0.0000000E+00   208.3252       2572.154       1013.268      0.6747778       51.07647       982.3531      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2011           9          30 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2011          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2012           3           2 beef_salt                                   FERT   9.4034234E-03  0.0000000E+00   122.6442      0.0000000E+00   351.2621      0.8584204       51.54715       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2012           3           2 beef_salt                                   FERT   9.4034234E-03  0.0000000E+00   122.6442      0.0000000E+00   351.2621      0.8584204       51.54715       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2012           4           9 fldcult             TILLAGE  4.7992632E-02  0.0000000E+00   140.4163      0.0000000E+00   169.7709       73.54781       56.94824      0.3000000    
+           1        2012           5           1 beef_salt                                MANURE   0.1148148      0.0000000E+00   120.9942      0.0000000E+00   136.0936       32.79378       55.84249       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2012           5          10 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2012           5          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2012           5          10 rice140                                 TRANSPLANT  0.1477778      0.2000000       109.3712      0.2000000       124.3238       23.38261       55.57827      0.0000000E+00   4.950495    
+           1        2012           5          11 ponding                  PADDY IRRIGATION   12.00000    
+           1        2012           5          11 puddle                   PUDDLE
+           1        2012           5          12 ponding                  PADDY IRRIGATION   12.90061    
+           1        2012           5          13 ponding                  PADDY IRRIGATION   13.50376    
+           1        2012           5          14 ponding                  PADDY IRRIGATION   12.65664    
+           1        2012           5          15 ponding                  PADDY IRRIGATION   60.00000    
+           1        2012           5          16 ponding                  PADDY IRRIGATION   11.00000    
+           1        2012           5          17 ponding                  PADDY IRRIGATION   13.34111    
+           1        2012           5          18 ponding                  PADDY IRRIGATION   13.01710    
+           1        2012           5          19 ponding                  PADDY IRRIGATION   3.137882    
+           1        2012           5          20 ponding                  PADDY IRRIGATION   2.334320    
+           1        2012           5          21 ponding                  PADDY IRRIGATION   2.974945    
+           1        2012           5          22 ponding                  PADDY IRRIGATION   2.864941    
+           1        2012           5          23 ponding                  PADDY IRRIGATION   3.026546    
+           1        2012           5          24 ponding                  PADDY IRRIGATION   3.195560    
+           1        2012           5          25 ponding                  PADDY IRRIGATION   2.542149    
+           1        2012           5          26 ponding                  PADDY IRRIGATION   2.876934    
+           1        2012           5          27 ponding                  PADDY IRRIGATION   3.164871    
+           1        2012           5          28 ponding                  PADDY IRRIGATION   3.130489    
+           1        2012           5          29 ponding                  PADDY IRRIGATION   2.837383    
+           1        2012           5          30 ponding                  PADDY IRRIGATION   3.251720    
+           1        2012           5          31 ponding                  PADDY IRRIGATION   60.00000    
+           1        2012           6           1 ponding                  PADDY IRRIGATION   3.099640    
+           1        2012           6           2 ponding                  PADDY IRRIGATION   2.874210    
+           1        2012           6           3 ponding                  PADDY IRRIGATION   1.309376    
+           1        2012           6           4 ponding                  PADDY IRRIGATION   3.336788    
+           1        2012           6           5 ponding                  PADDY IRRIGATION   2.474243    
+           1        2012           6           6 ponding                  PADDY IRRIGATION   3.359859    
+           1        2012           6           7 ponding                  PADDY IRRIGATION   2.605049    
+           1        2012           6           8 ponding                  PADDY IRRIGATION   3.055664    
+           1        2012           6           9 ponding                  PADDY IRRIGATION   60.00000    
+           1        2012           6          10 ponding                  PADDY IRRIGATION   3.382797    
+           1        2012           6          11 ponding                  PADDY IRRIGATION   3.044365    
+           1        2012           6          12 ponding                  PADDY IRRIGATION   2.634365    
+           1        2012           6          13 ponding                  PADDY IRRIGATION   3.054008    
+           1        2012           6          14 ponding                  PADDY IRRIGATION   3.001854    
+           1        2012           6          15 ponding                  PADDY IRRIGATION   3.417236    
+           1        2012           6          16 ponding                  PADDY IRRIGATION  0.9831429    
+           1        2012           6          17 ponding                  PADDY IRRIGATION   2.966801    
+           1        2012           6          18 ponding                  PADDY IRRIGATION   3.036587    
+           1        2012           6          19 ponding                  PADDY IRRIGATION  9.9349976E-02
+           1        2012           6          20 ponding                  PADDY IRRIGATION   60.00000    
+           1        2012           6          21 ponding                  PADDY IRRIGATION   3.312088    
+           1        2012           6          22 ponding                  PADDY IRRIGATION   3.408653    
+           1        2012           6          23 ponding                  PADDY IRRIGATION   3.433372    
+           1        2012           6          24 ponding                  PADDY IRRIGATION   3.160778    
+           1        2012           6          25 ponding                  PADDY IRRIGATION   2.530010    
+           1        2012           6          26 ponding                  PADDY IRRIGATION   3.272202    
+           1        2012           6          27 ponding                  PADDY IRRIGATION   3.706421    
+           1        2012           6          28 ponding                  PADDY IRRIGATION   3.442387    
+           1        2012           6          30 beef_salt                                FERT-WET  0.3797553      0.5035455       205.9166       712.7047       74.46451      6.0199999E-04   54.67119       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2012           9          14 rice140                                     HARV/KILL  0.8018772      0.0000000E+00   207.4675       2101.690       807.3926      0.6679889       53.81866       834.6887      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2012          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2012          10           4 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2013           3           1 beef_salt                                   FERT   9.5168538E-03  0.0000000E+00   170.0908      0.0000000E+00   291.3740       1.014826       54.16013       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2013           3           1 beef_salt                                   FERT   9.5168538E-03  0.0000000E+00   170.0908      0.0000000E+00   291.3740       1.014826       54.16013       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2013           4           2 fldcult             TILLAGE  4.9331106E-02  0.0000000E+00   150.8136      0.0000000E+00   149.5794       50.29789       59.97104      0.3000000    
+           1        2013           5           1 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2013           5           1 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           5           1 beef_salt                                MANURE   0.1051845      0.0000000E+00   141.4965      0.0000000E+00   111.7615       14.44218       58.29973       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2013           5           2 ponding                  PADDY IRRIGATION   12.00000    
+           1        2013           5           2 puddle                   PUDDLE
+           1        2013           5           3 ponding                  PADDY IRRIGATION   13.62273    
+           1        2013           5           4 ponding                  PADDY IRRIGATION   13.05626    
+           1        2013           5           5 ponding                  PADDY IRRIGATION   13.48693    
+           1        2013           5           6 ponding                  PADDY IRRIGATION   11.85625    
+           1        2013           5           7 ponding                  PADDY IRRIGATION   2.903130    
+           1        2013           5           8 ponding                  PADDY IRRIGATION   2.809364    
+           1        2013           5           9 ponding                  PADDY IRRIGATION   3.206303    
+           1        2013           5          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           5          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           5          12 ponding                  PADDY IRRIGATION   3.627663    
+           1        2013           5          13 ponding                  PADDY IRRIGATION   3.202980    
+           1        2013           5          14 ponding                  PADDY IRRIGATION   3.344467    
+           1        2013           5          15 ponding                  PADDY IRRIGATION   3.485439    
+           1        2013           5          15 rice140                                 TRANSPLANT  0.1483450      0.2000000       200.0875      0.2000000       97.09235       7.702321       59.07233      0.0000000E+00   4.950495    
+           1        2013           5          16 ponding                  PADDY IRRIGATION   2.880199    
+           1        2013           5          17 ponding                  PADDY IRRIGATION   2.999435    
+           1        2013           5          18 ponding                  PADDY IRRIGATION   3.249996    
+           1        2013           5          19 ponding                  PADDY IRRIGATION  0.3163414    
+           1        2013           5          20 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           5          21 ponding                  PADDY IRRIGATION   3.056900    
+           1        2013           5          22 ponding                  PADDY IRRIGATION   3.304230    
+           1        2013           5          23 ponding                  PADDY IRRIGATION   3.282764    
+           1        2013           5          24 ponding                  PADDY IRRIGATION   3.248661    
+           1        2013           5          25 ponding                  PADDY IRRIGATION   3.416561    
+           1        2013           5          26 ponding                  PADDY IRRIGATION   3.227474    
+           1        2013           5          27 ponding                  PADDY IRRIGATION   3.124722    
+           1        2013           5          28 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           5          29 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           5          30 ponding                  PADDY IRRIGATION   2.310883    
+           1        2013           5          31 ponding                  PADDY IRRIGATION   2.934914    
+           1        2013           6           1 ponding                  PADDY IRRIGATION   2.341618    
+           1        2013           6           2 ponding                  PADDY IRRIGATION   2.418144    
+           1        2013           6           3 ponding                  PADDY IRRIGATION   3.128780    
+           1        2013           6           4 ponding                  PADDY IRRIGATION   3.102432    
+           1        2013           6           5 ponding                  PADDY IRRIGATION   3.131908    
+           1        2013           6           6 ponding                  PADDY IRRIGATION   3.312744    
+           1        2013           6           7 ponding                  PADDY IRRIGATION   3.200226    
+           1        2013           6           8 ponding                  PADDY IRRIGATION   2.940495    
+           1        2013           6           9 ponding                  PADDY IRRIGATION   2.656319    
+           1        2013           6          10 ponding                  PADDY IRRIGATION   3.370392    
+           1        2013           6          11 ponding                  PADDY IRRIGATION   2.597794    
+           1        2013           6          12 ponding                  PADDY IRRIGATION  0.9946594    
+           1        2013           6          13 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           6          14 ponding                  PADDY IRRIGATION   2.806381    
+           1        2013           6          15 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           6          16 ponding                  PADDY IRRIGATION   3.091721    
+           1        2013           6          17 ponding                  PADDY IRRIGATION   3.471073    
+           1        2013           6          18 ponding                  PADDY IRRIGATION   2.866486    
+           1        2013           6          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2013           7           1 beef_salt                                   FERT   0.3725412      0.5069212       192.8758       469.8561       60.53954      6.0199999E-04   57.41032       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2013           9           9 rice140                                     HARV/KILL  0.7786465      0.0000000E+00   170.8415       5733.638       1813.980      0.6799840       53.68298       2639.037      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2013          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2013          10           3 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2014           2           8 beef_salt                                   FERT   9.5735705E-03  0.0000000E+00   126.0347      0.0000000E+00   568.7104      0.8702746       55.43577       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2014           2           8 beef_salt                                   FERT   9.5735705E-03  0.0000000E+00   126.0347      0.0000000E+00   568.7104      0.8702746       55.43577       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2014           3          27 fldcult             TILLAGE  4.7743078E-02  0.0000000E+00   122.3746      0.0000000E+00   294.9014       99.49179       60.85300      0.3000000    
+           1        2014           5           1 beef_salt                                MANURE   0.1469611      0.0000000E+00   112.9611      0.0000000E+00   207.4478       83.72862       59.88059       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2014           5           6 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2014           5           6 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           5           6 rice140                                 TRANSPLANT  0.1580206      0.2000000       106.5902      0.2000000       197.2808       80.55243       59.82048      0.0000000E+00   4.950495    
+           1        2014           5           7 ponding                  PADDY IRRIGATION   12.00000    
+           1        2014           5           7 puddle                   PUDDLE
+           1        2014           5           8 ponding                  PADDY IRRIGATION   13.52119    
+           1        2014           5           9 ponding                  PADDY IRRIGATION   11.04539    
+           1        2014           5          10 ponding                  PADDY IRRIGATION   13.52885    
+           1        2014           5          11 ponding                  PADDY IRRIGATION   13.39415    
+           1        2014           5          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           5          13 ponding                  PADDY IRRIGATION   2.000000    
+           1        2014           5          14 ponding                  PADDY IRRIGATION   10.33320    
+           1        2014           5          15 ponding                  PADDY IRRIGATION   2.316422    
+           1        2014           5          16 ponding                  PADDY IRRIGATION   3.095001    
+           1        2014           5          17 ponding                  PADDY IRRIGATION   3.054619    
+           1        2014           5          18 ponding                  PADDY IRRIGATION   3.124229    
+           1        2014           5          19 ponding                  PADDY IRRIGATION   3.167835    
+           1        2014           5          20 ponding                  PADDY IRRIGATION   3.081230    
+           1        2014           5          21 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           5          22 ponding                  PADDY IRRIGATION   3.598820    
+           1        2014           5          23 ponding                  PADDY IRRIGATION   3.170067    
+           1        2014           5          24 ponding                  PADDY IRRIGATION   2.965256    
+           1        2014           5          25 ponding                  PADDY IRRIGATION   3.105682    
+           1        2014           5          26 ponding                  PADDY IRRIGATION  0.9643250    
+           1        2014           5          27 ponding                  PADDY IRRIGATION   1.729038    
+           1        2014           5          28 ponding                  PADDY IRRIGATION   3.153397    
+           1        2014           5          29 ponding                  PADDY IRRIGATION   3.183125    
+           1        2014           5          30 ponding                  PADDY IRRIGATION   3.399467    
+           1        2014           5          31 ponding                  PADDY IRRIGATION   3.335205    
+           1        2014           6           1 ponding                  PADDY IRRIGATION   3.424973    
+           1        2014           6           2 ponding                  PADDY IRRIGATION   2.202614    
+           1        2014           6           3 ponding                  PADDY IRRIGATION  0.8351860    
+           1        2014           6           4 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           6           5 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           6           6 ponding                  PADDY IRRIGATION   3.443741    
+           1        2014           6           7 ponding                  PADDY IRRIGATION   2.714989    
+           1        2014           6           8 ponding                  PADDY IRRIGATION   2.888382    
+           1        2014           6           9 ponding                  PADDY IRRIGATION   2.669846    
+           1        2014           6          10 ponding                  PADDY IRRIGATION   2.814388    
+           1        2014           6          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           6          12 ponding                  PADDY IRRIGATION   3.525867    
+           1        2014           6          13 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           6          14 ponding                  PADDY IRRIGATION   3.377518    
+           1        2014           6          15 ponding                  PADDY IRRIGATION   3.118031    
+           1        2014           6          16 ponding                  PADDY IRRIGATION   3.222813    
+           1        2014           6          17 ponding                  PADDY IRRIGATION   3.150948    
+           1        2014           6          18 ponding                  PADDY IRRIGATION   2.541733    
+           1        2014           6          19 ponding                  PADDY IRRIGATION   2.928707    
+           1        2014           6          20 ponding                  PADDY IRRIGATION   3.099522    
+           1        2014           6          21 ponding                  PADDY IRRIGATION   3.092426    
+           1        2014           6          22 ponding                  PADDY IRRIGATION   2.489941    
+           1        2014           6          23 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           6          24 ponding                  PADDY IRRIGATION   60.00000    
+           1        2014           6          29 beef_salt                                FERT-WET  0.3961916      0.5020353       204.9928       1006.741       114.6530      6.0199999E-04   59.02148       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2014           9          23 rice140                                     HARV/KILL  0.8414419      0.0000000E+00   156.2365       3398.380       1313.704      0.6223189       57.78088       1316.773      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2014          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2014          10           3 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2015           2          21 beef_salt                                   FERT   9.4714835E-03  0.0000000E+00   170.4769      0.0000000E+00   503.5616      0.8477921       58.46495       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2015           2          21 beef_salt                                   FERT   9.4714835E-03  0.0000000E+00   170.4769      0.0000000E+00   503.5616      0.8477921       58.46495       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2015           3          31 fldcult             TILLAGE  4.9682751E-02  0.0000000E+00   129.1712      0.0000000E+00   248.3214       37.43867       64.08659      0.3000000    
+           1        2015           5           1 beef_salt                                MANURE   0.1376711      0.0000000E+00   142.0277      0.0000000E+00   181.8466       12.12602       62.73863       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2015           5           8 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2015           5           8 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           5           8 rice140                                 TRANSPLANT  0.1576237      0.2000000       131.4690      0.2000000       169.4929       9.445604       62.58647      0.0000000E+00   4.950495    
+           1        2015           5           9 ponding                  PADDY IRRIGATION   12.00000    
+           1        2015           5           9 puddle                   PUDDLE
+           1        2015           5          10 ponding                  PADDY IRRIGATION   13.91959    
+           1        2015           5          11 ponding                  PADDY IRRIGATION   13.52508    
+           1        2015           5          12 ponding                  PADDY IRRIGATION   2.300114    
+           1        2015           5          13 ponding                  PADDY IRRIGATION   6.164860    
+           1        2015           5          14 ponding                  PADDY IRRIGATION   13.83795    
+           1        2015           5          15 ponding                  PADDY IRRIGATION   3.516449    
+           1        2015           5          16 ponding                  PADDY IRRIGATION   2.543087    
+           1        2015           5          17 ponding                  PADDY IRRIGATION   3.200771    
+           1        2015           5          18 ponding                  PADDY IRRIGATION   2.968468    
+           1        2015           5          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           5          20 ponding                  PADDY IRRIGATION   3.500389    
+           1        2015           5          21 ponding                  PADDY IRRIGATION   3.160522    
+           1        2015           5          22 ponding                  PADDY IRRIGATION   3.212135    
+           1        2015           5          23 ponding                  PADDY IRRIGATION   3.083447    
+           1        2015           5          24 ponding                  PADDY IRRIGATION   2.584335    
+           1        2015           5          25 ponding                  PADDY IRRIGATION   3.493092    
+           1        2015           5          26 ponding                  PADDY IRRIGATION   3.104748    
+           1        2015           5          27 ponding                  PADDY IRRIGATION   3.435822    
+           1        2015           5          28 ponding                  PADDY IRRIGATION   3.458847    
+           1        2015           5          29 ponding                  PADDY IRRIGATION   3.353073    
+           1        2015           5          30 ponding                  PADDY IRRIGATION   3.135479    
+           1        2015           5          31 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           6           1 ponding                  PADDY IRRIGATION   4.148991    
+           1        2015           6           2 ponding                  PADDY IRRIGATION   3.203941    
+           1        2015           6           3 ponding                  PADDY IRRIGATION   2.292374    
+           1        2015           6           4 ponding                  PADDY IRRIGATION   3.337875    
+           1        2015           6           5 ponding                  PADDY IRRIGATION   3.198551    
+           1        2015           6           6 ponding                  PADDY IRRIGATION   1.270927    
+           1        2015           6           7 ponding                  PADDY IRRIGATION   3.047783    
+           1        2015           6           8 ponding                  PADDY IRRIGATION   3.190441    
+           1        2015           6           9 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           6          10 ponding                  PADDY IRRIGATION   3.441483    
+           1        2015           6          11 ponding                  PADDY IRRIGATION   3.581505    
+           1        2015           6          12 ponding                  PADDY IRRIGATION   2.100849    
+           1        2015           6          13 ponding                  PADDY IRRIGATION   3.628418    
+           1        2015           6          14 ponding                  PADDY IRRIGATION   2.889381    
+           1        2015           6          15 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           6          16 ponding                  PADDY IRRIGATION   3.178589    
+           1        2015           6          17 ponding                  PADDY IRRIGATION   2.970448    
+           1        2015           6          18 ponding                  PADDY IRRIGATION   2.423553    
+           1        2015           6          19 ponding                  PADDY IRRIGATION   3.254429    
+           1        2015           6          20 ponding                  PADDY IRRIGATION   3.045944    
+           1        2015           6          21 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           6          22 ponding                  PADDY IRRIGATION   1.468369    
+           1        2015           6          23 ponding                  PADDY IRRIGATION   3.157749    
+           1        2015           6          24 ponding                  PADDY IRRIGATION   3.278030    
+           1        2015           6          25 ponding                  PADDY IRRIGATION   2.818985    
+           1        2015           6          26 ponding                  PADDY IRRIGATION   60.00000    
+           1        2015           6          30 beef_salt                                FERT-WET  0.3949552      0.5056775       206.2935       563.2079       99.49857      6.0199999E-04   62.21939       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2015           9          18 rice140                                     HARV/KILL  0.8245182      0.0000000E+00   201.1685       2344.094       937.4930      0.6260495       61.11417       897.6648      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2015          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2015          10           2 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2016           2          13 beef_salt                                   FERT   9.6416287E-03  0.0000000E+00   182.7559      0.0000000E+00   276.7185      0.5097266       61.26562       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2016           2          13 beef_salt                                   FERT   9.6416287E-03  0.0000000E+00   182.7559      0.0000000E+00   276.7185      0.5097266       61.26562       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2016           3          26 fldcult             TILLAGE  4.9682744E-02  0.0000000E+00   161.3747      0.0000000E+00   144.9401       22.59570       66.48352      0.3000000    
+           1        2016           5           1 beef_salt                                MANURE   0.1570224      0.0000000E+00   161.6275      0.0000000E+00   100.9382       4.669140       65.15298       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2016           5          10 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2016           5          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           5          10 rice140                                 TRANSPLANT  0.1865712      0.2000000       154.4653      0.2000000       92.20879       3.273308       65.01733      0.0000000E+00   4.950495    
+           1        2016           5          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           5          12 ponding                  PADDY IRRIGATION   12.00000    
+           1        2016           5          12 puddle                   PUDDLE
+           1        2016           5          13 ponding                  PADDY IRRIGATION   13.87436    
+           1        2016           5          14 ponding                  PADDY IRRIGATION   13.33104    
+           1        2016           5          15 ponding                  PADDY IRRIGATION   7.495811    
+           1        2016           5          16 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           5          17 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           5          18 ponding                  PADDY IRRIGATION   3.877823    
+           1        2016           5          19 ponding                  PADDY IRRIGATION   3.447807    
+           1        2016           5          20 ponding                  PADDY IRRIGATION   2.958832    
+           1        2016           5          21 ponding                  PADDY IRRIGATION   3.297318    
+           1        2016           5          22 ponding                  PADDY IRRIGATION   3.334415    
+           1        2016           5          23 ponding                  PADDY IRRIGATION   3.382233    
+           1        2016           5          24 ponding                  PADDY IRRIGATION   3.516754    
+           1        2016           5          25 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           5          26 ponding                  PADDY IRRIGATION   3.888695    
+           1        2016           5          27 ponding                  PADDY IRRIGATION   3.061733    
+           1        2016           5          28 ponding                  PADDY IRRIGATION   3.274731    
+           1        2016           5          29 ponding                  PADDY IRRIGATION   2.760986    
+           1        2016           5          30 ponding                  PADDY IRRIGATION   1.579681    
+           1        2016           5          31 ponding                  PADDY IRRIGATION   3.635075    
+           1        2016           6           1 ponding                  PADDY IRRIGATION   3.152451    
+           1        2016           6           2 ponding                  PADDY IRRIGATION   3.095352    
+           1        2016           6           3 ponding                  PADDY IRRIGATION   2.973507    
+           1        2016           6           4 ponding                  PADDY IRRIGATION   2.832054    
+           1        2016           6           5 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           6           6 ponding                  PADDY IRRIGATION   3.063492    
+           1        2016           6           7 ponding                  PADDY IRRIGATION   2.080685    
+           1        2016           6           8 ponding                  PADDY IRRIGATION   2.545242    
+           1        2016           6           9 ponding                  PADDY IRRIGATION   2.769657    
+           1        2016           6          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           6          11 ponding                  PADDY IRRIGATION   3.886597    
+           1        2016           6          12 ponding                  PADDY IRRIGATION   2.766918    
+           1        2016           6          13 ponding                  PADDY IRRIGATION   2.218693    
+           1        2016           6          14 ponding                  PADDY IRRIGATION   3.319080    
+           1        2016           6          15 ponding                  PADDY IRRIGATION   3.128136    
+           1        2016           6          16 ponding                  PADDY IRRIGATION   1.151333    
+           1        2016           6          17 ponding                  PADDY IRRIGATION   2.835434    
+           1        2016           6          18 ponding                  PADDY IRRIGATION   3.481464    
+           1        2016           6          19 ponding                  PADDY IRRIGATION   3.593555    
+           1        2016           6          20 ponding                  PADDY IRRIGATION   3.264771    
+           1        2016           6          21 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           6          22 ponding                  PADDY IRRIGATION   1.983711    
+           1        2016           6          23 ponding                  PADDY IRRIGATION   2.686275    
+           1        2016           6          24 ponding                  PADDY IRRIGATION   3.192173    
+           1        2016           6          25 ponding                  PADDY IRRIGATION   60.00000    
+           1        2016           6          26 ponding                  PADDY IRRIGATION   3.354294    
+           1        2016           6          27 ponding                  PADDY IRRIGATION   3.787579    
+           1        2016           6          28 ponding                  PADDY IRRIGATION   3.145668    
+           1        2016           6          29 beef_salt                                FERT-WET  0.4176188      0.5070396       206.9951       375.9040       55.78687      6.0199999E-04   64.84892       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2016           9           5 rice140                                     HARV/KILL  0.8218751      0.0000000E+00   126.3691       1311.204       483.9644      0.6577331       64.02580       556.2248      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2016          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2016          10           6 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2017           2           5 beef_salt                                   FERT   9.6302852E-03  0.0000000E+00   64.56121      0.0000000E+00   127.9000       1.341883       64.22163       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2017           2           5 beef_salt                                   FERT   9.6302852E-03  0.0000000E+00   64.56121      0.0000000E+00   127.9000       1.341883       64.22163       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2017           4           1 fldcult             TILLAGE  4.8661865E-02  0.0000000E+00   31.48405      0.0000000E+00   63.07134       101.9355       68.52299      0.3000000    
+           1        2017           5           1 beef_salt                                MANURE   0.1392024      0.0000000E+00   9.148371      0.0000000E+00   46.65389       102.3717       67.72117       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2017           5           5 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2017           5           5 ponding                  PADDY IRRIGATION   60.00000    
+           1        2017           5           5 rice140                                 TRANSPLANT  0.1509539      0.2000000       8.502860      0.2000000       44.81554       102.4228       67.66817      0.0000000E+00   4.950495    
+           1        2017           5           6 ponding                  PADDY IRRIGATION   4.000000    
+           1        2017           5           6 puddle                   PUDDLE
+           1        2017           5           7 ponding                  PADDY IRRIGATION   13.67677    
+           1        2017           5           8 ponding                  PADDY IRRIGATION   13.63488    
+           1        2017           5           9 ponding                  PADDY IRRIGATION   12.88939    
+           1        2017           5          10 ponding                  PADDY IRRIGATION   6.184193    
+           1        2017           5          11 ponding                  PADDY IRRIGATION   11.53646    
+           1        2017           5          12 ponding                  PADDY IRRIGATION   13.80664    
+           1        2017           5          13 ponding                  PADDY IRRIGATION   12.40194    
+           1        2017           5          14 ponding                  PADDY IRRIGATION   13.81548    
+           1        2017           5          15 ponding                  PADDY IRRIGATION   13.56114    
+           1        2017           5          16 ponding                  PADDY IRRIGATION   13.76950    
+           1        2017           5          17 ponding                  PADDY IRRIGATION   13.64401    
+           1        2017           5          18 ponding                  PADDY IRRIGATION   13.50760    
+           1        2017           5          19 ponding                  PADDY IRRIGATION   11.85812    
+           1        2017           5          20 ponding                  PADDY IRRIGATION   3.393864    
+           1        2017           5          21 ponding                  PADDY IRRIGATION   3.034893    
+           1        2017           5          22 ponding                  PADDY IRRIGATION   2.944145    
+           1        2017           5          23 ponding                  PADDY IRRIGATION   3.167618    
+           1        2017           5          24 ponding                  PADDY IRRIGATION   2.725418    
+           1        2017           5          25 ponding                  PADDY IRRIGATION   1.740200    
+           1        2017           5          26 ponding                  PADDY IRRIGATION   3.722912    
+           1        2017           5          27 ponding                  PADDY IRRIGATION   3.389191    
+           1        2017           5          28 ponding                  PADDY IRRIGATION   3.349453    
+           1        2017           5          29 ponding                  PADDY IRRIGATION   3.303486    
+           1        2017           5          30 ponding                  PADDY IRRIGATION   3.463058    
+           1        2017           5          31 ponding                  PADDY IRRIGATION   2.833134    
+           1        2017           6           1 ponding                  PADDY IRRIGATION  0.2601776    
+           1        2017           6           2 ponding                  PADDY IRRIGATION   2.938061    
+           1        2017           6           3 ponding                  PADDY IRRIGATION   3.319008    
+           1        2017           6           4 ponding                  PADDY IRRIGATION   3.338367    
+           1        2017           6           5 ponding                  PADDY IRRIGATION   3.421894    
+           1        2017           6           6 ponding                  PADDY IRRIGATION   3.194160    
+           1        2017           6           7 ponding                  PADDY IRRIGATION   60.00000    
+           1        2017           6           8 ponding                  PADDY IRRIGATION   2.451904    
+           1        2017           6           9 ponding                  PADDY IRRIGATION   3.153233    
+           1        2017           6          10 ponding                  PADDY IRRIGATION   3.367363    
+           1        2017           6          11 ponding                  PADDY IRRIGATION   2.537457    
+           1        2017           6          12 ponding                  PADDY IRRIGATION   3.149132    
+           1        2017           6          13 ponding                  PADDY IRRIGATION   3.159664    
+           1        2017           6          14 ponding                  PADDY IRRIGATION   60.00000    
+           1        2017           6          15 ponding                  PADDY IRRIGATION   3.810440    
+           1        2017           6          16 ponding                  PADDY IRRIGATION   3.482876    
+           1        2017           6          17 ponding                  PADDY IRRIGATION   3.404285    
+           1        2017           6          18 ponding                  PADDY IRRIGATION   3.452499    
+           1        2017           6          19 ponding                  PADDY IRRIGATION   3.558407    
+           1        2017           6          20 ponding                  PADDY IRRIGATION   2.946903    
+           1        2017           6          21 ponding                  PADDY IRRIGATION   2.358799    
+           1        2017           6          22 ponding                  PADDY IRRIGATION   3.096935    
+           1        2017           6          23 ponding                  PADDY IRRIGATION   3.685646    
+           1        2017           6          30 beef_salt                                FERT-WET  0.3938095      0.5023313       201.6172       1064.914       25.52699       8.908774       67.68874       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2017           9          10 rice140                                     HARV/KILL  0.8075374      0.0000000E+00   207.4052       5241.492       1723.908      0.6041335       64.93220       2293.035      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2017          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2017          10           7 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2018           2          28 beef_salt                                   FERT   9.9819209E-03  0.0000000E+00   108.7196      0.0000000E+00   574.0658       1.436547       66.27699       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2018           2          28 beef_salt                                   FERT   9.9819209E-03  0.0000000E+00   108.7196      0.0000000E+00   574.0658       1.436547       66.27699       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2018           3          27 fldcult             TILLAGE  4.9546629E-02  0.0000000E+00   166.0511      0.0000000E+00   309.8893       83.22716       73.03336      0.3000000    
+           1        2018           5           1 beef_salt                                MANURE   0.1545723      0.0000000E+00   144.7951      0.0000000E+00   217.9909       16.32249       71.13938       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2018           5           9 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2018           5           9 ponding                  PADDY IRRIGATION   60.00000    
+           1        2018           5           9 rice140                                 TRANSPLANT  0.1769636      0.2000000       157.0690      0.2000000       201.1499       11.23522       70.91933      0.0000000E+00   4.950495    
+           1        2018           5          10 ponding                  PADDY IRRIGATION   12.00000    
+           1        2018           5          10 puddle                   PUDDLE
+           1        2018           5          11 ponding                  PADDY IRRIGATION   13.54553    
+           1        2018           5          12 ponding                  PADDY IRRIGATION   13.38185    
+           1        2018           5          13 ponding                  PADDY IRRIGATION   60.00000    
+           1        2018           5          14 ponding                  PADDY IRRIGATION   60.00000    
+           1        2018           5          15 ponding                  PADDY IRRIGATION   3.842403    
+           1        2018           5          16 ponding                  PADDY IRRIGATION   3.146255    
+           1        2018           5          17 ponding                  PADDY IRRIGATION   2.851795    
+           1        2018           5          18 ponding                  PADDY IRRIGATION   2.772629    
+           1        2018           5          19 ponding                  PADDY IRRIGATION  0.9012222    
+           1        2018           5          20 ponding                  PADDY IRRIGATION   2.502457    
+           1        2018           5          21 ponding                  PADDY IRRIGATION   3.155136    
+           1        2018           5          22 ponding                  PADDY IRRIGATION   2.878006    
+           1        2018           5          23 ponding                  PADDY IRRIGATION   60.00000    
+           1        2018           5          24 ponding                  PADDY IRRIGATION   60.00000    
+           1        2018           5          25 ponding                  PADDY IRRIGATION   3.861385    
+           1        2018           5          26 ponding                  PADDY IRRIGATION   2.905186    
+           1        2018           5          27 ponding                  PADDY IRRIGATION   3.495068    
+           1        2018           5          28 ponding                  PADDY IRRIGATION   2.837765    
+           1        2018           5          29 ponding                  PADDY IRRIGATION   3.026806    
+           1        2018           5          30 ponding                  PADDY IRRIGATION   3.394581    
+           1        2018           5          31 ponding                  PADDY IRRIGATION   2.626022    
+           1        2018           6           1 ponding                  PADDY IRRIGATION   3.378437    
+           1        2018           6           2 ponding                  PADDY IRRIGATION   3.485703    
+           1        2018           6           3 ponding                  PADDY IRRIGATION   3.550369    
+           1        2018           6           4 ponding                  PADDY IRRIGATION   3.432961    
+           1        2018           6           5 ponding                  PADDY IRRIGATION   3.035080    
+           1        2018           6           6 ponding                  PADDY IRRIGATION   2.606766    
+           1        2018           6           7 ponding                  PADDY IRRIGATION   3.245590    
+           1        2018           6           8 ponding                  PADDY IRRIGATION   3.366920    
+           1        2018           6           9 ponding                  PADDY IRRIGATION   3.275585    
+           1        2018           6          10 ponding                  PADDY IRRIGATION   3.419201    
+           1        2018           6          11 ponding                  PADDY IRRIGATION   3.096523    
+           1        2018           6          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2018           6          13 ponding                  PADDY IRRIGATION   3.321335    
+           1        2018           6          14 ponding                  PADDY IRRIGATION   3.285633    
+           1        2018           6          15 ponding                  PADDY IRRIGATION   3.462894    
+           1        2018           6          16 ponding                  PADDY IRRIGATION   3.384960    
+           1        2018           6          17 ponding                  PADDY IRRIGATION   3.572342    
+           1        2018           6          18 ponding                  PADDY IRRIGATION   3.219418    
+           1        2018           6          19 ponding                  PADDY IRRIGATION   3.417336    
+           1        2018           6          20 ponding                  PADDY IRRIGATION   2.444180    
+           1        2018           6          21 ponding                  PADDY IRRIGATION   3.098740    
+           1        2018           6          22 ponding                  PADDY IRRIGATION   3.705460    
+           1        2018           6          23 ponding                  PADDY IRRIGATION   3.449100    
+           1        2018           6          24 ponding                  PADDY IRRIGATION   3.510757    
+           1        2018           6          25 ponding                  PADDY IRRIGATION   3.771439    
+           1        2018           6          26 ponding                  PADDY IRRIGATION   3.703094    
+           1        2018           6          27 ponding                  PADDY IRRIGATION   3.024082    
+           1        2018           6          27 beef_salt                                FERT-WET  0.4032242      0.5004659       206.7845       524.2627       122.9262      6.0199999E-04   70.53451       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2018           8          31 rice140                                     HARV/KILL  0.8024898      0.0000000E+00   194.2332       1654.800       681.5638      0.6699561       69.62566       652.2490      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2018          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2018          10           3 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2019           2          23 beef_salt                                   FERT   9.2559643E-03  0.0000000E+00   105.4583      0.0000000E+00   193.2489      0.8316585       69.55745       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2019           2          23 beef_salt                                   FERT   9.2559643E-03  0.0000000E+00   105.4583      0.0000000E+00   193.2489      0.8316585       69.55745       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2019           3          26 fldcult             TILLAGE  4.8174120E-02  0.0000000E+00   91.43113      0.0000000E+00   100.2081       100.9430       75.50237      0.3000000    
+           1        2019           5           1 beef_salt                                MANURE   0.1402007      0.0000000E+00   72.92630      0.0000000E+00   69.78624       97.92412       73.60503       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2019           5           4 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2019           5           4 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           5           4 rice140                                 TRANSPLANT  0.1467343      0.2000000       68.44295      0.2000000       67.71352       97.56372       73.53783      0.0000000E+00   4.950495    
+           1        2019           5           5 ponding                  PADDY IRRIGATION   12.00000    
+           1        2019           5           5 puddle                   PUDDLE
+           1        2019           5           6 ponding                  PADDY IRRIGATION   13.80601    
+           1        2019           5           7 ponding                  PADDY IRRIGATION   13.60170    
+           1        2019           5           8 ponding                  PADDY IRRIGATION   13.48930    
+           1        2019           5           9 ponding                  PADDY IRRIGATION   13.26939    
+           1        2019           5          10 ponding                  PADDY IRRIGATION   13.46637    
+           1        2019           5          11 ponding                  PADDY IRRIGATION   13.67619    
+           1        2019           5          12 ponding                  PADDY IRRIGATION   13.70872    
+           1        2019           5          13 ponding                  PADDY IRRIGATION   13.67752    
+           1        2019           5          14 ponding                  PADDY IRRIGATION   13.68572    
+           1        2019           5          15 ponding                  PADDY IRRIGATION   6.921730    
+           1        2019           5          16 ponding                  PADDY IRRIGATION   3.253036    
+           1        2019           5          17 ponding                  PADDY IRRIGATION   3.323662    
+           1        2019           5          18 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           5          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           5          20 ponding                  PADDY IRRIGATION   2.617165    
+           1        2019           5          21 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           5          22 ponding                  PADDY IRRIGATION   3.936661    
+           1        2019           5          23 ponding                  PADDY IRRIGATION   3.316513    
+           1        2019           5          24 ponding                  PADDY IRRIGATION   3.466286    
+           1        2019           5          25 ponding                  PADDY IRRIGATION   3.445381    
+           1        2019           5          26 ponding                  PADDY IRRIGATION   3.031368    
+           1        2019           5          27 ponding                  PADDY IRRIGATION   3.571598    
+           1        2019           5          28 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           5          29 ponding                  PADDY IRRIGATION   3.272160    
+           1        2019           5          30 ponding                  PADDY IRRIGATION   3.478336    
+           1        2019           5          31 ponding                  PADDY IRRIGATION   3.044277    
+           1        2019           6           1 ponding                  PADDY IRRIGATION   1.908005    
+           1        2019           6           2 ponding                  PADDY IRRIGATION   3.193146    
+           1        2019           6           3 ponding                  PADDY IRRIGATION   3.351288    
+           1        2019           6           4 ponding                  PADDY IRRIGATION   3.433926    
+           1        2019           6           5 ponding                  PADDY IRRIGATION   3.324162    
+           1        2019           6           6 ponding                  PADDY IRRIGATION   3.432091    
+           1        2019           6           7 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           6           8 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           6           9 ponding                  PADDY IRRIGATION   2.918724    
+           1        2019           6          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           6          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           6          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2019           6          13 ponding                  PADDY IRRIGATION   3.714432    
+           1        2019           6          14 ponding                  PADDY IRRIGATION   3.185150    
+           1        2019           6          15 ponding                  PADDY IRRIGATION  0.1227531    
+           1        2019           6          16 ponding                  PADDY IRRIGATION   3.297470    
+           1        2019           6          17 ponding                  PADDY IRRIGATION   3.433060    
+           1        2019           6          18 ponding                  PADDY IRRIGATION   3.480225    
+           1        2019           6          19 ponding                  PADDY IRRIGATION   2.834629    
+           1        2019           6          20 ponding                  PADDY IRRIGATION   3.262333    
+           1        2019           6          21 ponding                  PADDY IRRIGATION   3.491669    
+           1        2019           6          22 ponding                  PADDY IRRIGATION   3.682987    
+           1        2019           6          28 beef_salt                                FERT-WET  0.3872306      0.5020944       204.3914       1148.925       38.95930      6.0199999E-04   73.08224       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2019           9          10 rice140                                     HARV/KILL  0.8049968      0.0000000E+00   207.2464       4489.281       1731.403      0.5688162       70.87630       1709.526      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2019          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2019          10           8 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2020           1          25 beef_salt                                   FERT   9.4601400E-03  0.0000000E+00   118.5282      0.0000000E+00   448.4619       1.357768       71.93431       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2020           1          25 beef_salt                                   FERT   9.4601400E-03  0.0000000E+00   118.5282      0.0000000E+00   448.4619       1.357768       71.93431       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2020           3          10 fldcult             TILLAGE  4.9580660E-02  0.0000000E+00   125.2943      0.0000000E+00   218.9387       90.48381       77.18398      0.3000000    
+           1        2020           5           1 beef_salt                                MANURE   0.1534154      0.0000000E+00   70.70367      0.0000000E+00   129.8233       46.38870       75.81284       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2020           5           8 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2020           5           8 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           5           8 rice140                                 TRANSPLANT  0.1775875      0.2000000       70.41599      0.2000000       121.0038       44.03435       75.75098      0.0000000E+00   4.950495    
+           1        2020           5           9 ponding                  PADDY IRRIGATION   9.000000    
+           1        2020           5          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           5          11 ponding                  PADDY IRRIGATION   11.00000    
+           1        2020           5          11 puddle                   PUDDLE
+           1        2020           5          12 ponding                  PADDY IRRIGATION   13.67369    
+           1        2020           5          13 ponding                  PADDY IRRIGATION   13.98993    
+           1        2020           5          14 ponding                  PADDY IRRIGATION   13.59190    
+           1        2020           5          15 ponding                  PADDY IRRIGATION   12.85716    
+           1        2020           5          16 ponding                  PADDY IRRIGATION  0.1334686    
+           1        2020           5          17 ponding                  PADDY IRRIGATION   13.23439    
+           1        2020           5          18 ponding                  PADDY IRRIGATION   13.76118    
+           1        2020           5          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           5          20 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           5          21 ponding                  PADDY IRRIGATION   3.705849    
+           1        2020           5          22 ponding                  PADDY IRRIGATION   3.246426    
+           1        2020           5          23 ponding                  PADDY IRRIGATION   3.338890    
+           1        2020           5          24 ponding                  PADDY IRRIGATION   3.275440    
+           1        2020           5          25 ponding                  PADDY IRRIGATION   2.257587    
+           1        2020           5          26 ponding                  PADDY IRRIGATION   2.760250    
+           1        2020           5          27 ponding                  PADDY IRRIGATION   2.864746    
+           1        2020           5          28 ponding                  PADDY IRRIGATION   3.390034    
+           1        2020           5          29 ponding                  PADDY IRRIGATION   3.053246    
+           1        2020           5          30 ponding                  PADDY IRRIGATION   3.353958    
+           1        2020           5          31 ponding                  PADDY IRRIGATION   2.831646    
+           1        2020           6           1 ponding                  PADDY IRRIGATION   2.609406    
+           1        2020           6           2 ponding                  PADDY IRRIGATION   3.254227    
+           1        2020           6           3 ponding                  PADDY IRRIGATION   3.036034    
+           1        2020           6           4 ponding                  PADDY IRRIGATION   2.755993    
+           1        2020           6           5 ponding                  PADDY IRRIGATION   3.523525    
+           1        2020           6           6 ponding                  PADDY IRRIGATION   3.276924    
+           1        2020           6           7 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6           8 ponding                  PADDY IRRIGATION   4.123245    
+           1        2020           6           9 ponding                  PADDY IRRIGATION   3.700977    
+           1        2020           6          10 ponding                  PADDY IRRIGATION   3.675053    
+           1        2020           6          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          13 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          14 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          15 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          16 ponding                  PADDY IRRIGATION   3.887707    
+           1        2020           6          17 ponding                  PADDY IRRIGATION   3.447124    
+           1        2020           6          18 ponding                  PADDY IRRIGATION  0.6555290    
+           1        2020           6          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          20 ponding                  PADDY IRRIGATION   1.180363    
+           1        2020           6          21 ponding                  PADDY IRRIGATION   2.955101    
+           1        2020           6          22 ponding                  PADDY IRRIGATION   3.181534    
+           1        2020           6          23 ponding                  PADDY IRRIGATION   3.482685    
+           1        2020           6          24 ponding                  PADDY IRRIGATION   3.698399    
+           1        2020           6          25 ponding                  PADDY IRRIGATION   60.00000    
+           1        2020           6          26 ponding                  PADDY IRRIGATION   1.065506    
+           1        2020           6          28 beef_salt                                FERT-WET  0.4086237      0.5010877       203.9437       969.6577       72.47596      6.0199999E-04   75.82401       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2020           9          16 rice140                                     HARV/KILL  0.8404440      0.0000000E+00   207.3938       3095.011       1226.229      0.5860301       74.18058       1166.442      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2020          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2020          10           4 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2021           1          26 beef_salt                                   FERT   9.5849140E-03  0.0000000E+00   89.72910      0.0000000E+00   396.2093       1.387762       74.86465       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2021           1          26 beef_salt                                   FERT   9.5849140E-03  0.0000000E+00   89.72910      0.0000000E+00   396.2093       1.387762       74.86465       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2021           3          10 fldcult             TILLAGE  4.8968133E-02  0.0000000E+00   91.51173      0.0000000E+00   213.8796       95.52826       80.21241      0.3000000    
+           1        2021           5           1 beef_salt                                MANURE   0.1826125      0.0000000E+00   53.83032      0.0000000E+00   126.8234       73.12930       78.77780       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2021           5          11 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2021           5          11 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           5          11 rice140                                 TRANSPLANT  0.2083840      0.2000000       56.97792      0.2000000       114.6968       69.53630       78.69286      0.0000000E+00   4.950495    
+           1        2021           5          12 ponding                  PADDY IRRIGATION   11.00000    
+           1        2021           5          12 puddle                   PUDDLE
+           1        2021           5          13 ponding                  PADDY IRRIGATION   13.57176    
+           1        2021           5          14 ponding                  PADDY IRRIGATION   13.68338    
+           1        2021           5          15 ponding                  PADDY IRRIGATION   13.50696    
+           1        2021           5          16 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           5          17 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           5          18 ponding                  PADDY IRRIGATION   12.00000    
+           1        2021           5          19 ponding                  PADDY IRRIGATION   12.17690    
+           1        2021           5          20 ponding                  PADDY IRRIGATION   13.62992    
+           1        2021           5          21 ponding                  PADDY IRRIGATION   7.279587    
+           1        2021           5          22 ponding                  PADDY IRRIGATION   13.33227    
+           1        2021           5          23 ponding                  PADDY IRRIGATION   5.417480    
+           1        2021           5          24 ponding                  PADDY IRRIGATION   3.102665    
+           1        2021           5          25 ponding                  PADDY IRRIGATION   3.304008    
+           1        2021           5          26 ponding                  PADDY IRRIGATION   1.620186    
+           1        2021           5          27 ponding                  PADDY IRRIGATION   2.631283    
+           1        2021           5          28 ponding                  PADDY IRRIGATION   2.470459    
+           1        2021           5          29 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           5          30 ponding                  PADDY IRRIGATION   3.843529    
+           1        2021           5          31 ponding                  PADDY IRRIGATION   3.336746    
+           1        2021           6           1 ponding                  PADDY IRRIGATION   1.252918    
+           1        2021           6           2 ponding                  PADDY IRRIGATION   3.379581    
+           1        2021           6           3 ponding                  PADDY IRRIGATION   2.939713    
+           1        2021           6           4 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6           5 ponding                  PADDY IRRIGATION   2.554665    
+           1        2021           6           6 ponding                  PADDY IRRIGATION   2.866154    
+           1        2021           6           7 ponding                  PADDY IRRIGATION   3.191261    
+           1        2021           6           8 ponding                  PADDY IRRIGATION   3.245312    
+           1        2021           6           9 ponding                  PADDY IRRIGATION   3.481945    
+           1        2021           6          10 ponding                  PADDY IRRIGATION   3.473026    
+           1        2021           6          11 ponding                  PADDY IRRIGATION  0.5691795    
+           1        2021           6          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          13 ponding                  PADDY IRRIGATION   3.524445    
+           1        2021           6          14 ponding                  PADDY IRRIGATION   3.456932    
+           1        2021           6          15 ponding                  PADDY IRRIGATION   3.003487    
+           1        2021           6          16 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          17 ponding                  PADDY IRRIGATION   2.267807    
+           1        2021           6          18 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          20 ponding                  PADDY IRRIGATION   3.608536    
+           1        2021           6          21 ponding                  PADDY IRRIGATION   3.547783    
+           1        2021           6          22 ponding                  PADDY IRRIGATION   3.676247    
+           1        2021           6          23 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          24 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          25 ponding                  PADDY IRRIGATION   2.968781    
+           1        2021           6          26 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           6          27 ponding                  PADDY IRRIGATION   1.938370    
+           1        2021           6          28 ponding                  PADDY IRRIGATION   2.930958    
+           1        2021           6          29 ponding                  PADDY IRRIGATION   60.00000    
+           1        2021           7           1 beef_salt                                   FERT   0.4402936      0.5033678       200.3673       1070.977       68.69838      6.0199999E-04   78.22843       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2021           9          15 rice140                                     HARV/KILL  0.8627559      0.0000000E+00   190.3685       7581.813       2394.518      0.5675781       73.76659       3474.933      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2021           9          29 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2021          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2022           1          23 beef_salt                                   FERT   9.6870018E-03  0.0000000E+00   92.54913      0.0000000E+00   685.7939       1.185420       76.00116       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2022           1          23 beef_salt                                   FERT   9.6870018E-03  0.0000000E+00   92.54913      0.0000000E+00   685.7939       1.185420       76.00116       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2022           3          23 fldcult             TILLAGE  4.9501255E-02  0.0000000E+00   61.49361      0.0000000E+00   348.5377       98.11604       81.53822      0.3000000    
+           1        2022           5           1 beef_salt                                MANURE   0.1539371      0.0000000E+00   59.60902      0.0000000E+00   235.5170       95.70477       81.03661       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2022           5          10 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2022           5          10 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           5          10 rice140                                 TRANSPLANT  0.1794250      0.2000000       43.21663      0.2000000       215.1488       94.68951       80.98942      0.0000000E+00   4.950495    
+           1        2022           5          11 ponding                  PADDY IRRIGATION   12.00000    
+           1        2022           5          11 puddle                   PUDDLE
+           1        2022           5          12 ponding                  PADDY IRRIGATION   13.18689    
+           1        2022           5          13 ponding                  PADDY IRRIGATION   13.07061    
+           1        2022           5          14 ponding                  PADDY IRRIGATION   12.63829    
+           1        2022           5          15 ponding                  PADDY IRRIGATION   13.96808    
+           1        2022           5          16 ponding                  PADDY IRRIGATION   13.81744    
+           1        2022           5          17 ponding                  PADDY IRRIGATION   13.69141    
+           1        2022           5          18 ponding                  PADDY IRRIGATION   13.72549    
+           1        2022           5          19 ponding                  PADDY IRRIGATION   13.76683    
+           1        2022           5          20 ponding                  PADDY IRRIGATION   13.30736    
+           1        2022           5          21 ponding                  PADDY IRRIGATION   13.24370    
+           1        2022           5          22 ponding                  PADDY IRRIGATION   13.83316    
+           1        2022           5          23 ponding                  PADDY IRRIGATION   4.516781    
+           1        2022           5          24 ponding                  PADDY IRRIGATION   3.265621    
+           1        2022           5          25 ponding                  PADDY IRRIGATION   3.410557    
+           1        2022           5          26 ponding                  PADDY IRRIGATION   3.066910    
+           1        2022           5          27 ponding                  PADDY IRRIGATION   3.414692    
+           1        2022           5          28 ponding                  PADDY IRRIGATION   3.392284    
+           1        2022           5          29 ponding                  PADDY IRRIGATION   3.082809    
+           1        2022           5          30 ponding                  PADDY IRRIGATION   3.808418    
+           1        2022           5          31 ponding                  PADDY IRRIGATION   2.348587    
+           1        2022           6           1 ponding                  PADDY IRRIGATION   3.575932    
+           1        2022           6           2 ponding                  PADDY IRRIGATION   3.363270    
+           1        2022           6           3 ponding                  PADDY IRRIGATION   3.520493    
+           1        2022           6           4 ponding                  PADDY IRRIGATION   3.689465    
+           1        2022           6           5 ponding                  PADDY IRRIGATION   3.017120    
+           1        2022           6           6 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6           7 ponding                  PADDY IRRIGATION   3.064354    
+           1        2022           6           8 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6           9 ponding                  PADDY IRRIGATION   1.656281    
+           1        2022           6          10 ponding                  PADDY IRRIGATION   3.471802    
+           1        2022           6          11 ponding                  PADDY IRRIGATION   3.088905    
+           1        2022           6          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6          13 ponding                  PADDY IRRIGATION   1.119614    
+           1        2022           6          14 ponding                  PADDY IRRIGATION   2.621464    
+           1        2022           6          15 ponding                  PADDY IRRIGATION   2.566837    
+           1        2022           6          16 ponding                  PADDY IRRIGATION  0.5211868    
+           1        2022           6          17 ponding                  PADDY IRRIGATION   3.116486    
+           1        2022           6          18 ponding                  PADDY IRRIGATION   3.084454    
+           1        2022           6          19 ponding                  PADDY IRRIGATION   3.535381    
+           1        2022           6          20 ponding                  PADDY IRRIGATION   3.520836    
+           1        2022           6          21 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6          22 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6          23 ponding                  PADDY IRRIGATION   3.813019    
+           1        2022           6          23 beef_salt                                FERT-WET  0.3942745      0.5002882       200.3643       1020.726       138.2571       11.17839       81.71717       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2022           6          24 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6          25 ponding                  PADDY IRRIGATION   60.00000    
+           1        2022           6          26 ponding                  PADDY IRRIGATION   2.836563    
+           1        2022           6          27 ponding                  PADDY IRRIGATION   3.484795    
+           1        2022           6          28 ponding                  PADDY IRRIGATION   3.558140    
+           1        2022           8          26 rice140                                     HARV/KILL  0.7915211      0.0000000E+00   203.9614       5117.061       1903.529      0.5945246       78.74300       2066.625      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2022           9          30 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
+           1        2022          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2023           2           8 beef_salt                                   FERT   9.1652190E-03  0.0000000E+00   106.2193      0.0000000E+00   528.9815       1.457332       79.85870       100.0000       100.0000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2023           2           8 beef_salt                                   FERT   9.1652190E-03  0.0000000E+00   106.2193      0.0000000E+00   528.9815       1.457332       79.85870       20.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00   20.00000      0.0000000E+00
+           1        2023           3          16 fldcult             TILLAGE  4.7232643E-02  0.0000000E+00   82.53542      0.0000000E+00   271.5572       100.9972       85.90422      0.3000000    
+           1        2023           5           1 beef_salt                                MANURE   0.1704300      0.0000000E+00   61.08431      0.0000000E+00   171.0331       97.75324       84.30383       12.99270      4.0504834E-05  4.0099821E-03  2.7418651E-02  1.0562415E-02  4.7515212E-03
+           1        2023           5           8 paddy                    RESET WEIR HEIGHT (m)  5.9999999E-02
+           1        2023           5           8 ponding                  PADDY IRRIGATION   60.00000    
+           1        2023           5           8 rice140                                 TRANSPLANT  0.1926284      0.2000000       82.48385      0.2000000       159.4140       96.89021       84.15070      0.0000000E+00   4.950495    
+           1        2023           5           9 ponding                  PADDY IRRIGATION   12.00000    
+           1        2023           5           9 puddle                   PUDDLE
+           1        2023           5          10 ponding                  PADDY IRRIGATION   13.21111    
+           1        2023           5          11 ponding                  PADDY IRRIGATION   13.19921    
+           1        2023           5          12 ponding                  PADDY IRRIGATION   13.41006    
+           1        2023           5          13 ponding                  PADDY IRRIGATION   11.06179    
+           1        2023           5          14 ponding                  PADDY IRRIGATION   10.98608    
+           1        2023           5          15 ponding                  PADDY IRRIGATION   13.32331    
+           1        2023           5          16 ponding                  PADDY IRRIGATION   13.20837    
+           1        2023           5          17 ponding                  PADDY IRRIGATION   13.23889    
+           1        2023           5          18 ponding                  PADDY IRRIGATION   3.576088    
+           1        2023           5          19 ponding                  PADDY IRRIGATION   60.00000    
+           1        2023           5          20 ponding                  PADDY IRRIGATION   3.331879    
+           1        2023           5          21 ponding                  PADDY IRRIGATION   2.846310    
+           1        2023           5          22 ponding                  PADDY IRRIGATION   2.795162    
+           1        2023           5          23 ponding                  PADDY IRRIGATION   2.731640    
+           1        2023           5          24 ponding                  PADDY IRRIGATION   2.921677    
+           1        2023           5          25 ponding                  PADDY IRRIGATION   2.936623    
+           1        2023           5          26 ponding                  PADDY IRRIGATION   2.916885    
+           1        2023           5          27 ponding                  PADDY IRRIGATION   2.902714    
+           1        2023           5          28 ponding                  PADDY IRRIGATION   2.796646    
+           1        2023           5          29 ponding                  PADDY IRRIGATION   60.00000    
+           1        2023           5          30 ponding                  PADDY IRRIGATION   60.00000    
+           1        2023           5          31 ponding                  PADDY IRRIGATION   1.309372    
+           1        2023           6           1 ponding                  PADDY IRRIGATION   3.209053    
+           1        2023           6           2 ponding                  PADDY IRRIGATION   1.587177    
+           1        2023           6           3 ponding                  PADDY IRRIGATION  0.4918060    
+           1        2023           6           4 ponding                  PADDY IRRIGATION   2.854080    
+           1        2023           6           5 ponding                  PADDY IRRIGATION   2.675297    
+           1        2023           6           6 ponding                  PADDY IRRIGATION   2.865368    
+           1        2023           6           7 ponding                  PADDY IRRIGATION   2.613819    
+           1        2023           6           8 ponding                  PADDY IRRIGATION   2.788895    
+           1        2023           6           9 ponding                  PADDY IRRIGATION   2.679211    
+           1        2023           6          10 ponding                  PADDY IRRIGATION   2.727062    
+           1        2023           6          11 ponding                  PADDY IRRIGATION   2.826523    
+           1        2023           6          12 ponding                  PADDY IRRIGATION   60.00000    
+           1        2023           6          13 ponding                  PADDY IRRIGATION   3.170265    
+           1        2023           6          14 ponding                  PADDY IRRIGATION   2.746429    
+           1        2023           6          15 ponding                  PADDY IRRIGATION   2.964123    
+           1        2023           6          16 ponding                  PADDY IRRIGATION   2.804047    
+           1        2023           6          17 ponding                  PADDY IRRIGATION   2.993195    
+           1        2023           6          18 ponding                  PADDY IRRIGATION   2.774448    
+           1        2023           6          19 ponding                  PADDY IRRIGATION   2.788563    
+           1        2023           6          20 ponding                  PADDY IRRIGATION   2.892513    
+           1        2023           6          21 ponding                  PADDY IRRIGATION   1.784420    
+           1        2023           6          22 ponding                  PADDY IRRIGATION  0.7985153    
+           1        2023           6          23 ponding                  PADDY IRRIGATION   2.803329    
+           1        2023           6          24 ponding                  PADDY IRRIGATION   3.087635    
+           1        2023           6          25 ponding                  PADDY IRRIGATION   3.123566    
+           1        2023           6          26 ponding                  PADDY IRRIGATION   60.00000    
+           1        2023           6          28 beef_salt                                FERT-WET  0.4252980      0.5053517       203.8487       971.1310       95.48199       1.687594       84.45784       36.00000       36.00000      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2023           9           5 rice140                                     HARV/KILL  0.8308814      0.0000000E+00   208.2379       4132.852       1561.268      0.5810230       81.96579       1634.509      0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00  0.0000000E+00
+           1        2023          10           1 ponding                  PADDY IRRIGATION  0.0000000E+00
+           1        2023          10           3 paddy                    RESET WEIR HEIGHT (m)  0.0000000E+00
