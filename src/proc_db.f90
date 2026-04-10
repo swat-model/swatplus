@@ -16,7 +16,8 @@
       call till_parm_read                           !! read the tillage database
       call pest_parm_read                           !! read the pesticide database
       call fert_parm_read                           !! read the fertilizer/nutrient database
-      call manure_parm_read                         !! read the manure database - includes pathogens/antibiotics
+      call manure_orgmin_read                       !! read the manure database
+      call manure_db_read                           !! read the manure database - includes pathogens/antibiotics
       call urban_parm_read                          !! read the urban land types database
       call path_parm_read                           !! read the pathogen data parameters
       call septic_parm_read 
