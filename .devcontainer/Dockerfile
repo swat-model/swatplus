@@ -14,6 +14,8 @@ RUN apt-get update && \
         gfortran \
         && rm -rf /var/lib/apt/lists/*
 
+RUN sudo apt-get install python3-pip
+
 RUN python -m pip install ipykernel
 
 # 2. Add Intel’s GPG key and repository for oneAPI
