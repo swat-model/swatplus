@@ -97,7 +97,7 @@
         real :: no3atmo = 0.            !kg N/ha        |nitrate added to the soil from atmospheric deposition
         real :: nh4atmo = 0.            !kg N/ha        |ammonia added to the soil from atmospheric deposition
         real :: nuptake = 0.            !kg N/ha        |plant nitrogen uptake
-        real :: puptake = 0.            !kg N/ha        |plant phosphorus uptake
+        real :: puptake = 0.            !kg P/ha        |plant phosphorus uptake
         real :: gwsoiln = 0.            !kg N/ha        |nitrate added to the soil from the aquifer (rtb gwflow)
         real :: gwsoilp = 0.            !kg P/ha        |Phos added to the soil from the aquifer (rtb gwflow)
       end type output_nutbal
@@ -138,7 +138,7 @@
         real :: act_sta_n = 0.          !kg N/ha        |nitrogen moving from active organic pool to stable pool
         real :: org_lab_p = 0.          !kg P/ha        |phosphorus moving from the organic pool to labile pool
         real :: rsd_hs_c = 0.           !kg C/ha        |amt of carbon moving from the fresh org (residue) to soil slow humus 
-        real :: rsd_nitorg_n = 0.       !kg P/ha        |nitrogen moving from the fresh organic pool (residue) to nitrate
+        real :: rsd_nitorg_n = 0.       !kg N/ha        |nitrogen moving from the fresh organic pool (residue) to nitrate
         real :: rsd_laborg_p = 0.       !kg P/ha        |phosphorus moving from the fresh organic pool (residue) to the labile (80%)
                                                         !   and org (20%) pools
       end type output_nutcarb_cycling
@@ -196,7 +196,7 @@
         real :: sedminp = 0.        !kg P/ha        |mineral phosphorus leaving the landscape transported in sediment
         real :: tileno3 = 0.        !kg N/ha        |nitrate NO3 in tile flow
         real :: lchlabp = 0.        !kg P/ha        |soluble P (labile) leaching past bottom soil layer
-        real :: tilelabp = 0.       !kg N/ha        |soluble P (labile) NO3 in tile flow
+        real :: tilelabp = 0.       !kg P/ha        |soluble P (labile) in tile flow
         real :: satexn = 0.         !kg N/ha        | amt of NO3-N in saturation excess surface runoff in HRU for the day
       end type output_losses
       
