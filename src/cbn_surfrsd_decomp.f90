@@ -32,7 +32,7 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru, isep 
+      use hru_module, only : ihru
       use soil_module
       use plant_module
       use plant_data_module

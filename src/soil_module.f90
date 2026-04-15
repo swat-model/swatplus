@@ -93,6 +93,7 @@
         real :: wat_tbl = 0.               !! 
         real :: avpor = 0.                 !! none           average porosity for entire soil profile
         real :: avbd = 0.                  !! Mg/m^3         average bulk density for soil profile
+        real :: tmp_srf = 0.               !! celsius        surface temperature of the soil
       end type soil_profile
       type (soil_profile), dimension(:), allocatable :: soil
       type (soil_profile), dimension(:), allocatable :: soil_init

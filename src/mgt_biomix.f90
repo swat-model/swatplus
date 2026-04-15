@@ -130,7 +130,6 @@
           ! Calculated a temperature weighted average of emix 
           emix_sum = 0.
           do l = 1, soil(jj)%nly
-            if (l == 3) soil(jj)%phys(l)%tmp = -1.
             if (soil(jj)%phys(l)%tmp > 1.e-6) then
               if (soil(jj)%phys(l)%d <= dtil) then
                 emix = bmix
