@@ -12,7 +12,6 @@ RUN apt-get update && \
         cmake \
         gdb \
         gfortran \
-        python \
         && rm -rf /var/lib/apt/lists/*
 
 # 2. Add Intel’s GPG key and repository for oneAPI
