@@ -33,7 +33,11 @@
 		  "fortran-lang.linter-gfortran",
 		  "ms-vscode.cpptools",
 		  "mhutchie.git-graph",
-		  "GitHub.remotehub"
+		  "GitHub.remotehub",
+		  "ms-toolsai.jupyter",
+		  "ms-toolsai.jupyter-keymap",
+		  "ms-toolsai.jupyter-renderers",
+		  "ms-toolsai.jupyter-vscode-jupyter-cell-tags"
 		]
 	  }
 	}
