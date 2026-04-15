@@ -14,6 +14,8 @@ RUN apt-get update && \
         gfortran \
         && rm -rf /var/lib/apt/lists/*
 
+RUN python -m pip install ipykernel
+
 # 2. Add Intel’s GPG key and repository for oneAPI
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
     | gpg --dearmor \
