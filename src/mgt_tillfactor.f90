@@ -56,13 +56,14 @@
         if (emix > 1.e-6) then
 
           xx = 0.
-          ! zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
+          ! zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.) <- original equation.
           if (bio_mix_event) then
-            yy = 0.
-            soil(jj)%ly(l)%tillagef = 0.
             zz = zz_bmix_coef_a + (zz_bmix_coef_b)*exp(zz_bmix_coef_c*soil(jj)%phys(l)%clay/100.)
+            ! for a biomix event, the previous tillagef is set to zero in the mgt_biomix subroutine
+            ! because it should not be cumulative so yy will always be zero for biomix event.
+            yy = soil(jj)%ly(l)%tillagef / zz
           else
-            ! zz = 3. + (15. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.)
+            ! zz = 3. + (15. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.) <- original equation.
             zz = zz_emix_coef_a + (zz_emix_coef_b)*exp(zz_emix_coef_c*soil(jj)%phys(l)%clay/100.)
             yy = soil(jj)%ly(l)%tillagef / zz
           endif
@@ -71,10 +72,10 @@
 
           ! empirical solution for x when y is known and y=x/(x+exp(m1-m2*x)) 
           if (yy > 0.01) then
-          xx1 = yy ** exp_w(-0.13 + 1.06 * yy)
-          ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmatic error that is ignored by intel but not by gfortran
-          xx2 = exp_w(0.64 + 0.64 * yy ** 10.)
-          xx = xx1 * xx2
+            xx1 = yy ** exp_w(-0.13 + 1.06 * yy)
+            ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmatic error that is ignored by intel but not by gfortran
+            xx2 = exp_w(0.64 + 0.64 * yy ** 10.)
+            xx = xx1 * xx2
           end if
 
           csdr = xx + emix
