@@ -14,7 +14,7 @@
     real :: cum_rf = 0.               !            |
     real :: x1 = 0.                   !            |
     real :: x2 = 0.                   !            |
-    integer, intent (in) :: j         !none               |HRU number
+    integer, intent (in) :: j         !none        |HRU number
     integer :: k = 0                  !            |
     integer :: ly = 0                 !none        |number of soil layer that manure applied
     real :: a = 0.                    !            |
@@ -26,8 +26,11 @@
     real :: xx2 = 0.                  !            |
     real :: xx = 0.                   !            |
     
+    ly = 0
+    pcom(j)%plg(ipl)%rtfr = 0. ! First, reset all layer's root fractions to zero
+    
     if (pcom(j)%plg(ipl)%root_dep < 1.e-6) then
-      pcom(j)%plg(ipl)%rtfr(ly) = 1.
+      pcom(j)%plg(ipl)%rtfr(1) = 1.
       return
     endif
 
