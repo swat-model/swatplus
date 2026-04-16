@@ -2,8 +2,7 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
 # 1. Install dependencies needed to add Intel’s repo, install CMake, gfortran, and GDB
-# RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
         gpg \
         lsb-release \
