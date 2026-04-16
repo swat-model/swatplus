@@ -569,7 +569,7 @@
       implicit none
 
       integer :: i, j, k, s, iob
-      integer :: cell_id
+      integer :: cell_id, gis_id
       real :: sum
       real :: obs_temp, obs_no3, obs_p
       character(len=16) :: obs_name
@@ -1224,8 +1224,13 @@
       if(gwflag_day == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
+            if(grid_type == "structured") then
+              gis_id = cell_row(i)*grid_ncol + cell_col(i)
+            else
+              gis_id = i
+            endif
             write(out_gwcell_day,140) time%day, time%mo, time%day_mo, &
-              time%yrc, i, cell_row(i)*grid_ncol+cell_col(i), &
+              time%yrc, i, gis_id, &
               'gw_', i, &
               gw_state(i)%head, &
               gw_state(i)%elev - gw_state(i)%head, &
@@ -1358,7 +1363,11 @@
         if(gwflag_mon == 1) then
           do i=1,ncell
             if(gw_state(i)%stat == 1) then
-              gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
+              if(grid_type == "structured") then
+                gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
+              else
+                gis_id = i
+              endif
               wtdepth = gw_state(i)%elev - gw_state(i)%hdmo
               write(out_gwcell_mon,140) time%day, time%mo, &
                 time%day_mo, time%yrc, i, gis_id, &
@@ -1615,7 +1624,11 @@
       if(gwflag_yr == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
-            gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
+            if(grid_type == "structured") then
+              gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
+            else
+              gis_id = i
+            endif
             wtdepth = gw_state(i)%elev - gw_state(i)%hdyr
             write(out_gwcell_yr,140) time%day, time%mo, &
               time%day_mo, time%yrc, i, gis_id, &
@@ -2018,7 +2031,11 @@
       if(gwflag_aa == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
-            gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
+            if(grid_type == "structured") then
+              gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
+            else
+              gis_id = i
+            endif
             wtdepth = gw_state(i)%elev - (gw_head_sum_aa(i) / nbyr_r)
             write(out_gwcell_aa,140) time%day, time%mo, &
               time%day_mo, time%yrc, i, gis_id, &
@@ -2196,9 +2213,15 @@
       write(out_gw_celldef,'(a)') 'cell_id  row  col        x_coord        y_coord  zone  status          area'
       do i=1,ncell
         if(gw_state(i)%stat > 0) then
-          write(out_gw_celldef,'(i8,2i6,2f15.1,2i6,e15.4)') &
-            i, cell_row(i), cell_col(i), gw_state(i)%xcrd, gw_state(i)%ycrd, &
-            gw_state(i)%zone, gw_state(i)%stat, gw_state(i)%area
+          if(grid_type == "structured") then
+            write(out_gw_celldef,'(i8,2i6,2f15.1,2i6,e15.4)') &
+              i, cell_row(i), cell_col(i), gw_state(i)%xcrd, gw_state(i)%ycrd, &
+              gw_state(i)%zone, gw_state(i)%stat, gw_state(i)%area
+          else
+            write(out_gw_celldef,'(i8,2i6,2f15.1,2i6,e15.4)') &
+              i, 0, 0, gw_state(i)%xcrd, gw_state(i)%ycrd, &
+              gw_state(i)%zone, gw_state(i)%stat, gw_state(i)%area
+          endif
         endif
       enddo
       close(out_gw_celldef)

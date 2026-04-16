@@ -31,7 +31,6 @@
       real :: cell_rech_heat = 0.     !J          |heat in recharge to the cell
       real :: hru_total = 0.          !m3         |summation of recharge from multiple HRUs
       real :: hru_cell_total = 0.     !m3         |summation of recharge for multiple cells
-      real :: huc12_cell_total = 0.   !m3         |summation of recharge from a huc12 catchment
       real :: sub_recharge = 0.       !m3         |summation of recharge for subbasin
       real :: sub_heat = 0.           !J          |summation of recharge heat for subbasin
       real :: sub_solmass(100) = 0.   !g          |total solute mass in recharge, for the subbasin
@@ -115,7 +114,6 @@
 			else !proceed with HRU-cell connection
 
       !map recharge from the HRUs to the grid cells
-      !national model (HUC12) recharge mapping removed
         ob_num = sp_ob1%hru  !object number of first HRU
         do k=1,sp_ob%hru
           rech_volume = (gw_rech(k)/1000.) * (ob(ob_num)%area_ha * 10000.) !m * m2 = m3

@@ -233,6 +233,12 @@
       tw_local_prev = ch_out_d(ich)%temp
       
       ! ---------------------calculate average temperature of the previous x days ------------------------------------
+      if (ig <= 0) then
+        ! no temperature gage assigned — fall back to default
+        tw_local = tw_def
+        goto 900
+      endif
+
      ! surface lag
       if (time%yrs == 1) then !only if simulation year = 1
           surf_lag = min (jday, surf_lag)
@@ -241,13 +247,13 @@
       end if 
       
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year - (tmp start year is model year)
-      
-      if (jday <= surf_lag) then
+
+      if (jday <= surf_lag .and. yrs_to_start > 1) then
           t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-surf_lag+1:365,yrs_to_start-1)))/surf_lag
           t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-surf_lag+1:365,yrs_to_start-1)))/surf_lag
       else
-          t_air_max_av = sum(tmp(ig)%ts(jday-surf_lag+1:jday,yrs_to_start))/surf_lag
-          t_air_min_av = sum(tmp(ig)%ts2(jday-surf_lag+1:jday,yrs_to_start))/surf_lag
+          t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-surf_lag+1)):int(jday),yrs_to_start))/surf_lag
+          t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-surf_lag+1)):int(jday),yrs_to_start))/surf_lag
       end if
       t_surf = max(0.01,(t_air_max_av + t_air_min_av) / 2)
       
@@ -260,12 +266,12 @@
       
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year - tmp start year is model year
       
-      if (jday <= lat_lag) then
+      if (jday <= lat_lag .and. yrs_to_start > 1) then
           t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-lat_lag+1:365,yrs_to_start-1)))/lat_lag
           t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-lat_lag+1:365,yrs_to_start-1)))/lat_lag
       else
-          t_air_max_av = sum(tmp(ig)%ts(jday-lat_lag+1:jday,yrs_to_start))/lat_lag
-          t_air_min_av = sum(tmp(ig)%ts2(jday-lat_lag+1:jday,yrs_to_start))/lat_lag
+          t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-lat_lag+1)):int(jday),yrs_to_start))/lat_lag
+          t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-lat_lag+1)):int(jday),yrs_to_start))/lat_lag
       end if
       t_lat = max(0.01,(t_air_max_av + t_air_min_av) / 2)
       
@@ -278,12 +284,12 @@
       
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year -tmp start year is model year
       
-      if (jday <= gw_lag) then
+      if (jday <= gw_lag .and. yrs_to_start > 1) then
           t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-gw_lag+1:365,yrs_to_start-1)))/gw_lag
           t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-gw_lag+1:365,yrs_to_start-1)))/gw_lag
       else
-          t_air_max_av = sum(tmp(ig)%ts(jday-gw_lag+1:jday,yrs_to_start))/gw_lag
-          t_air_min_av = sum(tmp(ig)%ts2(jday-gw_lag+1:jday,yrs_to_start))/gw_lag
+          t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-gw_lag+1)):int(jday),yrs_to_start))/gw_lag
+          t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-gw_lag+1)):int(jday),yrs_to_start))/gw_lag
       end if
       t_gw = max(0.01,(t_air_max_av + t_air_min_av) / 2)
       
@@ -296,12 +302,12 @@
       
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year - tmp start year is model year
       
-      if (jday <= sno_lag) then
+      if (jday <= sno_lag .and. yrs_to_start > 1) then
           t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-sno_lag+1:365,yrs_to_start-1)))/sno_lag
           t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-sno_lag+1:365,yrs_to_start-1)))/sno_lag
       else
-          t_air_max_av = sum(tmp(ig)%ts(jday-sno_lag+1:jday,yrs_to_start))/sno_lag
-          t_air_min_av = sum(tmp(ig)%ts2(jday-sno_lag+1:jday,yrs_to_start))/sno_lag
+          t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-sno_lag+1)):int(jday),yrs_to_start))/sno_lag
+          t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-sno_lag+1)):int(jday),yrs_to_start))/sno_lag
       end if
       t_sno = min(2.5,max(0.01,(t_air_max_av + t_air_min_av) / 2))
       
@@ -324,6 +330,7 @@
           tw_local = 5.0 + 0.75 * w%tave
       end if
       
+  900 continue
       ! ----------------- initial water temperature of upstream channel------------------
         
       tw_up = ht1%temp
