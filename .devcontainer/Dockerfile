@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
 # 1. Install dependencies needed to add Intel’s repo, install CMake, gfortran, and GDB
-RUN apt-get update
+# RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
         wget \
         gpg \
@@ -26,8 +26,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https:/
     > /etc/apt/sources.list.d/oneAPI.list
 
 # 3. Install Intel oneAPI Fortran Compiler
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+# RUN apt-get update && \
+RUN apt-get install -y --no-install-recommends \
         intel-oneapi-compiler-fortran \
         && rm -rf /var/lib/apt/lists/*
 
