@@ -113,6 +113,11 @@
           real :: lsf = 0.      !frac               |fraction of the litter that is structural
           real :: lslf = 0.     !kg kg-1            |fraction of structural litter that is lignin 
           real :: lsnf = 0.     !kg kg-1            |fraction of structural litter that is N      
+          real :: frac_seq = .95             !      |fraction of total carbon the is sequestered carbon when initializing sequestered pools
+          real :: frac_not_seq = .05         !      |fraction of total carbon the is NOT sequestered carbon when initializing non-sequestered pools
+          real :: frac_hum_microb = 0.02     !      !fraction of carbon that is microbrial pool when initializing microbrial pools
+          real :: frac_hum_slow = 0.54       !      !fraction of carbon that is humas slow pool  when initializing humus slow pools
+          real :: frac_hum_passive = 0.44    !      |fraction of carbon that is humas passive pool when initializing humas passive pools
       end type organic_fractions
       type (organic_fractions) :: org_frac                    
       

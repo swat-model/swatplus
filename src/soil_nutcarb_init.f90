@@ -8,6 +8,7 @@
       use soil_data_module
       use basin_module
       use organic_mineral_mass_module
+      use carbon_module
 
       implicit none 
       
@@ -159,48 +160,50 @@
         
         if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
-          frac_hum_microb = 0.02
-          frac_hum_slow = 0.54
-          frac_hum_passive = 0.44
+          org_frac%frac_seq = .95
+          org_frac%frac_not_seq = 1.0 -.95
+          org_frac%frac_hum_microb = 0.02
+          org_frac%frac_hum_slow = 0.54
+          org_frac%frac_hum_passive = 0.44
 
           !!initialize passive humus pool
-          soil1(ihru)%hp(ly)%m = frac_hum_passive * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%hp(ly)%c = frac_hum_passive * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hp(ly)%m = org_frac%frac_seq * frac_hum_passive * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hp(ly)%c = org_frac%frac_seq * frac_hum_passive * soil1(ihru)%tot(ly)%c
           soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
           soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
               
           !!initialize slow humus pool
-          soil1(ihru)%hs(ly)%m = frac_hum_slow * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%hs(ly)%c = frac_hum_slow * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hs(ly)%m = org_frac%frac_seq * frac_hum_slow * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hs(ly)%c = org_frac%frac_seq * frac_hum_slow * soil1(ihru)%tot(ly)%c
           soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
           soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
               
           !!initialize microbial pool
-          soil1(ihru)%microb(ly)%m = frac_hum_microb * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%microb(ly)%c = frac_hum_microb * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%microb(ly)%m = org_frac%frac_seq * frac_hum_microb * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%microb(ly)%c = org_frac%frac_seq * frac_hum_microb * soil1(ihru)%tot(ly)%c
           soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.            !assume 8:1 C:N ratio
           soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
             
           !! metabolic residue
           soil1(ihru)%meta(ly) = plt_mass_z
-          ! soil1(ihru)%meta(ly)%m = 0.85 * soil1(ihru)%tot(ly)%m
-          ! soil1(ihru)%meta(ly)%c = 0.85 * soil1(ihru)%tot(ly)%c              
-          ! soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
-          ! soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
+          soil1(ihru)%meta(ly)%m = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%meta(ly)%c = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%c              
+          soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
+          soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
             
           ! structural residue
           soil1(ihru)%str(ly) = plt_mass_z
-          ! soil1(ihru)%str(ly)%m = 0.15 * soil1(ihru)%tot(ly)%m
-          ! soil1(ihru)%str(ly)%c = 0.15 * soil1(ihru)%tot(ly)%c               
-          ! soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
-          ! soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
+          soil1(ihru)%str(ly)%m = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%str(ly)%c = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%c               
+          soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
+          soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
           
           !! lignin residue
           soil1(ihru)%lig(ly) = plt_mass_z
-          ! soil1(ihru)%lig(ly)%m = 0.8 * soil1(ihru)%str(ly)%m
-          ! soil1(ihru)%lig(ly)%c = 0.8 * soil1(ihru)%str(ly)%c                 !assume 80% structural c is lig
-          ! soil1(ihru)%lig(ly)%n = 0.2 * soil1(ihru)%str(ly)%n
-          ! soil1(ihru)%lig(ly)%p = 0.02 * soil1(ihru)%str(ly)%p
+          soil1(ihru)%lig(ly)%m = 0.8 * soil1(ihru)%str(ly)%m
+          soil1(ihru)%lig(ly)%c = 0.8 * soil1(ihru)%str(ly)%c                 !assume 80% structural c is lig
+          soil1(ihru)%lig(ly)%n = 0.2 * soil1(ihru)%str(ly)%n
+          soil1(ihru)%lig(ly)%p = 0.02 * soil1(ihru)%str(ly)%p
             
         end if
 
