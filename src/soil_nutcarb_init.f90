@@ -160,11 +160,7 @@
         
         if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
-          org_frac%frac_seq = .95
           org_frac%frac_not_seq = 1.0 -.95
-          org_frac%frac_hum_microb = 0.02
-          org_frac%frac_hum_slow = 0.54
-          org_frac%frac_hum_passive = 0.44
 
           !!initialize passive humus pool
           soil1(ihru)%hp(ly)%m = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
@@ -185,21 +181,21 @@
           soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
             
           !! metabolic residue
-          soil1(ihru)%meta(ly) = plt_mass_z
+          ! soil1(ihru)%meta(ly) = plt_mass_z
           soil1(ihru)%meta(ly)%m = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%m
           soil1(ihru)%meta(ly)%c = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%c              
           soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
           soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
             
           ! structural residue
-          soil1(ihru)%str(ly) = plt_mass_z
+          ! soil1(ihru)%str(ly) = plt_mass_z
           soil1(ihru)%str(ly)%m = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%m
           soil1(ihru)%str(ly)%c = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%c               
           soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
           soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
           
           !! lignin residue
-          soil1(ihru)%lig(ly) = plt_mass_z
+          ! soil1(ihru)%lig(ly) = plt_mass_z
           soil1(ihru)%lig(ly)%m = 0.8 * soil1(ihru)%str(ly)%m
           soil1(ihru)%lig(ly)%c = 0.8 * soil1(ihru)%str(ly)%c                 !assume 80% structural c is lig
           soil1(ihru)%lig(ly)%n = 0.2 * soil1(ihru)%str(ly)%n
