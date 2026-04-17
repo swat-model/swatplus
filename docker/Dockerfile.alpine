@@ -1,0 +1,93 @@
+##
+# <username>/swatplus:alpine-<SWATPLUSVER>
+#
+# This alpine-based SWAT+ image includes SWAT+ models compiled by 
+#   gfortran and user-specified optimization levels
+#
+# Usage: 
+#   > cd <path/to/swatplus_official>
+#   # Example: 
+#   # docker build \
+#     -t crazyzlj/swatplus:alpine-61.0.1 \
+#     --build-arg SWATPLUSVER=61.0.1 \
+#     --build-arg RELEASE_OPT_LEVELS="O1 O2" \
+#     -f docker/Dockerfile.alpine .
+#
+#   # 1. SWATPLUSVER can be specified mannually, like "-t crazyzlj/swatplus:debian-61.0.1 --build-arg SWATPLUSVER=61.0.1",
+#   #                or read from the "VERSION" file:
+#   #                   Bash/Zsh/sh (Linux/macOS):
+#   #                       -t crazyzlj/swatplus:debian-$(cat VERSION) --build-arg SWATPLUSVER=$(cat VERSION)
+#   #                   PowerShell (Windows):
+#   #                       -t "crazyzlj/swatplus:debian-$(Get-Content VERSION)" --build-arg "SWATPLUSVER=$(Get-Content VERSION)"
+#   # 2. RELEASE_OPT_LEVELS can be one or several optimization levels, including O0, O1, O2, and O3, e.g., "O1 O2"
+#
+# Copyright 2025-2026 Liang-Jun Zhu <zlj@lreis.ac.cn>
+#
+# Use alpine as the build container
+ARG ALPINE_VERSION=3.22
+# ===================================================================
+# STAGE 1: builder
+# ===================================================================
+FROM alpine:${ALPINE_VERSION} AS builder
+
+LABEL maintainer="Liang-Jun Zhu <zlj@lreis.ac.cn>"
+
+RUN \
+    apk update && apk upgrade \
+    && apk add --no-cache gfortran cmake ninja-build make musl-dev
+
+# Copy source directory
+WORKDIR /swatplus_official
+COPY . .
+
+# Build SWAT+, the executable name will be swatplus-<SWATPLUSVER>-gnu-lin_x86_64-Rel/Dbg-<OPT_LEVEL>
+ARG SWATPLUSVER
+ARG RELEASE_OPT_LEVELS="O0 O1 O2"
+ARG INSTALL_DIR=/swatplus_official/dist
+
+RUN set -ex; \
+    build_one() { \
+      cfg="$1"; \
+      opt="${2:-}"; \
+      if [ -n "$opt" ]; then \
+        bdir="/swatplus_official/build_${cfg}_${opt}"; \
+      else \
+        bdir="/swatplus_official/build_${cfg}"; \
+      fi; \
+      cmake -G Ninja -DCMAKE_MAKE_PROGRAM=/usr/lib/ninja-build/bin/ninja \
+        -S /swatplus_official \
+        -B "$bdir" \
+        -DCMAKE_BUILD_TYPE="$cfg" \
+        -DTAG="${SWATPLUSVER}" \
+        -DINSTALL_PREFIX="${INSTALL_DIR}" \
+        ${opt:+-DOPT_LEVEL="$opt"}; \
+      cmake --build "$bdir" -j"$(nproc)"; \
+      cmake --install "$bdir"; \
+    }; \
+    build_one Debug; \
+    if [ -n "${RELEASE_OPT_LEVELS}" ]; then \
+        for opt in ${RELEASE_OPT_LEVELS}; do \
+            build_one Release "$opt"; \
+        done; \
+    fi
+
+# ===================================================================
+# STAGE 2: runner
+# ===================================================================
+FROM alpine:${ALPINE_VERSION} AS runner
+
+# copy entrypoint to set Intel environment before running this container
+COPY docker/entrypoint_alpine.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Order layers starting with less frequently varying ones
+ARG SWATPLUSVER
+ARG INSTALL_DIR=/swatplus_official/dist
+COPY --from=builder ${INSTALL_DIR}/bin/ /usr/local/bin/
+
+# set Intel environment
+ENTRYPOINT ["/entrypoint.sh"]
+
+# run swatplus compiled with O1 optimization level, by default
+ENV SWATPLUSEXEC="swatplus-${SWATPLUSVER}-gnu-lin_x86_64-Rel-o1"
+CMD ["${SWATPLUSEXEC}"]

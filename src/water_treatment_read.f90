@@ -26,6 +26,13 @@
       inquire (file='water_treat.wal', exist=i_exist)
       if (.not. i_exist .or. 'water_treat.wal' == "null") then
         allocate (wtp(0:0))
+        allocate (wtp_om_stor(0:0))
+        allocate (wtp_cs_stor(0:0))
+        allocate (wtp_om_out(0:0))
+        allocate (wal_tr_omd(0:0))
+        allocate (wal_tr_omm(0:0))
+        allocate (wal_tr_omy(0:0))
+        allocate (wal_tr_oma(0:0))
       else
       do 
         open (107,file='water_treat.wal')
