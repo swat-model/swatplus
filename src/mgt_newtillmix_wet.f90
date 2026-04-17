@@ -212,9 +212,6 @@
           end if
         end do
     
-        !if (bsn_cc%cswat == 1) then
-        !    call mgt_tillfactor(jj,bmix,emix,dtil)
-        !end if
       end if
 
       return
