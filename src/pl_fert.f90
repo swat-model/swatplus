@@ -103,13 +103,6 @@
                        fertdb(ifrt)%forgp
         end if
         
-        !! for C-FARM add to manure pool - assume C:N ratio = 10
-        if (bsn_cc%cswat == 1) then
-          soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg * fertdb(ifrt)%forgn * 10.
-          soil1(j)%man(l)%n = soil1(j)%man(l)%n + fr_ly * frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%man(l)%p = soil1(j)%man(l)%p + fr_ly * frt_kg * fertdb(ifrt)%forgp
-        end if
-
         !! for SWAT-C add to slow humus pool and fresh residue pools
         if ((bsn_cc%cswat == 2  .or. bsn_cc%cswat == 3 ) .and. manure_flag) then
           

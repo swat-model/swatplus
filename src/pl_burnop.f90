@@ -61,14 +61,7 @@
         hpc_d(j)%emit_c = hpc_d(j)%emit_c + pl_burn%c
         
         !! burn all surface (layer 1) residue and humus components
-        if (bsn_cc%cswat == 1) then
-          !! const carbon (bsn_cc%cswat == 1)
-          pl_burn = fire_db(iburn)%fr_burn * (soil1(j)%hact(1) + soil1(j)%hsta(1))
-          soil1(j)%hact(1) = (1. - fire_db(iburn)%fr_burn) * soil1(j)%hact(1)
-          soil1(j)%hsta(1) = (1. - fire_db(iburn)%fr_burn) * soil1(j)%hsta(1)
-          !! add plant p burn to stable humus pool for constant carbon
-          soil1(j)%hsta(1)%p = soil1(j)%hsta(1)%p + pl_burn%p
-        else
+        if (bsn_cc%cswat == 2) then
           !! dynamic carbon (bsn_cc%cswat == 2)
           pl_burn = fire_db(iburn)%fr_burn * (soil1(j)%hs(1) + soil1(j)%hp(1) + soil1(j)%pl(ipl)%rsd(ipl))
           soil1(j)%hs(1) = (1. - fire_db(iburn)%fr_burn) * soil1(j)%hs(1)
