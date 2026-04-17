@@ -180,8 +180,7 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
         case ("aqu") 
           if(bsn_cc%gwflow == 0) then !proceed with original code
           j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-          avail = (wallo(iwallo)%trn(itrn)%src(isrc)%wdraw_lim - aqu_d(j)%dep_wt)  * aqu_dat(j)%spyld
-          avail = avail * 10000. * aqu_prm(j)%area_ha     !m3 = 10,000*ha*m
+          avail = 10. * aqu_prm(j)%area_ha *aqu_d(j)%stor     !m3 = 10.*ha*m
           if (trn_m3 < avail) then
             !! only have flow, no3, and minp(solp) for aquifer
             wal_omd(iwallo)%trn(itrn)%src(isrc)%hd%flo = trn_m3
