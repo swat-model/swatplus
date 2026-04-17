@@ -96,27 +96,28 @@
                   pcom(j)%plcur(ipl)%gro = "y"
                   pcom(j)%plcur(ipl)%idorm = "n"
                   call mgt_plantop
-                  if (mgt%op3 > 0) then
+                  !itr = 0
+                  if (mgt%op3 > 1.e-6) then
                     do idb = 1, db_mx%transplant
                       if (mgt%op_plant == transpl(idb)%name) then
                         itr = idb
                         exit
                       endif
                     end do
-                    if (itr > 0) then
-                      call mgt_transplant (itr)
-                      if (pco%mgtout ==  "y") then
-                        write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "TRANSPLANT ",    &
-                          phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
-                          pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
-                          sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
-                      end if
-                    endif
+                  end if
+                  if (itr > 0) then
+                    call mgt_transplant (itr)
+                    if (pco%mgtout ==  "y") then
+                      write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "TRANSPLANT ",   &
+                        phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
+                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                           &
+                        sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
+                    end if
                   else
                     if (pco%mgtout ==  "y") then
                       write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "    PLANT ",    &
                         phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
-                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
+                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                           &
                         sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
                     end if
                   end if
@@ -373,8 +374,8 @@
               endif
             else
               call pl_fert (ifrt, frt_kg, ifertop)
-              call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
-              call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
+              !call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
+              !call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
               if (pco%mgtout == "y") then
                 write (2612,*) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "    FERT ",         &
                   phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m,         &
@@ -383,7 +384,7 @@
               endif
             endif
 
-          case ("manu")   !! fertilizer operation
+          case ("manu")   !! manure application
             ipl = 1
             ifrt = mgt%op1                          !fertilizer type from fert data base
             frt_kg = mgt%op3                        !amount applied in kg/ha
