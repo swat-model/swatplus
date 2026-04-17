@@ -1,40 +1,44 @@
-      subroutine gwflow_canl(chan_id) !rtb gwflow
+      subroutine gwflow_canal(chan_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
-!!    (exchange volumes are used in gwflow_simulate, in groundwater balance equations)
-      
+!!    (exchange volumes are used in gwflow_simulate, in groundwater balance equations), for canals
+!!    that remove water from a specified channel.
+
       use gwflow_module
-      use hydrograph_module, only : ch_stor
+      use hydrograph_module, only : ch_stor,ch_out_d
       use time_module
       use constituent_mass_module
-      
+
       implicit none
 
-      integer, intent (in) :: chan_id    !       |channel number
-      integer :: c = 0                   !       |counter for canals connected to the channel
-      integer :: k = 0                   !       |counter for cells connected to a canal
-      integer :: s = 0                   !       |counter of groundwater solutes
-      integer :: canal_id = 0            !       |canal in connection with the channel
-      integer :: cell_id = 0             !       |cell in connection with the canal
-      integer :: day_beg = 0             !       |beginning day (julian) of active canal
-      integer :: day_end = 0             !       |ending day (julian) of active canal
-      integer :: isalt = 0               !       |salt ion counter
-      integer :: ics = 0                 !       |constituent counter
+      integer, intent (in) :: chan_id		 !       |channel number
+      integer :: c = 0											 !       |counter for canals connected to the channel
+      integer :: k = 0                       !       |counter for cells connected to a canal
+      integer :: s = 0                       !       |counter of groundwater solutes
+      integer :: canal_id = 0                !       |canal in connection with the channel
+      integer :: cell_id = 0                 !       |cell in connection with the canal
+      integer :: day_beg = 0                 !       |beginning day (julian) of active canal
+      integer :: day_end = 0                 !       |ending day (julian) of active canal
+      integer :: isalt = 0                   !       |salt ion counter
+      integer :: ics = 0                     !       |constituent counter
       integer :: sol_index = 0
-      real :: chan_volume = 0.           !m3     |water volume in channel before groundwater exchange occurs
-      real :: width = 0.                 !m      |canal width
-      real :: depth = 0.                 !m      |canal depth
-      real :: thick = 0.                 !m      |canal bed thickness
-      real :: length = 0.                !m      |length of canal in the cell
-      real :: stage = 0.                 !m      |stage of canal in the cell
-      real :: bed_K = 0.                  !m/day  |hydraulic conductivity of canal bed in the cell
-      real :: flow_area = 0.             !m2     |groundwater flow area of water exchange, in cell
-      real :: canal_bed = 0.             !m      |canal bed elevation in the cell
-      real :: head_diff = 0.             !m      |head difference between canal stage and groundwater head
-      real :: Q = 0.                     !m3/day |water exchange flow rate, calculated by Darcy's Law
-      real :: chan_csol(100) = 0.        !g/m3   |solute concentration in channel water
-      real :: solmass(100) = 0.          !g      |solute mass transferred
+      integer :: dum = 0
+      real :: chan_volume = 0.                !m3     |water volume in channel before groundwater exchange occurs
+      real :: width = 0.                      !m      |canal width
+      real :: depth = 0.                      !m      |canal depth
+      real :: thick = 0.                      !m      |canal bed thickness
+      real :: length = 0.                     !m      |length of canal in the cell
+      real :: stage = 0.                      !m      |stage of canal in the cell
+      real :: bed_K = 0.											 !m/day  |hydraulic conductivity of canal bed in the cell
+	  real :: reduc = 0.
+	  real :: daycount_real = 0.
+      real :: flow_area = 0.                  !m2     |groundwater flow area of water exchange, in cell
+      real :: canal_bed = 0.                  !m      |canal bed elevation in the cell
+      real :: head_diff = 0.                  !m      |head difference between canal stage and groundwater head
+      real :: Q = 0.                          !m3/day |water exchange flow rate, calculated by Darcy's Law
+      real :: chan_csol(100) = 0.             !g/m3   |solute concentration in channel water
+      real :: solmass(100) = 0.               !g      |solute mass transferred
       real :: conc_nh3 = 0.
       real :: conc_no2 = 0.
       real :: conc_dox = 0.
@@ -43,11 +47,14 @@
       real :: mass_no2 = 0.
       real :: mass_dox = 0.
       real :: mass_orgn = 0.
-      
-      
+      real :: heat_flux = 0.                  !J      |heat flux in groundwater-canal exchange water
+      real :: chan_heat = 0.                  !J      |heat in channel water
+
+
+
       !only proceed if canal-cell exchange is active
       if (gw_canal_flag == 1) then
-      
+
         !record starting channel volume (m3) and solute concentrations (g/m3)
         chan_csol = 0.
         conc_nh3 = 0.
@@ -63,7 +70,7 @@
           if (gwsol_salt == 1) then
             do isalt=1,cs_db%num_salts
               sol_index = sol_index + 1
-              chan_csol(sol_index) = (ch_water(chan_id)%salt(isalt) * 1000.) / chan_volume    
+              chan_csol(sol_index) = (ch_water(chan_id)%salt(isalt) * 1000.) / chan_volume
             enddo
           endif
           !constituents
@@ -72,16 +79,16 @@
               sol_index = sol_index + 1
               chan_csol(sol_index) = (ch_water(chan_id)%cs(ics) * 1000.) / chan_volume
             enddo
-          endif 
+          endif
           conc_nh3 = (ch_stor(chan_id)%nh3 * 1000.) / chan_volume
           conc_no2 = (ch_stor(chan_id)%no2 * 1000.) / chan_volume
           conc_dox = (ch_stor(chan_id)%dox * 1000.) / chan_volume
           conc_orgn = (ch_stor(chan_id)%orgn * 1000.) / chan_volume
         endif
-        
+
         !loop through the canals that are connected to the channel
         do c=1,gw_chan_canl_info(chan_id)%ncanal
-        
+
           !attributes of the canal
           canal_id = gw_chan_canl_info(chan_id)%canals(c)
           width = gw_chan_canl_info(chan_id)%wdth(c)
@@ -89,24 +96,24 @@
           thick = gw_chan_canl_info(chan_id)%thck(c)
           day_beg = gw_chan_canl_info(chan_id)%dayb(c)
           day_end = gw_chan_canl_info(chan_id)%daye(c)
-        
+
           !only proceed if canal is "on"
           if (time%day.ge.day_beg .and. time%day.le.day_end) then
-            
+
             !loop through the cells that are connected to the current canal
-            do k=1,gw_canl_info(canal_id)%ncon  
-              
+            do k=1,gw_canl_info(canal_id)%ncon
+
               !id of the gwflow cell
               cell_id = gw_canl_info(canal_id)%cells(k)
-              
+
               !only proceed if the cell is active
               if (gw_state(cell_id)%stat == 1) then
-              
+
                 !attributes of the cell
-                length = gw_canl_info(canal_id)%leng(k) 
-                stage = gw_canl_info(canal_id)%elev(k) 
-                bed_K = gw_canl_info(canal_id)%hydc(k)
-                
+                length = gw_canl_info(canal_id)%leng(k)
+                stage = gw_canl_info(canal_id)%elev(k)
+								bed_K = gw_canl_info(canal_id)%hydc(k)
+
                 !calculate exchange rate Q (m3/day)
                 flow_area = length * width !m2 = area of seepage
                 canal_bed = stage - depth !m
@@ -121,26 +128,59 @@
                   head_diff = stage - gw_state(cell_id)%head
                   Q = bed_K * (head_diff / thick) * flow_area !canal seepage (positive Q: entering aquifer)
                 endif
-                
+
                 !store values in gwflow source/sink arrays
                 if(Q < 0) then !groundwater --> canal
                   !if ((Q*-1 == 1).ge.gw_state(cell_id)%stor) then !can only remove what is there
-                  if (-Q .ge. gw_state(cell_id)%stor) then !can only remove what is there                  
-                    Q = -gw_state(cell_id)%stor 
+                  if (-Q .ge. gw_state(cell_id)%stor) then !can only remove what is there
+                    Q = -gw_state(cell_id)%stor
                   endif
-                  gw_ss(cell_id)%canl = gw_ss(cell_id)%canl + Q
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell 
+                  gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q
+                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell
                 else !canal --> groundwater (seepage)
                   if(Q > 0) then !canal seepage; remove water from channel
                     if(Q > ch_stor(chan_id)%flo) then !can only remove what is there
                       Q = ch_stor(chan_id)%flo
                     endif
-                    gw_ss(cell_id)%canl = gw_ss(cell_id)%canl + Q !store for water balance calculations
-                    ch_stor(chan_id)%flo = ch_stor(chan_id)%flo - Q !remove water from channel 
+                    gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q !store for water balance calculations
+                    ch_stor(chan_id)%flo = ch_stor(chan_id)%flo - Q !remove water from channel
                   endif
                 endif
-                gw_ss_sum(cell_id)%canl = gw_ss_sum(cell_id)%canl + Q !store for annual water 
-                
+                gw_hyd_ss_yr(cell_id)%canl = gw_hyd_ss_yr(cell_id)%canl + Q !store for annual water
+                gw_hyd_ss_mo(cell_id)%canl = gw_hyd_ss_mo(cell_id)%canl + Q !store for monthly water
+
+                !heat
+                if(gw_heat_flag == 1) then
+                  chan_heat = ch_stor(chan_id)%temp * gw_rho * gw_cp * chan_volume !J in channel
+                  if(Q < 0) then !mass is leaving the cell --> canal
+                    heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * Q !J
+                    if(-heat_flux >= gwheat_state(cell_id)%stor) then
+                      heat_flux = -gwheat_state(cell_id)%stor
+                    endif
+                    gwheat_state(cell_id)%stor = gwheat_state(cell_id)%stor + heat_flux !update heat in the cell
+                  else
+                    heat_flux = 0.
+                    if(ch_stor(chan_id)%temp > 0) then
+                      heat_flux = ch_stor(chan_id)%temp * gw_rho * gw_cp * Q !J
+                      if(heat_flux > chan_heat) then
+                        heat_flux = chan_heat
+                      endif
+                      gwheat_state(cell_id)%stor = gwheat_state(cell_id)%stor + heat_flux !update heat in the cell
+                    endif
+                  endif
+                  !update channel heat and temperature
+                  chan_heat = chan_heat + (heat_flux*(-1))
+                  if(ch_stor(chan_id)%flo > 0) then
+                    ch_stor(chan_id)%temp = chan_heat / (gw_rho * gw_cp * ch_stor(chan_id)%flo)
+                  else
+                    ch_stor(chan_id)%temp = 0.
+									endif
+									ch_out_d(chan_id)%temp = ch_stor(chan_id)%temp
+                  !store for heat balance
+                  gw_heat_ss(cell_id)%canl = gw_heat_ss(cell_id)%canl + heat_flux
+                  gw_heat_ss_yr(cell_id)%canl = gw_heat_ss_yr(cell_id)%canl + heat_flux !J
+                endif
+
                 !calculate solute mass (g/day) transported between cell and channel
                 if (gw_solute_flag == 1) then
                   if(Q < 0) then !mass is leaving the cell --> canal
@@ -197,7 +237,7 @@
                         sol_index = sol_index + 1
                         if((solmass(sol_index)/1000.) > ch_water(chan_id)%salt(isalt)) then
                           solmass(sol_index) = ch_water(chan_id)%salt(isalt) * 1000. !g
-                        endif 
+                        endif
                         ch_water(chan_id)%salt(isalt) = ch_water(chan_id)%salt(isalt) - (solmass(sol_index)/1000.) !kg
                       enddo
                     endif
@@ -207,7 +247,7 @@
                         sol_index = sol_index + 1
                         if((solmass(sol_index)/1000.) > ch_water(chan_id)%cs(ics)) then
                           solmass(sol_index) = ch_water(chan_id)%cs(ics) * 1000. !g
-                        endif  
+                        endif
                         ch_water(chan_id)%cs(ics) = ch_water(chan_id)%cs(ics) - (solmass(sol_index)/1000.) !kg
                       enddo
                     endif
@@ -216,18 +256,19 @@
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_ss(cell_id)%solute(s)%canl = gwsol_ss(cell_id)%solute(s)%canl + solmass(s)
                     gwsol_ss_sum(cell_id)%solute(s)%canl = gwsol_ss_sum(cell_id)%solute(s)%canl + solmass(s)
+										gwsol_ss_sum_mo(cell_id)%solute(s)%canl = gwsol_ss_sum_mo(cell_id)%solute(s)%canl + solmass(s)
                   enddo
                 endif !end solutes
-                
+
               endif !check if cell is active
-              
+
             enddo !go to next cell connected to the canal
 
           endif !check if canal is "on"
-      
-        enddo !go to next canal connected to the channel  
-          
+
+        enddo !go to next canal connected to the channel
+
       endif !check if canal-cell exchange is active
-          
+
       return
-      end subroutine gwflow_canl      
+      end subroutine gwflow_canal

@@ -3,17 +3,18 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the volume of groundwater that is removed from the
 !!    aquifer via ET
-      
-      use gwflow_module   
+
+      use gwflow_module
       use maximum_data_module, only : db_mx
       use calibration_data_module, only : lsu_out
       use hydrograph_module, only : sp_ob1,ob,sp_ob
-      
+
       implicit none
 
       integer :: i = 0                      !       |counter
       integer :: j = 0                      !       |counter
       integer :: k = 0                      !       |counter
+      integer :: s = 0                      !       |solute counter
       integer :: cell_id = 0                !       |gwflow cell
       integer :: hru_id = 0                 !       |id of HRU
       integer :: ob_num = 0                 !       |object number of HRU
@@ -25,12 +26,12 @@
       real :: gw_head = 0.                  !m      |groundwater head of the cell
       real :: gwet = 0.                     !mm     |depth of groundwater ET for cell
       real :: gwet_volume = 0.              !m3     |actual ET for cell
-      
-      
-      
+
+
+
       !check LSU-cell connection
-      if (lsu_cells_link == 1) then 
-      
+      if (lsu_cells_link == 1) then
+
         !loop through the landscape units
         do k=1,db_mx%lsu_out
           !sum remaining ET (m3) for each LSU (based on collection of HRUs within the LSU)
@@ -68,25 +69,33 @@
             else
               gwet_volume = 0.
             endif
-            gw_ss(cell_id)%gwet = gw_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
-            gw_ss_sum(cell_id)%gwet = gw_ss_sum(cell_id)%gwet + (gwet_volume*(-1))
-            gw_state(cell_id)%stor = gw_state(cell_id)%stor - gwet_volume 
+            gw_hyd_ss(cell_id)%gwet = gw_hyd_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
+            gw_hyd_ss_yr(cell_id)%gwet = gw_hyd_ss_yr(cell_id)%gwet + (gwet_volume*(-1)) !store for annual water
+            gw_hyd_ss_mo(cell_id)%gwet = gw_hyd_ss_mo(cell_id)%gwet + (gwet_volume*(-1)) !store for monthly water
+            gw_state(cell_id)%stor = gw_state(cell_id)%stor - gwet_volume
+            !heat flux
+            if(gw_heat_flag == 1) then
+              gw_heat_ss(cell_id)%gwet = gwheat_state(cell_id)%temp * gw_rho * gw_cp * gw_hyd_ss(cell_id)%gwet !J
+              gw_heat_ss_yr(cell_id)%gwet = gw_heat_ss_yr(cell_id)%gwet + gw_heat_ss(cell_id)%gwet !J
+            endif
           enddo
         enddo !go to next LSU
-        
-      else !proceed with HRU-cell connection  
-      
+
+      else !proceed with HRU-cell connection
+
       ob_num = sp_ob1%hru  !object number of first HRU
       do k=1,sp_ob%hru
         max_gwet = etremain(k) !maximum ET rate from the water table (mm)
         do i=1,hru_num_cells(k)
-          max_gwet = max_gwet * hru_cells_fract(k,i) !mm
+					max_gwet = max_gwet * hru_cells_fract(k,i) !mm
           cell_id = hru_cells(k,i)
           et_surface = gw_state(cell_id)%elev !ground surface
           et_bottom = et_surface - gw_state(cell_id)%exdp !lower elevation bound for ET to occur
           gw_head = gw_state(cell_id)%head
           gwet = 0.
-          if(gw_head < et_bottom) then
+          if(et_surface == et_bottom) then
+					  gwet = 0.
+					elseif(gw_head < et_bottom) then
             gwet = 0. !below the extinction depth
           elseif(gw_head > et_surface) then
             gwet = max_gwet
@@ -106,14 +115,20 @@
           else
             gwet_volume = 0.
           endif
-          gw_ss(cell_id)%gwet = gw_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
-          gw_ss_sum(cell_id)%gwet = gw_ss_sum(cell_id)%gwet + (gwet_volume*(-1))
-          gw_state(cell_id)%stor = gw_state(cell_id)%stor - gwet_volume 
+          gw_hyd_ss(cell_id)%gwet = gw_hyd_ss(cell_id)%gwet + (gwet_volume*(-1)) !(negative --> leaving the aquifer)
+          gw_hyd_ss_yr(cell_id)%gwet = gw_hyd_ss_yr(cell_id)%gwet + (gwet_volume*(-1)) !store for annual water
+          gw_hyd_ss_mo(cell_id)%gwet = gw_hyd_ss_mo(cell_id)%gwet + (gwet_volume*(-1)) !store for monthly water
+          gw_state(cell_id)%stor = gw_state(cell_id)%stor - gwet_volume
+          !heat flux
+          if(gw_heat_flag == 1) then
+            gw_heat_ss(cell_id)%gwet = gwheat_state(cell_id)%temp * gw_rho * gw_cp * gw_hyd_ss(cell_id)%gwet !J
+            gw_heat_ss_yr(cell_id)%gwet = gw_heat_ss_yr(cell_id)%gwet + gw_heat_ss(cell_id)%gwet !J
+          endif
         enddo
         ob_num = ob_num + 1
       enddo
-      
+
       endif !check for LSU-cell connection
-      
+
       return
-      end subroutine gwflow_gwet 
+    end subroutine gwflow_gwet
