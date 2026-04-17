@@ -54,8 +54,8 @@
               if(Q > gw_state(cell_id)%stor) then
                 Q = gw_state(cell_id)%stor
               endif
-              gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q !update available groundwater in the cell 
-              gw_ss(cell_id)%tile = Q * (-1) !leaving aquifer
+              gw_state(cell_id)%stor = gw_state(cell_id)%stor + (Q*(-1)) !update available groundwater in the cell 
+              gw_ss(cell_id)%tile = gw_ss(cell_id)%tile + (Q*(-1)) !leaving aquifer
               gw_ss_sum(cell_id)%tile = gw_ss_sum(cell_id)%tile + (Q*(-1)) !leaving aquifer
               
               !add water to channel
@@ -68,7 +68,7 @@
                   if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                     solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                   endif
-                  gwsol_ss(cell_id)%solute(s)%tile = solmass(s) * (-1) !leaving aquifer
+                  gwsol_ss(cell_id)%solute(s)%tile = gwsol_ss(cell_id)%solute(s)%tile + (solmass(s)*(-1)) !leaving aquifer
                   gwsol_ss_sum(cell_id)%solute(s)%tile = gwsol_ss_sum(cell_id)%solute(s)%tile + (solmass(s)*(-1)) !leaving aquifer
                 enddo  
                 !add solute to channel

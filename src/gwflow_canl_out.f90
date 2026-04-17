@@ -82,9 +82,9 @@
               if (gw_solute_flag == 1) then
                 if(Q < 0) then !mass is leaving the cell --> canal
                   do s=1,gw_nsolute !loop through the solutes
-                    solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
-                    if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
-                      solmass(s) = gwsol_state(cell_id)%solute(s)%mass
+                    solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g, negative: leaving the aquifer
+                    if(-solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
+                      solmass(s) = -gwsol_state(cell_id)%solute(s)%mass
                     endif
                   enddo
                 else !mass entering the cell from the canal (i.e., from the channel that provides the canal water)

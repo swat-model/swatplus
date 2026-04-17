@@ -42,9 +42,13 @@
               satx_count = satx_count + 1 !track the number of saturated cells (for output)
               satx_depth = gw_state(cell_id)%head - gw_state(cell_id)%elev !height above ground surface
               satx_volume = (gw_state(cell_id)%area * satx_depth) * gw_state(cell_id)%spyd !m3 of groundwater above ground surface 
+              if (satx_volume  >= gw_state(cell_id)%stor) then !can only remove what is there
+                satx_volume = gw_state(cell_id)%stor
+              endif
+              gw_state(cell_id)%stor = gw_state(cell_id)%stor + (satx_volume * (-1)) !update available groundwater in the cell
               
               !store for water balance calculations (in gwflow_simulate)
-              gw_ss(cell_id)%satx = satx_volume * (-1) !negative = leaving the aquifer
+              gw_ss(cell_id)%satx = gw_ss(cell_id)%satx + (satx_volume * (-1)) !negative = leaving the aquifer
               gw_ss_sum(cell_id)%satx = gw_ss_sum(cell_id)%satx + (satx_volume * (-1))
               
               !store for channel object (positive value = water added to channel)
@@ -58,7 +62,7 @@
                   if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                     solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                   endif
-                  gwsol_ss(cell_id)%solute(s)%satx = solmass(s) * (-1) !negative = leaving the aquifer
+                  gwsol_ss(cell_id)%solute(s)%satx = gwsol_ss(cell_id)%solute(s)%satx + (solmass(s) * (-1)) !negative = leaving the aquifer
                   gwsol_ss_sum(cell_id)%solute(s)%satx = gwsol_ss_sum(cell_id)%solute(s)%satx + (solmass(s)*(-1))
                 enddo
                 !add solute mass to channel
