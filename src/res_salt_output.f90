@@ -49,7 +49,7 @@
                          (ressalt_d(j)%salt(isalt)%conc,isalt=1,cs_db%num_salts), &
                           ressalt_d(j)%salt(1)%volm
         if (pco%csvout == "y") then
-          write (5041,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (5041,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (ressalt_d(j)%salt(isalt)%inflow,isalt=1,cs_db%num_salts), &
                                         (ressalt_d(j)%salt(isalt)%outflow,isalt=1,cs_db%num_salts), &
                                         (ressalt_d(j)%salt(isalt)%seep,isalt=1,cs_db%num_salts), &
@@ -94,7 +94,7 @@
                            (ressalt_m(j)%salt(isalt)%conc,isalt=1,cs_db%num_salts), &
                             ressalt_m(j)%salt(1)%volm
           if (pco%csvout == "y") then
-            write (5043,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (5043,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                           (ressalt_m(j)%salt(isalt)%inflow,isalt=1,cs_db%num_salts), &
                                           (ressalt_m(j)%salt(isalt)%outflow,isalt=1,cs_db%num_salts), &
                                           (ressalt_m(j)%salt(isalt)%seep,isalt=1,cs_db%num_salts), &
@@ -152,7 +152,7 @@
                            (ressalt_y(j)%salt(isalt)%conc,isalt=1,cs_db%num_salts), &
                             ressalt_y(j)%salt(1)%volm
           if (pco%csvout == "y") then
-            write (5045,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (5045,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                           (ressalt_y(j)%salt(isalt)%inflow,isalt=1,cs_db%num_salts), &
                                           (ressalt_y(j)%salt(isalt)%outflow,isalt=1,cs_db%num_salts), &
                                           (ressalt_y(j)%salt(isalt)%seep,isalt=1,cs_db%num_salts), &
@@ -203,7 +203,7 @@
                          (ressalt_a(j)%salt(isalt)%conc,isalt=1,cs_db%num_salts), &
                           ressalt_a(j)%salt(1)%volm
         if (pco%csvout == "y") then
-          write (5047,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (5047,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (ressalt_a(j)%salt(isalt)%inflow,isalt=1,cs_db%num_salts), &
                                         (ressalt_a(j)%salt(isalt)%outflow,isalt=1,cs_db%num_salts), &
                                         (ressalt_a(j)%salt(isalt)%seep,isalt=1,cs_db%num_salts), &

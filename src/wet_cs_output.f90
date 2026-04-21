@@ -54,7 +54,7 @@
                          (wetcs_d(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                           wetcs_d(j)%cs(1)%volm
         if (pco%csvout == "y") then
-          write (6091,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (6091,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (wetcs_d(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                         (wetcs_d(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                         (wetcs_d(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -105,7 +105,7 @@
                            (wetcs_m(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                             wetcs_m(j)%cs(1)%volm
           if (pco%csvout == "y") then
-            write (6093,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (6093,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                           (wetcs_m(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                           (wetcs_m(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                           (wetcs_m(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -171,7 +171,7 @@
                            (wetcs_y(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                             wetcs_y(j)%cs(1)%volm
           if (pco%csvout == "y") then
-            write (6095,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (6095,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                           (wetcs_y(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                           (wetcs_y(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                           (wetcs_y(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -230,7 +230,7 @@
                          (wetcs_a(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                           wetcs_a(j)%cs(1)%volm
         if (pco%csvout == "y") then
-          write (6097,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (6097,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (wetcs_a(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                         (wetcs_a(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                         (wetcs_a(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &

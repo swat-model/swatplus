@@ -15,7 +15,7 @@
           !write (9000,*) "CHANNEL             channel_subday.txt"
           !if (pco%csvout == "y")  then
           !  open (,file="channel_subday.csv",recl = 1500)
-          !  write (,'(*(G0.3,:,","))') ch_hdr !! channel header csv format
+          !  write (,'(*(G0.6,:,","))') ch_hdr !! channel header csv format
           ! write (9000,*) "CHANNEL             channel_subday.csv"
           !end if
         !endif
@@ -31,8 +31,8 @@
           if (pco%csvout == "y")  then
             call open_output_file(2484, "channel_day.csv", 1500)
             write (2484,*) bsn%name, prog
-            write (2484,'(*(G0.3,:,","))') ch_hdr !! channel header csv format
-            write (2484,'(*(G0.3,:,","))') ch_hdr_units
+            write (2484,'(*(G0.6,:,","))') ch_hdr !! channel header csv format
+            write (2484,'(*(G0.6,:,","))') ch_hdr_units
            write (9000,*) "CHANNEL                   channel_day.csv"
           end if
         endif
@@ -48,8 +48,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2485, "channel_mon.csv", 1500)
             write (2485,*) bsn%name, prog
-            write (2485,'(*(G0.3,:,","))') ch_hdr   !! channel aa header csv format
-            write (2485,'(*(G0.3,:,","))') ch_hdr_units
+            write (2485,'(*(G0.6,:,","))') ch_hdr   !! channel aa header csv format
+            write (2485,'(*(G0.6,:,","))') ch_hdr_units
             write (9000,*) "CHANNEL                   channel_mon.csv"
           end if
           end if
@@ -65,8 +65,8 @@
           if (pco%csvout == "y")  then
             call open_output_file(2486, "channel_yr.csv", 1500)
             write (2486,*) bsn%name, prog
-            write (2486,'(*(G0.3,:,","))') ch_hdr !! channel header csv format
-            write (2486,'(*(G0.3,:,","))') ch_hdr_units
+            write (2486,'(*(G0.6,:,","))') ch_hdr !! channel header csv format
+            write (2486,'(*(G0.6,:,","))') ch_hdr_units
            write (9000,*) "CHANNEL                   channel_yr.csv"
           end if
         endif
@@ -82,8 +82,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2487, "channel_aa.csv", 1500)
             write (2487,*) bsn%name, prog
-            write (2487,'(*(G0.3,:,","))') ch_hdr   !! channel aa header csv format
-            write (2487,'(*(G0.3,:,","))') ch_hdr_units
+            write (2487,'(*(G0.6,:,","))') ch_hdr   !! channel aa header csv format
+            write (2487,'(*(G0.6,:,","))') ch_hdr_units
             write (9000,*) "CHANNEL                   channel_aa.csv"
           end if
           end if

@@ -18,7 +18,7 @@
           write (3110,*) time%day, time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omd(itrt)
 
           if (pco%csvout == "y") then
-          write (3114,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omd(itrt)
+          write (3114,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omd(itrt)
           end if
         end if
        
@@ -34,7 +34,7 @@
           write (3111,*) time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omm(itrt)
  
           if (pco%csvout == "y") then
-          write (3115,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omm(itrt)
+          write (3115,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omm(itrt)
           end if
         end if
 
@@ -51,7 +51,7 @@
           write (3112,*) time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omy(itrt)
   
               if (pco%csvout == "y") then
-          write (3116,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omy(itrt)
+          write (3116,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_omy(itrt)
           end if
         end if
 
@@ -68,7 +68,7 @@
         write (3113,*) time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_oma(itrt)
 
         if (pco%csvout == "y") then
-        write (3117,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_oma(itrt)
+        write (3117,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, itrt, om_treat_name(itrt), wal_tr_oma(itrt)
         end if
        end if
       end if

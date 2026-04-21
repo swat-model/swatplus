@@ -222,7 +222,7 @@
          call open_output_file(6022, "hru_cs_day.csv", 3000)
          write (6022,*) bsn%name, prog
          write (6022,*) 'conc = mg/L; other = kg/ha'
-         write (6022,'(*(G0.3,:","))') cs_hdr_hru
+         write (6022,'(*(G0.6,:","))') cs_hdr_hru
        endif
      endif
      
@@ -263,7 +263,7 @@
          call open_output_file(6024, "hru_cs_mon.csv", 3000)
          write (6024,*) bsn%name, prog
          write (6024,*) 'conc = mg/L; other = kg/ha'
-         write (6024,'(*(G0.3,:","))') cs_hdr_hru
+         write (6024,'(*(G0.6,:","))') cs_hdr_hru
        endif
      endif
      
@@ -304,7 +304,7 @@
          call open_output_file(6026, "hru_cs_yr.csv", 3000)
          write (6026,*) bsn%name, prog
          write (6026,*) 'conc = mg/L; other = kg/ha'
-         write (6026,'(*(G0.3,:","))') cs_hdr_hru
+         write (6026,'(*(G0.6,:","))') cs_hdr_hru
        endif
      endif
      
@@ -345,7 +345,7 @@
          call open_output_file(6028, "hru_cs_aa.csv", 3000)
          write (6028,*) bsn%name, prog
          write (6028,*) 'conc = mg/L; other = kg/ha'
-         write (6028,'(*(G0.3,:","))') cs_hdr_hru
+         write (6028,'(*(G0.6,:","))') cs_hdr_hru
        endif
      endif
 
@@ -376,7 +376,7 @@
            call open_output_file(6061, "aquifer_cs_day.csv", 2000)
            write (6061,*) bsn%name, prog
            write (6061,*) 'conc = mg/L; other = kg'
-           write (6061,'(*(G0.3,:","))') cs_hdr_aqu
+           write (6061,'(*(G0.6,:","))') cs_hdr_aqu
          endif
        endif
      endif
@@ -408,7 +408,7 @@
            call open_output_file(6063, "aquifer_cs_mon.csv", 2000)
            write (6063,*) bsn%name, prog
            write (6063,*) 'conc = mg/L; other = kg'
-           write (6063,'(*(G0.3,:","))') cs_hdr_aqu
+           write (6063,'(*(G0.6,:","))') cs_hdr_aqu
          endif
        endif
      endif
@@ -440,7 +440,7 @@
            call open_output_file(6065, "aquifer_cs_yr.csv", 2000)
            write (6065,*) bsn%name, prog
            write (6065,*) 'conc = mg/L; other = kg'
-           write (6065,'(*(G0.3,:","))') cs_hdr_aqu
+           write (6065,'(*(G0.6,:","))') cs_hdr_aqu
          endif
        endif
      endif
@@ -472,7 +472,7 @@
            call open_output_file(6067, "aquifer_cs_aa.csv", 2000)
            write (6067,*) bsn%name, prog
            write (6067,*) 'conc = mg/L; other = kg'
-           write (6067,'(*(G0.3,:","))') cs_hdr_aqu
+           write (6067,'(*(G0.6,:","))') cs_hdr_aqu
          endif
        endif
      endif
@@ -501,7 +501,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6031, "channel_cs_day.csv", 2000)
            write (6031,*) bsn%name, prog
-           write (6031,'(*(G0.3,:","))') chcs_hdr
+           write (6031,'(*(G0.6,:","))') chcs_hdr
          endif
        endif
      endif
@@ -530,7 +530,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6033, "channel_cs_mon.csv", 2000)
            write (6033,*) bsn%name, prog
-           write (6033,'(*(G0.3,:","))') chcs_hdr
+           write (6033,'(*(G0.6,:","))') chcs_hdr
          endif
        endif
      endif
@@ -559,7 +559,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6035, "channel_cs_yr.csv", 2000)
            write (6035,*) bsn%name, prog
-           write (6035,'(*(G0.3,:","))') chcs_hdr
+           write (6035,'(*(G0.6,:","))') chcs_hdr
          endif
        endif
      endif
@@ -588,7 +588,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6037, "channel_cs_aa.csv", 2000)
            write (6037,*) bsn%name, prog
-           write (6037,'(*(G0.3,:","))') chcs_hdr
+           write (6037,'(*(G0.6,:","))') chcs_hdr
          endif
        endif
      endif
@@ -621,7 +621,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6041, "reservoir_cs_day.csv", 2000)
            write (6041,*) bsn%name, prog
-           write (6041,'(*(G0.3,:","))') rescs_hdr
+           write (6041,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif
@@ -654,7 +654,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6043, "reservoir_cs_mon.csv", 2000)
            write (6043,*) bsn%name, prog
-           write (6043,'(*(G0.3,:","))') rescs_hdr
+           write (6043,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif
@@ -687,7 +687,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6045, "reservoir_cs_yr.csv", 2000)
            write (6045,*) bsn%name, prog
-           write (6045,'(*(G0.3,:","))') rescs_hdr
+           write (6045,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif
@@ -720,7 +720,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6047, "reservoir_cs_aa.csv", 2000)
            write (6047,*) bsn%name, prog
-           write (6047,'(*(G0.3,:","))') rescs_hdr
+           write (6047,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif 
@@ -758,7 +758,7 @@
            call open_output_file(6071, "rout_unit_cs_day.csv", 2000)
            write (6071,*) bsn%name, prog
            write (6071,*) 'all values in kg'
-           write (6071,'(*(G0.3,:","))') rucsb_hdr
+           write (6071,'(*(G0.6,:","))') rucsb_hdr
          endif
        endif
      endif
@@ -796,7 +796,7 @@
            call open_output_file(6073, "rout_unit_cs_mon.csv", 2000)
            write (6073,*) bsn%name, prog
            write (6073,*) 'all values in kg'
-           write (6073,'(*(G0.3,:","))') rucsb_hdr
+           write (6073,'(*(G0.6,:","))') rucsb_hdr
          endif
        endif
      endif
@@ -834,7 +834,7 @@
            call open_output_file(6075, "rout_unit_cs_yr.csv", 2000)
            write (6075,*) bsn%name, prog
            write (6075,*) 'all values in kg'
-           write (6075,'(*(G0.3,:","))') rucsb_hdr
+           write (6075,'(*(G0.6,:","))') rucsb_hdr
          endif
        endif
      endif
@@ -872,7 +872,7 @@
            call open_output_file(6077, "rout_unit_cs_aa.csv", 2000)
            write (6077,*) bsn%name, prog
            write (6077,*) 'all values in kg'
-           write (6077,'(*(G0.3,:","))') rucsb_hdr
+           write (6077,'(*(G0.6,:","))') rucsb_hdr
          endif
        endif
      endif 
@@ -904,7 +904,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6091, "wetland_cs_day.csv", 2000)
            write (6091,*) bsn%name, prog
-           write (6091,'(*(G0.3,:","))') rescs_hdr
+           write (6091,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif
@@ -936,7 +936,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6093, "wetland_cs_mon.csv", 2000)
            write (6093,*) bsn%name, prog
-           write (6093,'(*(G0.3,:","))') rescs_hdr
+           write (6093,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif
@@ -968,7 +968,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6095, "wetland_cs_yr.csv", 2000)
            write (6095,*) bsn%name, prog
-           write (6095,'(*(G0.3,:","))') rescs_hdr
+           write (6095,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif
@@ -1000,7 +1000,7 @@
          if (pco%csvout == "y") then
            call open_output_file(6097, "wetland_cs_aa.csv", 2000)
            write (6097,*) bsn%name, prog
-           write (6097,'(*(G0.3,:","))') rescs_hdr
+           write (6097,'(*(G0.6,:","))') rescs_hdr
          endif
        endif
      endif 

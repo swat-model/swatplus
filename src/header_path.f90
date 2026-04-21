@@ -18,7 +18,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2794, "hru_path_day.csv", 800)
             write (2794,*) bsn%name, prog
-            write (2794,'(*(G0.3,:","))') pathb_hdr
+            write (2794,'(*(G0.6,:","))') pathb_hdr
             write (9000,*) "HRU_PATH                  hru_path_day.csv"
           end if
       end if
@@ -33,7 +33,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2795, "hru_path_mon.csv", 800)
             write (2795,*) bsn%name, prog
-            write (2795,'(*(G0.3,:","))') pathb_hdr
+            write (2795,'(*(G0.6,:","))') pathb_hdr
             write (9000,*) "HRU_PATH                  hru_path_mon.csv"
           end if
       end if
@@ -48,7 +48,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2796, "hru_path_yr.csv", 800)
             write (2796,*) bsn%name, prog
-            write (2796,'(*(G0.3,:","))') pathb_hdr
+            write (2796,'(*(G0.6,:","))') pathb_hdr
             write (9000,*) "HRU_PATH                  hru_path_yr.csv"
           end if
       end if
@@ -63,7 +63,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2797, "hru_path_aa.csv", 800)
             write (2797,*) bsn%name, prog
-            write (2797,'(*(G0.3,:","))') pathb_hdr
+            write (2797,'(*(G0.6,:","))') pathb_hdr
             write (9000,*) "HRU_PATH                  hru_path_aa.csv"
           end if
       end if

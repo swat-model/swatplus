@@ -36,7 +36,7 @@
              write (2808,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
                chpst_d(j)%pest(ipest)   !! pesticide balance
              if (pco%csvout == "y") then
-               write (2812,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+               write (2812,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                  cs_db%pests(ipest), chpst_d(j)%pest(ipest)
              end if
           end if
@@ -55,7 +55,7 @@
              write (2809,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
                chpst_m(j)%pest(ipest)
                if (pco%csvout == "y") then
-                 write (2813,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2813,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                    cs_db%pests(ipest), chpst_m(j)%pest(ipest)
                end if
            end if
@@ -74,7 +74,7 @@
              write (2810,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
                chpst_y(j)%pest(ipest)
                if (pco%csvout == "y") then
-                 write (2814,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2814,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                    cs_db%pests(ipest), chpst_y(j)%pest(ipest)
                end if
            end if
@@ -88,7 +88,7 @@
            write (2811,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
              chpst_a(j)%pest(ipest)
            if (pco%csvout == "y") then
-             write (2815,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+             write (2815,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                cs_db%pests(ipest), chpst_a(j)%pest(ipest)
            end if
            chpst_a(j)%pest(ipest) = ch_pestbz

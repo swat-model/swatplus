@@ -24,7 +24,7 @@
         if (pco%chan_bsn%d == "y") then
           write (2110,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_d
           if (pco%csvout == "y") then
-            write (2114,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_d
+            write (2114,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_d
           end if 
         end if 
       end if
@@ -35,7 +35,7 @@
         if (pco%chan_bsn%m == "y") then
           write (2111,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_m
           if (pco%csvout == "y") then
-            write (2115,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_m
+            write (2115,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_m
           end if
         end if
         bch_m = chz
@@ -47,7 +47,7 @@
         if (pco%chan_bsn%y == "y") then 
           write (2112,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_y
           if (pco%csvout == "y") then
-            write (2116,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_y
+            write (2116,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_y
           end if
         end if
         
@@ -59,7 +59,7 @@
         bch_a = bch_a / time%yrs_prt
         write (2113,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_a
         if (pco%csvout == "y") then
-          write (2117,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_a
+          write (2117,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_a
         end if
       end if
 

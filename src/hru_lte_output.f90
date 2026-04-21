@@ -23,27 +23,27 @@
           if (pco%wb_sd%d == "y") then
             write (2300,100) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltwb_d(isd)  !! waterbal
               if (pco%csvout == "y") then 
-                write (2304,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                write (2304,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltwb_d(isd)  !! waterbal
               end if 
           end if
 !          if (pco%nb_sd%d == "y") then
 !            write (2420,100) time%day, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_d(isd)  !! nutrient bal
 !             if (pco%csvout == "y") then 
-!               write (2424,'(*(G0.3,:","))') time%day, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_d(isd)  !! nutrient bal
+!               write (2424,'(*(G0.6,:","))') time%day, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_d(isd)  !! nutrient bal
 !             end if 
 !          end if
           if (pco%ls_sd%d == "y") then
             write (2440,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltls_d(isd)  !! losses
               if (pco%csvout == "y") then 
-                write (2444,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                write (2444,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltls_d(isd)  !! losses
               endif 
           end if
           if (pco%pw_sd%d == "y") then
             write (2460,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltpw_d(isd)  !! plant weather 
               if (pco%csvout == "y") then 
-                write (2464,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                write (2464,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltpw_d(isd)  !! plant weather 
               end if 
           end if
@@ -64,27 +64,27 @@
            if (pco%wb_sd%m == "y") then
              write (2301,100) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltwb_m(isd)
                if (pco%csvout == "y") then 
-                 write (2305,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2305,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltwb_m(isd)
                end if 
            end if
 !           if (pco%nb_sd%m == "y") then
 !             write (2421,100) time%mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_m(isd)
 !             if (pco%csvout == "y") then 
-!               write (2425,'(*(G0.3,:","))') time%mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_m(isd)
+!               write (2425,'(*(G0.6,:","))') time%mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_m(isd)
 !             end if 
 !           end if
            if (pco%ls_sd%m == "y") then
              write (2441,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltls_m(isd)
                if (pco%csvout == "y") then 
-                 write (2445,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2445,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltls_m(isd)
                end if 
            end if
            if (pco%pw_sd%m == "y") then
              write (2461,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltpw_m(isd)
                if (pco%csvout == "y") then 
-                 write (2465,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2465,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltpw_m(isd)
                end if 
            end if
@@ -110,27 +110,27 @@
            if (time%end_yr == 1 .and. pco%wb_sd%y == "y") then
              write (2302,100) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltwb_y(isd)
                 if (pco%csvout == "y") then 
-                  write (2306,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                  write (2306,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltwb_y(isd)
                 end if 
            end if
 !           if (time%end_yr == 1 .and. pco%nb_sd%y == "y") then
 !             write (2422,100) time%end_yr, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_y(isd)
 !             if (pco%csvout == "y") then 
-!               write (2426,'(*(G0.3,:","))') time%end_yr, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_y(isd)
+!               write (2426,'(*(G0.6,:","))') time%end_yr, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_y(isd)
 !             end if 
 !           end if
            if (time%end_yr == 1 .and. pco%ls_sd%y == "y") then
              write (2442,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltls_y(isd)
                if (pco%csvout == "y") then 
-                 write (2446,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2446,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltls_y(isd)
                end if 
            end if
            if (time%end_yr == 1 .and. pco%pw_sd%y == "y") then
              write (2462,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltpw_y(isd)
               if (pco%csvout == "y") then 
-                write (2466,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+                write (2466,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                     hltpw_y(isd)
               end if 
            end if
@@ -143,7 +143,7 @@
            hltwb_a(isd) = hltwb_a(isd) // time%days_prt          
            write (2303,100) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltwb_a(isd)
            if (pco%csvout == "y") then 
-             write (2307,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+             write (2307,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                 hltwb_a(isd)
            end if
            hltwb_a(isd) = hwbz
@@ -153,7 +153,7 @@
 !           hltnb_a(isd) = hltnb_a(isd) / time%yrs_prt
 !           write (2423,100) time%end_yr, time%yrs, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_a(isd)
 !         if (pco%csvout == "y") then 
-!             write (2427,'(*(G0.3,:","))') time%end_yr, time%yrs, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_a(isd)
+!             write (2427,'(*(G0.6,:","))') time%end_yr, time%yrs, isd, ob(iob)%gis_id, ob(iob)%name, hltnb_a(isd)
 !           end if
 !         end if
 !         hltnb_a(isd) = hnbz       
@@ -162,7 +162,7 @@
            hltls_a(isd) = hltls_a(isd) / time%yrs_prt  
            write (2443,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltls_a(isd)
            if (pco%csvout == "y") then 
-             write (2447,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+             write (2447,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                 hltls_a(isd)
            end if
          end if
@@ -173,7 +173,7 @@
            hltpw_a(isd) = hltpw_a(isd) // time%days_prt
            write (2463,101) time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, hltpw_a(isd)
            if (pco%csvout == "y") then 
-             write (2467,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
+             write (2467,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, isd, ob(iob)%gis_id, ob(iob)%name, &
                 hltpw_a(isd)
            end if
            hltpw_a(isd) = hpwz
