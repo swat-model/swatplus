@@ -25,7 +25,7 @@
            ob(icmd)%obtypno_out(i), ob(icmd)%htyp_out(i), i = 1,        &
            ob(icmd)%src_tot)
           if (pco%csvout == "y") then 
-            write (7001,'(*(G0.3,:","))') ii, ob(icmd)%name, ob(icmd)%typ,  &  
+            write (7001,'(*(G0.6,:","))') ii, ob(icmd)%name, ob(icmd)%typ,  &  
             ob(icmd)%props, ob(icmd)%props2, ob(icmd)%src_tot,              &
              ob(icmd)%rcv_tot, (ob(icmd)%obj_out,ob(icmd)%obtyp_out(i),     &
              ob(icmd)%obtypno_out(i), ob(icmd)%htyp_out(i), i = 1,          &

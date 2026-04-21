@@ -26,7 +26,7 @@
               isrc = 1, mallo(imallo)%src_obs)  
 
            if (pco%csvout == "y") then
-          write (3211,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
+          write (3211,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
               mallo(imallo)%trn(itrn)%ob_num, (mallo(imallo)%src(isrc)%num, mallo(imallo)%src(isrc)%mois_typ,   &
               mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%trn(itrn)%withdr(isrc),                         &
               isrc = 1, mallo(imallo)%src_obs)  
@@ -53,7 +53,7 @@
               isrc = 1, mallo(imallo)%src_obs) 
  
               if (pco%csvout == "y") then
-          write (3213,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
+          write (3213,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
               mallo(imallo)%trn(itrn)%ob_num, (mallo(imallo)%src(isrc)%num, mallo(imallo)%src(isrc)%mois_typ,   &
               mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%trn(itrn)%withdr_m(isrc),                       &
               isrc = 1, mallo(imallo)%src_obs)  
@@ -81,7 +81,7 @@
               isrc = 1, mallo(imallo)%src_obs) 
   
               if (pco%csvout == "y") then
-          write (3215,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
+          write (3215,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
               mallo(imallo)%trn(itrn)%ob_num, (mallo(imallo)%src(isrc)%num, mallo(imallo)%src(isrc)%mois_typ,   &
               mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%trn(itrn)%withdr_y(isrc),                       &
               isrc = 1, mallo(imallo)%src_obs)  
@@ -108,7 +108,7 @@
               isrc = 1, mallo(imallo)%src_obs) 
 
         if (pco%csvout == "y") then
-        write (3217,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
+        write (3217,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%trn(itrn)%ob_typ, &
               mallo(imallo)%trn(itrn)%ob_num, (mallo(imallo)%src(isrc)%num, mallo(imallo)%src(isrc)%mois_typ,   &
               mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%trn(itrn)%withdr_a(isrc),                       &
               isrc = 1, mallo(imallo)%src_obs)  

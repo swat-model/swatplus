@@ -217,7 +217,7 @@
          call open_output_file(5022, "hru_salt_day.csv", 3000)
          write (5022,*) bsn%name, prog
          write (5022,*) 'conc = mg/L; other = kg/ha'
-         write (5022,'(*(G0.3,:","))') salt_hdr_hru
+         write (5022,'(*(G0.6,:","))') salt_hdr_hru
        endif
      endif
      
@@ -257,7 +257,7 @@
          call open_output_file(5024, "hru_salt_mon.csv", 3000)
          write (5024,*) bsn%name, prog
          write (5024,*) 'conc = mg/L; other = kg/ha'
-         write (5024,'(*(G0.3,:","))') salt_hdr_hru
+         write (5024,'(*(G0.6,:","))') salt_hdr_hru
        endif
      endif
      
@@ -297,7 +297,7 @@
          call open_output_file(5026, "hru_salt_yr.csv", 3000)
          write (5026,*) bsn%name, prog
          write (5026,*) 'conc = mg/L; other = kg/ha'
-         write (5026,'(*(G0.3,:","))') salt_hdr_hru
+         write (5026,'(*(G0.6,:","))') salt_hdr_hru
        endif
      endif
      
@@ -337,7 +337,7 @@
          call open_output_file(5028, "hru_salt_aa.csv", 3000)
          write (5028,*) bsn%name, prog
          write (5028,*) 'conc = mg/L; other = kg/ha'
-         write (5028,'(*(G0.3,:","))') salt_hdr_hru
+         write (5028,'(*(G0.6,:","))') salt_hdr_hru
        endif
      endif
 
@@ -366,7 +366,7 @@
            call open_output_file(5061, "aquifer_salt_day.csv", 2000)
            write (5061,*) bsn%name, prog
            write (5061,*) 'conc = mg/L; other = kg'
-           write (5061,'(*(G0.3,:","))') salt_hdr_aqu
+           write (5061,'(*(G0.6,:","))') salt_hdr_aqu
          endif
        endif
      endif
@@ -396,7 +396,7 @@
            call open_output_file(5063, "aquifer_salt_mon.csv", 2000)
            write (5063,*) bsn%name, prog
            write (5063,*) 'conc = mg/L; other = kg'
-           write (5063,'(*(G0.3,:","))') salt_hdr_aqu
+           write (5063,'(*(G0.6,:","))') salt_hdr_aqu
          endif
        endif
      endif
@@ -426,7 +426,7 @@
            call open_output_file(5065, "aquifer_salt_yr.csv", 2000)
            write (5065,*) bsn%name, prog
            write (5065,*) 'conc = mg/L; other = kg'
-           write (5065,'(*(G0.3,:","))') salt_hdr_aqu
+           write (5065,'(*(G0.6,:","))') salt_hdr_aqu
          endif
        endif
      endif
@@ -456,7 +456,7 @@
            call open_output_file(5067, "aquifer_salt_aa.csv", 2000)
            write (5067,*) bsn%name, prog
            write (5067,*) 'conc = mg/L; other = kg'
-           write (5067,'(*(G0.3,:","))') salt_hdr_aqu
+           write (5067,'(*(G0.6,:","))') salt_hdr_aqu
          endif
        endif
      endif
@@ -485,7 +485,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5031, "channel_salt_day.csv", 2000)
            write (5031,*) bsn%name, prog
-           write (5031,'(*(G0.3,:","))') chsalt_hdr
+           write (5031,'(*(G0.6,:","))') chsalt_hdr
          endif
        endif
      endif
@@ -514,7 +514,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5033, "channel_salt_mon.csv", 2000)
            write (5033,*) bsn%name, prog
-           write (5033,'(*(G0.3,:","))') chsalt_hdr
+           write (5033,'(*(G0.6,:","))') chsalt_hdr
          endif
        endif
      endif
@@ -543,7 +543,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5035, "channel_salt_yr.csv", 2000)
            write (5035,*) bsn%name, prog
-           write (5035,'(*(G0.3,:","))') chsalt_hdr
+           write (5035,'(*(G0.6,:","))') chsalt_hdr
          endif
        endif
      endif
@@ -572,7 +572,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5037, "channel_salt_aa.csv", 2000)
            write (5037,*) bsn%name, prog
-           write (5037,'(*(G0.3,:","))') chsalt_hdr
+           write (5037,'(*(G0.6,:","))') chsalt_hdr
          endif
        endif
      endif
@@ -602,7 +602,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5041, "reservoir_salt_day.csv", 2000)
            write (5041,*) bsn%name, prog
-           write (5041,'(*(G0.3,:","))') ressalt_hdr
+           write (5041,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif
@@ -632,7 +632,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5043, "reservoir_salt_mon.csv", 2000)
            write (5043,*) bsn%name, prog
-           write (5043,'(*(G0.3,:","))') ressalt_hdr
+           write (5043,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif
@@ -662,7 +662,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5045, "reservoir_salt_yr.csv", 2000)
            write (5045,*) bsn%name, prog
-           write (5045,'(*(G0.3,:","))') ressalt_hdr
+           write (5045,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif
@@ -692,7 +692,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5047, "reservoir_salt_aa.csv", 2000)
            write (5047,*) bsn%name, prog
-           write (5047,'(*(G0.3,:","))') ressalt_hdr
+           write (5047,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif 
@@ -730,7 +730,7 @@
            call open_output_file(5071, "rout_unit_salt_day.csv", 2000)
            write (5071,*) bsn%name, prog
            write (5071,*) 'all values in kg'
-           write (5071,'(*(G0.3,:","))') rusaltb_hdr
+           write (5071,'(*(G0.6,:","))') rusaltb_hdr
          endif
        endif
      endif
@@ -768,7 +768,7 @@
            call open_output_file(5073, "rout_unit_salt_mon.csv", 2000)
            write (5073,*) bsn%name, prog
            write (5073,*) 'all values in kg'
-           write (5073,'(*(G0.3,:","))') rusaltb_hdr
+           write (5073,'(*(G0.6,:","))') rusaltb_hdr
          endif
        endif
      endif
@@ -806,7 +806,7 @@
            call open_output_file(5075, "rout_unit_salt_yr.csv", 2000)
            write (5075,*) bsn%name, prog
            write (5075,*) 'all values in kg'
-           write (5075,'(*(G0.3,:","))') rusaltb_hdr
+           write (5075,'(*(G0.6,:","))') rusaltb_hdr
          endif
        endif
      endif
@@ -844,7 +844,7 @@
            call open_output_file(5077, "rout_unit_salt_aa.csv", 2000)
            write (5077,*) bsn%name, prog
            write (5077,*) 'all values in kg'
-           write (5077,'(*(G0.3,:","))') rusaltb_hdr
+           write (5077,'(*(G0.6,:","))') rusaltb_hdr
          endif
        endif
      endif 
@@ -874,7 +874,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5091, "wetland_salt_day.csv", 2000)
            write (5091,*) bsn%name, prog
-           write (5091,'(*(G0.3,:","))') ressalt_hdr
+           write (5091,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif
@@ -904,7 +904,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5093, "wetland_salt_mon.csv", 2000)
            write (5093,*) bsn%name, prog
-           write (5093,'(*(G0.3,:","))') ressalt_hdr
+           write (5093,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif
@@ -934,7 +934,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5095, "wetland_salt_yr.csv", 2000)
            write (5095,*) bsn%name, prog
-           write (5095,'(*(G0.3,:","))') ressalt_hdr
+           write (5095,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif
@@ -964,7 +964,7 @@
          if (pco%csvout == "y") then
            call open_output_file(5097, "wetland_salt_aa.csv", 2000)
            write (5097,*) bsn%name, prog
-           write (5097,'(*(G0.3,:","))') ressalt_hdr
+           write (5097,'(*(G0.6,:","))') ressalt_hdr
          endif
        endif
      endif

@@ -19,7 +19,7 @@
         if (pco%sd_chan%d == "y") then
           write (4800,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, chsd_d(ichan)
            if (pco%csvout == "y") then
-             write (4804,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
+             write (4804,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
              chsd_d(ichan)
            end if
         end if
@@ -34,7 +34,7 @@
           if (pco%sd_chan%m == "y") then
           write (4801,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, chsd_m(ichan)
           if (pco%csvout == "y") then
-            write (4805,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
+            write (4805,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
               chsd_m(ichan)
           end if
         end if
@@ -50,7 +50,7 @@
         if (pco%sd_chan%y == "y") then 
           write (4802,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, chsd_y(ichan)
           if (pco%csvout == "y") then
-           write (4806,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
+           write (4806,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
              chsd_y(ichan)
           end if
         end if
@@ -64,7 +64,7 @@
         if (pco%sd_chan%a == "y") then
         write (4803,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, chsd_a(ichan)
         if (pco%csvout == "y") then
-          write (4807,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
+          write (4807,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, &
             chsd_a(ichan)
         end if
        end if

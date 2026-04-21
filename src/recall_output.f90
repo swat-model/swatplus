@@ -22,7 +22,7 @@
           if (pco%recall%d == "y") then
             write (4600,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_d(irec)
             if (pco%csvout == "y") then
-              write (4604,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_d(irec)
+              write (4604,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_d(irec)
             end if
           end if
         end if
@@ -33,7 +33,7 @@
           if (pco%recall%m == "y") then
             write (4601,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_m(irec)
             if (pco%csvout == "y") then
-              write (4605,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_m(irec)
+              write (4605,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_m(irec)
             endif
           end if
           rec_m(irec) = hz
@@ -45,7 +45,7 @@
           if (pco%recall%y == "y") then
             write (4602,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_y(irec)
             if (pco%csvout == "y") then
-              write (4606,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_y(irec) 
+              write (4606,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_y(irec) 
             end if
           end if
           !! zero yearly variables        
@@ -57,7 +57,7 @@
           rec_a(irec) = rec_a(irec) / time%yrs_prt
             write (4603,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_a(irec)
             if (pco%csvout == "y") then 
-              write (4607,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, ob(iob)%name, ob(iob)%typ, rec_a(irec)  
+              write (4607,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ob(iob)%name, ob(iob)%typ, rec_a(irec)  
             end if 
           end if
 

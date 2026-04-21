@@ -63,7 +63,7 @@
                          (ru_hru_saltb_d(iru)%salt(isalt)%uptk,isalt=1,cs_db%num_salts), &
                           ru_hru_saltb_d(iru)%salt(1)%diss       
         if (pco%csvout == "y") then
-          write (5071,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+          write (5071,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                                                             (rusaltb_d(iru)%hd(1)%salt(isalt),isalt=1,cs_db%num_salts), &
                                         (rusaltb_d(iru)%hd(2)%salt(isalt),isalt=1,cs_db%num_salts), &
                                         (rusaltb_d(iru)%hd(3)%salt(isalt),isalt=1,cs_db%num_salts), &
@@ -138,7 +138,7 @@
                            (ru_hru_saltb_m(iru)%salt(isalt)%uptk,isalt=1,cs_db%num_salts), &
                             ru_hru_saltb_m(iru)%salt(1)%diss
           if (pco%csvout == "y") then
-            write (5073,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+            write (5073,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                           (rusaltb_m(iru)%hd(1)%salt(isalt),isalt=1,cs_db%num_salts), &
                                           (rusaltb_m(iru)%hd(2)%salt(isalt),isalt=1,cs_db%num_salts), &
                                           (rusaltb_m(iru)%hd(3)%salt(isalt),isalt=1,cs_db%num_salts), &
@@ -213,7 +213,7 @@
                            (ru_hru_saltb_y(iru)%salt(isalt)%uptk,isalt=1,cs_db%num_salts), &
                             ru_hru_saltb_y(iru)%salt(1)%diss
           if (pco%csvout == "y") then
-            write (5075,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+            write (5075,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                           (rusaltb_y(iru)%hd(1)%salt(isalt),isalt=1,cs_db%num_salts), &
                                           (rusaltb_y(iru)%hd(2)%salt(isalt),isalt=1,cs_db%num_salts), &
                                           (rusaltb_y(iru)%hd(3)%salt(isalt),isalt=1,cs_db%num_salts), &
@@ -286,7 +286,7 @@
                          (ru_hru_saltb_a(iru)%salt(isalt)%uptk,isalt=1,cs_db%num_salts), &
                           ru_hru_saltb_a(iru)%salt(1)%diss
         if (pco%csvout == "y") then
-          write (5077,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+          write (5077,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                         (rusaltb_a(iru)%hd(1)%salt(isalt),isalt=1,cs_db%num_salts), &
                                         (rusaltb_a(iru)%hd(2)%salt(isalt),isalt=1,cs_db%num_salts), &
                                         (rusaltb_a(iru)%hd(3)%salt(isalt),isalt=1,cs_db%num_salts), &
