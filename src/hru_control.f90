@@ -381,16 +381,16 @@
           !call nut_nitvol
         end if
 
-        !! compute residue decomposition and nitrogen and phosphorus mineralization
-        if (bsn_cc%cswat == 2) then
-          if (bmix_eff > 1.e-6) call mgt_newtillmix (ihru, bmix_eff, 0)
-          !! compute surface residue decomposition for each plant in community
-          call cbn_surfrsd_decomp
-          !! compute soil residue (roots and tilled in) decomposition
-          call cbn_rsd_decomp      ! added by JC and FG, modified from nut_minrln.f90
-          !! compute mineralization and carbon pool transformations
-          call cbn_zhang2
-        end if
+        ! !! compute residue decomposition and nitrogen and phosphorus mineralization
+        ! if (bsn_cc%cswat == 2) then
+        !   if (bmix_eff > 1.e-6) call mgt_newtillmix (ihru, bmix_eff, 0)
+        !   !! compute surface residue decomposition for each plant in community
+        !   call cbn_surfrsd_decomp
+        !   !! compute soil residue (roots and tilled in) decomposition
+        !   call cbn_rsd_decomp      ! added by JC and FG, modified from nut_minrln.f90
+        !   !! compute mineralization and carbon pool transformations
+        !   call cbn_zhang2
+        ! end if
 
         if (bsn_cc%cswat == 3) then
           if (bmix_eff > 1.e-6 .and. tillage_switch(ihru) == 0) call mgt_biomix (ihru, bmix_eff)
