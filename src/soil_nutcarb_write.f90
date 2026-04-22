@@ -202,10 +202,10 @@
             else
               frac_above_300 = 0.0
             endif
-            if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then
+            if (bsn_cc%cswat == 0) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
             endif
-            if(bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+            if(bsn_cc%cswat == 1 ) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + soil1(j)%tot(ly)%c * frac_above_300 
             endif
           end do
@@ -244,11 +244,11 @@
             else
               frac_above_300 = 0.0
             endif
-            if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then
+            if (bsn_cc%cswat == 0) then
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
               soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             endif
-            if(bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+            if(bsn_cc%cswat == 1 ) then
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300 
             endif
           end do
@@ -270,8 +270,8 @@
           end if
           print_soil_lyr_depths = .false.
           
-          !write the cswat == 2  or 3 related files. 
-          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+          !write the cswat == 1 files. 
+          if (bsn_cc%cswat == 1 ) then
             !write all organic carbon for the residue file = "hru_rsdc_stat.txt/csv"
             if (layer_output) then
               profile_depth = int(soil(j)%phys(soil(j)%nly)%d)

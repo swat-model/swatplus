@@ -45,7 +45,7 @@
       
       rtof = man_coef%rtof
       !! calculate c:n ratio for manure applications for SWAT-C
-      if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+      if (bsn_cc%cswat == 1 ) then
         if (fertdb(ifrt)%forgn > 0. .or. fertdb(ifrt)%forgp > 0. ) then
           manure_flag = .true.
         endif
@@ -104,14 +104,14 @@
         end if
         
         !! for C-FARM add to manure pool - assume C:N ratio = 10
-        if (bsn_cc%cswat == 1) then
-          soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg * fertdb(ifrt)%forgn * 10.
-          soil1(j)%man(l)%n = soil1(j)%man(l)%n + fr_ly * frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%man(l)%p = soil1(j)%man(l)%p + fr_ly * frt_kg * fertdb(ifrt)%forgp
-        end if
+        ! if (bsn_cc%cswat == 1) then
+        !   soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg * fertdb(ifrt)%forgn * 10.
+        !   soil1(j)%man(l)%n = soil1(j)%man(l)%n + fr_ly * frt_kg * fertdb(ifrt)%forgn
+        !   soil1(j)%man(l)%p = soil1(j)%man(l)%p + fr_ly * frt_kg * fertdb(ifrt)%forgp
+        ! end if
 
         !! for SWAT-C add to slow humus pool and fresh residue pools
-        if ((bsn_cc%cswat == 2  .or. bsn_cc%cswat == 3 ) .and. manure_flag) then
+        if ((bsn_cc%cswat == 1 ) .and. manure_flag) then
           
           !! add 1-rtof to slow humus pool
           pool_fr = (1. - rtof) * fr_ly

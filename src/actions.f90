@@ -365,10 +365,10 @@
             if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
               idtill = d_tbl%act_typ(iac)
               ipl = 1
-              if (bsn_cc%cswat == 3) then
-                call mgt_newtillmix_3(j, 0., idtill)
+              if (bsn_cc%cswat == 1) then
+                call mgt_newtillmix_cswat1(j, 0., idtill)
               else
-                call mgt_newtillmix(j, 0., idtill)
+                call mgt_newtillmix_cswat0(j, 0., idtill)
               endif
             
               if (pco%mgtout == "y") then
@@ -943,10 +943,10 @@
               if (wet_ob(j)%depth > 0.001) then
                 call mgt_newtillmix_wet(j,idtill) 
               else
-                if (bsn_cc%cswat == 3) then
-                  call mgt_newtillmix_3(j,0.,idtill) 
+                if (bsn_cc%cswat == 1) then
+                  call mgt_newtillmix_cswat1(j,0.,idtill) 
                 else
-                  call mgt_newtillmix(j,0.,idtill) 
+                  call mgt_newtillmix_cswat0(j,0.,idtill) 
                 endif
               endif
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
