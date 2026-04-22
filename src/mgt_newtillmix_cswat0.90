@@ -1,4 +1,4 @@
-      subroutine mgt_newtillmix (jj, bmix, idtill)
+      subroutine mgt_newtillmix_cswat0 (jj, bmix, idtill)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine mixes residue and nutrients during tillage and 
@@ -278,4 +278,4 @@
         endif
       end if
       return
-      end subroutine mgt_newtillmix
+      end subroutine mgt_newtillmix_cswat0
