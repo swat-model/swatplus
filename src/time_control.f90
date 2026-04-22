@@ -332,8 +332,8 @@
           end if
         
           !! compute biological mixing at the end of every year
-          if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then  !! fg added this because when cswat == 2 or cswat == 3, biomixing occurs every day that the soil layer is above freezing not at the end of the year.
-            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
+          if (bsn_cc%cswat == 0) then  !! fg added this because when cswat == 1, biomixing occurs every day that the soil layer is above freezing not at the end of the year.
+            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix_cswat0 (j, hru(j)%hyd%biomix, 0)
           end if
 
           !! update sequence number for year in rotation to that of
