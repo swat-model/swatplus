@@ -214,7 +214,7 @@
             "freq           jday         mon         day        year        unit hru     name               300_sum", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
           endif 
 
-          if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then
+          if (bsn_cc%cswat  == 0 ) then
             do ly = 1, soil(j)%nly
               soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             end do

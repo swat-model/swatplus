@@ -59,7 +59,7 @@
       !!added by zhang
       !!======================  
 
-      if (bsn_cc%cswat >= 0) then
+      if (bsn_cc%cswat == 1 ) then
         wet(j)%no3 = wet(j)%no3 + frt_kg * (1. - fertdb(ifrt)%fnh3n) * fertdb(ifrt)%fminn
         wet(j)%nh3 = wet(j)%nh3 + frt_kg * fertdb(ifrt)%fnh3n * fertdb(ifrt)%fminn
         wet(j)%solp = wet(j)%solp + frt_kg * fertdb(ifrt)%fminp

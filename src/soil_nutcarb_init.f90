@@ -20,9 +20,6 @@
       real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
       real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
       real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
-      real :: frac_hum_microb = 0.      !0-1        |fraction of humus in microbial pool - CENTURY
-      real :: frac_hum_slow = 0.        !0-1        |fraction of humus in slow pool - CENTURY
-      real :: frac_hum_passive = 0.     !0-1        |fraction of humus in passive pool - CENTURY
       real :: actp = 0.
       real :: solp = 0.
       real :: ssp = 0.

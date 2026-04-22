@@ -45,7 +45,6 @@
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
       integer :: ipl = 0               !               |
-      real :: prev_depth = 0.
       real :: emix = 0.                !none           |mixing efficiency
       real :: dtil = 0.                !mm             |depth of mixing
       real :: frac_mixed = 0.          !               |
@@ -105,7 +104,7 @@
         bio_mix_event = .true.
       else 
         !! tillage operation
-        bio_mix_event = .false
+        bio_mix_event = .false.
         emix = tilldb(idtill)%effmix
         dtil = tilldb(idtill)%deptil
         tillage_days(jj) = 0
