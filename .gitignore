@@ -20,6 +20,7 @@ Makefile
 *.cache
 *.ilk
 *.log
+*.vscode/
 [Bb]in
 [Dd]ebug*/
 *.lib

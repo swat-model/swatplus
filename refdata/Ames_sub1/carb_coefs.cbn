@@ -1,4 +1,4 @@
-File: carb_coefs.cbn   Carbon coefficients used if cswat == 2
+File: carb_coefs.cbn   Carbon coefficients used if cswat == 1
 
 # carbdb coefficients
 #               1st_lyr     other_lyrs
@@ -12,10 +12,14 @@ hs_hp           0.05        0.05
 
 # org_allo coefficients
 #               1st_lyr     other_lyrs
-a1co2           0.600       0.55
+a1co2           0.60        0.55
 asco2           0.55        0.55
 apco2           0.55        0.55 
 abco2           0.55        0.0
+
+# organic fractions used to initialize soil carbon into various pools 
+#               frac_seq    frac_hum_microb     frac_hum_slow   frac_hum_passive
+org_frac        0.95        0.02                0.54            0.44 
 
 # carbon water partitioning coefficients
 prmt_21         1000.   
@@ -30,15 +34,15 @@ man_to_c    0.42
 
 # temperature effect equation parameters
 tn             -0.5
-top            35.0
+top            30.0
 tx             50.0
 
 # bio and tillage mixing coeffients in mgt_tillfactor.f90
 zz_bmix_coefs   3.0   5.0    -5.5
-zz_emix_coefs   3.0   10.0   -5.5
+zz_emix_coefs   3.0   15.0   -5.5
 
 # Surface residue photo degradtion factor.
-photo_degrade_factor    .01
+photo_degrade_factor    .001
 
 # Soil Test Values for each layer
 # soil_name and depth_mm are required, enter -1 for other values if missing.
