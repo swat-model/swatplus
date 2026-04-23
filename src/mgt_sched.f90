@@ -22,7 +22,8 @@
       implicit none
       
       external :: cs_fert, cs_fert_wet, curno, mgt_harvbiomass, mgt_harvgrain, mgt_harvresidue, &
-                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_3, mgt_newtillmix_wet, mgt_plantop, pest_apply, &
+                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_cswat0, mgt_newtillmix_cswat1, &
+                  mgt_newtillmix_wet, mgt_plantop, pest_apply, &
                   pl_burnop, pl_fert, pl_fert_wet, pl_manure, salt_fert, salt_fert_wet, chg_par, &
                   mgt_transplant
       

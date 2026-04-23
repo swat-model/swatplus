@@ -59,7 +59,7 @@
       
       external :: actions, aqu_pest_output_init, basin_sw_init, calsoft_ave_output, calsoft_sum_output, &
                   cli_atmodep_time_control, cli_precip_control, climate_control, command, conditions, &
-                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix
+                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix_cswat0
 
       integer :: j = 0               !none          |counter
       integer :: julian_day = 0      !none          |counter
