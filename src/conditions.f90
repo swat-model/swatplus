@@ -238,6 +238,15 @@
           ivar_cur = pcom(ob_num)%days_harv
           ivar_tbl = int(d_tbl%cond(ic)%lim_const)
           call cond_integer (ic, ivar_cur, ivar_tbl)
+          ! For pl_hv_covercrop only (use when New Year carryover can false-trigger):
+          ! if days_harv > (time%day + X), block this ">" hit as stale carryover.
+          if (trim(adjustl(d_tbl%name)) == "pl_hv_covercrop") then
+            do ialt = 1, d_tbl%alts
+              if (d_tbl%alt(ic,ialt) == ">" .and. d_tbl%act_hit(ialt) == "y") then
+                if (ivar_cur > (time%day + ivar_tbl)) d_tbl%act_hit(ialt) = "n"
+              end if
+            end do
+          end if
                                          
         !days since last irrigation
         case ("days_irr")
