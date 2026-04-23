@@ -145,12 +145,12 @@
             if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
             if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
 
-            soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%m
-            soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_3_part_fracs(idp)%str_frac_abg * decomp%m
-            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%m
-            soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_3_part_fracs(idp)%meta_frac_abg * decomp%c
-            soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_3_part_fracs(idp)%str_frac_abg * decomp%c
-            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_3_part_fracs(idp)%lig_frac_abg * decomp%c
+            soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%m
+            soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_1_part_fracs(idp)%str_frac_abg * decomp%m
+            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%m
+            soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%c
+            soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_1_part_fracs(idp)%str_frac_abg * decomp%c
+            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%c
             
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
