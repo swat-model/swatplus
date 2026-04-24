@@ -20,7 +20,7 @@
         real :: str_frac_blg = 0.15   !none       |fraction of below ground (blg) biomass that is structural
         real :: lig_frac_blg = 0.12   !none       |fraction of below ground (blg) biomass that is lignin    
       end type lignin_derived_partition_fracs
-      type(lignin_derived_partition_fracs), dimension(:),allocatable, target, save ::  cswat_3_part_fracs
+      type(lignin_derived_partition_fracs), dimension(:),allocatable, target, save ::  cswat_1_part_fracs
 
 
       type plant_db

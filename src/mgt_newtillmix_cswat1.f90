@@ -1,4 +1,4 @@
-      subroutine mgt_newtillmix_3 (jj, bmix, idtill)
+      subroutine mgt_newtillmix_cswat1(jj, bmix, idtill)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine mixes residue and nutrients during tillage and 
@@ -245,4 +245,4 @@
       deallocate (sol_msn)    
       deallocate (frac_dep)    
       return
-      end subroutine mgt_newtillmix_3
+      end subroutine mgt_newtillmix_cswat1

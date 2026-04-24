@@ -72,33 +72,34 @@
             (1. - fertdb(ifrt)%fnh3n) * fertdb(ifrt)%fminn
 
         if (bsn_cc%cswat == 0) then
-        soil1(j)%tot(l)%n = soil1(j)%tot(l)%n + rtof * xx * frt_kg *   &
-                       fertdb(ifrt)%forgn
-        soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * xx * &
-            frt_kg * fertdb(ifrt)%forgn
-        soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx * frt_kg *   &
-                       fertdb(ifrt)%forgp
-        soil1(j)%hsta(l)%p = soil1(j)%hsta(l)%p + (1. - rtof)*xx*frt_kg *  &
-                       fertdb(ifrt)%forgp
+          soil1(j)%tot(l)%n = soil1(j)%tot(l)%n + rtof * xx * frt_kg *   &
+                        fertdb(ifrt)%forgn
+          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * xx * &
+              frt_kg * fertdb(ifrt)%forgn
+          soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx * frt_kg *   &
+                        fertdb(ifrt)%forgp
+          soil1(j)%hsta(l)%p = soil1(j)%hsta(l)%p + (1. - rtof)*xx*frt_kg *  &
+                        fertdb(ifrt)%forgp
         end if
-      if (bsn_cc%cswat == 1) then
-      soil1(j)%man(l)%c = soil1(j)%man(l)%c + xx * frt_kg *            &
-            fertdb(ifrt)%forgn * 10.
-      soil1(j)%man(l)%n = soil1(j)%man(l)%n + xx * frt_kg *            &
-            fertdb(ifrt)%forgn
-      soil1(j)%man(l)%p = soil1(j)%man(l)%p + xx * frt_kg *            &
-            fertdb(ifrt)%forgp
-      end if
+
+        if (bsn_cc%cswat == 1) then
+          soil1(j)%man(l)%c = soil1(j)%man(l)%c + xx * frt_kg *            &
+                fertdb(ifrt)%forgn * 10.
+          soil1(j)%man(l)%n = soil1(j)%man(l)%n + xx * frt_kg *            &
+                fertdb(ifrt)%forgn
+          soil1(j)%man(l)%p = soil1(j)%man(l)%p + xx * frt_kg *            &
+                fertdb(ifrt)%forgp
+        end if
 
         !!By Zhang for C/N cycling 
         !!===========================
-      if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
-        soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx *           &
-            frt_kg * fertdb(ifrt)%forgp
-        soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * xx *      &
-            frt_kg * fertdb(ifrt)%forgp
-        
-        !!allocate organic fertilizer to Slow N pool;
+        if (bsn_cc%cswat == 1 ) then
+          soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx *           &
+              frt_kg * fertdb(ifrt)%forgp
+          soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * xx *      &
+              frt_kg * fertdb(ifrt)%forgp
+          
+          !!allocate organic fertilizer to Slow N pool;
           soil1(j)%hs(l)%n = soil1(j)%hs(l)%n + (1. - rtof) * xx *    &
                         frt_kg * fertdb(ifrt)%forgn
         
@@ -134,7 +135,7 @@
           
           
           soil1(j)%meta(l)%n = soil1(j)%meta(l)%n + ZZ
-           
+          
           !! remaining organic N is llocated to structural litter N pool
           soil1(j)%str(l)%n = soil1(j)%str(l)%n + X1 * fertdb(ifrt)%forgn - ZZ
           !XZ is the amount of organic carbon allocated to structural litter C pool   
@@ -153,8 +154,8 @@
           !update lignin weight in structural litter.
           soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ * .175
           !soil1(j)%rsd(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
-          
-      end if
+            
+        end if
         !!By Zhang for C/N cycling 
         !!=========================== 
 
@@ -163,7 +164,6 @@
 
         soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab + xx * frt_kg *          & 
             fertdb(ifrt)%fminp
-
       end do 
 
 !! summary calculations

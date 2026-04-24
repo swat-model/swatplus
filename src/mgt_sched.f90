@@ -22,7 +22,8 @@
       implicit none
       
       external :: cs_fert, cs_fert_wet, curno, mgt_harvbiomass, mgt_harvgrain, mgt_harvresidue, &
-                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_3, mgt_newtillmix_wet, mgt_plantop, pest_apply, &
+                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_cswat0, mgt_newtillmix_cswat1, &
+                  mgt_newtillmix_wet, mgt_plantop, pest_apply, &
                   pl_burnop, pl_fert, pl_fert_wet, pl_manure, salt_fert, salt_fert_wet, chg_par, &
                   mgt_transplant
       
@@ -327,10 +328,10 @@
           case ("till")   !! tillage operation
             idtill = mgt%op1
             ipl = Max(1, mgt%op2)
-            if (bsn_cc%cswat == 3) then
-              call mgt_newtillmix_3(j, 0., idtill)
+            if (bsn_cc%cswat == 1) then
+              call mgt_newtillmix_cswat1(j, 0., idtill)
             else
-              call mgt_newtillmix(j, 0., idtill)
+              call mgt_newtillmix_cswat0(j, 0., idtill)
             endif
             
             if (pco%mgtout == "y") then
@@ -592,10 +593,10 @@
             if (wet_ob(j)%depth > 0.001) then
               call mgt_newtillmix_wet(j,idtill) 
             else
-              if (bsn_cc%cswat == 3) then
-                call mgt_newtillmix_3(j, 0., idtill)
+              if (bsn_cc%cswat == 1) then
+                call mgt_newtillmix_cswat1(j, 0., idtill)
               else
-                call mgt_newtillmix(j, 0., idtill)
+                call mgt_newtillmix_cswat0(j, 0., idtill)
               endif
             endif
             if (pco%mgtout == "y") then
