@@ -221,7 +221,7 @@
         end do    !! read and store data
         
         !! save end year of recall data
-        recall(i)%end_yr = iyr
+        recall(irec)%end_yr = iyr
         close (108)
         
       end if    !! if new org mineral, then read
