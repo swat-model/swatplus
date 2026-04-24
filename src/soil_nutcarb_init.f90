@@ -20,9 +20,6 @@
       real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
       real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
       real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
-      real :: frac_hum_microb = 0.      !0-1        |fraction of humus in microbial pool - CENTURY
-      real :: frac_hum_slow = 0.        !0-1        |fraction of humus in slow pool - CENTURY
-      real :: frac_hum_passive = 0.     !0-1        |fraction of humus in passive pool - CENTURY
       real :: actp = 0.
       real :: solp = 0.
       real :: ssp = 0.
@@ -142,7 +139,7 @@
           soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         end if
         
-        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+        if (bsn_cc%cswat == 1 ) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
           org_frac%frac_not_seq = 1.0 -.95
 
@@ -187,8 +184,8 @@
             
         end if
 
-          soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
-          soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+        soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+        soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
 
       end do   !! end soil layer loop 
 

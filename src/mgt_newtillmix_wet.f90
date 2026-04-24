@@ -136,7 +136,7 @@
 
             !!by zhang
             !!============== 
-          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then         
+          if (bsn_cc%cswat == 1) then         
               smix(20+npmx+1) = smix(20+npmx+1) + soil1(jj)%str(l)%c * frac_mixed
               smix(20+npmx+2) = smix(20+npmx+2) + soil1(jj)%lig(l)%c * frac_mixed
               smix(20+npmx+3) = smix(20+npmx+3) + soil1(jj)%lig(l)%n* frac_mixed
@@ -196,7 +196,7 @@
           end do
 
 
-          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then         
+          if (bsn_cc%cswat == 1) then         
             soil1(jj)%str(l)%c = soil1(jj)%str(l)%c * frac_non_mixed + smix(20+npmx+1) * frac_dep(l)
             soil1(jj)%lig(l)%c = soil1(jj)%lig(l)%c * frac_non_mixed + smix(20+npmx+2) * frac_dep(l)
             soil1(jj)%lig(l)%n = soil1(jj)%lig(l)%n * frac_non_mixed + smix(20+npmx+3) * frac_dep(l)

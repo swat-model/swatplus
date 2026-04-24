@@ -59,7 +59,7 @@
       
       external :: actions, aqu_pest_output_init, basin_sw_init, calsoft_ave_output, calsoft_sum_output, &
                   cli_atmodep_time_control, cli_precip_control, climate_control, command, conditions, &
-                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix
+                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix_cswat0
 
       integer :: j = 0               !none          |counter
       integer :: julian_day = 0      !none          |counter
@@ -332,8 +332,8 @@
           end if
         
           !! compute biological mixing at the end of every year
-          if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then  !! fg added this because when cswat == 2 or cswat == 3, biomixing occurs every day that the soil layer is above freezing not at the end of the year.
-            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
+          if (bsn_cc%cswat == 0) then  !! fg added this because when cswat == 1, biomixing occurs every day that the soil layer is above freezing not at the end of the year.
+            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix_cswat0 (j, hru(j)%hyd%biomix, 0)
           end if
 
           !! update sequence number for year in rotation to that of

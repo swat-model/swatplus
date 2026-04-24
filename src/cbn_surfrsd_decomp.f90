@@ -32,16 +32,18 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru
+      use hru_module, only : ihru 
       use soil_module
       use plant_module
       use plant_data_module
       use output_landscape_module, only : hnb_d
       
       implicit none 
+       
+      external :: fcgd
 
+      real :: fcgd
       integer :: j = 0      !none          |HRU number
-      integer :: k = 0      !none          |counter (soil layer)
       real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
                             !              |to nitrate(80%) and active organic(20%)
                             !              |pools in layer
@@ -60,7 +62,6 @@
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
-      k = 1
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
@@ -74,16 +75,21 @@
       !! compute root and incorporated residue decomposition
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
-          !! mineralization can occur only if temp above 0 deg
+          ! mineralization can occur only if temp above 0 deg
+          photo_decomp = photo_degrade_factor * pl_mass(j)%rsd(ipl) 
+          pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
+          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
           if (soil(j)%phys(1)%tmp > 0.) then
-            !! compute soil water factor
+            
             sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
             sut = Max(.05, sut)
 
             !!compute soil temperature factor
+            ! cdg = fcgd(soil(j)%tmp_srf)
             xx = soil(j)%phys(1)%tmp
             cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
             cdg = Max(.1, cdg)
+            !! compute soil water factor
 
             !! compute combined factor
             xx = cdg * sut
@@ -126,28 +132,27 @@
             if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
             if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
 
-            !! add mass and carbon to soil organic pools
-            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * decomp%m
-            soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * decomp%m
-            soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * decomp%m
-            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * decomp%c
-            soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * decomp%c
-            soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * decomp%c
+            soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%m
+            soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_1_part_fracs(idp)%str_frac_abg * decomp%m
+            soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%m
+            soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%c
+            soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_1_part_fracs(idp)%str_frac_abg * decomp%c
+            soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%c
             
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            rsd_meta%n = decomp%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
+            rsd_meta%n = decomp%n - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
+            soil1(j)%meta(1)%n = soil1(j)%meta(1)%n + rsd_meta%n
             rsd_str%n = decomp%n - rsd_meta%n
-            soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
-            soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
+            soil1(j)%str(1)%n = soil1(j)%str(1)%n + rsd_str%n
+            soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + lig_frac * rsd_str%n
             
-            rsd_meta%p = decomp%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
+            rsd_meta%p = decomp%p - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
+            soil1(j)%meta(1)%p = soil1(j)%meta(1)%p + rsd_meta%p
             rsd_str%p = decomp%p - rsd_meta%p
-            soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
-            soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            soil1(j)%str(1)%p = soil1(j)%str(1)%p + rsd_str%p
+            soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + lig_frac * rsd_str%p
             
           end if    ! soil temp > 0
           
