@@ -117,26 +117,27 @@
       istep = 0
       idaystep = 0
 
-      do 
-        open (108,file = recall_db(irec)%org_min%name)
-        read (108,*,iostat=eof) titldum
-        if (eof < 0) exit
-        read (108,*,iostat=eof) nbyr
-        if (eof < 0) exit
-        read (108,*,iostat=eof) header
-        exit 
-      end do
-        
-      !! check if the org mineral has already been used in a previous recall object
-      do iprev = 1, irec
-        if (recall_db(irec)%org_min%name == recall_db(irec)%org_min%name) then
-          recall_db(irec)%iorg_min = iprev
+      !! Set pointer to org_min with same name as current record.
+      recall_db(irec)%iorg_min = irec
+      !! Loop through previous records to find org_min with same name and set pointer to that record if found.
+      do iprev = 1, irec - 1
+        if (recall_db(irec)%org_min%name == recall_db(iprev)%org_min%name) then
+          recall_db(irec)%iorg_min = recall_db(iprev)%iorg_min
           exit
         end if
       end do
-          
-      !! if new org mineral, then read
+
       if (recall_db(irec)%iorg_min == irec) then
+        !! Read header to get nbyr and time-step type before allocating arrays.
+        do 
+          open (108,file = recall_db(irec)%org_min%name)
+          read (108,*,iostat=eof) titldum
+          if (eof < 0) exit
+          read (108,*,iostat=eof) nbyr
+          if (eof < 0) exit
+          read (108,*,iostat=eof) header
+          exit 
+        end do
                 
         select case (recall_db(irec)%org_min%tstep)
             
