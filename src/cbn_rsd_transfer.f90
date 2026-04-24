@@ -47,11 +47,6 @@
       real :: idp = 0.      !              |plant number in plant data module
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
-      real :: starting_n
-      real :: starting_p
-      real :: ending_n
-      real :: ending_p
-
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
@@ -80,9 +75,9 @@
             if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
             if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
 
-            soil1(j)%meta(k) = soil1(j)%meta(k) + cswat_3_part_fracs(idp)%meta_frac_blg * transfer
-            soil1(j)%str(k)  = soil1(j)%str(k)  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer
-            soil1(j)%lig(k)  = soil1(j)%lig(k)  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer
+            soil1(j)%meta(k) = soil1(j)%meta(k) + cswat_1_part_fracs(idp)%meta_frac_blg * transfer
+            soil1(j)%str(k)  = soil1(j)%str(k)  + cswat_1_part_fracs(idp)%str_frac_blg  * transfer
+            soil1(j)%lig(k)  = soil1(j)%lig(k)  + cswat_1_part_fracs(idp)%lig_frac_blg  * transfer
             
           end if    ! soil temp > 0
           
