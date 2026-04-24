@@ -324,13 +324,19 @@
 
       ich = isdch
             
-      !! allocate water for transfers that don't include a channel as a source
+      !! Execute scheduled transfers sourced from this channel (ich) for each
+      !! water allocation object; stop when trn_cur is exhausted or points
+      !! to a different source channel.
       if (db_mx%wallo_db > 0) then
         do iwallo = 1, db_mx%wallo_db
-          do while (wallo(iwallo)%trn(wallo(iwallo)%trn_cur)%ch_src == ich)
+          do while (wallo(iwallo)%trn_cur > 0)
+            !! All transfers for this object have been processed.
+            if (wallo(iwallo)%trn_cur > wallo(iwallo)%trn_obs) exit
+            !! Next transfer belongs to a different source channel.
+            if (wallo(iwallo)%trn(wallo(iwallo)%trn_cur)%ch_src /= ich) exit
             iw = iwallo
-            trn_m3 = ht2%flo
-            if (wallo(iwallo)%trn_cur <= wallo(iwallo)%trn_obs) call wallo_control (iw)
+            trn_m3 = ht2%flo   !available supply (m3) for this transfer
+            call wallo_control (iw)
           end do
         end do
       end if
