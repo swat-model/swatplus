@@ -43,10 +43,14 @@
       integer :: j = 0      !none          |HRU number
       integer :: k = 0      !none          |counter (soil layer)
       real :: decr = 0.     !              |
-      real :: ipl = 0.      !              |plant number in plant community
+      integer :: ipl = 0.      !              |plant number in plant community
       real :: idp = 0.      !              |plant number in plant data module
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
+      real :: starting_n
+      real :: starting_p
+      real :: ending_n
+      real :: ending_p
 
       j = ihru
       nactfr = .02
@@ -59,7 +63,6 @@
       hnb_d(j)%rsd_laborg_p = 0.
 
       !! compute root and incorporated residue decomposition
-      !! compute humus mineralization of organic soil pools 
       do k = 1, soil(j)%nly
 
         do ipl = 1, pcom(j)%npl
@@ -77,43 +80,9 @@
             if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
             if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
 
-            !! add mass and carbon to soil organic pools
-            ! soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + pldb(idp)%res_part_fracs%meta_frac * transfer%m
-            ! soil1(j)%str(k)%m = soil1(j)%str(k)%m + pldb(idp)%res_part_fracs%str_frac * transfer%m
-            ! soil1(j)%lig(k)%m = soil1(j)%lig(k)%m + pldb(idp)%res_part_fracs%lig_frac * transfer%m
-            ! soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + pldb(idp)%res_part_fracs%meta_frac * transfer%c
-            ! soil1(j)%str(k)%c = soil1(j)%str(k)%c + pldb(idp)%res_part_fracs%str_frac * transfer%c
-            ! soil1(j)%lig(k)%c = soil1(j)%lig(k)%c + pldb(idp)%res_part_fracs%lig_frac * transfer%c
-            
-            soil1(j)%meta(k)%m = soil1(j)%meta(k)%m + cswat_3_part_fracs(idp)%meta_frac_blg * transfer%m
-            soil1(j)%str(k)%m  = soil1(j)%str(k)%m  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer%m
-            soil1(j)%lig(k)%m  = soil1(j)%lig(k)%m  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer%m
-            soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_3_part_fracs(idp)%meta_frac_blg * transfer%c
-            soil1(j)%str(k)%c  = soil1(j)%str(k)%c  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer%c
-            soil1(j)%lig(k)%c  = soil1(j)%lig(k)%c  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer%c
-            
-            !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
-            !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
-            !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            if (soil1(j)%meta(k)%c > 1.e-6) then
-              rsd_meta%n = transfer%n - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            else
-              rsd_meta%n = 0. 
-            end if
-            soil1(j)%meta(k)%n = soil1(j)%meta(k)%n + rsd_meta%n
-            rsd_str%n = transfer%n - rsd_meta%n
-            soil1(j)%str(k)%n = soil1(j)%str(k)%n + rsd_str%n
-            soil1(j)%lig(k)%n = soil1(j)%lig(k)%n + lig_frac * rsd_str%n
-            
-            if (soil1(j)%meta(k)%c > 1.e-6) then
-              rsd_meta%p = transfer%p - soil1(j)%str(k)%c / (15. * soil1(j)%meta(k)%c)
-            else
-              rsd_meta%p = 0.  
-            end if
-            soil1(j)%meta(k)%p = soil1(j)%meta(k)%p + rsd_meta%p
-            rsd_str%p = transfer%p - rsd_meta%p
-            soil1(j)%str(k)%p = soil1(j)%str(k)%p + rsd_str%p
-            soil1(j)%lig(k)%p = soil1(j)%lig(k)%p + lig_frac * rsd_str%p
+            soil1(j)%meta(k) = soil1(j)%meta(k) + cswat_3_part_fracs(idp)%meta_frac_blg * transfer
+            soil1(j)%str(k)  = soil1(j)%str(k)  + cswat_3_part_fracs(idp)%str_frac_blg  * transfer
+            soil1(j)%lig(k)  = soil1(j)%lig(k)  + cswat_3_part_fracs(idp)%lig_frac_blg  * transfer
             
           end if    ! soil temp > 0
           
