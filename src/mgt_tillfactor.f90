@@ -79,12 +79,8 @@
           end if
 
           csdr = xx + emix
-          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then                                       !! fg added this to do bio_mixing on a daily basis
-            if (soil(jj)%phys(l)%tmp <= 0. .and. bio_mix_event) then 
-              soil(jj)%ly(l)%tillagef = 0.
-            else
-              soil(jj)%ly(l)%tillagef = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
-            endif
+          if (soil(jj)%phys(l)%tmp <= 0. .and. bio_mix_event) then 
+            soil(jj)%ly(l)%tillagef = 0.
           else
             soil(jj)%ly(l)%tillagef = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
           endif

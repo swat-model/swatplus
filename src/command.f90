@@ -523,7 +523,7 @@
         if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write(" y") 
         if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write("yl") 
         ! if (pco%cb_hru%a == "y" .and. time%end_yr == 1) call soil_nutcarb_write("a")
-        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+        if (bsn_cc%cswat == 1) then
           if (pco%cb_vars_hru%d == "y") call soil_carbvar_write(" d")
           if (pco%cb_vars_hru%d == "l") call soil_carbvar_write("dl")
           if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write(" m")
