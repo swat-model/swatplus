@@ -75,6 +75,7 @@
             xx1 = yy ** exp_w(-0.13 + 1.06 * yy)
             ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmatic error that is ignored by intel but not by gfortran
             xx2 = exp_w(0.64 + 0.64 * yy ** 10.)
+            if (xx2 > 10.) xx2 = 10.
             xx = xx1 * xx2
           end if
 
