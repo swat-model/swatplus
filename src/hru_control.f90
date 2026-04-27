@@ -51,7 +51,7 @@
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
                   sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
-                  mgt_newtillmix_3, cbn_surfrsd_decomp, cbn_rsd_transfer, cbn_surfrsd_decomp_3, mgt_biomix
+                  mgt_newtillmix_cswat3, cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
