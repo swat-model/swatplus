@@ -109,11 +109,6 @@
 
       bmix = biomix_eff
 
-      ! intialize soil emix and tillagef to 0.
-      ! do l = 1, soil(jj)%nly
-      !   soil1(jj)%emix(l) = 0.
-      !   soil(jj)%ly(l)%tillagef = 0.
-      ! enddo
       ! Adjust biomix efficency linearly by days since last tillage 
       if (tillage_switch(jj) == 1) then
         bmix = bmix * tillage_days(jj)/till_eff_days
@@ -140,6 +135,7 @@
             if (soil(jj)%phys(l)%tmp > 1.e-6) then
               if (soil(jj)%phys(l)%d <= dtil) then
                 emix = bmix
+                ! Adjust the amount of mixing based on the fcgd temperature function. 
                 emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
                 emix_sum = emix_sum + emix * soil(jj)%phys(l)%thick
               elseif (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
