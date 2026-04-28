@@ -181,7 +181,6 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
-       real :: tf = 0.           !varies    |variable to hold calculation results
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -346,8 +345,9 @@
 
               ! This case uses the tillagf factor developed by Armen 16 January 2008 and is determined 
               ! in the subroutine mgt_tillagef subroutine prior to running this subroutine.
-              tf = soil(j)%ly(k)%tillagef 
-              org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
+              if (org_con%tillf == 4) then
+                org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
+              endif
 
             case(4)
               ! place holder for dndc method
