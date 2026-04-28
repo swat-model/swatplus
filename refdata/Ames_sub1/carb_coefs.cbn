@@ -1,4 +1,4 @@
-File: carb_coefs.cbn   Carbon coefficients used if cswat == 1
+File: carb_coefs.cbn   Carbon coefficients used if cswat == 2 or cswat == 3
 
 # carbdb coefficients
 #               1st_lyr     other_lyrs
@@ -29,31 +29,28 @@ prmt_44         0.5
 till_eff_days   30
 
 # Manure carbon coefficients
-rtof        0.5
-man_to_c    0.42           
+rtof            0.5 
+man_to_c        0.42  
 
-# temperature effect equation parameters
-tn             -0.5
-top            30.0
-tx             50.0
+# cbn_zhang2 carbon temperture, water, & tillage factor approaches
+# Ref Title: "Replicating measured site-scale soil organic carbon dynamics in the U.S. Corn Belt using the SWAT-C model"
+# Ref URL: https://www.sciencedirect.com/science/article/abs/pii/S1364815222002535?via%3Dihub
+# tmpf  Options: 1 - tmpf1,  2 - tmpf2,  3 - tmpf3
+# watf  Options: 1 - watf1,  2 - watf2,  3 - watf3
+# tillf Options: 1 - tillf1, 2 - tillf2, 3 - tillf3, 4 - Armen 16, Note: tillf option 4 is not in the referenced paper but is the original default in the swatplus model.
+#                      tmpf    watf    tillf
+cbn_factor_approaches   2       1       4    # 2, 1, 4 is the orginal default settings in the model. 
 
-# bio and tillage mixing coeffients in mgt_tillfactor.f90
-zz_bmix_coefs   3.0   5.0    -5.5
-zz_emix_coefs   3.0   15.0   -5.5
+# tmpf2 temperature effect equation parameters
+tn              -0.5
+top             30.0
+tx              50.0
+
+# bio and tillage mixing coeffients in mgt_tillfactor.f90 tillf option of 4
+zz_bmix_coefs   3.0    5.0   -5.5
+zz_emix_coefs   3.0   15.0   -3.5
 
 # Surface residue photo degradtion factor.
-photo_degrade_factor    .001
+photo_degrade_factor    0.001
 
-# Soil Test Values for each layer
-# soil_name and depth_mm are required, enter -1 for other values if missing.
-# The order of entry must be asending depths for each soil.
-# If sand, silt, clay are not -1 they must total to 100.0
-# Their should be a unique mapping between the soil_name below and in hru_data.hru 
-# and soils.sol file to prevent overwiting soil information for other
-# hrus.
-nmbr_soil_test_layers 4
-#         soil_name      depth_mm  bulk_density carbon %sand    %silt   %clay
-soil_test soil_01-h1     150        2.0         4.0     30.0     30.0    40.0 
-soil_test soil_01-h1     250        1.5         3.0     25.0     35.0    40.0 
-soil_test soil_03-h3     125        1.6         3.0     40.0     30.0    30.0
-soil_test soil_03-h3     150        2.0         3.0     15.0     45.0    40.0
+
