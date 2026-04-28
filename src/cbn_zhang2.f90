@@ -112,6 +112,7 @@
        real :: wc = 0.           !none                 |scaling factor for soil water impact on daily
        real :: sat = 0.          !                     |
        real :: void = 0.         !                     |
+       real :: stemp = 0.        !celsius              |soil layer temperature
        real :: x3 = 0.           !none                 |amount of c transformed from passive, slow, metabolic, and non-lignin structural pools to microbial pool
        real :: lscta = 0.        !                     |
        real :: lslcta = 0.       !                     |
@@ -181,6 +182,11 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
+       real :: xx1 = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: xx2 = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: w1  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: w2  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: svoid = 0.        !                     | the amount voids in soil layer after accounting for water content.
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -269,7 +275,13 @@
       do k = 1, soil(j)%nly
 
         ! Initialize org_con, org_ratio, org_flux, org_tran values to zero
-        org_con = org_con_zero
+        org_con%sut = 0.           !                 |soil water control on biological processes
+        org_con%cdg = 0.           !                 |soil temperature control on biological processes
+        org_con%cs  = 0.           !                 |combined factor controlling biological processes
+        org_con%ox  = 0.           !                 |oxygen control on biological processes 
+        org_con%x1  = 0.           !                 |tillage control on residue decomposition
+        org_con%no3 = 0.           !                 |no3 as adjusted in cbn_zhang2
+        org_con%nh4 = 0.           !                 |nh4 as adjusted in cbn_zhang2
         soil1(j)%org_con_lr(k) = org_con    
         
         org_ratio = org_ratio_zero
@@ -299,23 +311,45 @@
         org_allo(cf_lyr)%asp = 0.
         soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)   
 
-      
+        stemp = soil(j)%phys(k)%tmp  
         !! mineralization can occur only if temp above 0 deg
         !check sol_st soil water content in each soil ayer mm h2o
-        if (soil(j)%phys(k)%tmp > 0. .and. soil(j)%phys(k)%st > 0.) then
+        if (stemp > 0. .and. soil(j)%phys(k)%st > 0.) then
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
           !sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
-          if (wc - soil(j)%phys(k)%wpmm < 0.) then
-            org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
-          else
-            org_con%sut = .1 + .9 * sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
-          end if             
-          org_con%sut = min(1., org_con%sut)
-          org_con%sut = max(.05, org_con%sut)
+          if (org_con%watf == 1) then
+            if (wc - soil(j)%phys(k)%wpmm < 0.) then
+              org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
+            else
+              org_con%sut = .1 + .9 * sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
+            end if             
+            org_con%sut = min(1., org_con%sut)
+            org_con%sut = max(.05, org_con%sut)
+          endif
+
+          if (org_con%watf == 2) then
+            svoid = soil(j)%phys(k)%por * (1.0 - (wc / (soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm)))
+            if (wc <= soil(j)%phys(k)%wpmm) then
+              xx1 = 0.4 * (wc / soil(j)%phys(k)%wpmm) 
+            elseif (wc <= fc) then
+              xx1 = 0.4 + 0.6 * ((wc - soil(j)%phys(k)%wpmm)/(fc - soil(j)%phys(k)%wpmm))
+            else 
+              xx1 = 1.0
+            endif
+            if (svoid >= 0.1) then
+              xx2 = 0.2 + 0.8 * ((svoid - 0.1)/(soil(j)%phys(k)%por - .1))
+            else
+              xx2 = 0.2 * (svoid/0.1)
+            endif
+            w1 = (1.0 + 4.0 * (1.0 - xx1)) * xx1**4
+            w2 = 0.5 + 0.5 * (xx2/(xx2 + exp(-20 * xx2)))
+            org_con%sut = w1 * w2
+          endif
+
  
           !compute tillage factor (till_eff) from armen
           org_con%till_eff = 1.0
@@ -342,7 +376,6 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-
               ! This case uses the tillagf factor developed by Armen 16 January 2008 and is determined 
               ! in the subroutine mgt_tillagef subroutine prior to running this subroutine.
               if (org_con%tillf == 4) then
@@ -355,8 +388,23 @@
           end select
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
-          ! org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
-          org_con%cdg = fcgd(soil(j)%phys(k)%tmp)
+          if (org_con%tmpf == 1) then
+            if(stemp <= 35.) then
+              org_con%cdg = stemp /(stemp + exp(5.058 - .2504*stemp))
+            elseif (soil(j)%phys(k)%tmp <= 60.) then
+              org_con%cdg = 1.0 - 0.04*(stemp - 35.)
+            else
+              org_con%cdg = 0.0
+            endif
+          endif
+
+          if (org_con%tmpf == 2) then
+            org_con%cdg = fcgd(stemp)
+          endif
+
+          if (org_con%tmpf == 3) then
+            org_con%cdg = 0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1
+          endif
 
           !!compute oxygen (ox)
           org_con%ox = 1. - 0.8 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2) / (((soil(j)%phys(kk)%d + &

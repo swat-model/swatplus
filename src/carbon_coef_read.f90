@@ -83,6 +83,9 @@ subroutine carbon_coef_read
                 case("man_to_c")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, man_coef%man_to_c
+                case("cbn_factor_approaches")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_con%tmpf, org_con%watf, org_con%tillf
                 case("tn")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tn 
