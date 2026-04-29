@@ -344,9 +344,8 @@
           !plant
           case ("plant")
             j = d_tbl%act(iac)%ob_num
-            
-            if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
-                
+            if (j == 0) j = ob_cur
+           
             icom = pcom(j)%pcomdb
             pcom(j)%days_plant = 1       !reset days since last planting
             !! check for generic plant-harv and set crops
