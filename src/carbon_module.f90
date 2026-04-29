@@ -103,9 +103,10 @@
           real :: tn = -5.           ! celsius         |minimum temperature bound
           real :: top = 30.          ! celsius         |peak (optimum) temperature 
           real :: tx = 50.           ! celsius         |maximum temperature bound
+          integer :: tmpf = 2        !                 |temperature factor approach used in cbn_zhang2 
+          integer :: watf = 1        !                 |water factor approach used in cbn_zhang2 
       end type organic_controls
       type (organic_controls) :: org_con
-      type (organic_controls) :: org_con_zero
         
       type organic_fractions
           real :: lmf = 0.      !frac               |fraction of the litter that is metabolic

@@ -58,14 +58,15 @@
           xx = 0.
           ! zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.) <- original equation.
           if (bio_mix_event) then
+            soil(jj)%ly(l)%tillagef_biomix = 0.0  ! At this point, this is the  previous days biomix value. 
+                                                  ! Need to set it too zero becuase unlike tillage mixing,
+                                                  ! we don't won' biomix to accumulate from one day to the next.
             zz = zz_bmix_coef_a + (zz_bmix_coef_b)*exp(zz_bmix_coef_c*soil(jj)%phys(l)%clay/100.)
-            ! for a biomix event, the previous tillagef is set to zero in the mgt_biomix subroutine
-            ! because it should not be cumulative so yy will always be zero for biomix event.
-            yy = soil(jj)%ly(l)%tillagef / zz
+            yy = 0.0
           else
             ! zz = 3. + (15. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.) <- original equation.
             zz = zz_emix_coef_a + (zz_emix_coef_b)*exp(zz_emix_coef_c*soil(jj)%phys(l)%clay/100.)
-            yy = soil(jj)%ly(l)%tillagef / zz
+            yy = soil(jj)%ly(l)%tillagef_tillmix / zz
           endif
           m1 = 1
           m2 = 2
@@ -81,9 +82,14 @@
 
           csdr = xx + emix
           if (soil(jj)%phys(l)%tmp <= 0. .and. bio_mix_event) then 
-            soil(jj)%ly(l)%tillagef = 0.
+            soil(jj)%ly(l)%tillagef_biomix = 0.
           else
-            soil(jj)%ly(l)%tillagef = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
+            if (bio_mix_event) then
+              soil(jj)%ly(l)%tillagef_biomix = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
+            else
+              soil(jj)%ly(l)%tillagef_tillmix = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
+            endif
+            soil(jj)%ly(l)%tillagef = soil(jj)%ly(l)%tillagef_tillmix + soil(jj)%ly(l)%tillagef_biomix 
           endif
         endif
       end do        

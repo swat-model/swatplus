@@ -146,13 +146,15 @@
       if (bsn_cc%cswat == 1) then
         if (tillage_switch(ihru) .eq. 1) then
           if (tillage_days(ihru) .ge. till_eff_days) then
+            ! no more tillage effect from last tillage.
             tillage_switch(ihru) = 0
             tillage_days(ihru) = 0
+            do ly = 1,soil(j)%nly 
+              soil(j)%ly(ly)%tillagef_tillmix = 0.0
+            enddo
           else
             tillage_days(ihru) = tillage_days(ihru) + 1
           end if                
-          !tillage_depth(ihru) = dtil
-          !tillage_switch(ihru) = .TRUE. 
         end if
       end if
 
@@ -382,7 +384,7 @@
         end if
 
         if (bsn_cc%cswat == 1) then
-          if (bmix_eff > 1.e-6 .and. tillage_switch(ihru) == 0) call mgt_biomix (ihru, bmix_eff)
+          if (bmix_eff > 1.e-6 ) call mgt_biomix (ihru, bmix_eff)
           !! compute surface residue decomposition for each plant in community
           call cbn_surfrsd_decomp
           !! compute soil residue (roots and tilled in) decomposition

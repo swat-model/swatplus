@@ -1,4 +1,4 @@
-      subroutine mgt_biomix (jj, bmix)
+      subroutine mgt_biomix (jj, biomix_eff)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine mixes residue and nutrients from biological mixing
@@ -36,18 +36,19 @@
       use plant_module
       use plant_data_module
       use tillage_data_module
+      use hru_module
       
       implicit none
       
       external :: mgt_tillfactor,  fcgd
 
       integer, intent (in) :: jj       !none           |HRU number
-      real, intent (in) :: bmix        !               | 
-      real :: fcgd              !                     |
+      real, intent (in) :: biomix_eff    !               | 
+      real :: fcgd                     !                     |
+      real :: bmix                     !                     |
       integer :: l = 0                 !none           |counter
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
-      integer :: ipl = 0               !               |
       integer :: lyr_exit = 0
       real :: avg_emix = 0.             !none           |weighted averagte mixing efficiency
       real :: emix = 0.                !none           |mixing efficiency
@@ -106,11 +107,12 @@
       allocate (sol_msn(soil(jj)%nly), source = 0.)    
       allocate (frac_dep(soil(jj)%nly),source = 0.)    
 
-      ! intialize soil emix and tillagef to 0.
-      do l = 1, soil(jj)%nly
-        soil1(jj)%emix(l) = 0.
-        soil(jj)%ly(l)%tillagef = 0.
-      enddo
+      bmix = biomix_eff
+
+      ! Adjust biomix efficency linearly by days since last tillage 
+      if (tillage_switch(jj) == 1) then
+        bmix = bmix * tillage_days(jj)/till_eff_days
+      endif
 
       if (bmix > 1.e-6) then
         emix = bmix 
@@ -133,6 +135,7 @@
             if (soil(jj)%phys(l)%tmp > 1.e-6) then
               if (soil(jj)%phys(l)%d <= dtil) then
                 emix = bmix
+                ! Adjust the amount of mixing based on the fcgd temperature function. 
                 emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
                 emix_sum = emix_sum + emix * soil(jj)%phys(l)%thick
               elseif (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 

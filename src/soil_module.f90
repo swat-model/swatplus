@@ -16,6 +16,8 @@
         real :: prk = 0.         !! mm H2O         percolation from soil layer on current day
         real :: volcr = 0.       !! mm             crack volume for soil layer 
         real :: tillagef = 0.
+        real :: tillagef_biomix = 0.
+        real :: tillagef_tillmix = 0.
         real :: watp = 0.
         integer :: a_days = 0
         integer :: b_days = 0
