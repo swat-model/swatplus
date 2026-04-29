@@ -108,10 +108,6 @@
       tillage_depth(jj) = dtil
       tillage_switch(jj) = 1
 
-      ! This is new tillage event, set tillagef_biomix values to zero.
-      do l = 1, soil(jj)%nly
-        soil(jj)%ly(l)%tillagef_biomix = 0.0
-      end do
 
       !!by zhang DSSAT tillage
       !!=======================
