@@ -105,7 +105,6 @@
           real :: tx = 50.           ! celsius         |maximum temperature bound
           integer :: tmpf = 2        !                 |temperature factor approach used in cbn_zhang2 
           integer :: watf = 1        !                 |water factor approach used in cbn_zhang2 
-          integer :: tillf = 4       !                 |tillage factor approach used in cbn_zhang2 
       end type organic_controls
       type (organic_controls) :: org_con
         

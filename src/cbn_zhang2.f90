@@ -378,9 +378,7 @@
             case(3)
               ! This case uses the tillagf factor developed by Armen 16 January 2008 and is determined 
               ! in the subroutine mgt_tillagef subroutine prior to running this subroutine.
-              if (org_con%tillf == 4) then
-                org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
-              endif
+              org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
 
             case(4)
               ! place holder for dndc method

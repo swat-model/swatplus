@@ -32,14 +32,13 @@ till_eff_days   30
 rtof            0.5 
 man_to_c        0.42  
 
-# cbn_zhang2 carbon temperture, water, & tillage factor approaches
+# cbn_zhang2 carbon temperture and water factor approaches
 # Ref Title: "Replicating measured site-scale soil organic carbon dynamics in the U.S. Corn Belt using the SWAT-C model"
 # Ref URL: https://www.sciencedirect.com/science/article/abs/pii/S1364815222002535?via%3Dihub
-# tmpf  Options: 1 - tmpf1,  2 - tmpf2,  3 - tmpf3
-# watf  Options: 1 - watf1,  2 - watf2,  3 - watf3
-# tillf Options: 1 - tillf1, 2 - tillf2, 3 - tillf3, 4 - Armen 16, Note: tillf option 4 is not in the referenced paper but is the original default in the swatplus model.
-#                      tmpf    watf    tillf
-cbn_factor_approaches   2       1       4    # 2, 1, 4 is the orginal default settings in the model. 
+# tmpf  Options: 1 - tmpf1,  2 - tmpf2
+# watf  Options: 1 - watf1,  2 - watf2
+#                      tmpf    watf    
+cbn_factor_approaches   2       1
 
 # tmpf2 temperature effect equation parameters
 tn              -0.5
