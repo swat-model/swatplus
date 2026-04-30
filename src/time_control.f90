@@ -276,13 +276,15 @@
         !! write annual basin crop yields and harvested areas
         if (sp_ob%hru > 0) then
         do iplt = 1, basin_plants
-          crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
-          if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
-            write (5100,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld(iplt)%area_ha,            &
-                                                bsn_crop_yld(iplt)%yield, crop_yld_t_ha
+          if (time%yrs > pco%nyskip) then
+            crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
+            if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
+              write (5100,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld(iplt)%area_ha,          &
+                                                  bsn_crop_yld(iplt)%yield, crop_yld_t_ha
+            end if
+            bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
+            bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
           end if
-          bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
-          bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
           bsn_crop_yld(iplt) = bsn_crop_yld_z
           if (time%end_sim == 1) then
             crop_yld_t_ha = bsn_crop_yld_aa(iplt)%yield / (bsn_crop_yld_aa(iplt)%area_ha + 1.e-6)
