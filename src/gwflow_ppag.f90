@@ -57,7 +57,8 @@
           
           !check for available groundwater in the cell
           if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then !if water table is above bedrock
-            gwvol_avail = ((gw_state(cell_id)%head-gw_state(cell_id)%botm) * gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
+            ! gwvol_avail = ((gw_state(cell_id)%head-gw_state(cell_id)%botm) * gw_state(cell_id)%area) * gw_state(cell_id)%spyd !m3
+            gwvol_avail = gw_state(cell_id)%stor
           else
             gwvol_avail = 0.
           endif
@@ -75,7 +76,8 @@
           trn_unmet = trn_unmet + gwvol_unmet
           
           !save the pumping volume (m3), for use in gwflow_simulate
-          gw_ss(cell_id)%ppag = gwvol_removed * (-1) !m3 negative = leaving the aquifer
+          gw_state(cell_id)%stor = gw_state(cell_id)%stor + gwvol_removed * (-1) !update available groundwater in the cell
+          gw_ss(cell_id)%ppag = gw_ss(cell_id)%ppag + gwvol_removed * (-1) !m3 negative = leaving the aquifer
           gw_ss_sum(cell_id)%ppag = gw_ss_sum(cell_id)%ppag + (gwvol_removed * (-1))
           
           !sum the pumping for the current HRU

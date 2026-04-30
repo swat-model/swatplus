@@ -163,19 +163,21 @@
                      
       !record file
       write(out_gw,*) 'gwflow subroutine called:',time%yrc,time%day
-      
+
       
       
       !1. calculate the available volume of groundwater (m3) in each cell ---------------------------------------------
-      do i=1,ncell
-        if(gw_state(i)%stat.gt.0) then
-          if(gw_state(i)%head > gw_state(i)%botm) then
-            gw_state(i)%stor = ((gw_state(i)%head - gw_state(i)%botm) * gw_state(i)%area) * gw_state(i)%spyd
-          else
-            gw_state(i)%stor = 0.
-          endif
-        endif
-      enddo
+      ! The groundwater storage should be intialized once at the begining of the entire simulation,
+      !   the following code was moved to gwflow_read.f90.
+      !do i=1,ncell
+      !  if(gw_state(i)%stat.gt.0) then
+      !    if(gw_state(i)%head > gw_state(i)%botm) then
+      !      gw_state(i)%stor = ((gw_state(i)%head - gw_state(i)%botm) * gw_state(i)%area) * gw_state(i)%spyd
+      !    else
+      !      gw_state(i)%stor = 0.
+      !    endif
+      !  endif
+      !enddo
       
       
 
@@ -416,8 +418,8 @@
 
               !update storage and head for the cell
               stor_change = (Q + gw_ss(i)%totl) * gw_time_step !change in storage (m3)
-              gw_state(i)%stor = gw_state(i)%stor + stor_change !new storage (m3)
-              sat_change = stor_change / (gw_state(i)%spyd * gw_state(i)%area) !change in saturated thickness (m3)
+              gw_state(i)%stor = gw_state(i)%vbef + stor_change !new storage (m3)
+              sat_change = stor_change / (gw_state(i)%spyd * gw_state(i)%area) !change in saturated thickness (m)
               gw_state(i)%hnew = gw_state(i)%head + sat_change !new groundwater head (m)
               
             elseif(gw_state(i)%stat == 2) then !constant head cell                 

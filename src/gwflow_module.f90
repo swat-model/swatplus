@@ -20,7 +20,8 @@
       integer :: grid_nrow = 0                                !number of rows in structured grid
       integer :: grid_ncol = 0                                !number of columns in structured grid
       integer, dimension (:,:), allocatable :: cell_id_usg    !usg cell number, for cell in structured grid (array)
-      integer, dimension (:), allocatable :: cell_id_list     !usg cell number, for cell in structured grid (list)
+      integer, dimension (:), allocatable :: cell_id_list     !original cell number to valid cell id, for cell in structured grid (list)
+      integer, dimension (:), allocatable :: cell_id_init_list !valid cell id to original cell number, for cell in structured grid (list)
       integer, dimension (:,:), allocatable :: grid_status    !cell status for structured grid
       integer, dimension (:,:), allocatable :: grid_int       !generic array for reading in values for structured grid
       real, dimension (:,:), allocatable :: grid_val          !generic array for reading in values for structured grid

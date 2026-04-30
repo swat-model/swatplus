@@ -57,7 +57,7 @@
       real :: dist_y = 0.             !          |
       real :: min_dist = 0.           !          |
       real :: distance = 0.           !          |
-      real :: gw_cell_volume = 0.     !          |
+      !real :: gw_cell_volume = 0.     !          |
       !input file numbers
       integer :: in_gw = 0            !          |
       integer :: in_hru_cell = 0      !          |
@@ -307,6 +307,12 @@
             cell_id_list(count) = ncell
           endif
         enddo
+      enddo
+      allocate (cell_id_init_list(ncell))
+      do i=1,grid_nrow*grid_ncol
+          if (cell_id_list(i) > 0) then
+              cell_id_init_list(cell_id_list(i))=i
+          endif
       enddo
       !second: !allocate general array of cell attributes
       allocate (gw_state(ncell))
@@ -1353,7 +1359,7 @@
       
         !include no3 and p (default)
         gw_nsolute = 2
-        gwsol_nm(1) = 'no3'
+        gwsol_nm(1) = 'no3-n' ! change from no3 to no3-n, to keep consistent with auto-generated gwflow.solutes
         gwsol_nm(2) = 'p'
         
         !determine which other solutes should be included
@@ -1409,8 +1415,11 @@
         if(grid_type == "structured") then
           !read one array at a time
           do s=1,gw_nsolute
-            read(in_gw,*) header
+            read(in_gw,*) header ! since we specified gw_nsolute as 
             read(in_gw,*) read_type
+            if(header /= gwsol_nm(s)) then ! TODO In the auto-generated gwflow.solutes, we should add a line to indicate how many solutes are included.
+                write(9003,*) "Warning: ", gwsol_nm(s), " is not found in gwflow.solutes, will use 0 by default."
+            endif    
             if(read_type == "single") then
               read(in_gw,*) single_value
               grid_val = single_value
@@ -1418,6 +1427,8 @@
               do i=1,grid_nrow
                 read(in_gw,*) (grid_val(i,j),j=1,grid_ncol)
               enddo
+            else
+              grid_val = 0  ! In case the input format of gwflow.solutes is not correct!
             endif
             do i=1,grid_nrow
               do j=1,grid_ncol
@@ -2290,22 +2301,30 @@
       endif
       gw_rech = 0.
       
-      !set groundwater head to initial head, for each grid cell
+      !set groundwater head to initial head, and set initial storage for each grid cell
       do i=1,ncell
         gw_state(i)%head = gw_state(i)%init
+        if(gw_state(i)%stat.gt.0) then
+          if(gw_state(i)%head > gw_state(i)%botm) then
+            gw_state(i)%stor = ((gw_state(i)%head - gw_state(i)%botm) * gw_state(i)%area) * gw_state(i)%spyd
+          else
+            gw_state(i)%stor = 0.
+          endif
+        endif
       enddo
       
       !set solute mass for each grid cell
       if (gw_solute_flag == 1) then
         do i=1,ncell
           if(gw_state(i)%stat.gt.0) then
-            if(gw_state(i)%head > gw_state(i)%botm) then
-              gw_cell_volume = gw_state(i)%area * (gw_state(i)%head-gw_state(i)%botm) * gw_state(i)%spyd !m3 of groundwater
-            else
-              gw_cell_volume = 0.
-            endif
+            !if(gw_state(i)%head > gw_state(i)%botm) then
+            !  gw_cell_volume = gw_state(i)%area * (gw_state(i)%head-gw_state(i)%botm) * gw_state(i)%spyd !m3 of groundwater
+            !else
+            !  gw_cell_volume = 0.
+            !endif
             do s=1,gw_nsolute !loop through solutes
-              gwsol_state(i)%solute(s)%mass = gw_cell_volume * gwsol_state(i)%solute(s)%conc !m3 * g/m3 = g
+              !gwsol_state(i)%solute(s)%mass = gw_cell_volume * gwsol_state(i)%solute(s)%conc !m3 * g/m3 = g
+              gwsol_state(i)%solute(s)%mass = gw_state(i)%stor * gwsol_state(i)%solute(s)%conc !m3 * g/m3 = g
             enddo
           endif
         enddo
