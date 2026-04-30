@@ -67,6 +67,7 @@
       real :: mix_rock
       real :: mix_bd
       real :: mix_rsd
+      real :: stemp                                   !celsius      |Soil layer temperature
       logical :: bio_mix_event
 
       npmx = cs_db%num_pests
@@ -111,7 +112,10 @@
 
       ! Adjust biomix efficency linearly by days since last tillage 
       if (tillage_switch(jj) == 1) then
-        bmix = bmix * tillage_days(jj)/till_eff_days
+        if (tillage_days(jj)/30.0 < 1.0) then
+          bmix = bmix * tillage_days(jj)/30.0
+        ! bmix = bmix * tillage_days(jj)/till_eff_days
+        endif
       endif
 
       if (bmix > 1.e-6) then
@@ -136,11 +140,24 @@
               if (soil(jj)%phys(l)%d <= dtil) then
                 emix = bmix
                 ! Adjust the amount of mixing based on the fcgd temperature function. 
-                emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                stemp = soil(jj)%phys(l)%tmp
+                if (org_con%tmpf == 2) then
+                  emix = emix * fcgd(stemp) 
+                elseif (org_con%tmpf == 3) then
+                  emix = emix * (0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1)
+                else
+                  emix = emix * fcgd(stemp) 
+                endif
                 emix_sum = emix_sum + emix * soil(jj)%phys(l)%thick
               elseif (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
                 emix = bmix
-                emix = emix * fcgd(soil(jj)%phys(l)%tmp) 
+                if (org_con%tmpf == 2) then
+                  emix = emix * fcgd(stemp) 
+                elseif (org_con%tmpf == 3) then
+                  emix = emix * (0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1)
+                else
+                  emix = emix * fcgd(stemp) 
+                endif
                 emix_sum = emix_sum + emix * (dtil - soil(jj)%phys(l-1)%d)
               else
                 lyr_exit = l
