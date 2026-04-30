@@ -20,7 +20,7 @@ subroutine carbon_coef_read
     nmbr_soil_test_layers = 0     ! comes from soil module
     soil_test_cntr  = 0     ! local variable
 
-    if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+    if (bsn_cc%cswat == 1) then
         inquire (file='carb_coefs.cbn', exist=i_exist)
         if (i_exist) then
           open (107,file='carb_coefs.cbn', iostat=eof)
@@ -83,6 +83,9 @@ subroutine carbon_coef_read
                 case("man_to_c")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, man_coef%man_to_c
+                case("cbn_factor_approaches")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_con%tmpf, org_con%watf
                 case("tn")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tn 

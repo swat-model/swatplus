@@ -84,7 +84,7 @@
 
         !!By Zhang for C/N cycling 
         !!===========================
-      if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+      if (bsn_cc%cswat == 1) then
         soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * fr_ly *           &
             frt_kg * manure_om(ifrt)%forgp
         soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * fr_ly *      &
@@ -139,8 +139,8 @@
           !update lignin weight in structural litter.
           soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + str_m * .175
           !soil1(j)%rsd(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
-          
-      end if
+            
+        end if
         !!By Zhang for C/N cycling 
         !!=========================== 
 

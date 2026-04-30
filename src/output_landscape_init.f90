@@ -493,7 +493,7 @@
             write (9000,*) "HRU                       hru_plc_stat.csv"
           end if
     
-          if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+          if (bsn_cc%cswat == 1 ) then
             call open_output_file(4561, "hru_rsdc_stat.txt", 1500)
             write (4561,*)  bsn%name, prog
             write (4561,*) rsdc_hdr
@@ -576,7 +576,7 @@
         endif
 
         !! write carbon variables headers to hru_carbvars
-        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+        if (bsn_cc%cswat == 1 ) then
           if (pco%cb_vars_hru%d /= "n" .or. pco%cb_vars_hru%m /= "n"  .or. pco%cb_vars_hru%y /= "n" ) then
             call open_output_file(4574, "hru_carbvars.txt", 1500)
             write (4574,*)  bsn%name, prog
@@ -630,7 +630,7 @@
         endif
 
         !! write end of simulation soil properties headers to hru_endsim_soil_prop
-        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+        if (bsn_cc%cswat == 1 ) then
           if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
             call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
             write (4584,*)  bsn%name, prog
