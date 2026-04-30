@@ -23,9 +23,9 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
       real :: cha_div = 0.          !m3         |maximum amount of flow that can be diverted
       real :: rto = 0.              !none       |ratio of channel withdrawal to determine hydrograph removed
       real :: avail = 0.            !m3         |water available to withdraw from an aquifer
+      external :: gwflow_pump_allo
       real :: extracted = 0.        !m3         |water extracted from the aquifer object (gwflow - rtb)
       real :: trn_unmet = 0.        !m3         |demand that is unmet (gwflow - rtb)
-      real :: hru_demand = 0.   !m3         |demand (copy to pass into gwflow subroutine - rtb)
       real :: withdraw = 0.         !m3
       real :: unmet = 0.            !m3
         
@@ -180,8 +180,7 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
         case ("aqu") 
           if(bsn_cc%gwflow == 0) then !proceed with original code
           j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-          avail = (wallo(iwallo)%trn(itrn)%src(isrc)%wdraw_lim - aqu_d(j)%dep_wt)  * aqu_dat(j)%spyld
-          avail = avail * 10000. * aqu_prm(j)%area_ha     !m3 = 10,000*ha*m
+          avail = 10. * aqu_prm(j)%area_ha *aqu_d(j)%stor     !m3 = 10.*ha*m
           if (trn_m3 < avail) then
             !! only have flow, no3, and minp(solp) for aquifer
             wal_omd(iwallo)%trn(itrn)%src(isrc)%hd%flo = trn_m3
@@ -200,8 +199,7 @@ subroutine wallo_withdraw (iwallo, itrn, isrc)
           elseif(bsn_cc%gwflow == 1) then !gwflow is active; determine pumping amounts from grid cells
             extracted = 0.
             trn_unmet = 0.
-            hru_demand = trn_m3
-            call gwflow_ppag(wallo(iwallo)%trn(itrn)%num,trn_m3,extracted,trn_unmet)
+            call gwflow_pump_allo(wallo(iwallo)%trn(itrn)%num,trn_m3,extracted,trn_unmet)
             wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + extracted
             wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_unmet
             wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &

@@ -8,7 +8,8 @@
       use time_module
       use constituent_mass_module
       use ch_salt_module
-      
+      use gwflow_module, only : div_conc_salt
+
       implicit none 
 
       !incoming variables
@@ -23,6 +24,9 @@
       
       !depending on the point source type, add/remove salt mass to object
       obcs(icmd)%hd(1)%salt = 0.
+      do isalt=1,cs_db%num_salts
+        div_conc_salt(isalt,irec) = 0.
+      enddo
       if (cs_db%num_salts > 0) then
         select case (rec_salt(irec)%typ)  
           case (1)    !daily
@@ -33,6 +37,7 @@
                   ichan = ob(icmd)%obtypno_out(1) !channel from which water is diverted
                   if(ch_stor(ichan)%flo > 10.) then !only proceed if channel has water
                     salt_conc = (ch_water(ichan)%salt(isalt)*1000.) / ch_stor(ichan)%flo !g/m3 in channel water
+                    div_conc_salt(isalt,irec) = salt_conc
                     div_mass = (salt_conc * recall(irec)%hd(time%day,time%yrs)%flo) / 1000. !kg/day  
                     if((div_mass*(-1)) > ch_water(ichan)%salt(isalt)) then
                       div_mass = ch_water(ichan)%salt(isalt) * (-1) !only take what is there

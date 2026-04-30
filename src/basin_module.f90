@@ -244,6 +244,12 @@
         type(print_interval) :: cs_chn          !!  constituent output for channels
         type(print_interval) :: cs_res          !!  constituent output for reservoirs
         type(print_interval) :: cs_wet          !!  constituent output for reservoirs
+        type(print_interval) :: gwflow_wb       !!  gwflow cell + basin water balance (day/mon/yr/aa)
+        type(print_interval) :: gwflow_flux     !!  gwflow canal, pond, tile, gwsw, chan obs diagnostic output
+        type(print_interval) :: gwflow_heat     !!  gwflow basin heat balance output
+        type(print_interval) :: gwflow_solute   !!  gwflow basin solute balance output
+        type(print_interval) :: gwflow_obs      !!  gwflow observation well output
+        type(print_interval) :: gwflow_pump     !!  gwflow HRU pumping output
       end type basin_print_codes
       type (basin_print_codes) :: pco
       type (basin_print_codes) :: pco_init

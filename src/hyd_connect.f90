@@ -77,7 +77,6 @@
       if (sp_ob%gwflow > 0) then     ! 4==gwflow
         sp_ob1%gwflow = nspu
         nspu = sp_ob%gwflow + nspu
-        inquire(file='gwflow.huc12cell',exist=i_exist)
       end if
       if (sp_ob%aqu > 0) then         ! 5==aquifer
         sp_ob1%aqu = nspu
