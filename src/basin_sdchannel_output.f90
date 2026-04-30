@@ -34,7 +34,7 @@
           write (4900,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_wat_d, &
           bch_stor_d, bch_in_d, bch_out_d
           if (pco%csvout == "y") then
-            write (4904,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, &
+            write (4904,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, &
             bch_wat_d, bch_stor_d, bch_in_d, bch_out_d
           end if 
         end if 
@@ -52,7 +52,7 @@
           write (4901,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_wat_m, &
             bch_stor_d, bch_in_m, bch_out_m
           if (pco%csvout == "y") then
-            write (4905,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, &
+            write (4905,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, &
               bch_wat_m, bch_stor_d, bch_in_m, bch_out_m
           end if
         end if
@@ -73,7 +73,7 @@
           write (4902,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_wat_y, &
             bch_stor_d, bch_in_y, bch_out_y
           if (pco%csvout == "y") then
-            write (4906,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name,&
+            write (4906,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name,&
               bch_wat_y, bch_stor_d, bch_in_y, bch_out_y
           end if
         end if
@@ -91,7 +91,7 @@
         write (4903,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_wat_a, &
           bch_stor_d, bch_in_a, bch_out_a
         if (pco%csvout == "y") then
-          write (4907,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, &
+          write (4907,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, &
             bch_wat_a, bch_stor_d, bch_in_a, bch_out_a
         end if
       end if

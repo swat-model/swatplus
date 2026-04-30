@@ -18,7 +18,7 @@
           write (3110,*) time%day, time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omd(iuse)
 
           if (pco%csvout == "y") then
-          write (3114,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omd(iuse)
+          write (3114,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omd(iuse)
           end if
         end if
        
@@ -34,7 +34,7 @@
           write (3111,*) time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omm(iuse)
  
           if (pco%csvout == "y") then
-          write (3115,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omm(iuse)
+          write (3115,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omm(iuse)
           end if
         end if
 
@@ -51,7 +51,7 @@
           write (3112,*) time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omy(iuse)
   
               if (pco%csvout == "y") then
-          write (3116,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omy(iuse)
+          write (3116,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_omy(iuse)
           end if
         end if
 
@@ -68,7 +68,7 @@
         write (3113,*) time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_oma(iuse)
 
         if (pco%csvout == "y") then
-        write (3117,'(*(G0.3,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_oma(iuse)
+        write (3117,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iuse, om_use_name(iuse), wal_use_oma(iuse)
         end if
        end if
       end if

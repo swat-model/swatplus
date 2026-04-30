@@ -21,7 +21,7 @@
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_d  
 
            if (pco%csvout == "y") then
-          write (3201,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
+          write (3201,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_d  
 
            end if
@@ -39,7 +39,7 @@
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_m
  
               if (pco%csvout == "y") then
-          write (3203,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
+          write (3203,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_m  
 
           end if
@@ -59,7 +59,7 @@
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_y
   
               if (pco%csvout == "y") then
-          write (3205,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
+          write (3205,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_y
           end if
         end if
@@ -78,7 +78,7 @@
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_a
 
         if (pco%csvout == "y") then
-        write (3207,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
+        write (3207,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, mallo(imallo)%src(isrc)%num,   &
               mallo(imallo)%src(isrc)%mois_typ, mallo(imallo)%src(isrc)%manure_typ, mallo(imallo)%src(isrc)%bal_a
         end if
        end if

@@ -68,7 +68,7 @@
                          (hcsb_d(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                          (hcsb_d(j)%cs(ics)%srbd,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6022,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (6022,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                                                              (hcsb_d(j)%cs(ics)%soil,ics=1,cs_db%num_cs), & 
                                          (hcsb_d(j)%cs(ics)%surq,ics=1,cs_db%num_cs), &
                                          (hcsb_d(j)%cs(ics)%sedm,ics=1,cs_db%num_cs), &
@@ -147,7 +147,7 @@
                            (hcsb_m(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                            (hcsb_m(j)%cs(ics)%srbd,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6024,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (6024,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                          (hcsb_m(j)%cs(ics)%soil,ics=1,cs_db%num_cs), & 
                                          (hcsb_m(j)%cs(ics)%surq,ics=1,cs_db%num_cs), &
                                          (hcsb_m(j)%cs(ics)%sedm,ics=1,cs_db%num_cs), &
@@ -249,7 +249,7 @@
                            (hcsb_y(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                            (hcsb_y(j)%cs(ics)%srbd,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6026,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (6026,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                          (hcsb_y(j)%cs(ics)%soil,ics=1,cs_db%num_cs), & 
                                          (hcsb_y(j)%cs(ics)%surq,ics=1,cs_db%num_cs), &
                                          (hcsb_y(j)%cs(ics)%sedm,ics=1,cs_db%num_cs), &
@@ -344,7 +344,7 @@
                         (hcsb_a(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                         (hcsb_a(j)%cs(ics)%srbd,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6028,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (6028,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (hcsb_a(j)%cs(ics)%soil,ics=1,cs_db%num_cs), & 
                                         (hcsb_a(j)%cs(ics)%surq,ics=1,cs_db%num_cs), &
                                         (hcsb_a(j)%cs(ics)%sedm,ics=1,cs_db%num_cs), &

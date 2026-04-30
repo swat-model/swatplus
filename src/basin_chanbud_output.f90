@@ -22,7 +22,7 @@
         if (pco%sd_chan_bsn%d == "y") then
           write (2128,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_d
           if (pco%csvout == "y") then
-            write (2132,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_d
+            write (2132,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_d
           end if 
         end if 
       end if
@@ -36,7 +36,7 @@
         if (pco%sd_chan_bsn%m == "y") then
           write (2129,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_m
           if (pco%csvout == "y") then
-            write (2133,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_m
+            write (2133,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_m
           end if
         end if
         bch_sed_bud_m = ch_sed_budz
@@ -51,7 +51,7 @@
         if (pco%sd_chan_bsn%y == "y") then 
           write (2130,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_y
           if (pco%csvout == "y") then
-            write (2134,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_y
+            write (2134,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_y
           end if
         end if
         bch_sed_bud_y = ch_sed_budz
@@ -64,7 +64,7 @@
         
         write (2131,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_a
         if (pco%csvout == "y") then
-          write (2135,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_a
+          write (2135,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, bch_sed_bud_a
         end if
       end if
 

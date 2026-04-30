@@ -20,8 +20,8 @@
           if (pco%csvout == "y") then
             call open_output_file(4814, "channel_sd_subday.csv", 1500)
             write (4814,*) bsn%name, prog
-            write (4814,'(*(G0.3,:,","))') sdch_hdr 
-            write (4814,'(*(G0.3,:,","))') sdch_hdr_units_sub
+            write (4814,'(*(G0.6,:,","))') sdch_hdr 
+            write (4814,'(*(G0.6,:,","))') sdch_hdr_units_sub
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_subday.csv"
           end if
            end if         
@@ -40,14 +40,14 @@
           if (pco%csvout == "y") then
             call open_output_file(2504, "channel_sd_day.csv", 1500)
             write (2504,*) bsn%name, prog
-            write (2504,'(*(G0.3,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
-            write (2504,'(*(G0.3,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
+            write (2504,'(*(G0.6,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
+            write (2504,'(*(G0.6,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_day.csv"
             
             !call open_output_file(2510, "channel_sd_day_new.csv", 1500)
             !write (2510,*) bsn%name, prog
-            !write (2510,'(*(G0.3,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
-            !write (2510,'(*(G0.3,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
+            !write (2510,'(*(G0.6,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
+            !write (2510,'(*(G0.6,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
             !write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_day_new.csv"                  
           end if
         endif
@@ -70,14 +70,14 @@
           if (pco%csvout == "y") then
             call open_output_file(2505, "channel_sd_mon.csv", 1500)
             write (2505,*) bsn%name, prog
-            write (2505,'(*(G0.3,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
-            write (2505,'(*(G0.3,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
+            write (2505,'(*(G0.6,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
+            write (2505,'(*(G0.6,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_mon.csv"
             
            !call open_output_file(3512, "channel_sd_mon_new.csv", 1500)
             !write (3512,*) bsn%name, prog
-            !write (3512,'(*(G0.3,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
-            !write (3512,'(*(G0.3,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
+            !write (3512,'(*(G0.6,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
+            !write (3512,'(*(G0.6,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
             !write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_mon_new.csv"    
           end if
           end if
@@ -100,14 +100,14 @@
           if (pco%csvout == "y") then
             call open_output_file(2506, "channel_sd_yr.csv", 1500)
             write (2506,*) bsn%name, prog
-            write (2506,'(*(G0.3,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
-            write (2506,'(*(G0.3,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
+            write (2506,'(*(G0.6,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
+            write (2506,'(*(G0.6,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units 
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_yr.csv"
             
           !call open_output_file(3514, "channel_sd_yr_new.csv", 1500)
           !  write (3514,*) bsn%name, prog
-          !  write (3514,'(*(G0.3,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
-          !  write (3514,'(*(G0.3,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
+          !  write (3514,'(*(G0.6,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
+          !  write (3514,'(*(G0.6,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
           !  write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_yr_new.csv"    
           end if
         endif
@@ -130,14 +130,14 @@
           if (pco%csvout == "y") then
             call open_output_file(2507, "channel_sd_aa.csv", 1500)
             write (2507,*) bsn%name, prog
-            write (2507,'(*(G0.3,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
-            write (2507,'(*(G0.3,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units
+            write (2507,'(*(G0.6,:,","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
+            write (2507,'(*(G0.6,:,","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units1, hyd_hdr_units1, wtmp_units
             write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_aa.csv"
             
           !call open_output_file(3516, "channel_sd_aa_new.csv", 1500)
           !  write (3516,*) bsn%name, prog
-          !  write (3516,'(*(G0.3,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
-          !  write (3516,'(*(G0.3,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
+          !  write (3516,'(*(G0.6,:,","))') ch_wbod_inouthdr, hyd_inout_hdr
+          !  write (3516,'(*(G0.6,:,","))') ch_wbod_inouthdr_units, hydinout_hdr_units1
           !  write (9000,*) "SWAT-DEG_CHANNEL          channel_sd_aa_new.csv"
             
           end if
@@ -155,8 +155,8 @@
           if (pco%csvout == "y") then
             call open_output_file(4804, "channel_sdmorph_day.csv", 1500)
             write (4804,*) bsn%name, prog
-            write (4804,'(*(G0.3,:,","))') sdch_hdr 
-            write (4804,'(*(G0.3,:,","))') sdch_hdr_units
+            write (4804,'(*(G0.6,:,","))') sdch_hdr 
+            write (4804,'(*(G0.6,:,","))') sdch_hdr_units
             write (9000,*) "SWAT-DEG_CHANNEL_MORPH    channel_sdmorph_day.csv"
           end if
         endif
@@ -170,10 +170,10 @@
           write (4801,*) sdch_hdr_units
           write (9000,*) "SWAT-DEG_CHANNEL_MORPH    channel_sdmorph_mon.txt"
           if (pco%csvout == "y") then
-            call open_output_file(4805, "channel_mon_sdmorph.csv", 1500)
+            call open_output_file(4805, "channel_sdmorph_mon.csv", 1500)
             write (4805,*) bsn%name, prog
-            write (4805,'(*(G0.3,:,","))') sdch_hdr   
-            write (4805,'(*(G0.3,:,","))') sdch_hdr_units
+            write (4805,'(*(G0.6,:,","))') sdch_hdr   
+            write (4805,'(*(G0.6,:,","))') sdch_hdr_units
             write (9000,*) "SWAT-DEG_CHANNEL_MORPH    channel_sdmorph_mon.csv"
           end if
           end if
@@ -189,8 +189,8 @@
           if (pco%csvout == "y") then
             call open_output_file(4806, "channel_sdmorph_yr.csv", 1500)
             write (4806,*) bsn%name, prog
-            write (4806,'(*(G0.3,:,","))') sdch_hdr !! swat deg channel morph csv
-            write (4806,'(*(G0.3,:,","))') sdch_hdr_units
+            write (4806,'(*(G0.6,:,","))') sdch_hdr !! swat deg channel morph csv
+            write (4806,'(*(G0.6,:,","))') sdch_hdr_units
             write (9000,*) "SWAT-DEG_CHANNEL_MORPH    channel_sdmorph_yr.csv"
           end if
         endif
@@ -206,8 +206,8 @@
           if (pco%csvout == "y") then
             call open_output_file(4807, "channel_sdmorph_aa.csv", 1500)
             write (4807,*) bsn%name, prog
-            write (4807,'(*(G0.3,:,","))') sdch_hdr   
-            write (4807,'(*(G0.3,:,","))') sdch_hdr_units
+            write (4807,'(*(G0.6,:,","))') sdch_hdr   
+            write (4807,'(*(G0.6,:,","))') sdch_hdr_units
             write (9000,*) "SWAT-DEG_CHANNEL_MORPH    channel_sdmorph_aa.csv"
           end if
           end if
@@ -224,8 +224,8 @@
           if (pco%csvout == "y") then 
             call open_output_file(4812, "sd_chanbud_day.csv", 1500)
             write (4812,*) bsn%name, prog
-            write (4812,'(*(G0.3,:","))') sdch_bud_hdr
-            write (4812,'(*(G0.3,:","))') sdch_bud_hdr_units        
+            write (4812,'(*(G0.6,:","))') sdch_bud_hdr
+            write (4812,'(*(G0.6,:","))') sdch_bud_hdr_units        
             write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_day.csv"
           end if
         endif
@@ -239,8 +239,8 @@
          if (pco%csvout == "y") then 
            call open_output_file(4813, "sd_chanbud_mon.csv", 1500)
            write (4813,*) bsn%name, prog
-           write (4813,'(*(G0.3,:","))') sdch_bud_hdr 
-           write (4813,'(*(G0.3,:","))') sdch_bud_hdr_units        
+           write (4813,'(*(G0.6,:","))') sdch_bud_hdr 
+           write (4813,'(*(G0.6,:","))') sdch_bud_hdr_units        
            write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_mon.csv"
          end if
         end if
@@ -254,8 +254,8 @@
           if (pco%csvout == "y") then 
             call open_output_file(4814, "sd_chanbud_yr.csv", 1500)
             write (4814,*) bsn%name, prog
-            write (4814,'(*(G0.3,:","))') sdch_bud_hdr
-            write (4814,'(*(G0.3,:","))') sdch_bud_hdr_units        
+            write (4814,'(*(G0.6,:","))') sdch_bud_hdr
+            write (4814,'(*(G0.6,:","))') sdch_bud_hdr_units        
             write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_yr.csv"
           end if
         endif
@@ -269,8 +269,8 @@
           if (pco%csvout == "y") then 
             call open_output_file(4815, "sd_chanbud_aa.csv", 1500)
             write (4815,*) bsn%name, prog
-            write (4815,'(*(G0.3,:","))') sdch_bud_hdr 
-            write (4815,'(*(G0.3,:","))') sdch_bud_hdr_units 
+            write (4815,'(*(G0.6,:","))') sdch_bud_hdr 
+            write (4815,'(*(G0.6,:","))') sdch_bud_hdr_units 
             write (9000,*) "SWAT_DEG_CHAN_BUD         sd_chanbud_aa.csv"
           end if
         end if

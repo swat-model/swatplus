@@ -24,7 +24,7 @@
              ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),           &
              ob(icmd)%frac_out(iout), ht1
             if (pco%csvout == "y") then
-              write (2584,'(*(G0.3,:","))')time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,   &
+              write (2584,'(*(G0.6,:","))')time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,   &
                ob(icmd)%obtyp_out(iout),                              &
                ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),                   &
                ob(icmd)%frac_out(iout), ht1  
@@ -41,7 +41,7 @@
            ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),           &
            ob(icmd)%frac_out(iout), ob(icmd)%hout_m(iout)
             if (pco%csvout == "y") then
-              write (2585,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ, & 
+              write (2585,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ, & 
              ob(icmd)%obtyp_out(iout),                              &
              ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),                   &
              ob(icmd)%frac_out(iout), ob(icmd)%hout_m(iout)
@@ -60,7 +60,7 @@
            ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),           &
            ob(icmd)%frac_out(iout), ob(icmd)%hout_y(iout)
              if (pco%csvout == "y") then
-               write (2586,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,  &
+               write (2586,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,  &
                ob(icmd)%obtyp_out(iout),                              &
                ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),                   &
                ob(icmd)%frac_out(iout), ob(icmd)%hout_y(iout)
@@ -78,7 +78,7 @@
            ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),           &
            ob(icmd)%frac_out(iout), ob(icmd)%hout_a(iout)
             if (pco%csvout == "y") then
-              write (2587,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name,    &
+              write (2587,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name,    &
               ob(icmd)%typ, ob(icmd)%obtyp_out(iout),                   &
               ob(icmd)%obtypno_out(iout), ob(icmd)%htyp_out(iout),                      &
               ob(icmd)%frac_out(iout), ob(icmd)%hout_a(iout)

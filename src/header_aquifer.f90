@@ -18,8 +18,8 @@
          if (pco%csvout == "y") then
             call open_output_file(2524, "aquifer_day.csv", 1500)
             write (2524,*) bsn%name, prog
-            write (2524,'(*(G0.3,:,","))') aqu_hdr   !! aquifer csv
-            write (2524,'(*(G0.3,:,","))') aqu_hdr_units
+            write (2524,'(*(G0.6,:,","))') aqu_hdr   !! aquifer csv
+            write (2524,'(*(G0.6,:,","))') aqu_hdr_units
             write (9000,*) "AQUIFER                   aquifer_day.csv"
          end if
         endif
@@ -35,8 +35,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2525, "aquifer_mon.csv", 1500)
             write (2525,*) bsn%name, prog
-            write (2525,'(*(G0.3,:,","))') aqu_hdr   !! aquifer csv
-            write (2525,'(*(G0.3,:,","))') aqu_hdr_units
+            write (2525,'(*(G0.6,:,","))') aqu_hdr   !! aquifer csv
+            write (2525,'(*(G0.6,:,","))') aqu_hdr_units
             write (9000,*) "AQUIFER                   aquifer_mon.csv"
           end if
          end if
@@ -52,8 +52,8 @@
          if (pco%csvout == "y") then
             call open_output_file(2526, "aquifer_yr.csv", 1500)
             write (2526,*) bsn%name, prog
-            write (2526,'(*(G0.3,:,","))') aqu_hdr   !! aquifer csv
-            write (2526,'(*(G0.3,:,","))') aqu_hdr_units
+            write (2526,'(*(G0.6,:,","))') aqu_hdr   !! aquifer csv
+            write (2526,'(*(G0.6,:,","))') aqu_hdr_units
             write (9000,*) "AQUIFER                   aquifer_yr.csv"
          end if
         endif
@@ -69,8 +69,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2527, "aquifer_aa.csv", 1500)
             write (2527,*) bsn%name, prog
-            write (2527,'(*(G0.3,:,","))') aqu_hdr   !! aquifer csv
-            write (2527,'(*(G0.3,:,","))') aqu_hdr_units
+            write (2527,'(*(G0.6,:,","))') aqu_hdr   !! aquifer csv
+            write (2527,'(*(G0.6,:,","))') aqu_hdr_units
             write (9000,*) "AQUIFER                   aquifer_aa.csv"
           end if
          end if 
