@@ -381,8 +381,6 @@
           case ("plant")
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
-            
-            if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
                 
             icom = pcom(j)%pcomdb
             pcom(j)%days_plant = 1       !reset days since last planting
@@ -435,7 +433,6 @@
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
               pcom(j)%dtbl(idtbl)%days_act(iac) = 1     !reset days since last action
               if (iac > 1) pcom(j)%dtbl(idtbl)%days_act(iac-1) =  0     !reset previous action day counter
-            end if
             
           !harvest only
           case ("harvest")
