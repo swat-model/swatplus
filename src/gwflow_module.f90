@@ -3,17 +3,23 @@
       implicit none
 
       !general variables ----------------------------------------------------------------------------------------------
-      integer :: ncell = 0      !               !number of gwflow cells
-      integer :: num_active = 0 !               !number of active cells
-      real    :: gw_time_step = 0.!days           !flow solution time step
-      integer :: gwflag_day = 0 !               !flag for writing daily mass balance file
-      integer :: gwflag_yr = 0  !               !flag for writing yearly mass balance file
-      integer :: gwflag_aa = 0  !               !flag for writing average annual mass balance file
-      integer :: bc_type = 0    !               !boundary conditions (1=constant head; 2=no-flow)
-      integer :: conn_type = 0  !               !recharge/ET connections (1=HRU; 2=LSU)
-      integer :: out_cols = 0   !               !number of columns used in writing output variables
-      integer :: gw_daycount = 0  !               !simulation day counter (for pumping time series)
-      real*8  :: gwflow_area = 0.d0!m2             !area of the watershed occupied by active gwflow cells
+      integer :: ncell = 0          !               !number of gwflow cells
+      integer :: num_active = 0     !               !number of active cells
+      real    :: gw_time_step = 0.  !days           !flow solution time step
+      integer :: gwflag_day = 0     !               !flag for writing daily mass balance file
+      integer :: gwflag_mon = 0     !               !flag for writing monthly mass balance file
+      integer :: gwflag_yr = 0      !               !flag for writing yearly mass balance file
+      integer :: gwflag_aa = 0      !               !flag for writing average annual mass balance file
+      integer :: gwflag_obs = 1     !               !flag for writing observation well output (default on)
+      integer :: gwflag_pump = 1    !               !flag for writing HRU pumping output (default on)
+      integer :: gwflag_heat = 1    !               !flag for writing heat balance output (default on if heat active)
+      integer :: gwflag_solute = 1  !               !flag for writing solute balance output (default on if solute active)
+      integer :: gwflag_flux = 1    !               !flag for writing specialty diagnostic output (default on)
+      integer :: bc_type = 0        !               !boundary conditions (1=constant head; 2=no-flow)
+      integer :: conn_type = 0      !               !recharge/ET connections (1=HRU; 2=LSU)
+      integer :: gw_daycount = 0    !               !simulation day counter (for pumping time series)
+      real*8  :: gwflow_area = 0.d0 !m2             !area of the watershed occupied by active gwflow cells
+      real, dimension (:), allocatable :: bc_type_array !generic array for reading in values for structured grid
       
       !grid type ------------------------------------------------------------------------------------------------------
       character*15 :: grid_type                               !"structured" or "unstructured" (usg)
@@ -24,7 +30,10 @@
       integer, dimension (:,:), allocatable :: grid_status    !cell status for structured grid
       integer, dimension (:,:), allocatable :: grid_int       !generic array for reading in values for structured grid
       real, dimension (:,:), allocatable :: grid_val          !generic array for reading in values for structured grid
-      
+      integer, dimension (:), allocatable :: cell_row          !structured grid row for each cell (for cell definition output)
+      integer, dimension (:), allocatable :: cell_col          !structured grid column for each cell (for cell definition output)
+      integer :: out_gw_celldef = 1416                         !file unit for cell definition output
+
       !groundwater state variables for each cell ----------------------------------------------------------------------
       type groundwater_state
         real :: elev = 0.           !m            |ground surface elevation
@@ -39,6 +48,7 @@
         real :: spyd = 0.           !m3/m3        |aquifer specific yield
         real :: exdp = 0.           !m            |groundwater ET extinction depth
         integer :: stat = 0         !             |status (0=inactive; 1=active; 2=boundary)
+        integer :: zone = 0         !             |aquifer zone
         integer :: ncon = 0         !             |number of connected cells
         integer :: tile = 0         !             |tile drainage flag (0=no tile; 1=tile is present)
         real :: hnew = 0.           !m            |new groundwater head (at end of day)
@@ -48,10 +58,30 @@
         real :: vaft = 0.           !m3           |groundwater volume at end of day
         real :: hdmo = 0.           !m            |monthly average groundwater head
         real :: hdyr = 0.           !m            |annual average groundwater head
+        real :: delx = 0.           !m            |change in groundwater position (x direction) for current time step
+        real :: dely = 0.           !m            |change in groundwater position (y direction) for current time step
       end type groundwater_state
       type (groundwater_state), dimension (:), allocatable :: gw_state
       
       
+      !groundwater transit time variables for each cell ---------------------------------------------------------------
+      integer :: gw_ttime = 0
+      integer :: gw_transit_num = 0
+      integer, dimension (:), allocatable :: gw_transit_cells
+      integer, dimension (:), allocatable :: gw_cell_chan_flag
+      real, dimension (:), allocatable :: gw_cell_chan_time
+      real, dimension (:), allocatable :: gw_cell_tile_time
+      type groundwater_transit
+        real*8 :: x = 0.             !m            |x coordinate
+        real*8 :: y = 0.             !m            |y coordinate
+        integer :: cell = 0          !             |current cell where groundwater is located
+        real :: t = 0.               !d            |cumulative groundwater travel time from recharge area
+        real :: t_chan = 0.          !d            |time for groundwater to reach a channel
+        real :: t_tile = 0.          !d            |time for groundwater to reach a tile drain
+        real :: t_well = 0.          !d            |time for groundwater to reach pumping well
+      end type groundwater_transit
+      type (groundwater_transit), dimension (:), allocatable :: gw_transit
+
       !variables for HRU (and LSU) linkage to grid cells --------------------------------------------------------------
       !variables for linking HRUs to grid cells
       integer :: hru_cells_link = 0                                          !        |
@@ -62,6 +92,7 @@
       real, dimension (:,:), allocatable :: hru_cells_fract                  !        |
       real, dimension (:,:), allocatable :: cells_fract                      !        |
       real, dimension (:,:), allocatable :: cell_hrus_fract                  !        |
+      integer, dimension (:), allocatable :: hrus_connected                  !        |flag: which HRUs are connected to cells
       !variables for linking LSUs (landscape units) to grid cells
       integer :: lsu_cells_link = 0                                          !        |
       integer :: in_lsu_cell = 0                                             !        |
@@ -72,72 +103,63 @@
       
       
       !variables for groundwater sources and sinks --------------------------------------------------------------------
-      
-      !daily flow rates
+
+      !unified source/sink type -- used for water fluxes, heat fluxes, and grid summaries
+      !fields not applicable to a given variable are left at 0.0 and unused
       type groundwater_ss
-        real :: rech = 0.           !m3            |volume of recharge water added to cell
-        real :: gwet = 0.           !m3            |volume of ET water removed from cell
-        real :: gwsw = 0.           !m3            |volume of groundwater discharging to channels
-        real :: swgw = 0.           !m3            |volume of channel water seeping to groundwater via channel bed
-        real :: satx = 0.           !m3            |volume of groundwater discharging to channels via saturation excess flow
-        real :: soil = 0.           !m3            |volume of groundwater added to the soil profile
-        real :: latl = 0.           !m3            |volume of groundwater flowing between adjacent cells
-        real :: bndr = 0.           !m3            |volume of groundwater exchanged across watershed boundary
-        real :: ppag = 0.           !m3            |volume of groundwater removed via agricultural pumping (irrigation)
-        real :: ppdf = 0.           !m3            |volume of groundwater pumping not met by groundwater storage (deficit)
-        real :: ppex = 0.           !m3            |volume of groundwater removed via external pumping (water lost from system)
-        real :: tile = 0.           !m3            |volume of groundwater removed via tile drainage outflow
-        real :: resv = 0.           !m3            |volume of groundwater exchanged with reservoirs
-        real :: wetl = 0.           !m3            |volume of groundwater exchanged with wetlands
-        real :: fpln = 0.           !m3            |volume of groundwater exchanged with floodplains
-        real :: canl = 0.           !m3            |volume of groundwater exchanged with canals
-        real :: totl = 0.           !m3            |sum of groundwater inputs and outputs
+        real :: chng = 0.           !              |change in storage (grid summaries only)
+        real :: rech = 0.           !              |recharge
+        real :: gwet = 0.           !              |groundwater ET
+        real :: gwsw = 0.           !              |groundwater discharge to channels
+        real :: swgw = 0.           !              |channel seepage to groundwater
+        real :: satx = 0.           !              |saturation excess flow
+        real :: soil = 0.           !              |groundwater added to soil profile
+        real :: latl = 0.           !              |lateral flow between cells
+        real :: disp = 0.           !              |dispersion (heat/solute transport)
+        real :: bndr = 0.           !              |boundary exchange
+        real :: ppag = 0.           !              |allocation-driven pumping (irrigation)
+        real :: ppdf = 0.           !              |pumping deficit (unmet demand)
+        real :: ppex = 0.           !              |external pumping
+        real :: tile = 0.           !              |tile drainage outflow
+        real :: resv = 0.           !              |reservoir exchange
+        real :: wetl = 0.           !              |wetland exchange
+        real :: fpln = 0.           !              |floodplain exchange
+        real :: canl = 0.           !              |canal exchange
+        real :: pond = 0.           !              |recharge pond seepage
+        real :: phyt = 0.           !              |phreatophyte transpiration
+        real :: totl = 0.           !              |sum of inputs and outputs
       end type groundwater_ss
-      type (groundwater_ss), dimension (:), allocatable :: gw_ss
-      
-      !sums for annual flow rates
-      type groundwater_ss_sum
-        real :: rech = 0.           !m3            |volume of recharge water added to cell
-        real :: gwet = 0.           !m3            |volume of ET water removed from cell
-        real :: gwsw = 0.           !m3            |volume of groundwater discharging to channels
-        real :: swgw = 0.           !m3            |volume of channel water seeping to groundwater via channel bed
-        real :: satx = 0.           !m3            |volume of groundwater discharging to channels via saturation excess flow
-        real :: soil = 0.           !m3            |volume of groundwater added to the soil profile
-        real :: latl = 0.           !m3            |volume of groundwater flowing between adjacent cells
-        real :: bndr = 0.           !m3            |volume of groundwater exchanged across watershed boundary
-        real :: ppag = 0.           !m3            |volume of groundwater removed via agricultural pumping (irrigation)
-        real :: ppdf = 0.           !m3            |volume of groundwater pumping not met by groundwater storage (deficit)
-        real :: ppex = 0.           !m3            |volume of groundwater removed via external pumping (water lost from system)
-        real :: tile = 0.           !m3            |volume of groundwater removed via tile drainage outflow
-        real :: resv = 0.           !m3            |volume of groundwater exchanged with reservoirs
-        real :: wetl = 0.           !m3            |volume of groundwater exchanged with wetlands
-        real :: fpln = 0.           !m3            |volume of groundwater exchanged with floodplains
-        real :: canl = 0.           !m3            |volume of groundwater exchanged with canals
-      end type groundwater_ss_sum
-      type (groundwater_ss), dimension (:), allocatable :: gw_ss_sum
-      
-      !grid totals for the year
-      type ss_grid
-        real :: chng = 0.           !m3            |grid annual total change in groundwater storage        
-        real :: rech = 0.           !m3            |grid annual total recharge
-        real :: gwet = 0.           !m3            |grid annual total groundwater ET 
-        real :: gwsw = 0.           !m3            |grid annual total groundwater discharing to channels
-        real :: swgw = 0.           !m3            |grid annual total channel water seeping to groundwater via channel bed
-        real :: satx = 0.           !m3            |grid annual total groundwater discharging to channels via saturation excess flow
-        real :: soil = 0.           !m3            |grid annual total groundwater added to the soil profile
-        real :: latl = 0.           !m3            |grid annual total groundwater flowing between adjacent cells
-        real :: bndr = 0.           !m3            |grid annual total groundwater exchanged across watershed boundary
-        real :: ppag = 0.           !m3            |grid annual total groundwater removed via agricultural pumping (irrigation)
-        real :: ppdf = 0.           !m3            |grid annual total groundwater pumping not met by groundwater storage (deficit)
-        real :: ppex = 0.           !m3            |grid annual total groundwater removed via external pumping (water lost from system)
-        real :: tile = 0.           !m3            |grid annual total groundwater removed via tile drainage outflow
-        real :: resv = 0.           !m3            |grid annual total groundwater exchanged with reservoirs
-        real :: wetl = 0.           !m3            |grid annual total groundwater exchanged with wetlands
-        real :: fpln = 0.           !m3            |grid annual total groundwater exchanged with floodplains
-        real :: canl = 0.           !m3            |grid annual total groundwater exchanged with canals
-      end type ss_grid
-      type (ss_grid) :: ss_grid_yr 
-      type (ss_grid) :: ss_grid_tt
+
+      !--- hydrology (water) fluxes: per-cell arrays (m3) ---
+      type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss         !daily
+      type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss_mo      !monthly sums
+      type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss_yr      !yearly sums
+      type (groundwater_ss), dimension (:), allocatable :: gw_hyd_ss_aa      !average annual sums
+      real, dimension (:), allocatable :: gw_head_sum_aa                     !head sum across all years for AA avg
+
+      !--- hydrology (water) fluxes: grid-wide totals (mm) ---
+      type (groundwater_ss) :: gw_hyd_grid_mo                                !monthly grid total
+      type (groundwater_ss) :: gw_hyd_grid_yr                                !yearly grid total
+      type (groundwater_ss) :: gw_hyd_grid_aa                                !accumulates simulation total; divided by nbyr at end
+
+      !--- shared grid totals for end-of-day / end-of-sim (computed in output_day, used in output_aa) ---
+      real*8 :: vbef_grid = 0.d0                                              !m3 total GW volume at start of day
+      real*8 :: vaft_grid = 0.d0                                              !m3 total GW volume at end of day
+      real*8 :: heat_hbef_grid = 0.d0                                         !J total heat at start of day
+      real*8 :: heat_haft_grid = 0.d0                                         !J total heat at end of day
+      real :: sol_grid_mbef = 0.                                              !kg total solute mass at start of day
+      real :: sol_grid_maft = 0.                                              !kg total solute mass at end of day
+      integer :: sim_month = 0                                                !month counter for simulation
+
+      !--- heat fluxes: per-cell arrays (Joule / MJ) ---
+      type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss        !daily
+      type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss_mo     !monthly sums
+      type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss_yr     !yearly sums
+
+      !--- heat fluxes: grid-wide totals (MJ) ---
+      type (groundwater_ss) :: gw_heat_grid_mo                               !monthly grid total
+      type (groundwater_ss) :: gw_heat_grid_yr                               !yearly grid total
+      type (groundwater_ss) :: gw_heat_grid_aa                               !accumulates simulation total; divided by nbyr at end
       
       !rech: variables for groundwater recharge ---------------------------------------------------
       integer, dimension (:), allocatable :: gw_bound_near  !           |nearest active cell to each boundary cell
@@ -163,6 +185,10 @@
       real, dimension (:), allocatable :: gw_chan_K         !           |
       real, dimension (:), allocatable :: gw_chan_thick     !           |
       real :: gw_bed_change = 0.                            !           |
+      integer, dimension (:), allocatable :: gw_chan_dpzn   !           |depth zone per channel-cell connection
+      integer :: gw_chan_dep_flag = 0                        !           |flag for channel depth zones
+      integer :: gw_chan_ndpzn = 0                           !           |number of channel depth zones
+      real, dimension (:), allocatable :: gw_chan_dep        !m          |specified daily channel depths
       !channel-cell connection
       type cell_channel_info
         integer :: ncon = 0                                 !           |number of cells connected to the channel
@@ -171,8 +197,21 @@
         real, allocatable :: elev(:)                        !m          |elevation of channel bed in the cell
         real, allocatable :: hydc(:)                        !m          |hydraulic conductivity of channel bed in the cell
         real, allocatable :: thck(:)                        !m          |thickness of channel bed in the cell
+        integer, allocatable :: dpzn(:)                     !           |channel depth zone (optional)
       endtype cell_channel_info
       type (cell_channel_info), dimension(:), allocatable :: gw_chan_info
+
+      !groundwater-channel cell groups ---------------------------------------------------------
+      integer :: gw_gwsw_group_flag = 0                     !           |flag for channel cell grouping
+      integer :: gw_gwsw_ngroup = 0                         !           |number of groups
+      integer :: gw_gwsw_max = 0                            !           |max cells per group
+      integer, dimension (:), allocatable :: gw_gwsw_ncell  !           |number of cells per group
+      integer, dimension (:,:), allocatable :: gw_gwsw_group !          |cell IDs in each group
+
+      !channel observation cells ---------------------------------------------------------------
+      integer :: gw_chan_obs_flag = 0                        !           |flag for observation cells
+      integer :: gw_chan_nobs = 0                            !           |number of observation cells
+      integer, dimension (:), allocatable :: gw_chan_obs_cell !          |cell IDs for observations
       
       !satx: variables for saturated excess flow --------------------------------------------------
       integer :: gw_satx_flag = 0                           !           |
@@ -196,11 +235,10 @@
       type (cell_connections), dimension(:), allocatable :: cell_con
       
       !ppag: variables for irrigation pumping -----------------------------------------------------
-      real, dimension (:), allocatable :: hru_pump          !           |
-      real, dimension (:), allocatable :: hru_pump_mo       !           |
-      real, dimension (:), allocatable :: hru_pump_yr       !           |
-      real, dimension (:,:), allocatable :: hru_pump_mo_all !           |
-      real, dimension (:,:), allocatable :: hru_pump_yr_all !           |
+      real, dimension (:), allocatable :: hru_pump          !m3/day     |daily pumping per HRU
+      real, dimension (:), allocatable :: hru_pump_mo       !m3         |monthly accumulator
+      real, dimension (:), allocatable :: hru_pump_yr       !m3         |yearly accumulator
+      real, dimension (:), allocatable :: hru_pump_aa       !m3         |average annual accumulator (sum of yearly totals)
       !logical :: hru_pump_flag !           |
       integer :: hru_pump_flag = 0
       integer :: in_hru_pump_obs = 0                        !           |
@@ -221,9 +259,9 @@
       integer :: gw_tile_group_flag = 0                            !           |
       integer :: gw_tile_num_group = 0                             !           |
       integer :: num_tile_cells(50) = 0                            !           |
-      real    :: gw_tile_depth = 0.                                !           |
-      real    :: gw_tile_drain_area = 0.                           !           |
-      real    :: gw_tile_K = 0.                                    !           |
+      real, dimension (:), allocatable :: gw_tile_depth            !m          |tile drain depth per cell
+      real, dimension (:), allocatable :: gw_tile_drain_area       !m2         |drainage area per cell
+      real, dimension (:), allocatable :: gw_tile_K                !m/day      |tile hydraulic conductivity per cell
       integer, dimension (:,:), allocatable :: gw_cell_tile        !           |
       integer, dimension (:), allocatable :: gw_tilecell_chancell  !           |
       integer, dimension (:,:), allocatable :: gw_tile_groups      !           |
@@ -285,6 +323,7 @@
         real, allocatable :: wdth(:)                     !m    |canal width
         real, allocatable :: dpth(:)                     !m    |canal depth
         real, allocatable :: thck(:)                     !m    |canal thickness
+        real, allocatable :: hydc(:)                     !m/d  |hydraulic conductivity of canal bed sediments
         integer, allocatable :: dayb(:)                  !     |beginning day of active canal
         integer, allocatable :: daye(:)                  !     |ending day of active canal
       endtype canal_chan_info
@@ -314,8 +353,83 @@
       integer :: gw_canal_ncells_out = 0                 !     |number of cells connected to canals that receive outside water
       real, allocatable :: canal_out_info(:,:)           !     |characteristics for canals that receive outside water
       real, allocatable :: canal_out_conc(:)             !     |solute concentration in canals that receive outside water
-      
-      
+      !temporary: diversion water quality arrays (to be replaced by wallo transfer hydrograph in Phase 7)
+      real, allocatable :: div_conc_salt(:,:)            !g/m3 |salt ion concentration in diverted water
+      real, allocatable :: div_conc_cs(:,:)              !g/m3 |constituent concentration in diverted water
+      !canal-cell connection for canals that receive water from a point source diversion
+      type cell_canal_div_info
+        integer :: cell_id = 0
+        integer :: canal_id = 0
+        real :: leng = 0.
+        real :: elev = 0.
+      end type cell_canal_div_info
+      type (cell_canal_div_info), dimension (:), allocatable :: gw_canl_div_cell
+      integer :: gw_canal_ncells_div = 0                 !     |number of cells connected to canals that receive from diversions
+      !canal diversion characteristics
+      type canal_info
+        integer :: canal_id = 0
+        integer :: divr = 0                              !     |recall diversion ID (0 = no recall)
+        real :: width = 0.                               !m    |canal width
+        real :: depth = 0.                               !m    |canal water depth
+        real :: thick = 0.                               !m    |canal bed thickness
+        real :: bed_K = 0.                               !m/day|canal bed hydraulic conductivity
+        real :: div = 0.                                 !m3   |volume of water diverted from channel source
+        real :: stor = 0.                                !m3   |current volume of canal water
+        real :: out_seep = 0.                            !m3   |volume of canal water seeped to aquifer
+        real :: out_pond = 0.                            !m3   |volume of canal water routed to recharge pond
+      end type canal_info
+      type (canal_info), dimension (:), allocatable :: gw_canl_div_info
+
+      !pond: variables for recharge pond seepage --------------------------------------------------
+      integer :: gw_pond_flag = 0                        !     |flag = 0 (off) or 1 (on)
+      integer :: gw_npond = 0                            !     |number of recharge ponds in the model domain
+      integer :: in_ponds = 1219                         !     |input file unit for ponds
+      !pond features
+      type cell_pond_info
+        integer :: id = 0                                !     |recharge pond id
+        integer :: chan = 0                               !     |channel which provides water to the recharge pond
+        integer :: canal = 0                              !     |canal which provides water to the recharge pond
+        integer :: unl = 0                                !     |flag for outside source (1 = outside source)
+        integer :: ncell = 0                              !     |number of cells connected to the recharge pond
+        integer :: wsta = 0                               !     |weather station id
+        real :: area = 0.                                !m2   |recharge pond surface area
+        real :: bed_k = 0.                               !m/d  |hydraulic conductivity of the pond bed sediments
+        real :: evap_co = 0.6                            !     |pond evaporation coefficient
+        real :: stor = 0.                                !m3   |current daily volume of the recharge pond
+        real :: seep = 0.                                !m3   |current daily seepage from the pond to the aquifer
+        real :: div = 0.                                 !m3   |current daily specified diversion volume
+        real :: div_uns = 0.                             !m3   |unsatisfied diversion volume
+        real :: evap = 0.                                !m3   |current daily volume of evaporation from the recharge pond
+        integer :: dy_start = 0                          !     |year when recharge pond begins operation
+        integer, allocatable :: cells(:)                 !     |cells connected to the recharge pond
+        real, allocatable :: conn_area(:)                !m2   |connection area between recharge pond and cell
+        real, allocatable :: sol_mass(:)                 !kg   |solute mass in the pond water
+        real, allocatable :: sol_conc(:)                 !g/m3 |solute concentration in the pond water
+        real, allocatable :: unl_conc(:)                 !g/m3 |solute concentrations for an outside water source
+      end type cell_pond_info
+      type (cell_pond_info), dimension (:), allocatable :: gw_pond_info
+
+      !phyt: variables for phreatophyte transpiration ----------------------------------------------
+      integer :: gw_phyt_flag = 0                        !     |flag = 0 (off) or 1 (on)
+      integer :: gw_phyt_ncells = 0                      !     |number of cells with phreatophytes
+      integer :: gw_phyt_npts = 0                        !     |number of depth-rate points
+      integer, allocatable :: gw_phyt_ids(:)             !     |ids of cells with phreatophytes
+      real, allocatable :: gw_phyt_area(:)               !m2   |area of each cell that contains phreatophytes
+      real, allocatable :: gw_phyt_dep(:)                !m    |depth below ground surface for ET-rate relationship
+      real, allocatable :: gw_phyt_rate(:)               !m/day|rate of transpiration at corresponding depth
+
+      !tvh: variables for time-varying boundary conditions -----------------------------------------
+      integer :: gw_tvh_flag = 0                         !     |flag = 0 (off) or 1 (on)
+      integer :: gw_ntvh = 0                             !     |number of time-varying boundary cells
+      integer, allocatable :: gw_tvh_ids(:)              !     |boundary cell IDs
+      real, allocatable :: gw_tvh_vals(:,:)              !     |boundary cell head values for each year
+
+      !variables for writing out groundwater balance for selected groups of cells
+      integer :: gw_group_flag = 0                       !     |flag to make active
+      integer :: gw_wb_grp_num = 0                       !     |number of water balance groups
+      integer, allocatable :: gw_wb_grp_ncell(:)         !     |number of cells in each group
+      integer, allocatable :: gw_wb_grp_cells(:,:)       !     |cell IDs in each water balance group
+
       !general: nearest channel for each grid cell
       real, allocatable :: cell_channel(:)               !     |nearest channel for each grid cell 
       
@@ -329,44 +443,43 @@
       
       !variables for observation wells --------------------------------------------------------------------------------
       integer :: gw_num_obs_wells = 0                           !     |
-      integer, dimension (:), allocatable :: gw_obs_cells_init  !     |
       integer, dimension (:), allocatable :: gw_obs_cells       !     |
       real, dimension (:), allocatable :: gw_obs_head           !     |
       integer :: gw_cell_obs_ss = 0                             !     |
       real, dimension (:), allocatable :: gw_cell_obs_ss_vals   !     |
-      !logical :: usgs_obs!     |
-      integer :: usgs_obs = 0
-      real(8), dimension (:), allocatable :: usgs_id            !     |
-      real, dimension (:,:), allocatable :: usgs_head_vals      !     |
-      real, dimension (:,:), allocatable :: gw_obs_head_annual  !     |
-      real, dimension (:,:), allocatable :: sim_head_vals       !     |
-      real, dimension (:,:), allocatable :: gw_obs_sat_annual   !     |
-      real, dimension (:,:), allocatable :: sim_sat_vals        !     |
-      
-      
-      !variables for streamflow testing and output --------------------------------------------------------------------
-      !logical stream_obs!     |
-      integer :: stream_obs = 0
-      integer :: gw_num_obs_chan = 0                            !     |
-      integer :: num_months = 0                                 !     |
-      integer :: sim_month = 0                                  !     |
-      integer, dimension (:), allocatable :: obs_channels       !     |
-      real, dimension (:,:), allocatable :: stream_nse          !     |
-      real, dimension (:,:), allocatable :: stream_nse1         !     |
-      real, dimension (:,:), allocatable :: stream_nnse         !     |
-      real, dimension (:,:), allocatable :: stream_kg           !     |
-      real, dimension (:,:), allocatable :: stream_pbias        !     |
-      real, dimension (:,:), allocatable :: obs_flow_vals       !     |
-      real, dimension (:,:), allocatable :: sim_flow_vals       !     |
-      integer :: gw_flow_cal_yrs = 0                            !     |
-      integer :: gw_flow_cal = 0                                !     |
       
 
       !variables for hydrograph separation ----------------------------------------------------------------------------
       real, dimension (:,:), allocatable :: chan_hyd_sep
       integer, dimension (:), allocatable :: hydsep_flag
-      
-      
+
+
+      !variables for groundwater heat transport -----------------------------------------------------------------------
+      integer :: gw_heat_flag = 0         !             |flag (0 or 1) 1 = heat transport is simulated
+      real :: gw_rho = 1000.              !kg/m3        |density of groundwater
+      real :: gw_cp = 4182.               !J/(kg C)     |specific heat of groundwater
+      real, dimension (:), allocatable :: gw_rechheat   !J            |heat in daily recharge (reaching water table)
+      real, dimension (:), allocatable :: gw_obs_temp   !deg C        |temperature in observation cells
+      real, dimension (:), allocatable :: gw_obs_temp_aa !deg C       |AA temperature accumulator for obs wells
+      real, dimension (:,:), allocatable :: gw_obs_sol_aa  !mg/L      |AA solute conc accumulator for obs wells
+      real, dimension (:), allocatable :: heat_cell     !J            |heat storage for current day (before heat change loop)
+      type groundwater_heat_state
+        real :: stor = 0.           !Joule        |current heat stored in groundwater
+        real :: thmc = 0.           !J/(d m K)    |thermal conductivity
+        real :: temp = 0.           !C            |current groundwater temperature
+        real :: tnew = 0.           !C            |new groundwater temperature (at end of day)
+        real :: told = 0.           !C            |old groundwater temperature (at beginning of day)
+        real :: hbef = 0.           !Joule        |groundwater heat at beginning of day
+        real :: haft = 0.           !Joule        |groundwater heat at end of day
+        real :: tpmo = 0.           !C            |monthly average groundwater temperature
+        real :: tpyr = 0.           !C            |annual average groundwater temperature
+      end type groundwater_heat_state
+      type (groundwater_heat_state), dimension (:), allocatable :: gwheat_state
+
+      !note: gw_heat_ss, gw_heat_ss_mo, gw_heat_ss_yr, gw_heat_grid_* use the unified
+      !      groundwater_ss type declared above in the sources/sinks section
+
+
       !variables for groundwater solute transport ---------------------------------------------------------------------
       
       !general solute variables
@@ -379,10 +492,10 @@
       integer :: gwsol_minl = 0                               !    |flag for simulating salt mineral precipitation-dissolution
       integer :: gw_nminl = 0                                 !    |number of salt minerals (set to 5)
        
-      !main attributes of solutes
-      character (len=16) :: gwsol_nm(100) = ""
-      real :: gwsol_rctn(100) = 0.
-      real :: gwsol_sorb(100) = 0.
+      !main attributes of solutes (allocated in gwflow_read to gw_nsolute)
+      character (len=16), allocatable :: gwsol_nm(:)
+      real, allocatable :: gwsol_rctn(:)
+      real, allocatable :: gwsol_sorb(:)
       
       !solute cell state variables
       type solute_state
@@ -400,8 +513,8 @@
       end type object_solute_state
       type (object_solute_state), dimension (:), allocatable :: gwsol_state
 
-      !salt mineral cell state variables
-      real :: mass_min(100) = 0.                         !g       |solute mass added/removed from cell via precipitation-dissolution
+      !salt mineral cell state variables (allocated in gwflow_read to gw_nsolute)
+      real, allocatable :: mass_min(:)                   !g       |solute mass added/removed from cell via precipitation-dissolution
       type minl_state
         real, dimension (:), allocatable :: fract        !        |fraction of cell that is the salt mineral
       end type minl_state
@@ -409,7 +522,7 @@
       
       !solute cell chemical reaction variables
       integer, dimension (:), allocatable :: cell_int
-      real :: mass_rct(100) = 0.    !g            |solute mass added/removed from cell via chemical reaction
+      real, allocatable :: mass_rct(:)    !g            |solute mass added/removed from cell via chemical reaction (allocated in gwflow_read)
       type solute_chem
         real :: ino3 = 0.           !             |selenium reduction inhibition factor
         real :: oxyg = 0.           !g/m3         |oxygen concentration in groundwater
@@ -423,6 +536,11 @@
         real, dimension (:), allocatable :: shale_sseratio  !        |sulfur:se ratio in shale
         real, dimension (:), allocatable :: shale_o2a       !1/day   |o2 oxidation rate in presence of shale
         real, dimension (:), allocatable :: shale_no3a      !1/day   |no3 oxidation rate in presence of shale
+        integer :: bed_flag = 0     !             |flag (0,1) for presence of shale in bedrock
+        real :: bed_sse = 0.        !             |sulfur:se ratio in bedrock shale
+        real :: bed_o2a = 0.        !1/day        |o2 oxidation rate in presence of bedrock shale
+        real :: bed_no3a = 0.       !1/day        |no3 oxidation rate in presence of bedrock shale
+        integer :: ripar = 0        !             |flag: 1=cell in riparian area; 0=not
       end type solute_chem
       type (solute_chem), dimension (:), allocatable :: gwsol_chem
       
@@ -440,6 +558,7 @@
         real :: wetl = 0.           !g            |solute mass exchanged with wetland
         real :: fpln = 0.           !g            |solute mass exchanged with channel in floodplain
         real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
+        real :: pond = 0.           !g            |solute mass in recharge pond seepage water
         real :: advn = 0.           !g            |solute mass advected to/from cell
         real :: disp = 0.           !g            |solute mass dispersed to/from cell
         real :: rcti = 0.           !g            |solute mass of chemical reaction (input)
@@ -467,6 +586,7 @@
         real :: wetl = 0.           !g            |solute mass exchanged with wetland
         real :: fpln = 0.           !g            |solute mass exchanged with channel in floodplain
         real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
+        real :: pond = 0.           !g            |solute mass in recharge pond seepage water
         real :: advn = 0.           !g            |solute mass advected to/from cell
         real :: disp = 0.           !g            |solute mass dispersed to/from cell
         real :: rcti = 0.           !g            |solute mass produced by chemical reaction
@@ -478,12 +598,19 @@
         type (solute_ss_sum), dimension (:), allocatable :: solute
       end type object_solute_ss_sum
       type (object_solute_ss_sum), dimension (:), allocatable :: gwsol_ss_sum
+      type (object_solute_ss_sum), dimension (:), allocatable :: gwsol_ss_sum_mo
       
       !percolation and recharge arrays
       real, dimension (:,:), allocatable :: gwflow_percsol         !kg/ha    |solute mass leaving the soil profile
       real, dimension (:,:), allocatable :: gw_rechsol             !kg/ha    |solute mass in daily recharge (reaching water table)
       
-      !grid mass for year and total (kg)
+      !grid mass for month, year, and total (kg)
+      real, dimension (:), allocatable :: sol_grid_chng_mo,sol_grid_rech_mo,sol_grid_gwsw_mo,sol_grid_swgw_mo, &
+                                          sol_grid_satx_mo,sol_grid_advn_mo,sol_grid_disp_mo, &
+                                          sol_grid_rcti_mo,sol_grid_rcto_mo,sol_grid_minl_mo, &
+                                          sol_grid_sorb_mo,sol_grid_ppag_mo,sol_grid_ppex_mo,sol_grid_tile_mo, &
+                                          sol_grid_soil_mo,sol_grid_resv_mo,sol_grid_wetl_mo,sol_grid_canl_mo, &
+                                          sol_grid_fpln_mo,sol_grid_pond_mo
       real, dimension (:), allocatable :: sol_grid_chng_yr
       real, dimension (:), allocatable :: sol_grid_rech_yr
       real, dimension (:), allocatable :: sol_grid_gwsw_yr
@@ -503,6 +630,7 @@
       real, dimension (:), allocatable :: sol_grid_wetl_yr
       real, dimension (:), allocatable :: sol_grid_canl_yr
       real, dimension (:), allocatable :: sol_grid_fpln_yr
+      real, dimension (:), allocatable :: sol_grid_pond_yr
       real, dimension (:), allocatable :: sol_grid_chng_tt
       real, dimension (:), allocatable :: sol_grid_rech_tt
       real, dimension (:), allocatable :: sol_grid_gwsw_tt
@@ -522,30 +650,19 @@
       real, dimension (:), allocatable :: sol_grid_wetl_tt
       real, dimension (:), allocatable :: sol_grid_canl_tt
       real, dimension (:), allocatable :: sol_grid_fpln_tt
+      real, dimension (:), allocatable :: sol_grid_pond_tt
       
       !solute concentrations at observation cells
       real, dimension (:,:), allocatable :: gw_obs_solute          !         |                                 
                                           
       
-      !variables specific to national model (NAM) ---------------------------------------------------------------------
-      !logical  nat_model!         |
-      integer :: nat_model = 0
-      integer, dimension (:), allocatable :: huc12_nhru            !         |
-      integer, dimension (:), allocatable :: huc12_ncell           !         |
-      integer, dimension (:), allocatable :: hrus_connected        !         |
-      integer, dimension (:,:), allocatable :: huc12_hrus          !         |
-      integer, dimension (:), allocatable :: cell_received         !         |
-      integer, dimension (:,:), allocatable :: huc12_cells         !         |
-      integer, dimension (:), allocatable :: cell_included_huc12   !         |
-      real(8), dimension (:), allocatable :: huc12                 !         |
-      real, dimension (:,:), allocatable :: gw_huc12_wb            !         |
-      real, dimension (:,:), allocatable :: gw_huc12_wb_mo         !         |
-      
-      
       !reading and writing --------------------------------------------------------------------------------------------
       integer :: out_gw = 1228
       integer :: in_wet_cell = 1239
-      integer :: out_gwobs = 1240
+      integer :: out_gwobs = 1457       !merged obs well long-format file (day)
+      integer :: out_gwobs_mon = 1458
+      integer :: out_gwobs_yr = 1459
+      integer :: out_gwobs_aa = 1460
       integer :: out_gwconnect = 1241
       integer :: out_gwheads = 1242
       integer :: out_gwbal = 1243
@@ -558,9 +675,11 @@
       integer :: out_gwsw = 1252
       integer :: out_lateral = 1253
       integer :: out_gw_etact = 1254
-      integer :: out_gw_tile = 1255
+      integer :: out_gw_tile = 1317
+      integer :: out_gwbal_mon = 1255
       integer :: out_gwbal_yr = 1256
       integer :: out_gwbal_aa = 1257
+      integer :: out_gwbal_grp = 1601
       integer :: out_hyd_sep = 1258
       integer :: out_tile_cells = 1259
       integer :: out_gwconc = 1260
@@ -571,22 +690,49 @@
       integer :: out_gw_wet = 1310
       integer :: out_gw_pumpag = 1272
       integer :: out_gw_pumpex = 1273
-      integer :: out_gwobs_usgs = 1274
-      integer :: out_strobs = 1275
-      integer :: out_huc12wb = 1276
-      integer :: out_huc12wb_mo = 1312
       integer :: out_gw_pumpdef = 1277
       integer :: out_gw_canal = 1278
       integer :: out_gw_fp = 1283
       integer :: out_gw_chem = 1284
-      integer :: out_hru_pump_mo = 1285
-      integer :: out_hru_pump_yr = 1286
+      !yearly water flux component output
+      integer :: out_gw_gwet = 1311
+      integer :: out_gw_gwsw = 1312
+      integer :: out_gw_satx = 1314
+      integer :: out_gw_ppag = 1315
+      integer :: out_gw_ppex = 1316
+      integer :: out_gw_resv = 1318
+      integer :: out_gw_wetl = 1319
+      integer :: out_gw_fpln = 1320
+      integer :: out_gw_canl = 1321
+      integer :: out_gw_pond = 1322
+      integer :: out_gw_phyt = 1325
+      !canal and pond balance output
+      integer :: out_canal_bal = 1328
+      integer :: out_canal_sol = 1329
+      integer :: out_pond_bal = 1323
+      integer :: out_pond_sol = 1324
+      integer :: out_pond_mass = 1326
+      integer :: out_pond_conc = 1327
+      !temperature output
+      integer :: out_gwtemps = 1370
+      !transit time output
+      integer :: out_gw_transit = 1410
+      integer :: out_gw_transit_chan = 1411
+      integer :: out_gw_transit_tile = 1412
+      !channel cell groups and observation output
+      integer :: out_gwsw_groups = 1413
+      integer :: out_gwsw_chanobs_flow = 1414
+      integer :: out_gwsw_chanobs_no3 = 1415
+      integer :: out_hru_pump_day = 1285
+      integer :: out_hru_pump_mo = 1454
+      integer :: out_hru_pump_yr = 1455
+      integer :: out_hru_pump_aa = 1456
       integer :: out_hru_pump_obs = 1287
       integer :: out_head_mo = 1288
       integer :: out_head_yr = 1289
       integer :: out_conc_mo = 1290
       integer :: out_conc_yr = 1291
-      !solute fluxes
+      !solute fluxes (yearly)
       integer :: out_sol_rech = 1292
       integer :: out_sol_gwsw = 1293
       integer :: out_sol_soil = 1294
@@ -602,11 +748,72 @@
       integer :: out_sol_rcto = 1304
       integer :: out_sol_minl = 1305
       integer :: out_sol_sorb = 1306
-      !solute mass balance (daily, yearly, average annual)
+      integer :: out_sol_pond = 1307
+      !solute fluxes (monthly)
+      integer :: out_sol_rech_mo = 1430
+      integer :: out_sol_gwsw_mo = 1431
+      integer :: out_sol_soil_mo = 1432
+      integer :: out_sol_satx_mo = 1433
+      integer :: out_sol_ppag_mo = 1434
+      integer :: out_sol_ppex_mo = 1435
+      integer :: out_sol_tile_mo = 1436
+      integer :: out_sol_resv_mo = 1437
+      integer :: out_sol_fpln_mo = 1438
+      integer :: out_sol_canl_mo = 1439
+      integer :: out_sol_wetl_mo = 1440
+      integer :: out_sol_rcti_mo = 1441
+      integer :: out_sol_rcto_mo = 1442
+      integer :: out_sol_minl_mo = 1443
+      integer :: out_sol_sorb_mo = 1444
+      integer :: out_sol_pond_mo = 1445
+      !solute mass balance (daily, monthly, yearly, average annual)
       integer :: out_solbal_dy = 7100
+      integer :: out_solbal_mo = 7150
       integer :: out_solbal_yr = 7200
       integer :: out_solbal_aa = 7300
       !solute observation cell concentrations
-      integer :: out_gwobs_sol = 1305
-       
-      end module gwflow_module  
+      integer :: out_gwobs_sol = 1308
+      !water flux component output (monthly grids)
+      integer :: out_gw_rech_mo = 1330
+      integer :: out_gw_gwet_mo = 1331
+      integer :: out_gw_gwsw_mo = 1332
+      integer :: out_gw_soil_mo = 1333
+      integer :: out_gw_satx_mo = 1334
+      integer :: out_gw_ppag_mo = 1335
+      integer :: out_gw_ppex_mo = 1336
+      integer :: out_gw_tile_mo = 1337
+      integer :: out_gw_resv_mo = 1338
+      integer :: out_gw_wetl_mo = 1339
+      integer :: out_gw_fpln_mo = 1340
+      integer :: out_gw_canl_mo = 1341
+      integer :: out_gw_pond_mo = 1342
+      integer :: out_gw_phyt_mo = 1343
+      !heat transport output
+      integer :: out_heatbal_dy = 1360
+      integer :: out_heatbal_yr = 1361
+      integer :: out_heatbal_aa = 1362
+      integer :: out_temp_mo = 1371
+      integer :: out_temp_yr = 1372
+      integer :: out_gwobs_temp = 1373
+      !heat flux component output (yearly grids)
+      integer :: out_heat_rech = 1380
+      integer :: out_heat_gwet = 1381
+      integer :: out_heat_gwsw = 1382
+      integer :: out_heat_satx = 1383
+      integer :: out_heat_soil = 1384
+      integer :: out_heat_tile = 1385
+      integer :: out_heat_ppag = 1386
+      integer :: out_heat_ppex = 1387
+      integer :: out_heat_resv = 1388
+      integer :: out_heat_wetl = 1389
+      integer :: out_heat_fpln = 1390
+      integer :: out_heat_canl = 1391
+      integer :: out_heat_pond = 1392
+
+      !cell-level long-format output file units
+      integer :: out_gwcell_day = 1450
+      integer :: out_gwcell_mon = 1451
+      integer :: out_gwcell_yr  = 1452
+      integer :: out_gwcell_aa  = 1453
+
+      end module gwflow_module

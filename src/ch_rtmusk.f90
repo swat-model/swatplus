@@ -200,7 +200,12 @@
         rto = trans_loss / ch_stor(jrch)%flo
         ch_stor(jrch) = (1. - rto) * ch_stor(jrch)
       end if
-      ch_wat_d(ich)%seep = trans_loss
+      !if gwflow active, seepage computed in gwflow routine
+      if(bsn_cc%gwflow == 0) then
+        ch_wat_d(ich)%seep = trans_loss
+      else
+        ch_wat_d(ich)%seep = 0.
+      endif
 
       !! calculate evaporation losses
       if (ch_stor(jrch)%flo > 1.e-6) then
