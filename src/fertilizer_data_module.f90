@@ -35,7 +35,7 @@
       type manure_attributes
         character(len=64) ::  name = " "  !! Identifier used to crosswalk fertilizer entries, constructed from
                                           !! manure_region, manure_source, and manure_type
-        real :: frac_water = 0.       !! kg water/kg manure |frac of manure which is water
+        real :: frac_water = 0.       !! kg water/(kg manure + kg_water) |frac of manure which is water
         real :: fcbn = 0.0            !! kg C/kg frt        |frac of fert which is carbon
         real :: fminn = 0.            !! kg minN/kg frt     |frac of fert which is mineral nitrogen (NO3+NH3)
         real :: fminp = 0.            !! kg minN/kg frt     |frac of fert which is mineral phoshorus

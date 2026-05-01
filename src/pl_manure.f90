@@ -67,7 +67,7 @@
        
       frac_solids = (1. - manure_om(ifrt)%frac_water) 
       liq_manure_kg = frt_kg/(frac_solids) - frt_kg
-      liq_manure_mm = liq_manure_kg * .0001 !this is in mm/ha units
+      liq_manure_mm = liq_manure_kg * .0001 !this results in mm/ha units
 
       do l = 1, 2
         fr_ly = 0.
@@ -97,7 +97,7 @@
         if (bsn_cc%cswat == 1) then
           ! soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg *          &
           !       manure_om(ifrt)%forgn * 10.
-          soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg * orgc_fr
+          soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg * manure_om(ifrt)%fcbn
 
           soil1(j)%man(l)%n = soil1(j)%man(l)%n + fr_ly * frt_kg *            &
                 manure_om(ifrt)%forgn
@@ -119,9 +119,11 @@
         
           frt_ly = fr_ly * frt_kg 
           
-          org_c = frt_ly * orgc_fr
+          ! org_c = frt_ly * orgc_fr
+          org_c = frt_ly * manure_om(ifrt)%fcbn
                     
-          c_n_fac = .175 * orgc_fr / (manure_om(ifrt)%fminn + manure_om(ifrt)%forgn + 1.e-5)
+          ! c_n_fac = .175 * orgc_fr / (manure_om(ifrt)%fminn + manure_om(ifrt)%forgn + 1.e-5)
+          c_n_fac = .175 * org_c / (manure_om(ifrt)%fminn + manure_om(ifrt)%forgn + 1.e-5)
           
           meta_fr = .85 - .018 * c_n_fac
           if (meta_fr < 0.01) then
@@ -138,16 +140,15 @@
           meta_m = frt_ly * meta_fr
           soil1(j)%meta(l)%m = soil1(j)%meta(l)%m + meta_m
           
-          
-          meta_n = frt_ly *rtof * manure_om(ifrt)%forgn * meta_fr
-          
+          meta_n = frt_ly * rtof * manure_om(ifrt)%forgn * meta_fr
           
           soil1(j)%meta(l)%n = soil1(j)%meta(l)%n + meta_n
           
           !! remaining organic N is llocated to structural litter N pool
           soil1(j)%str(l)%n = soil1(j)%str(l)%n + frt_ly * manure_om(ifrt)%forgn - meta_n
             
-          str_c = frt_ly * orgc_fr - meta_c
+          ! str_c = frt_ly * orgc_fr - meta_c
+          str_c = frt_ly * org_c - meta_c
           soil1(j)%str(l)%c = soil1(j)%str(l)%c + str_c
           
           !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in structural litter pool
