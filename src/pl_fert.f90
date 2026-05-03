@@ -123,7 +123,10 @@
           
           !! add lignin manure pool
           ! soil1(j)%lig(l) = soil1(j)%lig(l) + 0.175 * pool_fr * org_frt
-          soil1(j)%lig(l) = soil1(j)%lig(l) + soil1(j)%str(l) * .80
+          soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + soil1(j)%str(l)%m * .80
+          soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + soil1(j)%str(l)%c * .80
+          soil1(j)%lig(l)%n = soil1(j)%lig(l)%n + soil1(j)%str(l)%n * .80
+          soil1(j)%lig(l)%p = soil1(j)%lig(l)%p + soil1(j)%str(l)%p * .80
           
           !! total residue pool is metabolic + structural
           ! soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
