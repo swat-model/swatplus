@@ -42,7 +42,6 @@
       real :: str_c = 0.        !organic carbon allocated to structural litter C pool
       real :: str_m = 0.         !fertilizer (including C and N) allocated into structure litter SOM pool
       real :: c_n_fac = 0.        !function of C:N ratio in fertilizer
-      real :: orgc_fr = 0.                   !fraction of organic carbon in fertilizer - 0.42
       real :: liq_manure_kg = 0.   !kilograms of the liquid portion of the manure 
       real :: liq_manure_mm = 0.   !mm/ha of of the liquid portion of the manure
       real :: frac_solids          !fraction of solids in manure which by definition is solids/(solids + liquids)
