@@ -49,7 +49,6 @@
       
       j = ihru
       
-      orgc_fr = man_coef%man_to_c
       rtof = man_coef%rtof
           
       !! add water to layer - mm = kg/ha * 1.0m3/t * ha/10,000m2 * 1,000mm/m
