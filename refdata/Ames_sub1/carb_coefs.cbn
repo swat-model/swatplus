@@ -4,9 +4,10 @@ File: carb_coefs.cbn   Carbon coefficients used if cswat == 2 or cswat == 3
 # 1 is true, 0 is false
 # If omitted, the default is 0 or false.
 # if 0, only hru_cbn_lyr.txt/.csv and hru_seq_lyr.txt/.csv will be printed out.
-# if 1, hru_cbn_lyr.txt/.csv, hru_seq_lyr.txt/.csv, hru_rsdc_stat.txt/csv, hru_soilc_stat.txt/csv, &
-#       hru_cflux_stat.txt/csv, hru_soilcarb_mb_stat.txt/csv, hru_cpool_stat.txt/csv, hru_n_p_pool_stat.txt/csv, &
-cbn_diagnostics 1 
+# if 1, hru_cbn_lyr.txt/.csv, hru_seq_lyr.txt/.csv, hru_rsdc_stat.txt/.csv, hru_soilc_stat.txt/.csv, &
+#       hru_cflux_stat.txt/.csv, hru_soilcarb_mb_stat.txt/.csv, hru_cpool_stat.txt/.csv, hru_n_p_pool_stat.txt/.csv, &
+#       hru_begsim_soil_prop.txt/.csv, hru_endsim_soil_prop.txt/.csv
+cbn_diagnostics 0 
 
 # carbdb coefficients
 #               1st_lyr     other_lyrs
