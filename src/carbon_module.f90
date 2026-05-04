@@ -1,6 +1,9 @@
       module carbon_module 
       
       implicit none
+
+      logical :: cbn_diagnostics = .false.   !        |This controls what is printed out in soil_nutcarb_write.f90. 
+                                             !        |If .false. only hru_cbn_lyr(.txt, .csv) and hru_seq_lyr(.txt, .csv) will be printed out
       
       type carbon_terrestrial_inputs
         real :: er_POC_para = 1.5       !           |POC enrichment ratio ! 0-10 ! 0.0-5.0  MOST SENSITIVE  

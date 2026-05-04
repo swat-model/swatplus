@@ -1,4 +1,12 @@
-File: carb_coefs.cbn   Carbon coefficients used if cswat == 1
+File: carb_coefs.cbn   Carbon coefficients used if cswat == 2 or cswat == 3
+
+# cbn_diagnostics contols what carbon related files are printed out if hru_cb is specified in print.prt
+# 1 is true, 0 is false
+# If omitted, the default is 0 or false.
+# if 0, only hru_cbn_lyr.txt/.csv and hru_seq_lyr.txt/.csv will be printed out.
+# if 1, hru_cbn_lyr.txt/.csv, hru_seq_lyr.txt/.csv, hru_rsdc_stat.txt/csv, hru_soilc_stat.txt/csv, &
+#       hru_cflux_stat.txt/csv, hru_soilcarb_mb_stat.txt/csv, hru_cpool_stat.txt/csv, hru_n_p_pool_stat.txt/csv, &
+cbn_diagnostics 1 
 
 # carbdb coefficients
 #               1st_lyr     other_lyrs
@@ -26,7 +34,7 @@ prmt_21         1000.
 prmt_44         0.5
 
 # Length of days that a tillage event will be effective
-till_eff_days   30
+till_eff_days   100
 
 # Manure carbon coefficients
 rtof            0.5 
@@ -38,7 +46,8 @@ man_to_c        0.42
 # tmpf  Options: 1 - tmpf1,  2 - tmpf2, 3 - tmpf3
 # watf  Options: 1 - watf1,  2 - watf2
 #                      tmpf    watf    
-cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+# cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+cbn_factor_approaches   3       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
 
 # tmpf2 temperature effect equation parameters
 tn              -0.5
@@ -50,18 +59,6 @@ zz_bmix_coefs   3.0    5.0   -5.5
 zz_emix_coefs   3.0   15.0   -3.5
 
 # Surface residue photo degradtion factor.
-photo_degrade_factor    .01
+photo_degrade_factor    0.001
 
-# Soil Test Values for each layer
-# soil_name and depth_mm are required, enter -1 for other values if missing.
-# The order of entry must be asending depths for each soil.
-# If sand, silt, clay are not -1 they must total to 100.0
-# Their should be a unique mapping between the soil_name below and in hru_data.hru 
-# and soils.sol file to prevent overwiting soil information for other
-# hrus.
-nmbr_soil_test_layers 4
-#         soil_name      depth_mm  bulk_density carbon %sand    %silt   %clay
-soil_test soil_01-h1     150        2.0         4.0     30.0     30.0    40.0 
-soil_test soil_01-h1     250        1.5         3.0     25.0     35.0    40.0 
-soil_test soil_03-h3     125        1.6         3.0     40.0     30.0    30.0
-soil_test soil_03-h3     150        2.0         3.0     15.0     45.0    40.0
+
