@@ -70,7 +70,7 @@
       bsn_org_rsd = soil_org_z
 
       if (freq_label == "begsim" .or. freq_label == "endsim" ) then
-        if (cbn_diagnostics == .true.) then
+        if (cbn_diagnostics .eqv. .true.) then
           do j = 1, sp_ob%hru
             iob = sp_ob1%hru + j - 1
             if (freq_label == "begsim") then
@@ -261,7 +261,7 @@
           end if
           print_soil_lyr_depths = .false.
           
-          if (cbn_diagnostics == .true.) then
+          if (cbn_diagnostics .eqv. .true.) then
             !write all organic carbon for the plant community file = "hru_plc_stat.txt"
             write (4560,*) freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                 &
