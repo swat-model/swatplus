@@ -530,11 +530,6 @@
               call nut_orgn
             end if
         
-            ! !! C-Farm (Armen) c and organic n in runoff
-            ! if (bsn_cc%cswat == 1) then
-            !   call nut_orgnc
-            ! end if
-      
             !! SWAT-C Xuesong -- c and organic n in runoff
             if (bsn_cc%cswat == 1) then
               call nut_orgnc2

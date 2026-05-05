@@ -40,9 +40,6 @@
       
       implicit none 
        
-      external :: fcgd
-
-      real :: fcgd
       integer :: j = 0      !none          |HRU number
       real :: rmn1 = 0.     !kg N/ha       |amount of nitrogen moving from fresh organic
                             !              |to nitrate(80%) and active organic(20%)
@@ -80,16 +77,14 @@
           pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
           pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
           if (soil(j)%phys(1)%tmp > 0.) then
-            
+            !! compute soil water factor
             sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
             sut = Max(.05, sut)
 
             !!compute soil temperature factor
-            ! cdg = fcgd(soil(j)%tmp_srf)
             xx = soil(j)%phys(1)%tmp
             cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
             cdg = Max(.1, cdg)
-            !! compute soil water factor
 
             !! compute combined factor
             xx = cdg * sut

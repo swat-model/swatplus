@@ -8,7 +8,8 @@
       use time_module
       use constituent_mass_module
       use ch_cs_module
-      
+      use gwflow_module, only : div_conc_cs
+
       implicit none 
 
       !incoming variables
@@ -23,6 +24,9 @@
       
       !depending on the point source type, add/remove constituent mass to object
       obcs(icmd)%hd(1)%cs = 0.
+      do ics=1,cs_db%num_cs
+        div_conc_cs(ics,irec) = 0.
+      enddo
       if (cs_db%num_cs > 0) then
         select case (rec_cs(irec)%typ)  
           case (1)    !daily
@@ -33,6 +37,7 @@
                   ichan = ob(icmd)%obtypno_out(1) !channel from which water is diverted
                   if(ch_stor(ichan)%flo > 10.) then !only proceed if channel has water
                     cs_conc = (ch_water(ichan)%cs(ics)*1000.) / ch_stor(ichan)%flo !g/m3 in channel water
+                    div_conc_cs(ics,irec) = cs_conc
                     div_mass = (cs_conc * recall(irec)%hd(time%day,time%yrs)%flo) / 1000. !kg/day 
                     if((div_mass*(-1)) > ch_water(ichan)%cs(ics)) then
                       div_mass = ch_water(ichan)%cs(ics) * (-1) !only take what is there

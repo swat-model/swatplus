@@ -58,7 +58,8 @@
       type (output_waterbal), dimension (:), allocatable :: hltwb_m
       type (output_waterbal), dimension (:), allocatable :: hltwb_y
       type (output_waterbal), dimension (:), allocatable :: hltwb_a
-      
+
+      type (output_waterbal), dimension (:), allocatable :: lsu_wb_d    !output for using components of lsus in ch_temp
       type (output_waterbal), dimension (:), allocatable :: ruwb_d
       type (output_waterbal), dimension (:), allocatable :: ruwb_m
       type (output_waterbal), dimension (:), allocatable :: ruwb_y
@@ -1292,9 +1293,9 @@
          character (len=12) :: isd           =    "        unit"
          character (len=22) :: id            =    "                gis_id"
          character (len=13) :: name          =    "    name     "
-         character(len=15)  :: abco2         =    "          abco2"
-         character(len=15)  :: abpt          =    "            abp"  
          character(len=15)  :: asp           =    "            asp"         
+         character(len=15)  :: abpt          =    "            abp"  
+         character(len=15)  :: abco2         =    "          abco2"
          character(len=15)  :: a1co2         =    "          a1co2"         
          character(len=15)  :: asco2         =    "          asco2"         
          character(len=15)  :: apco2         =    "          apco2"         

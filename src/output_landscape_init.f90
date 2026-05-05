@@ -9,6 +9,7 @@
       use aquifer_module
       use output_landscape_module
       use time_module
+      use carbon_module
       use output_path_module
       
       implicit none 
@@ -478,100 +479,131 @@
             write (4559,*)  bsn%name, prog, "total sequestered soil carbon (Mg/ha) by layer depth in mm" 
             write (9000,*) "HRU                       hru_seq_lyr.csv"
           end if
-    
-          !! write carbon in soil, plant, and residue
-          call open_output_file(4560, "hru_plc_stat.txt", 1500)
-          write (4560,*)  bsn%name, prog
-          write (4560,*) plc_hdr
-          write (4560,*) plc_hdr_units
-          write (9000,*) "HRU                       hru_plc_stat.txt"
-          if (pco%csvout == "y") then
-            call open_output_file(4563, "hru_plc_stat.csv", 1500)
-            write (4563,*)  bsn%name, prog
-            write (4563,'(*(G0.3,:,","))') plc_hdr
-            write (4563,'(*(G0.3,:,","))') plc_hdr_units
-            write (9000,*) "HRU                       hru_plc_stat.csv"
-          end if
-    
-          if (bsn_cc%cswat == 1 ) then
-            call open_output_file(4561, "hru_rsdc_stat.txt", 1500)
-            write (4561,*)  bsn%name, prog
-            write (4561,*) rsdc_hdr
-            write (4561,*) rsdc_hdr_units
-            write (9000,*) "HRU                       hru_rsdc_stat.txt"
+
+          if (cbn_diagnostics == .true.) then
+
+            !! write end of simulation soil properties headers to hru_endsim_soil_prop
+            call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
+            write (4584,*)  bsn%name, prog
+            write (4584,*)  endsim_soil_prop_hdr
+            write (9000,*) "HRU                       hru_endsim_soil_prop.txt"
             if (pco%csvout == "y") then
-              call open_output_file(4564, "hru_rsdc_stat.csv", 1500)
-              write (4564,*)  bsn%name, prog
-              write (4564,'(*(G0.3,:,","))') rsdc_hdr
-              write (4564,'(*(G0.3,:,","))') rsdc_hdr_units
-              write (9000,*) "HRU                       hru_rsdc_stat.csv"
-            end if
-          
-            call open_output_file(4562, "hru_soilc_stat.txt", 1500)
-            write (4562,*)  bsn%name, prog
-            write (4562,*) soilc_hdr
-            write (4562,*) soilc_hdr_units
-            write (9000,*) "HRU                       hru_soilc_stat.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4565, "hru_soilc_stat.csv", 1500)
-              write (4565,*)  bsn%name, prog
-              write (4565,'(*(G0.3,:,","))') soilc_hdr
-              write (4565,'(*(G0.3,:,","))') soilc_hdr_units
-              write (9000,*) "HRU                       hru_soilc_stat.csv"
+              call open_output_file(4585, "hru_endsim_soil_prop.csv", 1500)
+              write (4585,*)  bsn%name, prog
+              write (4585,'(*(G0.3,:,","))') endsim_soil_prop_hdr
+              write (9000,*) "HRU                       hru_endsim_soil_prop.csv"
             end if
 
-            call open_output_file(4567, "hru_cflux_stat.txt", 1500)
-            write (4567,*)  bsn%name, prog
-            write (4567,*) soil_org_flux_hdr
-            write (4567,*) soil_org_flux_hdr_units
-            write (9000,*) "HRU                       hru_cflux_stat.txt"
+            !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
+            call open_output_file(4586, "hru_begsim_soil_prop.txt", 1500)
+            write (4586,*)  bsn%name, prog
+            write (4586,*)  endsim_soil_prop_hdr  ! begsim can use the same header as endsim 
+            write (9000,*) "HRU                       hru_begsim_soil_prop.txt"
             if (pco%csvout == "y") then
-              call open_output_file(4568, "hru_cflux_stat.csv", 1500)
-              write (4568,*)  bsn%name, prog
-              write (4568,'(*(G0.3,:,","))') soil_org_flux_hdr
-              write (4568,'(*(G0.3,:,","))') soil_org_flux_hdr_units
-              write (9000,*) "HRU                       hru_cflux_stat.csv"
-            end if
-          
-            call open_output_file(4570, "hru_soilcarb_mb_stat.txt", 1500)
-            write (4570,*)  bsn%name, prog
-            write (4570,*) soil_mb_hdr
-            write (4570,*) soil_mb_units
-            write (9000,*) "HRU                       hru_soilcarb_mb_stat.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4571, "hru_soilcarb_mb_stat.csv", 1500)
-              write (4571,*)  bsn%name, prog
-              write (4571,'(*(G0.3,:,","))') soil_mb_hdr
-              write (4571,'(*(G0.3,:,","))') soil_mb_units
-              write (9000,*) "HRU                       hru_soilcarb_mb_stat.csv"
+              call open_output_file(4587, "hru_begsim_soil_prop.csv", 1500)
+              write (4587,*)  bsn%name, prog
+              write (4587,'(*(G0.3,:,","))') endsim_soil_prop_hdr ! begsim can use the same header as endsim 
+              write (9000,*) "HRU                       hru_begsim_soil_prop.csv"
             end if
 
-            call open_output_file(4572, "hru_cpool_stat.txt", 1500)
-            write (4572,*)  bsn%name, prog
-            write (4572,*) cpool_hdr
-            write (4572,*) cpool_units
-            write (9000,*) "HRU                       hru_cpool_stat.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4573, "hru_cpool_stat.csv", 1500)
-              write (4573,*)  bsn%name, prog
-              write (4573,'(*(G0.3,:,","))') cpool_hdr
-              write (4573,'(*(G0.3,:,","))') cpool_units
-              write (9000,*) "HRU                       hru_cpool_stat.csv"
-            end if
+            ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
+            call soil_nutcarb_write(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
 
-            call open_output_file(4582, "hru_n_p_pool_stat.txt", 1500)
-            write (4582,*)  bsn%name, prog
-            write (4582,*) n_p_pool_hdr
-            write (4582,*) n_p_pool_units
-            write (9000,*) "HRU                       hru_n_p_pool_stat.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4583, "hru_n_p_pool_stat.csv", 1500)
-              write (4583,*)  bsn%name, prog
-              write (4583,'(*(G0.3,:,","))') n_p_pool_hdr
-              write (4583,'(*(G0.3,:,","))') n_p_pool_units
-              write (9000,*) "HRU                       hru_n_p_pool_stat.csv"
-            end if
+            if (bsn_cc%cswat == 1 ) then
+              if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
+                !! write carbon in soil, plant, and residue
+                call open_output_file(4560, "hru_plc_stat.txt", 1500)
+                write (4560,*)  bsn%name, prog
+                write (4560,*) plc_hdr
+                write (4560,*) plc_hdr_units
+                write (9000,*) "HRU                       hru_plc_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4563, "hru_plc_stat.csv", 1500)
+                  write (4563,*)  bsn%name, prog
+                  write (4563,'(*(G0.3,:,","))') plc_hdr
+                  write (4563,'(*(G0.3,:,","))') plc_hdr_units
+                  write (9000,*) "HRU                       hru_plc_stat.csv"
+                end if
+      
+                call open_output_file(4561, "hru_rsdc_stat.txt", 1500)
+                write (4561,*)  bsn%name, prog
+                write (4561,*) rsdc_hdr
+                write (4561,*) rsdc_hdr_units
+                write (9000,*) "HRU                       hru_rsdc_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4564, "hru_rsdc_stat.csv", 1500)
+                  write (4564,*)  bsn%name, prog
+                  write (4564,'(*(G0.3,:,","))') rsdc_hdr
+                  write (4564,'(*(G0.3,:,","))') rsdc_hdr_units
+                  write (9000,*) "HRU                       hru_rsdc_stat.csv"
+                end if
+              
+                call open_output_file(4562, "hru_soilc_stat.txt", 1500)
+                write (4562,*)  bsn%name, prog
+                write (4562,*) soilc_hdr
+                write (4562,*) soilc_hdr_units
+                write (9000,*) "HRU                       hru_soilc_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4565, "hru_soilc_stat.csv", 1500)
+                  write (4565,*)  bsn%name, prog
+                  write (4565,'(*(G0.3,:,","))') soilc_hdr
+                  write (4565,'(*(G0.3,:,","))') soilc_hdr_units
+                  write (9000,*) "HRU                       hru_soilc_stat.csv"
+                end if
 
+                call open_output_file(4567, "hru_cflux_stat.txt", 1500)
+                write (4567,*)  bsn%name, prog
+                write (4567,*) soil_org_flux_hdr
+                write (4567,*) soil_org_flux_hdr_units
+                write (9000,*) "HRU                       hru_cflux_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4568, "hru_cflux_stat.csv", 1500)
+                  write (4568,*)  bsn%name, prog
+                  write (4568,'(*(G0.3,:,","))') soil_org_flux_hdr
+                  write (4568,'(*(G0.3,:,","))') soil_org_flux_hdr_units
+                  write (9000,*) "HRU                       hru_cflux_stat.csv"
+                end if
+              
+                call open_output_file(4570, "hru_soilcarb_mb_stat.txt", 1500)
+                write (4570,*)  bsn%name, prog
+                write (4570,*) soil_mb_hdr
+                write (4570,*) soil_mb_units
+                write (9000,*) "HRU                       hru_soilcarb_mb_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4571, "hru_soilcarb_mb_stat.csv", 1500)
+                  write (4571,*)  bsn%name, prog
+                  write (4571,'(*(G0.3,:,","))') soil_mb_hdr
+                  write (4571,'(*(G0.3,:,","))') soil_mb_units
+                  write (9000,*) "HRU                       hru_soilcarb_mb_stat.csv"
+                end if
+
+                call open_output_file(4572, "hru_cpool_stat.txt", 1500)
+                write (4572,*)  bsn%name, prog
+                write (4572,*) cpool_hdr
+                write (4572,*) cpool_units
+                write (9000,*) "HRU                       hru_cpool_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4573, "hru_cpool_stat.csv", 1500)
+                  write (4573,*)  bsn%name, prog
+                  write (4573,'(*(G0.3,:,","))') cpool_hdr
+                  write (4573,'(*(G0.3,:,","))') cpool_units
+                  write (9000,*) "HRU                       hru_cpool_stat.csv"
+                end if
+
+                call open_output_file(4582, "hru_n_p_pool_stat.txt", 1500)
+                write (4582,*)  bsn%name, prog
+                write (4582,*) n_p_pool_hdr
+                write (4582,*) n_p_pool_units
+                write (9000,*) "HRU                       hru_n_p_pool_stat.txt"
+                if (pco%csvout == "y") then
+                  call open_output_file(4583, "hru_n_p_pool_stat.csv", 1500)
+                  write (4583,*)  bsn%name, prog
+                  write (4583,'(*(G0.3,:,","))') n_p_pool_hdr
+                  write (4583,'(*(G0.3,:,","))') n_p_pool_units
+                  write (9000,*) "HRU                       hru_n_p_pool_stat.csv"
+                end if
+              endif
+            endif
           endif
         endif
 
@@ -629,36 +661,6 @@
           endif
         endif
 
-        !! write end of simulation soil properties headers to hru_endsim_soil_prop
-        if (bsn_cc%cswat == 1 ) then
-          if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
-            call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
-            write (4584,*)  bsn%name, prog
-            write (4584,*)  endsim_soil_prop_hdr
-            write (9000,*) "HRU                       hru_endsim_soil_prop.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4585, "hru_endsim_soil_prop.csv", 1500)
-              write (4585,*)  bsn%name, prog
-              write (4585,'(*(G0.3,:,","))') endsim_soil_prop_hdr
-              write (9000,*) "HRU                       hru_endsim_soil_prop.csv"
-            end if
-
-        !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
-            call open_output_file(4586, "hru_begsim_soil_prop.txt", 1500)
-            write (4586,*)  bsn%name, prog
-            write (4586,*)  endsim_soil_prop_hdr  ! begsim can use the same header as endsim 
-            write (9000,*) "HRU                       hru_begsim_soil_prop.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4587, "hru_begsim_soil_prop.csv", 1500)
-              write (4587,*)  bsn%name, prog
-              write (4587,'(*(G0.3,:,","))') endsim_soil_prop_hdr ! begsim can use the same header as endsim 
-              write (9000,*) "HRU                       hru_begsim_soil_prop.csv"
-            end if
-
-            ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
-            call soil_nutcarb_write(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
-          endif
-        endif
         
  !! NEW BASIN CARBON ALL OUTPUT FILE
         

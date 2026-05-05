@@ -16,6 +16,7 @@ subroutine carbon_coef_read
     logical :: i_exist = .false.      !           |true if file exists
     character (len=80) :: titldum = ""!           |title of file
     character (len=24) :: var_name = "" !
+    integer :: int_cbn_diagnostics = 0
     
     nmbr_soil_test_layers = 0     ! comes from soil module
     soil_test_cntr  = 0     ! local variable
@@ -32,6 +33,11 @@ subroutine carbon_coef_read
               if (eof < 0) exit
               if (var_name(1:1) == "#") cycle  ! allow comment lines in file that begin with #
               select case(var_name) 
+                case("cbn_diagnostics")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, int_cbn_diagnostics
+                    if (int_cbn_diagnostics == 1) cbn_diagnostics = .true.
+                    if (int_cbn_diagnostics == 0) cbn_diagnostics = .false.
                 case("hp_rate")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, carbdb(1)%hp_rate,carbdb(2)%hp_rate

@@ -43,10 +43,11 @@
       integer :: j = 0      !none          |HRU number
       integer :: k = 0      !none          |counter (soil layer)
       real :: decr = 0.     !              |
-      integer :: ipl = 0.      !              |plant number in plant community
+      integer :: ipl = 0      !              |plant number in plant community
       real :: idp = 0.      !              |plant number in plant data module
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
                             !              |of organic nitrogen in the active pool. 
+
       j = ihru
       nactfr = .02
       !zero transformations for summing layers

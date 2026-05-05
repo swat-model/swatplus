@@ -11,8 +11,8 @@
       use time_module
       use climate_module
       use maximum_data_module
-      use gwflow_module, only: nat_model
-      
+      use basin_module, only : bsn_cc
+
       implicit none
       
       external :: search
@@ -309,10 +309,10 @@
                       endif
                     enddo
                   endif
-                  if(aqu_found.eq.1 .and. nat_model == 1) then
+                  if(aqu_found.eq.1 .and. bsn_cc%gwflow == 1) then
                     ob(i)%src_tot = ob(i)%src_tot - 1
                   endif
-                  
+
                   if (eof < 0) exit
               else
                 !! set outflow object type to 0 - needed in final hyd_read_connect loop 

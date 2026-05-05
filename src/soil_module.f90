@@ -35,9 +35,9 @@
         real :: bd = 0.             !! Mg/m**3      ! bulk density of the soil
         real :: k = 0.              !! mm/hr        ! saturated hydraulic conductivity of soil layer. Index:(layer,HRU)
         real :: cbn = 0.            !! mm/hr        ! percent organic carbon of soil layer
-        real :: clay = 0.           !! none         ! fraction clay content in soil material (UNIT CHANGE!)
+        real :: clay = 0.           !! %            ! percent clay content in soil material (UNIT CHANGE!)
         real :: silt = 0.           !! %            ! percent silt content in soil material
-        real :: sand = 0.           !! none         ! fraction of sand in soil material
+        real :: sand = 0.           !! %            ! percent of sand in soil material
         real :: rock = 0.           !! %            ! percent of rock fragments in soil layer 
         real :: conv_wt = 0.        !! none         ! factor which converts kg/kg to kg/ha
         real :: crdep = 0.          !! mm           ! maximum or potential crack volume

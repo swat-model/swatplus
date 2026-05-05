@@ -1,5 +1,14 @@
 File: carb_coefs.cbn   Carbon coefficients used if cswat == 2 or cswat == 3
 
+# cbn_diagnostics contols what carbon related files are printed out if hru_cb is specified in print.prt
+# 1 is true, 0 is false
+# If omitted, the default is 0 or false.
+# if 0, only hru_cbn_lyr.txt/.csv and hru_seq_lyr.txt/.csv will be printed out.
+# if 1, hru_cbn_lyr.txt/.csv, hru_seq_lyr.txt/.csv, hru_rsdc_stat.txt/.csv, hru_soilc_stat.txt/.csv, &
+#       hru_cflux_stat.txt/.csv, hru_soilcarb_mb_stat.txt/.csv, hru_cpool_stat.txt/.csv, hru_n_p_pool_stat.txt/.csv, &
+#       hru_begsim_soil_prop.txt/.csv, hru_endsim_soil_prop.txt/.csv
+cbn_diagnostics 0 
+
 # carbdb coefficients
 #               1st_lyr     other_lyrs
 hp_rate         1.2e-05     1.2e-05     
@@ -26,7 +35,7 @@ prmt_21         1000.
 prmt_44         0.5
 
 # Length of days that a tillage event will be effective
-till_eff_days   30
+till_eff_days   100
 
 # Manure carbon coefficients
 rtof            0.5 
@@ -38,7 +47,8 @@ man_to_c        0.42
 # tmpf  Options: 1 - tmpf1,  2 - tmpf2, 3 - tmpf3
 # watf  Options: 1 - watf1,  2 - watf2
 #                      tmpf    watf    
-cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+# cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+cbn_factor_approaches   3       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
 
 # tmpf2 temperature effect equation parameters
 tn              -0.5
