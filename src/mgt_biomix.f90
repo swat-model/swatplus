@@ -68,6 +68,7 @@
       real :: mix_bd
       real :: mix_rsd
       real :: stemp                                   !celsius      |Soil layer temperature
+      real :: consf                                   !             |soil layer consilidation factor
       logical :: bio_mix_event
 
       npmx = cs_db%num_pests
@@ -108,15 +109,7 @@
       allocate (sol_msn(soil(jj)%nly), source = 0.)    
       allocate (frac_dep(soil(jj)%nly),source = 0.)    
 
-      bmix = biomix_eff
-
-      ! ! Adjust biomix efficency linearly by days since last tillage 
-      ! if (tillage_switch(jj) == 1) then
-      !   if (tillage_days(jj)/30.0 < 1.0) then
-      !     bmix = bmix * tillage_days(jj)/30.0
-      !   ! bmix = bmix * tillage_days(jj)/till_eff_days
-      !   endif
-      ! endif
+      bmix = bmix_eff
 
       if (bmix > 1.e-6) then
         emix = bmix 
@@ -136,6 +129,27 @@
           ! Calculated a temperature weighted average of emix 
           emix_sum = 0.
           do l = 1, soil(jj)%nly
+            ! Adjust potiential biomix efficency based on soil consolidation  
+            if (tillage_switch(jj) == 1 .and. tillage_days(jj) > 0.) then
+              if (soil(jj)%phys(l)%st >= soil(jj)%phys(l)%fc) then
+                consf = .15
+              else 
+                consf = .15 * soil(jj)%phys(l)%st / soil(jj)%phys(l)%fc
+              endif
+              ! soil(jj)%ly(l)%bmix  =  soil(jj)%ly(l)%bmix + (1.0/(1.0 - consf)) 
+              soil(jj)%ly(l)%bmix  =  soil(jj)%ly(l)%bmix + consf * bmix_eff
+              if (soil(jj)%ly(l)%bmix > bmix_eff) then
+                soil(jj)%ly(l)%bmix = bmix_eff
+              endif
+              bmix = soil(jj)%ly(l)%bmix
+            elseif (tillage_switch(jj) == 1 .and. tillage_days(jj) == 0) then
+              bmix = 0.
+              soil(jj)%ly(l)%bmix = bmix 
+            else
+              bmix = bmix_eff
+              soil(jj)%ly(l)%bmix = bmix 
+            endif
+
             if (soil(jj)%phys(l)%tmp > 1.e-6) then
               if (soil(jj)%phys(l)%d <= dtil) then
                 emix = bmix

@@ -2,6 +2,7 @@
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine initializes soil chemical properties
+!!    and intial soil layer bmix efficiency
 
       use hru_module, only : hru, ihru, sol_plt_ini
       use soil_module
@@ -9,6 +10,7 @@
       use basin_module
       use organic_mineral_mass_module
       use carbon_module
+      use tillage_data_module
 
       implicit none 
       
@@ -183,6 +185,16 @@
           soil1(ihru)%lig(ly)%p = 0.02 * soil1(ihru)%str(ly)%p
             
         end if
+
+        ! set the initial biomix for each soil layer
+        if (bmix_depth >= soil(ihru)%phys(ly)%d) then
+          soil(ihru)%ly(ihru)%bmix = bmix_eff
+        else if (bmix_depth > soil(ihru)%phys(ly-1)%d .and. bmix_depth <= soil(ihru)%phys(ly)%d ) then
+          !interpolate
+          soil(ihru)%ly(ihru)%bmix = bmix_eff * (bmix_depth - soil(ihru)%phys(ly-1)%d )/soil(ihru)%phys(ly)%thick 
+        else
+          soil(ihru)%ly(ihru)%bmix = 0.0
+        endif
 
         soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
         soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
