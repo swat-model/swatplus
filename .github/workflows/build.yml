@@ -198,7 +198,7 @@ jobs:
             e="build/swatplus-*"
           elif [ "$RUNNER_OS" == "Windows" ]; then
             cmake -B build -G "MinGW Makefiles" \
-              -D CMAKE_Fortran_COMPILER="C:\Program Files (x86)\Intel\oneAPI\compiler\2025.2\bin\${{ env.FC }}.exe" \
+              -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
               -D TAG=$RELEASE_VERSION \
               -D CMAKE_BUILD_TYPE=Release
             e="build/swatplus-*.exe"
