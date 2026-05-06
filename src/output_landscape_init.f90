@@ -480,7 +480,7 @@
             write (9000,*) "HRU                       hru_seq_lyr.csv"
           end if
 
-          if (cbn_diagnostics == .true.) then
+          if (cbn_diagnostics .eqv. .true.) then
 
             !! write end of simulation soil properties headers to hru_endsim_soil_prop
             call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
