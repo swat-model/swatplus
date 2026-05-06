@@ -110,13 +110,13 @@
 
       bmix = biomix_eff
 
-      ! Adjust biomix efficency linearly by days since last tillage 
-      if (tillage_switch(jj) == 1) then
-        if (tillage_days(jj)/30.0 < 1.0) then
-          bmix = bmix * tillage_days(jj)/30.0
-        ! bmix = bmix * tillage_days(jj)/till_eff_days
-        endif
-      endif
+      ! ! Adjust biomix efficency linearly by days since last tillage 
+      ! if (tillage_switch(jj) == 1) then
+      !   if (tillage_days(jj)/30.0 < 1.0) then
+      !     bmix = bmix * tillage_days(jj)/30.0
+      !   ! bmix = bmix * tillage_days(jj)/till_eff_days
+      !   endif
+      ! endif
 
       if (bmix > 1.e-6) then
         emix = bmix 
