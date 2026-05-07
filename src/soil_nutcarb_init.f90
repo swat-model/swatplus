@@ -188,12 +188,12 @@
 
         ! set the initial biomix for each soil layer
         if (bmix_depth >= soil(ihru)%phys(ly)%d) then
-          soil(ihru)%ly(ihru)%bmix = bmix_eff
+          soil(ihru)%ly(ly)%init_bmix = bmix_eff
         else if (bmix_depth > soil(ihru)%phys(ly-1)%d .and. bmix_depth <= soil(ihru)%phys(ly)%d ) then
           !interpolate
-          soil(ihru)%ly(ihru)%bmix = bmix_eff * (bmix_depth - soil(ihru)%phys(ly-1)%d )/soil(ihru)%phys(ly)%thick 
+          soil(ihru)%ly(ly)%init_bmix = bmix_eff * (bmix_depth - soil(ihru)%phys(ly-1)%d )/soil(ihru)%phys(ly)%thick 
         else
-          soil(ihru)%ly(ihru)%bmix = 0.0
+          soil(ihru)%ly(ly)%init_bmix = 0.0
         endif
 
         soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
