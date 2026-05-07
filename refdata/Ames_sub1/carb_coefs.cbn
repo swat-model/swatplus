@@ -28,7 +28,7 @@ abco2           0.55        0.0
 
 # organic fractions used to initialize soil carbon into various pools 
 #               frac_seq    frac_hum_microb     frac_hum_slow   frac_hum_passive
-org_frac        0.95        0.02                0.54            0.44 
+org_frac        0.95        0.02                0.44            0.54 
 
 # carbon water partitioning coefficients
 prmt_21         1000.   
