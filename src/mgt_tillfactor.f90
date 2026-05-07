@@ -16,6 +16,7 @@
 
     use soil_module
     use basin_module
+    use hru_module, only: tillage_days, tillage_depth, tillage_switch
     use tillage_data_module
     use utils
     
@@ -29,29 +30,24 @@
     integer :: m2 = 0                 !               |
     real :: dtil                      !mm             |depth of mixing
     real :: XX = 0.                   !varies         |variable to hold calculation results
-    integer :: j = 0                  !none           |counter
     real :: zz = 0.                   !               |
     real :: yy = 0.                   !               |
     real :: xx1 = 0.                  !               | 
     real :: xx2 = 0.                  !               | 
     real :: csdr = 0.                 !               | 
     real :: consf = 0.                !               |Moisture consolidation factor 
-    real :: frac_not_mixed = 0.       !               |fraction of soil layer not mixed.
+    real :: frac_mixed = 0.       !               |fraction of soil layer not mixed.
     
-    j = jj
-
-    if (emix > 0.) then
-
-      do l = 1, soil(j)%nly
+      do l = 1, soil(jj)%nly
             
         if (soil(jj)%phys(l)%d <= dtil) then
           emix = emix
-          frac_not_mixed = 0.0
+          frac_mixed = 1.0
         else if (soil(jj)%phys(l)%d > dtil .and. soil(jj)%phys(l-1)%d < dtil) then 
            emix = emix * (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
-           frac_not_mixed = 1.0 - (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
+           frac_mixed = 1.0 - (dtil - soil(jj)%phys(l-1)%d) / soil(jj)%phys(l)%thick
         else
-           frac_not_mixed = 1.0
+           frac_mixed = 0.0
            emix = 0.
         end if
             
@@ -85,27 +81,35 @@
           soil(jj)%ly(l)%tillagef_biomix = 0.
         else if (soil(jj)%phys(l)%tmp > 0.) then
           if (bio_mix_event) then
+            ! no need to reduce biomix by fraction_not_mixed this because this was already 
+            ! accounted for in soil_nutcarb_init and therefore accounted for 
+            ! in mgt_biomix which computes the input biomix this subroutine,
             soil(jj)%ly(l)%tillagef_biomix = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
           else
             soil(jj)%ly(l)%tillagef_tillmix = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
-            ! Reduce biomix by the fraction not mixed in the soil layer.
+            ! Reduce till_mix by the fraction mixed in the soil layer and 
+            ! this occures with the tillage depth is inbetween soil layer depths
             if (soil(jj)%ly(l)%tillagef_tillmix > 0.) then 
-              soil(jj)%ly(l)%tillagef_biomix = soil(jj)%ly(l)%tillagef_biomix * frac_not_mixed
+              soil(jj)%ly(l)%tillagef_tillmix = soil(jj)%ly(l)%tillagef_tillmix * frac_mixed
             endif
           endif
 
           ! Daily tillagef_tillmix moisture content consolidation  adjustment
-          if (soil(jj)%phys(l)%st >= soil(jj)%phys(l)%fc) then
-            consf = .02
-          else 
-            consf = .02 * soil(jj)%phys(l)%st / soil(jj)%phys(l)%fc
+          if (tillage_days(jj) > 0) then
+            if (soil(jj)%phys(l)%st >= soil(jj)%phys(l)%fc) then
+              consf = till_consf
+            else 
+              consf = till_consf * soil(jj)%phys(l)%st / soil(jj)%phys(l)%fc
+            endif
+            soil(jj)%ly(l)%tillagef_tillmix  =  (1.0 - consf) * soil(jj)%ly(l)%tillagef_tillmix 
+            if (soil(jj)%ly(l)%tillagef_tillmix <= .01) then
+              soil(jj)%ly(l)%tillagef_tillmix = 0.
+            endif
           endif
-          soil(jj)%ly(l)%tillagef_tillmix  =  (1.0 - consf) * soil(jj)%ly(l)%tillagef_tillmix 
 
           soil(jj)%ly(l)%tillagef = soil(jj)%ly(l)%tillagef_tillmix + soil(jj)%ly(l)%tillagef_biomix 
         endif
       end do        
-    end if
         
     return
     end subroutine mgt_tillfactor
