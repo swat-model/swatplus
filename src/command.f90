@@ -73,7 +73,7 @@
 
       icmd = sp_ob1%objs
       wallo(:)%trn_cur = 1
-      res_ob(:)%wallo_call = 0
+      if (allocated(res_ob)) res_ob(:)%wallo_call = 0
       
       do while (icmd /= 0)
           
