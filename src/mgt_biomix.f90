@@ -68,6 +68,7 @@
       real :: mix_bd
       real :: mix_rsd
       real :: stemp                                   !celsius      |Soil layer temperature
+      real :: consf                                   !             |soil layer consilidation factor
       logical :: bio_mix_event
 
       npmx = cs_db%num_pests
@@ -108,18 +109,7 @@
       allocate (sol_msn(soil(jj)%nly), source = 0.)    
       allocate (frac_dep(soil(jj)%nly),source = 0.)    
 
-      bmix = biomix_eff
-
-      ! Adjust biomix efficency linearly by days since last tillage 
-      if (tillage_switch(jj) == 1) then
-        if (tillage_days(jj)/30.0 < 1.0) then
-          bmix = bmix * tillage_days(jj)/30.0
-        ! bmix = bmix * tillage_days(jj)/till_eff_days
-        endif
-      endif
-
-      if (bmix > 1.e-6) then
-        emix = bmix 
+      if (bmix_eff > 1.e-6) then
         kk = soil(jj)%nly
         dtil = Min(soil(jj)%phys(kk)%d, bmix_depth) ! bmix_depth as read from tillage.till
 
@@ -136,6 +126,29 @@
           ! Calculated a temperature weighted average of emix 
           emix_sum = 0.
           do l = 1, soil(jj)%nly
+            ! Adjust potiential biomix efficency based on soil consolidation  
+            ! if (tillage_switch(jj) == 1 .and. tillage_days(jj) > 0.) then
+            if (tillage_days(jj) > 0.) then
+              if (soil(jj)%phys(l)%st >= soil(jj)%phys(l)%fc) then
+                consf = bio_consf
+              else 
+                consf = bio_consf * soil(jj)%phys(l)%st / soil(jj)%phys(l)%fc
+              endif
+              soil(jj)%ly(l)%bmix  =  soil(jj)%ly(l)%bmix + consf * soil(jj)%ly(l)%init_bmix
+
+              if (soil(jj)%ly(l)%bmix > soil(jj)%ly(l)%init_bmix) then
+                soil(jj)%ly(l)%bmix = soil(jj)%ly(l)%init_bmix
+              endif
+              bmix = soil(jj)%ly(l)%bmix
+
+            elseif (tillage_switch(jj) == 1 .and. tillage_days(jj) == 0) then
+              bmix = 0.
+              soil(jj)%ly(l)%bmix = bmix 
+            else
+              bmix = soil(jj)%ly(l)%init_bmix
+              soil(jj)%ly(l)%bmix = bmix 
+            endif
+
             if (soil(jj)%phys(l)%tmp > 1.e-6) then
               if (soil(jj)%phys(l)%d <= dtil) then
                 emix = bmix

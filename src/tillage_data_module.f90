@@ -13,6 +13,8 @@
       real    :: zz_emix_coef_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for tillage mixing
       real    :: zz_emix_coef_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for tillage mixing 
       real    :: zz_emix_coef_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for tillage mixing
+      real    :: bio_consf      = .15
+      real    :: till_consf     = .10
 
       type tillage_db
         character(len=16) :: tillnm = " "

@@ -19,6 +19,7 @@
         real :: tillagef_biomix = 0.
         real :: tillagef_tillmix = 0.
         real :: bmix
+        real :: init_bmix
         real :: watp = 0.
         integer :: a_days = 0
         integer :: b_days = 0

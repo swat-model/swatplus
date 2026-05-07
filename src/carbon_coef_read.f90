@@ -14,8 +14,8 @@ subroutine carbon_coef_read
     integer :: eof = 0                !           |end of file
     integer :: soil_test_cntr  = 0    !           |counter for soil test, cannot exceed nmbr_soil_tests 
     logical :: i_exist = .false.      !           |true if file exists
-    character (len=80) :: titldum = ""!           |title of file
-    character (len=24) :: var_name = "" !
+    character (len=80) :: titldum  = "" !           |title of file
+    character (len=30) :: var_name = "" !
     integer :: int_cbn_diagnostics = 0
     
     nmbr_soil_test_layers = 0     ! comes from soil module
@@ -86,9 +86,9 @@ subroutine carbon_coef_read
                 case("rtof")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, man_coef%rtof
-                case("man_to_c")
+                case("cbn_consolidation_factors")
                     backspace (107)
-                    read (107,*,iostat=eof) var_name, man_coef%man_to_c
+                    read (107,*,iostat=eof) var_name, bio_consf, till_consf
                 case("cbn_factor_approaches")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tmpf, org_con%watf

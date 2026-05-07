@@ -28,7 +28,7 @@ abco2           0.55        0.0
 
 # organic fractions used to initialize soil carbon into various pools 
 #               frac_seq    frac_hum_microb     frac_hum_slow   frac_hum_passive
-org_frac        0.95        0.02                0.54            0.44 
+org_frac        0.95        0.02                0.44            0.54 
 
 # carbon water partitioning coefficients
 prmt_21         1000.   
@@ -39,7 +39,10 @@ till_eff_days   100
 
 # Manure carbon coefficients
 rtof            0.5 
-man_to_c        0.42  
+
+# Carbon moisture consolidation factors
+#                          bio_consf  till_consf
+cbn_consolidation_factors  .15        .10
 
 # cbn_zhang2 carbon temperture and water factor approaches
 # Ref Title: "Replicating measured site-scale soil organic carbon dynamics in the U.S. Corn Belt using the SWAT-C model"
@@ -48,7 +51,7 @@ man_to_c        0.42
 # watf  Options: 1 - watf1,  2 - watf2
 #                      tmpf    watf    
 # cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
-cbn_factor_approaches   3       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
 
 # tmpf2 temperature effect equation parameters
 tn              -0.5
