@@ -53,7 +53,6 @@
         
       if (organic_flag) then
         org_frt%m = frt_kg
-        ! org_frt%c = man_coef%man_to_c * frt_kg
         org_frt%c = fertdb(ifrt)%forgn * frt_kg * 10.0  ! assume a 10:1 carbon to nitrogen ratio.
         org_frt%n = fertdb(ifrt)%forgn * frt_kg
         org_frt%p = fertdb(ifrt)%forgp * frt_kg
