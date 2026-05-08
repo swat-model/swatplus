@@ -283,16 +283,7 @@
         real, dimension (27) :: p = 0.   !probabilities for all points on the fdc
       end type duration_curve_points
 
-      type water_temperature_data
-        character(len=16) :: name = ""
-        real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
-        real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
-        real :: sur_lat = 1.        ! none          |coefficient influencing surface and lateral flow temperature contributions
-        integer :: airlag_d = 6     ! days          |average air temperature lag
-        real :: hex_coef1 = .67     ! 1/hour        |heat transfer coefficient 1
-        real :: hex_coef2 = 1.16    ! 1/hour        |heat transfer coefficient 2
-      end type water_temperature_data
-      type (water_temperature_data) :: w_temp
+      !water_temperature_data type and w_temp array moved to channel_data_module
 
       integer :: fdc_npts = 27
       real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,97.,98.,99./) !percent        |output percent on the fdc (input)
@@ -1194,10 +1185,14 @@
         type (hru_swift_header_baseunit2) :: dr_unit
       end type hru_swift_header
       type (hru_swift_header) :: hru_swift_hdr
-      
-      
 
-      
+      type shade_factor_data
+        integer :: jday = 0            ! none          |day of the year
+        integer :: lsu  = 0               ! none          |landscape unit
+        real :: value = 0.                  ! none          |shade factor value
+      end type shade_factor_data
+      type (shade_factor_data), dimension (:), allocatable :: shf_db
+
       interface operator (+)
         module procedure hydout_add
       end interface

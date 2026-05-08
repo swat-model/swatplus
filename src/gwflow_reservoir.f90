@@ -1,14 +1,14 @@
-      subroutine gwflow_resv(res_id) !rtb gwflow
+      subroutine gwflow_reservoir(res_id) !rtb gwflow
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates the water exchange volume between the reservoir and the connected grid cells
 !!    (exchange volumes are used in gwflow_simulate, in groundwater balance equations)
-      
+
       use gwflow_module
       use hydrograph_module, only : res
       use water_body_module, only: res_wat_d
       use constituent_mass_module
-      
+
       implicit none
 
       integer, intent (in) :: res_id     !       |reservoir number
@@ -29,62 +29,77 @@
       real :: res_volume = 0.            !m3     |water volume in reservoir before groundwater exchange occurs
       real :: resv_csol(100) = 0.        !g/m3   |solute concentration in reservoir water
       real :: solmass(100) = 0.          !g      |solute mass transferred
+      real :: heat_flux = 0.             !J      |heat removed from groundwater
+      real :: seep_total = 0.            !m3	 |total seepage from reservoir to gwflow cells
 
-      
-      
+
       !only proceed if reservoir-cell exchange is active
       if (gw_res_flag == 1) then
-      
+
         !record starting reservoir volume (m3)
         res_volume = res(res_id)%flo
 
         !loop through the cells connected to the reservoir
-        do k=1,gw_resv_info(res_id)%ncon
+        seep_total = 0.
+				do k=1,gw_resv_info(res_id)%ncon
           res_cell_id = gw_resv_info(res_id)%cells(k) !id of reservoir cell
-        
+
           !loop through the cells connected to the cell
           do jj=1,gw_state(res_cell_id)%ncon
-            
+
             !id of cell connected to the reservoir cell
             cell_id = cell_con(res_cell_id)%cell_id(jj)
-            
+
             !only proceed if the cell is active; is so, calculate horizontal exchange (m3/day)
             if(gw_state(cell_id)%stat == 1) then
               Q = 0.
-              
+
               !length of connection between cells
               area_res_cell = gw_state(res_cell_id)%area !m2
               area_cell = gw_state(cell_id)%area !m2
               min_area = min(area_res_cell,area_cell)
               conn_length = sqrt(min_area)
-              
+
               !exchange volume (m3/day) using Darcy's Law
-              head_diff = gw_resv_info(res_id)%elev(k) - gw_state(cell_id)%head 
+              head_diff = gw_resv_info(res_id)%elev(k) - gw_state(cell_id)%head
               res_K = gw_resv_info(res_id)%hydc(k)
               res_thick = gw_resv_info(res_id)%thck(k)
-              Q = res_K * (head_diff / res_thick) * (res_thick * conn_length)   
-              
+              Q = res_K * (head_diff / res_thick) * (res_thick * conn_length)
+
               !check against available storage volumes (m3)
               if(Q > 0) then !reservoir --> aquifer
-                if(Q > res(res_id)%flo) then !can only remove what is there
-                  Q = res(res_id)%flo
+                if((Q+seep_total) > res(res_id)%flo) then !cannot remove more than is present in the reservoir
+                  Q = 0.
                 endif
               elseif(Q < 0) then !aquifer --> reservoir
                 !if((Q*-1 == 1).ge.gw_state(cell_id)%stor) then
                 if (-Q .ge.gw_state(cell_id)%stor) then
                   !Q = gw_state(cell_id)%stor * (-1)
-                  Q = -gw_state(cell_id)%stor   
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q   
-                endif   
+                  Q = -gw_state(cell_id)%stor
+                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q
+                endif
               endif
 
               !store for gwflow water balance calculations (in gwflow_simulate)
-              gw_ss(cell_id)%resv = gw_ss(cell_id)%resv + Q 
-              gw_ss_sum(cell_id)%resv = gw_ss_sum(cell_id)%resv + Q
-              
+              gw_hyd_ss(cell_id)%resv = gw_hyd_ss(cell_id)%resv + Q
+              gw_hyd_ss_yr(cell_id)%resv = gw_hyd_ss_yr(cell_id)%resv + Q !store for annual water
+              gw_hyd_ss_mo(cell_id)%resv = gw_hyd_ss_mo(cell_id)%resv + Q !store for monthly water
+
               !store seepage value for reservoir object
-              res_wat_d(res_id)%seep = Q
-              
+							seep_total = seep_total + Q
+
+              !heat transport
+              if(gw_heat_flag == 1) then
+                if(Q < 0) then !aquifer --> reservoir
+                  heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * Q !J
+                  if(-heat_flux >= gwheat_state(cell_id)%stor) then
+                    heat_flux = -gwheat_state(cell_id)%stor
+                  endif
+                  gw_heat_ss(cell_id)%resv = gw_heat_ss(cell_id)%resv + heat_flux
+                  gw_heat_ss_yr(cell_id)%resv = gw_heat_ss_yr(cell_id)%resv + heat_flux !J
+                endif
+              endif
+
               !calculate solute mass (g/day) transported to/from cell
               if (gw_solute_flag == 1) then
                 resv_csol = 0.
@@ -97,7 +112,8 @@
                     endif
                     gwsol_ss(cell_id)%solute(s)%resv = solmass(s)
                     gwsol_ss_sum(cell_id)%solute(s)%resv = gwsol_ss_sum(cell_id)%solute(s)%resv + solmass(s)
-                  enddo    
+									gwsol_ss_sum_mo(cell_id)%solute(s)%resv = gwsol_ss_sum_mo(cell_id)%solute(s)%resv + solmass(s)
+                  enddo
                   !add solute to reservoir
                   res(res_id)%no3 = res(res_id)%no3 + (solmass(1)*(-1)/1000.) !kg
                   res(res_id)%solp = res(res_id)%solp + (solmass(2)*(-1)/1000.) !kg
@@ -106,14 +122,14 @@
                   if (gwsol_salt == 1) then
                     do isalt=1,cs_db%num_salts
                       sol_index = sol_index + 1
-                      res_water(res_id)%salt(isalt) = res_water(res_id)%salt(isalt) + (solmass(sol_index)*(-1)/1000.) !kg   
+                      res_water(res_id)%salt(isalt) = res_water(res_id)%salt(isalt) + (solmass(sol_index)*(-1)/1000.) !kg
                     enddo
                   endif
                   !constituents
                   if (gwsol_cons == 1) then
                     do ics=1,cs_db%num_cs
                       sol_index = sol_index + 1
-                      res_water(res_id)%cs(ics) = res_water(res_id)%cs(ics) + (solmass(sol_index)*(-1)/1000.) !kg  
+                      res_water(res_id)%cs(ics) = res_water(res_id)%cs(ics) + (solmass(sol_index)*(-1)/1000.) !kg
                     enddo
                   endif
                 else !mass entering cell (reservoir --> aquifer)
@@ -121,25 +137,25 @@
                   if(res_volume > 10.) then
                     !no3-n
                     if(res(res_id)%no3 > 0.) then
-                      resv_csol(1) = (res(res_id)%no3 * 1000.) / res_volume !g/m3 in reservoir  
+                      resv_csol(1) = (res(res_id)%no3 * 1000.) / res_volume !g/m3 in reservoir
                     endif
                     !p
                     if(res(res_id)%solp > 0.) then
-                      resv_csol(2) = (res(res_id)%solp * 1000.) / res_volume !g/m3 in reservoir 
+                      resv_csol(2) = (res(res_id)%solp * 1000.) / res_volume !g/m3 in reservoir
                     endif
                     sol_index = 2
                     !salts
                     if (gwsol_salt == 1) then
                       do isalt=1,cs_db%num_salts
                         sol_index = sol_index + 1
-                        resv_csol(sol_index) = (res_water(res_id)%salt(isalt) * 1000.) / res_volume !g/m3 in channel        
+                        resv_csol(sol_index) = (res_water(res_id)%salt(isalt) * 1000.) / res_volume !g/m3 in channel
                       enddo
                     endif
                     !constituents
                     if (gwsol_cons == 1) then
                       do ics=1,cs_db%num_cs
                         sol_index = sol_index + 1
-                        resv_csol(sol_index) = (res_water(res_id)%cs(ics) * 1000.) / res_volume !g/m3 in channel        
+                        resv_csol(sol_index) = (res_water(res_id)%cs(ics) * 1000.) / res_volume !g/m3 in channel
                       enddo
                     endif
                   endif
@@ -165,7 +181,7 @@
                       sol_index = sol_index + 1
                       if((solmass(sol_index)/1000.) > res_water(res_id)%salt(isalt)) then
                         solmass(sol_index) = res_water(res_id)%salt(isalt) * 1000. !g
-                      endif 
+                      endif
                       res_water(res_id)%salt(isalt) = res_water(res_id)%salt(isalt) - (solmass(sol_index)/1000.) !kg
                     enddo
                   endif
@@ -175,7 +191,7 @@
                       sol_index = sol_index + 1
                       if((solmass(sol_index)/1000.) > res_water(res_id)%cs(ics)) then
                         solmass(sol_index) = res_water(res_id)%cs(ics) * 1000. !g
-                      endif  
+                      endif
                       res_water(res_id)%cs(ics) = res_water(res_id)%cs(ics) - (solmass(sol_index)/1000.) !kg
                     enddo
                   endif
@@ -183,18 +199,22 @@
                   do s=1,gw_nsolute !loop through the solutes
                     gwsol_ss(cell_id)%solute(s)%resv = solmass(s)
                     gwsol_ss_sum(cell_id)%solute(s)%resv = gwsol_ss_sum(cell_id)%solute(s)%resv + solmass(s)
+									gwsol_ss_sum_mo(cell_id)%solute(s)%resv = gwsol_ss_sum_mo(cell_id)%solute(s)%resv + solmass(s)
                   enddo
                 endif
 
               endif !end solutes
-              
+
             endif !check if cell is active
 
           enddo !go to next connected cell
 
         enddo !go to next reservoir cell
-        
+
+				!store total exchange volume, for reservoir water balance in res_control
+				res_wat_d(res_id)%seep = seep_total
+
       endif !if reservoir-cell connection is active in the simulation
-      
+
       return
-      end subroutine gwflow_resv         
+      end subroutine gwflow_reservoir

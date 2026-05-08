@@ -26,6 +26,7 @@
       real :: alpha_up = 0.
       real :: alpha_down = 0.
 
+      external :: gwflow_reservoir
       integer :: dom            = 0                                           !           |Day of month
       integer :: mon            = 0                                           !           |Month of year
       integer :: end_of_mo      = 0                                           !           |End of month flag
@@ -160,8 +161,10 @@
         !! calculate water balance for day
         res_wat_d(jres)%evap = 10. * res_hyd(jres)%evrsv * wst(iwst)%weat%pet * res_wat_d(jres)%area_ha
         res_wat_d(jres)%precip = 10. * wst(iwst)%weat%precip * res_wat_d(jres)%area_ha
-        if(bsn_cc%gwflow == 0) then !if gwflow active, seepage calculated in gwflow_simulate (rtb gwflow)
+        if(bsn_cc%gwflow == 0) then !if gwflow active, seepage calculated via gwflow_reservoir (rtb gwflow)
           res_wat_d(jres)%seep = 240. * res_hyd(jres)%k * res_wat_d(jres)%area_ha
+        else
+          call gwflow_reservoir(jres)
         endif
 
         !! add precip to reservoir storage
