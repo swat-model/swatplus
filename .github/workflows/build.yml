@@ -51,88 +51,88 @@ jobs:
          path: v.txt
 
 ##### Build swat with GNU
-  # build-gnu:
-  #   runs-on: ${{ matrix.os }}
-  #   needs:
-  #     - version
-  #   #if: endsWith(github.event.base_ref, 'main') == true
+  build-gnu:
+    runs-on: ${{ matrix.os }}
+    needs:
+      - version
+    #if: endsWith(github.event.base_ref, 'main') == true
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       os: [ubuntu-latest, windows-latest, macos-latest]
-  #       toolchain:
-  #         - {compiler: gcc, version: 13}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        toolchain:
+          - {compiler: gcc, version: 13}
 
-  #   steps:
-  #     - name: Install Compiler
-  #       uses: fortran-lang/setup-fortran@v1
-  #       id: setup-fortran
-  #       with:
-  #         compiler: ${{ matrix.toolchain.compiler }}
-  #         version: ${{ matrix.toolchain.version }}
+    steps:
+      - name: Install Compiler
+        uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
 
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Build SWAT+
-  #       id: build_exe
-  #       run: |
-  #         echo ${{ env.FC }}
-  #         cmake --version
+      - name: Build SWAT+
+        id: build_exe
+        run: |
+          echo ${{ env.FC }}
+          cmake --version
 
-  #         RELEASE_VERSION=${GITHUB_REF#refs/*/}
-  #         os="$RUNNER_OS"
-  #         e="build/swatplus-*"
-  #         gen="Unix"
+          RELEASE_VERSION=${GITHUB_REF#refs/*/}
+          os="$RUNNER_OS"
+          e="build/swatplus-*"
+          gen="Unix"
 
-  #         if [ "$RUNNER_OS" == "Windows" ]; then
-  #            e="build/swatplus-*.exe"
-  #            gen="MinGW"
-  #         fi
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             e="build/swatplus-*.exe"
+             gen="MinGW"
+          fi
 
-  #         # generate
-  #         cmake -B build -G "${gen} Makefiles" \
-  #             -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
-  #             -D TAG=$RELEASE_VERSION \
-  #             -D CMAKE_BUILD_TYPE=Release
+          # generate
+          cmake -B build -G "${gen} Makefiles" \
+              -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
+              -D TAG=$RELEASE_VERSION \
+              -D CMAKE_BUILD_TYPE=Release
 
-  #         # build
-  #         cmake --build build --parallel 4
+          # build
+          cmake --build build --parallel 4
 
-  #         exebase=`basename -s .exe build/swatplus-*`
-  #         exez="${exebase}.zip"
-  #         exe=`ls $e`
+          exebase=`basename -s .exe build/swatplus-*`
+          exez="${exebase}.zip"
+          exe=`ls $e`
 
-  #         echo $exe
-  #         echo $exez
-  #         echo $os
+          echo $exe
+          echo $exez
+          echo $os
 
-  #         echo "exe=$exe" >> $GITHUB_OUTPUT
-  #         echo "exez=$exez" >> $GITHUB_OUTPUT
-  #         echo "os=$os" >> $GITHUB_OUTPUT
+          echo "exe=$exe" >> $GITHUB_OUTPUT
+          echo "exez=$exez" >> $GITHUB_OUTPUT
+          echo "os=$os" >> $GITHUB_OUTPUT
 
-  #         ls -hl build/swatplus-*
-  #         file build/swatplus-*
+          ls -hl build/swatplus-*
+          file build/swatplus-*
 
-  #         if [ "$RUNNER_OS" != "Windows" ]; then
-  #           (cd build && zip ../$exez swatplus-*)
-  #         fi
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            (cd build && zip ../$exez swatplus-*)
+          fi
 
-  #       shell: bash
+        shell: bash
 
-  #     - name: zip
-  #       if: matrix.os == 'windows-latest'
-  #       uses: vimtor/action-zip@v1.2
-  #       with:
-  #         files: ${{ steps.build_exe.outputs.exe }}
-  #         dest: ${{ steps.build_exe.outputs.exez }}
+      - name: zip
+        if: matrix.os == 'windows-latest'
+        uses: vimtor/action-zip@v1.2
+        with:
+          files: ${{ steps.build_exe.outputs.exe }}
+          dest: ${{ steps.build_exe.outputs.exez }}
 
-  #     - name: upload
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: gnu-${{ steps.build_exe.outputs.os }}
-  #         path: ${{ steps.build_exe.outputs.exez }}
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: gnu-${{ steps.build_exe.outputs.os }}
+          path: ${{ steps.build_exe.outputs.exez }}
 
 
 ##### Build with Intel (ifx. ifort)
@@ -146,18 +146,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [windows-latest]
+        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        
         toolchain:
           - {compiler: intel, version: '2025.2'}
           - {compiler: intel-classic, version: '2021.9'}
         exclude:
-          # - os: macos-latest
-          #   toolchain: {compiler: intel, version: '2025.2'}
-          - os: windows-latest
-            toolchain: {compiler: intel-classic, version: '2021.9'}
-          # - os: ubuntu-latest
+          - os: macos-latest
+            toolchain: {compiler: intel, version: '2025.2'}
+          # - os: windows-latest
           #   toolchain: {compiler: intel-classic, version: '2021.9'}
+          - os: ubuntu-latest
+            toolchain: {compiler: intel-classic, version: '2021.9'}
 
     steps:
       - name: Checkout
@@ -255,39 +256,38 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    #needs: [ build-gnu, build-intel ]
-    needs: [ build-intel ]
+    needs: [ build-gnu, build-intel ]
 
     steps:
-    # - name: Download GNU Linux
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: gnu-Linux
-
-    # - name: Download GNU Windows
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: gnu-Windows
-
-    # - name: Download GNU macOS
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: gnu-macOS
-
-    # - name: Download Intel Linux
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: intel-Linux
-
-    - name: Download Intel Windows
+    - name: Download GNU Linux
       uses: actions/download-artifact@v4
       with:
-        name: intel-Windows
+        name: gnu-Linux
 
-    # - name: Download Intel macOS
+    - name: Download GNU Windows
+      uses: actions/download-artifact@v4
+      with:
+        name: gnu-Windows
+
+    - name: Download GNU macOS
+      uses: actions/download-artifact@v4
+      with:
+        name: gnu-macOS
+
+    - name: Download Intel Linux
+      uses: actions/download-artifact@v4
+      with:
+        name: intel-Linux
+
+    # - name: Download Intel Windows
     #   uses: actions/download-artifact@v4
     #   with:
-    #     name: intel-macOS
+    #     name: intel-Windows
+
+    - name: Download Intel macOS
+      uses: actions/download-artifact@v4
+      with:
+        name: intel-macOS
 
     - name: Download version
       uses: actions/download-artifact@v4
