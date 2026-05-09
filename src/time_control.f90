@@ -220,8 +220,8 @@
           !! zero demand, withdrawal, and unmet for entire allocation object
           wallo(:)%tot = walloz
           !! zero water treatment and use outflow in case they receive water multiple times
-          wtp_om_out(:) = hz
-          wuse_om_out(:) = hz
+          if (allocated(wtp_om_out)) wtp_om_out(:) = hz
+          if (allocated(wuse_om_out)) wuse_om_out(:) = hz
 
           if (time%yrs > pco%nyskip) ndmo(time%mo) = ndmo(time%mo) + 1
 
