@@ -480,7 +480,31 @@
             write (9000,*) "HRU                       hru_seq_lyr.csv"
           end if
 
+          call open_output_file(4582, "hru_n_p_pool_stat.txt", 1500)
+          write (4582,*)  bsn%name, prog
+          write (4582,*) n_p_pool_hdr
+          write (4582,*) n_p_pool_units
+          write (9000,*) "HRU                       hru_n_p_pool_stat.txt"
+          if (pco%csvout == "y") then
+            call open_output_file(4583, "hru_n_p_pool_stat.csv", 1500)
+            write (4583,*)  bsn%name, prog
+            write (4583,'(*(G0.3,:,","))') n_p_pool_hdr
+            write (4583,'(*(G0.3,:,","))') n_p_pool_units
+            write (9000,*) "HRU                       hru_n_p_pool_stat.csv"
+          end if
+
           if (cbn_diagnostics .eqv. .true.) then
+            !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
+            call open_output_file(4586, "hru_begsim_soil_prop.txt", 1500)
+            write (4586,*)  bsn%name, prog
+            write (4586,*)  endsim_soil_prop_hdr  ! begsim can use the same header as endsim 
+            write (9000,*) "HRU                       hru_begsim_soil_prop.txt"
+            if (pco%csvout == "y") then
+              call open_output_file(4587, "hru_begsim_soil_prop.csv", 1500)
+              write (4587,*)  bsn%name, prog
+              write (4587,'(*(G0.3,:,","))') endsim_soil_prop_hdr ! begsim can use the same header as endsim 
+              write (9000,*) "HRU                       hru_begsim_soil_prop.csv"
+            endif
 
             !! write end of simulation soil properties headers to hru_endsim_soil_prop
             call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
@@ -494,22 +518,11 @@
               write (9000,*) "HRU                       hru_endsim_soil_prop.csv"
             end if
 
-            !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
-            call open_output_file(4586, "hru_begsim_soil_prop.txt", 1500)
-            write (4586,*)  bsn%name, prog
-            write (4586,*)  endsim_soil_prop_hdr  ! begsim can use the same header as endsim 
-            write (9000,*) "HRU                       hru_begsim_soil_prop.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4587, "hru_begsim_soil_prop.csv", 1500)
-              write (4587,*)  bsn%name, prog
-              write (4587,'(*(G0.3,:,","))') endsim_soil_prop_hdr ! begsim can use the same header as endsim 
-              write (9000,*) "HRU                       hru_begsim_soil_prop.csv"
-            end if
-
-            ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
-            call soil_nutcarb_write(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
 
             if (bsn_cc%cswat == 1 ) then
+              ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
+              call soil_nutcarb_write(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
+
               if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
                 !! write carbon in soil, plant, and residue
                 call open_output_file(4560, "hru_plc_stat.txt", 1500)
@@ -590,18 +603,6 @@
                   write (9000,*) "HRU                       hru_cpool_stat.csv"
                 end if
 
-                call open_output_file(4582, "hru_n_p_pool_stat.txt", 1500)
-                write (4582,*)  bsn%name, prog
-                write (4582,*) n_p_pool_hdr
-                write (4582,*) n_p_pool_units
-                write (9000,*) "HRU                       hru_n_p_pool_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4583, "hru_n_p_pool_stat.csv", 1500)
-                  write (4583,*)  bsn%name, prog
-                  write (4583,'(*(G0.3,:,","))') n_p_pool_hdr
-                  write (4583,'(*(G0.3,:,","))') n_p_pool_units
-                  write (9000,*) "HRU                       hru_n_p_pool_stat.csv"
-                end if
               endif
             endif
           endif
