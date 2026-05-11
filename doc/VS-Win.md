@@ -15,7 +15,7 @@ Even though Visual Studio bundles Git, a separate install is needed to support S
 4. Install python
 
 5. Open the windows cmd shell window, and type in
-    `python3 -m pip install ipykernel plotly pandas nbformat`
+    ```python3 -m pip install ipykernel plotly pandas nbformat```
    
 **Important:** After installing all the above, reboot your computer.
 
