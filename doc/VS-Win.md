@@ -10,9 +10,11 @@ Even though Visual Studio bundles Git, a separate install is needed to support S
 
 2. Install [**Intel Fortran Compiler for Windows**](https://www.intel.com/content/www/us/en/developer/tools/oneapi/fortran-compiler-download.html) package from Intel, stand alone version.
 
-3. Install [**Git**](https://git-scm.com/downloads/win). 
+3. Install [**Git**](https://git-scm.com/downloads/win).
 
-6. Open the windows cmd shell window, and type in
+4. Install python
+
+5. Open the windows cmd shell window, and type in
     `python3 -m pip install ipykernel plotly pandas nbformat`
    
 **Important:** After installing all the above, reboot your computer.
