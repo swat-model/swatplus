@@ -6,16 +6,11 @@ Install the required packages in the order below, this is important! The Intel c
 
 Even though Visual Studio bundles Git, a separate install is needed to support SWAT+ version tagging during the `CMake` build. Install the following, accept the defaults.
 
-1. Install the latest [**Visual Studio Community 2022**](https://visualstudio.microsoft.com/free-developer-offers/), and include the `Desktop Development with C++` workload and python decelopment.
+1. Install the latest [**Visual Studio Community 2022**](https://visualstudio.microsoft.com/free-developer-offers/), and include the `Desktop Development with C++.
 
 2. Install [**Intel Fortran Compiler for Windows**](https://www.intel.com/content/www/us/en/developer/tools/oneapi/fortran-compiler-download.html) package from Intel, stand alone version.
 
 3. Install [**Git**](https://git-scm.com/downloads/win).
-
-4. Install python
-
-5. Open the windows cmd shell window, and type in
-    ```python3 -m pip install ipykernel plotly pandas nbformat```
    
 **Important:** After installing all the above, reboot your computer.
 
