@@ -2395,7 +2395,7 @@
           endif
           backspace(in_cell_hru)
         enddo
-31      cell_num_hrus(cell_num) = hru_count
+31      cell_num_hrus(hru_cell) = hru_count
       enddo
       max_hrus = maxval(cell_num_hrus(1:ncell))
       !rewind and re-read headers
@@ -2430,7 +2430,7 @@
           endif
           backspace(in_cell_hru)
         enddo
-30      cell_num_hrus(cell_num) = hru_count
+30      cell_num_hrus(hru_cell) = hru_count
       enddo
       else
         write(out_gw,*) '          gwflow.cellhru not found; cell-HRU reverse mapping not available'
