@@ -50,7 +50,7 @@
                          (chcs_d(iru)%cs(ics)%water,ics=1,cs_db%num_cs), &
                          (chcs_d(iru)%cs(ics)%conc,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6031,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+          write (6031,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                         (chcs_d(iru)%cs(ics)%tot_in,ics=1,cs_db%num_cs), &
                                         (chcs_d(iru)%cs(ics)%gw_in,ics=1,cs_db%num_cs), &
                                         (chcs_d(iru)%cs(ics)%tot_out,ics=1,cs_db%num_cs), &
@@ -92,7 +92,7 @@
                            (chcs_m(iru)%cs(ics)%water,ics=1,cs_db%num_cs), &
                            (chcs_m(iru)%cs(ics)%conc,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6033,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+            write (6033,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                           (chcs_m(iru)%cs(ics)%tot_in,ics=1,cs_db%num_cs), &
                                           (chcs_m(iru)%cs(ics)%gw_in,ics=1,cs_db%num_cs), &
                                           (chcs_m(iru)%cs(ics)%tot_out,ics=1,cs_db%num_cs), &
@@ -145,7 +145,7 @@
                            (chcs_y(iru)%cs(ics)%water,ics=1,cs_db%num_cs), &
                            (chcs_y(iru)%cs(ics)%conc,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6035,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+            write (6035,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                           (chcs_y(iru)%cs(ics)%tot_in,ics=1,cs_db%num_cs), &
                                           (chcs_y(iru)%cs(ics)%gw_in,ics=1,cs_db%num_cs), &
                                           (chcs_y(iru)%cs(ics)%tot_out,ics=1,cs_db%num_cs), &
@@ -192,7 +192,7 @@
                          (chcs_a(iru)%cs(ics)%water,ics=1,cs_db%num_cs), &
                          (chcs_a(iru)%cs(ics)%conc,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6037,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+          write (6037,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                         (chcs_a(iru)%cs(ics)%tot_in,ics=1,cs_db%num_cs), &
                                         (chcs_a(iru)%cs(ics)%gw_in,ics=1,cs_db%num_cs), &
                                         (chcs_a(iru)%cs(ics)%tot_out,ics=1,cs_db%num_cs), &

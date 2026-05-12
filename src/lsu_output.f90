@@ -71,7 +71,7 @@
             ruwb_d(ilsu)%snopack = (ruwb_d(ilsu)%sno_init + ruwb_d(ilsu)%sno_final) / 2.
             write (2140,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_d(ilsu)  !! waterbal
             if (pco%csvout == "y") then 
-              write (2144,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2144,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_d(ilsu)  !! waterbal
             end if 
             ruwb_d(ilsu)%sw_init = ruwb_d(ilsu)%sw_final
@@ -80,21 +80,21 @@
           if (pco%nb_lsu%d == "y") then
             write (2150,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_d(ilsu)  !! nutrient bal
             if (pco%csvout == "y") then 
-              write (2154,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2154,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_d(ilsu)  !! nutrient bal
             end if 
           end if
           if (pco%ls_lsu%d == "y") then
             write (2160,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_d(ilsu)  !! losses
             if (pco%csvout == "y") then 
-              write (2164,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2164,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_d(ilsu)  !! losses
             end if 
           end if
           if (pco%pw_lsu%d == "y") then
             write (2170,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_d(ilsu)  !! plant weather
             if (pco%csvout == "y") then 
-              write (2175,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_d(ilsu)  !! plant weather 
             end if
           end if 
@@ -116,7 +116,7 @@
             ruwb_m(ilsu)%sno_final = ruwb_d(ilsu)%sno_final
             write (2141,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_m(ilsu)
             if (pco%csvout == "y") then 
-              write (2145,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2145,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_m(ilsu)
             end if
             ruwb_m(ilsu)%sw_init = ruwb_m(ilsu)%sw_final
@@ -125,14 +125,14 @@
           if (pco%nb_lsu%m == "y") then 
             write (2151,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_m(ilsu)
             if (pco%csvout == "y") then 
-              write (2155,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2155,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_m(ilsu)
             end if 
           end if
           if (pco%ls_lsu%m == "y") then
             write (2161,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_m(ilsu)
             if (pco%csvout == "y") then 
-              write (2165,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2165,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_m(ilsu)
             end if 
           end if
@@ -141,7 +141,7 @@
             rupw_m(ilsu)%pplnt = rupw_d(ilsu)%pplnt
             write (2171,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_m(ilsu)
             if (pco%csvout == "y") then 
-              write (2175,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+              write (2175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_m(ilsu)
             end if 
           end if
@@ -171,7 +171,7 @@
              ruwb_y(ilsu)%sno_final = ruwb_d(ilsu)%sno_final
              write (2142,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_y(ilsu)
              if (pco%csvout == "y") then 
-               write (2146,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+               write (2146,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_y(ilsu)
              end if
              ruwb_y(ilsu)%sw_init = ruwb_y(ilsu)%sw_final
@@ -180,14 +180,14 @@
            if (pco%nb_lsu%y == "y") then
              write (2152,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_y(ilsu)
              if (pco%csvout == "y") then 
-               write (2156,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+               write (2156,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_y(ilsu)
              end if 
            end if
            if (pco%ls_lsu%y == "y") then
              write (2162,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_y(ilsu)
              if (pco%csvout == "y") then 
-               write (2166,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+               write (2166,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_y(ilsu)
              end if 
            end if
@@ -196,7 +196,7 @@
              rupw_y(ilsu)%pplnt = rupw_d(ilsu)%pplnt
              write (2172,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_y(ilsu)
              if (pco%csvout == "y") then 
-               write (2176,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, &
+               write (2176,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_y(ilsu)
              end if 
            end if
@@ -225,21 +225,21 @@
         
         write (2143,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_a(ilsu)
         if (pco%csvout == "y") then 
-          write (2147,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_a(ilsu)
+          write (2147,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_a(ilsu)
         end if 
       end if
       if (time%end_sim == 1 .and. pco%nb_lsu%a == "y") then
         runb_a(ilsu) = runb_a(ilsu) / time%yrs_prt
         write (2153,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_a(ilsu)
         if (pco%csvout == "y") then 
-          write (2157,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_a(ilsu)
+          write (2157,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_a(ilsu)
         end if
       end if
       if (time%end_sim == 1 .and. pco%ls_lsu%a == "y") then     
         ruls_a(ilsu) = ruls_a(ilsu) / time%yrs_prt
         write (2163,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_a(ilsu)
         if (pco%csvout == "y") then 
-          write (2167,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_a(ilsu)
+          write (2167,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_a(ilsu)
         end if 
       end if
       if (time%end_sim == 1 .and. pco%pw_lsu%a == "y") then    
@@ -249,7 +249,7 @@
         rupw_a(ilsu)%pplnt = rupw_d(ilsu)%pplnt
         write (2173,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_a(ilsu) 
         if (pco%csvout == "y") then 
-          write (2177,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_a(ilsu)
+          write (2177,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_a(ilsu)
         end if
       end if
       end do    !ilsu

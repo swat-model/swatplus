@@ -34,7 +34,7 @@
           if (pco%wb_hru%d == "y") then
              write (2790,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpath_bal(j)%path(ipath)   !! pathogen balance
              if (pco%csvout == "y") then
-               write (2794,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+               write (2794,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                  hpath_bal(j)%path(ipath)
              end if
           end if
@@ -55,7 +55,7 @@
            if (pco%wb_hru%m == "y") then
              write (2791,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpathb_m(j)%path(ipath)
                if (pco%csvout == "y") then
-                 write (2795,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2795,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                    hpathb_m(j)%path(ipath)
                end if
            end if
@@ -77,7 +77,7 @@
            if (time%end_yr == 1 .and. pco%wb_hru%y == "y") then
              write (2792,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpathb_y(j)%path(ipath)
                if (pco%csvout == "y") then
-                 write (2796,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2796,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                    hpathb_y(j)%path(ipath)
                end if
            end if
