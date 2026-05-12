@@ -52,7 +52,7 @@
                                 soil1(j)%org_con_lr(k)%no3, soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp, soil1(j)%emix(k) 
                 if (pco%csvout == "y") then
                     write (4575,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                soil1(j)%org_con_lr(k)%sut, soil(j)%ly(k)%tillagef, soil(j)%ly(k)%tillagef_biomix, soil(j)%ly(k)%tillagef_tillmix, &
+                                soil1(j)%org_con_lr(k)%sut, soil(j)%ly(k)%tillagef, soil(j)%ly(k)%bmix, soil(j)%ly(k)%tillagef_biomix, soil(j)%ly(k)%tillagef_tillmix, &
                                 soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, &
                                 soil1(j)%org_con_lr(k)%no3, soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp, soil1(j)%emix(k) 
                 end if

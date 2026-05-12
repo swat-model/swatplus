@@ -511,6 +511,7 @@
         !     potential transformations metabolic litter
               org_con%x1 = carbdb(cf_lyr)%meta_rate * org_con%cs
               org_tran%lmctp = soil1(j)%meta(k)%c * org_con%x1
+              if (org_tran%lmctp <= 1.e-6) org_tran%lmctp = 0.
               org_tran%lmntp = soil1(j)%meta(k)%n * org_con%x1
               
         !     potential transformations microbial biomass
