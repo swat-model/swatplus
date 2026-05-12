@@ -22,7 +22,8 @@
       implicit none
       
       external :: cs_fert, cs_fert_wet, curno, mgt_harvbiomass, mgt_harvgrain, mgt_harvresidue, &
-                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_wet, mgt_plantop, pest_apply, &
+                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_cswat0, mgt_newtillmix_cswat1, &
+                  mgt_newtillmix_wet, mgt_plantop, pest_apply, &
                   pl_burnop, pl_fert, pl_fert_wet, pl_manure, salt_fert, salt_fert_wet, chg_par, &
                   mgt_transplant
       
@@ -223,6 +224,13 @@
                     harveff = mgt%op3
                     call mgt_harvresidue (j, harveff, iharvop)
                 end select
+                if (pco%mgtout == "y") then
+                  write (2612, *) j, time%yrc, time%mo, time%day_mo,  pldb(idp)%plantnm, "    HARVEST ",  &
+                      phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, biomass, pl_mass(j)%rsd_tot%m,   &
+                      sol_sumno3(j), sol_sumsolp(j), pl_yield%m, pcom(j)%plstr(ipl)%sum_n,                &
+                      pcom(j)%plstr(ipl)%sum_p, pcom(j)%plstr(ipl)%sum_tmp, pcom(j)%plstr(ipl)%sum_w,     &
+                      pcom(j)%plstr(ipl)%sum_a
+                  end if 
               end if
             end do
           
@@ -328,7 +336,11 @@
           case ("till")   !! tillage operation
             idtill = mgt%op1
             ipl = Max(1, mgt%op2)
-            call mgt_newtillmix(j, 0., idtill)
+            if (bsn_cc%cswat == 1) then
+              call mgt_newtillmix_cswat1(j, 0., idtill)
+            else
+              call mgt_newtillmix_cswat0(j, 0., idtill)
+            endif
             
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, tilldb(idtill)%tillnm, "    TILLAGE ", &
@@ -589,7 +601,11 @@
             if (wet_ob(j)%depth > 0.001) then
               call mgt_newtillmix_wet(j,idtill) 
             else
-              call mgt_newtillmix(j,0.,idtill) 
+              if (bsn_cc%cswat == 1) then
+                call mgt_newtillmix_cswat1(j, 0., idtill)
+              else
+                call mgt_newtillmix_cswat0(j, 0., idtill)
+              endif
             endif
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "PUDDLE"

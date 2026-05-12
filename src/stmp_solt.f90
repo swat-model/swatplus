@@ -49,7 +49,6 @@
       real :: bcv = 0.           !none          |lagging factor for cover
       real :: tbare = 0.         !deg C         |temperature of bare soil surface
       real :: tcov = 0.          !deg C         |temperature of soil surface corrected for cover
-      real :: tmp_srf = 0.       !deg C         |temperature of soil surface
       real :: cover = 0.         !kg/ha         |soil cover
 
       j = ihru
@@ -100,7 +99,7 @@
       st0 = 0.
       tbare = 0.
       tcov = 0.
-      tmp_srf = 0.
+      soil(j)%tmp_srf = 0.
       !! SWAT manual equation 2.3.10
       st0 = (w%solrad * (1. - albday) - 14.) / 20.
       !! SWAT manual equation 2.3.9
@@ -112,7 +111,7 @@
 !!    previously using minimum causing soil temp to decrease
 !!    in summer due to high biomass
 
-      tmp_srf = 0.5 * (tbare + tcov)  ! following Jimmy"s code
+      soil(j)%tmp_srf = 0.5 * (tbare + tcov)  ! following Jimmy"s code
 
 !! calculate temperature for each layer on current day
       xx = 0.
@@ -125,7 +124,7 @@
         df = zd / (zd + Exp(-.8669 - 2.0775 * zd))
         !! SWAT manual equation 2.3.3
         soil(j)%phys(k)%tmp = tlag * soil(j)%phys(k)%tmp + (1. - tlag) *       &
-                      (df * (wgn_pms(iwgen)%tmp_an - tmp_srf) + tmp_srf)
+                      (df * (wgn_pms(iwgen)%tmp_an - soil(j)%tmp_srf) + soil(j)%tmp_srf)
         xx = soil(j)%phys(k)%d
 
         ! Temperature correction for Onsite Septic systems

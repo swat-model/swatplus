@@ -6,12 +6,12 @@ Install the required packages in the order below, this is important! The Intel c
 
 Even though Visual Studio bundles Git, a separate install is needed to support SWAT+ version tagging during the `CMake` build. Install the following, accept the defaults.
 
-1. Install the latest [**Visual Studio Community 2022**](https://visualstudio.microsoft.com/free-developer-offers/), and include the `Desktop Development with C++` workload.
+1. Install the latest [**Visual Studio Community 2022**](https://visualstudio.microsoft.com/free-developer-offers/), and include the `Desktop Development with C++.
 
 2. Install [**Intel Fortran Compiler for Windows**](https://www.intel.com/content/www/us/en/developer/tools/oneapi/fortran-compiler-download.html) package from Intel, stand alone version.
 
-3. Install [**Git**](https://git-scm.com/downloads/win) .
-
+3. Install [**Git**](https://git-scm.com/downloads/win).
+   
 **Important:** After installing all the above, reboot your computer.
 
 **Note:** Running integrated SWAT+ tests in Visual Studio requires Python. You may optionally Install Python from the Microsoft App Store and the Python workload in Visual Studio.    

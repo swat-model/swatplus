@@ -51,7 +51,7 @@
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
                   sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
-                  mgt_newtillmix_3, cbn_surfrsd_decomp
+                  mgt_newtillmix_cswat3, cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
@@ -103,6 +103,11 @@
       do j1=1,soil(j)%nly
         sw_volume_begin = sw_volume_begin + soil(j)%phys(j1)%st
       enddo
+
+      ! zero out the mixing efficiency for the day
+      do ly = 1, soil(j)%nly
+        soil1(j)%emix(ly) = 0.
+      enddo
      
       !h => hwb_d(j)
       !h = hwbz
@@ -138,16 +143,18 @@
       hwb_d(j)%wet_out = 0.
       hnb_d(j)%denit = 0.
 
-      if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+      if (bsn_cc%cswat == 1) then
         if (tillage_switch(ihru) .eq. 1) then
-          if (tillage_days(ihru) .ge. 30) then
+          if (tillage_days(ihru) .ge. till_eff_days) then
+            ! no more tillage effect from last tillage.
             tillage_switch(ihru) = 0
             tillage_days(ihru) = 0
+            do ly = 1,soil(j)%nly 
+              soil(j)%ly(ly)%tillagef_tillmix = 0.0
+            enddo
           else
             tillage_days(ihru) = tillage_days(ihru) + 1
           end if                
-          !tillage_depth(ihru) = dtil
-          !tillage_switch(ihru) = .TRUE. 
         end if
       end if
 
@@ -376,23 +383,13 @@
           !call nut_nitvol
         end if
 
-        !! compute residue decomposition and nitrogen and phosphorus mineralization
-        if (bsn_cc%cswat == 2) then
-          if (bmix_eff > 1.e-6) call mgt_newtillmix (ihru, bmix_eff, 0)
+        if (bsn_cc%cswat == 1) then
+          if (bmix_eff > 1.e-6 ) call mgt_biomix (ihru, bmix_eff)
           !! compute surface residue decomposition for each plant in community
           call cbn_surfrsd_decomp
           !! compute soil residue (roots and tilled in) decomposition
-          call cbn_rsd_decomp      ! added by JC and FG, modified from nut_minrln.f90
-          !! compute mineralization and carbon pool transformations
-          call cbn_zhang2
-        end if
-
-        if (bsn_cc%cswat == 3) then
-          if (bmix_eff > 1.e-6) call mgt_newtillmix_3 (ihru, bmix_eff, 0)
-          !! compute surface residue decomposition for each plant in community
-          call cbn_surfrsd_decomp_3
-          !! compute soil residue (roots and tilled in) decomposition
           call cbn_rsd_transfer      ! added by JC and FG, modified from nut_minrln.f90 and modified by fg to transfer soil residue to meta, str, lig
+          ! call cbn_rsd_decomp
           !! compute mineralization and carbon pool transformations
           call cbn_zhang2
         end if
@@ -534,7 +531,7 @@
             end if
         
             !! SWAT-C Xuesong -- c and organic n in runoff
-            if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+            if (bsn_cc%cswat == 1) then
               call nut_orgnc2
             end if
             call nut_psed

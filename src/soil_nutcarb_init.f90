@@ -2,12 +2,15 @@
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine initializes soil chemical properties
+!!    and intial soil layer bmix efficiency
 
       use hru_module, only : hru, ihru, sol_plt_ini
       use soil_module
       use soil_data_module
       use basin_module
       use organic_mineral_mass_module
+      use carbon_module
+      use tillage_data_module
 
       implicit none 
       
@@ -19,9 +22,6 @@
       real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
       real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
       real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
-      real :: frac_hum_microb = 0.      !0-1        |fraction of humus in microbial pool - CENTURY
-      real :: frac_hum_slow = 0.        !0-1        |fraction of humus in slow pool - CENTURY
-      real :: frac_hum_passive = 0.     !0-1        |fraction of humus in passive pool - CENTURY
       real :: actp = 0.
       real :: solp = 0.
       real :: ssp = 0.
@@ -37,22 +37,6 @@
       isol_pl = hru(ihru)%dbs%soil_plant_init
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
-      !! set soil carbon
-      ! soil1(ihru)%cbn(1) = max(0.001, soildb(isol)%ly(1)%cbn)    !! assume 0.001% carbon if zero
-      !! calculate percent carbon for lower layers using exponential decrease
-      !do ly = 2, nly
-        !dep_frac = Exp(-solt_db(isolt)%exp_co * soil(ihru)%phys(ly)%d)
-        !soil1(ihru)%cbn(ly) = soil1(ihru)%cbn(1) * dep_frac
-      !end do
-      !! use carbon content in the soils database
-      ! do ly = 2, nly
-      !   if (ly - 1 <= soildb(isol)%s%nly) then
-      !     soil1(ihru)%cbn(ly) = soildb(isol)%ly(ly-1)%cbn
-      !   else
-      !     soil1(ihru)%cbn(ly) = soildb(isol)%ly(soildb(isol)%s%nly)%cbn
-      !   end if
-      ! end do
-
       do ly = 1, nly
         if (ly == 1) then
           soil1(ihru)%cbn(ly) = max(0.001, soil(ihru)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
@@ -157,55 +141,63 @@
           soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         end if
         
-        if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+        if (bsn_cc%cswat == 1 ) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
-          frac_hum_microb = 0.02
-          frac_hum_slow = 0.54
-          frac_hum_passive = 0.44
+          org_frac%frac_not_seq = 1.0 -.95
 
           !!initialize passive humus pool
-          soil1(ihru)%hp(ly)%m = frac_hum_passive * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%hp(ly)%c = frac_hum_passive * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hp(ly)%m = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hp(ly)%c = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
           soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
           soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
               
           !!initialize slow humus pool
-          soil1(ihru)%hs(ly)%m = frac_hum_slow * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%hs(ly)%c = frac_hum_slow * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hs(ly)%m = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hs(ly)%c = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
           soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
           soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
               
           !!initialize microbial pool
-          soil1(ihru)%microb(ly)%m = frac_hum_microb * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%microb(ly)%c = frac_hum_microb * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%microb(ly)%m = org_frac%frac_seq * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%microb(ly)%c = org_frac%frac_seq * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
           soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.            !assume 8:1 C:N ratio
           soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
             
           !! metabolic residue
-          soil1(ihru)%meta(ly) = plt_mass_z
-          !soil1(ihru)%meta(ly)%m = 0.85 * soil1(ihru)%tot(ly)%m
-          !soil1(ihru)%meta(ly)%c = 0.357 * soil1(ihru)%tot(ly)%c              !0.357=0.42*0.85
-          !soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               !assume 10:1 C:N ratio (EPIC)
-          !soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
+          ! soil1(ihru)%meta(ly) = plt_mass_z
+          soil1(ihru)%meta(ly)%m = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%meta(ly)%c = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%c              
+          soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
+          soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
             
-          !! structural residue
-          soil1(ihru)%str(ly) = plt_mass_z
-          !soil1(ihru)%str(ly)%m = 0.15 * soil1(ihru)%tot(ly)%m
-          !soil1(ihru)%str(ly)%c = 0.063 * soil1(ihru)%tot(ly)%c               !0.063=0.42*0.15
-          !soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
-          !soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
+          ! structural residue
+          ! soil1(ihru)%str(ly) = plt_mass_z
+          soil1(ihru)%str(ly)%m = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%str(ly)%c = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%c               
+          soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
+          soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
           
           !! lignin residue
-          soil1(ihru)%lig(ly) = plt_mass_z
-          !soil1(ihru)%lig(ly)%m = 0.8 * soil1(ihru)%str(ly)%m
-          !soil1(ihru)%lig(ly)%c = 0.8 * soil1(ihru)%str(ly)%c                 !assume 80% Structural C is lig
-          !soil1(ihru)%lig(ly)%n = 0.2 * soil1(ihru)%str(ly)%n
-          !soil1(ihru)%lig(ly)%p = 0.02 * soil1(ihru)%str(ly)%p
+          ! soil1(ihru)%lig(ly) = plt_mass_z
+          soil1(ihru)%lig(ly)%m = 0.8 * soil1(ihru)%str(ly)%m
+          soil1(ihru)%lig(ly)%c = 0.8 * soil1(ihru)%str(ly)%c                 !assume 80% structural c is lig
+          soil1(ihru)%lig(ly)%n = 0.2 * soil1(ihru)%str(ly)%n
+          soil1(ihru)%lig(ly)%p = 0.02 * soil1(ihru)%str(ly)%p
             
         end if
 
-          soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
-          soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+        ! set the initial biomix for each soil layer
+        if (bmix_depth >= soil(ihru)%phys(ly)%d) then
+          soil(ihru)%ly(ly)%init_bmix = bmix_eff
+        else if (bmix_depth > soil(ihru)%phys(ly-1)%d .and. bmix_depth <= soil(ihru)%phys(ly)%d ) then
+          !interpolate
+          soil(ihru)%ly(ly)%init_bmix = bmix_eff * (bmix_depth - soil(ihru)%phys(ly-1)%d )/soil(ihru)%phys(ly)%thick 
+        else
+          soil(ihru)%ly(ly)%init_bmix = 0.0
+        endif
+
+        soil1(ihru)%tot(ly) = soil1(ihru)%str(ly) + soil1(ihru)%meta(ly) + soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
+        soil1(ihru)%seq(ly) = soil1(ihru)%hs(ly) + soil1(ihru)%hp(ly) + soil1(ihru)%microb(ly)
 
       end do   !! end soil layer loop 
 
