@@ -27,7 +27,7 @@
               wal_omd(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
 
            if (pco%csvout == "y") then
-          write (3114,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ,   &
+          write (3114,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ,   &
               wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num,           &
               (wallo(iwallo)%trn(itrn)%src(isrc)%typ, wallo(iwallo)%trn(itrn)%src(isrc)%num,                      &
               wal_omd(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
@@ -53,7 +53,7 @@
               wal_omm(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
  
               if (pco%csvout == "y") then
-          write (3115,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ, &
+          write (3115,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ, &
               wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num,         &
               (wallo(iwallo)%trn(itrn)%src(isrc)%typ, wallo(iwallo)%trn(itrn)%src(isrc)%num,                    &
               wal_omm(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
@@ -81,7 +81,7 @@
               wal_omy(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
   
               if (pco%csvout == "y") then
-          write (3116,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ, &
+          write (3116,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ, &
               wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num,         &
               (wallo(iwallo)%trn(itrn)%src(isrc)%typ, wallo(iwallo)%trn(itrn)%src(isrc)%num,                    &
               wal_omy(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
@@ -108,7 +108,7 @@
               wal_oma(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)
 
         if (pco%csvout == "y") then
-        write (3117,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ,   &
+        write (3117,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, itrn, wallo(iwallo)%trn(itrn)%trn_typ,   &
               wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num, wallo(iwallo)%trn(itrn)%num,         &
               (wallo(iwallo)%trn(itrn)%src(isrc)%typ, wallo(iwallo)%trn(itrn)%src(isrc)%num,                    &
               wal_oma(iwallo)%trn(itrn)%src(isrc)%hd, isrc = 1, wallo(iwallo)%trn(itrn)%src_num)

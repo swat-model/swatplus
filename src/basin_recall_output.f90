@@ -22,7 +22,7 @@
           if (pco%recall_bsn%d == "y") then
             write (4500,*) time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_d
             if (pco%csvout == "y") then
-              write (4504,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_d
+              write (4504,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_d
             end if
           end if
         end if
@@ -33,7 +33,7 @@
           if (pco%recall_bsn%m == "y") then
             write (4501,*) time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_m
             if (pco%csvout == "y") then
-              write (4505,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_m
+              write (4505,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_m
             endif
           end if
           brec_m = hz
@@ -45,7 +45,7 @@
           if (pco%recall_bsn%y == "y") then
             write (4502,*) time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_y
             if (pco%csvout == "y") then
-              write (4506,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_y 
+              write (4506,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_y 
             end if
           end if
           !! zero yearly variables        
@@ -58,7 +58,7 @@
         brec_a = brec_a / time%yrs_prt
         write (4503,*) time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_a
         if (pco%csvout == "y") then 
-          write (4507,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_a 
+          write (4507,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn%name, brec_a 
         end if 
       end if
       
