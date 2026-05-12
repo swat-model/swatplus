@@ -41,7 +41,7 @@
              write (3000,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", ob(iob)%name, cs_db%pests(ipest), &
                baqupst_d%pest(ipest)   !! pesticide balance
              if (pco%csvout == "y") then
-               write (3004,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", ob(iob)%name, &
+               write (3004,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", ob(iob)%name, &
                  cs_db%pests(ipest), baqupst_d%pest(ipest)
              end if
           end if
@@ -61,7 +61,7 @@
              write (3001,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", ob(iob)%name, &
                cs_db%pests(ipest), baqupst_m%pest(ipest)
                if (pco%csvout == "y") then
-                 write (3005,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", &
+                 write (3005,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", &
                    ob(iob)%name, cs_db%pests(ipest), baqupst_m%pest(ipest)
                end if
            end if
@@ -83,7 +83,7 @@
              write (3002,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", ob(iob)%name, &
                cs_db%pests(ipest), baqupst_y%pest(ipest)
                if (pco%csvout == "y") then
-                 write (3006,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", &
+                 write (3006,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", &
                    ob(iob)%name, cs_db%pests(ipest), baqupst_y%pest(ipest)
                end if
            end if
@@ -101,7 +101,7 @@
            write (3003,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", ob(iob)%name, &
              cs_db%pests(ipest), baqupst_a%pest(ipest)
            if (pco%csvout == "y") then
-             write (3007,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", &
+             write (3007,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", &
                ob(iob)%name, cs_db%pests(ipest), baqupst_a%pest(ipest)
            end if
            baqupst_a%pest(ipest) = aqu_pestbz

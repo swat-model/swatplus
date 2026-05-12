@@ -25,8 +25,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2584, "hydout_day.csv", 800)
             write (2584,*) bsn%name, prog
-            write (2584,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2584,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2584,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2584,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*) "HYDOUT                    hydout_day.csv"
           end if
       end if
@@ -40,8 +40,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2585, "hydout_mon.csv", 800)
             write (2585,*) bsn%name, prog
-            write (2585,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2585,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2585,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2585,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*) "HYDOUT                    hydout_mon.csv"
           end if
      end if
@@ -55,8 +55,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2586, "hydout_yr.csv", 800)
             write (2586,*) bsn%name, prog
-            write (2586,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2586,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2586,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2586,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*)   "HYDOUT                    hydout_yr.csv"
           end if
      end if
@@ -70,8 +70,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2587, "hydout_aa.csv", 800)
             write (2587,*) bsn%name, prog
-            write (2587,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2587,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2587,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2587,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*)   "HYDOUT                    hydout_aa.csv"
           end if
        end if
@@ -87,8 +87,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2564, "hydin_day.csv", 800)
             write (2564,*) bsn%name, prog
-            write (2564,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2564,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2564,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2564,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*) "HYDIN                     hydin_day.csv"
           end if
        endif
@@ -102,8 +102,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2565, "hydin_mon.csv", 800)
             write (2565,*) bsn%name, prog
-            write (2565,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2565,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2565,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2565,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*) "HYDIN                     hydin_mon.csv"
           end if
       endif
@@ -117,8 +117,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2566, "hydin_yr.csv", 800)
             write (2566,*) bsn%name, prog
-            write (2566,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2566,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2566,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2566,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*) "HYDIN                     hydin_yr.csv"
           end if
       endif
@@ -132,8 +132,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2567, "hydin_aa.csv", 800)
             write (2567,*) bsn%name, prog
-            write (2567,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
-            write (2567,'(*(G0.3,:","))') hyd_hdr_units2
+            write (2567,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr_obj, hyd_hdr
+            write (2567,'(*(G0.6,:","))') hyd_hdr_units2
             write (9000,*) "HYDIN                     hydin_aa.csv"
           end if
       endif
@@ -149,8 +149,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2704, "deposition_day.csv", 800)
             write (2704,*) bsn%name, prog
-            write (2704,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr
-            write (2704,'(*(G0.3,:","))') hyd_hdr_units
+            write (2704,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr
+            write (2704,'(*(G0.6,:","))') hyd_hdr_units
             write (9000,*) "DEPO                      deposition_day.csv"
           end if
       end if
@@ -165,8 +165,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2705, "deposition_mon.csv", 800)
             write (2705,*) bsn%name, prog
-            write (2705,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr
-            write (2705,'(*(G0.3,:","))') hyd_hdr_units
+            write (2705,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr
+            write (2705,'(*(G0.6,:","))') hyd_hdr_units
             write (9000,*) "DEPO                      deposition_mon.csv"
           end if
        end if
@@ -181,8 +181,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2706, "deposition_yr.csv", 800)
             write (2706,*) bsn%name, prog
-            write (2706,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr
-            write (2706,'(*(G0.3,:","))') hyd_hdr_units
+            write (2706,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr
+            write (2706,'(*(G0.6,:","))') hyd_hdr_units
             write (9000,*) "DEPO                      deposition_yr.csv"
           end if
        end if
@@ -197,8 +197,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2707, "deposition_aa.csv", 800)
             write (2707,*) bsn%name, prog
-            write (2707,'(*(G0.3,:","))') hyd_hdr_time, hyd_hdr
-            write (2707,'(*(G0.3,:","))') hyd_hdr_units
+            write (2707,'(*(G0.6,:","))') hyd_hdr_time, hyd_hdr
+            write (2707,'(*(G0.6,:","))') hyd_hdr_units
             write (9000,*) "DEPO                      deposition_aa.csv"
           end if
        end if
