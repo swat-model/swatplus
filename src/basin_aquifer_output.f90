@@ -28,7 +28,7 @@
           if (pco%aqu_bsn%d == "y") then
             write (2090,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_d
             if (pco%csvout == "y") then
-              write (2094,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_d
+              write (2094,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_d
             end if
           end if
         end if
@@ -43,7 +43,7 @@
           if (pco%aqu_bsn%m == "y") then
             write (2091,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_m
             if (pco%csvout == "y") then
-              write (2095,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_m
+              write (2095,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_m
             endif
           end if
           baqu_m = aquz
@@ -58,7 +58,7 @@
           if (pco%aqu_bsn%y == "y") then
             write (2092,102) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_y
             if (pco%csvout == "y") then
-              write (2096,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_y 
+              write (2096,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_y 
             end if
           end if
           !! zero yearly variables        
@@ -70,7 +70,7 @@
         baqu_a = baqu_a / time%yrs_prt
         write (2093,102) time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_a
         if (pco%csvout == "y") then 
-          write (2097,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_a 
+          write (2097,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "     1", bsn%name, baqu_a 
         end if 
       end if
       

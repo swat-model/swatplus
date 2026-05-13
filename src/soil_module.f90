@@ -16,6 +16,10 @@
         real :: prk = 0.         !! mm H2O         percolation from soil layer on current day
         real :: volcr = 0.       !! mm             crack volume for soil layer 
         real :: tillagef = 0.
+        real :: tillagef_biomix = 0.
+        real :: tillagef_tillmix = 0.
+        real :: bmix
+        real :: init_bmix
         real :: watp = 0.
         integer :: a_days = 0
         integer :: b_days = 0
@@ -33,9 +37,9 @@
         real :: bd = 0.             !! Mg/m**3      ! bulk density of the soil
         real :: k = 0.              !! mm/hr        ! saturated hydraulic conductivity of soil layer. Index:(layer,HRU)
         real :: cbn = 0.            !! mm/hr        ! percent organic carbon of soil layer
-        real :: clay = 0.           !! none         ! fraction clay content in soil material (UNIT CHANGE!)
+        real :: clay = 0.           !! %            ! percent clay content in soil material (UNIT CHANGE!)
         real :: silt = 0.           !! %            ! percent silt content in soil material
-        real :: sand = 0.           !! none         ! fraction of sand in soil material
+        real :: sand = 0.           !! %            ! percent of sand in soil material
         real :: rock = 0.           !! %            ! percent of rock fragments in soil layer 
         real :: conv_wt = 0.        !! none         ! factor which converts kg/kg to kg/ha
         real :: crdep = 0.          !! mm           ! maximum or potential crack volume
@@ -93,6 +97,7 @@
         real :: wat_tbl = 0.               !! 
         real :: avpor = 0.                 !! none           average porosity for entire soil profile
         real :: avbd = 0.                  !! Mg/m^3         average bulk density for soil profile
+        real :: tmp_srf = 0.               !! celsius        surface temperature of the soil
       end type soil_profile
       type (soil_profile), dimension(:), allocatable :: soil
       type (soil_profile), dimension(:), allocatable :: soil_init

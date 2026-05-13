@@ -7,19 +7,21 @@ subroutine carbon_coef_read
     use tillage_data_module 
     use soil_module
     use organic_mineral_mass_module
+    use plant_data_module
     
     implicit none
 
     integer :: eof = 0                !           |end of file
     integer :: soil_test_cntr  = 0    !           |counter for soil test, cannot exceed nmbr_soil_tests 
     logical :: i_exist = .false.      !           |true if file exists
-    character (len=80) :: titldum = ""!           |title of file
-    character (len=24) :: var_name = "" !
+    character (len=80) :: titldum  = "" !           |title of file
+    character (len=30) :: var_name = "" !
+    integer :: int_cbn_diagnostics = 0
     
     nmbr_soil_test_layers = 0     ! comes from soil module
     soil_test_cntr  = 0     ! local variable
 
-    if (bsn_cc%cswat == 2 .or. bsn_cc%cswat == 3) then
+    if (bsn_cc%cswat == 1) then
         inquire (file='carb_coefs.cbn', exist=i_exist)
         if (i_exist) then
           open (107,file='carb_coefs.cbn', iostat=eof)
@@ -31,6 +33,11 @@ subroutine carbon_coef_read
               if (eof < 0) exit
               if (var_name(1:1) == "#") cycle  ! allow comment lines in file that begin with #
               select case(var_name) 
+                case("cbn_diagnostics")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, int_cbn_diagnostics
+                    if (int_cbn_diagnostics == 1) cbn_diagnostics = .true.
+                    if (int_cbn_diagnostics == 0) cbn_diagnostics = .false.
                 case("hp_rate")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, carbdb(1)%hp_rate,carbdb(2)%hp_rate
@@ -64,6 +71,9 @@ subroutine carbon_coef_read
                 case("abco2")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_allo(1)%abco2,org_allo(2)%abco2
+                case("org_frac")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_frac%frac_seq, org_frac%frac_hum_microb, org_frac%frac_hum_slow, org_frac%frac_hum_passive
                 case("prmt_21")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, cb_wtr_coef%prmt_21
@@ -76,9 +86,12 @@ subroutine carbon_coef_read
                 case("rtof")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, man_coef%rtof
-                case("man_to_c")
+                case("cbn_consolidation_factors")
                     backspace (107)
-                    read (107,*,iostat=eof) var_name, man_coef%man_to_c
+                    read (107,*,iostat=eof) var_name, bio_consf, till_consf
+                case("cbn_factor_approaches")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, org_con%tmpf, org_con%watf
                 case("tn")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tn 
@@ -88,6 +101,15 @@ subroutine carbon_coef_read
                 case("tx")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_con%tx
+                case("zz_bmix_coefs")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, zz_bmix_coef_a, zz_bmix_coef_b, zz_bmix_coef_c
+                case("zz_emix_coefs")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, zz_emix_coef_a, zz_emix_coef_b, zz_emix_coef_c
+                case("photo_degrade_factor")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, photo_degrade_factor
                 case("nmbr_soil_test_layers")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, nmbr_soil_test_layers

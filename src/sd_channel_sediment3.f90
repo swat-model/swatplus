@@ -9,8 +9,13 @@
       use water_body_module
       use reservoir_module
       use utils
+      use basin_module, only : bsn_cc
+      use gwflow_module, only : flood_freq
+      use channel_velocity_module
 
-      implicit none     
+      implicit none
+
+      external :: gwflow_floodplain     
       
       external :: rcurv_interp_flo
 
@@ -83,6 +88,8 @@
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
       vel = peakrate / rcurv%xsec_area
       rttime = sd_ch(ich)%chl / (3.6 * vel)
+      sd_ch_vel(ich)%vel = vel       !store for ch_temp
+      sd_ch_vel(ich)%rttime = rttime !store for ch_temp
 
       !! add precip to inflow - km * m * 1000 m/km * ha/10000 m2 = ha
       ch_wat_d(ich)%area_ha = sd_ch(ich)%chl * sd_ch(ich)%chw / 10.
@@ -100,6 +107,11 @@
       florate_ob = ave_rate - bf_flow
       if (florate_ob > 0.) then
         flo_time = 2. * ht1%flo / ave_rate
+        !floodplain exchange with aquifer (gwflow)
+        if(bsn_cc%gwflow.eq.1) then
+          flood_freq(ich) = 1
+          call gwflow_floodplain(ich)
+        endif
         !! assume a triangular distribution
         if (flo_time < 86400.) then
           !! flow is over within the day

@@ -613,6 +613,54 @@
                      read (107,*,iostat=eof) name, pco%cs_wet%d, pco%cs_wet%m, pco%cs_wet%y, pco%cs_wet%a  
                      pco%cs_wet%already_read_in = .true.
                   endif
+               case("gwflow_wb")
+                  if (pco%gwflow_wb%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_wb%d, pco%gwflow_wb%m, pco%gwflow_wb%y, pco%gwflow_wb%a
+                     pco%gwflow_wb%already_read_in = .true.
+                  endif
+               case("gwflow_flux")
+                  if (pco%gwflow_flux%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_flux%d, pco%gwflow_flux%m, pco%gwflow_flux%y, pco%gwflow_flux%a
+                     pco%gwflow_flux%already_read_in = .true.
+                  endif
+               case("gwflow_heat")
+                  if (pco%gwflow_heat%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_heat%d, pco%gwflow_heat%m, pco%gwflow_heat%y, pco%gwflow_heat%a
+                     pco%gwflow_heat%already_read_in = .true.
+                  endif
+               case("gwflow_solute")
+                  if (pco%gwflow_solute%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_solute%d, pco%gwflow_solute%m, pco%gwflow_solute%y, pco%gwflow_solute%a
+                     pco%gwflow_solute%already_read_in = .true.
+                  endif
+               case("gwflow_obs")
+                  if (pco%gwflow_obs%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_obs%d, pco%gwflow_obs%m, pco%gwflow_obs%y, pco%gwflow_obs%a
+                     pco%gwflow_obs%already_read_in = .true.
+                  endif
+               case("gwflow_pump")
+                  if (pco%gwflow_pump%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_pump%d, pco%gwflow_pump%m, pco%gwflow_pump%y, pco%gwflow_pump%a
+                     pco%gwflow_pump%already_read_in = .true.
+                  endif
                case default
                   write(*, fmt="(a,a,a)", advance="yes") "Error: The output object ", name, "in the input file print.prt is not a valid object."
                   write(*, fmt="(a)") "       and cannot be processed"

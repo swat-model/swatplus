@@ -22,7 +22,8 @@
       implicit none
       
       external :: cs_fert, cs_fert_wet, curno, mgt_harvbiomass, mgt_harvgrain, mgt_harvresidue, &
-                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_wet, mgt_plantop, pest_apply, &
+                  mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_cswat0, mgt_newtillmix_cswat1, &
+                  mgt_newtillmix_wet, mgt_plantop, pest_apply, &
                   pl_burnop, pl_fert, pl_fert_wet, pl_manure, salt_fert, salt_fert_wet, chg_par, &
                   mgt_transplant
       
@@ -96,27 +97,28 @@
                   pcom(j)%plcur(ipl)%gro = "y"
                   pcom(j)%plcur(ipl)%idorm = "n"
                   call mgt_plantop
-                  if (mgt%op3 > 0) then
+                  !itr = 0
+                  if (mgt%op3 > 1.e-6) then
                     do idb = 1, db_mx%transplant
                       if (mgt%op_plant == transpl(idb)%name) then
                         itr = idb
                         exit
                       endif
                     end do
-                    if (itr > 0) then
-                      call mgt_transplant (itr)
-                      if (pco%mgtout ==  "y") then
-                        write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "TRANSPLANT ",    &
-                          phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
-                          pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
-                          sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
-                      end if
-                    endif
+                  end if
+                  if (itr > 0) then
+                    call mgt_transplant (itr)
+                    if (pco%mgtout ==  "y") then
+                      write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "TRANSPLANT ",   &
+                        phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
+                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                           &
+                        sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
+                    end if
                   else
                     if (pco%mgtout ==  "y") then
                       write (2612, *) j, time%yrc, time%mo, time%day_mo, pldb(idp)%plantnm,  "    PLANT ",    &
                         phubase(j), pcom(j)%plcur(ipl)%phuacc,  soil(j)%sw,                                   &
-                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                              &
+                        pl_mass(j)%tot(ipl)%m, pl_mass(j)%rsd_tot%m, sol_sumno3(j),                           &
                         sol_sumsolp(j),pcom(j)%plg(ipl)%lai, pcom(j)%plcur(ipl)%lai_pot
                     end if
                   end if
@@ -222,6 +224,13 @@
                     harveff = mgt%op3
                     call mgt_harvresidue (j, harveff, iharvop)
                 end select
+                if (pco%mgtout == "y") then
+                  write (2612, *) j, time%yrc, time%mo, time%day_mo,  pldb(idp)%plantnm, "    HARVEST ",  &
+                      phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, biomass, pl_mass(j)%rsd_tot%m,   &
+                      sol_sumno3(j), sol_sumsolp(j), pl_yield%m, pcom(j)%plstr(ipl)%sum_n,                &
+                      pcom(j)%plstr(ipl)%sum_p, pcom(j)%plstr(ipl)%sum_tmp, pcom(j)%plstr(ipl)%sum_w,     &
+                      pcom(j)%plstr(ipl)%sum_a
+                  end if 
               end if
             end do
           
@@ -327,7 +336,11 @@
           case ("till")   !! tillage operation
             idtill = mgt%op1
             ipl = Max(1, mgt%op2)
-            call mgt_newtillmix(j, 0., idtill)
+            if (bsn_cc%cswat == 1) then
+              call mgt_newtillmix_cswat1(j, 0., idtill)
+            else
+              call mgt_newtillmix_cswat0(j, 0., idtill)
+            endif
             
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, tilldb(idtill)%tillnm, "    TILLAGE ", &
@@ -369,8 +382,8 @@
               endif
             else
               call pl_fert (ifrt, frt_kg, ifertop)
-              call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
-              call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
+              !call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
+              !call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
               if (pco%mgtout == "y") then
                 write (2612,*) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "    FERT ",         &
                   phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, pl_mass(j)%tot(ipl)%m,         &
@@ -379,7 +392,7 @@
               endif
             endif
 
-          case ("manu")   !! fertilizer operation
+          case ("manu")   !! manure application
             ipl = 1
             ifrt = mgt%op1                          !fertilizer type from fert data base
             frt_kg = mgt%op3                        !amount applied in kg/ha
@@ -588,7 +601,11 @@
             if (wet_ob(j)%depth > 0.001) then
               call mgt_newtillmix_wet(j,idtill) 
             else
-              call mgt_newtillmix(j,0.,idtill) 
+              if (bsn_cc%cswat == 1) then
+                call mgt_newtillmix_cswat1(j, 0., idtill)
+              else
+                call mgt_newtillmix_cswat0(j, 0., idtill)
+              endif
             endif
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "PUDDLE"

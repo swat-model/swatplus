@@ -2,8 +2,7 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
 # 1. Install dependencies needed to add Intel’s repo, install CMake, gfortran, and GDB
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
         gpg \
         lsb-release \
@@ -12,7 +11,10 @@ RUN apt-get update && \
         cmake \
         gdb \
         gfortran \
+        python3-pip \
         && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install ipykernel plotly pandas nbformat
 
 # 2. Add Intel’s GPG key and repository for oneAPI
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
@@ -23,8 +25,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https:/
     > /etc/apt/sources.list.d/oneAPI.list
 
 # 3. Install Intel oneAPI Fortran Compiler
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         intel-oneapi-compiler-fortran \
         && rm -rf /var/lib/apt/lists/*
 

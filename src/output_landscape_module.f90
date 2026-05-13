@@ -58,7 +58,8 @@
       type (output_waterbal), dimension (:), allocatable :: hltwb_m
       type (output_waterbal), dimension (:), allocatable :: hltwb_y
       type (output_waterbal), dimension (:), allocatable :: hltwb_a
-      
+
+      type (output_waterbal), dimension (:), allocatable :: lsu_wb_d    !output for using components of lsus in ch_temp
       type (output_waterbal), dimension (:), allocatable :: ruwb_d
       type (output_waterbal), dimension (:), allocatable :: ruwb_m
       type (output_waterbal), dimension (:), allocatable :: ruwb_y
@@ -1266,6 +1267,10 @@
          character (len=22) :: id            =    "                gis_id"
          character (len=13) :: name          =    "    name     "
          character(len=15)  :: sut           =    "            sut"
+         character(len=16)  :: tillagef      =    "        tillagef" 
+         character(len=16)  :: bmix          =    "           bmix" 
+         character(len=16)  :: tillagef_biomix     =    " tillagef_biomix" 
+         character(len=17)  :: tillagef_tillmix    =    " tillagef_tillmix" 
          character(len=15)  :: till_eff      =    "       till_eff"  
          character(len=15)  :: cdg           =    "            cdg"         
          character(len=15)  :: ox            =    "             ox"         
@@ -1274,6 +1279,7 @@
          character(len=15)  :: nh4           =    "            nh4"         
          character(len=15)  :: resp          =    "       co2_resp"         
          character(len=15)  :: soil_tmp      =    "      soil_temp"         
+         character(len=15)  :: emix          =    "           emix"         
          end type output_carb_vars_header
       type (output_carb_vars_header) :: carbvars_hdr
       
@@ -1288,9 +1294,9 @@
          character (len=12) :: isd           =    "        unit"
          character (len=22) :: id            =    "                gis_id"
          character (len=13) :: name          =    "    name     "
-         character(len=15)  :: abco2         =    "          abco2"
-         character(len=15)  :: abpt          =    "            abp"  
          character(len=15)  :: asp           =    "            asp"         
+         character(len=15)  :: abpt          =    "            abp"  
+         character(len=15)  :: abco2         =    "          abco2"
          character(len=15)  :: a1co2         =    "          a1co2"         
          character(len=15)  :: asco2         =    "          asco2"         
          character(len=15)  :: apco2         =    "          apco2"         

@@ -256,8 +256,8 @@
       aqu_d(iaq)%minp = ob(icmd)%hin%flo * aqu_dat(iaq)%minp / 1000.
       ob(icmd)%hd(1)%solp = aqu_d(iaq)%minp
       
-      !! temperature of aquifer flow
-      ob(icmd)%hd(1)%temp = w_temp%gw
+      !! temperature of aquifer flow (handled in ch_temp component mixing)
+      !ob(icmd)%hd(1)%temp = w_temp(0)%gw
 
       !! compute fraction of flow to each channel in the aquifer
       !! if connected to aquifer - add flow

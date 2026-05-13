@@ -17,7 +17,7 @@
       
       implicit none
       
-      external :: pl_partition, pl_root_gro, pl_seed_gro, xmon, jdt
+      external :: pl_partition, pl_root_gro, pl_seed_gro, pl_rootfr, xmon, jdt
       
       integer, intent (in) :: init   !           |
       integer, intent (in) :: iihru  !none       |hru number to send to plant_init

@@ -59,7 +59,7 @@
       
       external :: actions, aqu_pest_output_init, basin_sw_init, calsoft_ave_output, calsoft_sum_output, &
                   cli_atmodep_time_control, cli_precip_control, climate_control, command, conditions, &
-                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix
+                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix_cswat0
 
       integer :: j = 0               !none          |counter
       integer :: julian_day = 0      !none          |counter
@@ -220,8 +220,8 @@
           !! zero demand, withdrawal, and unmet for entire allocation object
           wallo(:)%tot = walloz
           !! zero water treatment and use outflow in case they receive water multiple times
-          wtp_om_out(:) = hz
-          wuse_om_out(:) = hz
+          if (allocated(wtp_om_out)) wtp_om_out(:) = hz
+          if (allocated(wuse_om_out)) wuse_om_out(:) = hz
 
           if (time%yrs > pco%nyskip) ndmo(time%mo) = ndmo(time%mo) + 1
 
@@ -276,13 +276,15 @@
         !! write annual basin crop yields and harvested areas
         if (sp_ob%hru > 0) then
         do iplt = 1, basin_plants
-          crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
-          if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
-            write (5100,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld(iplt)%area_ha,            &
-                                                bsn_crop_yld(iplt)%yield, crop_yld_t_ha
+          if (time%yrs > pco%nyskip) then
+            crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
+            if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
+              write (5100,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld(iplt)%area_ha,          &
+                                                  bsn_crop_yld(iplt)%yield, crop_yld_t_ha
+            end if
+            bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
+            bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
           end if
-          bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
-          bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
           bsn_crop_yld(iplt) = bsn_crop_yld_z
           if (time%end_sim == 1) then
             crop_yld_t_ha = bsn_crop_yld_aa(iplt)%yield / (bsn_crop_yld_aa(iplt)%area_ha + 1.e-6)
@@ -332,8 +334,8 @@
           end if
         
           !! compute biological mixing at the end of every year
-          if (bsn_cc%cswat /= 2 .and. bsn_cc%cswat /= 3) then  !! fg added this because so that cbn_zhang2 can handle bio mixing directlyn
-            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
+          if (bsn_cc%cswat == 0) then  !! fg added this because when cswat == 0, biomixing occurs every day that the soil layer is above freezing not at the end of the year.
+            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix_cswat0 (j, hru(j)%hyd%biomix, 0)
           end if
 
           !! update sequence number for year in rotation to that of

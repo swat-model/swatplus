@@ -20,8 +20,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2544, "reservoir_day.csv", 1500)
             write (2544,*) bsn%name, prog
-            write (2544,'(*(G0.3,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
-            write (2544,'(*(G0.3,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
+            write (2544,'(*(G0.6,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
+            write (2544,'(*(G0.6,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
             write (9000,*) "RES                       reservoir_day.csv"
           end if
       end if
@@ -35,8 +35,8 @@
            if (pco%csvout == "y") then
             call open_output_file(2545, "reservoir_mon.csv", 1500)
             write (2545,*) bsn%name, prog
-            write (2545,'(*(G0.3,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
-            write (2545,'(*(G0.3,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
+            write (2545,'(*(G0.6,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
+            write (2545,'(*(G0.6,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
             write (2545,*) "RES                       reservoir_mon.csv"
           end if
      end if
@@ -50,8 +50,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2546, "reservoir_yr.csv", 1500)
             write (2546,*) bsn%name, prog
-            write (2546,'(*(G0.3,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
-            write (2546,'(*(G0.3,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
+            write (2546,'(*(G0.6,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
+            write (2546,'(*(G0.6,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
             write (9000,*) "RES                       reservoir_yr.csv"
           end if
       end if
@@ -65,8 +65,8 @@
           if (pco%csvout == "y") then
             call open_output_file(2547, "reservoir_aa.csv", 1500)
             write (2547,*) bsn%name, prog
-            write (2547,'(*(G0.3,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
-            write (2547,'(*(G0.3,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
+            write (2547,'(*(G0.6,:","))') ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr
+            write (2547,'(*(G0.6,:","))') ch_wbod_hdr_units, hyd_hdr_units3, hyd_hdr_units3, hyd_hdr_units3
             write (9000,*) "RES                       reservoir_aa.csv"
           end if
       end if
