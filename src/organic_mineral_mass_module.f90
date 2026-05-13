@@ -137,7 +137,7 @@
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_sstr                         !       |total structural pool for surface (summed by lower layers)
       type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for surface (summed by lower layers)
-      type (organic_mass) :: soil_prof_smeta                         !       |total metabolic pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_smeta                        !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_man                          !       |total manure pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_water                        !       |total dissolved pool for profile (summed by layer)
       type (organic_mass) :: soil_org_z                             !       |used to zero organic objects

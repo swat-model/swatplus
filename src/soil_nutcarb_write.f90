@@ -30,6 +30,10 @@
       real :: prf_swc = 0.0     !mm/mm       |average profile soil water content including wilting point moisture content.
       real :: prf_depth = 0.0   !mm          |depth of soil profile.
       real :: frac_above_300 = 1.0
+      real :: soil_prof_lig_n
+      real :: soil_prof_nonlig_n
+      real :: soil_prof_lig_p
+      real :: soil_prof_nonlig_p
       integer :: iihru = 0      !none        |counter
       integer :: j = 0          !none        |counter
       integer :: ipl = 0        !none        |counter
@@ -137,6 +141,10 @@
           soil_prof_hp = soil_org_z
           soil_prof_microb = soil_org_z
           soil_prof_water = soil_org_z
+          soil_prof_lig_n = 0.
+          soil_prof_nonlig_n = 0.
+          soil_prof_lig_p = 0.
+          soil_prof_nonlig_p = 0.
           do ly = 1, soil(j)%nly
             soil_prof_seq_hs = soil_prof_seq_hs + soil1(j)%hs(ly)
             soil_prof_seq_hp = soil_prof_seq_hp + soil1(j)%hp(ly)
@@ -166,6 +174,10 @@
             soil_prof_meta = soil_prof_meta + soil1(j)%meta(ly)
             soil_prof_lig = soil_prof_lig +  soil1(j)%lig(ly)
             soil_prof_nonlig = soil_prof_nonlig +  soil1(j)%nonlig(ly)
+            soil_prof_lig_n = soil_prof_lig_n + soil1(j)%lig(ly)%n
+            soil_prof_nonlig_n = soil_prof_nonlig_n +  soil1(j)%nonlig(ly)%n
+            soil_prof_lig_p = soil_prof_lig_p +  soil1(j)%lig(ly)%p
+            soil_prof_nonlig_p = soil_prof_nonlig_p +  soil1(j)%nonlig(ly)%p
             soil_prof_microb = soil_prof_microb + soil1(j)%microb(ly)
             soil_prof_water = soil_prof_water + soil1(j)%water(ly)
           end do
@@ -290,13 +302,15 @@
                         soil_prof_microb%p + soil_prof_water%p + soil_prof_man%p
           write (4582,*) freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                         tot_prof_n, soil_prof_rsd%n, soil_prof_str%n, soil_prof_meta%n, soil_prof_hs%n, soil_prof_hp%n,         &
-                        soil_prof_microb%n, soil_prof_water%n, soil_prof_man%n 
+                        soil_prof_microb%n, soil_prof_lig_n, soil_prof_nonlig_n, soil_prof_water%n, soil_prof_man%n, &
+                        tot_prof_p, soil_prof_rsd%p, soil_prof_str%p, soil_prof_meta%p, soil_prof_hs%p, soil_prof_hp%p,         &
+                        soil_prof_microb%p, soil_prof_lig_p, soil_prof_nonlig_p, soil_prof_water%p, soil_prof_man%p
           if (pco%csvout == "y") then
             write (4583,'(*(G0.7,:,","))') freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                           tot_prof_n, soil_prof_rsd%n, soil_prof_str%n, soil_prof_meta%n, soil_prof_hs%n, soil_prof_hp%n,         &
-                          soil_prof_microb%n, soil_prof_water%n, soil_prof_man%n, &
-                          soil_prof_rsd%p, soil_prof_str%p, soil_prof_meta%p, soil_prof_hs%p, soil_prof_hp%p,         &
-                          soil_prof_microb%p, soil_prof_water%p, soil_prof_man%p
+                          soil_prof_microb%n, soil_prof_lig_n, soil_prof_nonlig_n, soil_prof_water%n, soil_prof_man%n, &
+                          tot_prof_p, soil_prof_rsd%p, soil_prof_str%p, soil_prof_meta%p, soil_prof_hs%p, soil_prof_hp%p,         &
+                          soil_prof_microb%p, soil_prof_lig_p, soil_prof_nonlig_p, soil_prof_water%p, soil_prof_man%p
           endif 
           
           if (cbn_diagnostics .eqv. .true.) then
