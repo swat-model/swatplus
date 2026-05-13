@@ -1,0 +1,37 @@
+##
+# <username>/fortran-env:debian-<DEBIAN_VER>
+#
+# This image creates the building environment for SWAT+, including gfortran and ifx
+#
+# Usage: 
+#   > cd <path/to/Dockerfile.devenv.debian>
+#   > docker build -t <username>/fortran-env:debian-12.11 -f Dockerfile.devenv.debian .
+#
+# Copyright 2025-2026 Liang-Jun Zhu <zlj@lreis.ac.cn>
+# Use debian as the base image, which is used for continuumio/miniconda3, and thus convenient for incorporate python scripts when needed
+# https://github.com/ContinuumIO/docker-images/blob/main/miniconda3/debian/Dockerfile
+ARG DEBIAN_VER=12.11-slim@sha256:6ac2c08566499cc2415926653cf2ed7c3aedac445675a013cc09469c9e118fdd
+FROM debian:${DEBIAN_VER}
+
+LABEL maintainer="Liang-Jun Zhu <zlj@lreis.ac.cn>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# change the shell to use "source" command
+SHELL ["/bin/bash", "-c"]
+
+# install gfortran and Intel Fortran compilers
+RUN apt-get update && apt-get install -y wget gpg \
+    cmake ninja-build \
+    ca-certificates \
+    build-essential \
+    gfortran \
+    && \
+    wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
+        | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" \
+        | tee /etc/apt/sources.list.d/oneAPI.list \
+    && apt-get update \
+    && apt-get install -y intel-oneapi-compiler-fortran \
+    && rm -rf /var/lib/apt/lists/*
+
