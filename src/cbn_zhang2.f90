@@ -102,7 +102,6 @@
        integer :: kk = 0         !                     |
        real :: lmnta = 0      !                     |      
        real :: min_n_ppm = 0  !                     |
-       real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
@@ -615,7 +614,8 @@
                   lscta = org_tran%lsctp
                   lsnta = org_tran%lsntp
                   lslcta = org_tran%lslctp
-                  lslncat = org_tran%lslnctp
+                  !lslncat = org_tran%lslnctp   
+                  lslncta = org_tran%lslnctp   
               end if
               if (cpn2>0.) then
                   lmcta = org_tran%lmctp * reduc
@@ -744,7 +744,7 @@
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
-              org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
+              org_flux%co2fstr = org_flux%co2fstr + org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
               org_flux%cfstrs2 = .7 * lslcta
@@ -904,11 +904,15 @@
               
               !!update c and n of different som pools
               !!=========================================
-              soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)
+              !soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)   ! instead of this, should be the sum lignon and non lignin c
               soil1(j)%lig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslcta)
-              soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              ! soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslncta)
+              soil1(j)%str(k)%c = soil1(j)%nonlig(k)%c +  soil1(j)%lig(k)%c
                             
               soil1(j)%lig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslcta / .42)
+              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslncta / .42)
+          
               soil1(j)%str(k)%m = max(1.e-10, soil1(j)%str(k)%m - lscta / .42)
               
               if (soil1(j)%meta(k)%m > 0.) then

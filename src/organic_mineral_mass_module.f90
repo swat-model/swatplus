@@ -29,6 +29,7 @@
         type (organic_mass) :: microb    !       |microbial biomass
         type (organic_mass) :: str       !       |structural litter pool
         type (organic_mass) :: lig       !       |lignin pool
+        type (organic_mass) :: nonlig    !       |non lignin pool
         type (organic_mass) :: meta      !       |metabolic litter pool
         type (organic_mass) :: man       !       |manure pool
         type (organic_mass) :: water     !       |water soluble
@@ -108,6 +109,7 @@
         type (organic_mass), dimension(:), allocatable :: microb    !       |microbial biomass
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: lig       !       |lignin pool dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: nonlig    !       |non lignin pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: man       !       |manure pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: water     !       |water soluble
@@ -131,6 +133,7 @@
       type (organic_mass) :: soil_prof_seq_microb                   !       |sequestered microbial pool for profile summed up by layer excluding layer 1
       type (organic_mass) :: soil_prof_str                          !       |total structural pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_lig                          !       |total lignin pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_nonlig                       !       |total nonlignin pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_sstr                         !       |total structural pool for surface (summed by lower layers)
       type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for surface (summed by lower layers)
