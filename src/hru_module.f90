@@ -267,6 +267,7 @@
         real :: irr_hmin = 0                    !mm H2O     |threshold ponding depth to trigger paddy irrigation
         real :: irr_isc = 0                     !mm H2O     |ID of the source cha/res/aqu for paddy irrigation
         real, dimension(5) :: flow = 0          !mm H2O     |average annual flow (1=wyld,2=perc,3=surface,4=lateral,5=tile)
+        integer :: last_irr_day = -999          !none       |julian day of last irrigation event
       end type hydrologic_response_unit
       type (hydrologic_response_unit), dimension(:), allocatable, target :: hru
       type (hydrologic_response_unit), dimension(:), allocatable, target :: hru_init
