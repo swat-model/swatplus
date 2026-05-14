@@ -1,4 +1,13 @@
-File: carb_coefs.cbn   Carbon coefficients used if cswat == 2
+File: carb_coefs.cbn   Carbon coefficients used if cswat == 2 or cswat == 3
+
+# cbn_diagnostics contols what carbon related files are printed out if hru_cb is specified in print.prt
+# 1 is true, 0 is false
+# If omitted, the default is 0 or false.
+# if 0, only hru_cbn_lyr.txt/.csv and hru_seq_lyr.txt/.csv and hru_n_p_pool_stat.txt/csv will be printed out.
+# if 1, hru_cbn_lyr.txt/.csv, hru_seq_lyr.txt/.csv, hru_rsdc_stat.txt/.csv, hru_soilc_stat.txt/.csv, &
+#       hru_cflux_stat.txt/.csv, hru_soilcarb_mb_stat.txt/.csv, hru_cpool_stat.txt/.csv, hru_n_p_pool_stat.txt/.csv, &
+#       hru_begsim_soil_prop.txt/.csv, hru_endsim_soil_prop.txt/.csv
+cbn_diagnostics 0 
 
 # carbdb coefficients
 #               1st_lyr     other_lyrs
@@ -12,37 +21,48 @@ hs_hp           0.05        0.05
 
 # org_allo coefficients
 #               1st_lyr     other_lyrs
-a1co2           0.600       0.55
+a1co2           0.60        0.55
 asco2           0.55        0.55
 apco2           0.55        0.55 
 abco2           0.55        0.0
+
+# organic fractions used to initialize soil carbon into various pools 
+#               frac_seq    frac_hum_microb     frac_hum_slow   frac_hum_passive
+org_frac        0.95        0.02                0.44            0.54 
 
 # carbon water partitioning coefficients
 prmt_21         1000.   
 prmt_44         0.5
 
 # Length of days that a tillage event will be effective
-till_eff_days   30
+till_eff_days   100
 
 # Manure carbon coefficients
-rtof        0.5
-man_to_c    0.42           
+rtof            0.5 
 
-# temperature effect equation parameters
-tn             -0.5
-top            35.0
-tx             50.0
+# Carbon moisture consolidation factors
+#                          bio_consf  till_consf
+cbn_consolidation_factors  .15        .10
 
-# Soil Test Values for each layer
-# soil_name and depth_mm are required, enter -1 for other values if missing.
-# The order of entry must be asending depths for each soil.
-# If sand, silt, clay are not -1 they must total to 100.0
-# Their should be a unique mapping between the soil_name below and in hru_data.hru 
-# and soils.sol file to prevent overwiting soil information for other
-# hrus.
-nmbr_soil_test_layers 4
-#         soil_name      depth_mm  bulk_density carbon %sand    %silt   %clay
-soil_test soil_01-h1     150        2.0         4.0     30.0     30.0    40.0 
-soil_test soil_01-h1     250        1.5         3.0     25.0     35.0    40.0 
-soil_test soil_03-h3     125        1.6         3.0     40.0     30.0    30.0
-soil_test soil_03-h3     150        2.0         3.0     15.0     45.0    40.0
+# cbn_zhang2 carbon temperture and water factor approaches
+# Ref Title: "Replicating measured site-scale soil organic carbon dynamics in the U.S. Corn Belt using the SWAT-C model"
+# Ref URL: https://www.sciencedirect.com/science/article/abs/pii/S1364815222002535?via%3Dihub
+# tmpf  Options: 1 - tmpf1,  2 - tmpf2, 3 - tmpf3
+# watf  Options: 1 - watf1,  2 - watf2
+#                      tmpf    watf    
+# cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+
+# tmpf2 temperature effect equation parameters
+tn              -0.5
+top             30.0
+tx              50.0
+
+# bio and tillage mixing coeffients in mgt_tillfactor.f90 tillf option of 4
+zz_bmix_coefs   3.0    5.0   -5.5
+zz_emix_coefs   3.0   15.0   -3.5
+
+# Surface residue photo degradtion factor.
+photo_degrade_factor    0.001
+
+

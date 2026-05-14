@@ -1,6 +1,9 @@
       module carbon_module 
       
       implicit none
+
+      logical :: cbn_diagnostics = .false.   !        |This controls what is printed out in soil_nutcarb_write.f90. 
+                                             !        |If .false. only hru_cbn_lyr(.txt, .csv) and hru_seq_lyr(.txt, .csv) will be printed out
       
       type carbon_terrestrial_inputs
         real :: er_POC_para = 1.5       !           |POC enrichment ratio ! 0-10 ! 0.0-5.0  MOST SENSITIVE  
@@ -101,11 +104,12 @@
           ! real :: xlslf = 0.         !               |control on potential transformation of structural litter by lignin fraction
           ! The following three parameters resolve the shape of the temperature effect equation:  
           real :: tn = -5.           ! celsius         |minimum temperature bound
-          real :: top = 35.          ! celsius         |peak (optimum) temperature 
+          real :: top = 30.          ! celsius         |peak (optimum) temperature 
           real :: tx = 50.           ! celsius         |maximum temperature bound
+          integer :: tmpf = 2        !                 |temperature factor approach used in cbn_zhang2 
+          integer :: watf = 1        !                 |water factor approach used in cbn_zhang2 
       end type organic_controls
       type (organic_controls) :: org_con
-      type (organic_controls) :: org_con_zero
         
       type organic_fractions
           real :: lmf = 0.      !frac               |fraction of the litter that is metabolic
@@ -113,6 +117,11 @@
           real :: lsf = 0.      !frac               |fraction of the litter that is structural
           real :: lslf = 0.     !kg kg-1            |fraction of structural litter that is lignin 
           real :: lsnf = 0.     !kg kg-1            |fraction of structural litter that is N      
+          real :: frac_seq = .95             !      |fraction of total carbon the is sequestered carbon when initializing sequestered pools
+          real :: frac_not_seq = .05         !      |fraction of total carbon the is NOT sequestered carbon when initializing non-sequestered pools
+          real :: frac_hum_microb = 0.02     !      !fraction of carbon that is microbrial pool when initializing microbrial pools
+          real :: frac_hum_slow = 0.54       !      !fraction of carbon that is humas slow pool  when initializing humus slow pools
+          real :: frac_hum_passive = 0.44    !      |fraction of carbon that is humas passive pool when initializing humas passive pools
       end type organic_fractions
       type (organic_fractions) :: org_frac                    
       

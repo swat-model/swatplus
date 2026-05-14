@@ -23,7 +23,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2804, "hru_pest_day.csv", 800)
             write (2804,*) bsn%name, prog
-            write (2804,'(*(G0.3,:","))') pestb_hdr
+            write (2804,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "HRU_PEST                  hru_pest_day.csv"
           end if
       end if
@@ -38,7 +38,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2805, "hru_pest_mon.csv", 800)
             write (2805,*) bsn%name, prog
-            write (2805,'(*(G0.3,:","))') pestb_hdr
+            write (2805,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "HRU_PEST                  hru_pest_mon.csv"
           end if
       end if
@@ -53,7 +53,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2806, "hru_pest_yr.csv", 800)
             write (2806,*) bsn%name, prog
-            write (2806,'(*(G0.3,:","))') pestb_hdr
+            write (2806,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "HRU_PEST                  hru_pest_yr.csv"
           end if
       end if
@@ -68,7 +68,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2807, "hru_pest_aa.csv", 800)
             write (2807,*) bsn%name, prog
-            write (2807,'(*(G0.3,:","))') pestb_hdr
+            write (2807,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "HRU_PEST                  hru_pest_aa.csv"
           end if
       end if
@@ -87,7 +87,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2812, "channel_pest_day.csv", 800)
             write (2812,*) bsn%name, prog
-            write (2812,'(*(G0.3,:","))') chpest_hdr
+            write (2812,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "CHANNEL_PEST              channel_pest_day.csv"
           end if
       end if
@@ -102,7 +102,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2813, "channel_pest_mon.csv", 800)
             write (2813,*) bsn%name, prog
-            write (2813,'(*(G0.3,:","))') chpest_hdr
+            write (2813,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "CHANNEL_PEST              channel_pest_mon.csv"
           end if
       end if
@@ -117,7 +117,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2814, "channel_pest_yr.csv", 800)
             write (2814,*) bsn%name, prog
-            write (2814,'(*(G0.3,:","))') chpest_hdr
+            write (2814,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "CHANNEL_PEST              channel_pest_yr.csv"
           end if
       end if
@@ -132,7 +132,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2815, "channel_pest_aa.csv", 800)
             write (2815,*) bsn%name, prog
-            write (2815,'(*(G0.3,:","))') chpest_hdr
+            write (2815,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "CHANNEL_PEST              channel_pest_aa.csv"
           end if
       end if
@@ -151,7 +151,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2820, "reservoir_pest_day.csv", 800)
             write (2820,*) bsn%name, prog
-            write (2820,'(*(G0.3,:","))') respest_hdr
+            write (2820,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "RESERVOIR_PEST            reservoir_pest_day.csv"           
           end if
       end if
@@ -166,7 +166,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2821, "reservoir_pest_mon.csv", 800)
             write (2821,*) bsn%name, prog
-            write (2821,'(*(G0.3,:","))') respest_hdr
+            write (2821,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "RESERVOIR_PEST            reservoir_pest_mon.csv"
           end if
       end if
@@ -181,7 +181,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2822, "reservoir_pest_yr.csv", 800)
             write (2822,*) bsn%name, prog
-            write (2822,'(*(G0.3,:","))') respest_hdr
+            write (2822,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "RESERVOIR_PEST            reservoir_pest_yr.csv"
           end if
       end if
@@ -196,7 +196,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2823, "reservoir_pest_aa.csv", 800)
             write (2823,*) bsn%name, prog
-            write (2823,'(*(G0.3,:","))') respest_hdr
+            write (2823,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "RESERVOIR_PEST            reservoir_pest_aa.csv"
           end if
       end if
@@ -215,7 +215,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3004, "basin_aqu_pest_day.csv", 800)
             write (3004,*) bsn%name, prog
-            write (3004,'(*(G0.3,:","))') aqupest_hdr
+            write (3004,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "BASIN_AQUIFER_PEST        basin_aqu_pest_day.csv"
           end if
       end if
@@ -230,7 +230,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3005, "basin_aqu_pest_mon.csv", 800)
             write (3005,*) bsn%name, prog
-            write (3005,'(*(G0.3,:","))') aqupest_hdr
+            write (3005,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "BASIN_AQUIFER_PEST        basin_aqu_pest_mon.csv"
           end if
       end if
@@ -245,7 +245,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3006, "basin_aqu_pest_yr.csv", 800)
             write (3006,*) bsn%name, prog
-            write (3006,'(*(G0.3,:","))') aqupest_hdr
+            write (3006,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "BASIN_AQUIFER_PEST        basin_aqu_pest_yr.csv" 
           end if
       end if
@@ -260,7 +260,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3007, "basin_aqu_pest_aa.csv", 800)
             write (3007,*) bsn%name, prog
-            write (3007,'(*(G0.3,:","))') aqupest_hdr
+            write (3007,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "BASIN_AQUIFER_PEST        basin_aqu_pest_aa.csv"
           end if
       end if
@@ -279,7 +279,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3012, "aquifer_pest_day.csv", 800)
             write (3012,*) bsn%name, prog
-            write (3012,'(*(G0.3,:","))') aqupest_hdr
+            write (3012,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "AQUIFER_PEST              aquifer_pest_day.csv"
           end if
       end if
@@ -294,7 +294,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3013, "aquifer_pest_mon.csv", 800)
             write (3013,*) bsn%name, prog
-            write (3013,'(*(G0.3,:","))') aqupest_hdr
+            write (3013,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "AQUIFER_PEST              aquifer_pest_mon.csv"
           end if
       end if
@@ -309,7 +309,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3014, "aquifer_pest_yr.csv", 800)
             write (3014,*) bsn%name, prog
-            write (3014,'(*(G0.3,:","))') aqupest_hdr
+            write (3014,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "AQUIFER_PEST              aquifer_pest_yr.csv"
           end if
       end if
@@ -324,7 +324,7 @@
           if (pco%csvout == "y") then
             call open_output_file(3015, "aquifer_pest_aa.csv", 800)
             write (3015,*) bsn%name, prog
-            write (3015,'(*(G0.3,:","))') aqupest_hdr
+            write (3015,'(*(G0.6,:","))') aqupest_hdr
             write (9000,*) "AQUIFER_PEST              aquifer_pest_aa.csv"
           end if
       end if
@@ -343,7 +343,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2836, "basin_ch_pest_day.csv", 800)
             write (2836,*) bsn%name, prog
-            write (2836,'(*(G0.3,:","))') chpest_hdr
+            write (2836,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "BASIN_CH_PEST             reservoir_pest_day.csv"
           end if
        end if
@@ -358,7 +358,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2837, "basin_ch_pest_mon.csv", 800)
             write (2837,*) bsn%name, prog
-            write (2837,'(*(G0.3,:","))') chpest_hdr
+            write (2837,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "BASIN_CH_PEST             basin_ch_pest_mon.csv"
           end if
       end if
@@ -373,7 +373,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2838, "basin_ch_pest_yr.csv", 800)
             write (2838,*) bsn%name, prog
-            write (2838,'(*(G0.3,:","))') chpest_hdr
+            write (2838,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "BASIN_CH_PEST             basin_ch_pest_yr.csv"
           end if
       end if
@@ -388,7 +388,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2839, "basin_ch_pest_aa.csv", 800)
             write (2839,*) bsn%name, prog
-            write (2839,'(*(G0.3,:","))') chpest_hdr
+            write (2839,'(*(G0.6,:","))') chpest_hdr
             write (9000,*) "BASIN_CH_PEST             basin_ch_pest_aa.csv"
           end if
       end if
@@ -407,7 +407,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2852, "basin_res_pest_day.csv", 800)
             write (2852,*) bsn%name, prog
-            write (2852,'(*(G0.3,:","))') respest_hdr
+            write (2852,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "BASIN_RES_PEST          reservoir_pest_day.csv"
           end if
        end if
@@ -422,7 +422,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2853, "basin_res_pest_mon.csv", 800)
             write (2853,*) bsn%name, prog
-            write (2853,'(*(G0.3,:","))') respest_hdr
+            write (2853,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "BASIN_RES_PEST            basin_res_pest_mon.csv" 
           end if
       end if
@@ -437,7 +437,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2854, "basin_res_pest_yr.csv", 800)
             write (2854,*) bsn%name, prog
-            write (2854,'(*(G0.3,:","))') respest_hdr
+            write (2854,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "BASIN_RES_PEST            basin_res_pest_yr.csv"
           end if
       end if
@@ -452,7 +452,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2855, "basin_res_pest_aa.csv", 800)
             write (2855,*) bsn%name, prog
-            write (2855,'(*(G0.3,:","))') respest_hdr
+            write (2855,'(*(G0.6,:","))') respest_hdr
             write (9000,*) "BASIN_RES_PEST            basin_res_pest_aa.csv"
           end if
       end if
@@ -471,7 +471,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2868, "basin_ls_pest_day.csv", 800)
             write (2868,*) bsn%name, prog
-            write (2868,'(*(G0.3,:","))') pestb_hdr
+            write (2868,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "BASIN_LS_PEST             basin_ls_pest_day.csv"
           end if
        end if
@@ -486,7 +486,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2869, "basin_ls_pest_mon.csv", 800)
             write (2869,*) bsn%name, prog
-            write (2869,'(*(G0.3,:","))') pestb_hdr
+            write (2869,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "BASIN_LS_PEST             basin_ls_pest_mon.csv"
           end if
       end if
@@ -501,7 +501,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2870, "basin_ls_pest_yr.csv", 800)
             write (2870,*) bsn%name, prog
-            write (2870,'(*(G0.3,:","))') pestb_hdr
+            write (2870,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "BASIN_LS_PEST             basin_ls_pest_yr.csv"
           end if
       end if
@@ -516,7 +516,7 @@
           if (pco%csvout == "y") then
             call open_output_file(2871, "basin_ls_pest_aa.csv", 800)
             write (2871,*) bsn%name, prog
-            write (2871,'(*(G0.3,:","))') pestb_hdr
+            write (2871,'(*(G0.6,:","))') pestb_hdr
             write (9000,*) "BASIN_LS_PEST             basin_ls_pest_aa.csv"
           end if
       end if

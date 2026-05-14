@@ -20,6 +20,7 @@ Makefile
 *.cache
 *.ilk
 *.log
+*.vscode/
 [Bb]in
 [Dd]ebug*/
 *.lib
@@ -68,7 +69,6 @@ ford.md
 /.vs/cmake.db
 /.vs/slnx.sqlite
 /.vs
-/.vscode
 /refdata/Osu_1hru/lsunit_ls_aa.txt
 /refdata/Osu_1hru/lsunit_nb_aa.txt
 /refdata/Osu_1hru/lsunit_pw_aa.txt
