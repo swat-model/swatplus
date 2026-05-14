@@ -248,6 +248,24 @@
           ivar_cur = pcom(ob_num)%days_irr
           ivar_tbl = int(d_tbl%cond(ic)%lim_const)
           call cond_integer (ic, ivar_cur, ivar_tbl)
+        
+        !days since last physical water application 
+        case ("irr_day")
+          ob_num = d_tbl%cond(ic)%ob_num
+          if (ob_num == 0) ob_num = ob_cur
+          
+          ! bulletproof check: If it has NEVER irrigated (0 or -999), force a pass
+          if (hru(ob_num)%last_irr_day == 0 .or. hru(ob_num)%last_irr_day == -999) then
+             ivar_cur = 999 
+          else
+             ! calculate normal days since last irrigation
+             ivar_cur = time%day - hru(ob_num)%last_irr_day
+             ! fix for crossing the New Year (Jan 1st - Dec 31st)
+             if (ivar_cur < 0) ivar_cur = ivar_cur + 365 
+          end if
+          
+          ivar_tbl = int(d_tbl%cond(ic)%lim_const)
+          call cond_integer (ic, ivar_cur, ivar_tbl)
                                          
         !days since last action
         case ("days_act")
