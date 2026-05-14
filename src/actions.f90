@@ -35,8 +35,7 @@
       external :: cn2_init, cs_fert, curno, hru_fr_change, hru_lum_init, mgt_harvbiomass, mgt_harvgrain, &
                   mgt_harvresidue, mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_wet, &
                   mgt_transplant, pest_apply, pl_burnop, pl_fert, pl_fert_wet, pl_graze, pl_manure, &
-                  plant_init, salt_fert, structure_set_parms, wet_initial, chg_par, mgt_newtillmix_cswat1, &
-                  mgt_newtillmix_cswat0
+                  plant_init, salt_fert, structure_set_parms, wet_initial, chg_par
 
       integer, intent (in)  :: ob_cur      !none     |sequential number of individual objects
       integer, intent (in)  :: ob_num      !none     |sequential number for all objects
@@ -146,7 +145,9 @@
                 if (d_tbl%act(iac)%file_pointer == "unlim") then
                   irrig(j)%applied = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * (1. - irrop_db(irrop)%surq)
                   irrig(j)%runoff = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * irrop_db(irrop)%surq
-                end if  
+                end if
+                ! save the Julian day of this irrigation
+                hru(j)%last_irr_day = time%day
               
                 !set organics and constituents from irr.ops ! irrig(j)%water =  cs_irr(j) = 
                 if (pco%mgtout == "y") then
@@ -275,6 +276,8 @@
                   
             ! add irrigation to yearly sum for dtbl conditioning jga 6-25
             hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
+            ! save the Julian day of this irrigation
+            hru(j)%last_irr_day = time%day
             
             if (d_tbl%act(iac)%name=='ponding') then !paddy irrigation
               if (pco%mgtout == "y") then
@@ -366,11 +369,7 @@
             if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
               idtill = d_tbl%act_typ(iac)
               ipl = 1
-              if (bsn_cc%cswat == 1) then
-                call mgt_newtillmix_cswat1(j, 0., idtill)
-              else
-                call mgt_newtillmix_cswat0(j, 0., idtill)
-              endif
+              call mgt_newtillmix(j, 0., idtill)
             
               if (pco%mgtout == "y") then
                 write (2612, *) j, time%yrc, time%mo, time%day_mo, tilldb(idtill)%tillnm, "    TILLAGE",    &
@@ -386,6 +385,8 @@
           case ("plant")
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
+            
+            if (pcom(j)%dtbl(idtbl)%num_actions(iac) <= Int(d_tbl%act(iac)%const2)) then
                 
             icom = pcom(j)%pcomdb
             pcom(j)%days_plant = 1       !reset days since last planting
@@ -438,6 +439,7 @@
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
               pcom(j)%dtbl(idtbl)%days_act(iac) = 1     !reset days since last action
               if (iac > 1) pcom(j)%dtbl(idtbl)%days_act(iac-1) =  0     !reset previous action day counter
+            end if
             
           !harvest only
           case ("harvest")
@@ -941,11 +943,7 @@
               if (wet_ob(j)%depth > 0.001) then
                 call mgt_newtillmix_wet(j,idtill) 
               else
-                if (bsn_cc%cswat == 1) then
-                  call mgt_newtillmix_cswat1(j,0.,idtill) 
-                else
-                  call mgt_newtillmix_cswat0(j,0.,idtill) 
-                endif
+                call mgt_newtillmix(j,0.,idtill) 
               endif
               pcom(j)%dtbl(idtbl)%num_actions(iac) = pcom(j)%dtbl(idtbl)%num_actions(iac) + 1
 
