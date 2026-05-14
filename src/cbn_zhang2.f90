@@ -62,12 +62,17 @@
        !lmctp   : potential transformation of c in metabolic litter (kg ha-1 day-1)
        !lmntp   : potential transformation of n in metabolic litter (kg ha-1 day-1)
        !lsctp   : potential transformation of c in structural litter (kg ha-1 day-1)
+       !lmcta   : actual transformation of c in metabolic litter (kg ha-1 day-1)
+       !lmnta   : actual transformation of n in metabolic litter (kg ha-1 day-1)
+       !lscta   : actual transformation of c in structural litter (kg ha-1 day-1)
        !lsf     : fraction of the litter that is structural
        !lslf    : fraction of structural litter that is lignin (kg kg-1)
        !lsnf    : fraction of structural litter that is n (kg kg-1)
        !lslctp  : potential transformation of c in lignin of structural litter (kg ha-1 day-1)
        !lslnctp : potential transformation of c in nonlignin structural litter (kg ha-1 day-1)  
-       !lsntp   : potential transformation of n in structural litter (kg ha-1 day-1)
+       !lslcta  : actual transformation of c in lignin of structural litter (kg ha-1 day-1)
+       !lslncta : actual transformation of c in nonlignin structural litter (kg ha-1 day-1)  
+       !lsntp   : actual transformation of n in structural litter (kg ha-1 day-1)
        !lsr     : rate of potential transformation of structural litter under optimal conditions
                 !(surface = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
        !ncbm    : n/c ratio of biomass
