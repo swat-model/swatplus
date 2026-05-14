@@ -62,12 +62,17 @@
        !lmctp   : potential transformation of c in metabolic litter (kg ha-1 day-1)
        !lmntp   : potential transformation of n in metabolic litter (kg ha-1 day-1)
        !lsctp   : potential transformation of c in structural litter (kg ha-1 day-1)
+       !lmcta   : actual transformation of c in metabolic litter (kg ha-1 day-1)
+       !lmnta   : actual transformation of n in metabolic litter (kg ha-1 day-1)
+       !lscta   : actual transformation of c in structural litter (kg ha-1 day-1)
        !lsf     : fraction of the litter that is structural
        !lslf    : fraction of structural litter that is lignin (kg kg-1)
        !lsnf    : fraction of structural litter that is n (kg kg-1)
        !lslctp  : potential transformation of c in lignin of structural litter (kg ha-1 day-1)
        !lslnctp : potential transformation of c in nonlignin structural litter (kg ha-1 day-1)  
-       !lsntp   : potential transformation of n in structural litter (kg ha-1 day-1)
+       !lslcta  : actual transformation of c in lignin of structural litter (kg ha-1 day-1)
+       !lslncta : actual transformation of c in nonlignin structural litter (kg ha-1 day-1)  
+       !lsntp   : actual transformation of n in structural litter (kg ha-1 day-1)
        !lsr     : rate of potential transformation of structural litter under optimal conditions
                 !(surface = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
        !ncbm    : n/c ratio of biomass
@@ -102,7 +107,6 @@
        integer :: kk = 0         !                     |
        real :: lmnta = 0      !                     |      
        real :: min_n_ppm = 0  !                     |
-       real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
@@ -615,7 +619,8 @@
                   lscta = org_tran%lsctp
                   lsnta = org_tran%lsntp
                   lslcta = org_tran%lslctp
-                  lslncat = org_tran%lslnctp
+                  !lslncat = org_tran%lslnctp   
+                  lslncta = org_tran%lslnctp   
               end if
               if (cpn2>0.) then
                   lmcta = org_tran%lmctp * reduc
@@ -744,7 +749,7 @@
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
-              org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
+              org_flux%co2fstr = org_flux%co2fstr + org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
               org_flux%cfstrs2 = .7 * lslcta
@@ -904,11 +909,15 @@
               
               !!update c and n of different som pools
               !!=========================================
-              soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)
+              !soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)   ! instead of this, should be the sum lignon and non lignin c
               soil1(j)%lig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslcta)
-              soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              ! soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslncta)
+              soil1(j)%str(k)%c = soil1(j)%nonlig(k)%c +  soil1(j)%lig(k)%c
                             
               soil1(j)%lig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslcta / .42)
+              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslncta / .42)
+          
               soil1(j)%str(k)%m = max(1.e-10, soil1(j)%str(k)%m - lscta / .42)
               
               if (soil1(j)%meta(k)%m > 0.) then

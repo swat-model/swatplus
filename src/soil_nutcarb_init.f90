@@ -184,6 +184,12 @@
           soil1(ihru)%lig(ly)%n = 0.2 * soil1(ihru)%str(ly)%n
           soil1(ihru)%lig(ly)%p = 0.02 * soil1(ihru)%str(ly)%p
             
+          !! non-lignin residue
+          ! soil1(ihru)%lig(ly) = plt_mass_z
+          soil1(ihru)%nonlig(ly)%m = soil1(ihru)%str(ly)%m - soil1(ihru)%lig(ly)%m 
+          soil1(ihru)%nonlig(ly)%c = soil1(ihru)%str(ly)%c - soil1(ihru)%lig(ly)%c 
+          soil1(ihru)%nonlig(ly)%n = soil1(ihru)%str(ly)%n - soil1(ihru)%lig(ly)%n 
+          soil1(ihru)%nonlig(ly)%p = soil1(ihru)%str(ly)%p - soil1(ihru)%lig(ly)%p 
         end if
 
         ! set the initial biomix for each soil layer
