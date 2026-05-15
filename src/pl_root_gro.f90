@@ -46,6 +46,8 @@
         phumax = amin1 (1., pcom(j)%plcur(ipl)%phuacc)
         pcom(j)%plg(ipl)%root_frac = pldb(idp)%rsr1 - (pldb(idp)%rsr1 - pldb(idp)%rsr2) * phumax
       end if
+
+      call pl_rootfr(j)
       
       return
       end subroutine pl_root_gro
