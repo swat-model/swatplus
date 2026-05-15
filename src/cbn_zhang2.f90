@@ -286,6 +286,8 @@
         org_con%x1  = 0.           !                 |tillage control on residue decomposition
         org_con%no3 = 0.           !                 |no3 as adjusted in cbn_zhang2
         org_con%nh4 = 0.           !                 |nh4 as adjusted in cbn_zhang2
+        org_con%resp = 0.          !                 !co2 resperation
+        org_con%till_eff = 0.      !                 !tillage factor.
         soil1(j)%org_con_lr(k) = org_con    
         
         org_ratio = org_ratio_zero

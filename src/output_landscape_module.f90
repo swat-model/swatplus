@@ -1059,7 +1059,7 @@
          character (len=13) :: name          =    "    name     "
          character(len=15)  :: sut           =    "            sut"
          character(len=16)  :: tillagef      =    "        tillagef" 
-         character(len=16)  :: bmix          =    "           bmix" 
+         character(len=16)  :: bmix          =    "       cons_bmix" 
          character(len=16)  :: tillagef_biomix     =    " tillagef_biomix" 
          character(len=17)  :: tillagef_tillmix    =    " tillagef_tillmix" 
          character(len=15)  :: till_eff      =    "       till_eff"  
