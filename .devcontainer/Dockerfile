@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-pip \
         && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install ipykernel plotly pandas nbformat
+RUN python3 -m pip install fortls ipykernel plotly pandas nbformat
 
 # 2. Add Intel’s GPG key and repository for oneAPI
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \

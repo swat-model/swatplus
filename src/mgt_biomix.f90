@@ -177,13 +177,15 @@
                 exit
               endif
             else
+              bmix = 0
+              soil(jj)%ly(l)%bmix = bmix 
               if (l > 1) then
                 dtil = soil(jj)%phys(l-1)%d
               else
                 dtil = 0.
               endif
-               lyr_exit = l
-              exit
+                lyr_exit = l
+                exit
             endif
           enddo
           

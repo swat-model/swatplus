@@ -538,32 +538,6 @@
                   write (9000,*) "HRU                       hru_plc_stat.csv"
                 end if
       
-                call open_output_file(4561, "hru_rsdc_stat.txt", 1500)
-                write (4561,*)  bsn%name, prog
-                write (4561,*) rsdc_hdr
-                write (4561,*) rsdc_hdr_units
-                write (9000,*) "HRU                       hru_rsdc_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4564, "hru_rsdc_stat.csv", 1500)
-                  write (4564,*)  bsn%name, prog
-                  write (4564,'(*(G0.6,:,","))') rsdc_hdr
-                  write (4564,'(*(G0.6,:,","))') rsdc_hdr_units
-                  write (9000,*) "HRU                       hru_rsdc_stat.csv"
-                end if
-              
-                call open_output_file(4562, "hru_soilc_stat.txt", 1500)
-                write (4562,*)  bsn%name, prog
-                write (4562,*) soilc_hdr
-                write (4562,*) soilc_hdr_units
-                write (9000,*) "HRU                       hru_soilc_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4565, "hru_soilc_stat.csv", 1500)
-                  write (4565,*)  bsn%name, prog
-                  write (4565,'(*(G0.6,:,","))') soilc_hdr
-                  write (4565,'(*(G0.6,:,","))') soilc_hdr_units
-                  write (9000,*) "HRU                       hru_soilc_stat.csv"
-                end if
-
                 call open_output_file(4567, "hru_cflux_stat.txt", 1500)
                 write (4567,*)  bsn%name, prog
                 write (4567,*) soil_org_flux_hdr
@@ -577,19 +551,6 @@
                   write (9000,*) "HRU                       hru_cflux_stat.csv"
                 end if
               
-                call open_output_file(4570, "hru_soilcarb_mb_stat.txt", 1500)
-                write (4570,*)  bsn%name, prog
-                write (4570,*) soil_mb_hdr
-                write (4570,*) soil_mb_units
-                write (9000,*) "HRU                       hru_soilcarb_mb_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4571, "hru_soilcarb_mb_stat.csv", 1500)
-                  write (4571,*)  bsn%name, prog
-                  write (4571,'(*(G0.6,:,","))') soil_mb_hdr
-                  write (4571,'(*(G0.6,:,","))') soil_mb_units
-                  write (9000,*) "HRU                       hru_soilcarb_mb_stat.csv"
-                end if
-
                 call open_output_file(4572, "hru_cpool_stat.txt", 1500)
                 write (4572,*)  bsn%name, prog
                 write (4572,*) cpool_hdr
