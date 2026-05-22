@@ -1,4 +1,4 @@
-File: carb_coefs.cbn   Carbon coefficients used if cswat == 2 or cswat == 3
+File: carb_coefs.cbn   Carbon coefficients used if cswat == 0 or cswat == 1
 
 # cbn_diagnostics contols what carbon related files are printed out if hru_cb is specified in print.prt
 # 1 is true, 0 is false
@@ -28,6 +28,13 @@ abco2           0.55        0.0
 # organic fractions used to initialize soil carbon into various pools 
 #               frac_seq    frac_hum_microb     frac_hum_slow   frac_hum_passive
 org_frac        0.95        0.02                0.44            0.54 
+
+# The input mathers_method controls whether the mathers equations will be used (or not used) 
+# to initialize humus slow pool carbon. 
+# Ref. "Updating carbon pool initialization within DSSAT-CENTURY", Soil Science Society of America Journal 2025
+# A value of 0 means the Mather's method will not be used.  This is the default if no method is specified
+# A value of 1 means the Mather's method will be used.
+mathers_method 1
 
 # carbon water partitioning coefficients
 prmt_21         1000.   
