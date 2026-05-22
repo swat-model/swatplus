@@ -122,6 +122,7 @@
           real :: frac_hum_microb = 0.02     !      !fraction of carbon that is microbrial pool when initializing microbrial pools
           real :: frac_hum_slow = 0.54       !      !fraction of carbon that is humas slow pool  when initializing humus slow pools
           real :: frac_hum_passive = 0.44    !      |fraction of carbon that is humas passive pool when initializing humas passive pools
+          logical :: mathers_method = .false. !     !logical indicating whether to use the mathers_method to initialize humus slow pools
       end type organic_fractions
       type (organic_fractions) :: org_frac                    
       
