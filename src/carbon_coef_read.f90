@@ -17,6 +17,7 @@ subroutine carbon_coef_read
     character (len=80) :: titldum  = "" !           |title of file
     character (len=30) :: var_name = "" !
     integer :: int_cbn_diagnostics = 0
+    integer :: int_mathers_method = 0
     
     nmbr_soil_test_layers = 0     ! comes from soil module
     soil_test_cntr  = 0     ! local variable
@@ -74,6 +75,11 @@ subroutine carbon_coef_read
                 case("org_frac")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, org_frac%frac_seq, org_frac%frac_hum_microb, org_frac%frac_hum_slow, org_frac%frac_hum_passive
+                case("mathers_method")
+                    backspace (107)
+                    read (107,*,iostat=eof) var_name, int_mathers_method
+                    if (int_mathers_method == 1) org_frac%mathers_method = .true.
+                    if (int_mathers_method == 0) org_frac%mathers_method = .false.
                 case("prmt_21")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, cb_wtr_coef%prmt_21
