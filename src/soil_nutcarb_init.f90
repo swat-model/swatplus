@@ -158,7 +158,7 @@
           soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
               
           !!initialize slow humus pool original method.  This is the default method
-          if (org_frac% mathers_method == .false.) then
+          if (org_frac% mathers_method .eqv. .false.) then
             soil1(ihru)%hs(ly)%m = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
             soil1(ihru)%hs(ly)%c = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
             soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
@@ -166,7 +166,7 @@
           endif
               
           ! initialize slow humus pool by Mathers approach ref: "Updating carbon pool initialization with DSSAT-CENTURY"
-          if (org_frac%mathers_method == .true.) then
+          if (org_frac%mathers_method .eqv. .true.) then
             if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 0.35 ) then
               mathers_frac = (.41 + 0.0053 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0 
               soil1(ihru)%hs(ly)%c = org_frac%frac_seq * mathers_frac * soil1(ihru)%tot(ly)%c
