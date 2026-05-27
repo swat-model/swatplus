@@ -41,7 +41,6 @@
       integer :: profile_depth
       character (len=7) :: freq_label
       logical :: layer_output
-      logical :: write_hdr = .true.
       real :: root_frac_ly = 0.
 
       layer_output = .false.
@@ -62,6 +61,11 @@
         case ("yl")
           freq_label = "year"
           layer_output = .true.
+        case (" a")
+          freq_label = "av_ann"
+        case ("al")
+          freq_label = "av_ann"
+          layer_output = .true.
         case (" b")
           freq_label = "begsim"
         case (" e")
@@ -74,46 +78,12 @@
       bsn_org_rsd = soil_org_z
 
       if (freq_label == "begsim" .or. freq_label == "endsim" ) then
-        if (cbn_diagnostics .eqv. .true.) then
+        !! hru_soil_snap_tot gated by pco%cb_snap_hru%a.
+        !! BOTH stages write soil1(j)%tot(ly)%c (kg C / ha) for comparability.
+        if (pco%cb_snap_hru%a == "y") then
           do j = 1, sp_ob%hru
             iob = sp_ob1%hru + j - 1
-            if (freq_label == "begsim") then
-              do ly = 1, soil(j)%nly
-                write (4586,*) freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              !soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
-                              soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil(j)%phys(ly)%cbn, &
-                              soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
-                              soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
-              enddo
-              if (pco%csvout == "y") then
-                do ly = 1, soil(j)%nly
-                  write (4587,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              ! soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
-                              soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil(j)%phys(ly)%cbn, &
-                              soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
-                              soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
-                enddo
-              endif
-            endif
-            ! write soil properties at the end of the simulation = "hru_endsim_soil_prop.txt/csv"
-            if (freq_label == "endsim") then
-              do ly = 1, soil(j)%nly
-                write (4584,*) freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              ! soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
-                              soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c, &
-                              soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
-                              soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
-              enddo
-              if (pco%csvout == "y") then
-                do ly = 1, soil(j)%nly
-                  write (4585,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              ! soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c/soil1(j)%tot(ly)%m * 100, &
-                              soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil1(j)%tot(ly)%c, &
-                              soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
-                              soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
-                enddo
-              endif 
-            endif
+            call cb_soil_snap_emit(4601, 4605, freq_label, j, iob)
           enddo
         endif
         return
@@ -214,40 +184,22 @@
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + soil1(j)%tot(ly)%c * frac_above_300 
             endif
           end do
-          if (write_hdr) then
-            write (4548,*)                                     &
-            "freq           jday         mon         day        year        unit hru     name               300_sum", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
-          endif 
-
-          if (bsn_cc%cswat  == 0 ) then
+          !! compute cswat==0 totals if needed (cswat==1 already has soil1%tot and soil1%seq populated)
+          if (bsn_cc%cswat == 0 ) then
             do ly = 1, soil(j)%nly
               soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             end do
           end if
-          write (4548,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                  soil1(j)%tot_300_c/1000., (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
-          if (pco%csvout == "y") then
-            if (write_hdr) then
-              write (4549,*)                                     &
-                  "freq,jday,mon,day,year,unit,hru,name,300_sum", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
-            endif 
-            write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                    soil1(j)%tot_300_c/1000., (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
-          end if
 
-          !write total sequestered  by soil layer, file = "hru_seq_lyr.txt"
-
-          ! calc total sequesterd C above or equal to 300mm
-          ! sum the tot seq c to 300mm.
+          !! compute total sequestered C above or equal to 300mm (was previously written to hru_seq_lyr; now folded into hru_cbn_lyr)
           soil1(j)%seq_tot_300_c = 0.0
-
           do ly = 1, soil(j)%nly
             if (soil(j)%phys(ly)%d <= 300.0) then
               frac_above_300 = 1.0
             else if (ly == 1) then
-              frac_above_300 = 300.0 / soil(j)%phys(ly)%d 
+              frac_above_300 = 300.0 / soil(j)%phys(ly)%d
             else if (soil(j)%phys(ly-1)%d < 300.0) then
-              frac_above_300 = (300.0 -  soil(j)%phys(ly-1)%d)/ (soil(j)%phys(ly)%d - soil(j)%phys(ly-1)%d) 
+              frac_above_300 = (300.0 -  soil(j)%phys(ly-1)%d)/ (soil(j)%phys(ly)%d - soil(j)%phys(ly-1)%d)
             else
               frac_above_300 = 0.0
             endif
@@ -256,139 +208,23 @@
               soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             endif
             if(bsn_cc%cswat == 1 ) then
-              soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300 
+              soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300
             endif
           end do
+
+          !! hru_cbn_lyr_{day,mon,yr,aa} - depth-prefixed columns; header written once at file open.
+          call cb_cbn_lyr_emit(out_freq, j, iob)
+
+          !! hru_n_p_pool_stat_{day,mon,yr,aa} - wide-per-layer, 18 vars
+          call cb_n_p_pool_emit(out_freq, j, iob)
           
-          if (write_hdr) then
-            write (4558,*) "freq           jday         mon         day        year        unit hru     name              Seq_300_sum", (int(soil(j)%phys(ly)%d), "  ", ly = 1, soil(j)%nly)
+          !! per-family gating happens inside each emit subroutine (no more cbn_diagnostics wrap).
+          call cb_plc_stat_emit(out_freq, j, iob)
+          call cb_soil_snap_period(out_freq, j, iob)
+          if (bsn_cc%cswat == 1) then
+            call cb_cflux_stat_emit(out_freq, j, iob)
+            call cb_cpool_stat_emit(out_freq, j, iob)
           endif
-          
-          write (4558,*) freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                  soil1(j)%seq_tot_300_c/1000., (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
-          if (pco%csvout == "y") then
-
-            if (write_hdr) then
-              write (4559,*)                                     &
-                  "freq,jday,mon,day,year,unit,hru,name,Seq_300mm_c", soil1(j)%seq_tot_300_c, (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
-            endif 
-
-            write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
-                                                  soil1(j)%seq_tot_300_c/1000., (soil1(j)%seq(ly)%c/1000.0, ly = 1, soil(j)%nly)
-          end if
-
-          write_hdr = .false.
-
-          !write n and p pool values for the soil profile file = "hru_n_p_pool_stat.txt/csv"
-          if (layer_output) then
-            do ly = 1, soil(j)%nly
-              tot_lyr_n = soil1(j)%rsd_tot(ly)%n + soil1(j)%str(ly)%n + soil1(j)%meta(ly)%n + soil1(j)%hs(ly)%n + soil1(j)%hp(ly)%n + &
-                            soil1(j)%microb(ly)%n + soil1(j)%water(ly)%n + soil1(j)%man(ly)%n 
-              tot_lyr_p = soil1(j)%rsd_tot(ly)%p + soil1(j)%str(ly)%p + soil1(j)%meta(ly)%p + soil1(j)%hs(ly)%p + soil1(j)%hp(ly)%p + &
-                            soil1(j)%microb(ly)%p + soil1(j)%water(ly)%p + soil1(j)%man(ly)%p
-              write (4582,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                            tot_lyr_n, soil1(j)%rsd_tot(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
-                            soil1(j)%microb(ly)%n, soil1(j)%lig(ly)%n, soil1(j)%nonlig(ly)%n, soil1(j)%water(ly)%n, soil1(j)%man(ly)%n,  &
-                            tot_lyr_p, soil1(j)%rsd_tot(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
-                            soil1(j)%microb(ly)%p, soil1(j)%lig(ly)%p, soil1(j)%nonlig(ly)%p, soil1(j)%water(ly)%p, soil1(j)%man(ly)%p
-              if (pco%csvout == "y") then
-                write (4583,'(*(G0.7,:,","))') freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                            tot_lyr_n, soil1(j)%rsd_tot(ly)%n, soil1(j)%str(ly)%n, soil1(j)%meta(ly)%n, soil1(j)%hs(ly)%n, soil1(j)%hp(ly)%n, &
-                            soil1(j)%microb(ly)%n, soil1(j)%lig(ly)%n, soil1(j)%nonlig(ly)%n, soil1(j)%water(ly)%n, soil1(j)%man(ly)%n,  &
-                            tot_lyr_p, soil1(j)%rsd_tot(ly)%p, soil1(j)%str(ly)%p, soil1(j)%meta(ly)%p, soil1(j)%hs(ly)%p, soil1(j)%hp(ly)%p, &
-                            soil1(j)%microb(ly)%p, soil1(j)%lig(ly)%p, soil1(j)%nonlig(ly)%p, soil1(j)%water(ly)%p, soil1(j)%man(ly)%p
-              endif
-            enddo
-          endif
-          tot_prof_n = soil_prof_rsd%n + soil_prof_str%n + soil_prof_meta%n + soil_prof_hs%n + soil_prof_hp%n +         &
-                        soil_prof_microb%n + soil_prof_water%n + soil_prof_man%n
-          tot_prof_p = soil_prof_rsd%p + soil_prof_str%p + soil_prof_meta%p + soil_prof_hs%p + soil_prof_hp%p +         &
-                        soil_prof_microb%p + soil_prof_water%p + soil_prof_man%p
-          write (4582,*) freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                        tot_prof_n, soil_prof_rsd%n, soil_prof_str%n, soil_prof_meta%n, soil_prof_hs%n, soil_prof_hp%n,         &
-                        soil_prof_microb%n, soil_prof_lig_n, soil_prof_nonlig_n, soil_prof_water%n, soil_prof_man%n, &
-                        tot_prof_p, soil_prof_rsd%p, soil_prof_str%p, soil_prof_meta%p, soil_prof_hs%p, soil_prof_hp%p,         &
-                        soil_prof_microb%p, soil_prof_lig_p, soil_prof_nonlig_p, soil_prof_water%p, soil_prof_man%p
-          if (pco%csvout == "y") then
-            write (4583,'(*(G0.7,:,","))') freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                          tot_prof_n, soil_prof_rsd%n, soil_prof_str%n, soil_prof_meta%n, soil_prof_hs%n, soil_prof_hp%n,         &
-                          soil_prof_microb%n, soil_prof_lig_n, soil_prof_nonlig_n, soil_prof_water%n, soil_prof_man%n, &
-                          tot_prof_p, soil_prof_rsd%p, soil_prof_str%p, soil_prof_meta%p, soil_prof_hs%p, soil_prof_hp%p,         &
-                          soil_prof_microb%p, soil_prof_lig_p, soil_prof_nonlig_p, soil_prof_water%p, soil_prof_man%p
-          endif 
-          
-          if (cbn_diagnostics .eqv. .true.) then
-            !write all organic carbon for the plant community file = "hru_plc_stat.txt"
-            write (4560,*) freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                 &
-                pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
-            ! file = "hru_plc_stat.csv"
-            if (pco%csvout == "y") then
-                write (4563,'(*(G0.7,:,","))') freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
-                pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
-            end if
-            
-            !write the cswat == 1 files. 
-            if (bsn_cc%cswat == 1 ) then
-          
-              !write organic flux pools for the soil profile file = "hru_cflux_stat.txt" make this non-cumulative
-              if (layer_output) then
-                do ly = 1, soil(j)%nly
-                  write (4567,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                soil1(j)%org_flx_lr(ly)
-                enddo
-              endif
-              write (4567,*) freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                            soil1(j)%org_flx_tot 
-              if (pco%csvout == "y") then
-                if (layer_output) then
-                  do ly = 1, soil(j)%nly
-                    write (4568,'(*(G0.7,:,","))') freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                  soil1(j)%org_flx_lr(ly)
-                  enddo 
-                endif
-                write (4568,'(*(G0.7,:,","))') freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                soil1(j)%org_flx_tot 
-              endif 
-              
-              !write carbon pool for the soil profile file = "hru_cpool_stat.txt/csv"
-              profile_depth = int(soil(j)%phys(soil(j)%nly)%d)
-              prf_swc = 0.0
-              prf_depth = 0.0
-              do ly = 1, soil(j)%nly
-                prf_swc = prf_swc + soil(j)%phys(ly)%tot_sw
-                prf_depth = prf_depth + soil(j)%phys(ly)%thick
-              enddo
-              prf_swc = prf_swc / prf_depth
-
-              if (layer_output) then
-                do ly = 1, soil(j)%nly
-                  write (4572,*) freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                soil1(j)%rsd_tot(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                                soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%nonlig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, &
-                                soil1(j)%root_tot(ly)%m, soil(j)%phys(ly)%tot_sw
-                enddo
-              endif
-              write (4572,*) freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                            soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
-                            soil_prof_microb%c, soil_prof_lig%c, soil_prof_nonlig%c, soil_prof_water%c, soil_prof_man%c, soil_prof_root%m, prf_swc
-              if (pco%csvout == "y") then
-                if (layer_output) then
-                  do ly = 1, soil(j)%nly
-                    write (4573,'(*(G0.7,:,","))') freq_label, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                                  soil1(j)%rsd_tot(ly)%c, soil1(j)%str(ly)%c, soil1(j)%meta(ly)%c, soil1(j)%hs(ly)%c, soil1(j)%hp(ly)%c, &
-                                  soil1(j)%microb(ly)%c, soil1(j)%lig(ly)%c, soil1(j)%nonlig(ly)%c, soil1(j)%water(ly)%c, soil1(j)%man(ly)%c, &
-                                  soil1(j)%root_tot(ly)%m, soil(j)%phys(ly)%tot_sw
-                  enddo
-                endif
-                write (4573,'(*(G0.7,:,","))') freq_label, -1, -1, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
-                              soil_prof_rsd%c, soil_prof_str%c, soil_prof_meta%c, soil_prof_hs%c, soil_prof_hp%c,         &
-                              soil_prof_microb%c, soil_prof_lig%c, soil_prof_nonlig%c, soil_prof_water%c, soil_prof_man%c, soil_prof_root%m, prf_swc
-              endif 
-              
-            endif
-          end if
 
         end do    !! hru loop
         
@@ -407,11 +243,473 @@
           end if
         end do
                 
-        !! write all carbon, organic n and p, and mineral n and p for the soil profile, plants, and residue
-        write (4566,*) time%day, time%yrc, ' basin ', bsn_org_soil%c, bsn_org_pl%c, bsn_org_rsd%c
+        !! basin_carbon_all.txt (unit 4566) removed; basin yearly sums reconstructable from HRU files
 
       endif      
 
       return
+
+      contains
+
+      subroutine cb_cpool_stat_emit(freq_in, hru_j, hru_iob)
+        !! emit one wide-per-layer row to the cpool_stat file matching freq_in.
+        !! state-variable file: each call writes whatever the pool is at that timestep boundary.
+        character(len=2), intent(in) :: freq_in
+        integer, intent(in) :: hru_j, hru_iob
+
+        integer :: u_txt, u_csv, k, n_use
+        real :: buf(cb_n_layers)
+
+        select case(freq_in)
+          case (" d"); u_txt = 4538; u_csv = 4542; if (pco%cb_cpool_hru%d /= "y") return
+          case (" m"); u_txt = 4539; u_csv = 4543; if (pco%cb_cpool_hru%m /= "y") return
+          case (" y"); u_txt = 4540; u_csv = 4544; if (pco%cb_cpool_hru%y /= "y") return
+          case (" a"); u_txt = 4541; u_csv = 4545; if (pco%cb_cpool_hru%a /= "y") return
+          case default; return
+        end select
+
+        n_use = soil(hru_j)%nly
+
+        !! txt
+        write (u_txt, '(5i12,2x,i12,2x,a16)', advance='no') &
+          time%day, time%mo, time%day_mo, time%yrc, hru_j, ob(hru_iob)%gis_id, ob(hru_iob)%name
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+        call cb_write_depth_row(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%str(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%meta(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hs(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hp(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%microb(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%lig(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%nonlig(k)%c; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%root_tot(k)%m; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%tot_sw; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "yes")
+
+        !! csv
+        if (pco%csvout == "y") then
+          call cb_emit_row_id_csv(u_csv, hru_j, hru_iob)
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+          call cb_write_depth_row(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%str(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%meta(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hs(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hp(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%microb(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%lig(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%nonlig(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%root_tot(k)%m; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%tot_sw; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "yes")
+        end if
+      end subroutine cb_cpool_stat_emit
+
+      subroutine cb_emit_row_id_txt(unit_no, hru_j, hru_iob)
+        integer, intent(in) :: unit_no, hru_j, hru_iob
+        write (unit_no, '(5i12,2x,i12,2x,a16)', advance='no') &
+          time%day, time%mo, time%day_mo, time%yrc, hru_j, ob(hru_iob)%gis_id, ob(hru_iob)%name
+      end subroutine cb_emit_row_id_txt
+
+      subroutine cb_emit_row_id_csv(unit_no, hru_j, hru_iob)
+        integer, intent(in) :: unit_no, hru_j, hru_iob
+        write (unit_no, '(5(i0,a),i0,a,a)', advance='no') &
+          time%day, ",", time%mo, ",", time%day_mo, ",", time%yrc, ",", hru_j, ",", &
+          ob(hru_iob)%gis_id, ",", trim(ob(hru_iob)%name)
+      end subroutine cb_emit_row_id_csv
+
+      subroutine cb_n_p_pool_emit(freq_in, hru_j, hru_iob)
+        !! 18 N+P pool vars per layer, wide format
+        character(len=2), intent(in) :: freq_in
+        integer, intent(in) :: hru_j, hru_iob
+        integer :: u_txt, u_csv, k, n_use
+        real :: buf(cb_n_layers)
+
+        select case(freq_in)
+          case (" d"); u_txt = 4566; u_csv = 4570; if (pco%cb_npool_hru%d /= "y") return
+          case (" m"); u_txt = 4567; u_csv = 4571; if (pco%cb_npool_hru%m /= "y") return
+          case (" y"); u_txt = 4568; u_csv = 4572; if (pco%cb_npool_hru%y /= "y") return
+          case (" a"); u_txt = 4569; u_csv = 4573; if (pco%cb_npool_hru%a /= "y") return
+          case default; return
+        end select
+        n_use = soil(hru_j)%nly
+
+        call cb_emit_row_id_txt(u_txt, hru_j, hru_iob)
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+        call cb_write_depth_row(u_txt, buf, n_use, .false., "no")
+        !! N pools
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%n + soil1(hru_j)%str(k)%n + soil1(hru_j)%meta(k)%n + soil1(hru_j)%hs(k)%n + soil1(hru_j)%hp(k)%n + soil1(hru_j)%microb(k)%n + soil1(hru_j)%water(k)%n + soil1(hru_j)%man(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%str(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%meta(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hs(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hp(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%microb(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%lig(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%nonlig(k)%n; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        !! P pools
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%p + soil1(hru_j)%str(k)%p + soil1(hru_j)%meta(k)%p + soil1(hru_j)%hs(k)%p + soil1(hru_j)%hp(k)%p + soil1(hru_j)%microb(k)%p + soil1(hru_j)%water(k)%p + soil1(hru_j)%man(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%str(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%meta(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hs(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hp(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%microb(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%lig(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%nonlig(k)%p; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "yes")
+
+        if (pco%csvout == "y") then
+          call cb_emit_row_id_csv(u_csv, hru_j, hru_iob)
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+          call cb_write_depth_row(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%n + soil1(hru_j)%str(k)%n + soil1(hru_j)%meta(k)%n + soil1(hru_j)%hs(k)%n + soil1(hru_j)%hp(k)%n + soil1(hru_j)%microb(k)%n + soil1(hru_j)%water(k)%n + soil1(hru_j)%man(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%str(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%meta(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hs(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hp(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%microb(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%lig(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%nonlig(k)%n; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%p + soil1(hru_j)%str(k)%p + soil1(hru_j)%meta(k)%p + soil1(hru_j)%hs(k)%p + soil1(hru_j)%hp(k)%p + soil1(hru_j)%microb(k)%p + soil1(hru_j)%water(k)%p + soil1(hru_j)%man(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%rsd_tot(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%str(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%meta(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hs(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%hp(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%microb(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%lig(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%nonlig(k)%p; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "yes")
+        end if
+      end subroutine cb_n_p_pool_emit
+
+      subroutine cb_plc_stat_emit(freq_in, hru_j, hru_iob)
+        !! 7 plant carbon vars, no soil layers
+        character(len=2), intent(in) :: freq_in
+        integer, intent(in) :: hru_j, hru_iob
+        integer :: u_txt, u_csv
+
+        select case(freq_in)
+          case (" d"); u_txt = 4574; u_csv = 4578; if (pco%cb_plt_hru%d /= "y") return
+          case (" m"); u_txt = 4575; u_csv = 4579; if (pco%cb_plt_hru%m /= "y") return
+          case (" y"); u_txt = 4576; u_csv = 4580; if (pco%cb_plt_hru%y /= "y") return
+          case (" a"); u_txt = 4577; u_csv = 4581; if (pco%cb_plt_hru%a /= "y") return
+          case default; return
+        end select
+
+        write (u_txt, '(5i12,2x,i12,2x,a16,7(1x,g16.7))') &
+          time%day, time%mo, time%day_mo, time%yrc, hru_j, ob(hru_iob)%gis_id, ob(hru_iob)%name, &
+          pl_mass(hru_j)%tot_com%c, pl_mass(hru_j)%ab_gr_com%c, pl_mass(hru_j)%leaf_com%c, &
+          pl_mass(hru_j)%stem_com%c, pl_mass(hru_j)%seed_com%c, pl_mass(hru_j)%root_com%c, pl_mass(hru_j)%rsd_tot%c
+
+        if (pco%csvout == "y") then
+          write (u_csv, '(5(i0,a),i0,a,a,7(a,g0.7))') &
+            time%day, ",", time%mo, ",", time%day_mo, ",", time%yrc, ",", hru_j, ",", &
+            ob(hru_iob)%gis_id, ",", trim(ob(hru_iob)%name), &
+            ",", pl_mass(hru_j)%tot_com%c, ",", pl_mass(hru_j)%ab_gr_com%c, ",", pl_mass(hru_j)%leaf_com%c, &
+            ",", pl_mass(hru_j)%stem_com%c, ",", pl_mass(hru_j)%seed_com%c, ",", pl_mass(hru_j)%root_com%c, &
+            ",", pl_mass(hru_j)%rsd_tot%c
+        end if
+      end subroutine cb_plc_stat_emit
+
+      subroutine cb_cflux_stat_emit(freq_in, hru_j, hru_iob)
+        !! 37 flux vars per layer, wide format.
+        !! For _aa file (out_freq=" a"/"al"): values come from soil1%org_flx_cum_lr / yrs_prt (true annual average).
+        !! For _day/_mon/_yr files: values come from soil1%org_flx_lr (instantaneous daily flux at the timestep boundary).
+        character(len=2), intent(in) :: freq_in
+        integer, intent(in) :: hru_j, hru_iob
+        integer :: u_txt, u_csv, k, n_use
+        real :: buf(cb_n_layers)
+        logical :: use_aa
+
+        select case(freq_in)
+          case (" d"); u_txt = 4558; u_csv = 4562; use_aa = .false.; if (pco%cb_flux_hru%d /= "y") return
+          case (" m"); u_txt = 4559; u_csv = 4563; use_aa = .false.; if (pco%cb_flux_hru%m /= "y") return
+          case (" y"); u_txt = 4560; u_csv = 4564; use_aa = .false.; if (pco%cb_flux_hru%y /= "y") return
+          case (" a"); u_txt = 4561; u_csv = 4565; use_aa = .true.; if (pco%cb_flux_hru%a /= "y") return
+          case default; return
+        end select
+        n_use = soil(hru_j)%nly
+
+        call cb_emit_row_id_txt(u_txt, hru_j, hru_iob)
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+        call cb_write_depth_row(u_txt, buf, n_use, .false., "no")
+        !! all 37 organic_flux fields (matches cflux_vars order)
+        call cb_cflux_emit_blocks(u_txt, .false., hru_j, n_use, buf, use_aa)
+
+        if (pco%csvout == "y") then
+          call cb_emit_row_id_csv(u_csv, hru_j, hru_iob)
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+          call cb_write_depth_row(u_csv, buf, n_use, .true., "no")
+          call cb_cflux_emit_blocks(u_csv, .true., hru_j, n_use, buf, use_aa)
+        end if
+      end subroutine cb_cflux_stat_emit
+
+      subroutine cb_cflux_emit_blocks(u, is_csv, hru_j, n_use, buf, use_aa)
+        integer, intent(in) :: u, hru_j, n_use
+        logical, intent(in) :: is_csv, use_aa
+        real, intent(inout) :: buf(:)
+        integer :: k
+        real :: yrs
+
+        yrs = max(time%yrs_prt, 1.0)
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfmets1/yrs, soil1(hru_j)%org_flx_lr(k)%cfmets1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfstrs1/yrs, soil1(hru_j)%org_flx_lr(k)%cfstrs1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfstrs2/yrs, soil1(hru_j)%org_flx_lr(k)%cfstrs2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efmets1/yrs, soil1(hru_j)%org_flx_lr(k)%efmets1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efstrs1/yrs, soil1(hru_j)%org_flx_lr(k)%efstrs1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efstrs2/yrs, soil1(hru_j)%org_flx_lr(k)%efstrs2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%immmets1/yrs, soil1(hru_j)%org_flx_lr(k)%immmets1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%immstrs1/yrs, soil1(hru_j)%org_flx_lr(k)%immstrs1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%immstrs2/yrs, soil1(hru_j)%org_flx_lr(k)%immstrs2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrmets1/yrs, soil1(hru_j)%org_flx_lr(k)%mnrmets1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrstrs1/yrs, soil1(hru_j)%org_flx_lr(k)%mnrstrs1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrstrs2/yrs, soil1(hru_j)%org_flx_lr(k)%mnrstrs2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%co2fmet/yrs, soil1(hru_j)%org_flx_lr(k)%co2fmet, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%co2fstr/yrs, soil1(hru_j)%org_flx_lr(k)%co2fstr, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfs1s2/yrs, soil1(hru_j)%org_flx_lr(k)%cfs1s2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfs1s3/yrs, soil1(hru_j)%org_flx_lr(k)%cfs1s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfs2s1/yrs, soil1(hru_j)%org_flx_lr(k)%cfs2s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfs2s3/yrs, soil1(hru_j)%org_flx_lr(k)%cfs2s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%cfs3s1/yrs, soil1(hru_j)%org_flx_lr(k)%cfs3s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efs1s2/yrs, soil1(hru_j)%org_flx_lr(k)%efs1s2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efs1s3/yrs, soil1(hru_j)%org_flx_lr(k)%efs1s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efs2s1/yrs, soil1(hru_j)%org_flx_lr(k)%efs2s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efs2s3/yrs, soil1(hru_j)%org_flx_lr(k)%efs2s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%efs3s1/yrs, soil1(hru_j)%org_flx_lr(k)%efs3s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%imms1s2/yrs, soil1(hru_j)%org_flx_lr(k)%imms1s2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%imms1s3/yrs, soil1(hru_j)%org_flx_lr(k)%imms1s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%imms2s1/yrs, soil1(hru_j)%org_flx_lr(k)%imms2s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%imms2s3/yrs, soil1(hru_j)%org_flx_lr(k)%imms2s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%imms3s1/yrs, soil1(hru_j)%org_flx_lr(k)%imms3s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrs1s2/yrs, soil1(hru_j)%org_flx_lr(k)%mnrs1s2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrs1s3/yrs, soil1(hru_j)%org_flx_lr(k)%mnrs1s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrs2s1/yrs, soil1(hru_j)%org_flx_lr(k)%mnrs2s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrs2s3/yrs, soil1(hru_j)%org_flx_lr(k)%mnrs2s3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%mnrs3s1/yrs, soil1(hru_j)%org_flx_lr(k)%mnrs3s1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%co2fs1/yrs, soil1(hru_j)%org_flx_lr(k)%co2fs1, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%co2fs2/yrs, soil1(hru_j)%org_flx_lr(k)%co2fs2, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = merge(soil1(hru_j)%org_flx_cum_lr(k)%co2fs3/yrs, soil1(hru_j)%org_flx_lr(k)%co2fs3, use_aa); end do
+        call cb_write_var_block(u, buf, n_use, is_csv, "yes")
+      end subroutine cb_cflux_emit_blocks
+
+      subroutine cb_cbn_lyr_emit(freq_in, hru_j, hru_iob)
+        !! 2 SOC vars per layer (tot + seq), plus 300mm sums; wide-per-layer
+        character(len=2), intent(in) :: freq_in
+        integer, intent(in) :: hru_j, hru_iob
+        integer :: u_txt, u_csv, k, n_use
+        real :: buf(cb_n_layers)
+
+        select case(freq_in)
+          case (" d"); u_txt = 4530; u_csv = 4534; if (pco%cb_lyr_hru%d /= "y") return
+          case (" m"); u_txt = 4531; u_csv = 4535; if (pco%cb_lyr_hru%m /= "y") return
+          case (" y"); u_txt = 4532; u_csv = 4536; if (pco%cb_lyr_hru%y /= "y") return
+          case (" a"); u_txt = 4533; u_csv = 4537; if (pco%cb_lyr_hru%a /= "y") return
+          case default; return
+        end select
+        n_use = soil(hru_j)%nly
+
+        call cb_emit_row_id_txt(u_txt, hru_j, hru_iob)
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+        call cb_write_depth_row(u_txt, buf, n_use, .false., "no")
+        write (u_txt, '(1x,g22.7)', advance='no') soil1(hru_j)%tot_300_c/1000.
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%tot(k)%c/1000.; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        write (u_txt, '(1x,g22.7)', advance='no') soil1(hru_j)%seq_tot_300_c/1000.
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%seq(k)%c/1000.; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "yes")
+
+        if (pco%csvout == "y") then
+          call cb_emit_row_id_csv(u_csv, hru_j, hru_iob)
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+          call cb_write_depth_row(u_csv, buf, n_use, .true., "no")
+          write (u_csv, '(a,g0.7)', advance='no') ",", soil1(hru_j)%tot_300_c/1000.
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%tot(k)%c/1000.; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          write (u_csv, '(a,g0.7)', advance='no') ",", soil1(hru_j)%seq_tot_300_c/1000.
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%seq(k)%c/1000.; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "yes")
+        end if
+      end subroutine cb_cbn_lyr_emit
+
+      subroutine cb_soil_snap_period(freq_in, hru_j, hru_iob)
+        !! end-of-period soil property snapshot per layer; routed to hru_soil_snap_{day,mon,yr}.
+        character(len=2), intent(in) :: freq_in
+        integer, intent(in) :: hru_j, hru_iob
+        integer :: u_txt, u_csv
+
+        select case(freq_in)
+          case (" d"); u_txt = 4598; u_csv = 4602; if (pco%cb_snap_hru%d /= "y") return
+          case (" m"); u_txt = 4599; u_csv = 4603; if (pco%cb_snap_hru%m /= "y") return
+          case (" y"); u_txt = 4600; u_csv = 4604; if (pco%cb_snap_hru%y /= "y") return
+          case default; return    !! aa slot rolls into _tot file via " b"/" e" calls
+        end select
+        call cb_soil_snap_emit(u_txt, u_csv, "period", hru_j, hru_iob)
+      end subroutine cb_soil_snap_period
+
+      subroutine cb_soil_snap_emit(u_txt, u_csv, stage, hru_j, hru_iob)
+        !! emit one wide-per-layer snapshot row to (u_txt, u_csv).
+        !! `stage` is "begsim", "endsim", or "period". For period rows we still emit identical layout.
+        !! tot_c column uses soil1(hru_j)%tot(ly)%c for ALL stages (kg C / ha).
+        integer, intent(in) :: u_txt, u_csv, hru_j, hru_iob
+        character(len=*), intent(in) :: stage
+        integer :: k, n_use
+        real :: buf(cb_n_layers)
+
+        n_use = soil(hru_j)%nly
+
+        call cb_emit_row_id_txt(u_txt, hru_j, hru_iob)
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+        call cb_write_depth_row(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%bd; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%awc; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%k; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%tot(k)%c; end do  !! %c at all stages
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%clay; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%silt; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%sand; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%rock; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%alb; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%usle_k; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%ec; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%cal; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "no")
+        buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%ph; end do
+        call cb_write_var_block(u_txt, buf, n_use, .false., "yes")
+
+        if (pco%csvout == "y") then
+          call cb_emit_row_id_csv(u_csv, hru_j, hru_iob)
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = real(soil(hru_j)%phys(k)%d); end do
+          call cb_write_depth_row(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%bd; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%awc; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%k; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil1(hru_j)%tot(k)%c; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%clay; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%silt; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%sand; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%phys(k)%rock; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%alb; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%usle_k; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%ec; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%cal; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "no")
+          buf = 0.0; do k = 1, min(cb_n_layers, n_use); buf(k) = soil(hru_j)%ly(k)%ph; end do
+          call cb_write_var_block(u_csv, buf, n_use, .true., "yes")
+        end if
+      end subroutine cb_soil_snap_emit
 
       end subroutine soil_nutcarb_write

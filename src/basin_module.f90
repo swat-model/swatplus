@@ -206,8 +206,23 @@
         type(print_interval) :: nb_hru          !!  nutrient balance HRU output
         type(print_interval) :: ls_hru          !!  losses HRU output
         type(print_interval) :: pw_hru          !!  plant weather HRU output
-        type(print_interval) :: cb_hru          !!  carbon output
-        type(print_interval) :: cb_vars_hru     !!  carbon variable output
+        type(print_interval) :: cb_hru          !!  legacy carbon flag (kept for backward compat with print.prt readers; no longer referenced by writers)
+        type(print_interval) :: cb_vars_hru     !!  legacy carbon variable flag (same)
+        !! per-family carbon output flags (10 rows)
+        type(print_interval) :: cb_gl_hru       !!  hru_carb_gl_*    HRU C gain/loss
+        type(print_interval) :: cb_trf_hru      !!  hru_scf_*        HRU C transformations
+        type(print_interval) :: cb_lyr_hru      !!  hru_cbn_lyr_*    per-layer SOC totals + sequestered
+        type(print_interval) :: cb_cpool_hru    !!  hru_cpool_stat_* per-layer C pools
+        type(print_interval) :: cb_npool_hru    !!  hru_n_p_pool_stat_*  per-layer N+P pools
+        type(print_interval) :: cb_plt_hru      !!  hru_plc_stat_*   plant C state
+        type(print_interval) :: cb_flux_hru     !!  hru_cflux_stat_* per-layer flux diagnostic
+        type(print_interval) :: cb_drv_hru      !!  hru_carb_drv_*   per-layer drivers diagnostic
+        type(print_interval) :: cb_dyn_hru      !!  hru_carb_dyn_*   per-layer dynamics diagnostic
+        type(print_interval) :: cb_snap_hru     !!  hru_soil_snap_*  soil property snapshot
+        !! LSU-level area-weighted aggregations (Option 1: HRU-aggregated families only)
+        type(print_interval) :: cb_gl_lsu       !!  lsu_carb_gl_*    LSU-area-weighted C gain/loss
+        type(print_interval) :: cb_trf_lsu      !!  lsu_scf_*        LSU-area-weighted C transformations
+        type(print_interval) :: cb_plt_lsu      !!  lsu_plc_stat_*   LSU-area-weighted plant C state
         ! HRU-LTE
         type(print_interval) :: wb_sd           !!  water balance SWAT-DEG output 
         type(print_interval) :: nb_sd           !!  nutrient balance SWAT-DEG output

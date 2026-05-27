@@ -68,11 +68,7 @@
                             !              |layer due to denitrification
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
-      real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
-                            !              |of organic nitrogen in the active pool. 
-
       j = ihru
-      nactfr = .02
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.
@@ -107,8 +103,8 @@
           if (xx > 1.e6) xx = 1.e6
           csf = Sqrt(xx)
 
-          !! compute flow from active to stable pools- maintain fraction of active (nactfr)
-          rwn = .1e-4 * ((soil1(j)%hact(k)%n * (1. / nactfr - 1.) - soil1(j)%hsta(k)%n))
+          !! compute flow from active to stable pools - maintain fraction of active (n_act_frac)
+          rwn = .1e-4 * ((soil1(j)%hact(k)%n * (1. / n_act_frac - 1.) - soil1(j)%hsta(k)%n))
           if (rwn > 0.) then
             rwn = Min(rwn, soil1(j)%hact(k)%n)
           else

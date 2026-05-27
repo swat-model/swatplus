@@ -301,8 +301,12 @@
          end if
          
           if (time%end_sim == 1) then
-            if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
-              call soil_nutcarb_write(" e")    
+            !! endsim row to hru_soil_snap_tot when cb_snap_hru%a is on.
+            !! soil_nutcarb_write(" e") internally iterates all HRUs, so call once
+            !! (when j == 1 == first HRU in hru_output's outer loop). Calling per-HRU was producing
+            !! sp_ob%hru^2 endsim rows in hru_soil_snap_tot.txt.
+            if (pco%cb_snap_hru%a == "y" .and. j == 1) then
+              call soil_nutcarb_write(" e")
             endif
           endif
 

@@ -57,11 +57,11 @@
         xx = 0.
         ! zz = 3. + (8. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.) <- original equation.
         if (bio_mix_event) then
-          zz = zz_bmix_coef_a + (zz_bmix_coef_b)*exp(zz_bmix_coef_c*soil(jj)%phys(l)%clay/100.)
+          zz = bmix_a + (bmix_b)*exp(bmix_c*soil(jj)%phys(l)%clay/100.)
           yy = 0.0 !Setting this to zero so biomix does NOT accumulate from one day to the next.
         else
           ! zz = 3. + (15. - 3.)*exp(-5.5*soil(jj)%phys(l)%clay/100.) <- original equation.
-          zz = zz_emix_coef_a + (zz_emix_coef_b)*exp(zz_emix_coef_c*soil(jj)%phys(l)%clay/100.)
+          zz = tillmix_a + (tillmix_b)*exp(tillmix_c*soil(jj)%phys(l)%clay/100.)
           yy = soil(jj)%ly(l)%tillagef_tillmix / zz
         endif
         m1 = 1
