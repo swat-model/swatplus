@@ -74,7 +74,7 @@ subroutine carbon_coef_read
                     read (107,*,iostat=eof) var_name, org_allo(1)%abco2,org_allo(2)%abco2
                 case("org_frac")
                     backspace (107)
-                    read (107,*,iostat=eof) var_name, org_frac%frac_seq, org_frac%frac_hum_microb, org_frac%frac_hum_slow, org_frac%frac_hum_passive
+                    read (107,*,iostat=eof) var_name, org_frac%frac_litter, org_frac%frac_hum_microb, org_frac%frac_hum_slow, org_frac%frac_hum_passive
                 case("mathers_method")
                     backspace (107)
                     read (107,*,iostat=eof) var_name, int_mathers_method
