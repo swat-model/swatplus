@@ -520,7 +520,7 @@
 
 
             if (bsn_cc%cswat == 1 ) then
-              ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
+              ! Write out beginning adjusted soil properties if any value of cb_hru is not "n"
               call soil_nutcarb_write(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
 
               if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then

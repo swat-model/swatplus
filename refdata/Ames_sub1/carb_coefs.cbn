@@ -1,6 +1,6 @@
 File: carb_coefs.cbn   Carbon coefficients used if cswat == 0 or cswat == 1
 
-# cbn_diagnostics contols what carbon related files are printed out if hru_cb is specified in print.prt
+# cbn_diagnostics controls what carbon related files are printed out if hru_cb is specified in print.prt
 # 1 is true, 0 is false
 # If omitted, the default is 0 or false.
 # if 0, only hru_cbn_lyr.txt/.csv and hru_seq_lyr.txt/.csv and hru_n_p_pool_stat.txt/csv will be printed out.
@@ -50,21 +50,21 @@ rtof            0.5
 #                          bio_consf  till_consf
 cbn_consolidation_factors  .15        .10
 
-# cbn_zhang2 carbon temperture and water factor approaches
+# cbn_zhang2 carbon temperature and water factor approaches
 # Ref Title: "Replicating measured site-scale soil organic carbon dynamics in the U.S. Corn Belt using the SWAT-C model"
 # Ref URL: https://www.sciencedirect.com/science/article/abs/pii/S1364815222002535?via%3Dihub
 # tmpf  Options: 1 - tmpf1,  2 - tmpf2, 3 - tmpf3
 # watf  Options: 1 - watf1,  2 - watf2
 #                      tmpf    watf    
-# cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
-cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the orginal factor approaches.
+# cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the original factor approaches.
+cbn_factor_approaches   2       1  # tmpf = 2 and watf = 1 are the original factor approaches.
 
 # tmpf2 temperature effect equation parameters
 tn              -0.5
 top             30.0
 tx              50.0
 
-# bio and tillage mixing coeffients in mgt_tillfactor.f90 tillf option of 4
+# bio and tillage mixing coefficients in mgt_tillfactor.f90 tillf option of 4
 zz_bmix_coefs   3.0    5.0   -5.5
 zz_emix_coefs   3.0   15.0   -3.5
 

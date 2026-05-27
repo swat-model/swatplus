@@ -8,8 +8,8 @@
 !!    use with caution and report anomalous results to akemanian@brc.tamus.edu and jeff.arnold@usda.edu
 !!    Mixing was was changed by fgeter n March 2026 to only mix soil layers from the surface down to 
 !!    the top of a frozen soil or to the biomixing depth whichever is less.
-!!    The amount of surf residue that can be mixed as defined by bio mixing efficieny
-!!    is reduced by temperture and the depth from the surface to the top of a
+!!    The amount of surf residue that can be mixed as defined by bio mixing efficiency
+!!    is reduced by temperature and the depth from the surface to the top of a
 !!    of a frozon soil layer.   
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
@@ -126,7 +126,7 @@
           ! Calculated a temperature weighted average of emix 
           emix_sum = 0.
           do l = 1, soil(jj)%nly
-            ! Adjust potiential biomix efficency based on soil consolidation  
+            ! Adjust potential biomix efficiency based on soil consolidation
             ! if (tillage_switch(jj) == 1 .and. tillage_days(jj) > 0.) then
             if (tillage_days(jj) > 0.) then
               if (soil(jj)%phys(l)%st >= soil(jj)%phys(l)%fc) then
@@ -203,7 +203,7 @@
             end do
 
           
-            ! Determin how much is mixed and not mixed in each soil layer.
+            ! Determine how much is mixed and not mixed in each soil layer.
             !! msm = mass of soil mixed for the layer
             !! msn = mass of soil not mixed for the layer       
             do l = 1, soil(jj)%nly
@@ -247,7 +247,7 @@
               mix_org%water = mix_org%water + frac_mixed * soil1(jj)%water(l)
 
               do ipl = 1, pcom(jj)%npl
-                ! sum up the amount mixed rsd in the soil from each plant in plant comunity
+                ! sum up the amount mixed rsd in the soil from each plant in plant community
                 mix_org%rsd(ipl)= mix_org%rsd(ipl) + frac_dep(l) * avg_emix * soil1(jj)%pl(ipl)%rsd(l) 
                 ! now add the amount of surface residue that is mixed into each layer.
                 mix_org%surf_rsd = frac_dep(l) * avg_emix * pl_mass(jj)%rsd(ipl)
