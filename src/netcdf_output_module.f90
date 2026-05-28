@@ -232,7 +232,7 @@
 
       subroutine nc_epoch_init()
         write(nc_time_units,'(a,i0.4,a)') "days since ", pco%yrc_start, "-01-01"
-        nc_epoch_jday = pco%day_start - 1
+        nc_epoch_jday = pco%day_start
       end subroutine nc_epoch_init
 
       subroutine nc_stream_open(s, path, nobj, vnames, tchunk)
