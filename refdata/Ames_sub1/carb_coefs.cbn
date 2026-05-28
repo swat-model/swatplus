@@ -26,8 +26,8 @@ apco2           0.55        0.55
 abco2           0.55        0.0
 
 # organic fractions used to initialize soil carbon into various pools 
-#               frac_seq    frac_hum_microb     frac_hum_slow   frac_hum_passive
-org_frac        0.95        0.02                0.44            0.54 
+#               frac_litter    frac_hum_microb     frac_hum_slow   frac_hum_passive
+org_frac        0.05        0.02                0.44            0.54 
 
 # The input mathers_method controls whether the mathers equations will be used (or not used) 
 # to initialize humus slow pool carbon. 
