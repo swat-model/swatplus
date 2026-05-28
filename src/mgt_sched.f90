@@ -1,4 +1,4 @@
-      subroutine mgt_sched (isched)
+subroutine mgt_sched (isched)
 
       use plant_data_module
       use mgt_operations_module
@@ -219,18 +219,22 @@
                 end if
               !pcom(j)%plcur(ipl)%phuacc = 0.
               else   ! for when the crop is not living.
-                select case (harvop_db(iharvop)%typ)
-                  case ("residue")
-                    harveff = mgt%op3
-                    call mgt_harvresidue (j, harveff, iharvop)
-                end select
-                if (pco%mgtout == "y") then
-                  write (2612, *) j, time%yrc, time%mo, time%day_mo,  pldb(idp)%plantnm, "    HARVEST ",  &
-                      phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, biomass, pl_mass(j)%rsd_tot%m,   &
-                      sol_sumno3(j), sol_sumsolp(j), pl_yield%m, pcom(j)%plstr(ipl)%sum_n,                &
-                      pcom(j)%plstr(ipl)%sum_p, pcom(j)%plstr(ipl)%sum_tmp, pcom(j)%plstr(ipl)%sum_w,     &
-                      pcom(j)%plstr(ipl)%sum_a
-                  end if 
+                if (mgt%op_char == pcomdb(icom)%pl(ipl)%cpnm .or. mgt%op_char == "all") then
+                  idp = pcom(j)%plcur(ipl)%idplt
+                  biomass = pl_mass(j)%tot(ipl)%m
+                  select case (harvop_db(iharvop)%typ)
+                    case ("residue")
+                      harveff = mgt%op3
+                      call mgt_harvresidue (j, harveff, iharvop)
+                  end select
+                  if (pco%mgtout == "y") then
+                    write (2612, *) j, time%yrc, time%mo, time%day_mo,  pldb(idp)%plantnm, "    HARVEST ",  &
+                        phubase(j), pcom(j)%plcur(ipl)%phuacc, soil(j)%sw, biomass, pl_mass(j)%rsd_tot%m,   &
+                        sol_sumno3(j), sol_sumsolp(j), pl_yield%m, pcom(j)%plstr(ipl)%sum_n,                &
+                        pcom(j)%plstr(ipl)%sum_p, pcom(j)%plstr(ipl)%sum_tmp, pcom(j)%plstr(ipl)%sum_w,     &
+                        pcom(j)%plstr(ipl)%sum_a
+                  end if
+                end if
               end if
             end do
           
