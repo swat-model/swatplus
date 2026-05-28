@@ -11,6 +11,7 @@
       use sd_channel_module
       use water_body_module
       use channel_module, only : ch_output
+      use output_filter_module
       implicit none
       private
       public :: nc_use_output, nc_set_deflate_from_env
@@ -528,18 +529,27 @@
         character(len=*), intent(in) :: suffix
         character(len=1), intent(in) :: flag
         character(len=32) :: vn(nchnsd)
-        integer :: i, ich, iob
+        integer :: i, ich, iob, islot, nobj
         if (.not. nc_use_output()) return
         if (flag /= "y" .or. sp_ob%chandeg <= 0) return
+        if (output_filter_use_ch_sd_list()) then
+          nobj = output_filter_ch_sd_nwrite()
+          if (nobj <= 0) return
+        else
+          nobj = sp_ob%chandeg
+        end if
         do i = 1, nchnsd
           write(vn(i), '(a,i0)') "v", i
         end do
-        call nc_stream_open(s, "channel_sd_"//trim(suffix)//".nc", sp_ob%chandeg, vn, nc_tchunk_for_suffix(suffix))
+        call nc_stream_open(s, "channel_sd_"//trim(suffix)//".nc", nobj, vn, nc_tchunk_for_suffix(suffix))
+        islot = 0
         do ich = 1, sp_ob%chandeg
+          if (.not. output_filter_write_ch_sd(ich)) cycle
+          islot = islot + 1
           iob = sp_ob1%chandeg + ich - 1
-          s%obj_id(ich) = ich
-          s%gis_id(ich) = ob(iob)%gis_id
-          s%oname(ich) = ob(iob)%name
+          s%obj_id(islot) = ich
+          s%gis_id(islot) = ob(iob)%gis_id
+          s%oname(islot) = ob(iob)%name
         end do
       end subroutine nc_open_sd_channel
 
@@ -1010,11 +1020,7 @@
         type(water_body), intent(in) :: wb
         type(hyd_output), intent(in) :: stor, hin, hout
         real, intent(in) :: t
-        real :: arr(nchnsd)
-        if (s_cha_sd_d%on) then
-          call chn_sd_pack(wb, stor, hin, hout, t, arr)
-          call nc_stream_stage(s_cha_sd_d, i, arr)
-        end if
+        call nc_stage_sd_to(s_cha_sd_d, i, wb, stor, hin, hout, t)
       end subroutine nc_stage_sd_channel
 
       subroutine nc_flush_daily_basin()
@@ -1115,8 +1121,11 @@
         type(water_body), intent(in) :: wb
         type(hyd_output), intent(in) :: stor, hin, hout
         real, intent(in) :: t
+        integer :: slot
         real :: arr(nchnsd)
-        if (s%on) then; call chn_sd_pack(wb, stor, hin, hout, t, arr); call nc_stream_stage(s, i, arr); end if
+        slot = output_filter_ch_sd_nc_slot(i)
+        if (slot <= 0) return
+        if (s%on) then; call chn_sd_pack(wb, stor, hin, hout, t, arr); call nc_stream_stage(s, slot, arr); end if
       end subroutine nc_stage_sd_to
 
       subroutine nc_flush_monthly_basin()
