@@ -60,6 +60,9 @@
           ch_wat_m(ichan) = ch_wat_m(ichan) // const            !! // only divides area (daily average values)
           
           if (pco%sd_chan%m == "y") then
+          if (pco%cdfout == "y") then
+            call nc_stage_sd_channel_mon(ichan, ch_wat_m(ichan), ch_stor(ichan), ch_in_m(ichan), ch_out_m(ichan), wtemp)
+          else
           write (2501,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,  &
             ch_wat_m(ichan)%area_ha, ch_wat_m(ichan)%precip, ch_wat_m(ichan)%evap, ch_wat_m(ichan)%seep,   &
             ch_stor(ichan), ch_in_m(ichan), ch_out_m(ichan), wtemp
@@ -68,6 +71,7 @@
             write (2505,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,   &
             ch_wat_m(ichan)%area_ha, ch_wat_m(ichan)%precip, ch_wat_m(ichan)%evap, ch_wat_m(ichan)%seep,   &
             ch_stor(ichan), ch_in_m(ichan), ch_out_m(ichan), wtemp
+          end if
           end if
         end if
         !ch_stor_m(ichan) = chaz
@@ -90,6 +94,9 @@
         ch_wat_y(ichan) = ch_wat_y(ichan) // const      !! // only divides area (daily average values)
           
         if (pco%sd_chan%y == "y") then 
+          if (pco%cdfout == "y") then
+            call nc_stage_sd_channel_yr(ichan, ch_wat_y(ichan), ch_stor(ichan), ch_in_y(ichan), ch_out_y(ichan), wtemp)
+          else
           write (2502,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,   &
             ch_wat_y(ichan)%area_ha, ch_wat_y(ichan)%precip, ch_wat_y(ichan)%evap, ch_wat_y(ichan)%seep,    &
             ch_stor(ichan), ch_in_y(ichan), ch_out_y(ichan), wtemp
@@ -97,6 +104,7 @@
            write (2506,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,    &
             ch_wat_y(ichan)%area_ha, ch_wat_y(ichan)%precip, ch_wat_y(ichan)%evap, ch_wat_y(ichan)%seep,    &
             ch_stor(ichan), ch_in_y(ichan), ch_out_y(ichan), wtemp
+          end if
           end if
         end if
       end if
@@ -110,6 +118,9 @@
         ch_wat_a(ichan) = ch_wat_a(ichan) // time%yrs_prt       !! all averaged variables divided by years
         
         if (pco%sd_chan%a == "y") then
+        if (pco%cdfout == "y") then
+          call nc_stage_sd_channel_aa(ichan, ch_wat_a(ichan), ch_stor(ichan), ch_in_a(ichan), ch_out_a(ichan), wtemp)
+        else
         write (2503,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,  &
           ch_wat_a(ichan)%area_ha, ch_wat_a(ichan)%precip, ch_wat_a(ichan)%evap, ch_wat_a(ichan)%seep,   &
           ch_stor(ichan), ch_in_a(ichan), ch_out_a(ichan), wtemp
@@ -117,6 +128,7 @@
           write (2507,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,   &
           ch_wat_a(ichan)%area_ha, ch_wat_a(ichan)%precip, ch_wat_a(ichan)%evap, ch_wat_a(ichan)%seep,   &
           ch_stor(ichan), ch_in_a(ichan), ch_out_a(ichan), wtemp
+        end if
         end if
        end if
      end if 

@@ -10,6 +10,7 @@
       use carbon_module
       use sd_channel_module
       use water_body_module
+      use channel_module, only : ch_output
       implicit none
       private
       public :: nc_use_output, nc_set_deflate_from_env
@@ -21,8 +22,19 @@
       public :: nc_stage_hru_wb_aa, nc_stage_hru_nb_aa, nc_stage_hru_ls_aa, nc_stage_hru_pw_aa
       public :: nc_stage_hru_carbon, nc_stage_hru_carbon_mon, nc_stage_hru_carbon_yr, nc_stage_hru_carbon_aa
       public :: nc_stage_basin_wb, nc_stage_basin_nb, nc_stage_basin_ls, nc_stage_basin_pw
+      public :: nc_stage_basin_wb_mon, nc_stage_basin_nb_mon, nc_stage_basin_ls_mon, nc_stage_basin_pw_mon
+      public :: nc_stage_basin_wb_yr, nc_stage_basin_nb_yr, nc_stage_basin_ls_yr, nc_stage_basin_pw_yr
+      public :: nc_stage_basin_wb_aa, nc_stage_basin_nb_aa, nc_stage_basin_ls_aa, nc_stage_basin_pw_aa
       public :: nc_stage_lsu_wb, nc_stage_lsu_nb, nc_stage_lsu_ls, nc_stage_lsu_pw
-      public :: nc_stage_aquifer, nc_stage_sd_channel
+      public :: nc_stage_lsu_wb_mon, nc_stage_lsu_nb_mon, nc_stage_lsu_ls_mon, nc_stage_lsu_pw_mon
+      public :: nc_stage_lsu_wb_yr, nc_stage_lsu_nb_yr, nc_stage_lsu_ls_yr, nc_stage_lsu_pw_yr
+      public :: nc_stage_lsu_wb_aa, nc_stage_lsu_nb_aa, nc_stage_lsu_ls_aa, nc_stage_lsu_pw_aa
+      public :: nc_stage_aquifer, nc_stage_aquifer_mon, nc_stage_aquifer_yr, nc_stage_aquifer_aa
+      public :: nc_stage_sd_channel, nc_stage_sd_channel_mon, nc_stage_sd_channel_yr, nc_stage_sd_channel_aa
+      public :: nc_stage_basin_aquifer, nc_stage_basin_aquifer_mon, nc_stage_basin_aquifer_yr, nc_stage_basin_aquifer_aa
+      public :: nc_stage_basin_channel, nc_stage_basin_channel_mon, nc_stage_basin_channel_yr, nc_stage_basin_channel_aa
+      public :: nc_stage_channel, nc_stage_channel_mon, nc_stage_channel_yr, nc_stage_channel_aa
+      public :: nc_flush_daily_channel, nc_flush_monthly_channel, nc_flush_yearly_channel, nc_flush_aa_channel
       public :: nc_flush_daily_basin, nc_flush_daily_lsu, nc_flush_daily_aqu, nc_flush_daily_sd
       public :: nc_flush_monthly_basin, nc_flush_monthly_lsu, nc_flush_monthly_aqu, nc_flush_monthly_sd
       public :: nc_flush_yearly_basin, nc_flush_yearly_lsu, nc_flush_yearly_aqu, nc_flush_yearly_sd
@@ -32,6 +44,7 @@
       integer, parameter :: nhsc = 15, nhrc = 6, nhpc = 6, nhscf = 13
       integer, parameter :: naqu = 18
       integer, parameter :: nchnsd = 73
+      integer, parameter :: nch = 59
       integer, parameter :: name_len = 64
 
       type nc_stream
@@ -67,6 +80,9 @@
       type(nc_stream) :: s_lsu_wb_a, s_lsu_nb_a, s_lsu_ls_a, s_lsu_pw_a
       type(nc_stream) :: s_aqu_d, s_aqu_m, s_aqu_y, s_aqu_a
       type(nc_stream) :: s_cha_sd_d, s_cha_sd_m, s_cha_sd_y, s_cha_sd_a
+      type(nc_stream) :: s_bsn_aqu_d, s_bsn_aqu_m, s_bsn_aqu_y, s_bsn_aqu_a
+      type(nc_stream) :: s_bsn_cha_d, s_bsn_cha_m, s_bsn_cha_y, s_bsn_cha_a
+      type(nc_stream) :: s_cha_d, s_cha_m, s_cha_y, s_cha_a
       integer :: nc_epoch_jday = 0
       character(len=64) :: nc_time_units = ""
 
@@ -178,9 +194,41 @@
         call hyd_pack(stor, arr, 4)
         call hyd_pack(hin, arr, 22)
         call hyd_pack(hout, arr, 40)
-        arr(58)=wtemp
-        arr(59:nchnsd) = 0.
+        arr(59)=wtemp
+        if (nchnsd > 59) arr(60:nchnsd) = 0.
       end subroutine chn_sd_pack
+
+      subroutine bch_pack(c, arr)
+        type(ch_output), intent(in) :: c
+        real, intent(out) :: arr(nch)
+        arr(1)=c%flo_in;  arr(2)=c%flo_out; arr(3)=c%evap;     arr(4)=c%tloss
+        arr(5)=c%sed_in;  arr(6)=c%sed_out; arr(7)=c%sed_conc
+        arr(8)=c%orgn_in; arr(9)=c%orgn_out
+        arr(10)=c%orgp_in; arr(11)=c%orgp_out
+        arr(12)=c%no3_in;  arr(13)=c%no3_out
+        arr(14)=c%nh4_in;  arr(15)=c%nh4_out
+        arr(16)=c%no2_in;  arr(17)=c%no2_out
+        arr(18)=c%solp_in; arr(19)=c%solp_out
+        arr(20)=c%chla_in; arr(21)=c%chla_out
+        arr(22)=c%cbod_in; arr(23)=c%cbod_out
+        arr(24)=c%dis_in;  arr(25)=c%dis_out
+        arr(26)=c%solpst_in;  arr(27)=c%solpst_out
+        arr(28)=c%sorbpst_in; arr(29)=c%sorbpst_out
+        arr(30)=c%react;   arr(31)=c%volat;   arr(32)=c%setlpst
+        arr(33)=c%resuspst; arr(34)=c%difus; arr(35)=c%reactb
+        arr(36)=c%bury;    arr(37)=c%sedpest
+        arr(38)=c%bacp;    arr(39)=c%baclp
+        arr(40)=c%met1;    arr(41)=c%met2;    arr(42)=c%met3
+        arr(43)=c%sand_in; arr(44)=c%sand_out
+        arr(45)=c%silt_in; arr(46)=c%silt_out
+        arr(47)=c%clay_in; arr(48)=c%clay_out
+        arr(49)=c%smag_in; arr(50)=c%smag_out
+        arr(51)=c%lag_in;  arr(52)=c%lag_out
+        arr(53)=c%grvl_in; arr(54)=c%grvl_out
+        arr(55)=c%bnk_ero; arr(56)=c%ch_deg
+        arr(57)=c%ch_dep;  arr(58)=c%fp_dep
+        arr(59)=c%tot_ssed
+      end subroutine bch_pack
 
       subroutine nc_epoch_init()
         write(nc_time_units,'(a,i0.4,a)') "days since ", pco%yrc_start, "-01-01"
@@ -455,6 +503,26 @@
         end do
       end subroutine nc_open_aquifer
 
+      subroutine nc_open_channel(s, suffix, flag)
+        type(nc_stream), intent(inout) :: s
+        character(len=*), intent(in) :: suffix
+        character(len=1), intent(in) :: flag
+        character(len=32) :: vn(nch)
+        integer :: i, ich, iob
+        if (.not. nc_use_output()) return
+        if (flag /= "y" .or. sp_ob%chan <= 0) return
+        do i = 1, nch
+          write(vn(i), '(a,i0)') "v", i
+        end do
+        call nc_stream_open(s, "channel_"//trim(suffix)//".nc", sp_ob%chan, vn, nc_tchunk_for_suffix(suffix))
+        do ich = 1, sp_ob%chan
+          iob = sp_ob1%chan + ich - 1
+          s%obj_id(ich) = ich
+          s%gis_id(ich) = ob(iob)%gis_id
+          s%oname(ich) = ob(iob)%name
+        end do
+      end subroutine nc_open_channel
+
       subroutine nc_open_sd_channel(s, suffix, flag)
         type(nc_stream), intent(inout) :: s
         character(len=*), intent(in) :: suffix
@@ -539,6 +607,18 @@
         call nc_open_basin_singleton(s_bsn_nb_a, "basin_nb_aa", nnb, pco%nb_bsn%a, 1)
         call nc_open_basin_singleton(s_bsn_ls_a, "basin_ls_aa", nls, pco%ls_bsn%a, 1)
         call nc_open_basin_singleton(s_bsn_pw_a, "basin_pw_aa", npw, pco%pw_bsn%a, 1)
+        call nc_open_basin_singleton(s_bsn_aqu_d, "basin_aqu_day", naqu, pco%aqu_bsn%d, 30)
+        call nc_open_basin_singleton(s_bsn_aqu_m, "basin_aqu_mon", naqu, pco%aqu_bsn%m, 12)
+        call nc_open_basin_singleton(s_bsn_aqu_y, "basin_aqu_yr", naqu, pco%aqu_bsn%y, 1)
+        call nc_open_basin_singleton(s_bsn_aqu_a, "basin_aqu_aa", naqu, pco%aqu_bsn%a, 1)
+        call nc_open_basin_singleton(s_bsn_cha_d, "basin_cha_day", nch, pco%chan_bsn%d, 30)
+        call nc_open_basin_singleton(s_bsn_cha_m, "basin_cha_mon", nch, pco%chan_bsn%m, 12)
+        call nc_open_basin_singleton(s_bsn_cha_y, "basin_cha_yr", nch, pco%chan_bsn%y, 1)
+        call nc_open_basin_singleton(s_bsn_cha_a, "basin_cha_aa", nch, pco%chan_bsn%a, 1)
+        call nc_open_channel(s_cha_d, "day", pco%chan%d)
+        call nc_open_channel(s_cha_m, "mon", pco%chan%m)
+        call nc_open_channel(s_cha_y, "yr", pco%chan%y)
+        call nc_open_channel(s_cha_a, "aa", pco%chan%a)
         call nc_open_lsu_streams()
         call nc_open_aquifer(s_aqu_d, "day", pco%aqu%d)
         call nc_open_aquifer(s_aqu_m, "mon", pco%aqu%m)
@@ -594,6 +674,12 @@
         call nc_close_stream(s_aqu_y); call nc_close_stream(s_aqu_a)
         call nc_close_stream(s_cha_sd_d); call nc_close_stream(s_cha_sd_m)
         call nc_close_stream(s_cha_sd_y); call nc_close_stream(s_cha_sd_a)
+        call nc_close_stream(s_bsn_aqu_d); call nc_close_stream(s_bsn_aqu_m)
+        call nc_close_stream(s_bsn_aqu_y); call nc_close_stream(s_bsn_aqu_a)
+        call nc_close_stream(s_bsn_cha_d); call nc_close_stream(s_bsn_cha_m)
+        call nc_close_stream(s_bsn_cha_y); call nc_close_stream(s_bsn_cha_a)
+        call nc_close_stream(s_cha_d); call nc_close_stream(s_cha_m)
+        call nc_close_stream(s_cha_y); call nc_close_stream(s_cha_a)
       end subroutine netcdf_output_finish
 
       subroutine nc_stage_hru_wb(ihru, wb)
@@ -936,6 +1022,8 @@
         if (s_bsn_nb_d%on) call nc_stream_flush(s_bsn_nb_d)
         if (s_bsn_ls_d%on) call nc_stream_flush(s_bsn_ls_d)
         if (s_bsn_pw_d%on) call nc_stream_flush(s_bsn_pw_d)
+        if (s_bsn_aqu_d%on) call nc_stream_flush(s_bsn_aqu_d)
+        if (s_bsn_cha_d%on) call nc_stream_flush(s_bsn_cha_d)
       end subroutine nc_flush_daily_basin
 
       subroutine nc_flush_daily_lsu()
@@ -1036,6 +1124,8 @@
         if (s_bsn_nb_m%on) call nc_stream_flush(s_bsn_nb_m)
         if (s_bsn_ls_m%on) call nc_stream_flush(s_bsn_ls_m)
         if (s_bsn_pw_m%on) call nc_stream_flush(s_bsn_pw_m)
+        if (s_bsn_aqu_m%on) call nc_stream_flush(s_bsn_aqu_m)
+        if (s_bsn_cha_m%on) call nc_stream_flush(s_bsn_cha_m)
       end subroutine nc_flush_monthly_basin
 
       subroutine nc_flush_monthly_lsu()
@@ -1058,6 +1148,8 @@
         if (s_bsn_nb_y%on) call nc_stream_flush(s_bsn_nb_y)
         if (s_bsn_ls_y%on) call nc_stream_flush(s_bsn_ls_y)
         if (s_bsn_pw_y%on) call nc_stream_flush(s_bsn_pw_y)
+        if (s_bsn_aqu_y%on) call nc_stream_flush(s_bsn_aqu_y)
+        if (s_bsn_cha_y%on) call nc_stream_flush(s_bsn_cha_y)
       end subroutine nc_flush_yearly_basin
 
       subroutine nc_flush_yearly_lsu()
@@ -1080,6 +1172,8 @@
         if (s_bsn_nb_a%on) call nc_stream_flush(s_bsn_nb_a)
         if (s_bsn_ls_a%on) call nc_stream_flush(s_bsn_ls_a)
         if (s_bsn_pw_a%on) call nc_stream_flush(s_bsn_pw_a)
+        if (s_bsn_aqu_a%on) call nc_stream_flush(s_bsn_aqu_a)
+        if (s_bsn_cha_a%on) call nc_stream_flush(s_bsn_cha_a)
       end subroutine nc_flush_aa_basin
 
       subroutine nc_flush_aa_lsu()
@@ -1096,5 +1190,281 @@
       subroutine nc_flush_aa_sd()
         if (s_cha_sd_a%on) call nc_stream_flush(s_cha_sd_a)
       end subroutine nc_flush_aa_sd
+
+      subroutine nc_stage_basin_wb_mon(wb)
+        type(output_waterbal), intent(in) :: wb
+        call nc_stage_basin_wb_to(s_bsn_wb_m, wb)
+      end subroutine nc_stage_basin_wb_mon
+
+      subroutine nc_stage_basin_nb_mon(nb)
+        type(output_nutbal), intent(in) :: nb
+        call nc_stage_basin_nb_to(s_bsn_nb_m, nb)
+      end subroutine nc_stage_basin_nb_mon
+
+      subroutine nc_stage_basin_ls_mon(ls)
+        type(output_losses), intent(in) :: ls
+        call nc_stage_basin_ls_to(s_bsn_ls_m, ls)
+      end subroutine nc_stage_basin_ls_mon
+
+      subroutine nc_stage_basin_pw_mon(pw)
+        type(output_plantweather), intent(in) :: pw
+        call nc_stage_basin_pw_to(s_bsn_pw_m, pw)
+      end subroutine nc_stage_basin_pw_mon
+
+      subroutine nc_stage_basin_wb_yr(wb)
+        type(output_waterbal), intent(in) :: wb
+        call nc_stage_basin_wb_to(s_bsn_wb_y, wb)
+      end subroutine nc_stage_basin_wb_yr
+
+      subroutine nc_stage_basin_nb_yr(nb)
+        type(output_nutbal), intent(in) :: nb
+        call nc_stage_basin_nb_to(s_bsn_nb_y, nb)
+      end subroutine nc_stage_basin_nb_yr
+
+      subroutine nc_stage_basin_ls_yr(ls)
+        type(output_losses), intent(in) :: ls
+        call nc_stage_basin_ls_to(s_bsn_ls_y, ls)
+      end subroutine nc_stage_basin_ls_yr
+
+      subroutine nc_stage_basin_pw_yr(pw)
+        type(output_plantweather), intent(in) :: pw
+        call nc_stage_basin_pw_to(s_bsn_pw_y, pw)
+      end subroutine nc_stage_basin_pw_yr
+
+      subroutine nc_stage_basin_wb_aa(wb)
+        type(output_waterbal), intent(in) :: wb
+        call nc_stage_basin_wb_to(s_bsn_wb_a, wb)
+      end subroutine nc_stage_basin_wb_aa
+
+      subroutine nc_stage_basin_nb_aa(nb)
+        type(output_nutbal), intent(in) :: nb
+        call nc_stage_basin_nb_to(s_bsn_nb_a, nb)
+      end subroutine nc_stage_basin_nb_aa
+
+      subroutine nc_stage_basin_ls_aa(ls)
+        type(output_losses), intent(in) :: ls
+        call nc_stage_basin_ls_to(s_bsn_ls_a, ls)
+      end subroutine nc_stage_basin_ls_aa
+
+      subroutine nc_stage_basin_pw_aa(pw)
+        type(output_plantweather), intent(in) :: pw
+        call nc_stage_basin_pw_to(s_bsn_pw_a, pw)
+      end subroutine nc_stage_basin_pw_aa
+
+      subroutine nc_stage_lsu_wb_mon(i, wb)
+        integer, intent(in) :: i
+        type(output_waterbal), intent(in) :: wb
+        call nc_stage_lsu_wb_to(s_lsu_wb_m, i, wb)
+      end subroutine nc_stage_lsu_wb_mon
+
+      subroutine nc_stage_lsu_nb_mon(i, nb)
+        integer, intent(in) :: i
+        type(output_nutbal), intent(in) :: nb
+        call nc_stage_lsu_nb_to(s_lsu_nb_m, i, nb)
+      end subroutine nc_stage_lsu_nb_mon
+
+      subroutine nc_stage_lsu_ls_mon(i, ls)
+        integer, intent(in) :: i
+        type(output_losses), intent(in) :: ls
+        call nc_stage_lsu_ls_to(s_lsu_ls_m, i, ls)
+      end subroutine nc_stage_lsu_ls_mon
+
+      subroutine nc_stage_lsu_pw_mon(i, pw)
+        integer, intent(in) :: i
+        type(output_plantweather), intent(in) :: pw
+        call nc_stage_lsu_pw_to(s_lsu_pw_m, i, pw)
+      end subroutine nc_stage_lsu_pw_mon
+
+      subroutine nc_stage_lsu_wb_yr(i, wb)
+        integer, intent(in) :: i
+        type(output_waterbal), intent(in) :: wb
+        call nc_stage_lsu_wb_to(s_lsu_wb_y, i, wb)
+      end subroutine nc_stage_lsu_wb_yr
+
+      subroutine nc_stage_lsu_nb_yr(i, nb)
+        integer, intent(in) :: i
+        type(output_nutbal), intent(in) :: nb
+        call nc_stage_lsu_nb_to(s_lsu_nb_y, i, nb)
+      end subroutine nc_stage_lsu_nb_yr
+
+      subroutine nc_stage_lsu_ls_yr(i, ls)
+        integer, intent(in) :: i
+        type(output_losses), intent(in) :: ls
+        call nc_stage_lsu_ls_to(s_lsu_ls_y, i, ls)
+      end subroutine nc_stage_lsu_ls_yr
+
+      subroutine nc_stage_lsu_pw_yr(i, pw)
+        integer, intent(in) :: i
+        type(output_plantweather), intent(in) :: pw
+        call nc_stage_lsu_pw_to(s_lsu_pw_y, i, pw)
+      end subroutine nc_stage_lsu_pw_yr
+
+      subroutine nc_stage_lsu_wb_aa(i, wb)
+        integer, intent(in) :: i
+        type(output_waterbal), intent(in) :: wb
+        call nc_stage_lsu_wb_to(s_lsu_wb_a, i, wb)
+      end subroutine nc_stage_lsu_wb_aa
+
+      subroutine nc_stage_lsu_nb_aa(i, nb)
+        integer, intent(in) :: i
+        type(output_nutbal), intent(in) :: nb
+        call nc_stage_lsu_nb_to(s_lsu_nb_a, i, nb)
+      end subroutine nc_stage_lsu_nb_aa
+
+      subroutine nc_stage_lsu_ls_aa(i, ls)
+        integer, intent(in) :: i
+        type(output_losses), intent(in) :: ls
+        call nc_stage_lsu_ls_to(s_lsu_ls_a, i, ls)
+      end subroutine nc_stage_lsu_ls_aa
+
+      subroutine nc_stage_lsu_pw_aa(i, pw)
+        integer, intent(in) :: i
+        type(output_plantweather), intent(in) :: pw
+        call nc_stage_lsu_pw_to(s_lsu_pw_a, i, pw)
+      end subroutine nc_stage_lsu_pw_aa
+
+      subroutine nc_stage_aquifer_mon(i, a)
+        integer, intent(in) :: i
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_aquifer_to(s_aqu_m, i, a)
+      end subroutine nc_stage_aquifer_mon
+
+      subroutine nc_stage_aquifer_yr(i, a)
+        integer, intent(in) :: i
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_aquifer_to(s_aqu_y, i, a)
+      end subroutine nc_stage_aquifer_yr
+
+      subroutine nc_stage_aquifer_aa(i, a)
+        integer, intent(in) :: i
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_aquifer_to(s_aqu_a, i, a)
+      end subroutine nc_stage_aquifer_aa
+
+      subroutine nc_stage_sd_channel_mon(i, wb, stor, hin, hout, t)
+        integer, intent(in) :: i
+        type(water_body), intent(in) :: wb
+        type(hyd_output), intent(in) :: stor, hin, hout
+        real, intent(in) :: t
+        call nc_stage_sd_to(s_cha_sd_m, i, wb, stor, hin, hout, t)
+      end subroutine nc_stage_sd_channel_mon
+
+      subroutine nc_stage_sd_channel_yr(i, wb, stor, hin, hout, t)
+        integer, intent(in) :: i
+        type(water_body), intent(in) :: wb
+        type(hyd_output), intent(in) :: stor, hin, hout
+        real, intent(in) :: t
+        call nc_stage_sd_to(s_cha_sd_y, i, wb, stor, hin, hout, t)
+      end subroutine nc_stage_sd_channel_yr
+
+      subroutine nc_stage_sd_channel_aa(i, wb, stor, hin, hout, t)
+        integer, intent(in) :: i
+        type(water_body), intent(in) :: wb
+        type(hyd_output), intent(in) :: stor, hin, hout
+        real, intent(in) :: t
+        call nc_stage_sd_to(s_cha_sd_a, i, wb, stor, hin, hout, t)
+      end subroutine nc_stage_sd_channel_aa
+
+      subroutine nc_stage_basin_aquifer_to(s, a)
+        type(nc_stream), intent(inout) :: s
+        type(aquifer_dynamic), intent(in) :: a
+        real :: arr(naqu)
+        if (s%on) then; call aqu_pack(a, arr); call nc_stream_stage(s, 1, arr); end if
+      end subroutine nc_stage_basin_aquifer_to
+
+      subroutine nc_stage_basin_aquifer(a)
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_basin_aquifer_to(s_bsn_aqu_d, a)
+      end subroutine nc_stage_basin_aquifer
+
+      subroutine nc_stage_basin_aquifer_mon(a)
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_basin_aquifer_to(s_bsn_aqu_m, a)
+      end subroutine nc_stage_basin_aquifer_mon
+
+      subroutine nc_stage_basin_aquifer_yr(a)
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_basin_aquifer_to(s_bsn_aqu_y, a)
+      end subroutine nc_stage_basin_aquifer_yr
+
+      subroutine nc_stage_basin_aquifer_aa(a)
+        type(aquifer_dynamic), intent(in) :: a
+        call nc_stage_basin_aquifer_to(s_bsn_aqu_a, a)
+      end subroutine nc_stage_basin_aquifer_aa
+
+      subroutine nc_stage_basin_channel_to(s, c)
+        type(nc_stream), intent(inout) :: s
+        type(ch_output), intent(in) :: c
+        real :: arr(nch)
+        if (s%on) then; call bch_pack(c, arr); call nc_stream_stage(s, 1, arr); end if
+      end subroutine nc_stage_basin_channel_to
+
+      subroutine nc_stage_basin_channel(c)
+        type(ch_output), intent(in) :: c
+        call nc_stage_basin_channel_to(s_bsn_cha_d, c)
+      end subroutine nc_stage_basin_channel
+
+      subroutine nc_stage_basin_channel_mon(c)
+        type(ch_output), intent(in) :: c
+        call nc_stage_basin_channel_to(s_bsn_cha_m, c)
+      end subroutine nc_stage_basin_channel_mon
+
+      subroutine nc_stage_basin_channel_yr(c)
+        type(ch_output), intent(in) :: c
+        call nc_stage_basin_channel_to(s_bsn_cha_y, c)
+      end subroutine nc_stage_basin_channel_yr
+
+      subroutine nc_stage_basin_channel_aa(c)
+        type(ch_output), intent(in) :: c
+        call nc_stage_basin_channel_to(s_bsn_cha_a, c)
+      end subroutine nc_stage_basin_channel_aa
+
+      subroutine nc_stage_channel_to(s, i, c)
+        type(nc_stream), intent(inout) :: s
+        integer, intent(in) :: i
+        type(ch_output), intent(in) :: c
+        real :: arr(nch)
+        if (s%on) then; call bch_pack(c, arr); call nc_stream_stage(s, i, arr); end if
+      end subroutine nc_stage_channel_to
+
+      subroutine nc_stage_channel(i, c)
+        integer, intent(in) :: i
+        type(ch_output), intent(in) :: c
+        call nc_stage_channel_to(s_cha_d, i, c)
+      end subroutine nc_stage_channel
+
+      subroutine nc_stage_channel_mon(i, c)
+        integer, intent(in) :: i
+        type(ch_output), intent(in) :: c
+        call nc_stage_channel_to(s_cha_m, i, c)
+      end subroutine nc_stage_channel_mon
+
+      subroutine nc_stage_channel_yr(i, c)
+        integer, intent(in) :: i
+        type(ch_output), intent(in) :: c
+        call nc_stage_channel_to(s_cha_y, i, c)
+      end subroutine nc_stage_channel_yr
+
+      subroutine nc_stage_channel_aa(i, c)
+        integer, intent(in) :: i
+        type(ch_output), intent(in) :: c
+        call nc_stage_channel_to(s_cha_a, i, c)
+      end subroutine nc_stage_channel_aa
+
+      subroutine nc_flush_daily_channel()
+        if (s_cha_d%on) call nc_stream_flush(s_cha_d)
+      end subroutine nc_flush_daily_channel
+
+      subroutine nc_flush_monthly_channel()
+        if (s_cha_m%on) call nc_stream_flush(s_cha_m)
+      end subroutine nc_flush_monthly_channel
+
+      subroutine nc_flush_yearly_channel()
+        if (s_cha_y%on) call nc_stream_flush(s_cha_y)
+      end subroutine nc_flush_yearly_channel
+
+      subroutine nc_flush_aa_channel()
+        if (s_cha_a%on) call nc_stream_flush(s_cha_a)
+      end subroutine nc_flush_aa_channel
 
       end module netcdf_output_module
