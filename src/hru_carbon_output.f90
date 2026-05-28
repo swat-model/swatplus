@@ -9,6 +9,7 @@
       use organic_mineral_mass_module
       use soil_module
       use carbon_module
+      use netcdf_output_module
       
       implicit none
       
@@ -30,6 +31,9 @@
              
       !! daily print
       if (pco%nb_hru%d == "y") then
+        if (pco%cdfout == "y") then
+          call nc_stage_hru_carbon(j, hsc_d(j), hrc_d(j), hpc_d(j), hscf_d(j))
+        else
         write (4520,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hsc_d(j)    !! soil carbon gain/loss
         write (4530,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hrc_d(j)    !! residue carbon gain/loss
         write (4540,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_d(j)    !! plant carbon gain/loss
@@ -41,6 +45,7 @@
           write (4544,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_d(j)    !! plant carbon gain/loss
           write (4554,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hscf_d(j)   !! soil transformations
 
+        end if
         end if
       end if
          

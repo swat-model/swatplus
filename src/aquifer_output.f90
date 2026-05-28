@@ -4,6 +4,7 @@
       use basin_module
       use aquifer_module
       use hydrograph_module, only : ob, sp_ob1
+      use netcdf_output_module
       
       implicit none
             
@@ -19,9 +20,13 @@
         !! daily print - AQUIFER
          if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
           if (pco%aqu%d == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_aquifer(iaq, aqu_d(iaq))
+            else
             write (2520,100) time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_d(iaq)
             if (pco%csvout == "y") then
               write (2524,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_d(iaq)
+            end if
             end if
           end if
         end if

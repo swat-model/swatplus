@@ -13,6 +13,13 @@ cmake_host_system_information(RESULT os_version QUERY DISTRIB_RELEASE)
 cmake_host_system_information(RESULT os_like QUERY DISTRIB_ID_LIKE)
 cmake_host_system_information(RESULT pretty_name QUERY DISTRIB_PRETTY_NAME)
 
+
+option(SWATPLUS_NETCDF "Build NetCDF output backend" ON)
+if(SWATPLUS_NETCDF)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(NETCDF_F REQUIRED IMPORTED_TARGET netcdf-fortran)
+endif()
+
 project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
 include(CTest)
@@ -48,7 +55,7 @@ if (UNIX)
         set(FFC             "ifx")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdialect        "-cpp -ffree-line-length-none -fbacktrace")
         set(fdebug          "-Wall")
         set(frelease        "-O")
         set(FFC             "gnu")
@@ -57,7 +64,7 @@ if (UNIX)
             # Check if the OS is not Arch Linux or is not based on Arch Linux and is not Fedpra based
             # For non-Arch and non-FedoraLinux based systems using gfortran (GNU), set the link_library static flag to build a static executable.")
             # For Arch Linux based and Fedora based systems using gfortran, omit the link_library static flagt to build a dynamic executable.")
-            if (NOT ("${os_id}" STREQUAL "Arch" OR 
+            if (NOT SWATPLUS_NETCDF AND NOT ("${os_id}" STREQUAL "Arch" OR 
                      "${os_like}" MATCHES ".*arch.*" OR
                      "${os_id}" STREQUAL "fedora" ))
                 link_libraries("-static")
@@ -78,7 +85,7 @@ elseif(WIN32)
         set(frelease        "/O")
         set(FFC             "ifx")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdialect        "-cpp -ffree-line-length-none -fbacktrace")
         set(fdebug          "-Wall ")
         set(FFC             "gnu")
         set(frelease        "-O")
@@ -149,6 +156,12 @@ endif()
 
 file(GLOB sources src/*.f90)
 add_executable(${SWATPLUS_EXE} ${sources})
+if(SWATPLUS_NETCDF)
+  target_link_libraries(${SWATPLUS_EXE} PRIVATE PkgConfig::NETCDF_F)
+  target_include_directories(${SWATPLUS_EXE} PRIVATE ${NETCDF_F_INCLUDE_DIRS} /usr/include)
+  target_compile_options(${SWATPLUS_EXE} PRIVATE ${NETCDF_F_CFLAGS_OTHER})
+  target_compile_definitions(${SWATPLUS_EXE} PRIVATE SWATPLUS_NETCDF=1)
+endif()
 
 #############################################################################
 # Install

@@ -6,6 +6,7 @@
       use calibration_data_module
       use hydrograph_module
       use output_landscape_module
+      use netcdf_output_module
       
       implicit none
       
@@ -69,11 +70,15 @@
           if (pco%wb_lsu%d == "y") then
             ruwb_d(ilsu)%sw = (ruwb_d(ilsu)%sw_init + ruwb_d(ilsu)%sw_final) / 2.
             ruwb_d(ilsu)%snopack = (ruwb_d(ilsu)%sno_init + ruwb_d(ilsu)%sno_final) / 2.
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_wb(ilsu, ruwb_d(ilsu))
+            else
             write (2140,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_d(ilsu)  !! waterbal
             if (pco%csvout == "y") then 
               write (2144,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_d(ilsu)  !! waterbal
             end if 
+            end if
             ruwb_d(ilsu)%sw_init = ruwb_d(ilsu)%sw_final
             ruwb_d(ilsu)%sno_init = ruwb_d(ilsu)%sno_final
           end if 

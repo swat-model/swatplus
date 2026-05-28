@@ -22,6 +22,7 @@
       use constituent_mass_module
       use hru_module, only : ihru, hru
       use basin_module
+      use netcdf_output_module
       use maximum_data_module
       use gwflow_module
       use soil_module
@@ -536,6 +537,35 @@
           endif
         
         end do      ! hru loop  
+        !! swatplus_perf: netcdf
+        if (pco%cdfout == "y") then
+          call nc_flush_daily_hru()
+          if (time%end_mo == 1) call nc_flush_monthly_hru()
+          if (time%end_yr == 1) call nc_flush_yearly_hru()
+          if (time%end_sim == 1) call nc_flush_aa_hru()
+          call nc_flush_daily_basin()
+          call nc_flush_daily_lsu()
+          call nc_flush_daily_aqu()
+          call nc_flush_daily_sd()
+          if (time%end_mo == 1) then
+            call nc_flush_monthly_basin()
+            call nc_flush_monthly_lsu()
+            call nc_flush_monthly_aqu()
+            call nc_flush_monthly_sd()
+          end if
+          if (time%end_yr == 1) then
+            call nc_flush_yearly_basin()
+            call nc_flush_yearly_lsu()
+            call nc_flush_yearly_aqu()
+            call nc_flush_yearly_sd()
+          end if
+          if (time%end_sim == 1) then
+            call nc_flush_aa_basin()
+            call nc_flush_aa_lsu()
+            call nc_flush_aa_aqu()
+            call nc_flush_aa_sd()
+          end if
+        end if
         
         do iaq = 1, sp_ob%aqu
           call aquifer_output (iaq)

@@ -6,6 +6,7 @@
       use output_landscape_module
       use basin_module
       use carbon_module
+      use netcdf_output_module
       
       implicit none
 
@@ -69,12 +70,16 @@
           if (pco%wb_bsn%d == "y") then
             bwb_d%sw = (bwb_d%sw_init + bwb_d%sw_final) / 2.
             bwb_d%snopack = (bwb_d%sno_init + bwb_d%sno_final) / 2.
+            if (pco%cdfout == "y") then
+              call nc_stage_basin_wb(bwb_d)
+            else
             write (2050,100) time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bwb_d  !! waterbal
             if (pco%csvout == "y") then 
               write (2054,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, "       1", "       1", bsn%name, bwb_d  !! waterbal
             end if
             bwb_d%sw_init = bwb_d%sw_final
             bwb_d%sno_init = bwb_d%sno_final
+            end if
           end if 
           if (pco%nb_bsn%d == "y") then 
             write (2060,104) time%day, time%mo, time%day_mo, time%yrc, "        1", "       1", bsn%name, bnb_d  !! nutrient bal

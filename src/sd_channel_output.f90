@@ -5,6 +5,7 @@
       use time_module
       use hydrograph_module
       use water_body_module
+      use netcdf_output_module
       
       implicit none
       
@@ -30,6 +31,9 @@
 !!!!! daily print
        if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
         if (pco%sd_chan%d == "y") then
+          if (pco%cdfout == "y") then
+            call nc_stage_sd_channel(ichan, ch_wat_d(ichan), ch_stor(ichan), ch_in_d(ichan), ch_out_d(ichan), wtemp)
+          else
           write (2500,100) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name,       &
             ch_wat_d(ichan)%area_ha, ch_wat_d(ichan)%precip, ch_wat_d(ichan)%evap, ch_wat_d(ichan)%seep,        &                
             ch_stor(ichan), ch_in_d(ichan), ch_out_d(ichan), wtemp
@@ -38,6 +42,7 @@
                ch_wat_d(ichan)%area_ha, ch_wat_d(ichan)%precip, ch_wat_d(ichan)%evap, ch_wat_d(ichan)%seep,     &
                ch_stor(ichan), ch_in_d(ichan), ch_out_d(ichan), wtemp
            end if
+          end if
         end if
       end if
 
