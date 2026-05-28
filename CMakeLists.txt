@@ -12,6 +12,10 @@ cmake_host_system_information(RESULT os_id QUERY DISTRIB_ID)
 cmake_host_system_information(RESULT os_version QUERY DISTRIB_RELEASE)
 cmake_host_system_information(RESULT os_like QUERY DISTRIB_ID_LIKE)
 cmake_host_system_information(RESULT pretty_name QUERY DISTRIB_PRETTY_NAME)
+cmake_host_system_information(RESULT n QUERY NUMBER_OF_LOGICAL_CORES)
+
+# Inject a global compiler launcher prefix that forces the environment variable down to the build phase
+set(CMAKE_CROSSCOMPILING_EMULATOR "env" "CMAKE_BUILD_PARALLEL_LEVEL=${n}" CACHE INTERNAL "" FORCE)
 
 project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
@@ -160,6 +164,7 @@ install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION ${PROJECT_SOURCE
 find_package(Python3 QUIET)
 
 set(spcheck "${PROJECT_SOURCE_DIR}/test/spcheck.py")
+
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
 set(test_dir "${PROJECT_BINARY_DIR}/data")
 set(ref_dir  "${PROJECT_SOURCE_DIR}/data")
@@ -183,6 +188,7 @@ message( "-- Detected OS Like:     ${os_like}")
 message( "-- Detected Pretty Name: ${pretty_name}")
 message( "-- Build Type            ${CMAKE_BUILD_TYPE}")
 message( "-- Compiler              ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
+message( "-- Number of cores       ${n}")
 message( "-- FFLAGS                ${CMAKE_Fortran_FLAGS}")
 message( "--  RELEASE              ${CMAKE_Fortran_FLAGS_RELEASE}")
 message( "--  DEBUG                ${CMAKE_Fortran_FLAGS_DEBUG}")

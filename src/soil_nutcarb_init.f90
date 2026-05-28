@@ -39,7 +39,7 @@
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
       do ly = 1, nly
-        if (ly == 1) then
+       if (ly == 1) then
           soil1(ihru)%cbn(ly) = max(0.001, soil(ihru)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
         else
           soil1(ihru)%cbn(ly) = soil(ihru)%phys(ly)%cbn    
@@ -144,23 +144,23 @@
         
         if (bsn_cc%cswat == 1 ) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
-          if (org_frac%frac_seq < 1.0) then
-            org_frac%frac_not_seq = 1.0 - org_frac%frac_seq
-          else
-            org_frac%frac_not_seq = 1.e-6
+          if (org_frac%frac_litter < 1.e-6) then
+            org_frac%frac_litter = 1.e-6
           endif
-            
+          if (org_frac%frac_litter > 1.0) then
+            org_frac%frac_litter = 1.0
+          endif
 
           !!initialize passive humus pool
-          soil1(ihru)%hp(ly)%m = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%hp(ly)%c = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%hp(ly)%m = org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%hp(ly)%c = org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
           soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
           soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
               
           !!initialize slow humus pool original method.  This is the default method
           if (org_frac% mathers_method .eqv. .false.) then
-            soil1(ihru)%hs(ly)%m = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
-            soil1(ihru)%hs(ly)%c = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%hs(ly)%m = org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%hs(ly)%c = org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
             soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
             soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
           endif
@@ -169,13 +169,13 @@
           if (org_frac%mathers_method .eqv. .true.) then
             if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 0.35 ) then
               mathers_frac = (.41 + 0.0053 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0 
-              soil1(ihru)%hs(ly)%c = org_frac%frac_seq * mathers_frac * soil1(ihru)%tot(ly)%c
+              soil1(ihru)%hs(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c
               soil1(ihru)%hs(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
               soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
               soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
             else
               mathers_frac = (.069 + 0.015 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0
-              soil1(ihru)%hs(ly)%c = org_frac%frac_seq * mathers_frac * soil1(ihru)%tot(ly)%c  
+              soil1(ihru)%hs(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c  
               soil1(ihru)%hs(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
               soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
               soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
@@ -184,22 +184,22 @@
 
 
           !!initialize microbial pool
-          soil1(ihru)%microb(ly)%m = org_frac%frac_seq * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%microb(ly)%c = org_frac%frac_seq * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%microb(ly)%m = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%microb(ly)%c = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
           soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.            !assume 8:1 C:N ratio
           soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
             
           !! metabolic residue
           ! soil1(ihru)%meta(ly) = plt_mass_z
-          soil1(ihru)%meta(ly)%m = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%meta(ly)%c = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%c              
+          soil1(ihru)%meta(ly)%m = (1.0 + org_frac%frac_litter) * 0.85 * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%meta(ly)%c = (1.0 + org_frac%frac_litter) * 0.85 * soil1(ihru)%tot(ly)%c              
           soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
           soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
             
           ! structural residue
           ! soil1(ihru)%str(ly) = plt_mass_z
-          soil1(ihru)%str(ly)%m = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%str(ly)%c = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%c               
+          soil1(ihru)%str(ly)%m = (1.0 + org_frac%frac_litter) * 0.15 * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%str(ly)%c = (1.0 + org_frac%frac_litter) * 0.15 * soil1(ihru)%tot(ly)%c               
           soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
           soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
           
