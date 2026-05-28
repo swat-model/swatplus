@@ -6,6 +6,7 @@
       use calibration_data_module
       use hydrograph_module
       use output_landscape_module
+      use netcdf_output_module
       
       implicit none
       
@@ -69,33 +70,49 @@
           if (pco%wb_lsu%d == "y") then
             ruwb_d(ilsu)%sw = (ruwb_d(ilsu)%sw_init + ruwb_d(ilsu)%sw_final) / 2.
             ruwb_d(ilsu)%snopack = (ruwb_d(ilsu)%sno_init + ruwb_d(ilsu)%sno_final) / 2.
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_wb(ilsu, ruwb_d(ilsu))
+            else
             write (2140,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_d(ilsu)  !! waterbal
             if (pco%csvout == "y") then 
               write (2144,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_d(ilsu)  !! waterbal
             end if 
+            end if
             ruwb_d(ilsu)%sw_init = ruwb_d(ilsu)%sw_final
             ruwb_d(ilsu)%sno_init = ruwb_d(ilsu)%sno_final
           end if 
           if (pco%nb_lsu%d == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_nb(ilsu, runb_d(ilsu))
+            else
             write (2150,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_d(ilsu)  !! nutrient bal
             if (pco%csvout == "y") then 
               write (2154,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_d(ilsu)  !! nutrient bal
             end if 
+            end if
           end if
           if (pco%ls_lsu%d == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_ls(ilsu, ruls_d(ilsu))
+            else
             write (2160,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_d(ilsu)  !! losses
             if (pco%csvout == "y") then 
               write (2164,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_d(ilsu)  !! losses
             end if 
+            end if
           end if
           if (pco%pw_lsu%d == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_pw(ilsu, rupw_d(ilsu))
+            else
             write (2170,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_d(ilsu)  !! plant weather
             if (pco%csvout == "y") then 
               write (2175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_d(ilsu)  !! plant weather 
+            end if
             end if
           end if 
          end if
@@ -114,36 +131,52 @@
           if (pco%wb_lsu%m == "y") then
             ruwb_m(ilsu)%sw_final = ruwb_d(ilsu)%sw_final
             ruwb_m(ilsu)%sno_final = ruwb_d(ilsu)%sno_final
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_wb_mon(ilsu, ruwb_m(ilsu))
+            else
             write (2141,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_m(ilsu)
             if (pco%csvout == "y") then 
               write (2145,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_m(ilsu)
             end if
+            end if
             ruwb_m(ilsu)%sw_init = ruwb_m(ilsu)%sw_final
             ruwb_m(ilsu)%sno_init = ruwb_m(ilsu)%sno_final
           end if
           if (pco%nb_lsu%m == "y") then 
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_nb_mon(ilsu, runb_m(ilsu))
+            else
             write (2151,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_m(ilsu)
             if (pco%csvout == "y") then 
               write (2155,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_m(ilsu)
             end if 
+            end if
           end if
           if (pco%ls_lsu%m == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_ls_mon(ilsu, ruls_m(ilsu))
+            else
             write (2161,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_m(ilsu)
             if (pco%csvout == "y") then 
               write (2165,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_m(ilsu)
             end if 
+            end if
           end if
           if (pco%pw_lsu%m == "y") then
             rupw_m(ilsu)%nplnt = rupw_d(ilsu)%nplnt
             rupw_m(ilsu)%pplnt = rupw_d(ilsu)%pplnt
+            if (pco%cdfout == "y") then
+              call nc_stage_lsu_pw_mon(ilsu, rupw_m(ilsu))
+            else
             write (2171,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_m(ilsu)
             if (pco%csvout == "y") then 
               write (2175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_m(ilsu)
             end if 
+            end if
           end if
   
           sw_init = ruwb_m(ilsu)%sw_final
@@ -169,36 +202,52 @@
            if (pco%wb_lsu%y == "y") then
              ruwb_y(ilsu)%sw_final = ruwb_d(ilsu)%sw_final
              ruwb_y(ilsu)%sno_final = ruwb_d(ilsu)%sno_final
+             if (pco%cdfout == "y") then
+               call nc_stage_lsu_wb_yr(ilsu, ruwb_y(ilsu))
+             else
              write (2142,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_y(ilsu)
              if (pco%csvout == "y") then 
                write (2146,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_y(ilsu)
              end if
+             end if
              ruwb_y(ilsu)%sw_init = ruwb_y(ilsu)%sw_final
              ruwb_y(ilsu)%sno_init = ruwb_y(ilsu)%sno_final
            end if
            if (pco%nb_lsu%y == "y") then
+             if (pco%cdfout == "y") then
+               call nc_stage_lsu_nb_yr(ilsu, runb_y(ilsu))
+             else
              write (2152,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_y(ilsu)
              if (pco%csvout == "y") then 
                write (2156,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_y(ilsu)
              end if 
+             end if
            end if
            if (pco%ls_lsu%y == "y") then
+             if (pco%cdfout == "y") then
+               call nc_stage_lsu_ls_yr(ilsu, ruls_y(ilsu))
+             else
              write (2162,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_y(ilsu)
              if (pco%csvout == "y") then 
                write (2166,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_y(ilsu)
              end if 
+             end if
            end if
            if (pco%pw_lsu%y == "y") then
              rupw_y(ilsu)%nplnt = rupw_d(ilsu)%nplnt
              rupw_y(ilsu)%pplnt = rupw_d(ilsu)%pplnt
+             if (pco%cdfout == "y") then
+               call nc_stage_lsu_pw_yr(ilsu, rupw_y(ilsu))
+             else
              write (2172,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_y(ilsu)
              if (pco%csvout == "y") then 
                write (2176,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, &
                 ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_y(ilsu)
              end if 
+             end if
            end if
  
           !! zero yearly variables
@@ -223,33 +272,49 @@
         ruwb_a(ilsu)%sno_init = sno_init
         ruwb_a(ilsu)%sno_final = ruwb_d(ilsu)%sno_final
         
+        if (pco%cdfout == "y") then
+          call nc_stage_lsu_wb_aa(ilsu, ruwb_a(ilsu))
+        else
         write (2143,100) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_a(ilsu)
         if (pco%csvout == "y") then 
           write (2147,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruwb_a(ilsu)
         end if 
+        end if
       end if
       if (time%end_sim == 1 .and. pco%nb_lsu%a == "y") then
         runb_a(ilsu) = runb_a(ilsu) / time%yrs_prt
+        if (pco%cdfout == "y") then
+          call nc_stage_lsu_nb_aa(ilsu, runb_a(ilsu))
+        else
         write (2153,103) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_a(ilsu)
         if (pco%csvout == "y") then 
           write (2157,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, runb_a(ilsu)
         end if
+        end if
       end if
       if (time%end_sim == 1 .and. pco%ls_lsu%a == "y") then     
         ruls_a(ilsu) = ruls_a(ilsu) / time%yrs_prt
+        if (pco%cdfout == "y") then
+          call nc_stage_lsu_ls_aa(ilsu, ruls_a(ilsu))
+        else
         write (2163,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_a(ilsu)
         if (pco%csvout == "y") then 
           write (2167,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, ruls_a(ilsu)
         end if 
+        end if
       end if
       if (time%end_sim == 1 .and. pco%pw_lsu%a == "y") then    
         rupw_a(ilsu) = rupw_a(ilsu) / time%yrs_prt
         rupw_a(ilsu) = rupw_a(ilsu) // time%days_prt
         rupw_a(ilsu)%nplnt = rupw_d(ilsu)%nplnt
         rupw_a(ilsu)%pplnt = rupw_d(ilsu)%pplnt
+        if (pco%cdfout == "y") then
+          call nc_stage_lsu_pw_aa(ilsu, rupw_a(ilsu))
+        else
         write (2173,102) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_a(ilsu) 
         if (pco%csvout == "y") then 
           write (2177,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, lsu_out(ilsu)%name, rupw_a(ilsu)
+        end if
         end if
       end if
       end do    !ilsu

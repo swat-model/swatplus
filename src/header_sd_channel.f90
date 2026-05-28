@@ -4,12 +4,13 @@
       use basin_module
       use hydrograph_module
       use output_path_module
+      use output_filter_module
       
       implicit none 
 
 !!!  SWAT-DEG CHANNEL - SUBDAILY OUTPUT
       if (sp_ob%chandeg > 0) then
-        if (pco%sd_chan%d == "y") then
+        if (pco%sd_chan%d == "y" .and. output_filter_open_ch_sd_output()) then
           if (time%step > 1) then
 !!!!!!!! SD_CHANNEL
             call open_output_file(2508, "channel_sd_subday.txt", 1500)
@@ -54,7 +55,7 @@
       endif
       
         if (sp_ob%chandeg > 0) then
-          if (pco%sd_chan%m == "y") then  
+          if (pco%sd_chan%m == "y" .and. output_filter_open_ch_sd_output()) then  
           call open_output_file(2501, "channel_sd_mon.txt", 1500)
           write (2501,*) bsn%name, prog
           write (2501,*) ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
@@ -84,7 +85,7 @@
          end if 
         
       if (sp_ob%chandeg > 0) then
-        if (pco%sd_chan%y == "y") then
+        if (pco%sd_chan%y == "y" .and. output_filter_open_ch_sd_output()) then
           call open_output_file(2502, "channel_sd_yr.txt", 1500)
           write (2502,*) bsn%name, prog
           write (2502,*) ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr
@@ -114,7 +115,7 @@
       endif
       
         if (sp_ob%chandeg > 0) then
-          if (pco%sd_chan%a == "y") then
+          if (pco%sd_chan%a == "y" .and. output_filter_open_ch_sd_output()) then
           call open_output_file(2503, "channel_sd_aa.txt", 1500)
           write (2503,*) bsn%name, prog
           write (2503,*) ch_wbod_hdr, hyd_stor_hdr, hyd_in_hdr, hyd_out_hdr, wtmp_hdr

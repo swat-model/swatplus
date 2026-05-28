@@ -9,6 +9,7 @@
       use organic_mineral_mass_module
       use soil_module
       use carbon_module
+      use netcdf_output_module
       
       implicit none
       
@@ -30,6 +31,9 @@
              
       !! daily print
       if (pco%nb_hru%d == "y") then
+        if (pco%cdfout == "y") then
+          call nc_stage_hru_carbon(j, hsc_d(j), hrc_d(j), hpc_d(j), hscf_d(j))
+        else
         write (4520,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hsc_d(j)    !! soil carbon gain/loss
         write (4530,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hrc_d(j)    !! residue carbon gain/loss
         write (4540,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_d(j)    !! plant carbon gain/loss
@@ -42,6 +46,7 @@
           write (4554,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hscf_d(j)   !! soil transformations
 
         end if
+        end if
       end if
          
       !! check end of month
@@ -53,6 +58,9 @@
           
         !! monthly print
         if (pco%nb_hru%m == "y") then
+          if (pco%cdfout == "y") then
+            call nc_stage_hru_carbon_mon(j, hsc_m(j), hrc_m(j), hpc_m(j), hscf_m(j))
+          else
           write (4521,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hsc_m(j)    !! soil carbon gain/loss
           write (4531,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hrc_m(j)    !! residue carbon gain/loss
           write (4541,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_m(j)    !! plant carbon gain/loss
@@ -64,6 +72,7 @@
             write (4545,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_m(j)    !! plant carbon gain/loss
             write (4555,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hscf_m(j)   !! soil transformations
 
+          end if
           end if
         end if
         hsc_m(j) = hscz
@@ -81,6 +90,9 @@
         
         !! yearly print
         if (pco%nb_hru%y == "y") then
+          if (pco%cdfout == "y") then
+            call nc_stage_hru_carbon_yr(j, hsc_y(j), hrc_y(j), hpc_y(j), hscf_y(j))
+          else
           write (4522,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hsc_y(j)    !! soil carbon gain/loss
           write (4532,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hrc_y(j)    !! residue carbon gain/loss
           write (4542,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_y(j)    !! residue carbon gain/loss
@@ -92,6 +104,7 @@
           write (4546,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_y(j)    !! plant carbon gain/loss
           write (4556,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hscf_y(j)   !! soil transformations
 
+          end if
           end if
         end if
         hsc_y(j) = hscz
@@ -107,6 +120,9 @@
           hrc_a(j) = hrc_a(j) / time%yrs_prt 
           hpc_a(j) = hpc_a(j) / time%yrs_prt 
           hscf_a(j) = hscf_a(j) / time%yrs_prt
+          if (pco%cdfout == "y") then
+            call nc_stage_hru_carbon_aa(j, hsc_a(j), hrc_a(j), hpc_a(j), hscf_a(j))
+          else
           write (4523,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hsc_a(j)    !! soil carbon gain/loss
           write (4533,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hrc_a(j)    !! residue carbon gain/loss
           write (4543,*) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_a(j)    !! plant carbon gain/loss
@@ -118,6 +134,7 @@
             write (4547,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hpc_a(j)    !! plant carbon gain/loss
             write (4557,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, hscf_a(j)   !! soil transformations
 
+          end if
           end if
           hsc_a(j) = hscz
           hrc_a(j) = hrcz 
