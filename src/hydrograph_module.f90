@@ -722,6 +722,56 @@
         character (len=15) :: layer10 = "       st_mm_10"        !!mm H2O       |amt of water stored in layer 10
       end type sol_header
       type (sol_header) :: sol_hdr
+
+      type sol_nut_ly_header
+        character (len=15) :: no3     = "            no3"   !!kg N/ha      |nitrate
+        character (len=15) :: nh4     = "            nh4"   !!kg N/ha      |ammonium
+        character (len=15) :: hact_n  = "         hact_n"   !!kg N/ha      |active humus N
+        character (len=15) :: hsta_n  = "         hsta_n"   !!kg N/ha      |stable humus N
+        character (len=15) :: hs_n    = "           hs_n"   !!kg N/ha      |slow humus N
+        character (len=15) :: hp_n    = "           hp_n"   !!kg N/ha      |passive humus N
+        character (len=15) :: rsd_n   = "          rsd_n"   !!kg N/ha      |residue N
+        character (len=15) :: wsol_p  = "         wsol_p"   !!kg P/ha      |water soluble P
+        character (len=15) :: lab_p   = "          lab_p"   !!kg P/ha      |labile P
+        character (len=15) :: act_p   = "          act_p"   !!kg P/ha      |active mineral P
+        character (len=15) :: sta_p   = "          sta_p"   !!kg P/ha      |stable mineral P
+        character (len=15) :: hact_p  = "         hact_p"   !!kg P/ha      |active humus P
+        character (len=15) :: hsta_p  = "         hsta_p"   !!kg P/ha      |stable humus P
+        character (len=15) :: hs_p    = "           hs_p"   !!kg P/ha      |slow humus P
+        character (len=15) :: hp_p    = "           hp_p"   !!kg P/ha      |passive humus P
+        character (len=15) :: rsd_p   = "          rsd_p"   !!kg P/ha      |residue P
+      end type sol_nut_ly_header
+      type (sol_nut_ly_header) :: sol_nut_ly_hdr
+
+      type sol_nut_pr_header
+        character (len=15) :: no3     = "            no3"   !!kg N/ha      |profile nitrate
+        character (len=15) :: nh4     = "            nh4"   !!kg N/ha      |profile ammonium
+        character (len=15) :: wsol_p  = "         wsol_p"   !!kg P/ha      |profile water soluble P
+        character (len=15) :: lab_p   = "          lab_p"   !!kg P/ha      |profile labile P
+        character (len=15) :: act_p   = "          act_p"   !!kg P/ha      |profile active mineral P
+        character (len=15) :: sta_p   = "          sta_p"   !!kg P/ha      |profile stable mineral P
+        character (len=15) :: hact_m  = "         hact_m"   !!kg/ha        |profile active humus mass
+        character (len=15) :: hact_c  = "         hact_c"   !!kg C/ha      |profile active humus C
+        character (len=15) :: hact_n  = "         hact_n"   !!kg N/ha      |profile active humus N
+        character (len=15) :: hact_p  = "         hact_p"   !!kg P/ha      |profile active humus P
+        character (len=15) :: hsta_m  = "         hsta_m"   !!kg/ha        |profile stable humus mass
+        character (len=15) :: hsta_c  = "         hsta_c"   !!kg C/ha      |profile stable humus C
+        character (len=15) :: hsta_n  = "         hsta_n"   !!kg N/ha      |profile stable humus N
+        character (len=15) :: hsta_p  = "         hsta_p"   !!kg P/ha      |profile stable humus P
+        character (len=15) :: hs_m    = "           hs_m"   !!kg/ha        |profile slow humus mass
+        character (len=15) :: hs_c    = "           hs_c"   !!kg C/ha      |profile slow humus C
+        character (len=15) :: hs_n    = "           hs_n"   !!kg N/ha      |profile slow humus N
+        character (len=15) :: hs_p    = "           hs_p"   !!kg P/ha      |profile slow humus P
+        character (len=15) :: hp_m    = "           hp_m"   !!kg/ha        |profile passive humus mass
+        character (len=15) :: hp_c    = "           hp_c"   !!kg C/ha      |profile passive humus C
+        character (len=15) :: hp_n    = "           hp_n"   !!kg N/ha      |profile passive humus N
+        character (len=15) :: hp_p    = "           hp_p"   !!kg P/ha      |profile passive humus P
+        character (len=15) :: rsd_m   = "          rsd_m"   !!kg/ha        |profile residue mass
+        character (len=15) :: rsd_c   = "          rsd_c"   !!kg C/ha      |profile residue C
+        character (len=15) :: rsd_n   = "          rsd_n"   !!kg N/ha      |profile residue N
+        character (len=15) :: rsd_p   = "          rsd_p"   !!kg P/ha      |profile residue P
+      end type sol_nut_pr_header
+      type (sol_nut_pr_header) :: sol_nut_pr_hdr
       
       type plant_header        
         character (len=17) :: name =  "     name        "       !!none         |plant name 
