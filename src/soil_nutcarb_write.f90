@@ -180,11 +180,11 @@
             if (bsn_cc%cswat == 0) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
             endif
-            if(bsn_cc%cswat == 1 ) then
+            if(bsn_cc%cswat == 2 ) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + soil1(j)%tot(ly)%c * frac_above_300 
             endif
           end do
-          !! compute cswat==0 totals if needed (cswat==1 already has soil1%tot and soil1%seq populated)
+          !! compute cswat==0 totals if needed (cswat==2 already has soil1%tot and soil1%seq populated)
           if (bsn_cc%cswat == 0 ) then
             do ly = 1, soil(j)%nly
               soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
@@ -207,7 +207,7 @@
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
               soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             endif
-            if(bsn_cc%cswat == 1 ) then
+            if(bsn_cc%cswat == 2 ) then
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300
             endif
           end do
@@ -221,7 +221,7 @@
           !! per-family gating happens inside each emit subroutine (no more cbn_diagnostics wrap).
           call cb_plc_stat_emit(out_freq, j, iob)
           call cb_soil_snap_period(out_freq, j, iob)
-          if (bsn_cc%cswat == 1) then
+          if (bsn_cc%cswat == 2) then
             call cb_cflux_stat_emit(out_freq, j, iob)
             call cb_cpool_stat_emit(out_freq, j, iob)
           endif

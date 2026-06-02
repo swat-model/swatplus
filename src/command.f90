@@ -532,7 +532,7 @@
               pco%cb_plt_hru%a == "y" .or. pco%cb_flux_hru%a == "y" .or. pco%cb_snap_hru%a == "y")) &
             call soil_nutcarb_write(" a")
 
-          if (bsn_cc%cswat == 1) then
+          if (bsn_cc%cswat == 2) then
             if (pco%cb_drv_hru%d == "y" .or. pco%cb_dyn_hru%d == "y") call soil_carbvar_write(" d")
             if (time%end_mo == 1 .and. (pco%cb_drv_hru%m == "y" .or. pco%cb_dyn_hru%m == "y")) call soil_carbvar_write(" m")
             if (time%end_yr == 1 .and. (pco%cb_drv_hru%y == "y" .or. pco%cb_dyn_hru%y == "y")) call soil_carbvar_write(" y")
@@ -549,7 +549,7 @@
           if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write_legacy("yl")
 
           !! legacy CSU carbon variable outputs, gated by the hru_cb_vars row in print.prt
-          if (bsn_cc%cswat == 1) then
+          if (bsn_cc%cswat == 2) then
             if (pco%cb_vars_hru%d == "y") call soil_carbvar_write_legacy(" d")
             if (pco%cb_vars_hru%d == "l") call soil_carbvar_write_legacy("dl")
             if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write_legacy(" m")

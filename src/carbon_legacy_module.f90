@@ -532,7 +532,7 @@
             end if
 
 
-            if (bsn_cc%cswat == 1 ) then
+            if (bsn_cc%cswat == 2 ) then
               ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
               call soil_nutcarb_write_legacy(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
 
@@ -583,7 +583,7 @@
         endif
 
         !! write carbon variables headers to hru_carbvars
-        if (bsn_cc%cswat == 1 ) then
+        if (bsn_cc%cswat == 2 ) then
           if (pco%cb_vars_hru%d /= "n" .or. pco%cb_vars_hru%m /= "n"  .or. pco%cb_vars_hru%y /= "n" ) then
             call open_output_file(8374, "hru_carbvars.txt", 1500)
             write (8374,*)  bsn%name, prog

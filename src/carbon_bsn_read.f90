@@ -15,7 +15,7 @@
       !!   org_allo(:), so future expansion past dimension(2) needs no
       !!   change to this reader.
       !!
-      !! both files are required when bsn_cc%cswat == 1; the routine
+      !! both files are required when bsn_cc%cswat == 2; the routine
       !! aborts via error stop if either is missing or malformed.
       !! no-op when carbon is off.
 
@@ -40,14 +40,14 @@
       real                :: r_meta_rate, r_str_rate, r_microb_top_rate, r_hs_hp
       real                :: r_a1co2, r_asco2, r_apco2, r_abco2
 
-      if (bsn_cc%cswat /= 1) return
+      if (bsn_cc%cswat /= 2) return
 
       !! carbon.bsn (scalars)
 
       inquire (file=in_basin%carbon_bsn, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 1)"
-        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 2)"
+        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 2)"
         error stop
       end if
 
@@ -99,8 +99,8 @@
 
       inquire (file=carbon_lyr, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
-        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 2)"
+        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 2)"
         error stop
       end if
 
