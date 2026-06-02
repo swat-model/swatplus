@@ -34,6 +34,8 @@
       integer             :: layer_id  = 0
       integer             :: max_lyr   = 0
       integer             :: rows_read = 0
+      character (len=32)  :: carbon_lyr = ""   ! per-layer file, derived from carbon.bsn
+      integer             :: idot = 0
       real                :: r_hp_rate, r_hs_rate, r_microb_rate
       real                :: r_meta_rate, r_str_rate, r_microb_top_rate, r_hs_hp
       real                :: r_a1co2, r_asco2, r_apco2, r_abco2
@@ -85,18 +87,27 @@
 
       !! carbon_lyr.bsn (per-layer table)
 
-      !! carbon_lyr.bsn travels with carbon.bsn; not separately listed in file.cio
-      inquire (file='carbon_lyr.bsn', exist=i_exist)
+      !! the per-layer file name is built from carbon.bsn so it tracks any rename in
+      !! file.cio: carbon.bsn -> carbon_lyr.bsn, foo.bsn -> foo_lyr.bsn. it travels
+      !! with carbon.bsn and is not separately listed in file.cio.
+      idot = index(trim(in_basin%carbon_bsn), ".", back=.true.)
+      if (idot > 1) then
+        carbon_lyr = in_basin%carbon_bsn(1:idot-1) // "_lyr" // trim(in_basin%carbon_bsn(idot:))
+      else
+        carbon_lyr = trim(in_basin%carbon_bsn) // "_lyr.bsn"
+      end if
+
+      inquire (file=carbon_lyr, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: carbon_lyr.bsn is required when carbon is enabled (codes.bsn carbon = 1)"
-        write (9001,*) "ERROR: carbon_lyr.bsn is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
         error stop
       end if
 
-      open (107, file='carbon_lyr.bsn', iostat=eof)
+      open (107, file=carbon_lyr, iostat=eof)
       if (eof /= 0) then
-        write (*,*) "ERROR: carbon_lyr.bsn could not be opened"
-        write (9001,*) "ERROR: carbon_lyr.bsn could not be opened"
+        write (*,*) "ERROR: ", trim(carbon_lyr), " could not be opened"
+        write (9001,*) "ERROR: ", trim(carbon_lyr), " could not be opened"
         error stop
       end if
 
@@ -116,7 +127,7 @@
         if (eof /= 0) exit
 
         if (layer_id < 1 .or. layer_id > max_lyr) then
-          write (9001,*) "carbon_lyr.bsn: layer id ", layer_id,    &
+          write (9001,*) trim(carbon_lyr), ": layer id ", layer_id,    &
                          " is out of range (1 to ", max_lyr, "); row ignored"
           cycle
         end if
@@ -138,9 +149,9 @@
       end do
 
       if (rows_read < max_lyr) then
-        write (*,*) "ERROR: carbon_lyr.bsn provided ", rows_read,  &
+        write (*,*) "ERROR: ", trim(carbon_lyr), " provided ", rows_read,  &
                     " row(s); expected ", max_lyr
-        write (9001,*) "ERROR: carbon_lyr.bsn provided ", rows_read,  &
+        write (9001,*) "ERROR: ", trim(carbon_lyr), " provided ", rows_read,  &
                        " row(s); expected ", max_lyr
         close (107)
         error stop

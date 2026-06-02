@@ -12,9 +12,10 @@
       use carbon_module
       use output_path_module
       use soil_module
-      
-      implicit none 
-      
+      use carbon_legacy_module, only: carbon_legacy_open
+
+      implicit none
+
       external :: soil_nutcarb_write
 
       integer :: jhru
@@ -417,8 +418,12 @@
           if (pco%cb_dyn_hru%a == "y") call open_cb_wide_pair(4593, 4597, "hru_carb_dyn_aa.txt",  "hru_carb_dyn_aa.csv",  carb_dyn_vars)
         end if
 
+        !! legacy CSU carbon files (hru_cb / hru_cb_vars rows in print.prt).
+        !! opens the old fixed-column files and writes the begsim soil snapshot.
+        !! will be removed in revision 63.
+        call carbon_legacy_open
 
-        
+
 !! basin_carbon_all.txt removed: yearly-only basin sum reconstructable from HRU-level files
         
 !!!  HRU - Losses

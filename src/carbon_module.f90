@@ -2,7 +2,12 @@
       
       implicit none
 
-      !! cbn_diagnostics retired - per-family output gating now lives in print.prt (hru_cb_* rows).
+      !! per-family output gating for the standard carbon files lives in print.prt (hru_cb_* rows).
+      !! cbn_diagnostics only drives the legacy CSU output path (hru_cb / hru_cb_vars rows). it is
+      !! set in carbon_legacy_open from the cb_hru flag at startup, so no input file is needed for
+      !! it. the .false. here is only the pre-run default; it is assigned its real value before any
+      !! writer runs, so it does not disable legacy diagnostics. will be removed in revision 63.
+      logical :: cbn_diagnostics = .false.   !! turns on the legacy plc/cflux/cpool and soil-prop files
 
       !! basin-wide residue decomposition tunables (read from carbon.bsn)
       real :: n_act_frac = 0.02    !! frac    |fraction of organic N in the active humus pool (used in nut_nminrl active to stable flow)

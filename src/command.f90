@@ -43,7 +43,7 @@
                   basin_channel_output, basin_ls_pest_output, basin_output, basin_recall_output, &
                   basin_res_pest_output, basin_reservoir_output, basin_sdchannel_output, cs_balance, &
                   lsu_output, lsu_carbon_output, salt_balance, hyddep_output, recall_salt, recall_cs, soil_nutcarb_write, &
-                  soil_carbvar_write
+                  soil_carbvar_write, soil_nutcarb_write_legacy, soil_carbvar_write_legacy
 
       real, dimension(time%step) :: hyd_flo     !flow hydrograph
       integer :: in = 0               !              | 
@@ -538,8 +538,27 @@
             if (time%end_yr == 1 .and. (pco%cb_drv_hru%y == "y" .or. pco%cb_dyn_hru%y == "y")) call soil_carbvar_write(" y")
             if (time%end_sim == 1 .and. (pco%cb_drv_hru%a == "y" .or. pco%cb_dyn_hru%a == "y")) call soil_carbvar_write(" a")
           endif
-        
-        end do      ! hru loop  
+
+          !! legacy CSU carbon outputs, gated by the hru_cb row in print.prt
+          !! will be removed in revision 63.
+          if (pco%cb_hru%d == "y") call soil_nutcarb_write_legacy(" d")
+          if (pco%cb_hru%d == "l") call soil_nutcarb_write_legacy("dl")
+          if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write_legacy(" m")
+          if (pco%cb_hru%m == "l" .and. time%end_mo == 1) call soil_nutcarb_write_legacy("ml")
+          if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write_legacy(" y")
+          if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write_legacy("yl")
+
+          !! legacy CSU carbon variable outputs, gated by the hru_cb_vars row in print.prt
+          if (bsn_cc%cswat == 1) then
+            if (pco%cb_vars_hru%d == "y") call soil_carbvar_write_legacy(" d")
+            if (pco%cb_vars_hru%d == "l") call soil_carbvar_write_legacy("dl")
+            if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write_legacy(" m")
+            if (pco%cb_vars_hru%m == "l" .and. time%end_mo == 1) call soil_carbvar_write_legacy("ml")
+            if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write_legacy(" y")
+            if (pco%cb_vars_hru%y == "l" .and. time%end_yr == 1) call soil_carbvar_write_legacy("yl")
+          endif
+
+        end do      ! hru loop
         
         do iaq = 1, sp_ob%aqu
           call aquifer_output (iaq)
