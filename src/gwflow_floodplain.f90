@@ -40,8 +40,8 @@
       !record starting channel volume (m3)
       chan_volume = ch_stor(chan_id)%flo
 
-      !only proceed if floodplain option is activated
-      if(gw_fp_flag == 1) then
+      !only proceed if floodplain option is activated and connection info is loaded
+      if(gw_fp_flag == 1 .and. allocated(gw_fpln_info)) then
 
         !loop through the cells connected to the current channel
         do k=1,gw_fpln_info(chan_id)%ncon

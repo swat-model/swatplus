@@ -52,8 +52,14 @@
       !only proceed if the recharge pond flag has been activated ----------------------------------------------------------------
       if (gw_pond_flag == 1) then
 
-			  !read the diverted volumes (m3) for the current day -----------------------------------------------------------
-			  read(in_ponds,*) year,month,day,(gw_pond_info(r)%div,r=1,gw_npond)
+			  !read the diverted volumes (m3) for the current day (from pond_div.gw, if provided) ----------------------------
+			  if (gw_pond_div_flag == 1) then
+				  read(in_ponds,*) year,month,day,(gw_pond_info(r)%div,r=1,gw_npond)
+			  else
+				  do r=1,gw_npond
+					  gw_pond_info(r)%div = 0.
+				  enddo
+			  endif
 
         !loop through the recharge ponds ------------------------------------------------------------------------------
 			  do r=1,gw_npond
