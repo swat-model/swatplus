@@ -73,7 +73,7 @@
 
       icmd = sp_ob1%objs
       wallo(:)%trn_cur = 1
-      res_ob(:)%wallo_call = 0
+      if (allocated(res_ob)) res_ob(:)%wallo_call = 0
       
       do while (icmd /= 0)
           
@@ -517,19 +517,23 @@
             end do
           end if
                          
-        if (pco%cb_hru%d == "y") call soil_nutcarb_write(" d")
-        if (pco%cb_hru%d == "l") call soil_nutcarb_write("dl")
-        if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write(" m")
-        if (pco%cb_hru%m == "l" .and. time%end_mo == 1) call soil_nutcarb_write("ml")
-        if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write(" y") 
-        if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write("yl") 
-        ! if (pco%cb_hru%a == "y" .and. time%end_yr == 1) call soil_nutcarb_write("a")
-        if (pco%cb_vars_hru%d == "y") call soil_carbvar_write("d")
-        if (pco%cb_vars_hru%d == "l") call soil_carbvar_write("dl")
-        if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write("m")
-        if (pco%cb_vars_hru%m == "l" .and. time%end_mo == 1) call soil_carbvar_write("ml")
-        if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write("y")
-        if (pco%cb_vars_hru%y == "l" .and. time%end_yr == 1) call soil_carbvar_write("yl")
+          ! Call soil_nutcarb_write for specified output for hru_cb in print.prt
+          if (pco%cb_hru%d == "y") call soil_nutcarb_write(" d")
+          if (pco%cb_hru%d == "l") call soil_nutcarb_write("dl")
+          if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write(" m")
+          if (pco%cb_hru%m == "l" .and. time%end_mo == 1) call soil_nutcarb_write("ml")
+          if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write(" y") 
+          if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write("yl") 
+
+          ! Call soil_carbvar_write for specified output for hru_cb_vars in print.prt
+          if (bsn_cc%cswat == 1) then
+            if (pco%cb_vars_hru%d == "y") call soil_carbvar_write(" d")
+            if (pco%cb_vars_hru%d == "l") call soil_carbvar_write("dl")
+            if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write(" m")
+            if (pco%cb_vars_hru%m == "l" .and. time%end_mo == 1) call soil_carbvar_write("ml")
+            if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write(" y")
+            if (pco%cb_vars_hru%y == "l" .and. time%end_yr == 1) call soil_carbvar_write("yl")
+          endif
         
         end do      ! hru loop  
         

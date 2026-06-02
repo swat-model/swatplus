@@ -48,7 +48,7 @@
                          (acsb_d(iaq)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                          (acsb_d(iaq)%cs(ics)%srbd,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6061,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
+          write (6061,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
                                                                            (acsb_d(iaq)%cs(ics)%csgw,ics=1,cs_db%num_cs), &
                                        (acsb_d(iaq)%cs(ics)%rchrg,ics=1,cs_db%num_cs), &
                                        (acsb_d(iaq)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -97,7 +97,7 @@
                            (acsb_m(iaq)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                            (acsb_m(iaq)%cs(ics)%srbd,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6063,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
+            write (6063,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
                                          (acsb_m(iaq)%cs(ics)%csgw,ics=1,cs_db%num_cs), &
                                          (acsb_m(iaq)%cs(ics)%rchrg,ics=1,cs_db%num_cs), &
                                          (acsb_m(iaq)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -159,7 +159,7 @@
                            (acsb_y(iaq)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                            (acsb_y(iaq)%cs(ics)%srbd,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6065,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
+            write (6065,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
                                          (acsb_y(iaq)%cs(ics)%csgw,ics=1,cs_db%num_cs), &
                                          (acsb_y(iaq)%cs(ics)%rchrg,ics=1,cs_db%num_cs), &
                                          (acsb_y(iaq)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -214,7 +214,7 @@
                         (acsb_a(iaq)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                         (acsb_a(iaq)%cs(ics)%srbd,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6067,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
+          write (6067,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, & 
                                         (acsb_a(iaq)%cs(ics)%csgw,ics=1,cs_db%num_cs), &
                                         (acsb_a(iaq)%cs(ics)%rchrg,ics=1,cs_db%num_cs), &
                                         (acsb_a(iaq)%cs(ics)%seep,ics=1,cs_db%num_cs), &

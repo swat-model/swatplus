@@ -152,6 +152,7 @@
         integer :: om_use = 0
         integer :: out_src = 0
         integer :: out_rcv = 0
+        integer :: manure_om = 0     !! none     |number of manure organic matter types in manure_om.frt
       end type data_files_max_elements
       type (data_files_max_elements), save :: db_mx
                                  

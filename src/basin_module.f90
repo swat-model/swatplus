@@ -66,10 +66,10 @@
         integer :: qual2e = 0    !! 0 = instream nutrient routing using QUAL2E 
                                  !! 1 = instream nutrient routing using QUAL2E - with simplified nutrient transformations
         integer :: gwflow = 0    !!   0 = gwflow module not active; 1 = gwflow module active
-        integer :: idc_till = 3  !! 1 = Use dssat tillage method to use if cswat = 2 
-                                 !! 2 = Use epic tillage method to use if cswat = 2
-                                 !! 3 = Use Kemanian tillage method to use if cswat = 2
-                                 !! 4 = Use dndc tillage method to use if cswat = 2
+        integer :: idc_till = 3  !! 1 = Use dssat tillage method to use if cswat = 1 
+                                 !! 2 = Use epic tillage method to use if cswat = 1
+                                 !! 3 = Use Kemanian tillage method to use if cswat = 1
+                                 !! 4 = Use dndc tillage method to use if cswat = 1
 
       end type basin_control_codes
       type (basin_control_codes) :: bsn_cc

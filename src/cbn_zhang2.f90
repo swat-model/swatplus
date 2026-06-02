@@ -21,7 +21,7 @@
         !!==============================================
         !! local variables
        !rnmn
-       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85�0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
+       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85 * 0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
        !abl     : carbon allocation from biomass to leaching; abl = (1-exp(-f/(0.01* sw+ 0.1*(kdbm)*db)) (williams, 1995)
        !abp     : allocation from biomass to passive humus; 0 (surface litter), 0.003 + 0.032*claf (all other layers) (parton et al., 1993, 1994)
        !almco2  : allocation from metabolic litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
@@ -62,12 +62,17 @@
        !lmctp   : potential transformation of c in metabolic litter (kg ha-1 day-1)
        !lmntp   : potential transformation of n in metabolic litter (kg ha-1 day-1)
        !lsctp   : potential transformation of c in structural litter (kg ha-1 day-1)
+       !lmcta   : actual transformation of c in metabolic litter (kg ha-1 day-1)
+       !lmnta   : actual transformation of n in metabolic litter (kg ha-1 day-1)
+       !lscta   : actual transformation of c in structural litter (kg ha-1 day-1)
        !lsf     : fraction of the litter that is structural
        !lslf    : fraction of structural litter that is lignin (kg kg-1)
        !lsnf    : fraction of structural litter that is n (kg kg-1)
        !lslctp  : potential transformation of c in lignin of structural litter (kg ha-1 day-1)
        !lslnctp : potential transformation of c in nonlignin structural litter (kg ha-1 day-1)  
-       !lsntp   : potential transformation of n in structural litter (kg ha-1 day-1)
+       !lslcta  : actual transformation of c in lignin of structural litter (kg ha-1 day-1)
+       !lslncta : actual transformation of c in nonlignin structural litter (kg ha-1 day-1)  
+       !lsntp   : actual transformation of n in structural litter (kg ha-1 day-1)
        !lsr     : rate of potential transformation of structural litter under optimal conditions
                 !(surface = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
        !ncbm    : n/c ratio of biomass
@@ -102,7 +107,6 @@
        integer :: kk = 0         !                     |
        real :: lmnta = 0      !                     |      
        real :: min_n_ppm = 0  !                     |
-       real :: lslncat = 0    !                     |
        real :: min_n = 0      !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
@@ -112,6 +116,7 @@
        real :: wc = 0.           !none                 |scaling factor for soil water impact on daily
        real :: sat = 0.          !                     |
        real :: void = 0.         !                     |
+       real :: stemp = 0.        !celsius              |soil layer temperature
        real :: x3 = 0.           !none                 |amount of c transformed from passive, slow, metabolic, and non-lignin structural pools to microbial pool
        real :: lscta = 0.        !                     |
        real :: lslcta = 0.       !                     |
@@ -181,6 +186,11 @@
        real :: rto = 0.          !none                 |cloud cover factor
        real :: rspc = 0.         !                     |
        real :: xx = 0.           !varies    |variable to hold calculation results
+       real :: xx1 = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: xx2 = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: w1  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: w2  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
+       real :: svoid = 0.        !                     | the amount voids in soil layer after accounting for water content.
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -269,7 +279,15 @@
       do k = 1, soil(j)%nly
 
         ! Initialize org_con, org_ratio, org_flux, org_tran values to zero
-        org_con = org_con_zero
+        org_con%sut = 0.           !                 |soil water control on biological processes
+        org_con%cdg = 0.           !                 |soil temperature control on biological processes
+        org_con%cs  = 0.           !                 |combined factor controlling biological processes
+        org_con%ox  = 0.           !                 |oxygen control on biological processes 
+        org_con%x1  = 0.           !                 |tillage control on residue decomposition
+        org_con%no3 = 0.           !                 |no3 as adjusted in cbn_zhang2
+        org_con%nh4 = 0.           !                 |nh4 as adjusted in cbn_zhang2
+        org_con%resp = 0.          !                 !co2 resperation
+        org_con%till_eff = 0.      !                 !tillage factor.
         soil1(j)%org_con_lr(k) = org_con    
         
         org_ratio = org_ratio_zero
@@ -299,23 +317,45 @@
         org_allo(cf_lyr)%asp = 0.
         soil1(j)%org_allo_lr(k) = org_allo(cf_lyr)   
 
-      
+        stemp = soil(j)%phys(k)%tmp  
         !! mineralization can occur only if temp above 0 deg
         !check sol_st soil water content in each soil ayer mm h2o
-        if (soil(j)%phys(k)%tmp > 0. .and. soil(j)%phys(k)%st > 0.) then
+        if (stemp > 0. .and. soil(j)%phys(k)%st > 0.) then
           !!compute soil water factor - sut
           fc = soil(j)%phys(k)%fc + soil(j)%phys(k)%wpmm        ! units mm
           wc = soil(j)%phys(k)%st + soil(j)%phys(k)%wpmm        ! units mm
           !sat = soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm       ! units mm
           ! void = soil(j)%phys(k)%por * (1. - wc / sat)          ! fraction
 
-          if (wc - soil(j)%phys(k)%wpmm < 0.) then
-            org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
-          else
-            org_con%sut = .1 + .9 * sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
-          end if             
-          org_con%sut = min(1., org_con%sut)
-          org_con%sut = max(.05, org_con%sut)
+          if (org_con%watf == 1) then
+            if (wc - soil(j)%phys(k)%wpmm < 0.) then
+              org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
+            else
+              org_con%sut = .1 + .9 * sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
+            end if             
+            org_con%sut = min(1., org_con%sut)
+            org_con%sut = max(.05, org_con%sut)
+          endif
+
+          if (org_con%watf == 2) then
+            svoid = soil(j)%phys(k)%por * (1.0 - (wc / (soil(j)%phys(k)%ul + soil(j)%phys(k)%wpmm)))
+            if (wc <= soil(j)%phys(k)%wpmm) then
+              xx1 = 0.4 * (wc / soil(j)%phys(k)%wpmm) 
+            elseif (wc <= fc) then
+              xx1 = 0.4 + 0.6 * ((wc - soil(j)%phys(k)%wpmm)/(fc - soil(j)%phys(k)%wpmm))
+            else 
+              xx1 = 1.0
+            endif
+            if (svoid >= 0.1) then
+              xx2 = 0.2 + 0.8 * ((svoid - 0.1)/(soil(j)%phys(k)%por - .1))
+            else
+              xx2 = 0.2 * (svoid/0.1)
+            endif
+            w1 = (1.0 + 4.0 * (1.0 - xx1)) * xx1**4
+            w2 = 0.5 + 0.5 * (xx2/(xx2 + exp(-20 * xx2)))
+            org_con%sut = w1 * w2
+          endif
+
  
           !compute tillage factor (till_eff) from armen
           org_con%till_eff = 1.0
@@ -342,30 +382,9 @@
               ! place holder for epic method to compute till_eff
 
             case(3)
-              if (tillage_switch(j) .eq. 1 .and. tillage_days(j) .le. till_eff_days) then
-                ! Kemanian method    ----having modi
-                org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
-              else
-                ! Changed by fg to always have some bio mixing
-                if (soil(j)%phys(k)%d <= bmix_depth) then            
-                  ! org_con%till_eff = 1.0 + hru(j)%hyd%biomix
-                  org_con%till_eff = 1.0 + soil(j)%ly(k)%tillagef
-                else
-
-                  if (k == 1) then
-                    soil_lyr_thickness = soil(j)%phys(k)%d - 0.
-                  else
-                    soil_lyr_thickness = soil(j)%phys(k)%d - soil(j)%phys(k-1)%d
-                  end if
-
-                  if (soil(j)%phys(k)%d > bmix_depth .and. soil(j)%phys(k-1)%d < bmix_depth) then 
-                    org_con%till_eff = 1.0 + (soil(j)%ly(k)%tillagef * (bmix_depth - soil(j)%phys(k-1)%d) / soil_lyr_thickness)  
-                  else
-                    org_con%till_eff = 1.0
-                  end if
-                  
-                end if
-              endif
+              ! This case uses the tillagf factor developed by Armen 16 January 2008 and is determined 
+              ! in the subroutine mgt_tillagef subroutine prior to running this subroutine.
+              org_con%till_eff = 1. + soil(j)%ly(k)%tillagef 
 
             case(4)
               ! place holder for dndc method
@@ -373,15 +392,30 @@
           end select
 
           !!compute soil temperature factor - when sol_tep is larger than 35, cdg is negative?
-          ! org_con%cdg = soil(j)%phys(k)%tmp / (soil(j)%phys(k)%tmp + exp(5.058459 - 0.2503591 * soil(j)%phys(k)%tmp))
-          org_con%cdg = fcgd(soil(j)%phys(k)%tmp)
+          if (org_con%tmpf == 1) then
+            if(stemp <= 35.) then
+              org_con%cdg = stemp /(stemp + exp(5.058 - .2504*stemp))
+            elseif (soil(j)%phys(k)%tmp <= 60.) then
+              org_con%cdg = 1.0 - 0.04*(stemp - 35.)
+            else
+              org_con%cdg = 0.0
+            endif
+          endif
+
+          if (org_con%tmpf == 2) then
+            org_con%cdg = fcgd(stemp)
+          endif
+
+          if (org_con%tmpf == 3) then
+            org_con%cdg = 0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1
+          endif
 
           !!compute oxygen (ox)
           org_con%ox = 1. - 0.8 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2) / (((soil(j)%phys(kk)%d + &
              soil(j)%phys(kk-1)%d) / 2) + exp(18.40961 - 0.023683632 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2))) 
           
           !! compute combined factor
-          org_con%cs = min(10., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * org_con%till_eff) 
+          org_con%cs = min(15., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * org_con%till_eff) 
           
           !! call denitrification (to use void and cdg factor)
           !wdn = 0.
@@ -483,6 +517,7 @@
         !     potential transformations metabolic litter
               org_con%x1 = carbdb(cf_lyr)%meta_rate * org_con%cs
               org_tran%lmctp = soil1(j)%meta(k)%c * org_con%x1
+              if (org_tran%lmctp <= 1.e-6) org_tran%lmctp = 0.
               org_tran%lmntp = soil1(j)%meta(k)%n * org_con%x1
               
         !     potential transformations microbial biomass
@@ -586,7 +621,8 @@
                   lscta = org_tran%lsctp
                   lsnta = org_tran%lsntp
                   lslcta = org_tran%lslctp
-                  lslncat = org_tran%lslnctp
+                  !lslncat = org_tran%lslnctp   
+                  lslncta = org_tran%lslnctp   
               end if
               if (cpn2>0.) then
                   lmcta = org_tran%lmctp * reduc
@@ -715,7 +751,7 @@
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
               org_flux%co2fstr = .3 * lslcta
-              org_flux%co2fstr = org_allo(cf_lyr)%a1co2 * lslncta
+              org_flux%co2fstr = org_flux%co2fstr + org_allo(cf_lyr)%a1co2 * lslncta
               
               org_flux%cfstrs1 = a1 * lslncta
               org_flux%cfstrs2 = .7 * lslcta
@@ -875,11 +911,15 @@
               
               !!update c and n of different som pools
               !!=========================================
-              soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)
+              !soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)   ! instead of this, should be the sum lignon and non lignin c
               soil1(j)%lig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslcta)
-              soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              ! soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslncta)
+              soil1(j)%str(k)%c = soil1(j)%nonlig(k)%c +  soil1(j)%lig(k)%c
                             
               soil1(j)%lig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslcta / .42)
+              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslncta / .42)
+          
               soil1(j)%str(k)%m = max(1.e-10, soil1(j)%str(k)%m - lscta / .42)
               
               if (soil1(j)%meta(k)%m > 0.) then

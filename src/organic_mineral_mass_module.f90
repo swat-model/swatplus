@@ -29,6 +29,7 @@
         type (organic_mass) :: microb    !       |microbial biomass
         type (organic_mass) :: str       !       |structural litter pool
         type (organic_mass) :: lig       !       |lignin pool
+        type (organic_mass) :: nonlig    !       |non lignin pool
         type (organic_mass) :: meta      !       |metabolic litter pool
         type (organic_mass) :: man       !       |manure pool
         type (organic_mass) :: water     !       |water soluble
@@ -86,6 +87,7 @@
         type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
         real :: seq_tot_300_c                                       !       |total sequestered equal to or above 300mm soil depth
         real :: tot_300_c                                           !       |total carbon equal to or above 300mm soil depth
+        real, dimension(:), allocatable :: emix                      !       |the fraction of mixing that occurs from tillage or biomixing in each soil layer
         type (plant_residue), dimension(:), allocatable :: pl       !       |fresh surface residue dimensioned by plant and by layer
         type (organic_mass), dimension(:), allocatable :: rsd_tot   !       |total fresh surface residue dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: root_tot   !       |total live roots dimensioned by layer
@@ -107,6 +109,7 @@
         type (organic_mass), dimension(:), allocatable :: microb    !       |microbial biomass
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: lig       !       |lignin pool dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: nonlig    !       |non lignin pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: man       !       |manure pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: water     !       |water soluble
@@ -130,10 +133,11 @@
       type (organic_mass) :: soil_prof_seq_microb                   !       |sequestered microbial pool for profile summed up by layer excluding layer 1
       type (organic_mass) :: soil_prof_str                          !       |total structural pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_lig                          !       |total lignin pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_nonlig                       !       |total nonlignin pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_sstr                         !       |total structural pool for surface (summed by lower layers)
       type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for surface (summed by lower layers)
-      type (organic_mass) :: soil_prof_smeta                         !       |total metabolic pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_smeta                        !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_man                          !       |total manure pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_water                        !       |total dissolved pool for profile (summed by layer)
       type (organic_mass) :: soil_org_z                             !       |used to zero organic objects
@@ -148,6 +152,7 @@
       real :: bsn_mn = 0.                                           !       |total mineral n pool (no3+nh4) in basin
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in basin
       type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
+      type (organic_mass) :: photo_decomp                           !       |temporary storage for photo_residue decomp
       type (organic_mass) :: transfer                               !       |temporary storage for residue decomp
       type (organic_mass) :: pl_burn                                !       |residue and plant mass burned in fire
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter

@@ -1,18 +1,18 @@
-harv.ops: written by SWAT+ editor v2.3.3 on 2023-10-25 08:58 for SWAT+ rev.60.5.7
-name                      harv_typ      harv_idx      harv_eff   harv_bm_min  description
-forest_cut                    tree       0.95000       0.99000       0.00000  
-grain                        grain       0.00000       0.95000       0.00000  
-grass_bag                  biomass       0.50000       1.00000    2000.00000  
-grass_mulch                biomass       0.50000       0.00000    2000.00000  
-hay_cut_high               biomass       0.80000       1.00000    3000.00000  
-hay_cut_low                biomass       0.80000       1.00000    1000.00000  
-orchard                    biomass       0.01000       1.00000       0.00000  
-peanuts                      tuber       1.10000       0.95000       0.00000  
-tuber                        tuber       1.10000       0.95000       0.00000  
-silage                     biomass       0.90000       0.95000       0.00000  
-stover_high                residue       0.90000       1.00000    1000.00000  
-stover_los                 residue       0.30000       1.00000    3000.00000  
-stover_med                 residue       0.60000       1.00000    2000.00000  
-vegetables                 biomass       0.50000       1.00000    2000.00000  
-cotton_picker                grain       0.05000       0.95000       0.00000  
-cotton_strip                 grain       0.05000       0.95000       0.00000  
+harv_ops Generated from M:\Constructor\HUC8_models\models\07100007.accdb Time: 2/2/2024 4:13:37 PM
+           NAME  HARV_TYP  HARV_IDX  HARV_EFF  HARV_BM_MIN
+  cotton_picker     grain      0.05      0.95            0
+   cotton_strip     grain      0.05      0.95            0
+     forest_cut      tree      0.95      0.99            0
+          grain     grain         0      0.95            0
+      grass_bag   biomass       0.5         1         2000
+    grass_mulch   biomass       0.5         0         2000
+   hay_cut_high   biomass       0.8         1         3000
+    hay_cut_low   biomass       0.8         1         1000
+        orchard   biomass      0.01         1            0
+        peanuts     tuber       1.1      0.95            0
+         silage   biomass       0.9      0.95            0
+    stover_high   residue       0.9         1         1000
+     stover_low   residue       0.3         1         3000
+     stover_med   residue       0.6         1         2000
+          tuber     tuber       1.1      0.95            0
+     vegetables   biomass       0.5         1         2000

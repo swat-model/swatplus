@@ -188,7 +188,9 @@
         evol_m3 = wet_ob(j)%evol
         call conditions (j, irel)
         call res_hydro (j, irel, pvol_m3, evol_m3)
-      end if 
+        !! subtract outflow from wetland storage (similar to res_control)
+        wet(j)%flo = max(0., wet(j)%flo - ht2%flo)
+      end if
       
       !! surface runoff from wetland is discharge (outflow) ht2
       surfq(j) = ht2%flo / wsa1 !mm
