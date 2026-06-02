@@ -7,9 +7,13 @@
       real :: photo_degrade_factor = .01   ! none  |fraction to reduce surface residue due to photo degradation
 
       type residue_partition_fracs
-        real :: meta_frac = 0.85      !none       |fraction of that is metabolic
-        real :: str_frac = 0.15       !none       |fraction of that is structural
-        real :: lig_frac = 0.12       !none       |fraction of that is lignin    
+        !! field names are misleading.
+        !! plant_parm_read.f90:60-63 reads plants.plt columns into these slots and the carbon model uses
+        !! %lig_frac as bg_lig_frac and %str_frac as ab_lig_frac. Math is correct, names mislead.
+        !! Renaming touches multiple files; flagged for the model devs to resolve.
+        real :: meta_frac = 0.85      !none       |reads plants.plt avg_lig_frac
+        real :: str_frac = 0.15       !none       |reads plants.plt ab_lig_frac (used as above-ground lignin)
+        real :: lig_frac = 0.12       !none       |reads plants.plt bg_lig_frac (used as below-ground lignin)
       end type residue_partition_fracs
       
       type lignin_derived_partition_fracs

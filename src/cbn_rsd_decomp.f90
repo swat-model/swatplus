@@ -32,11 +32,12 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru 
+      use hru_module, only : ihru
       use soil_module
       use plant_module
       use plant_data_module
       use output_landscape_module, only : hnb_d
+      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
       
       implicit none 
 
@@ -58,11 +59,7 @@
       real :: idp = 0.      !              |plant number in plant data module
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
-      real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
-                            !              |of organic nitrogen in the active pool. 
-
       j = ihru
-      nactfr = .02
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.
@@ -99,16 +96,16 @@
             rmp = 0.
             if (soil1(j)%pl(ipl)%rsd(k)%n > 1.e-4) then
               cnr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%n
-              if (cnr > 500.) cnr = 500.
-              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+              if (cnr > cnr_cap) cnr = cnr_cap
+              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)    !! -.693 = -ln(2)
             else
               cnrf = 1.
             end if
-            
+
             if (soil1(j)%pl(ipl)%rsd(k)%p > 1.e-4) then
               cpr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%p
-              if (cpr > 5000.) cpr = 5000.
-              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+              if (cpr > cpr_cap) cpr = cpr_cap
+              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)    !! -.693 = -ln(2)
             else
               cprf = 1.
             end if

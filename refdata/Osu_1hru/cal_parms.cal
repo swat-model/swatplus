@@ -1,5 +1,5 @@
 cal_parms.cal: written by SWAT+ editor v2.2.0 on 2023-03-22 04:25 for SWAT+ rev.60.5.4
-186
+226
 name                       obj_typ       abs_min       abs_max             units  
 cn2                            hru      35.00000      95.00000              null  
 cn3_swf                        hru       0.00000       1.00000              null  
@@ -187,3 +187,43 @@ pst_aq_resus                   pst       0.00000       1.00000             m/day
 pst_ben_hlife                  pst       0.00000   10000.00000             1/day  
 pst_ben_bury                   pst       0.00000       0.10000             m/day  
 pst_ben_act_dep                pst       0.00000       1.00000                 m  
+init_seq                       bsn       0.50000       1.00000              frac
+init_microb                    bsn       0.00000       0.10000              frac
+init_slow                      bsn       0.20000       0.60000              frac
+init_passive                   bsn       0.20000       0.60000              frac
+koc_c                          bsn      500.00000    1500.00000             m3/g
+solc_ratio                     bsn       0.10000       1.00000              frac
+manure_c_frac                  bsn       0.00000       1.00000              frac
+bio_consol                     bsn       0.05000       0.50000              frac
+till_consol                    bsn       0.05000       0.50000              frac
+sfc_rsd_photodeg               bsn       0.00000       0.05000              frac
+n_act_frac                     bsn       0.00500       0.04000              frac
+cnr_cap                        bsn     100.00000    1000.00000              null
+cnr_ref                        bsn      10.00000      50.00000              null
+cpr_cap                        bsn    1000.00000   10000.00000              null
+cpr_ref                        bsn     100.00000     400.00000              null
+t_cbn_min                      bsn      -5.00000       5.00000           degrees
+t_cbn_opt                      bsn      25.00000      40.00000           degrees
+t_cbn_max                      bsn      45.00000      55.00000           degrees
+hp_rate                        hru       0.00001       0.00050              none
+hs_rate                        hru       0.0001        0.0050               none
+microb_rate                    hru       0.001         0.1                  none
+meta_rate                      hru       0.0001        0.1                  none
+str_rate                       hru       0.0001        0.1                  none
+microb_top_rate                hru       1.0           3.0                  none
+hs_hp                          hru       0.0001        0.01                 none
+a1co2                          hru       0.30          0.70                 frac
+asco2                          hru       0.30          0.70                 frac
+apco2                          hru       0.30          0.70                 frac
+abco2                          hru       0.30          0.70                 frac
+bmix_a                         bsn       0.5           10.0                 none
+bmix_b                         bsn       0.5           10.0                 none
+bmix_c                         bsn      -10.0         -0.5                  none
+tillmix_a                      bsn       0.5           10.0                 none
+tillmix_b                      bsn       0.5           20.0                 none
+tillmix_c                      bsn      -10.0         -0.5                  none
+bio_e                          plt       5.0          90.0                  none
+hvsti                          plt       0.05          0.95                 none
+rdmx                           plt       0.1           4.0                  m
+t_opt                          plt      10.0          40.0                 degC
+t_base                         plt       0.0          15.0                 degC

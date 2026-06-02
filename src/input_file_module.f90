@@ -16,8 +16,9 @@
 
 !! basin
       type input_basin
-       character(len=25) :: codes_bas = "codes.bsn"
-       character(len=25) :: parms_bas = "parameters.bsn"
+       character(len=25) :: codes_bas       = "codes.bsn"
+       character(len=25) :: parms_bas       = "parameters.bsn"
+       character(len=25) :: carbon_bsn      = "carbon.bsn"
       end type input_basin
       type (input_basin) :: in_basin
               

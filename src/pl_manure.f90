@@ -94,7 +94,7 @@
                         manure_om(ifrt)%forgp
         end if
         
-        if (bsn_cc%cswat == 1) then
+        if (bsn_cc%cswat == 2) then
           ! soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg *          &
           !       manure_om(ifrt)%forgn * 10.
           soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_mass * manure_om(ifrt)%fcbn
@@ -105,7 +105,7 @@
 
         !!By Zhang for C/N cycling 
         !!===========================
-        if (bsn_cc%cswat == 1) then
+        if (bsn_cc%cswat == 2) then
           soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * fr_mass * manure_om(ifrt)%forgp
           soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * fr_mass * manure_om(ifrt)%forgp
           

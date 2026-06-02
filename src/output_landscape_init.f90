@@ -11,10 +11,25 @@
       use time_module
       use carbon_module
       use output_path_module
-      
-      implicit none 
-      
+      use soil_module
+      use carbon_legacy_module, only: carbon_legacy_open
+
+      implicit none
+
       external :: soil_nutcarb_write
+
+      integer :: jhru
+
+      !! if carbon_layers.prt did not set the per-layer output count explicitly,
+      !! default it to the largest soil layer count across all HRUs so every
+      !! layer is written and no real layer is truncated.
+      if (.not. cb_n_layers_explicit) then
+        cb_n_layers = 0
+        do jhru = 1, sp_ob%hru
+          if (soil(jhru)%nly > cb_n_layers) cb_n_layers = soil(jhru)%nly
+        end do
+        if (cb_n_layers < 1) cb_n_layers = 7
+      end if
 
       if (sp_ob%hru > 0) then
 !!!  HRU - Water balance
@@ -206,204 +221,78 @@
         end if
        end if
                
- !!!NEW SOIL CARBON OUTPUT
-        if (pco%nb_hru%d == "y") then
-          call open_output_file(4520, "hru_soilcarb_day.txt", 1500)
+!!! hru_carb_gl gated by pco%cb_gl_hru (was riding hru_nb).
+        if (pco%cb_gl_hru%d == "y") then
+          call open_output_file(4520, "hru_carb_gl_day.txt", 8000)
           write (4520,*)  bsn%name, prog
-          write (4520,*) soilcarb_hdr
-          write (4520,*) soilcarb_hdr_units
-              write (9000,*) "HRU                       hru_soilcarb_day.txt"          
-             if (pco%csvout == "y") then
-              call open_output_file(4524, "hru_soilcarb_day.csv", 1500)
-              write (4524,*)  bsn%name, prog
-              write (4524,'(*(G0.6,:,","))') soilcarb_hdr
-              write (4524,'(*(G0.6,:,","))') soilcarb_hdr_units
-              write (9000,*) "HRU                       hru_soilcarb_day.csv"
-            end if
+          write (4520,*) carb_gl_hdr
+          write (4520,*) carb_gl_hdr_units
+          write (9000,*) "HRU                       hru_carb_gl_day.txt"
+          if (pco%csvout == "y") then
+            call open_output_file(4524, "hru_carb_gl_day.csv", 8000)
+            write (4524,*)  bsn%name, prog
+            write (4524,'(*(G0.6,:,","))') carb_gl_hdr
+            write (4524,'(*(G0.6,:,","))') carb_gl_hdr_units
+            write (9000,*) "HRU                       hru_carb_gl_day.csv"
+          end if
         endif
-        
-        if (pco%nb_hru%m == "y") then
-          call open_output_file(4521, "hru_soilcarb_mon.txt", 1500)
+
+        if (pco%cb_gl_hru%m == "y") then
+          call open_output_file(4521, "hru_carb_gl_mon.txt", 8000)
           write (4521,*)  bsn%name, prog
-          write (4521,*) soilcarb_hdr
-          write (4521,*) soilcarb_hdr_units
-          write (9000,*) "HRU                       hru_soilcarb_mon.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4525, "hru_soilcarb_mon.csv", 1500)
-              write (4525,*)  bsn%name, prog
-              write (4525,'(*(G0.6,:,","))') soilcarb_hdr
-              write (4525,'(*(G0.6,:,","))') soilcarb_hdr_units
-              write (9000,*) "HRU                       hru_soilcarb_mon.csv"
-            end if
+          write (4521,*) carb_gl_hdr
+          write (4521,*) carb_gl_hdr_units
+          write (9000,*) "HRU                       hru_carb_gl_mon.txt"
+          if (pco%csvout == "y") then
+            call open_output_file(4525, "hru_carb_gl_mon.csv", 8000)
+            write (4525,*)  bsn%name, prog
+            write (4525,'(*(G0.6,:,","))') carb_gl_hdr
+            write (4525,'(*(G0.6,:,","))') carb_gl_hdr_units
+            write (9000,*) "HRU                       hru_carb_gl_mon.csv"
+          end if
         endif
-        
-     if (pco%nb_hru%y == "y") then
-          call open_output_file(4522, "hru_soilcarb_yr.txt", 1500)
+
+        if (pco%cb_gl_hru%y == "y") then
+          call open_output_file(4522, "hru_carb_gl_yr.txt", 8000)
           write (4522,*)  bsn%name, prog
-          write (4522,*) soilcarb_hdr
-          write (4522,*) soilcarb_hdr_units
-          write (9000,*) "HRU                       hru_soilcarb_yr.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4526, "hru_soilcarb_yr.csv", 1500)
-              write (4526,*)  bsn%name, prog
-              write (4526,'(*(G0.6,:,","))') soilcarb_hdr
-              write (4526,'(*(G0.6,:,","))') soilcarb_hdr_units
-              write (9000,*) "HRU                       hru_soilcarb_yr.csv"
-            end if
+          write (4522,*) carb_gl_hdr
+          write (4522,*) carb_gl_hdr_units
+          write (9000,*) "HRU                       hru_carb_gl_yr.txt"
+          if (pco%csvout == "y") then
+            call open_output_file(4526, "hru_carb_gl_yr.csv", 8000)
+            write (4526,*)  bsn%name, prog
+            write (4526,'(*(G0.6,:,","))') carb_gl_hdr
+            write (4526,'(*(G0.6,:,","))') carb_gl_hdr_units
+            write (9000,*) "HRU                       hru_carb_gl_yr.csv"
+          end if
         endif
-        
-        if (pco%nb_hru%a == "y") then
-          call open_output_file(4523, "hru_soilcarb_aa.txt", 1500)
+
+        if (pco%cb_gl_hru%a == "y") then
+          call open_output_file(4523, "hru_carb_gl_aa.txt", 8000)
           write (4523,*)  bsn%name, prog
-          write (4523,*) soilcarb_hdr
-          write (4523,*) soilcarb_hdr_units
-          write (9000,*) "HRU                       hru_soilcarb_aa.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4527, "hru_soilcarb_aa.csv", 1500)
-              write (4527,*)  bsn%name, prog
-              write (4527,'(*(G0.6,:,","))') soilcarb_hdr
-              write (4527,'(*(G0.6,:,","))') soilcarb_hdr_units
-              write (9000,*) "HRU                       hru_soilcarb_aa.csv"
-            end if
+          write (4523,*) carb_gl_hdr
+          write (4523,*) carb_gl_hdr_units
+          write (9000,*) "HRU                       hru_carb_gl_aa.txt"
+          if (pco%csvout == "y") then
+            call open_output_file(4527, "hru_carb_gl_aa.csv", 8000)
+            write (4527,*)  bsn%name, prog
+            write (4527,'(*(G0.6,:,","))') carb_gl_hdr
+            write (4527,'(*(G0.6,:,","))') carb_gl_hdr_units
+            write (9000,*) "HRU                       hru_carb_gl_aa.csv"
+          end if
         endif
-        
- !!!NEW SOIL CARBON OUTPUT     
-              
-!!!NEW RESIDUE CARBON OUTPUT
-        if (pco%nb_hru%d == "y") then
-          call open_output_file(4530, "hru_rescarb_day.txt", 1500)
-          write (4530,*)  bsn%name, prog
-          write (4530,*) rescarb_hdr
-          write (4530,*) rescarb_hdr_units
-              write (9000,*) "HRU                       hru_rescarb_day.txt"          
-             if (pco%csvout == "y") then
-              call open_output_file(4534, "hru_rescarb_day.csv", 1500)
-              write (4534,*)  bsn%name, prog
-              write (4534,'(*(G0.6,:,","))') rescarb_hdr
-              write (4534,'(*(G0.6,:,","))') rescarb_hdr_units
-              write (9000,*) "HRU                       hru_rescarb_day.csv"
-            end if
-        endif
-        
-        if (pco%nb_hru%m == "y") then
-          call open_output_file(4531, "hru_rescarb_mon.txt", 1500)
-          write (4531,*)  bsn%name, prog
-          write (4531,*) rescarb_hdr
-          write (4531,*) rescarb_hdr_units
-          write (9000,*) "HRU                       hru_rescarb_mon.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4535, "hru_rescarb_mon.csv", 1500)
-              write (4535,*)  bsn%name, prog
-              write (4535,'(*(G0.6,:,","))') rescarb_hdr
-              write (4535,'(*(G0.6,:,","))') rescarb_hdr_units
-              write (9000,*) "HRU                       hru_rescarb_mon.csv"
-            end if
-        endif
-        
-     if (pco%nb_hru%y == "y") then
-          call open_output_file(4532, "hru_rescarb_yr.txt", 1500)
-          write (4532,*)  bsn%name, prog
-          write (4532,*) rescarb_hdr
-          write (4532,*) rescarb_hdr_units
-          write (9000,*) "HRU                       hru_rescarb_yr.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4536, "hru_rescarb_yr.csv", 1500)
-              write (4536,*)  bsn%name, prog
-              write (4536,'(*(G0.6,:,","))') rescarb_hdr
-              write (4536,'(*(G0.6,:,","))') rescarb_hdr_units
-              write (9000,*) "HRU                       hru_rescarb_yr.csv"
-            end if
-        endif
-        
-        if (pco%nb_hru%a == "y") then
-          call open_output_file(4533, "hru_rescarb_aa.txt", 1500)
-          write (4533,*)  bsn%name, prog
-          write (4533,*) rescarb_hdr
-          write (4533,*) rescarb_hdr_units
-          write (9000,*) "HRU                       hru_rescarb_aa.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4537, "hru_rescarb_aa.csv", 1500)
-              write (4537,*)  bsn%name, prog
-              write (4537,'(*(G0.6,:,","))') rescarb_hdr
-              write (4537,'(*(G0.6,:,","))') rescarb_hdr_units
-              write (9000,*) "HRU                       hru_rescarb_aa.csv"
-            end if
-        endif
-        
- !!!NEW RESIDUE CARBON OUTPUT 
-        
- !!!NEW PLANT CARBON OUTPUT
-        if (pco%nb_hru%d == "y") then
-          call open_output_file(4540, "hru_plcarb_day.txt", 1500)
-          write (4540,*)  bsn%name, prog
-          write (4540,*) plcarb_hdr
-          write (4540,*) plcarb_hdr_units
-              write (9000,*) "HRU                       hru_plcarb_day.txt"          
-             if (pco%csvout == "y") then
-              call open_output_file(4544, "hru_plcarb_day.csv", 1500)
-              write (4544,*)  bsn%name, prog
-              write (4544,'(*(G0.6,:,","))') plcarb_hdr
-              write (4544,'(*(G0.6,:,","))') plcarb_hdr_units
-              write (9000,*) "HRU                       hru_plcarb_day.csv"
-            end if
-        endif
-        
-        if (pco%nb_hru%m == "y") then
-          call open_output_file(4541, "hru_plcarb_mon.txt", 1500)
-          write (4541,*)  bsn%name, prog
-          write (4541,*) plcarb_hdr
-          write (4541,*) plcarb_hdr_units
-          write (9000,*) "HRU                       hru_plcarb_mon.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4545, "hru_plcarb_mon.csv", 1500)
-              write (4545,*)  bsn%name, prog
-              write (4545,'(*(G0.6,:,","))') plcarb_hdr
-              write (4545,'(*(G0.6,:,","))') plcarb_hdr_units
-              write (9000,*) "HRU                       hru_plcarb_mon.csv"
-            end if
-        endif
-        
-     if (pco%nb_hru%y == "y") then
-          call open_output_file(4542, "hru_plcarb_yr.txt", 1500)
-          write (4542,*)  bsn%name, prog
-          write (4542,*) plcarb_hdr
-          write (4542,*) plcarb_hdr_units
-          write (9000,*) "HRU                       hru_plcarb_yr.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4546, "hru_plcarb_yr.csv", 1500)
-              write (4546,*)  bsn%name, prog
-              write (4546,'(*(G0.6,:,","))') plcarb_hdr
-              write (4546,'(*(G0.6,:,","))') plcarb_hdr_units
-              write (9000,*) "HRU                       hru_plcarb_yr.csv"
-            end if
-        endif
-        
-        if (pco%nb_hru%a == "y") then
-          call open_output_file(4543, "hru_plcarb_aa.txt", 1500)
-          write (4543,*)  bsn%name, prog
-          write (4543,*) plcarb_hdr
-          write (4543,*) plcarb_hdr_units
-          write (9000,*) "HRU                       hru_plcarb_aa.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4547, "hru_plcarb_aa.csv", 1500)
-              write (4547,*)  bsn%name, prog
-              write (4547,'(*(G0.6,:,","))') plcarb_hdr
-              write (4547,'(*(G0.6,:,","))') plcarb_hdr_units
-              write (9000,*) "HRU                       hru_plcarb_aa.csv"
-            end if
-        endif
-        
- !!!NEW RESIDUE CARBON OUTPUT     
+
+
        
 !!!NEW SOIL TRANSFORMATIONS CARBON OUTPUT
-        if (pco%nb_hru%d == "y") then
-          call open_output_file(4550, "hru_scf_day.txt", 1500)
+        if (pco%cb_trf_hru%d == "y") then
+          call open_output_file(4550, "hru_scf_day.txt", 8000)
           write (4550,*)  bsn%name, prog
           write (4550,*) hscf_hdr
           write (4550,*) hscf_hdr_units
               write (9000,*) "HRU                       hru_scf_day.txt"          
              if (pco%csvout == "y") then
-              call open_output_file(4554, "hru_scf_day.csv", 1500)
+              call open_output_file(4554, "hru_scf_day.csv", 8000)
               write (4554,*)  bsn%name, prog
               write (4554,'(*(G0.6,:,","))') hscf_hdr
               write (4554,'(*(G0.6,:,","))') hscf_hdr_units
@@ -411,14 +300,14 @@
             end if
         endif
         
-        if (pco%nb_hru%m == "y") then
-          call open_output_file(4551, "hru_scf_mon.txt", 1500)
+        if (pco%cb_trf_hru%m == "y") then
+          call open_output_file(4551, "hru_scf_mon.txt", 8000)
           write (4551,*)  bsn%name, prog
           write (4551,*) hscf_hdr
           write (4551,*) hscf_hdr_units
           write (9000,*) "HRU                       hru_scf_mon.txt"
             if (pco%csvout == "y") then
-              call open_output_file(4555, "hru_scf_mon.csv", 1500)
+              call open_output_file(4555, "hru_scf_mon.csv", 8000)
               write (4555,*)  bsn%name, prog
               write (4555,'(*(G0.6,:,","))') hscf_hdr
               write (4555,'(*(G0.6,:,","))') hscf_hdr_units
@@ -426,14 +315,14 @@
             end if
         endif
         
-     if (pco%nb_hru%y == "y") then
-          call open_output_file(4552, "hru_scf_yr.txt", 1500)
+     if (pco%cb_trf_hru%y == "y") then
+          call open_output_file(4552, "hru_scf_yr.txt", 8000)
           write (4552,*)  bsn%name, prog
           write (4552,*) hscf_hdr
           write (4552,*) hscf_hdr_units
           write (9000,*) "HRU                       hru_scf_yr.txt"
             if (pco%csvout == "y") then
-              call open_output_file(4556, "hru_scf_yr.csv", 1500)
+              call open_output_file(4556, "hru_scf_yr.csv", 8000)
               write (4556,*)  bsn%name, prog
               write (4556,'(*(G0.6,:,","))') hscf_hdr
               write (4556,'(*(G0.6,:,","))') hscf_hdr_units
@@ -441,14 +330,14 @@
             end if
         endif
         
-        if (pco%nb_hru%a == "y") then
-          call open_output_file(4553, "hru_scf_aa.txt", 1500)
+        if (pco%cb_trf_hru%a == "y") then
+          call open_output_file(4553, "hru_scf_aa.txt", 8000)
           write (4553,*)  bsn%name, prog
           write (4553,*) hscf_hdr
           write (4553,*) hscf_hdr_units
           write (9000,*) "HRU                       hru_scf_aa.txt"
             if (pco%csvout == "y") then
-              call open_output_file(4557, "hru_scf_aa.csv", 1500)
+              call open_output_file(4557, "hru_scf_aa.csv", 8000)
               write (4557,*)  bsn%name, prog
               write (4557,'(*(G0.6,:,","))') hscf_hdr
               write (4557,'(*(G0.6,:,","))') hscf_hdr_units
@@ -460,181 +349,82 @@
        
 !!! NEW SOILC_STAT/RESC_STAT/PLC_STAT CARBON OUTPUT FILES
 
-        !! write carbon in soil by layer
-        if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n"  .or. pco%cb_hru%y /= "n") then
-          call open_output_file(4548, "hru_cbn_lyr.txt", 1500)
-          write (4548,*)  bsn%name, prog, "total soil carbon (Mg/ha) by layer depth in mm"
-          write (9000,*) "HRU                       hru_cbn_lyr.txt"
-          if (pco%csvout == "y") then
-            call open_output_file(4549, "hru_cbn_lyr.csv", 1500)
-            write (4549,*)  bsn%name, prog, "total soil carbon (Mg/ha) by layer depth in mm"
-            write (9000,*) "HRU                       hru_cbn_lyr.csv"
-          end if
-    
-          call open_output_file(4558, "hru_seq_lyr.txt", 1500)
-          write (4558,*)  bsn%name, prog, "total sequestered soil carbon (Mg/ha) by layer depth in mm"
-          write (9000,*) "HRU                       hru_seq_lyr.txt"
-          if (pco%csvout == "y") then
-            call open_output_file(4559, "hru_seq_lyr.csv", 1500)
-            write (4559,*)  bsn%name, prog, "total sequestered soil carbon (Mg/ha) by layer depth in mm" 
-            write (9000,*) "HRU                       hru_seq_lyr.csv"
-          end if
+        !! per-family carbon stat files, each with own print.prt flag (10 rows in hru_cb_* namespace).
+        !! Unit allocation (txt then csv):
+        !!   hru_carb_gl        4520-4523 / 4524-4527  (HRU C gain/loss; 21 vars, no layers)
+        !!   hru_cbn_lyr        4530-4533 / 4534-4537  (per-layer SOC totals + sequestered)
+        !!   hru_cpool_stat     4538-4541 / 4542-4545  (per-layer C pools; 10 vars)
+        !!   hru_scf            4550-4553 / 4554-4557  (HRU C transformations; 13 vars, no layers)
+        !!   hru_cflux_stat     4558-4561 / 4562-4565  (per-layer C and N fluxes; 37 vars)
+        !!   hru_n_p_pool_stat  4566-4569 / 4570-4573  (per-layer N+P pools; 18 vars)
+        !!   hru_plc_stat       4574-4577 / 4578-4581  (plant carbon state; 7 vars, no layers)
+        !!   hru_carb_drv       4582-4585 / 4586-4589  (per-layer drivers; 14 vars)
+        !!   hru_carb_dyn       4590-4593 / 4594-4597  (per-layer dynamics; 21 vars)
+        !!   hru_soil_snap      4598-4601 / 4602-4605  (per-layer soil snapshot; _tot has begsim+endsim rows)
+        !! Within each block, offsets are: day, mon, yr, aa.
 
-          call open_output_file(4582, "hru_n_p_pool_stat.txt", 1500)
-          write (4582,*)  bsn%name, prog
-          write (4582,*) n_p_pool_hdr
-          write (4582,*) n_p_pool_units
-          write (9000,*) "HRU                       hru_n_p_pool_stat.txt"
-          if (pco%csvout == "y") then
-            call open_output_file(4583, "hru_n_p_pool_stat.csv", 1500)
-            write (4583,*)  bsn%name, prog
-            write (4583,'(*(G0.6,:,","))') n_p_pool_hdr
-            write (4583,'(*(G0.6,:,","))') n_p_pool_units
-            write (9000,*) "HRU                       hru_n_p_pool_stat.csv"
-          end if
+        !! hru_cbn_lyr: per-layer SOC totals + sequestered. Header written once at file open.
+        if (pco%cb_lyr_hru%d == "y") call open_cb_banner_pair(4530, 4534, "hru_cbn_lyr_day.txt", "hru_cbn_lyr_day.csv", "total soil carbon (Mg/ha) by layer depth in mm")
+        if (pco%cb_lyr_hru%m == "y") call open_cb_banner_pair(4531, 4535, "hru_cbn_lyr_mon.txt", "hru_cbn_lyr_mon.csv", "total soil carbon (Mg/ha) by layer depth in mm")
+        if (pco%cb_lyr_hru%y == "y") call open_cb_banner_pair(4532, 4536, "hru_cbn_lyr_yr.txt",  "hru_cbn_lyr_yr.csv",  "total soil carbon (Mg/ha) by layer depth in mm")
+        if (pco%cb_lyr_hru%a == "y") call open_cb_banner_pair(4533, 4537, "hru_cbn_lyr_aa.txt",  "hru_cbn_lyr_aa.csv",  "total soil carbon (Mg/ha) by layer depth in mm")
 
-          if (cbn_diagnostics .eqv. .true.) then
-            !! write beginning of simulation soil properties headers to hru_begsim_soil_prop
-            call open_output_file(4586, "hru_begsim_soil_prop.txt", 1500)
-            write (4586,*)  bsn%name, prog
-            write (4586,*)  endsim_soil_prop_hdr  ! begsim can use the same header as endsim 
-            write (9000,*) "HRU                       hru_begsim_soil_prop.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4587, "hru_begsim_soil_prop.csv", 1500)
-              write (4587,*)  bsn%name, prog
-              write (4587,'(*(G0.6,:,","))') endsim_soil_prop_hdr ! begsim can use the same header as endsim 
-              write (9000,*) "HRU                       hru_begsim_soil_prop.csv"
-            endif
+        !! hru_n_p_pool_stat: per-layer N and P content of carbon pools.
+        if (pco%cb_npool_hru%d == "y") call open_cb_wide_pair(4566, 4570, "hru_n_p_pool_stat_day.txt", "hru_n_p_pool_stat_day.csv", n_p_pool_vars)
+        if (pco%cb_npool_hru%m == "y") call open_cb_wide_pair(4567, 4571, "hru_n_p_pool_stat_mon.txt", "hru_n_p_pool_stat_mon.csv", n_p_pool_vars)
+        if (pco%cb_npool_hru%y == "y") call open_cb_wide_pair(4568, 4572, "hru_n_p_pool_stat_yr.txt",  "hru_n_p_pool_stat_yr.csv",  n_p_pool_vars)
+        if (pco%cb_npool_hru%a == "y") call open_cb_wide_pair(4569, 4573, "hru_n_p_pool_stat_aa.txt",  "hru_n_p_pool_stat_aa.csv",  n_p_pool_vars)
 
-            !! write end of simulation soil properties headers to hru_endsim_soil_prop
-            call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
-            write (4584,*)  bsn%name, prog
-            write (4584,*)  endsim_soil_prop_hdr
-            write (9000,*) "HRU                       hru_endsim_soil_prop.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4585, "hru_endsim_soil_prop.csv", 1500)
-              write (4585,*)  bsn%name, prog
-              write (4585,'(*(G0.6,:,","))') endsim_soil_prop_hdr
-              write (9000,*) "HRU                       hru_endsim_soil_prop.csv"
-            end if
-
-
-            if (bsn_cc%cswat == 1 ) then
-              ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
-              call soil_nutcarb_write(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
-
-              if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
-                !! write carbon in soil, plant, and residue
-                call open_output_file(4560, "hru_plc_stat.txt", 1500)
-                write (4560,*)  bsn%name, prog
-                write (4560,*) plc_hdr
-                write (4560,*) plc_hdr_units
-                write (9000,*) "HRU                       hru_plc_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4563, "hru_plc_stat.csv", 1500)
-                  write (4563,*)  bsn%name, prog
-                  write (4563,'(*(G0.6,:,","))') plc_hdr
-                  write (4563,'(*(G0.6,:,","))') plc_hdr_units
-                  write (9000,*) "HRU                       hru_plc_stat.csv"
-                end if
-      
-                call open_output_file(4567, "hru_cflux_stat.txt", 1500)
-                write (4567,*)  bsn%name, prog
-                write (4567,*) soil_org_flux_hdr
-                write (4567,*) soil_org_flux_hdr_units
-                write (9000,*) "HRU                       hru_cflux_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4568, "hru_cflux_stat.csv", 1500)
-                  write (4568,*)  bsn%name, prog
-                  write (4568,'(*(G0.6,:,","))') soil_org_flux_hdr
-                  write (4568,'(*(G0.6,:,","))') soil_org_flux_hdr_units
-                  write (9000,*) "HRU                       hru_cflux_stat.csv"
-                end if
-              
-                call open_output_file(4572, "hru_cpool_stat.txt", 1500)
-                write (4572,*)  bsn%name, prog
-                write (4572,*) cpool_hdr
-                write (4572,*) cpool_units
-                write (9000,*) "HRU                       hru_cpool_stat.txt"
-                if (pco%csvout == "y") then
-                  call open_output_file(4573, "hru_cpool_stat.csv", 1500)
-                  write (4573,*)  bsn%name, prog
-                  write (4573,'(*(G0.6,:,","))') cpool_hdr
-                  write (4573,'(*(G0.6,:,","))') cpool_units
-                  write (9000,*) "HRU                       hru_cpool_stat.csv"
-                end if
-
-              endif
-            endif
-          endif
-        endif
-
-        !! write carbon variables headers to hru_carbvars
-        if (bsn_cc%cswat == 1 ) then
-          if (pco%cb_vars_hru%d /= "n" .or. pco%cb_vars_hru%m /= "n"  .or. pco%cb_vars_hru%y /= "n" ) then
-            call open_output_file(4574, "hru_carbvars.txt", 1500)
-            write (4574,*)  bsn%name, prog
-            write (4574,*) carbvars_hdr
-            write (9000,*) "HRU                       hru_carbvars.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4575, "hru_carbvars.csv", 1500)
-              write (4575,*)  bsn%name, prog
-              write (4575,'(*(G0.6,:,","))') carbvars_hdr
-              write (9000,*) "HRU                       hru_carbvars.csv"
-            end if
-
-            !! write org_allo variable headers to hru_org_allo_vars
-            call open_output_file(4576, "hru_org_allo_vars.txt", 1500)
-            write (4576,*)  bsn%name, prog
-            write (4576,*)  org_allow_hdr
-            write (9000,*) "HRU                       hru_org_allo_vars.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4577, "hru_org_allo_vars.csv", 1500)
-              write (4577,*)  bsn%name, prog
-              write (4577,'(*(G0.6,:,","))') org_allow_hdr
-              write (9000,*) "HRU                       hru_org_allo_vars.csv"
-            end if
-
-            !! write org_ratio variable headers to hru_org_ratio_vars
-            call open_output_file(4578, "hru_org_ratio_vars.txt", 1500)
-            write (4578,*)  bsn%name, prog
-            write (4578,*)  org_ratio_hdr
-            write (9000,*) "HRU                       hru_org_ratio_vars.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4579, "hru_org_ratio_vars.csv", 1500)
-              write (4579,*)  bsn%name, prog
-              write (4579,'(*(G0.6,:,","))') org_ratio_hdr
-              write (9000,*) "HRU                       hru_org_ratio_vars.csv"
-            end if
-
-           !! write org_trans variable headers to hru_org_trans_vars
-            call open_output_file(4580, "hru_org_trans_vars.txt", 1500)
-            write (4580,*)  bsn%name, prog
-            write (4580,*) org_trans_hdr
-            write (4580,*) org_trans_units
-            write (9000,*) "HRU                       hru_org_trans_vars.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(4581, "hru_org_trans_vars.csv", 1500)
-              write (4581,*)  bsn%name, prog
-              write (4581,'(*(G0.6,:,","))') org_trans_hdr
-              write (4581,'(*(G0.6,:,","))') org_trans_units
-              write (9000,*) "HRU                       hru_org_trans_vars.csv"
-            end if
-          endif
-        endif
-
-        
- !! NEW BASIN CARBON ALL OUTPUT FILE
-        
-        call open_output_file(4566, "basin_carbon_all.txt", 1500)
-        if (pco%nb_hru%a == "y") then
-          write (4566,*)  bsn%name, prog
-          write (4566,*) bsn_carb_hdr
-          write (4566,*) bsn_carb_hdr_units
-          write (9000,*) "BASIN                     basin_carbon_all.txt"
+        !! hru_soil_snap: per-layer soil properties. _day/_mon/_yr emit end-of-period rows; _tot emits begsim+endsim.
+        if (pco%cb_snap_hru%d == "y") call open_cb_wide_pair(4598, 4602, "hru_soil_snap_day.txt", "hru_soil_snap_day.csv", soil_snap_vars)
+        if (pco%cb_snap_hru%m == "y") call open_cb_wide_pair(4599, 4603, "hru_soil_snap_mon.txt", "hru_soil_snap_mon.csv", soil_snap_vars)
+        if (pco%cb_snap_hru%y == "y") call open_cb_wide_pair(4600, 4604, "hru_soil_snap_yr.txt",  "hru_soil_snap_yr.csv",  soil_snap_vars)
+        !! _tot file gated specifically by cb_snap_hru%a (begsim + endsim rows).
+        if (pco%cb_snap_hru%a == "y") then
+          call open_cb_wide_pair(4601, 4605, "hru_soil_snap_tot.txt", "hru_soil_snap_tot.csv", soil_snap_vars)
+          if (bsn_cc%cswat == 2) call soil_nutcarb_write(" b")  !! emit begsim row to hru_soil_snap_tot
         end if
-          
- !! NEW BASIN CARBON ALL OUTPUT FILE
+
+        !! hru_plc_stat: HRU-level plant carbon state (no layers).
+        if (pco%cb_plt_hru%d == "y") call open_cb_flat_pair(4574, 4578, "hru_plc_stat_day.txt", "hru_plc_stat_day.csv", ["total_c    ","ab_gr_c    ","leaf_c     ","stem_c     ","seed_c     ","root_c     ","surf_rsd_c "])
+        if (pco%cb_plt_hru%m == "y") call open_cb_flat_pair(4575, 4579, "hru_plc_stat_mon.txt", "hru_plc_stat_mon.csv", ["total_c    ","ab_gr_c    ","leaf_c     ","stem_c     ","seed_c     ","root_c     ","surf_rsd_c "])
+        if (pco%cb_plt_hru%y == "y") call open_cb_flat_pair(4576, 4580, "hru_plc_stat_yr.txt",  "hru_plc_stat_yr.csv",  ["total_c    ","ab_gr_c    ","leaf_c     ","stem_c     ","seed_c     ","root_c     ","surf_rsd_c "])
+        if (pco%cb_plt_hru%a == "y") call open_cb_flat_pair(4577, 4581, "hru_plc_stat_aa.txt",  "hru_plc_stat_aa.csv",  ["total_c    ","ab_gr_c    ","leaf_c     ","stem_c     ","seed_c     ","root_c     ","surf_rsd_c "])
+
+        !! The remaining 4 families require the carbon model (cswat==2).
+        if (bsn_cc%cswat == 2) then
+          !! hru_cflux_stat: per-layer C and N fluxes (37 vars)
+          if (pco%cb_flux_hru%d == "y") call open_cb_wide_pair(4558, 4562, "hru_cflux_stat_day.txt", "hru_cflux_stat_day.csv", cflux_vars)
+          if (pco%cb_flux_hru%m == "y") call open_cb_wide_pair(4559, 4563, "hru_cflux_stat_mon.txt", "hru_cflux_stat_mon.csv", cflux_vars)
+          if (pco%cb_flux_hru%y == "y") call open_cb_wide_pair(4560, 4564, "hru_cflux_stat_yr.txt",  "hru_cflux_stat_yr.csv",  cflux_vars)
+          if (pco%cb_flux_hru%a == "y") call open_cb_wide_pair(4561, 4565, "hru_cflux_stat_aa.txt",  "hru_cflux_stat_aa.csv",  cflux_vars)
+
+          !! hru_cpool_stat: per-layer C pools (10 vars)
+          if (pco%cb_cpool_hru%d == "y") call open_cb_wide_pair(4538, 4542, "hru_cpool_stat_day.txt", "hru_cpool_stat_day.csv", cpool_vars)
+          if (pco%cb_cpool_hru%m == "y") call open_cb_wide_pair(4539, 4543, "hru_cpool_stat_mon.txt", "hru_cpool_stat_mon.csv", cpool_vars)
+          if (pco%cb_cpool_hru%y == "y") call open_cb_wide_pair(4540, 4544, "hru_cpool_stat_yr.txt",  "hru_cpool_stat_yr.csv",  cpool_vars)
+          if (pco%cb_cpool_hru%a == "y") call open_cb_wide_pair(4541, 4545, "hru_cpool_stat_aa.txt",  "hru_cpool_stat_aa.csv",  cpool_vars)
+
+          !! hru_carb_drv: per-layer environmental drivers (14 vars)
+          if (pco%cb_drv_hru%d == "y") call open_cb_wide_pair(4582, 4586, "hru_carb_drv_day.txt", "hru_carb_drv_day.csv", carb_drv_vars)
+          if (pco%cb_drv_hru%m == "y") call open_cb_wide_pair(4583, 4587, "hru_carb_drv_mon.txt", "hru_carb_drv_mon.csv", carb_drv_vars)
+          if (pco%cb_drv_hru%y == "y") call open_cb_wide_pair(4584, 4588, "hru_carb_drv_yr.txt",  "hru_carb_drv_yr.csv",  carb_drv_vars)
+          if (pco%cb_drv_hru%a == "y") call open_cb_wide_pair(4585, 4589, "hru_carb_drv_aa.txt",  "hru_carb_drv_aa.csv",  carb_drv_vars)
+
+          !! hru_carb_dyn: per-layer pool dynamics (21 vars)
+          if (pco%cb_dyn_hru%d == "y") call open_cb_wide_pair(4590, 4594, "hru_carb_dyn_day.txt", "hru_carb_dyn_day.csv", carb_dyn_vars)
+          if (pco%cb_dyn_hru%m == "y") call open_cb_wide_pair(4591, 4595, "hru_carb_dyn_mon.txt", "hru_carb_dyn_mon.csv", carb_dyn_vars)
+          if (pco%cb_dyn_hru%y == "y") call open_cb_wide_pair(4592, 4596, "hru_carb_dyn_yr.txt",  "hru_carb_dyn_yr.csv",  carb_dyn_vars)
+          if (pco%cb_dyn_hru%a == "y") call open_cb_wide_pair(4593, 4597, "hru_carb_dyn_aa.txt",  "hru_carb_dyn_aa.csv",  carb_dyn_vars)
+        end if
+
+        !! legacy CSU carbon files (hru_cb / hru_cb_vars rows in print.prt).
+        !! opens the old fixed-column files and writes the begsim soil snapshot.
+        !! will be removed in revision 63.
+        call carbon_legacy_open
+
+
+!! basin_carbon_all.txt removed: yearly-only basin sum reconstructable from HRU-level files
         
 !!!  HRU - Losses
         if (pco%ls_hru%d == "y") then
@@ -653,68 +443,8 @@
         endif
         
                 
-!!!  HRU - New nutcarb gain loss file
-        if (pco%ls_hru%d == "y") then
-          call open_output_file(3341, "hru_nut_carb_gl_day.txt", 1500)
-          write (3341,*) bsn%name, prog
-          write (3341,*) ls_hdr1    !! hru
-          write (3341,*) ls_hdr_units1
-          write (9000,*) "HRU                       hru_nut_carb_gl_day.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(3342, "hru_nut_carb_gl_day.csv", 1500)
-              write (3342,*) bsn%name, prog
-              write (3342,'(*(G0.6,:,","))') ls_hdr1    !! hru
-              write (3342,'(*(G0.6,:,","))') ls_hdr_units1
-              write (9000,*) "HRU                       hru_nut_carb_gl_day.csv"
-            end if 
-        endif
+!!  hru_nut_carb_gl_* files removed: header-only files with no data writes; redundant with hru_ls and the dedicated carbon output files
 
-        if (pco%ls_hru%m == "y") then
-          call open_output_file(3343, "hru_nut_carb_gl_mon.txt", 1500)
-          write (3343,*) bsn%name, prog
-          write (3343,*) ls_hdr1    !! hru
-          write (3343,*) ls_hdr_units1
-          write (9000,*) "HRU                       hru_nut_carb_gl_mon.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(3344, "hru_nut_carb_gl_mon.csv", 1500)
-              write (3344,*) bsn%name, prog
-              write (3344,'(*(G0.6,:,","))') ls_hdr1    !! hru
-              write (3344,'(*(G0.6,:,","))') ls_hdr_units1
-              write (9000,*) "HRU                       hru_nut_carb_gl_mon.csv"
-            end if 
-        endif
-        
-        if (pco%ls_hru%y == "y") then
-          call open_output_file(3345, "hru_nut_carb_gl_yr.txt", 1500)
-          write (3345,*) bsn%name, prog
-          write (3345,*) ls_hdr1    !! hru
-          write (3345,*) ls_hdr_units1
-          write (9000,*) "HRU                       hru_nut_carb_gl_yr.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(3346, "hru_nut_carb_gl_yr.csv", 1500)
-              write (3346,*) bsn%name, prog
-              write (3346,'(*(G0.6,:,","))') ls_hdr1    !! hru
-              write (3346,'(*(G0.6,:,","))') ls_hdr_units1
-              write (9000,*) "HRU                       hru_nut_carb_gl_yr.csv"
-            end if 
-        endif
-        
-        if (pco%ls_hru%a == "y") then
-          call open_output_file(3347, "hru_nut_carb_gl_aa.txt", 1500)
-          write (3347,*) bsn%name, prog
-          write (3347,*) ls_hdr1    !! hru
-          write (3347,*) ls_hdr_units1
-          write (9000,*) "HRU                       hru_nut_carb_gl_aa.txt"
-            if (pco%csvout == "y") then
-              call open_output_file(3348, "hru_nut_carb_gl_aa.csv", 1500)
-              write (3348,*) bsn%name, prog
-              write (3348,'(*(G0.6,:,","))') ls_hdr1    !! hru
-              write (3348,'(*(G0.6,:,","))') ls_hdr_units1
-              write (9000,*) "HRU                       hru_nut_carb_gl_aa.csv"
-            end if 
-        endif
-!!!  HRU - New nutcarb gain loss file       
-           
        if (pco%ls_hru%m == "y") then
         call open_output_file(2031, "hru_ls_mon.txt", 1500)
         write (2031,*) bsn%name, prog
@@ -1551,6 +1281,241 @@
       
 1000    format (76x,"--YIELD (kg/ha)--",/,1x," jday",1x,"  mon",1x,"  day",1x,"   yr",1x,"   unit", 1x,"PLANTNM",   &
                  18x,"       MASS","          C", "           N","           P")
-        
+
+      !! LSU-level carbon output files (only when project has LSUs configured)
+      !! Unit allocation: lsu_carb_gl 4700-4707, lsu_scf 4708-4715, lsu_plc_stat 4716-4723.
+      !! Reuses HRU header types (carb_gl_hdr, hscf_hdr) since columns are identical; lsu_plc_stat uses runtime header.
+
+      if (db_mx%lsu_out > 0) then
+
+      !! lsu_carb_gl_*
+      if (pco%cb_gl_lsu%d == "y") then
+        call open_output_file(4700, "lsu_carb_gl_day.txt", 8000)
+        write (4700,*) bsn%name, prog
+        write (4700,*) carb_gl_hdr
+        write (4700,*) carb_gl_hdr_units
+        write (9000,*) "LSU                       lsu_carb_gl_day.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4704, "lsu_carb_gl_day.csv", 8000)
+          write (4704,*) bsn%name, prog
+          write (4704,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4704,'(*(G0.6,:,","))') carb_gl_hdr_units
+          write (9000,*) "LSU                       lsu_carb_gl_day.csv"
+        end if
+      end if
+      if (pco%cb_gl_lsu%m == "y") then
+        call open_output_file(4701, "lsu_carb_gl_mon.txt", 8000)
+        write (4701,*) bsn%name, prog
+        write (4701,*) carb_gl_hdr
+        write (4701,*) carb_gl_hdr_units
+        write (9000,*) "LSU                       lsu_carb_gl_mon.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4705, "lsu_carb_gl_mon.csv", 8000)
+          write (4705,*) bsn%name, prog
+          write (4705,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4705,'(*(G0.6,:,","))') carb_gl_hdr_units
+          write (9000,*) "LSU                       lsu_carb_gl_mon.csv"
+        end if
+      end if
+      if (pco%cb_gl_lsu%y == "y") then
+        call open_output_file(4702, "lsu_carb_gl_yr.txt", 8000)
+        write (4702,*) bsn%name, prog
+        write (4702,*) carb_gl_hdr
+        write (4702,*) carb_gl_hdr_units
+        write (9000,*) "LSU                       lsu_carb_gl_yr.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4706, "lsu_carb_gl_yr.csv", 8000)
+          write (4706,*) bsn%name, prog
+          write (4706,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4706,'(*(G0.6,:,","))') carb_gl_hdr_units
+          write (9000,*) "LSU                       lsu_carb_gl_yr.csv"
+        end if
+      end if
+      if (pco%cb_gl_lsu%a == "y") then
+        call open_output_file(4703, "lsu_carb_gl_aa.txt", 8000)
+        write (4703,*) bsn%name, prog
+        write (4703,*) carb_gl_hdr
+        write (4703,*) carb_gl_hdr_units
+        write (9000,*) "LSU                       lsu_carb_gl_aa.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4707, "lsu_carb_gl_aa.csv", 8000)
+          write (4707,*) bsn%name, prog
+          write (4707,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4707,'(*(G0.6,:,","))') carb_gl_hdr_units
+          write (9000,*) "LSU                       lsu_carb_gl_aa.csv"
+        end if
+      end if
+
+      !! lsu_scf_*
+      if (pco%cb_trf_lsu%d == "y") then
+        call open_output_file(4708, "lsu_scf_day.txt", 8000)
+        write (4708,*) bsn%name, prog
+        write (4708,*) hscf_hdr
+        write (4708,*) hscf_hdr_units
+        write (9000,*) "LSU                       lsu_scf_day.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4712, "lsu_scf_day.csv", 8000)
+          write (4712,*) bsn%name, prog
+          write (4712,'(*(G0.6,:,","))') hscf_hdr
+          write (4712,'(*(G0.6,:,","))') hscf_hdr_units
+          write (9000,*) "LSU                       lsu_scf_day.csv"
+        end if
+      end if
+      if (pco%cb_trf_lsu%m == "y") then
+        call open_output_file(4709, "lsu_scf_mon.txt", 8000)
+        write (4709,*) bsn%name, prog
+        write (4709,*) hscf_hdr
+        write (4709,*) hscf_hdr_units
+        write (9000,*) "LSU                       lsu_scf_mon.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4713, "lsu_scf_mon.csv", 8000)
+          write (4713,*) bsn%name, prog
+          write (4713,'(*(G0.6,:,","))') hscf_hdr
+          write (4713,'(*(G0.6,:,","))') hscf_hdr_units
+          write (9000,*) "LSU                       lsu_scf_mon.csv"
+        end if
+      end if
+      if (pco%cb_trf_lsu%y == "y") then
+        call open_output_file(4710, "lsu_scf_yr.txt", 8000)
+        write (4710,*) bsn%name, prog
+        write (4710,*) hscf_hdr
+        write (4710,*) hscf_hdr_units
+        write (9000,*) "LSU                       lsu_scf_yr.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4714, "lsu_scf_yr.csv", 8000)
+          write (4714,*) bsn%name, prog
+          write (4714,'(*(G0.6,:,","))') hscf_hdr
+          write (4714,'(*(G0.6,:,","))') hscf_hdr_units
+          write (9000,*) "LSU                       lsu_scf_yr.csv"
+        end if
+      end if
+      if (pco%cb_trf_lsu%a == "y") then
+        call open_output_file(4711, "lsu_scf_aa.txt", 8000)
+        write (4711,*) bsn%name, prog
+        write (4711,*) hscf_hdr
+        write (4711,*) hscf_hdr_units
+        write (9000,*) "LSU                       lsu_scf_aa.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4715, "lsu_scf_aa.csv", 8000)
+          write (4715,*) bsn%name, prog
+          write (4715,'(*(G0.6,:,","))') hscf_hdr
+          write (4715,'(*(G0.6,:,","))') hscf_hdr_units
+          write (9000,*) "LSU                       lsu_scf_aa.csv"
+        end if
+      end if
+
+      !! lsu_plc_stat_* (single column: lsu_plt_c, area-weighted plant carbon mass)
+      if (pco%cb_plt_lsu%d == "y") then
+        call open_output_file(4716, "lsu_plc_stat_day.txt", 8000)
+        write (4716,*) bsn%name, prog
+        write (4716,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        write (9000,*) "LSU                       lsu_plc_stat_day.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4720, "lsu_plc_stat_day.csv", 8000)
+          write (4720,*) bsn%name, prog
+          write (4720,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          write (9000,*) "LSU                       lsu_plc_stat_day.csv"
+        end if
+      end if
+      if (pco%cb_plt_lsu%m == "y") then
+        call open_output_file(4717, "lsu_plc_stat_mon.txt", 8000)
+        write (4717,*) bsn%name, prog
+        write (4717,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        write (9000,*) "LSU                       lsu_plc_stat_mon.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4721, "lsu_plc_stat_mon.csv", 8000)
+          write (4721,*) bsn%name, prog
+          write (4721,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          write (9000,*) "LSU                       lsu_plc_stat_mon.csv"
+        end if
+      end if
+      if (pco%cb_plt_lsu%y == "y") then
+        call open_output_file(4718, "lsu_plc_stat_yr.txt", 8000)
+        write (4718,*) bsn%name, prog
+        write (4718,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        write (9000,*) "LSU                       lsu_plc_stat_yr.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4722, "lsu_plc_stat_yr.csv", 8000)
+          write (4722,*) bsn%name, prog
+          write (4722,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          write (9000,*) "LSU                       lsu_plc_stat_yr.csv"
+        end if
+      end if
+      if (pco%cb_plt_lsu%a == "y") then
+        call open_output_file(4719, "lsu_plc_stat_aa.txt", 8000)
+        write (4719,*) bsn%name, prog
+        write (4719,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        write (9000,*) "LSU                       lsu_plc_stat_aa.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(4723, "lsu_plc_stat_aa.csv", 8000)
+          write (4723,*) bsn%name, prog
+          write (4723,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          write (9000,*) "LSU                       lsu_plc_stat_aa.csv"
+        end if
+      end if
+
+      end if  !! db_mx%lsu_out > 0
+
       return
+
+      contains
+
+        subroutine open_cb_wide_pair(u_txt, u_csv, fname_txt, fname_csv, var_names)
+          !! opens a wide-per-layer carbon stat file pair (txt always, csv if pco%csvout == "y").
+          integer, intent(in) :: u_txt, u_csv
+          character(len=*), intent(in) :: fname_txt, fname_csv
+          character(len=*), intent(in) :: var_names(:)
+          integer :: rl
+          !! record length must hold id columns + depth block + one block per
+          !! variable, each block cb_n_layers wide; sized so any layer count fits.
+          rl = 512 + (1 + size(var_names)) * cb_n_layers * 24
+          call open_output_file(u_txt, fname_txt, rl)
+          write (u_txt, *) bsn%name, prog
+          call cb_write_wide_header(u_txt, var_names, .false.)
+          write (9000, *) "HRU                       " // trim(fname_txt)
+          if (pco%csvout == "y") then
+            call open_output_file(u_csv, fname_csv, rl)
+            write (u_csv, *) bsn%name, prog
+            call cb_write_wide_header(u_csv, var_names, .true.)
+            write (9000, *) "HRU                       " // trim(fname_csv)
+          end if
+        end subroutine open_cb_wide_pair
+
+        subroutine open_cb_flat_pair(u_txt, u_csv, fname_txt, fname_csv, var_names)
+          !! opens a non-layered carbon stat file pair (no _lyrK suffix on labels).
+          integer, intent(in) :: u_txt, u_csv
+          character(len=*), intent(in) :: fname_txt, fname_csv
+          character(len=*), intent(in) :: var_names(:)
+          call open_output_file(u_txt, fname_txt, 8000)
+          write (u_txt, *) bsn%name, prog
+          call cb_write_flat_header(u_txt, var_names, .false.)
+          write (9000, *) "HRU                       " // trim(fname_txt)
+          if (pco%csvout == "y") then
+            call open_output_file(u_csv, fname_csv, 8000)
+            write (u_csv, *) bsn%name, prog
+            call cb_write_flat_header(u_csv, var_names, .true.)
+            write (9000, *) "HRU                       " // trim(fname_csv)
+          end if
+        end subroutine open_cb_flat_pair
+
+        subroutine open_cb_banner_pair(u_txt, u_csv, fname_txt, fname_csv, banner_msg)
+          !! opens hru_cbn_lyr files: banner row, then the column header (written once).
+          integer, intent(in) :: u_txt, u_csv
+          character(len=*), intent(in) :: fname_txt, fname_csv, banner_msg
+          integer :: rl
+          !! id columns + depth block + tot block + seq block (each cb_n_layers
+          !! wide) plus the two 300 mm scalar sums; sized so any layer count fits.
+          rl = 512 + (3 * cb_n_layers + 2) * 24
+          call open_output_file(u_txt, fname_txt, rl)
+          write (u_txt, *) bsn%name, prog, banner_msg
+          call cb_write_cbn_lyr_header(u_txt, .false.)
+          write (9000, *) "HRU                       " // trim(fname_txt)
+          if (pco%csvout == "y") then
+            call open_output_file(u_csv, fname_csv, rl)
+            write (u_csv, *) bsn%name, prog, banner_msg
+            call cb_write_cbn_lyr_header(u_csv, .true.)
+            write (9000, *) "HRU                       " // trim(fname_csv)
+          end if
+        end subroutine open_cb_banner_pair
+
       end subroutine output_landscape_init
