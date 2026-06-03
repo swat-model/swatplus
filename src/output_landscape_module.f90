@@ -1192,6 +1192,22 @@
          character(len=15)  :: ph            =    "             ph"  
          end type output_endsim_soil_prop_header
       type (output_endsim_soil_prop_header) ::endsim_soil_prop_hdr
+
+      type output_begsim_wp_lyr_header
+        character (len=7)  :: freq          =    "freq   "
+        character (len=16) :: soil_name     =    "            soil"
+        character (len=4)  :: soil_lyr      =    "lyrs"
+        character (len=6)  :: soil_depth    =    " depth"
+        character (len=3)  :: mo            =    "mon"
+        character (len=3)  :: day_mo        =    "day"
+        character (len=5)  :: yrc           =    "   yr"
+        character (len=5)  :: hru           =    "  hru"
+        character (len=8)  :: gis_id        =    "  gis_id"
+        character (len=16) :: name          =    "            name"
+        character (len=10) :: wp            =    "        wp"
+        character (len=10) :: wpmm          =    "      wpmm"
+      end type output_begsim_wp_lyr_header
+      type (output_begsim_wp_lyr_header) :: begsim_wp_lyr_hdr
       
 
 

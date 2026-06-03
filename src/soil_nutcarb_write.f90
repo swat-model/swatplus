@@ -17,6 +17,7 @@
       use carbon_module
       use basin_module
       use plant_module
+      use output_landscape_module
       
       implicit none
       
@@ -85,6 +86,12 @@
                               soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
                               soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
               enddo
+
+              do ly = 1, soil(j)%nly
+                write (4588,*) freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                              soil(j)%phys(ly)%wp, soil(j)%phys(ly)%wpmm
+              enddo
+
               if (pco%csvout == "y") then
                 do ly = 1, soil(j)%nly
                   write (4587,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
@@ -92,6 +99,11 @@
                               soil(j)%phys(ly)%bd, soil(j)%phys(ly)%awc, soil(j)%phys(ly)%k, soil(j)%phys(ly)%cbn, &
                               soil(j)%phys(ly)%clay, soil(j)%phys(ly)%silt, soil(j)%phys(ly)%sand, soil(j)%phys(ly)%rock, &
                               soil(j)%ly(ly)%alb, soil(j)%ly(ly)%usle_k, soil(j)%ly(ly)%ec, soil(j)%ly(ly)%cal, soil(j)%ly(ly)%ph
+                enddo
+
+                do ly = 1, soil(j)%nly
+                  write (4589,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                                soil(j)%phys(ly)%wp, soil(j)%phys(ly)%wpmm
                 enddo
               endif
             endif

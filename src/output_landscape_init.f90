@@ -506,6 +506,18 @@
               write (9000,*) "HRU                       hru_begsim_soil_prop.csv"
             endif
 
+            !! write beginning of simulation wilting-point water by layer
+            call open_output_file(4588, "hru_begsim_wp_lyr.txt", 1500)
+            write (4588,*)  bsn%name, prog
+            write (4588,*) begsim_wp_lyr_hdr
+            write (9000,*) "HRU                       hru_begsim_wp_lyr.txt"
+            if (pco%csvout == "y") then
+              call open_output_file(4589, "hru_begsim_wp_lyr.csv", 1500)
+              write (4589,*)  bsn%name, prog
+              write (4589,'(*(G0.6,:,","))') begsim_wp_lyr_hdr
+              write (9000,*) "HRU                       hru_begsim_wp_lyr.csv"
+            endif
+
             !! write end of simulation soil properties headers to hru_endsim_soil_prop
             call open_output_file(4584, "hru_endsim_soil_prop.txt", 1500)
             write (4584,*)  bsn%name, prog
