@@ -2,6 +2,8 @@
       
       use time_module
       use basin_module
+      use hru_module, only : hru
+      use soil_data_module, only : soildb
       
       implicit none
       
@@ -1648,5 +1650,56 @@
 !        dr1%lag = const
 !        dr1%grv = const
 !      end function dr_constant
+
+      integer function case6_header_layers(obtypno)
+        integer, intent(in) :: obtypno
+
+        integer :: ihru = 0
+        integer :: layer_count = 0
+
+        case6_header_layers = 1
+
+        if (obtypno == 0) then
+          do ihru = 1, sp_ob%hru
+            layer_count = soil_layers_for_hru(ihru)
+            case6_header_layers = Max(case6_header_layers, layer_count)
+          end do
+        else
+          case6_header_layers = soil_layers_for_hru(obtypno)
+        end if
+      end function case6_header_layers
+
+      integer function soil_layers_for_hru(ihru)
+        integer, intent(in) :: ihru
+
+        integer :: isol = 0
+
+        soil_layers_for_hru = 1
+        isol = hru(ihru)%dbs%soil
+        if (isol > 0) then
+          soil_layers_for_hru = soildb(isol)%s%nly
+          if (soildb(isol)%ly(1)%z > 19.5) soil_layers_for_hru = soil_layers_for_hru + 1
+        end if
+      end function soil_layers_for_hru
+
+      subroutine write_case6_header(iunit, obtypno)
+        integer, intent(in) :: iunit
+        integer, intent(in) :: obtypno
+
+        integer :: nly = 0
+        integer :: nly_hdr = 0
+        character(len=15), dimension(:), allocatable :: sol_hdr_dyn
+        character(len=200) :: solHdrFmt = ""
+
+        nly_hdr = case6_header_layers(obtypno)
+        allocate(sol_hdr_dyn(nly_hdr))
+        do nly = 1, nly_hdr
+          write(sol_hdr_dyn(nly), '(A,I0)') '       st_mm_', nly
+        end do
+        write(solHdrFmt, '(A,I0,A)') '(A11,A12,A12,A13,1X,A9,1X,A10,2X,', nly_hdr, '(A16))'
+        write (iunit,solHdrFmt) hyd_hdr_time%day, hyd_hdr_time%mo, hyd_hdr_time%day_mo, hyd_hdr_time%yrc, &
+          hyd_hdr_time%name, 'obj_type', (sol_hdr_dyn(nly), nly = 1, nly_hdr)
+        deallocate(sol_hdr_dyn)
+      end subroutine write_case6_header
       
       end module hydrograph_module

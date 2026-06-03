@@ -108,7 +108,7 @@
          !case (1-5)
          !write (iunit+i,*) hyd_hdr_time, hyd_hdr
          case (6)
-           write (iunit+i,*) hyd_hdr_time, sol_hdr
+           call write_case6_header(iunit+i, ob_out(i)%obtypno)
          case (7)
            write (iunit+i,*) hyd_hdr_time, sol_nut_ly_hdr
          case (8)
