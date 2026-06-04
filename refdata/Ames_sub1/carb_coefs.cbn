@@ -26,11 +26,18 @@ apco2           0.55        0.55
 abco2           0.55        0.0
 
 # organic fractions used to initialize soil carbon into various pools 
+# The sum of frac_hum_microb, frac_hum_slow and  frac_hum_passive must equel 1.0
+# If mathers_frac = 1, then frac_hum_passive is calculated based soil texture
+# and frac_hum_slow is recalcuated as (1.0 - (frac_hum_passive + frac_hum_microb)).
+# The frac_liter is the fraction of soil carbon that is added to liter pools (meta, str, lig) because
+# soil carbon from the soils data does not include liter.   
+# These factors only impact the initialization of the pools at the beginning of the 
+# simulation.
 #               frac_litter    frac_hum_microb     frac_hum_slow   frac_hum_passive
 org_frac        0.05        0.02                0.44            0.54 
 
-# The input mathers_method controls whether the mathers equations will be used (or not used) 
-# to initialize humus slow pool carbon. 
+# The mathers_method controls whether the mathers equations will be used (or not used) 
+# to initialize humus passive pool carbon. 
 # Ref. "Updating carbon pool initialization within DSSAT-CENTURY", Soil Science Society of America Journal 2025
 # A value of 0 means the Mather's method will not be used.  This is the default if no method is specified
 # A value of 1 means the Mather's method will be used.
@@ -47,6 +54,7 @@ till_eff_days   100
 rtof            0.5 
 
 # Carbon moisture consolidation factors
+# These factors effect how rapidly a recovery occurs to normal conditions after a tillage event.
 #                          bio_consf  till_consf
 cbn_consolidation_factors  .15        .10
 
