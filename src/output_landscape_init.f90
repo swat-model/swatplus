@@ -1283,173 +1283,173 @@
                  18x,"       MASS","          C", "           N","           P")
 
       !! LSU-level carbon output files (only when project has LSUs configured)
-      !! Unit allocation: lsu_carb_gl 4700-4707, lsu_scf 4708-4715, lsu_plc_stat 4716-4723.
+      !! Unit allocation: lsu_carb_gl 4750-4757, lsu_scf 4758-4765, lsu_plc_stat 4766-4773.
       !! Reuses HRU header types (carb_gl_hdr, hscf_hdr) since columns are identical; lsu_plc_stat uses runtime header.
 
       if (db_mx%lsu_out > 0) then
 
       !! lsu_carb_gl_*
       if (pco%cb_gl_lsu%d == "y") then
-        call open_output_file(4700, "lsu_carb_gl_day.txt", 8000)
-        write (4700,*) bsn%name, prog
-        write (4700,*) carb_gl_hdr
-        write (4700,*) carb_gl_hdr_units
+        call open_output_file(4750, "lsu_carb_gl_day.txt", 8000)
+        write (4750,*) bsn%name, prog
+        write (4750,*) carb_gl_hdr
+        write (4750,*) carb_gl_hdr_units
         write (9000,*) "LSU                       lsu_carb_gl_day.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4704, "lsu_carb_gl_day.csv", 8000)
-          write (4704,*) bsn%name, prog
-          write (4704,'(*(G0.6,:,","))') carb_gl_hdr
-          write (4704,'(*(G0.6,:,","))') carb_gl_hdr_units
+          call open_output_file(4754, "lsu_carb_gl_day.csv", 8000)
+          write (4754,*) bsn%name, prog
+          write (4754,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4754,'(*(G0.6,:,","))') carb_gl_hdr_units
           write (9000,*) "LSU                       lsu_carb_gl_day.csv"
         end if
       end if
       if (pco%cb_gl_lsu%m == "y") then
-        call open_output_file(4701, "lsu_carb_gl_mon.txt", 8000)
-        write (4701,*) bsn%name, prog
-        write (4701,*) carb_gl_hdr
-        write (4701,*) carb_gl_hdr_units
+        call open_output_file(4751, "lsu_carb_gl_mon.txt", 8000)
+        write (4751,*) bsn%name, prog
+        write (4751,*) carb_gl_hdr
+        write (4751,*) carb_gl_hdr_units
         write (9000,*) "LSU                       lsu_carb_gl_mon.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4705, "lsu_carb_gl_mon.csv", 8000)
-          write (4705,*) bsn%name, prog
-          write (4705,'(*(G0.6,:,","))') carb_gl_hdr
-          write (4705,'(*(G0.6,:,","))') carb_gl_hdr_units
+          call open_output_file(4755, "lsu_carb_gl_mon.csv", 8000)
+          write (4755,*) bsn%name, prog
+          write (4755,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4755,'(*(G0.6,:,","))') carb_gl_hdr_units
           write (9000,*) "LSU                       lsu_carb_gl_mon.csv"
         end if
       end if
       if (pco%cb_gl_lsu%y == "y") then
-        call open_output_file(4702, "lsu_carb_gl_yr.txt", 8000)
-        write (4702,*) bsn%name, prog
-        write (4702,*) carb_gl_hdr
-        write (4702,*) carb_gl_hdr_units
+        call open_output_file(4752, "lsu_carb_gl_yr.txt", 8000)
+        write (4752,*) bsn%name, prog
+        write (4752,*) carb_gl_hdr
+        write (4752,*) carb_gl_hdr_units
         write (9000,*) "LSU                       lsu_carb_gl_yr.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4706, "lsu_carb_gl_yr.csv", 8000)
-          write (4706,*) bsn%name, prog
-          write (4706,'(*(G0.6,:,","))') carb_gl_hdr
-          write (4706,'(*(G0.6,:,","))') carb_gl_hdr_units
+          call open_output_file(4756, "lsu_carb_gl_yr.csv", 8000)
+          write (4756,*) bsn%name, prog
+          write (4756,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4756,'(*(G0.6,:,","))') carb_gl_hdr_units
           write (9000,*) "LSU                       lsu_carb_gl_yr.csv"
         end if
       end if
       if (pco%cb_gl_lsu%a == "y") then
-        call open_output_file(4703, "lsu_carb_gl_aa.txt", 8000)
-        write (4703,*) bsn%name, prog
-        write (4703,*) carb_gl_hdr
-        write (4703,*) carb_gl_hdr_units
+        call open_output_file(4753, "lsu_carb_gl_aa.txt", 8000)
+        write (4753,*) bsn%name, prog
+        write (4753,*) carb_gl_hdr
+        write (4753,*) carb_gl_hdr_units
         write (9000,*) "LSU                       lsu_carb_gl_aa.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4707, "lsu_carb_gl_aa.csv", 8000)
-          write (4707,*) bsn%name, prog
-          write (4707,'(*(G0.6,:,","))') carb_gl_hdr
-          write (4707,'(*(G0.6,:,","))') carb_gl_hdr_units
+          call open_output_file(4757, "lsu_carb_gl_aa.csv", 8000)
+          write (4757,*) bsn%name, prog
+          write (4757,'(*(G0.6,:,","))') carb_gl_hdr
+          write (4757,'(*(G0.6,:,","))') carb_gl_hdr_units
           write (9000,*) "LSU                       lsu_carb_gl_aa.csv"
         end if
       end if
 
       !! lsu_scf_*
       if (pco%cb_trf_lsu%d == "y") then
-        call open_output_file(4708, "lsu_scf_day.txt", 8000)
-        write (4708,*) bsn%name, prog
-        write (4708,*) hscf_hdr
-        write (4708,*) hscf_hdr_units
+        call open_output_file(4758, "lsu_scf_day.txt", 8000)
+        write (4758,*) bsn%name, prog
+        write (4758,*) hscf_hdr
+        write (4758,*) hscf_hdr_units
         write (9000,*) "LSU                       lsu_scf_day.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4712, "lsu_scf_day.csv", 8000)
-          write (4712,*) bsn%name, prog
-          write (4712,'(*(G0.6,:,","))') hscf_hdr
-          write (4712,'(*(G0.6,:,","))') hscf_hdr_units
+          call open_output_file(4762, "lsu_scf_day.csv", 8000)
+          write (4762,*) bsn%name, prog
+          write (4762,'(*(G0.6,:,","))') hscf_hdr
+          write (4762,'(*(G0.6,:,","))') hscf_hdr_units
           write (9000,*) "LSU                       lsu_scf_day.csv"
         end if
       end if
       if (pco%cb_trf_lsu%m == "y") then
-        call open_output_file(4709, "lsu_scf_mon.txt", 8000)
-        write (4709,*) bsn%name, prog
-        write (4709,*) hscf_hdr
-        write (4709,*) hscf_hdr_units
+        call open_output_file(4759, "lsu_scf_mon.txt", 8000)
+        write (4759,*) bsn%name, prog
+        write (4759,*) hscf_hdr
+        write (4759,*) hscf_hdr_units
         write (9000,*) "LSU                       lsu_scf_mon.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4713, "lsu_scf_mon.csv", 8000)
-          write (4713,*) bsn%name, prog
-          write (4713,'(*(G0.6,:,","))') hscf_hdr
-          write (4713,'(*(G0.6,:,","))') hscf_hdr_units
+          call open_output_file(4763, "lsu_scf_mon.csv", 8000)
+          write (4763,*) bsn%name, prog
+          write (4763,'(*(G0.6,:,","))') hscf_hdr
+          write (4763,'(*(G0.6,:,","))') hscf_hdr_units
           write (9000,*) "LSU                       lsu_scf_mon.csv"
         end if
       end if
       if (pco%cb_trf_lsu%y == "y") then
-        call open_output_file(4710, "lsu_scf_yr.txt", 8000)
-        write (4710,*) bsn%name, prog
-        write (4710,*) hscf_hdr
-        write (4710,*) hscf_hdr_units
+        call open_output_file(4760, "lsu_scf_yr.txt", 8000)
+        write (4760,*) bsn%name, prog
+        write (4760,*) hscf_hdr
+        write (4760,*) hscf_hdr_units
         write (9000,*) "LSU                       lsu_scf_yr.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4714, "lsu_scf_yr.csv", 8000)
-          write (4714,*) bsn%name, prog
-          write (4714,'(*(G0.6,:,","))') hscf_hdr
-          write (4714,'(*(G0.6,:,","))') hscf_hdr_units
+          call open_output_file(4764, "lsu_scf_yr.csv", 8000)
+          write (4764,*) bsn%name, prog
+          write (4764,'(*(G0.6,:,","))') hscf_hdr
+          write (4764,'(*(G0.6,:,","))') hscf_hdr_units
           write (9000,*) "LSU                       lsu_scf_yr.csv"
         end if
       end if
       if (pco%cb_trf_lsu%a == "y") then
-        call open_output_file(4711, "lsu_scf_aa.txt", 8000)
-        write (4711,*) bsn%name, prog
-        write (4711,*) hscf_hdr
-        write (4711,*) hscf_hdr_units
+        call open_output_file(4761, "lsu_scf_aa.txt", 8000)
+        write (4761,*) bsn%name, prog
+        write (4761,*) hscf_hdr
+        write (4761,*) hscf_hdr_units
         write (9000,*) "LSU                       lsu_scf_aa.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4715, "lsu_scf_aa.csv", 8000)
-          write (4715,*) bsn%name, prog
-          write (4715,'(*(G0.6,:,","))') hscf_hdr
-          write (4715,'(*(G0.6,:,","))') hscf_hdr_units
+          call open_output_file(4765, "lsu_scf_aa.csv", 8000)
+          write (4765,*) bsn%name, prog
+          write (4765,'(*(G0.6,:,","))') hscf_hdr
+          write (4765,'(*(G0.6,:,","))') hscf_hdr_units
           write (9000,*) "LSU                       lsu_scf_aa.csv"
         end if
       end if
 
       !! lsu_plc_stat_* (single column: lsu_plt_c, area-weighted plant carbon mass)
       if (pco%cb_plt_lsu%d == "y") then
-        call open_output_file(4716, "lsu_plc_stat_day.txt", 8000)
-        write (4716,*) bsn%name, prog
-        write (4716,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        call open_output_file(4766, "lsu_plc_stat_day.txt", 8000)
+        write (4766,*) bsn%name, prog
+        write (4766,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
         write (9000,*) "LSU                       lsu_plc_stat_day.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4720, "lsu_plc_stat_day.csv", 8000)
-          write (4720,*) bsn%name, prog
-          write (4720,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          call open_output_file(4770, "lsu_plc_stat_day.csv", 8000)
+          write (4770,*) bsn%name, prog
+          write (4770,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
           write (9000,*) "LSU                       lsu_plc_stat_day.csv"
         end if
       end if
       if (pco%cb_plt_lsu%m == "y") then
-        call open_output_file(4717, "lsu_plc_stat_mon.txt", 8000)
-        write (4717,*) bsn%name, prog
-        write (4717,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        call open_output_file(4767, "lsu_plc_stat_mon.txt", 8000)
+        write (4767,*) bsn%name, prog
+        write (4767,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
         write (9000,*) "LSU                       lsu_plc_stat_mon.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4721, "lsu_plc_stat_mon.csv", 8000)
-          write (4721,*) bsn%name, prog
-          write (4721,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          call open_output_file(4771, "lsu_plc_stat_mon.csv", 8000)
+          write (4771,*) bsn%name, prog
+          write (4771,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
           write (9000,*) "LSU                       lsu_plc_stat_mon.csv"
         end if
       end if
       if (pco%cb_plt_lsu%y == "y") then
-        call open_output_file(4718, "lsu_plc_stat_yr.txt", 8000)
-        write (4718,*) bsn%name, prog
-        write (4718,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        call open_output_file(4768, "lsu_plc_stat_yr.txt", 8000)
+        write (4768,*) bsn%name, prog
+        write (4768,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
         write (9000,*) "LSU                       lsu_plc_stat_yr.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4722, "lsu_plc_stat_yr.csv", 8000)
-          write (4722,*) bsn%name, prog
-          write (4722,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          call open_output_file(4772, "lsu_plc_stat_yr.csv", 8000)
+          write (4772,*) bsn%name, prog
+          write (4772,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
           write (9000,*) "LSU                       lsu_plc_stat_yr.csv"
         end if
       end if
       if (pco%cb_plt_lsu%a == "y") then
-        call open_output_file(4719, "lsu_plc_stat_aa.txt", 8000)
-        write (4719,*) bsn%name, prog
-        write (4719,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
+        call open_output_file(4769, "lsu_plc_stat_aa.txt", 8000)
+        write (4769,*) bsn%name, prog
+        write (4769,*) "        jday         mon         day          yr        unit                gis_id    name              lsu_plt_c"
         write (9000,*) "LSU                       lsu_plc_stat_aa.txt"
         if (pco%csvout == "y") then
-          call open_output_file(4723, "lsu_plc_stat_aa.csv", 8000)
-          write (4723,*) bsn%name, prog
-          write (4723,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
+          call open_output_file(4773, "lsu_plc_stat_aa.csv", 8000)
+          write (4773,*) bsn%name, prog
+          write (4773,*) "jday,mon,day,yr,unit,gis_id,name,lsu_plt_c"
           write (9000,*) "LSU                       lsu_plc_stat_aa.csv"
         end if
       end if

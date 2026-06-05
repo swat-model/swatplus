@@ -63,16 +63,16 @@
 
         !! daily print
         if (pco%cb_gl_lsu%d == "y") then
-          write (4700,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_d(ilsu), lrc_d(ilsu), lpc_d(ilsu)
-          if (pco%csvout == "y") write (4704,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_d(ilsu), lrc_d(ilsu), lpc_d(ilsu)
+          write (4750,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_d(ilsu), lrc_d(ilsu), lpc_d(ilsu)
+          if (pco%csvout == "y") write (4754,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_d(ilsu), lrc_d(ilsu), lpc_d(ilsu)
         end if
         if (pco%cb_trf_lsu%d == "y") then
-          write (4708,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_d(ilsu)
-          if (pco%csvout == "y") write (4712,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_d(ilsu)
+          write (4758,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_d(ilsu)
+          if (pco%csvout == "y") write (4762,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_d(ilsu)
         end if
         if (pco%cb_plt_lsu%d == "y") then
-          write (4716,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
-          if (pco%csvout == "y") write (4720,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+          write (4766,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+          if (pco%csvout == "y") write (4770,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
         end if
 
         !! end of month
@@ -83,16 +83,16 @@
           lscf_y(ilsu) = lscf_y(ilsu) + lscf_m(ilsu)
 
           if (pco%cb_gl_lsu%m == "y") then
-            write (4701,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_m(ilsu), lrc_m(ilsu), lpc_m(ilsu)
-            if (pco%csvout == "y") write (4705,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_m(ilsu), lrc_m(ilsu), lpc_m(ilsu)
+            write (4751,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_m(ilsu), lrc_m(ilsu), lpc_m(ilsu)
+            if (pco%csvout == "y") write (4755,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_m(ilsu), lrc_m(ilsu), lpc_m(ilsu)
           end if
           if (pco%cb_trf_lsu%m == "y") then
-            write (4709,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_m(ilsu)
-            if (pco%csvout == "y") write (4713,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_m(ilsu)
+            write (4759,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_m(ilsu)
+            if (pco%csvout == "y") write (4763,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_m(ilsu)
           end if
           if (pco%cb_plt_lsu%m == "y") then
-            write (4717,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
-            if (pco%csvout == "y") write (4721,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+            write (4767,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+            if (pco%csvout == "y") write (4771,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
           end if
 
           lsc_m(ilsu) = hscz
@@ -109,16 +109,16 @@
           lscf_a(ilsu) = lscf_a(ilsu) + lscf_y(ilsu)
 
           if (pco%cb_gl_lsu%y == "y") then
-            write (4702,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_y(ilsu), lrc_y(ilsu), lpc_y(ilsu)
-            if (pco%csvout == "y") write (4706,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_y(ilsu), lrc_y(ilsu), lpc_y(ilsu)
+            write (4752,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_y(ilsu), lrc_y(ilsu), lpc_y(ilsu)
+            if (pco%csvout == "y") write (4756,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_y(ilsu), lrc_y(ilsu), lpc_y(ilsu)
           end if
           if (pco%cb_trf_lsu%y == "y") then
-            write (4710,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_y(ilsu)
-            if (pco%csvout == "y") write (4714,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_y(ilsu)
+            write (4760,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_y(ilsu)
+            if (pco%csvout == "y") write (4764,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_y(ilsu)
           end if
           if (pco%cb_plt_lsu%y == "y") then
-            write (4718,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
-            if (pco%csvout == "y") write (4722,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+            write (4768,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+            if (pco%csvout == "y") write (4772,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
           end if
 
           lsc_y(ilsu) = hscz
@@ -135,16 +135,16 @@
             lpc_a(ilsu) = lpc_a(ilsu) / time%yrs_prt
             lscf_a(ilsu) = lscf_a(ilsu) / time%yrs_prt
             if (pco%cb_gl_lsu%a == "y") then
-              write (4703,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_a(ilsu), lrc_a(ilsu), lpc_a(ilsu)
-              if (pco%csvout == "y") write (4707,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_a(ilsu), lrc_a(ilsu), lpc_a(ilsu)
+              write (4753,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_a(ilsu), lrc_a(ilsu), lpc_a(ilsu)
+              if (pco%csvout == "y") write (4757,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsc_a(ilsu), lrc_a(ilsu), lpc_a(ilsu)
             end if
             if (pco%cb_trf_lsu%a == "y") then
-              write (4711,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_a(ilsu)
-              if (pco%csvout == "y") write (4715,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_a(ilsu)
+              write (4761,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_a(ilsu)
+              if (pco%csvout == "y") write (4765,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lscf_a(ilsu)
             end if
             if (pco%cb_plt_lsu%a == "y") then
-              write (4719,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
-              if (pco%csvout == "y") write (4723,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+              write (4769,*) time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
+              if (pco%csvout == "y") write (4773,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ilsu, ob(iob)%gis_id, ob(iob)%name, lsu_plt_c
             end if
           end if
         end if

@@ -16,9 +16,10 @@
       !!   org_allo(:), so future expansion past dimension(2) needs no
       !!   change to this reader.
       !!
-      !! both files are required when bsn_cc%cswat == 2; the routine
-      !! aborts via error stop if either is missing or malformed.
-      !! no-op when carbon is off.
+      !! both files are required when bsn_cc%cswat == 2; the routine aborts via
+      !! error stop if either file is missing, or if its data line(s) are missing
+      !! or malformed. the leading title and column-header lines are optional and
+      !! may be blank. no-op when carbon is off.
 
       use carbon_module
       use basin_module
@@ -60,10 +61,10 @@
         error stop
       end if
 
-      read (107, *, iostat=eof) titldum
-      if (eof /= 0) goto 89
-      read (107, *, iostat=eof) header
-      if (eof /= 0) goto 89
+      !! comment and column-header lines are optional (may be blank); read with
+      !! '(a)' so a blank line consumes exactly one record instead of skipping it.
+      read (107, '(a)', iostat=eof) titldum
+      read (107, '(a)', iostat=eof) header
 
       read (107, *, iostat=eof)                                   &
         org_frac%frac_seq,         org_frac%frac_hum_microb,      &
@@ -80,8 +81,8 @@
         mathers_int
 
       if (eof /= 0) then
-        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " data row could not be parsed (expected 28 values)"
-        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " data row could not be parsed (expected 28 values)"
+        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " data/values line is missing or could not be parsed (expected 28 values)"
+        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " data/values line is missing or could not be parsed (expected 28 values)"
         close (107)
         error stop
       end if
@@ -89,7 +90,7 @@
       !! mathers_method: 1 = use the Mathers humus-slow init in soil_nutcarb_init, 0 = original method
       org_frac%mathers_method = (mathers_int == 1)
 
-   89 close (107)
+      close (107)
 
       !! carbon_lyr.bsn (per-layer table)
 
@@ -117,10 +118,8 @@
         error stop
       end if
 
-      read (107, *, iostat=eof) titldum
-      if (eof /= 0) goto 99
-      read (107, *, iostat=eof) header
-      if (eof /= 0) goto 99
+      read (107, '(a)', iostat=eof) titldum
+      read (107, '(a)', iostat=eof) header
 
       max_lyr = size(carbdb)
 
@@ -163,6 +162,6 @@
         error stop
       end if
 
-   99 close (107)
+      close (107)
       return
       end subroutine carbon_bsn_read
