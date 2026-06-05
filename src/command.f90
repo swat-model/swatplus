@@ -462,8 +462,8 @@
         
       end do
 
-      !! write object output for entire simulation
-      call obj_output
+      !! write object output for entire simulation (fort-leak-fix: no NetCDF backend)
+      if (pco%cdfout /= "y") call obj_output
       
       !! print all output files
       if (time%yrs > pco%nyskip) then
