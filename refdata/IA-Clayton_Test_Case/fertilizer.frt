@@ -1,0 +1,178 @@
+fertilizer.frt:
+name        min_n      min_p      org_n      org_p      nh3_n     pathogens     description
+mi_n        1.00000    0.00000    0.00000    0.00000    0.00000   null          serv_min_n
+mi_p        0.00000    1.00000    0.00000    0.00000    0.00000   null          serv_min_p
+or_n        0.00000    0.00000    1.00000    0.00000    0.00000   null          serv_org_n
+or_p        0.00000    0.00000    0.00000    1.00000    0.00000   null          serv_org_p
+elem_n      1.00000    0.00000    0.00000    0.00000    0.00000   null          ElementalNitrogen
+elem_p      0.00000    1.00000    0.00000    0.00000    0.00000   null          ElementalPhosphorous
+p           0.00000    1.00000    0.00000    0.00000    0.00000   null          SyntheticPhosphorous
+n           1.00000    0.00000    0.00000    0.00000    0.00000   null          SyntheticNitrogen
+anh_nh3     0.82000    0.00000    0.00000    0.00000    1.00000   null          AnhydrousAmmonia
+urea        0.46000    0.00000    0.00000    0.00000    1.00000   null          Urea
+46_00_00    0.46000    0.00000    0.00000    0.00000    0.00000   null          46_00_00
+33_00_00    0.33000    0.00000    0.00000    0.00000    0.00000   null          33_00_00
+31_13_00    0.31000    0.05700    0.00000    0.00000    0.00000   null          31_13_00
+30_80_00    0.30000    0.35200    0.00000    0.00000    0.00000   null          30_80_00
+30_15_00    0.30000    0.06600    0.00000    0.00000    0.00000   null          30_15_00
+28_10_10    0.28000    0.04400    0.00000    0.00000    0.00000   null          28_10_10
+28_03_00    0.28000    0.01300    0.00000    0.00000    0.00000   null          28_03_00
+26_13_00    0.26000    0.05700    0.00000    0.00000    0.00000   null          26_13_00
+25_05_00    0.25000    0.02200    0.00000    0.00000    0.00000   null          25_05_00
+25_03_00    0.25000    0.01300    0.00000    0.00000    0.00000   null          25_03_00
+24_06_00    0.24000    0.02600    0.00000    0.00000    0.00000   null          24_06_00
+22_14_00    0.22000    0.06200    0.00000    0.00000    0.00000   null          22_14_00
+20_20_00    0.20000    0.08800    0.00000    0.00000    0.00000   null          20_20_00
+18_46_00    0.18000    0.20200    0.00000    0.00000    0.00000   null          18_46_00
+18_04_00    0.18000    0.01800    0.00000    0.00000    0.00000   null          18_04_00
+16_20_20    0.16000    0.08800    0.00000    0.00000    0.00000   null          16_20_20
+15_15_15    0.15000    0.06600    0.00000    0.00000    0.00000   null          15_15_15
+15_15_00    0.15000    0.06600    0.00000    0.00000    0.00000   null          15_15_00
+13_13_13    0.13000    0.05700    0.00000    0.00000    0.00000   null          13_13_13
+12_20_00    0.12000    0.08800    0.00000    0.00000    0.00000   null          12_20_00
+11_52_00    0.11000    0.22900    0.00000    0.00000    0.00000   null          11_52_00
+11_15_00    0.11000    0.06600    0.00000    0.00000    0.00000   null          11_15_00
+10_34_00    0.10000    0.15000    0.00000    0.00000    0.00000   null          10_34_00
+10_28_00    0.10000    0.12300    0.00000    0.00000    0.00000   null          10_28_00
+10_20_20    0.10000    0.08800    0.00000    0.00000    0.00000   null          10_20_20
+10_10_10    0.10000    0.44000    0.00000    0.00000    0.00000   null          10_10_10
+08_15_00    0.08000    0.06600    0.00000    0.00000    0.00000   null          08_15_00
+08_08_00    0.08000    0.03500    0.00000    0.00000    0.00000   null          08_08_00
+07_07_00    0.07000    0.03100    0.00000    0.00000    0.00000   null          07_07_00
+07_00_00    0.07000    0.00000    0.00000    0.00000    0.00000   null          07_00_00
+06_24_24    0.06000    0.10600    0.00000    0.00000    0.00000   null          06_24_24
+05_10_15    0.05000    0.04400    0.00000    0.00000    0.00000   null          05_10_15
+05_10_10    0.05000    0.04400    0.00000    0.00000    0.00000   null          05_10_10
+05_10_05    0.05000    0.04400    0.00000    0.00000    0.00000   null          05_10_05
+04_08_00    0.04000    0.03500    0.00000    0.00000    0.00000   null          04_08_00
+03_06_00    0.03000    0.02600    0.00000    0.00000    0.00000   null          03_06_00
+02_09_00    0.02000    0.04000    0.00000    0.00000    0.00000   null          02_09_00
+00_15_00    0.00000    0.06600    0.00000    0.00000    0.00000   null          00_15_00
+00_06_00    0.00000    0.02600    0.00000    0.00000    0.00000   null          00_06_00
+dairy_fr    0.00700    0.00500    0.03100    0.00300    0.99000   null          Dairy_FreshManure
+beef_fr     0.01000    0.00400    0.03000    0.00700    0.99000   fresh_manure  Beef_FreshManure
+veal_fr     0.02300    0.00600    0.02900    0.00700    0.99000   fresh_manure  Veal_FreshManure
+swine_fr    0.02600    0.01100    0.02100    0.00500    0.99000   fresh_manure  Swine_FreshManure
+sheep_fr    0.01400    0.00300    0.02400    0.00500    0.99000   fresh_manure  Sheep_FreshManure
+goat_fr     0.01300    0.00300    0.02200    0.00500    0.99000   fresh_manure  Goat_FreshManure
+horse_fr    0.00600    0.00100    0.01400    0.00300    0.99000   fresh_manure  Horse_FreshManure
+layer_fr    0.01300    0.00600    0.04000    0.01300    0.99000   fresh_manure  Layer_FreshManure
+broil_fr    0.01000    0.00400    0.04000    0.01000    0.99000   fresh_manure  Broiler_FreshManure
+trkey_fr    0.00700    0.00300    0.04500    0.01600    0.99000   fresh_manure  Turkey_FreshManure
+duck_fr     0.02300    0.00800    0.02500    0.00900    0.99000   fresh_manure  Duck_FreshManure
+ceap_p_n    0.42000    0.00000    0.58000    0.00000    0.39200   ceap_manure   Ceap_Manure_N_Fr_Past
+ceap_p_p    0.00000    0.65000    0.00000    0.35000    0.00000   ceap_manure   Ceap_Manure_P_Fr_Past
+ceap_h_n    0.41000    0.00000    0.59000    0.00000    0.38100   ceap_manure   Ceap_Manure_N_Fr_Hay
+ceap_h_p    0.00000    0.65300    0.00000    0.34700    0.00000   ceap_manure   Ceap_Manure_P_Fr_Hay
+mw_bf_lq    0.02626    0.01273    0.03010    0.00570    0.99000   FtM_Manures   Midwest_Beef_Liquid
+mw_bf_sd    0.00217    0.00439    0.02140    0.00197    0.99000   FtM_Manures   Midwest_Beef_Solid
+mw_bf_sl    0.03641    0.01097    0.02848    0.00494    0.99000   FtM_Manures   Midwest_Beef_Slurry
+mw_bf_ss    0.00575    0.00793    0.03008    0.00356    0.99000   FtM_Manures   Midwest_Beef_Semi-solid
+mw_da_lq    0.03472    0.00631    0.03000    0.00388    0.99000   FtM_Manures   Midwest_Dairy_Liquid
+mw_da_sd    0.00179    0.00172    0.01268    0.00106    0.99000   FtM_Manures   Midwest_Dairy_Solid
+mw_da_sl    0.02241    0.00515    0.02178    0.00315    0.99000   FtM_Manures   Midwest_Dairy_Slurry
+mw_da_ss    0.00313    0.00262    0.01957    0.00161    0.99000   FtM_Manures   Midwest_Dairy_Semi-solid
+mw_po_lq    0.09124    0.02442    0.07696    0.01763    0.99000   FtM_Manures   Midwest_Poultry_Liquid
+mw_po_sd    0.00939    0.00904    0.03404    0.00655    0.99000   FtM_Manures   Midwest_Poultry_Solid
+mw_po_sl    0.05236    0.01457    0.04253    0.01055    0.99000   FtM_Manures   Midwest_Poultry_Slurry
+mw_po_ss    0.00986    0.01203    0.03246    0.00872    0.99000   FtM_Manures   Midwest_Poultry_Semi-solid
+mw_sw_lq    0.10542    0.01898    0.04825    0.00735    0.99000   FtM_Manures   Midwest_Swine_Liquid
+mw_sw_sd    0.00330    0.00830    0.01710    0.00322    0.99000   FtM_Manures   Midwest_Swine_Solid
+mw_sw_sl    0.06771    0.01642    0.03914    0.00638    0.99000   FtM_Manures   Midwest_Swine_Slurry
+mw_sw_ss    0.01364    0.01316    0.05956    0.00511    0.99000   FtM_Manures   Midwest_Swine_Semi-solid
+ne_bf_lq    0.01691    0.00536    0.05054    0.00242    0.99000   FtM_Manures   Northeast_Beef_Liquid
+ne_bf_sd    0.00111    0.00370    0.02135    0.00166    0.99000   FtM_Manures   Northeast_Beef_Solid
+ne_bf_sl    0.00820    0.00432    0.02338    0.00195    0.99000   FtM_Manures   Northeast_Beef_Slurry
+ne_bf_ss    0.00105    0.00354    0.01921    0.00159    0.99000   FtM_Manures   Northeast_Beef_Semi-solid
+ne_da_lq    0.03235    0.00623    0.03179    0.00383    0.99000   FtM_Manures   Northeast_Dairy_Liquid
+ne_da_sd    0.00220    0.00200    0.01252    0.00122    0.99000   FtM_Manures   Northeast_Dairy_Solid
+ne_da_sl    0.01914    0.00454    0.02286    0.00277    0.99000   FtM_Manures   Northeast_Dairy_Slurry
+ne_da_ss    0.00765    0.00308    0.01928    0.00189    0.99000   FtM_Manures   Northeast_Dairy_Semi-solid
+ne_po_lq    0.05777    0.00978    0.08090    0.00709    0.99000   FtM_Manures   Northeast_Poultry_Liquid
+ne_po_sd    0.00540    0.00870    0.03410    0.00633    0.99000   FtM_Manures   Northeast_Poultry_Solid
+ne_po_sl    0.01529    0.00624    0.02529    0.00451    0.99000   FtM_Manures   Northeast_Poultry_Slurry
+ne_po_ss    0.01804    0.00912    0.03323    0.00662    0.99000   FtM_Manures   Northeast_Poultry_Semi-solid
+ne_sw_lq    0.13585    0.01491    0.06491    0.00579    0.99000   FtM_Manures   Northeast_Swine_Liquid
+ne_sw_sd    0.00494    0.00771    0.02300    0.00300    0.99000   FtM_Manures   Northeast_Swine_Solid
+ne_sw_sl    0.05090    0.02445    0.03487    0.00950    0.99000   FtM_Manures   Northeast_Swine_Slurry
+ne_sw_ss    0.03129    0.01791    0.02606    0.00695    0.99000   FtM_Manures   Northeast_Swine_Semi-solid
+np_bf_lq    0.09604    0.03621    0.11799    0.01619    0.99000   FtM_Manures   Northern Plains_Beef_Liquid
+np_bf_sd    0.00182    0.00446    0.01235    0.00201    0.99000   FtM_Manures   Northern Plains_Beef_Solid
+np_bf_sl    0.05303    0.00935    0.02349    0.00421    0.99000   FtM_Manures   Northern Plains_Beef_Slurry
+np_bf_ss    0.04417    0.01025    0.02225    0.00458    0.99000   FtM_Manures   Northern Plains_Beef_Semi-solid
+np_da_lq    0.03882    0.00559    0.02902    0.00341    0.99000   FtM_Manures   Northern Plains_Dairy_Liquid
+np_da_sd    0.00166    0.00165    0.01199    0.00101    0.99000   FtM_Manures   Northern Plains_Dairy_Solid
+np_da_sl    0.02259    0.00410    0.02281    0.00250    0.99000   FtM_Manures   Northern Plains_Dairy_Slurry
+np_da_ss    0.00660    0.00216    0.01649    0.00132    0.99000   FtM_Manures   Northern Plains_Dairy_Semi-solid
+np_po_lq    0.13256    0.01572    0.06512    0.01140    0.99000   FtM_Manures   Northern Plains_Poultry_Liquid
+np_po_sd    0.00476    0.00996    0.02690    0.00725    0.99000   FtM_Manures   Northern Plains_Poultry_Solid
+np_po_sl    0.07927    0.01441    0.02439    0.01044    0.99000   FtM_Manures   Northern Plains_Poultry_Slurry
+np_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Northern Plains_Poultry_Semi-solid
+np_sw_lq    0.10526    0.01677    0.03594    0.00652    0.99000   FtM_Manures   Northern Plains_Swine_Liquid
+np_sw_sd    0.00334    0.01352    0.01155    0.00524    0.99000   FtM_Manures   Northern Plains_Swine_Solid
+np_sw_sl    0.07097    0.01846    0.02978    0.00717    0.99000   FtM_Manures   Northern Plains_Swine_Slurry
+np_sw_ss    0.05315    0.01324    0.02036    0.00514    0.99000   FtM_Manures   Northern Plains_Swine_Semi-solid
+nw_bf_lq    0.17986    0.10240    0.34412    0.04604    0.99000   FtM_Manures   Pacific Northwest_Beef_Liquid
+nw_bf_sd    0.00099    0.00350    0.01533    0.00157    0.99000   FtM_Manures   Pacific Northwest_Beef_Solid
+nw_bf_sl    0.03517    0.01058    0.02836    0.00476    0.99000   FtM_Manures   Pacific Northwest_Beef_Slurry
+nw_bf_ss    0.00531    0.00742    0.02804    0.00334    0.99000   FtM_Manures   Pacific Northwest_Beef_Semi-solid
+nw_da_lq    0.05088    0.00521    0.03361    0.00320    0.99000   FtM_Manures   Pacific Northwest_Dairy_Liquid
+nw_da_sd    0.00201    0.00406    0.01788    0.00248    0.99000   FtM_Manures   Pacific Northwest_Dairy_Solid
+nw_da_sl    0.01130    0.00404    0.02639    0.00247    0.99000   FtM_Manures   Pacific Northwest_Dairy_Slurry
+nw_da_ss    0.00396    0.00371    0.01945    0.00227    0.99000   FtM_Manures   Pacific Northwest_Dairy_Semi-solid
+nw_po_lq    0.39808    0.10132    0.38729    0.07338    0.99000   FtM_Manures   Pacific Northwest_Poultry_Liquid
+nw_po_sd    0.00796    0.00893    0.03138    0.00649    0.99000   FtM_Manures   Pacific Northwest_Poultry_Solid
+nw_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Pacific Northwest_Poultry_Slurry
+nw_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Pacific Northwest_Poultry_Semi-solid
+nw_sw_lq    0.01354    0.00175    0.00810    0.00068    0.99000   FtM_Manures   Pacific Northwest_Swine_Liquid
+nw_sw_sd    0.00323    0.00845    0.01665    0.00328    0.99000   FtM_Manures   Pacific Northwest_Swine_Solid
+nw_sw_sl    0.06693    0.01642    0.03875    0.00638    0.99000   FtM_Manures   Pacific Northwest_Swine_Slurry
+nw_sw_ss    0.01364    0.01324    0.05911    0.00516    0.99000   FtM_Manures   Pacific Northwest_Swine_Semi-solid
+se_bf_lq    0.00261    0.00128    0.00241    0.00057    0.99000   FtM_Manures   Southeast_Beef_Liquid
+se_bf_sd    0.00082    0.00387    0.01830    0.00174    0.99000   FtM_Manures   Southeast_Beef_Solid
+se_bf_sl    0.00562    0.00541    0.00520    0.00244    0.99000   FtM_Manures   Southeast_Beef_Slurry
+se_bf_ss    0.00144    0.00414    0.01857    0.00186    0.99000   FtM_Manures   Southeast_Beef_Semi-solid
+se_da_lq    0.00299    0.00254    0.00292    0.00156    0.99000   FtM_Manures   Southeast_Dairy_Liquid
+se_da_sd    0.00118    0.00267    0.01573    0.00164    0.99000   FtM_Manures   Southeast_Dairy_Solid
+se_da_sl    0.00859    0.00281    0.00763    0.00172    0.99000   FtM_Manures   Southeast_Dairy_Slurry
+se_da_ss    0.00191    0.00359    0.01773    0.00220    0.99000   FtM_Manures   Southeast_Dairy_Semi-solid
+se_po_lq    0.19904    0.03094    0.19185    0.02242    0.99000   FtM_Manures   Southeast_Poultry_Liquid
+se_po_sd    0.00711    0.00889    0.02953    0.00645    0.99000   FtM_Manures   Southeast_Poultry_Solid
+se_po_sl    0.00924    0.01947    0.00924    0.01408    0.99000   FtM_Manures   Southeast_Poultry_Slurry
+se_po_ss    0.00638    0.01973    0.02261    0.01427    0.99000   FtM_Manures   Southeast_Poultry_Semi-solid
+se_sw_lq    0.04586    0.00619    0.02818    0.00240    0.99000   FtM_Manures   Southeast_Swine_Liquid
+se_sw_sd    0.00094    0.00498    0.00849    0.00194    0.99000   FtM_Manures   Southeast_Swine_Solid
+se_sw_sl    0.02031    0.01305    0.01278    0.00508    0.99000   FtM_Manures   Southeast_Swine_Slurry
+se_sw_ss    0.00240    0.03267    0.01833    0.01271    0.99000   FtM_Manures   Southeast_Swine_Semi-solid
+sp_bf_lq    0.17146    2.00240    6.31894    0.90168    0.99000   FtM_Manures   Southern Plains_Beef_Liquid
+sp_bf_sd    0.00163    0.00404    0.01253    0.00181    0.99000   FtM_Manures   Southern Plains_Beef_Solid
+sp_bf_sl    0.06063    0.01011    0.02896    0.00454    0.99000   FtM_Manures   Southern Plains_Beef_Slurry
+sp_bf_ss    0.00135    0.00277    0.01366    0.00124    0.99000   FtM_Manures   Southern Plains_Beef_Semi-solid
+sp_da_lq    0.41966    0.54436    3.14149    0.33333    0.99000   FtM_Manures   Southern Plains_Dairy_Liquid
+sp_da_sd    0.00147    0.00242    0.01077    0.00148    0.99000   FtM_Manures   Southern Plains_Dairy_Solid
+sp_da_sl    0.07297    0.01177    0.03069    0.00722    0.99000   FtM_Manures   Southern Plains_Dairy_Slurry
+sp_da_ss    0.00190    0.00150    0.01392    0.00092    0.99000   FtM_Manures   Southern Plains_Dairy_Semi-solid
+sp_po_lq    2.87770    6.23501   24.94005    4.52038    0.99000   FtM_Manures   Southern Plains_Poultry_Liquid
+sp_po_sd    0.00855    0.01110    0.03055    0.00808    0.99000   FtM_Manures   Southern Plains_Poultry_Solid
+sp_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Southern Plains_Poultry_Slurry
+sp_po_ss    0.01706    0.01725    0.06059    0.01249    0.99000   FtM_Manures   Southern Plains_Poultry_Semi-solid
+sp_sw_lq    0.55635    0.07818    0.33094    0.03046    0.99000   FtM_Manures   Southern Plains_Swine_Liquid
+sp_sw_sd    0.00465    0.02546    0.02441    0.00989    0.99000   FtM_Manures   Southern Plains_Swine_Solid
+sp_sw_sl    0.01206    0.01566    0.01925    0.00609    0.99000   FtM_Manures   Southern Plains_Swine_Slurry
+sp_sw_ss    0.00199    0.08015    0.01046    0.03115    0.99000   FtM_Manures   Southern Plains_Swine_Semi-solid
+sw_bf_lq    0.17626    0.15108    0.38369    0.06763    0.99000   FtM_Manures   Southwest_Beef_Liquid
+sw_bf_sd    0.00165    0.00361    0.01661    0.00163    0.99000   FtM_Manures   Southwest_Beef_Solid
+sw_bf_sl    0.03517    0.01058    0.02836    0.00476    0.99000   FtM_Manures   Southwest_Beef_Slurry
+sw_bf_ss    0.00531    0.00742    0.02804    0.00334    0.99000   FtM_Manures   Southwest_Beef_Semi-solid
+sw_da_lq    0.04017    0.00660    0.02300    0.00405    0.99000   FtM_Manures   Southwest_Dairy_Liquid
+sw_da_sd    0.00198    0.00307    0.01452    0.00189    0.99000   FtM_Manures   Southwest_Dairy_Solid
+sw_da_sl    0.02959    0.00809    0.02578    0.00496    0.99000   FtM_Manures   Southwest_Dairy_Slurry
+sw_da_ss    0.00270    0.00303    0.01978    0.00187    0.99000   FtM_Manures   Southwest_Dairy_Semi-solid
+sw_po_lq    0.39808    0.10132    0.38729    0.07338    0.99000   FtM_Manures   Southwest_Poultry_Liquid
+sw_po_sd    0.00813    0.00896    0.02910    0.00648    0.99000   FtM_Manures   Southwest_Poultry_Solid
+sw_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Southwest_Poultry_Slurry
+sw_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Southwest_Poultry_Semi-solid
+sw_sw_lq    0.01354    0.00175    0.00810    0.00068    0.99000   FtM_Manures   Southwest_Swine_Liquid
+sw_sw_sd    0.00323    0.00845    0.01665    0.00328    0.99000   FtM_Manures   Southwest_Swine_Solid
+sw_sw_sl    0.06693    0.01642    0.03875    0.00638    0.99000   FtM_Manures   Southwest_Swine_Slurry
+sw_sw_ss    0.01364    0.01324    0.05911    0.00516    0.99000   FtM_Manures   Southwest_Swine_Semi-solid
