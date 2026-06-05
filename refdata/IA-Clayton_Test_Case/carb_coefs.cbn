@@ -28,11 +28,11 @@ abco2           0.55        0.55
 
 # organic fractions used to initialize soil carbon into various pools 
 #               frac_litter  frac_hum_microb     frac_hum_slow   frac_hum_passive
-org_frac        0.01         0.02                0.30            0.68
+org_frac        0.05         0.02                0.30            0.68
 
 # A value of 0 means the Mather's method will not be used.  This is the default if no method is specified
 # A value of 1 means the Mather's method will be used.
-mathers_method 1
+mathers_method 0
 
 
 # carbon water partitioning coefficients
