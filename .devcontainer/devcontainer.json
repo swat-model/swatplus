@@ -5,9 +5,8 @@
 	"build": {
 	  "dockerfile": "Dockerfile"
 	},
-	// Copy the reference data into the working directories.
-    "postCreateCommand": "mkdir -p workdata/Ames_sub1 && cp -r refdata/Ames_sub1/* workdata/Ames_sub1",
-	//"postCreateCommand": "mkdir -p workdata/my_data   && cp -r refdata/Ames_sub1/* workdata/my_data",
+	// Copy the test reference data into the working directory.
+        "postCreateCommand": "mkdir -p workdata/IA-Clayton_Test_Data && cp -r refdata/IA_Clayton_Test_Data/* workdata/IA_Clayton_Test_Data",
 	// 2. VS Code customizations
 	"customizations": {
 	  "vscode": {
