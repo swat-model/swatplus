@@ -4,7 +4,7 @@ nyskip         day_start    yrc_start      day_end      yrc_end   interval
 aa_int_cnt  
 0           
 csvout        dbout         cdfout        
-y             y             n
+n             y             n
 yrop_yld      mgtout        hydcon        fdcout
 b             y             n             n             
 objects                  daily       monthly        yearly         avann     
@@ -12,4 +12,4 @@ hru_wb                       n             n             y             n
 hru_nb                       n             n             y             n
 hru_ls                       n             n             y             n  
 hru_pw                       n             n             y             n
-hru_cb                       n             n             y             n
+hru_cb                       l             y             y             n
