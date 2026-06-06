@@ -49,14 +49,16 @@
 		  "fortran.linter.compiler": "gfortran",
 		  "fortran.linter.compilerPath": "/usr/bin/gfortran"
 		},
-		// 2A. Install relevant extensions automatically.
-		// fortran-lang.linter-gfortran IS the Modern Fortran extension — it
-		// provides both syntax highlighting AND linting. The old ekiwi111.modern-fortran
-		// ID no longer exists; remove it to avoid a silent install failure.
+		// 2A. Extensions installed into the Codespace container (remote side).
+		// In Codespaces, extensions must be listed here to run on the remote host.
+		// fortran-lang.linter-gfortran is the Modern Fortran extension — it
+		// provides both syntax highlighting AND linting.
+		// ms-vscode.remote-containers ensures container/remote support is active.
 		"extensions": [
 		  "ms-vscode.cmake-tools",
 		  "fortran-lang.linter-gfortran",
 		  "ms-vscode.cpptools",
+		  "ms-vscode.remote-containers",
 		  "mhutchie.git-graph",
 		  "GitHub.remotehub",
 		  "ms-toolsai.jupyter",
