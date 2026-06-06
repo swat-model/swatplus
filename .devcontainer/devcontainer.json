@@ -7,7 +7,9 @@
 	},
 	// Copy the test reference data into the working directory.
 	//"postCreateCommand": "mkdir -p workdata/Ames_sub1          && cp -r refdata/Ames_sub1/*            workdata/Ames_sub1",
-    "postCreateCommand":   "mkdir -p workdata/IA-Clayton_Test_Case && cp -r refdata/IA-Clayton_Test_Case/* workdata/IA-Clayton_Test_Case",
+    "postCreateCommand":  ["mkdir -p workdata/IA-Clayton_Test_Case && cp -r refdata/IA-Clayton_Test_Case/* workdata/IA-Clayton_Test_Case",
+                           "mkdir -p workdata/my_data"
+	]
     //"postCreateCommand": "mkdir -p workdata && cp -r refdata/IA_Clayton_Test_Data workdata",
 	// 2. VS Code customizations
 	"customizations": {
