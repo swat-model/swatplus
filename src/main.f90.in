@@ -5,6 +5,7 @@
       use maximum_data_module
       use calibration_data_module
       use hru_module
+      use netcdf_output_module, only: netcdf_output_finish
 
       implicit none
       
@@ -144,6 +145,7 @@
         call command
       else
         call time_control
+        call netcdf_output_finish
       end if
       
       if (cal_soft == "y") call calsoft_control

@@ -4,6 +4,7 @@
       use basin_module
       use aquifer_module
       use hydrograph_module, only : ob, sp_ob1
+      use netcdf_output_module
       
       implicit none
             
@@ -19,9 +20,13 @@
         !! daily print - AQUIFER
          if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
           if (pco%aqu%d == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_aquifer(iaq, aqu_d(iaq))
+            else
             write (2520,100) time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_d(iaq)
             if (pco%csvout == "y") then
               write (2524,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_d(iaq)
+            end if
             end if
           end if
         end if
@@ -34,10 +39,14 @@
           aqu_m(iaq)%no3_st = aqu_m(iaq)%no3_st / const
           aqu_y(iaq) = aqu_y(iaq) + aqu_m(iaq)
           if (pco%aqu%m == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_aquifer_mon(iaq, aqu_m(iaq))
+            else
             write (2521,100)  time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_m(iaq)
             if (pco%csvout == "y") then
               write (2525,'(*(G0.6,:","))')  time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_m(iaq)
             endif
+            end if
           end if
           aqu_m(iaq) = aquz
         end if
@@ -49,9 +58,13 @@
           aqu_y(iaq)%no3_st = aqu_y(iaq)%no3_st / 12.
           aqu_a(iaq) = aqu_a(iaq) + aqu_y(iaq)
           if (pco%aqu%y == "y") then
+            if (pco%cdfout == "y") then
+              call nc_stage_aquifer_yr(iaq, aqu_y(iaq))
+            else
             write (2522,102) time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_y(iaq)
             if (pco%csvout == "y") then
               write (2526,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_y(iaq) 
+            end if
             end if
           end if
           !! zero yearly variables        
@@ -61,10 +74,14 @@
       !! average annual print - AQUIFER
       if (time%end_sim == 1 .and. pco%aqu%a == "y") then
         aqu_a(iaq) = aqu_a(iaq) / time%yrs_prt
+        if (pco%cdfout == "y") then
+          call nc_stage_aquifer_aa(iaq, aqu_a(iaq))
+        else
         write (2523,102) time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_a(iaq)
         if (pco%csvout == "y") then 
           write (2527,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iaq, ob(iob)%gis_id, ob(iob)%name, aqu_a(iaq)  
         end if 
+        end if
       end if
       
       return

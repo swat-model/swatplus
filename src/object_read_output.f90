@@ -3,6 +3,7 @@
       use input_file_module
       use hydrograph_module
       use maximum_data_module
+      use basin_module, only: pco   !! fort-leak-fix
         
       implicit none
        
@@ -99,7 +100,8 @@
             end select
          iunit = ob_out(i)%unitno
          
-         !! open file and write header
+         !! open file and write header (fort-leak-fix: skip in cdfout - no NetCDF backend)
+         if (pco%cdfout /= "y") then
          open (iunit+i,file = ob_out(i)%filename,recl=2000)
          !write (iunit+i,*) "OBJECT.PRT                ", ob_out(i)%filename
          select case (ob_out(i)%hydno)
@@ -114,6 +116,7 @@
          case (10)
            write (iunit+i,*) hyd_hdr_time, fp_hdr
          end select
+         end if   !! fort-leak-fix
          
         end do  ! mobj_out  
         exit
