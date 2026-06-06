@@ -27,11 +27,31 @@
 			// Not strictly needed if your Dockerfile sets PATH/LD_LIBRARY_PATH
 			"PATH": "/opt/intel/oneapi/compiler/2025.0/bin:${env:PATH}",
 			"LD_LIBRARY_PATH": "/opt/intel/oneapi/compiler/2025.0/lib:${env:LD_LIBRARY_PATH}"
-		  }
+		  },
+		  // Explicitly associate Fortran file extensions with the Fortran language
+		  // so VS Code applies syntax highlighting even before any extension activates.
+		  // Without this, .f90 files may open as plain text in codespaces.
+		  "files.associations": {
+			"*.f90": "fortran",
+			"*.f95": "fortran",
+			"*.f03": "fortran",
+			"*.f08": "fortran",
+			"*.for": "fortran",
+			"*.f":   "fortran"
+		  },
+		  // fortls settings: point to the fortls binary installed via pip in
+		  // the Dockerfile. The linter-gfortran extension picks these up too.
+		  "fortran.fortls.path": "/usr/local/bin/fortls",
+		  "fortran.linter.compiler": "gfortran",
+		  "fortran.linter.compilerPath": "/usr/bin/gfortran"
 		},
-		// 2A. Install relevant extensions automatically
+		// 2A. Install relevant extensions automatically.
+		// ekiwi111.modern-fortran provides Fortran syntax highlighting.
+		// fortran-lang.linter-gfortran provides linting but NOT highlighting,
+		// so both are needed for a complete Fortran editing experience.
 		"extensions": [
 		  "ms-vscode.cmake-tools",
+		  "ekiwi111.modern-fortran",
 		  "fortran-lang.linter-gfortran",
 		  "ms-vscode.cpptools",
 		  "mhutchie.git-graph",
