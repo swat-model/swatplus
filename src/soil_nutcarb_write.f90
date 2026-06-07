@@ -229,7 +229,7 @@
           if (pco%csvout == "y") then
             if (write_hdr) then
               write (4549,*)                                     &
-                  "freq,jday,mon,day,year,unit,hru,name,300_sum", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                  "freq,jday,mon,day,year,unit,hru,name,300_sum,", (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
             endif 
             write (4549,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
                                                     soil1(j)%tot_300_c/1000., (soil1(j)%tot(ly)%c/1000.0, ly = 1, soil(j)%nly)
@@ -270,7 +270,7 @@
 
             if (write_hdr) then
               write (4559,*)                                     &
-                  "freq,jday,mon,day,year,unit,hru,name,Seq_300mm_c", soil1(j)%seq_tot_300_c, (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
+                  "freq,jday,mon,day,year,unit,hru,name,Seq_300mm_c,", soil1(j)%seq_tot_300_c, (int(soil(j)%phys(ly)%d), ",", ly = 1, soil(j)%nly)
             endif 
 
             write (4559,'(*(G0.7,:,","))') freq_label, time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%typ, ob(iob)%name,           &
