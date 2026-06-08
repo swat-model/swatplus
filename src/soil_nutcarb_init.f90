@@ -202,19 +202,13 @@
           endif
 
           !! metabolic residue
-          ! soil1(ihru)%meta(ly) = plt_mass_z
-          ! soil1(ihru)%meta(ly)%c = (1.0 + org_frac%frac_litter) * 0.85 * soil1(ihru)%tot(ly)%c              
           soil1(ihru)%meta(ly)%c = org_frac%frac_litter * 0.85 * soil1(ihru)%tot(ly)%c              
-          ! soil1(ihru)%meta(ly)%m = (1.0 + org_frac%frac_litter) * 0.85 * soil1(ihru)%tot(ly)%m
           soil1(ihru)%meta(ly)%m = soil1(ihru)%meta(ly)%c /.58
           soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
           soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
             
           ! structural residue
-          ! soil1(ihru)%str(ly) = plt_mass_z
-          ! soil1(ihru)%str(ly)%c = (1.0 + org_frac%frac_litter) * 0.15 * soil1(ihru)%tot(ly)%c               
           soil1(ihru)%str(ly)%c = org_frac%frac_litter * 0.15 * soil1(ihru)%tot(ly)%c               
-          ! soil1(ihru)%str(ly)%m = (1.0 + org_frac%frac_litter) * 0.15 * soil1(ihru)%tot(ly)%m
           soil1(ihru)%str(ly)%m = soil1(ihru)%str(ly)%c / .58 
           soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
           soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.

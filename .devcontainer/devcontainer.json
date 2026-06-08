@@ -5,9 +5,10 @@
 	"build": {
 	  "dockerfile": "Dockerfile"
 	},
-	// Copy the reference data into the working directories.
-    "postCreateCommand": "mkdir -p workdata/Ames_sub1 && cp -r refdata/Ames_sub1/* workdata/Ames_sub1",
-	//"postCreateCommand": "mkdir -p workdata/my_data   && cp -r refdata/Ames_sub1/* workdata/my_data",
+	// Copy the test reference data into the working directory.
+	//"postCreateCommand": "mkdir -p workdata/Ames_sub1          && cp -r refdata/Ames_sub1/*            workdata/Ames_sub1",
+	"postCreateCommand": "mkdir -p workdata/IA-Clayton_Test_Case workdata/my_data && cp -r refdata/IA-Clayton_Test_Case/* workdata/IA-Clayton_Test_Case/",
+
 	// 2. VS Code customizations
 	"customizations": {
 	  "vscode": {
@@ -26,13 +27,38 @@
 			// Not strictly needed if your Dockerfile sets PATH/LD_LIBRARY_PATH
 			"PATH": "/opt/intel/oneapi/compiler/2025.0/bin:${env:PATH}",
 			"LD_LIBRARY_PATH": "/opt/intel/oneapi/compiler/2025.0/lib:${env:LD_LIBRARY_PATH}"
-		  }
+		  },
+		  // Explicitly associate Fortran file extensions with the Fortran language
+		  // so VS Code applies syntax highlighting even before any extension activates.
+		  // Without this, .f90 files may open as plain text in codespaces.
+		  // Map free-form Fortran extensions to the language ID that
+		  // fortran-lang.linter-gfortran registers. Using the exact ID is
+		  // required — "fortran" alone is not recognized and files open as
+		  // plain text with no highlighting.
+		  "files.associations": {
+			"*.f90": "FortranFreeForm",
+			"*.f95": "FortranFreeForm",
+			"*.f03": "FortranFreeForm",
+			"*.f08": "FortranFreeForm",
+			"*.for": "FortranFixedForm",
+			"*.f":   "FortranFixedForm"
+		  },
+		  // fortls settings: point to the fortls binary installed via pip in
+		  // the Dockerfile. The linter-gfortran extension picks these up too.
+		  "fortran.fortls.path": "/usr/local/bin/fortls",
+		  "fortran.linter.compiler": "gfortran",
+		  "fortran.linter.compilerPath": "/usr/bin/gfortran"
 		},
-		// 2A. Install relevant extensions automatically
+		// 2A. Extensions installed into the Codespace container (remote side).
+		// In Codespaces, extensions must be listed here to run on the remote host.
+		// fortran-lang.linter-gfortran is the Modern Fortran extension — it
+		// provides both syntax highlighting AND linting.
+		// ms-vscode.remote-containers ensures container/remote support is active.
 		"extensions": [
 		  "ms-vscode.cmake-tools",
 		  "fortran-lang.linter-gfortran",
 		  "ms-vscode.cpptools",
+		  "ms-vscode.remote-containers",
 		  "mhutchie.git-graph",
 		  "GitHub.remotehub",
 		  "ms-toolsai.jupyter",
