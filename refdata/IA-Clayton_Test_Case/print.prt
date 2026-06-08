@@ -1,0 +1,15 @@
+print.prt: IA-Ames_20250122 (Tue Jun 02 13:31:33 MDT 2026)
+nyskip         day_start    yrc_start      day_end      yrc_end   interval  
+0                      0         2008            0         2025          1         
+aa_int_cnt  
+0           
+csvout        dbout         cdfout        
+n             y             n
+yrop_yld      mgtout        hydcon        fdcout
+b             y             n             n             
+objects                  daily       monthly        yearly         avann     
+hru_wb                       n             n             y             n
+hru_nb                       n             n             y             n
+hru_ls                       n             n             y             n  
+hru_pw                       n             n             y             n
+hru_cb                       l             y             y             n
