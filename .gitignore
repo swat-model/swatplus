@@ -44,6 +44,7 @@ _ReSharper*/
 *.o
 *.mod
 *.ico
+.nvim.lua
 .DS_Store
 Data/.DS_Store
 build/
