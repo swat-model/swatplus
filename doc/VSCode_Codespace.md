@@ -16,7 +16,7 @@ On starting a Codespaces VSCode instance:
 
 - A working input data set will be loaded into `/workdata/IA-Clayton_Test_Case` folder.
 
-- An empty` /workdata/myfolder` will be created. It is in this folder you can upload your own input data.
+- An empty` /workdata/my_data` folder will be created. It is in this folder you can upload your own input data.
 
 ## Cost of GitHub Codespaces Instances
 
@@ -74,7 +74,7 @@ In the output window at the bottom of the VSCode window, you should see the code
 
 `[build] Build finished with exit code 0`
 
-Once the compile is complete, the code can be executed by clicking on the icon that looks like triangle pointing to the right with a bug on top of it then selecting the Ames_sub1 in the dropdown menu then click on the green triangle next to the selected input data set.  
+Once the compile is complete, the code can be executed by clicking on the icon that looks like triangle pointing to the right with a bug on top of it then selecting the IA-Clayton_Test_Case in the dropdown menu then click on the green triangle next to the selected input data set.  
 
 ![](images/select_input_folder.png)
 
@@ -88,7 +88,7 @@ VSCode in GitHub Codespaces has full debug capabilities.  Regular and conditiona
 
 ## How to Run VSCode With Your Own Dataset
 
-You can upload your own input data.   When the virtual VSCode instance was created, two folders were created in the `/workdata` folder,  one called `Ames_sub1` and another folder called `my_data`.    The contents of the `/workdata/Ames_sub1`  folder was copied from the folder `/refdata/Ames_sub1` when the VSCode virtual instance was created and this is the input data set that was run earlier in debug mode.   The `/workdata/my_data` folder is empty.
+You can upload your own input data.   When the virtual VSCode instance was created, two folders were created in the `/workdata` folder,  one called `IA-Clayton_Test_Case` and another folder called `my_data`.    The contents of the `/workdata/IA-Clayton_Test_Case`  folder was copied from the folder `/refdata/IA-Clayton_Test_Case` when the VSCode virtual instance was created and this is the input data set that was run earlier in debug mode.   The `/workdata/my_data` folder is empty.
 
 If you want run swatplus your with own data set, right click on the empty  /workdata/my_data folder in the  VSCode solution explorer and select upload then your local file browser will appear.  You may have to allow cookies to allow permission in GitHub to open your local file explorer.  Once the local file explorer is open, navigate to your local data set and select all the files that you want to upload then select open or upload.  How the local file explorer looks depends on the local operating system that you are using.
 
@@ -98,14 +98,14 @@ After your input data has been uploaded into the `/workspace/my_data` folder.  R
 
 ![](images/select_input_folder2.png)
 
-If you want to have multiple input data sets, you can create additional folders as needed in the /workdata folder and then modify the /.vscode/launch.json file.   The default lauch.json file  has two json blocks in the "configurations" section to look for input data sets in /workdata/Ames_sub1 and in /workdata/my_data.  To add another data set, copy one of the current json blocks in "configurations" (i.e. either Ames_sub1 or my_data) to create a new section and then change the "name" variable to the name you want and the "cwd" to point to the input folder of your data."   For example, if you had input data in a folder called /workdata/walnut_creak, the .vscode/launch.json file would be modified to add a json block under at the end in the "configurations" section.  Be sure to add a comma between each section:
+If you want to have multiple input data sets, you can create additional folders as needed in the /workdata folder and then modify the /.vscode/launch.json file.   The default lauch.json file  has two json blocks in the "configurations" section to look for input data sets in /workdata/IA-Clayton_Test_Case and in /workdata/my_data.  To add another data set, copy one of the current json blocks in "configurations" (i.e. either IA-Clayton_Test_Case or my_data) to create a new section and then change the "name" variable to the name you want and the "cwd" to point to the input folder of your data."   For example, if you had input data in a folder called /workdata/walnut_creak, the .vscode/launch.json file would be modified to add a json block under at the end in the "configurations" section.  Be sure to add a comma between each section:
 
 ```JSON
 {
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Ames_sub1",
+            "name": "IA-Clayton_Test_Case",
             "type": "cppdbg",
             "request": "launch",
             // Resolved by CMake Tools:
@@ -113,7 +113,7 @@ If you want to have multiple input data sets, you can create additional folders 
             "args": [],
             "stopAtEntry": false,
             // Change the following to where swatplus input data exists
-            "cwd": "${workspaceFolder}/workdata/Ames_sub1",
+            "cwd": "${workspaceFolder}/workdata/IA-Clayton_Test_Case",
             "environment": [
                 {
                     // add the directory where our target was built to the PATHs
