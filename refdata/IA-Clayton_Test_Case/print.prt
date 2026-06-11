@@ -8,8 +8,9 @@ n             y             n
 yrop_yld      mgtout        hydcon        fdcout
 b             y             n             n             
 objects                  daily       monthly        yearly         avann     
-hru_wb                       n             n             y             n
-hru_nb                       n             n             y             n
-hru_ls                       n             n             y             n  
-hru_pw                       n             n             y             n
+bsn_wb                       n             n             y             a
+hru_wb                       n             n             y             a
+hru_nb                       n             n             y             a
+hru_ls                       n             n             y             a  
+hru_pw                       n             n             y             a
 hru_cb                       l             y             y             n
