@@ -1,3 +1,4 @@
+.ipynb_checkpoints/
 Thumbs.db
 *.onetoc?
 Makefile
@@ -44,6 +45,7 @@ _ReSharper*/
 *.o
 *.mod
 *.ico
+.nvim.lua
 .DS_Store
 Data/.DS_Store
 build/
@@ -69,6 +71,7 @@ ford.md
 /.vs/cmake.db
 /.vs/slnx.sqlite
 /.vs
+/bin
 /refdata/Osu_1hru/lsunit_ls_aa.txt
 /refdata/Osu_1hru/lsunit_nb_aa.txt
 /refdata/Osu_1hru/lsunit_pw_aa.txt
