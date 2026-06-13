@@ -82,7 +82,8 @@
       integer :: day_mo = 0          !              |
       integer :: imallo = 0
       integer :: ires = 0
-      
+      real :: rnum = 0.              !none          |channel count per stream order (>= 1 to avoid 0/0)
+
       time%yrc = time%yrc_start
       
       !! generate precip for the first day - %precip_next
@@ -408,13 +409,14 @@
       end do
       
       !! average and write by stream order
+      !! use max(num,1) as divisor: orders with no channels have zero numerators,
+      !! so 0/1 = 0. avoids vectorized 0.0/0.0 that traps under ifx -fpe0
       if (sp_ob%chandeg > 0) then
         do iord = 1, 12
-          if (ch_morph_ord(iord)%num > 0) then
-            ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / ch_morph_ord(iord)%num
-            ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / ch_morph_ord(iord)%num
-            ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / ch_morph_ord(iord)%num
-          end if
+          rnum = real(max(ch_morph_ord(iord)%num, 1))
+          ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / rnum
+          ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / rnum
+          ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / rnum
         end do
       end if
       
