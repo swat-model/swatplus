@@ -106,18 +106,21 @@ work in the browser too.
 If you haven't already created your fork, create a Github fork off of the swatplus main
 repository. Here are the steps:
 
-1. Go to the Github swatplus main repository at
+1. Go to the Github swatplus main repository 
    [https://github.com/swatplus/swatplus](https://github.com/swatplus/swatplus).
 2. Click on **Fork** and select the owner (which is yourself) and a name for your fork,
    then select **Create fork**.
 
 ### 2.3 Launching the Codespace
 
-1. On the repository page, click the green **<> Code** button → **Codespaces** tab →
-   **Create codespace on *main***.
-2. Wait for the container to build the first time (a few minutes; the oneAPI install is
-   large). Subsequent starts are fast.
-3. When the editor opens, the `postCreateCommand` has already copied the reference data
+1. On your forked repository page, click the green **<> Code** button → **Top Left
+   Hamburger Icon** → **codespaces**.
+2. Select **New Codespace** 
+3. For the repository select your forked repository then for the branch, select **greese_dev**.
+4. Select **create codespaces**
+5. Wait for the container to build the first time (a few minutes; the oneAPI install is
+   large). Subsequent restarts are faster.
+6. When the editor opens, the `postCreateCommand` has already copied the reference data
    into `workdata/`.
 
 > [!TIP]
@@ -129,7 +132,8 @@ repository. Here are the steps:
 
 ### 2.4 Before the session: confirm the toolchain
 
-Confirm the toolchain in a terminal:
+Confirm the toolchain in the vscode codespaces terminal.  If you don't see a terminal at
+the bottom of the codespaces, click on View and then Terminal. 
 
 ```bash
 which gfortran # /usr/bin/gfortran
@@ -141,28 +145,26 @@ ls workdata   # expect: IA_Clayton_Test_Case  my_data
 ### 2.5 First build
 
 The repo ships `CMakePresets.json`; the Linux gfortran preset is `gfortran_debug_linux`
-(with `gfortran_release_linux` for an optimised build). The command line is the reliable
-path and is unaffected by editor settings:
+(with `gfortran_release_linux` for an optimised build). 
 
-```bash
-# recommended: use the shipped gfortran preset
-cmake --preset gfortran_debug_linux  # configure: gfortran + Debug, binaryDir = build/debug
-cmake --build build/debug -j         # build (gfortran_release_linux -> build/release)
-```
+1. Begin by clicking the icon on the left that looks like triangle with a
+   wrench on top of it.
+2. Check under Configure to be sure that it says gfortran debug version. If it is
+   empty or has something else, select the pencil icon next to it and select
+   the gfortran debug version.
+3. Right click on CMakeLists.txt and select Clean Reconfigure All Projects. You
+   should do this step every time you change compilers or add or delete any files to the source code.
+4. Right click CMakeLists.txt again and select Build All Projects or select the
+   build icon at the bottom of codespaces.
 
-Only *configure* presets are defined, so the build step targets the preset's `binaryDir`
-(`build/debug`). Without a preset the equivalent is:
+> The build executable lands in the build/debug directory. Its name prints at the 
+> end of the build log on step 4 above.
 
-```bash
-cmake -S . -B build -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_BUILD_TYPE=Debug
-cmake --build build -j
-# the executable lands in the build dir; its name prints at the end of the build log
-```
+When vscode or codespaces is opened, CMake Tools auto-configures its compiler presets 
+from the last known instance. See steps 1-2 above if you need to change the compiler.
 
-In the editor, CMake Tools auto-configures on open. Select the **Debug** variant in the
-status bar (bottom of the window) so symbols and bounds-checking are compiled in, then build
-with `F7`. Confirm `src/main.f90` now exists; CMake generated it from `main.f90.in` at
-configure time, you did *not* create it.
+Confirm that `src/main.f90` now exists; CMake generated it from `main.f90.in` at
+configure time, you did *not* create it.  
 
 > [!WARNING]
 > **If CMake Tools configured with `ifx`.** `devcontainer.json` still pins `ifx` for the
@@ -173,11 +175,11 @@ configure time, you did *not* create it.
 
 ### 2.6 First run and first debug
 
-1. Open `src/main.f90` and set a breakpoint at the line `call proc_read` (click in the
-   gutter).
-2. Press `F5` and choose the **IA_Clayton_Test_Case** launch configuration. CMake Tools resolves the
-   freshly built binary; `gdb` starts it with the working directory set to
-   `workdata/IA_Clayton_Test_Case` (per `launch.json:13`).
+1. Click on codespaces explorer icon in the upper left then select the src folder and open main.f90 `and set a breakpoint at the line `call proc_read` (click in the
+   gutter to set the breakpoint).
+2. Select the debug icon that looks a bug on the left.  Then in top drop down, choose the **IA_Clayton_Test_Case**.
+3. Press `F5` to run the binary. `gdb` starts it with the working directory set to
+   `workdata/IA_Clayton_Test_Case` (per `launch.json:13`). You can also select Run then Start Debugging.
 3. Execution should stop at your breakpoint. Press `F5` again to continue; the model runs
    to completion in the integrated terminal.
 
@@ -197,10 +199,6 @@ present, breakpoints bind, and the dataset is found.
 
 ### 2.7 Orientation: the source layout and the program shape
 
-**Layout.** `src/` holds ~400 Fortran files in a *flat* directory; `refdata/` holds the
-reference datasets (`IA_Clayton_Test_Case`, `Osu_1hru`). Nobody memorises 400 files;
-`Ctrl+Shift+F` (search across files) is the primary navigation tool, and we use it to open
-every exercise.
 
 **Program shape (`main.f90`).** Three phases, the mental model for everything that follows:
 
