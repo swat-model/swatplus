@@ -3,6 +3,8 @@
 
 ## SWAT+ Conference 2026, Thessaloniki, Greece
 
+[Workshop Agenda](Swatplus_workshop_agenda.md)
+
 ---
 
 ## Contents
