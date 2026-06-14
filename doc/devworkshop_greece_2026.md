@@ -34,6 +34,7 @@
   - [4.2 The five steps](#42-the-five-steps)
   - [4.3 Activate and verify](#43-activate-and-verify)
   - [4.4 Discussion prompts](#44-discussion-prompts)
+  - [4.5 Commit and Push Your Changes](#45-commit-and-push-your-changes)
 - [5 Quick reference](#5-quick-reference)
   - [5.1 File and line locations (commit 5ccf6f0)](#51-file-and-line-locations-commit-5ccf6f0)
   - [5.2 Codespaces command cheat-sheet](#52-codespaces-command-cheat-sheet)
@@ -535,6 +536,11 @@ actually routing through your new code and not falling through to a stale value.
 >   (the "no `case default`" trap).
 > - **Declared `pet_const` as `integer`:** a type mismatch at `max(0., ...)` or silent
 >   truncation of 4.0 to 4. It must be `real`.
+
+### 4.5 Commit and Push Your Changes
+
+See [Section 3.7 Commit and Push Your Changes](#37-commit-and-push-your-changes) for the
+steps to stage, commit, and push your Exercise 2 changes to your fork.
 
 ---
 
