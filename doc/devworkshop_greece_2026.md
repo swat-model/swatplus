@@ -209,6 +209,8 @@ every exercise.
 - `call time_control`: the simulation loop. Everything before is setup; everything after is
   reporting.
 
+For a more complete call tree see [swatplus_call_tree.md](swatplus_call_tree.md).
+
 *read → init → run.* That is enough Fortran orientation to start.
 
 ---
