@@ -138,7 +138,7 @@ Confirm the toolchain in a terminal:
 which gfortran # /usr/bin/gfortran
 gfortran --version
 cmake --version
-ls workdata   # expect: Ames_sub1  my_data
+ls workdata   # expect: IA_Clayton_Test_Case  my_data
 ```
 
 ### 2.5 First build
@@ -178,9 +178,9 @@ configure time, you did *not* create it.
 
 1. Open `src/main.f90` and set a breakpoint at the line `call proc_read` (click in the
    gutter).
-2. Press `F5` and choose the **Ames_sub1** launch configuration. CMake Tools resolves the
+2. Press `F5` and choose the **IA_Clayton_Test_Case** launch configuration. CMake Tools resolves the
    freshly built binary; `gdb` starts it with the working directory set to
-   `workdata/Ames_sub1` (per `launch.json:13`).
+   `workdata/IA_Clayton_Test_Case` (per `launch.json:13`).
 3. Execution should stop at your breakpoint. Press `F5` again to continue; the model runs
    to completion in the integrated terminal.
 
@@ -201,7 +201,7 @@ present, breakpoints bind, and the dataset is found.
 ### 2.7 Orientation: the source layout and the program shape
 
 **Layout.** `src/` holds ~400 Fortran files in a *flat* directory; `refdata/` holds the
-reference datasets (`Ames_sub1`, `Osu_1hru`). Nobody memorises 400 files;
+reference datasets (`IA_Clayton_Test_Case`, `Osu_1hru`). Nobody memorises 400 files;
 `Ctrl+Shift+F` (search across files) is the primary navigation tool, and we use it to open
 every exercise.
 
@@ -297,7 +297,7 @@ integer :: day_lag_mx = 0 !! max days to lag hydrographs for hru, ru and channel
 if (bsn_prm%harg_expo < 1.e-6) bsn_prm%harg_expo = 0.5
 ```
 
-**File 3:** `parameters.bsn` (input data, in `workdata/Ames_sub1`). Add a `harg_expo`
+**File 3:** `parameters.bsn` (input data, in `workdata/IA_Clayton_Test_Case`). Add a `harg_expo`
 column header and value `0.50000` between the `co2` (column 43) and `day_lag_max` (column
 44) columns on *both* the header and data lines. The struct is read in one list-directed
 statement, `read (107,*) bsn_prm` at `basin_read_prm.f90:24`, so columns map *by position*
@@ -441,7 +441,7 @@ from `harg_expo`: 0 is a *legal* value (no constant applied), so clamp only nega
 if (bsn_prm%pet_const < 0.) bsn_prm%pet_const = 0.
 ```
 
-*File C:* `parameters.bsn` (in `workdata/Ames_sub1`). Add a `pet_const` column with value
+*File C:* `parameters.bsn` (in `workdata/IA_Clayton_Test_Case`). Add a `pet_const` column with value
 `0.00000` in the same position as File A, on both the header and data lines.
 
 #### Step 2: create the new source file `src/pet_constant.f90`
@@ -614,9 +614,9 @@ cmake -S . -B build -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_BUILD_TYPE=Debug
 cmake --build build -j
 
 # run a dataset (preset build)
-cd workdata/Ames_sub1 && ../../build/debug/<swatplus-binary>
+cd workdata/IA_Clayton_Test_Case && ../../build/debug/<swatplus-binary>
 
-# GUI: F7 build, F5 debug (pick "Ames_sub1"), Ctrl+Shift+F search
+# GUI: F7 build, F5 debug (pick "IA_Clayton_Test_Case"), Ctrl+Shift+F search
 # After adding a NEW .f90 file: Command Palette -> "CMake: Configure" first
 ```
 
