@@ -29,6 +29,7 @@
   - [3.5 Rebuild and verify (in Codespaces)](#35-rebuild-and-verify-in-codespaces)
   - [3.6 Discussion prompts](#36-discussion-prompts)
   - [3.7 Commit and Push Your Changes](#37-commit-and-push-your-changes)
+  - [3.8 Shutdown Codespaces](#38-shutdown-codespaces)
 - [4 Exercise 2: Add a constant daily PET method](#4-exercise-2-add-a-constant-daily-pet-method)
   - [4.1 Motivation and orientation](#41-motivation-and-orientation)
   - [4.2 The five steps](#42-the-five-steps)
@@ -369,6 +370,23 @@ then pushed to Github.
    staged changes.
 4. Finally, click the **ellipsis (...)** beside Changes and select **Push**. This pushes your
    changes to your fork on Github.
+
+### 3.8 Shutdown Codespaces
+
+Github will charge you for Codespaces if you use more than 60 hours with 2 processors in a
+month.
+
+> [!WARNING]
+> All your code changes in Codespaces will be lost if you did not commit and push your
+> changes to Github. If you have not done so, go back to
+> [Section 3.7 Commit and Push Your Changes](#37-commit-and-push-your-changes) before
+> shutting down.
+
+1. In your browser, go to the Codespaces tab where you started Codespaces and click the
+   **refresh/reload** icon.
+2. At the bottom of the screen you should see a running Codespaces instance that has a goofy
+   name. Click the **ellipsis (...)** beside it, select **Delete**, and answer **Yes** to the
+   prompt.
 
 ---
 
