@@ -106,18 +106,21 @@ work in the browser too.
 If you haven't already created your fork, create a Github fork off of the swatplus main
 repository. Here are the steps:
 
-1. Go to the Github swatplus main repository at
+1. Go to the Github swatplus main repository 
    [https://github.com/swatplus/swatplus](https://github.com/swatplus/swatplus).
 2. Click on **Fork** and select the owner (which is yourself) and a name for your fork,
    then select **Create fork**.
 
 ### 2.3 Launching the Codespace
 
-1. On the repository page, click the green **<> Code** button → **Codespaces** tab →
-   **Create codespace on *main***.
-2. Wait for the container to build the first time (a few minutes; the oneAPI install is
-   large). Subsequent starts are fast.
-3. When the editor opens, the `postCreateCommand` has already copied the reference data
+1. On your forked repository page, click the green **<> Code** button → **Top Left
+   Hamburger Icon** → **codespaces**.
+2. Select **New Codespace** 
+3. For the repository select your forked repository then for the branch, select **greese_2026**.
+4. Select **create codespaces**
+5. Wait for the container to build the first time (a few minutes; the oneAPI install is
+   large). Subsequent restarts are faster.
+6. When the editor opens, the `postCreateCommand` has already copied the reference data
    into `workdata/`.
 
 > [!TIP]
