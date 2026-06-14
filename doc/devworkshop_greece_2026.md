@@ -149,7 +149,7 @@ The repo ships `CMakePresets.json`; the Linux gfortran preset is `gfortran_debug
 
 1. Begin by clicking the icon on the left that looks like triangle with a
    wrench on top of it.
-2. Check under configure to be sure that it says gfortran debug version. If it is
+2. Check under Configure to be sure that it says gfortran debug version. If it is
    empty or has something else, select the pencil icon next to it and select
    the gfortran debug version.
 3. Right click on CMakeLists.txt and select Clean Reconfigure All Projects. You
@@ -175,7 +175,7 @@ configure time, you did *not* create it.
 
 ### 2.6 First run and first debug
 
-1. Click on codespaces explorer icon in the upper left then select the src folder and open main.f90`and set a breakpoint at the line `call proc_read` (click in the
+1. Click on codespaces explorer icon in the upper left then select the src folder and open main.f90 `and set a breakpoint at the line `call proc_read` (click in the
    gutter to set the breakpoint).
 2. Select the debug icon that looks a bug on the left.  Then in top drop down, choose the **IA_Clayton_Test_Case**.
 3. Press `F5` to run the binary. `gdb` starts it with the working directory set to
