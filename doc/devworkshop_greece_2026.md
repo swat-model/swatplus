@@ -1,8 +1,7 @@
 # SWAT+ Source Code Exercises, @celray, modified for workshop by @fgeter
 
-## Teacher's Guide: GitHub Codespaces
 
-**SWAT+ Conference 2026, Thessaloniki, Greece** 
+## SWAT+ Conference 2026, Thessaloniki, Greece
 
 ---
 
