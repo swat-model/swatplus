@@ -15,11 +15,12 @@
 - [1 How to use this guide](#1-how-to-use-this-guide)
 - [2 The GitHub Codespaces environment](#2-the-github-codespaces-environment)
   - [2.1 What a Codespace gives you](#21-what-a-codespace-gives-you)
-  - [2.2 Launching the Codespace](#22-launching-the-codespace)
-  - [2.3 Before the session: confirm the toolchain](#23-before-the-session-confirm-the-toolchain)
-  - [2.4 First build](#24-first-build)
-  - [2.5 First run and first debug](#25-first-run-and-first-debug)
-  - [2.6 Orientation: the source layout and the program shape](#26-orientation-the-source-layout-and-the-program-shape)
+  - [2.2 Create a fork in Github](#22-create-a-fork-in-github)
+  - [2.3 Launching the Codespace](#23-launching-the-codespace)
+  - [2.4 Before the session: confirm the toolchain](#24-before-the-session-confirm-the-toolchain)
+  - [2.5 First build](#25-first-build)
+  - [2.6 First run and first debug](#26-first-run-and-first-debug)
+  - [2.7 Orientation: the source layout and the program shape](#27-orientation-the-source-layout-and-the-program-shape)
 - [3 Exercise 1: Expose the Hargreaves exponent](#3-exercise-1-expose-the-hargreaves-exponent)
   - [3.1 Background](#31-background)
   - [3.2 Guided discovery](#32-guided-discovery)
@@ -27,6 +28,7 @@
   - [3.4 The exercise](#34-the-exercise)
   - [3.5 Rebuild and verify (in Codespaces)](#35-rebuild-and-verify-in-codespaces)
   - [3.6 Discussion prompts](#36-discussion-prompts)
+  - [3.7 Commit and Push Your Changes](#37-commit-and-push-your-changes)
 - [4 Exercise 2: Add a constant daily PET method](#4-exercise-2-add-a-constant-daily-pet-method)
   - [4.1 Motivation and orientation](#41-motivation-and-orientation)
   - [4.2 The five steps](#42-the-five-steps)
@@ -92,7 +94,24 @@ You can open the Codespace in the **browser** or attach **VS Code Desktop**; bot
 identically. Keyboard shortcuts (`Ctrl+Shift+F` for search, `F5` to debug, `F7` to build)
 work in the browser too.
 
-### 2.2 Launching the Codespace
+### 2.2 Create a fork in Github
+
+> [!NOTE]
+> **What is a fork?** A fork is your own personal copy of a repository on GitHub. It lives
+> under your GitHub account and is fully independent: you can make commits, push branches,
+> and open pull requests without affecting the original repository. Forks are the standard
+> way to contribute to an open-source project — you work in your fork and then propose your
+> changes back to the upstream repository via a pull request.
+
+If you haven't already created your fork, create a Github fork off of the swatplus main
+repository. Here are the steps:
+
+1. Go to the Github swatplus main repository at
+   [https://github.com/swatplus/swatplus](https://github.com/swatplus/swatplus).
+2. Click on **Fork** and select the owner (which is yourself) and a name for your fork,
+   then select **Create fork**.
+
+### 2.3 Launching the Codespace
 
 1. On the repository page, click the green **<> Code** button → **Codespaces** tab →
    **Create codespace on *main***.
@@ -108,7 +127,7 @@ work in the browser too.
 > where the container runs. Useful for venues with poor Wi-Fi or for participants who prefer
 > local disk.
 
-### 2.3 Before the session: confirm the toolchain
+### 2.4 Before the session: confirm the toolchain
 
 Confirm the toolchain in a terminal:
 
@@ -119,7 +138,7 @@ cmake --version
 ls workdata   # expect: Ames_sub1  my_data
 ```
 
-### 2.4 First build
+### 2.5 First build
 
 The repo ships `CMakePresets.json`; the Linux gfortran preset is `gfortran_debug_linux`
 (with `gfortran_release_linux` for an optimised build). The command line is the reliable
@@ -152,7 +171,7 @@ configure time, you did *not* create it.
 > (see [Switching compilers](#53-switching-compilers-gfortran-and-ifx)). Using the command
 > line above avoids this entirely.
 
-### 2.5 First run and first debug
+### 2.6 First run and first debug
 
 1. Open `src/main.f90` and set a breakpoint at the line `call proc_read` (click in the
    gutter).
@@ -176,7 +195,7 @@ present, breakpoints bind, and the dataset is found.
 > own `gdb-oneapi` (via `miDebuggerPath`) did not help either. If you must build with `ifx`
 > for other reasons, do the debugging on a parallel `gfortran` build.
 
-### 2.6 Orientation: the source layout and the program shape
+### 2.7 Orientation: the source layout and the program shape
 
 **Layout.** `src/` holds ~400 Fortran files in a *flat* directory; `refdata/` holds the
 reference datasets (`Ames_sub1`, `Osu_1hru`). Nobody memorises 400 files;
@@ -335,6 +354,20 @@ here too (`climate_control.f90:36`).
 > `co2`, `harg_expo`, and `day_lag_max` silently hold each other's values. The symptom is a
 > wrong-but-not-crashing run. Re-check that the column order matches the type declaration
 > order in File 1.
+
+### 3.7 Commit and Push Your Changes
+
+In order for your changes to persist in Github, your code changes must be staged, committed,
+then pushed to Github.
+
+1. In Codespaces, click the **git graph icon** on the left sidebar — it is the icon that
+   looks like a tree with branches.
+2. Click the **+** sign beside each file that was changed. This will "stage" the file to be
+   committed.
+3. Add a message in the text box under **Changes**, then click **Commit**. This commits your
+   staged changes.
+4. Finally, click the **ellipsis (...)** beside Changes and select **Push**. This pushes your
+   changes to your fork on Github.
 
 ---
 
@@ -561,7 +594,7 @@ cd workdata/Ames_sub1 && ../../build/debug/<swatplus-binary>
 
 These exercises use `gfortran`. Only switch to `ifx` if you specifically want an
 Intel-optimised build, and keep in mind it was not debuggable here (see the breakpoints note
-in [Section 2.5](#25-first-run-and-first-debug)).
+in [Section 2.6](#26-first-run-and-first-debug)).
 
 `F7` alone cannot change the compiler: CMake records `CMAKE_Fortran_COMPILER` in
 `build/debug/CMakeCache.txt` at the first configure and locks it for the life of that cache,
