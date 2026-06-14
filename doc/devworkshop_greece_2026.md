@@ -1,4 +1,4 @@
-# SWAT+ Source Code Exercises, @celray, modified for workshop by @fgeter
+# SWAT+ Source Code Exercises
 
 
 ## SWAT+ Conference 2026, Thessaloniki, Greece
