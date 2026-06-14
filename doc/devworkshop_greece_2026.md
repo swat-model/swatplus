@@ -36,6 +36,7 @@
   - [4.3 Activate and verify](#43-activate-and-verify)
   - [4.4 Discussion prompts](#44-discussion-prompts)
   - [4.5 Commit and Push Your Changes](#45-commit-and-push-your-changes)
+  - [4.6 Shutdown Codespaces](#46-shutdown-codespaces)
 - [5 Quick reference](#5-quick-reference)
   - [5.1 File and line locations (commit 5ccf6f0)](#51-file-and-line-locations-commit-5ccf6f0)
   - [5.2 Codespaces command cheat-sheet](#52-codespaces-command-cheat-sheet)
@@ -559,6 +560,11 @@ actually routing through your new code and not falling through to a stale value.
 
 See [Section 3.7 Commit and Push Your Changes](#37-commit-and-push-your-changes) for the
 steps to stage, commit, and push your Exercise 2 changes to your fork.
+
+### 4.6 Shutdown Codespaces
+
+See [Section 3.8 Shutdown Codespaces](#38-shutdown-codespaces) for the steps to safely shut
+down your Codespaces instance.
 
 ---
 
