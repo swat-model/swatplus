@@ -6,7 +6,7 @@ Resources:
 
 - [General GitHub/SWAT+ Intro](https://docs.google.com/presentation/d/156BU_YeCBLDwslZ52BgZnezDGfBRowHikVybuMth15k/edit?slide=id.g2e821c2e5f9_0_526#slide=id.g2e821c2e5f9_0_526)
 
-- Workshop Material (Frank)
+- [Workshop Material](devworkshop_greece_2026.md) (Frank)
 
 ### June 15, Day 1
 
@@ -57,7 +57,7 @@ Resources:
 
 - [General GitHub/SWAT+ Intro](https://docs.google.com/presentation/d/156BU_YeCBLDwslZ52BgZnezDGfBRowHikVybuMth15k/edit?slide=id.g2e821c2e5f9_0_526#slide=id.g2e821c2e5f9_0_526)
 
-- Workshop Material (Frank)
+- [Workshop Material](devworkshop_greece_2026.md) (Frank)
 
 ### June 15, Day 1
 
