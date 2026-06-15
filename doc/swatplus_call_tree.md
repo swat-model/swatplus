@@ -1,8 +1,6 @@
 # SWAT+ Call Tree from `main.f90`
 
-Full call tree without cswat constraints — both the `cswat = 0` (static model) and `cswat = 1` (CENTURY) paths are shown.
-Branches prefixed with `if` or `case` are conditional — the subroutine is only called when the condition is met.
-Click any linked name to jump to that routine's own call tree below.
+Full Swatplus call tree.  Click any linked name to jump to that routine's own call tree below.
 
 ---
 
