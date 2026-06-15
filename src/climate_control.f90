@@ -184,7 +184,7 @@
             if (wst(iwst)%weat%tmax > wst(iwst)%weat%tmin) then
               xl = 2.501 - 2.361e-3 * wst(iwst)%weat%tave
               wst(iwst)%weat%pet = .0023 * (ramm / xl) * (wst(iwst)%weat%tave      &
-              + 17.8) * (wst(iwst)%weat%tmax - wst(iwst)%weat%tmin) ** 0.5
+              + 17.8) * (wst(iwst)%weat%tmax - wst(iwst)%weat%tmin) ** bsn_prm%harg_expo
               wst(iwst)%weat%pet = Max(0., wst(iwst)%weat%pet)
             else
               wst(iwst)%weat%pet = 0.
@@ -203,7 +203,7 @@
         if (wst(iwst)%weat%tmax > wst(iwst)%weat%tmin) then
           xl = 2.501 - 2.361e-3 * wst(iwst)%weat%tave
           wst(iwst)%weat%pet = .0023 * (ramm / xl) * (wst(iwst)%weat%tave      &
-                + 17.8) * (wst(iwst)%weat%tmax - wst(iwst)%weat%tmin) ** 0.5
+                + 17.8) * (wst(iwst)%weat%tmax - wst(iwst)%weat%tmin) ** bsn_prm%harg_expo
           wst(iwst)%weat%pet = Max(0.01, wst(iwst)%weat%pet)
         else
           wst(iwst)%weat%pet = 0.01
