@@ -70,7 +70,8 @@ proc_bsn
 ├── basin_prm_default
 ├── basin_print_codes_read   read print.prt  → sets all output flags
 ├── <a href="#co2_read">co2_read</a>
-└── carbon_coef_read         read carbon_coef.cbn if present (overrides CENTURY rates)
+├── carbon_coef_read         read carbon_coef.cbn if present (overrides CENTURY rates)
+└── open_output_file         open files.out, diagnostics.out, area_calc.out
 </pre>
 
 ---
@@ -141,7 +142,8 @@ proc_hru
 ├── <a href="#soils_init">soils_init</a>               compute FC, WP, BD for each layer
 ├── <a href="#structure_init">structure_init</a> / <a href="#plant_all_init">plant_all_init</a> / <a href="#cn2_init_all">cn2_init_all</a> / hydro_init
 ├── pesticide_init / pathogen_init / salt_hru_init / cs_hru_init
-└── rte_read_nut
+├── rte_read_nut
+└── open_output_file         open erosion.out, checker.out
 </pre>
 
 ---
@@ -545,6 +547,8 @@ hru_control
 
 Called from `hru_control` when `yr_skip(j) == 0`.
 
+**Called from:** [`hru_control`](#hru_control)
+
 <pre>
 mgt_operatn
 │
@@ -678,7 +682,7 @@ mgt_sched(isched)
     │   └── [no subroutine called]
     │         sets hru%lumv%sdr_dep and %ldrain
     │         ldrain controls which soil layer is the tile drain target
-    │         used in <a href="#swr_percmain">swr_percmain</a>
+    │         used in swr_percmain
     │
     ├── case "weir" ── weir height adjustment ────────────────────────────────
     │   └── [no subroutine called]
@@ -737,7 +741,7 @@ cbn_zhang2
     │   ├── cdg      temperature scalar  fcgd(stemp(k))
     │   ├── ox       oxygen/depth scalar  (reduced below ~30 cm)
     │   ├── till_eff tillage disturbance scalar
-    │   │     = 1.6 for till_eff_days days after <a href="#mgt_newtillmix_cswat1">mgt_newtillmix_cswat1</a>
+    │   │     = 1.6 for till_eff_days days after mgt_newtillmix_cswat1
     │   │     = 1.0 otherwise
     │   └── cs = min(15,  sqrt(cdg × sut) × 0.9 × ox × till_eff)
     │         composite rate modifier applied to all transformations
@@ -766,7 +770,7 @@ cbn_zhang2
     ├── Pool mass updates
     │   microb(k)%c, hs(k)%c, hp(k)%c, str(k)%c, meta(k)%c, lig(k)%c, nonlig(k)%c
     │
-    ├── N flux accounting via nut_np_flow for each pool-to-pool transfer
+    ├── nut_np_flow              N flux accounting for each pool-to-pool transfer
     │   → updates meta%n, str%n, microb%n, hs%n, hp%n, NO3, NH4
     │
     ├── CO2 respiration summed into hsc_d(j)%rsp_c  (soil respiration output)
@@ -952,7 +956,11 @@ Called from `main`; reads export-coefficient object parameters.
 
 <pre>
 exco_db_read
-└── exco_read_om
+├── exco_read_om
+├── [if cs_db%num_pests > 0]   exco_read_pest
+├── [if cs_db%num_paths > 0]   exco_read_path
+├── [if cs_db%num_hmet > 0]    exco_read_hmet
+└── [if cs_db%num_salts > 0]   exco_read_salt
 </pre>
 
 ---
@@ -966,7 +974,11 @@ Called from `main` (and conditionally from `hyd_connect` when `sp_ob%dr > 0`); r
 
 <pre>
 dr_db_read
-└── dr_read_om
+├── dr_read_om
+├── [if cs_db%num_pests > 0]   dr_read_pest
+├── [if cs_db%num_paths > 0]   dr_path_read
+├── [if cs_db%num_hmet > 0]    dr_read_hmet
+└── [if cs_db%num_salts > 0]   dr_read_salt
 </pre>
 
 ---
@@ -1159,6 +1171,8 @@ gwflow_simulate
 ├── <a href="#gwflow_lateral">gwflow_lateral</a>                      this subroutine calculates lateral groundwater flow between adjacent cells
 ├── <a href="#gwflow_output_aa">gwflow_output_aa</a>                    this subroutine writes average annual gwflow output in SWAT+ long format:
 ├── gwflow_output_day                   this subroutine computes and writes daily gwflow output:
+├── gwflow_output_mon                   writes monthly gwflow output
+├── gwflow_output_yr                    writes yearly gwflow output
 ├── gwflow_phreatophyte                 this subroutine calculates the water removed from the aquifer via phreatophyte extraction
 ├── gwflow_pond                         this subroutine calculates the volume of seepage from recharge ponds;
 ├── gwflow_pump_ext                     this subroutine determines the volume of groundwater that is extracted
@@ -1207,6 +1221,7 @@ Source: `res_control.f90`
 
 <pre>
 res_control
+├── [if bsn_cc%lapse == 1]  cli_lapse   lapse-rate weather adjustment for reservoir elevation
 ├── <a href="#conditions">conditions</a>                          current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
 ├── gwflow_reservoir                    this subroutine calculates the water exchange volume between the reservoir and the connected grid cells
 ├── res_cs                              this subroutine computes the reservoir constituent mass balance
@@ -1249,6 +1264,8 @@ Source: `sd_channel_control3.f90`
 
 <pre>
 sd_channel_control3
+├── [if bsn_cc%lapse == 1]  cli_lapse   lapse-rate weather adjustment
+├── wallo_control               water allocation for channel objects
 ├── <a href="#ch_rtmusk">ch_rtmusk</a>                           this subroutine routes a daily flow through a reach using the
 ├── ch_rtpath                           this subroutine routes bacteria through the stream network
 ├── ch_rtpest                           this subroutine computes the daily stream pesticide balance
@@ -1627,7 +1644,8 @@ Source: `soils_init.f90`
 <pre>
 soils_init
 ├── soil_phys_init                      this subroutine initializes soil physical properties
-└── soils_test_adjust                   Adjust the input soil values based input soil test values.
+├── soils_test_adjust                   Adjust the input soil values based input soil test values.
+└── layersplit                          split soil layer for thickness adjustments (called twice)
 </pre>
 
 ---
@@ -2184,6 +2202,7 @@ Source: `pl_grow.f90`
 pl_grow
 ├── <a href="#pl_biomass_gro">pl_biomass_gro</a>
 ├── pl_dormant                          this subroutine checks the dormant status of the different plant types
+├── [if time%end_yr == 1]  pl_mortality  annual plant mortality
 ├── pl_leaf_gro                         this subroutine adjusts plant biomass, leaf area index, and canopy height
 ├── pl_leaf_senes                       lai decline for annuals - if dlai < phuacc < 1
 ├── <a href="#pl_nut_demand">pl_nut_demand</a>                       this subroutine predicts daily potential growth of total plant
@@ -2234,6 +2253,7 @@ surface
 ├── ero_pkq                             this subroutine computes the peak runoff rate for each HRU
 ├── ero_ysed                            this subroutine predicts daily soil loss caused by water erosion
 ├── sq_dailycn                          Calculates curve number for the day in the HRU
+├── [if surfq > 0 and bsn_cc%crk == 1]  sq_crackflow   route surface runoff into soil cracks
 └── <a href="#sq_volq">sq_volq</a>                             Call subroutines to calculate the current day"s CN for the HRU and
 </pre>
 
@@ -2626,7 +2646,8 @@ pl_biomass_gro
 ├── <a href="#pl_nup">pl_nup</a>                              This subroutine calculates plant nitrogen uptake
 ├── <a href="#pl_pup">pl_pup</a>                              this subroutine calculates plant phosphorus uptake
 ├── pl_tstr                             computes temperature stress for crop growth - strstmp
-└── salt_uptake                         this subroutine simulates salt ion uptake in the root zone
+├── salt_uptake                         this subroutine simulates salt ion uptake in the root zone
+└── [if cs_db%num_cs > 0]  cs_uptake   constituent uptake by plants
 </pre>
 
 ---
