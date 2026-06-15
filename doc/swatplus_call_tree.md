@@ -57,6 +57,9 @@ main
 
 ## proc_bsn
 
+
+**Called from:** [`main`](#main)
+
 <pre>
 proc_bsn
 ├── <a href="#readcio_read">readcio_read</a>             read file.cio
@@ -73,6 +76,9 @@ proc_bsn
 ---
 
 ## proc_db
+
+
+**Called from:** [`main`](#main)
 
 <pre>
 proc_db
@@ -99,6 +105,9 @@ proc_db
 
 ## proc_read
 
+
+**Called from:** [`main`](#main)
+
 <pre>
 proc_read
 ├── ch_read_temp / cli_read_atmodep / cli_staread
@@ -120,6 +129,9 @@ proc_read
 
 ## proc_hru
 
+
+**Called from:** [`main`](#main)
+
 <pre>
 proc_hru
 ├── hru_allo / <a href="#hru_read">hru_read</a> / hrudb_init
@@ -138,6 +150,9 @@ proc_hru
 
 Called from `main` in a loop over every HRU after `proc_hru` returns.
 
+**Called from:** [`main`](#main)
+
+
 <pre>
 [loop ihru = 1, sp_ob%hru]
     <a href="#soil_nutcarb_init">soil_nutcarb_init</a>(isol)
@@ -153,6 +168,9 @@ Called from `main` in a loop over every HRU after `proc_hru` returns.
 
 ## proc_cha
 
+
+**Called from:** [`main`](#main)
+
 <pre>
 proc_cha
 ├── ch_read_init / ch_read_init_cs
@@ -167,6 +185,9 @@ proc_cha
 
 ## proc_aqu
 
+
+**Called from:** [`main`](#main)
+
 <pre>
 proc_aqu
 ├── aqu_read / aqu_initial
@@ -176,6 +197,9 @@ proc_aqu
 ---
 
 ## proc_cal
+
+
+**Called from:** [`main`](#main)
 
 <pre>
 proc_cal
@@ -191,6 +215,9 @@ proc_cal
 
 ## proc_open
 
+
+**Called from:** [`main`](#main)
+
 <pre>
 proc_open
 ├── <a href="#output_landscape_init">output_landscape_init</a>
@@ -204,6 +231,9 @@ proc_open
 ---
 
 ## time_control
+
+
+**Called from:** [`calhard_control`](#calhard_control), [`main`](#main)
 
 <pre>
 time_control
@@ -246,6 +276,9 @@ time_control
 ## command
 
 Walks a singly-linked list (`ob(:)%cmd_next`) of all spatial objects in routing order each day.
+
+**Called from:** [`main`](#main), [`time_control`](#time_control)
+
 
 <pre>
 command
@@ -341,6 +374,9 @@ command
 ## hru_control
 
 Daily land-phase simulation for one HRU. Called from `command` for each `"hru"` object.
+
+**Called from:** [`command`](#command)
+
 
 <pre>
 hru_control
@@ -529,6 +565,9 @@ mgt_operatn
 Dispatches each management operation type. Called from `mgt_operatn`.
 After each call, advances `hru%cur_op` to the next scheduled operation.
 
+**Called from:** [`mgt_operatn`](#mgt_operatn)
+
+
 <pre>
 mgt_sched(isched)
 │
@@ -685,6 +724,9 @@ mgt_sched(isched)
 CENTURY 5-pool C/N model. Called once per day per HRU when `bsn_cc%cswat == 1`.
 Litter inputs arrive from `cbn_surfrsd_decomp` (surface) and `cbn_rsd_transfer` (soil layers).
 
+**Called from:** [`hru_control`](#hru_control)
+
+
 <pre>
 cbn_zhang2
 │
@@ -780,6 +822,9 @@ tot(k)%c = seq(k)%c + meta(k)%c + str(k)%c    (total organic C)
 
 Called from `mgt_sched` case `"till"` and case `"pudl"` (dry soil path) when `bsn_cc%cswat == 1`.
 
+**Called from:** [`mgt_sched`](#mgt_sched)
+
+
 ```
 mgt_sched case "till" (cswat==1)
 └── mgt_newtillmix_cswat1 (j, 0., idtill)
@@ -830,6 +875,9 @@ Key erosion columns accumulated in `hru_control` (`hls_d`):
 
 Called from `main` during INITIALIZATION; reads all measured weather time series into memory before the simulation loop.
 
+**Called from:** [`main`](#main)
+
+
 <pre>
 proc_date_time
 ├── cli_petmeas          read PET measurement files
@@ -846,6 +894,9 @@ proc_date_time
 ## hyd_connect
 
 Reads routing network configuration files and builds the object connectivity graph used by `command`.
+
+**Called from:** [`main`](#main)
+
 
 <pre>
 hyd_connect
@@ -882,6 +933,9 @@ hyd_connect
 
 Called from `main` after `hyd_connect`; loops over all recall objects and loads each recall input time series.
 
+**Called from:** [`main`](#main)
+
+
 <pre>
 recalldb_read
 └── [loop i = 1, sp_ob%recall]  recall_read(i)
@@ -892,6 +946,9 @@ recalldb_read
 ## exco_db_read
 
 Called from `main`; reads export-coefficient object parameters.
+
+**Called from:** [`main`](#main)
+
 
 <pre>
 exco_db_read
@@ -904,6 +961,9 @@ exco_db_read
 
 Called from `main` (and conditionally from `hyd_connect` when `sp_ob%dr > 0`); reads delivery-ratio database parameters.
 
+**Called from:** [`hyd_connect`](#hyd_connect), [`main`](#main)
+
+
 <pre>
 dr_db_read
 └── dr_read_om
@@ -914,6 +974,9 @@ dr_db_read
 ## climate_control
 
 Called daily from `time_control` at the start of each day loop. Reads measured data or calls weather generators for each weather station (`iwst`). Each variable falls back to its generator when the measured value is missing or out of bounds.
+
+**Called from:** [`time_control`](#time_control)
+
 
 <pre>
 climate_control
@@ -959,6 +1022,9 @@ The following sections document all SWAT+ subroutines reachable from `main` that
 
 this function computes new parameter value based on
 
+**Called from:** [`main`](#main), [`proc_cal`](#proc_cal)
+
+
 Source: `cal_parmchg_read.f90`
 
 <pre>
@@ -971,6 +1037,9 @@ cal_parmchg_read
 ## calhard_control
 
 re-initialize all objects
+
+**Called from:** [`main`](#main)
+
 
 Source: `calhard_control.f90`
 
@@ -986,6 +1055,9 @@ calhard_control
 
 Source: `hru_lte_read.f90`
 
+**Called from:** [`main`](#main)
+
+
 <pre>
 hru_lte_read
 └── ascrv                               this subroutine computes shape parameters x5 and x6 for the S curve
@@ -996,6 +1068,9 @@ hru_lte_read
 ## lsu_read_elements
 
 read landscape cataloging unit definitions for output (old subbasin output file)
+
+**Called from:** [`main`](#main)
+
 
 Source: `lsu_read_elements.f90`
 
@@ -1009,6 +1084,9 @@ lsu_read_elements
 ## proc_res
 
 allocate and initialize reservoir variables
+
+**Called from:** [`main`](#main)
+
 
 Source: `proc_res.f90`
 
@@ -1034,6 +1112,9 @@ proc_res
 
 compute unit hydrographs for all hru and ru
 
+**Called from:** [`main`](#main)
+
+
 Source: `unit_hyd_ru_hru.f90`
 
 <pre>
@@ -1046,6 +1127,9 @@ unit_hyd_ru_hru
 ## aqu_1d_control
 
 set pointers to aquifer database and weather station
+
+**Called from:** [`command`](#command)
+
 
 Source: `aqu_1d_control.f90`
 
@@ -1061,6 +1145,9 @@ aqu_1d_control
 ## gwflow_simulate
 
 this subroutine calculates new groundwater storage and solute mass for each gwflow grid cell;
+
+**Called from:** [`command`](#command)
+
 
 Source: `gwflow_simulate.f90`
 
@@ -1084,6 +1171,9 @@ gwflow_simulate
 
 Source: `hru_lte_control.f90`
 
+**Called from:** [`command`](#command)
+
+
 <pre>
 hru_lte_control
 ├── <a href="#actions">actions</a>
@@ -1095,6 +1185,9 @@ hru_lte_control
 ## hru_output
 
 this subroutine outputs HRU variables on daily, monthly and annual time steps
+
+**Called from:** [`command`](#command)
+
 
 Source: `hru_output.f90`
 
@@ -1108,6 +1201,9 @@ hru_output
 ## res_control
 
 Source: `res_control.f90`
+
+**Called from:** [`command`](#command)
+
 
 <pre>
 res_control
@@ -1130,6 +1226,9 @@ res_control
 
 name        |units         |definition
 
+**Called from:** [`command`](#command)
+
+
 Source: `ru_control.f90`
 
 <pre>
@@ -1142,6 +1241,9 @@ ru_control
 ## sd_channel_control3
 
 rtb floodplain
+
+**Called from:** [`command`](#command)
+
 
 Source: `sd_channel_control3.f90`
 
@@ -1166,6 +1268,9 @@ sd_channel_control3
 
 read data for aquifer elements for 2-D groundwater model
 
+**Called from:** [`hyd_connect`](#hyd_connect)
+
+
 Source: `aqu2d_read.f90`
 
 <pre>
@@ -1178,6 +1283,9 @@ aqu2d_read
 ## gwflow_read
 
 water balance and solute balance output file headers
+
+**Called from:** [`hyd_connect`](#hyd_connect)
+
 
 Source: `gwflow_read.f90`
 
@@ -1192,6 +1300,9 @@ gwflow_read
 
 con_file ==> connect file for spatial object
 
+**Called from:** [`hyd_connect`](#hyd_connect)
+
+
 Source: `hyd_read_connect.f90`
 
 <pre>
@@ -1204,6 +1315,9 @@ hyd_read_connect
 ## ru_read_elements
 
 read data for each element in all subbasins
+
+**Called from:** [`hyd_connect`](#hyd_connect)
+
 
 Source: `ru_read_elements.f90`
 
@@ -1218,6 +1332,9 @@ ru_read_elements
 
 output annual CO2
 
+**Called from:** [`proc_bsn`](#proc_bsn)
+
+
 Source: `co2_read.f90`
 
 <pre>
@@ -1230,6 +1347,9 @@ co2_read
 ## readcio_read
 
 read file.cio
+
+**Called from:** [`proc_bsn`](#proc_bsn)
+
 
 Source: `readcio_read.f90`
 
@@ -1244,6 +1364,9 @@ readcio_read
 
 read weather codes
 
+**Called from:** [`proc_bsn`](#proc_bsn)
+
+
 Source: `time_read.f90`
 
 <pre>
@@ -1257,6 +1380,9 @@ time_read
 
 Source: `aqu_read_elements.f90`
 
+**Called from:** [`proc_cal`](#proc_cal)
+
+
 <pre>
 aqu_read_elements
 └── define_unit_elements                save the object number of each defining unit
@@ -1267,6 +1393,9 @@ aqu_read_elements
 ## cal_conditions
 
 Source: `cal_conditions.f90`
+
+**Called from:** [`proc_cal`](#proc_cal)
+
 
 <pre>
 cal_conditions
@@ -1279,6 +1408,9 @@ cal_conditions
 
 Source: `ch_read_elements.f90`
 
+**Called from:** [`proc_cal`](#proc_cal)
+
+
 <pre>
 ch_read_elements
 └── define_unit_elements                save the object number of each defining unit
@@ -1289,6 +1421,9 @@ ch_read_elements
 ## pl_read_parms_cal
 
 Source: `pl_read_parms_cal.f90`
+
+**Called from:** [`proc_cal`](#proc_cal)
+
 
 <pre>
 pl_read_parms_cal
@@ -1301,6 +1436,9 @@ pl_read_parms_cal
 
 Source: `pl_read_regions_cal.f90`
 
+**Called from:** [`proc_cal`](#proc_cal)
+
+
 <pre>
 pl_read_regions_cal
 └── define_unit_elements                save the object number of each defining unit
@@ -1311,6 +1449,9 @@ pl_read_regions_cal
 ## rec_read_elements
 
 Source: `rec_read_elements.f90`
+
+**Called from:** [`proc_cal`](#proc_cal)
+
 
 <pre>
 rec_read_elements
@@ -1323,6 +1464,9 @@ rec_read_elements
 
 Source: `res_read_elements.f90`
 
+**Called from:** [`proc_cal`](#proc_cal)
+
+
 <pre>
 res_read_elements
 └── define_unit_elements                save the object number of each defining unit
@@ -1333,6 +1477,9 @@ res_read_elements
 ## sd_hydsed_init
 
 Source: `sd_hydsed_init.f90`
+
+**Called from:** [`proc_cha`](#proc_cha)
+
 
 <pre>
 sd_hydsed_init
@@ -1347,6 +1494,9 @@ sd_hydsed_init
 
 read all measured daily temperature data
 
+**Called from:** [`proc_date_time`](#proc_date_time)
+
+
 Source: `cli_tmeas.f90`
 
 <pre>
@@ -1359,6 +1509,9 @@ cli_tmeas
 ## cli_wgnread
 
 read weather generator data from weather_generator.dat - wgn parameters
+
+**Called from:** [`proc_date_time`](#proc_date_time)
+
 
 Source: `cli_wgnread.f90`
 
@@ -1374,6 +1527,9 @@ cli_wgnread
 
 read mgtops.dat file
 
+**Called from:** [`proc_db`](#proc_db)
+
+
 Source: `mgt_read_mgtops.f90`
 
 <pre>
@@ -1386,6 +1542,9 @@ mgt_read_mgtops
 ## plantparm_init
 
 set default values
+
+**Called from:** [`proc_db`](#proc_db)
+
 
 Source: `plantparm_init.f90`
 
@@ -1400,6 +1559,9 @@ plantparm_init
 
 assign topography and hyd parameters
 
+**Called from:** [`proc_hru`](#proc_hru)
+
+
 Source: `cn2_init_all.f90`
 
 <pre>
@@ -1413,6 +1575,9 @@ cn2_init_all
 
 Source: `hru_lum_init_all.f90`
 
+**Called from:** [`proc_hru`](#proc_hru)
+
+
 <pre>
 hru_lum_init_all
 └── hru_lum_init                        assign land use pointers for the hru
@@ -1424,6 +1589,9 @@ hru_lum_init_all
 
 Source: `hru_read.f90`
 
+**Called from:** [`proc_hru`](#proc_hru)
+
+
 <pre>
 hru_read
 └── <a href="#allocate_parms">allocate_parms</a>                      this subroutine allocates array sizes
@@ -1434,6 +1602,9 @@ hru_read
 ## plant_all_init
 
 assign land use pointers for the hru
+
+**Called from:** [`proc_hru`](#proc_hru)
+
 
 Source: `plant_all_init.f90`
 
@@ -1447,6 +1618,9 @@ plant_all_init
 ## soils_init
 
 Section 1
+
+**Called from:** [`proc_hru`](#proc_hru)
+
 
 Source: `soils_init.f90`
 
@@ -1462,6 +1636,9 @@ soils_init
 
 set parameters for structural land use/management
 
+**Called from:** [`proc_hru`](#proc_hru)
+
+
 Source: `structure_init.f90`
 
 <pre>
@@ -1474,6 +1651,9 @@ structure_init
 ## structure_set_parms
 
 this subroutine controls the simulation of the land phase of the
+
+**Called from:** [`actions`](#actions), [`proc_hru`](#proc_hru), [`structure_init`](#structure_init)
+
 
 Source: `structure_set_parms.f90`
 
@@ -1488,6 +1668,9 @@ structure_set_parms
 
 assign topography and hyd parameters
 
+**Called from:** [`proc_hru`](#proc_hru)
+
+
 Source: `topohyd_init.f90`
 
 <pre>
@@ -1500,6 +1683,9 @@ topohyd_init
 ## header_aquifer
 
 AQUIFER
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_aquifer.f90`
 
@@ -1514,6 +1700,9 @@ header_aquifer
 
 CHANNEL
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 Source: `header_channel.f90`
 
 <pre>
@@ -1527,6 +1716,9 @@ header_channel
 
 Source: `header_const.f90`
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 <pre>
 header_const
 └── open_output_file                    Get full path
@@ -1537,6 +1729,9 @@ header_const
 ## header_hyd
 
 HYDCON (no headers)
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_hyd.f90`
 
@@ -1551,6 +1746,9 @@ header_hyd
 
 open lu_change output file
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 Source: `header_lu_change.f90`
 
 <pre>
@@ -1563,6 +1761,9 @@ header_lu_change
 ## header_mgt
 
 open mgt.out file
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_mgt.f90`
 
@@ -1577,6 +1778,9 @@ header_mgt
 
 HRU_PATHOGEN - daily
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 Source: `header_path.f90`
 
 <pre>
@@ -1589,6 +1793,9 @@ header_path
 ## header_pest
 
 HRU_PESTICIDE - daily
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_pest.f90`
 
@@ -1603,6 +1810,9 @@ header_pest
 
 use hydrograph_module, only : res, sp_ob
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 Source: `header_reservoir.f90`
 
 <pre>
@@ -1616,6 +1826,9 @@ header_reservoir
 
 Source: `header_salt.f90`
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 <pre>
 header_salt
 └── open_output_file                    Get full path
@@ -1626,6 +1839,9 @@ header_salt
 ## header_sd_channel
 
 SWAT-DEG CHANNEL - SUBDAILY OUTPUT
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_sd_channel.f90`
 
@@ -1640,6 +1856,9 @@ header_sd_channel
 
 Water Allocation Output
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 Source: `header_water_allocation.f90`
 
 <pre>
@@ -1652,6 +1871,9 @@ header_water_allocation
 ## header_wetland
 
 RESERVOIR/WETLAND - DAILY
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_wetland.f90`
 
@@ -1666,6 +1888,9 @@ header_wetland
 
 Source: `header_write.f90`
 
+**Called from:** [`proc_open`](#proc_open)
+
+
 <pre>
 header_write
 └── open_output_file                    Get full path
@@ -1676,6 +1901,9 @@ header_write
 ## header_yield
 
 yield biomass file
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `header_yield.f90`
 
@@ -1689,6 +1917,9 @@ header_yield
 ## output_landscape_init
 
 HRU - Water balance
+
+**Called from:** [`proc_open`](#proc_open)
+
 
 Source: `output_landscape_init.f90`
 
@@ -1704,6 +1935,9 @@ output_landscape_init
 
 set initial volumes for res and hru types and convert units
 
+**Called from:** [`proc_res`](#proc_res)
+
+
 Source: `res_initial.f90`
 
 <pre>
@@ -1716,6 +1950,9 @@ res_initial
 ## actions
 
 Source: `actions.f90`
+
+**Called from:** [`hru_control`](#hru_control), [`hru_lte_control`](#hru_lte_control), [`mallo_control`](#mallo_control), [`time_control`](#time_control)
+
 
 <pre>
 actions
@@ -1751,6 +1988,9 @@ actions
 
 this subroutine controls weather inputs to SWAT. Precipitation and
 
+**Called from:** [`climate_control`](#climate_control), [`time_control`](#time_control)
+
+
 Source: `cli_precip_control.f90`
 
 <pre>
@@ -1766,6 +2006,9 @@ cli_precip_control
 
 current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
 
+**Called from:** [`hru_control`](#hru_control), [`hru_lte_control`](#hru_lte_control), [`mallo_control`](#mallo_control), [`res_control`](#res_control), [`time_control`](#time_control), [`wetland_control`](#wetland_control)
+
+
 Source: `conditions.f90`
 
 <pre>
@@ -1779,6 +2022,9 @@ conditions
 ## mallo_control
 
 zero demand, withdrawal, and unmet for entire allocation object
+
+**Called from:** [`time_control`](#time_control)
+
 
 Source: `mallo_control.f90`
 
@@ -1795,6 +2041,9 @@ mallo_control
 
 this subroutine updates constituent concentrations based on chemical reactions in groundwater
 
+**Called from:** [`aqu_1d_control`](#aqu_1d_control)
+
+
 Source: `cs_rctn_aqu.f90`
 
 <pre>
@@ -1807,6 +2056,9 @@ cs_rctn_aqu
 ## salt_chem_aqu
 
 this subroutine calculates salt ion concentrations based on equilibrium chemical reactions, for an HRU
+
+**Called from:** [`aqu_1d_control`](#aqu_1d_control)
+
 
 Source: `salt_chem_aqu.f90`
 
@@ -1828,6 +2080,9 @@ salt_chem_aqu
 
 this subroutine calculates lateral groundwater flow between adjacent cells
 
+**Called from:** [`gwflow_simulate`](#gwflow_simulate)
+
+
 Source: `gwflow_lateral.f90`
 
 <pre>
@@ -1842,6 +2097,9 @@ gwflow_lateral
 
 this subroutine writes average annual gwflow output in SWAT+ long format:
 
+**Called from:** [`gwflow_simulate`](#gwflow_simulate)
+
+
 Source: `gwflow_output.f90`
 
 <pre>
@@ -1854,6 +2112,9 @@ gwflow_output_aa
 ## cs_rctn_hru
 
 this subroutine updates constituent concentrations based on chemical reactions and sorption in the soil profile
+
+**Called from:** [`hru_control`](#hru_control)
+
 
 Source: `cs_rctn_hru.f90`
 
@@ -1868,6 +2129,9 @@ cs_rctn_hru
 
 this subroutine summarizes data for subbasins with multiple HRUs and
 
+**Called from:** [`hru_control`](#hru_control)
+
+
 Source: `hru_hyds.f90`
 
 <pre>
@@ -1880,6 +2144,9 @@ hru_hyds
 ## hru_urbanhr
 
 this subroutine computes loadings from urban areas using the
+
+**Called from:** [`hru_control`](#hru_control)
+
 
 Source: `hru_urbanhr.f90`
 
@@ -1894,6 +2161,9 @@ hru_urbanhr
 
 this subroutine predicts daily potential growth of total plant
 
+**Called from:** [`hru_control`](#hru_control)
+
+
 Source: `pl_community.f90`
 
 <pre>
@@ -1906,6 +2176,9 @@ pl_community
 ## pl_grow
 
 Source: `pl_grow.f90`
+
+**Called from:** [`hru_control`](#hru_control)
+
 
 <pre>
 pl_grow
@@ -1924,6 +2197,9 @@ pl_grow
 ## salt_chem_hru
 
 this subroutine calculates salt ion concentrations based on equilibrium chemical reactions, for an HRU
+
+**Called from:** [`hru_control`](#hru_control)
+
 
 Source: `salt_chem_hru.f90`
 
@@ -1945,6 +2221,9 @@ salt_chem_hru
 
 this subroutine models surface hydrology at any desired time step
 
+**Called from:** [`hru_control`](#hru_control)
+
+
 Source: `surface.f90`
 
 <pre>
@@ -1964,6 +2243,9 @@ surface
 
 this subroutine is the master soil percolation component.
 
+**Called from:** [`hru_control`](#hru_control)
+
+
 Source: `swr_percmain.f90`
 
 <pre>
@@ -1981,6 +2263,9 @@ swr_percmain
 ## wetland_control
 
 Source: `wetland_control.f90`
+
+**Called from:** [`hru_control`](#hru_control)
+
 
 <pre>
 wetland_control
@@ -2001,6 +2286,9 @@ wetland_control
 
 ictbl = 1     nbs
 
+**Called from:** [`res_control`](#res_control)
+
+
 Source: `res_rel_conds.f90`
 
 <pre>
@@ -2015,6 +2303,9 @@ res_rel_conds
 
 this subroutine routes a daily flow through a reach using the
 
+**Called from:** [`sd_channel_control3`](#sd_channel_control3)
+
+
 Source: `ch_rtmusk.f90`
 
 <pre>
@@ -2027,6 +2318,9 @@ ch_rtmusk
 ## ch_watqual4
 
 this subroutine performs in-stream nutrient transformations and water
+
+**Called from:** [`sd_channel_control3`](#sd_channel_control3)
+
 
 Source: `ch_watqual4.f90`
 
@@ -2041,6 +2335,9 @@ ch_watqual4
 
 this subroutine interpolates between points on a rating curve given flow rate
 
+**Called from:** [`ch_rtmusk`](#ch_rtmusk), [`ch_watqual4`](#ch_watqual4), [`sd_channel_control3`](#sd_channel_control3), [`sd_channel_sediment3`](#sd_channel_sediment3)
+
+
 Source: `rcurv_interp_flo.f90`
 
 <pre>
@@ -2054,6 +2351,9 @@ rcurv_interp_flo
 
 Source: `sd_channel_sediment3.f90`
 
+**Called from:** [`sd_channel_control3`](#sd_channel_control3)
+
+
 <pre>
 sd_channel_sediment3
 ├── gwflow_floodplain                   this subroutine calculates the water exchange volume between the floodplain and the connected grid cells
@@ -2065,6 +2365,9 @@ sd_channel_sediment3
 ## gwflow_output_init
 
 this subroutine opens all gwflow output files and writes headers
+
+**Called from:** [`gwflow_read`](#gwflow_read)
+
 
 Source: `gwflow_output.f90`
 
@@ -2078,6 +2381,9 @@ gwflow_output_init
 ## cal_parm_select
 
 this subroutine finds the current parameter value based on
+
+**Called from:** [`cal_conditions`](#cal_conditions)
+
 
 Source: `cal_parm_select.f90`
 
@@ -2094,6 +2400,9 @@ cal_parm_select
 
 this subroutine interpolates between points on a rating curve given flow rate
 
+**Called from:** [`sd_hydsed_init`](#sd_hydsed_init)
+
+
 Source: `rcurv_interp_dep.f90`
 
 <pre>
@@ -2107,6 +2416,9 @@ rcurv_interp_dep
 
 assign cn2
 
+**Called from:** [`actions`](#actions), [`cn2_init_all`](#cn2_init_all)
+
+
 Source: `cn2_init.f90`
 
 <pre>
@@ -2119,6 +2431,9 @@ cn2_init
 ## allocate_parms
 
 this subroutine allocates array sizes
+
+**Called from:** [`hru_read`](#hru_read)
+
 
 Source: `allocate_parms.f90`
 
@@ -2135,6 +2450,9 @@ allocate_parms
 ## plant_init
 
 use hru_lte_module
+
+**Called from:** [`actions`](#actions), [`plant_all_init`](#plant_all_init)
+
 
 Source: `plant_init.f90`
 
@@ -2153,6 +2471,9 @@ plant_init
 
 this subroutine determines the curve numbers for moisture conditions
 
+**Called from:** [`actions`](#actions), [`cal_parm_select`](#cal_parm_select), [`cn2_init`](#cn2_init), [`mgt_sched`](#mgt_sched), [`pl_burnop`](#pl_burnop)
+
+
 Source: `curno.f90`
 
 <pre>
@@ -2166,6 +2487,9 @@ curno
 
 this subroutine performs the harvest grain only operation
 
+**Called from:** [`actions`](#actions), [`mgt_sched`](#mgt_sched)
+
+
 Source: `mgt_harvtuber.f90`
 
 <pre>
@@ -2178,6 +2502,9 @@ mgt_harvtuber
 ## mgt_killop
 
 this subroutine performs the kill operation
+
+**Called from:** [`actions`](#actions), [`mgt_sched`](#mgt_sched)
+
 
 Source: `mgt_killop.f90`
 
@@ -2193,6 +2520,9 @@ mgt_killop
 
 this subroutine mixes residue and nutrients during tillage and
 
+**Called from:** [`actions`](#actions), [`mgt_sched`](#mgt_sched)
+
+
 Source: `mgt_newtillmix_cswat1.f90`
 
 <pre>
@@ -2205,6 +2535,9 @@ mgt_newtillmix_cswat1
 ## mgt_transplant
 
 set initial heat units and other data
+
+**Called from:** [`actions`](#actions), [`mgt_sched`](#mgt_sched)
+
 
 Source: `mgt_transplant.f90`
 
@@ -2221,6 +2554,9 @@ mgt_transplant
 
 this subroutine performs all management operations
 
+**Called from:** [`actions`](#actions), [`mgt_sched`](#mgt_sched)
+
+
 Source: `pl_burnop.f90`
 
 <pre>
@@ -2233,6 +2569,9 @@ pl_burnop
 ## wet_initial
 
 check if hru can store surface water
+
+**Called from:** [`actions`](#actions)
+
 
 Source: `wet_initial.f90`
 
@@ -2247,6 +2586,9 @@ wet_initial
 
 this subroutine calculates solute advection, dispersion, chemical
 
+**Called from:** [`gwflow_lateral`](#gwflow_lateral)
+
+
 Source: `gwflow_solute.f90`
 
 <pre>
@@ -2260,6 +2602,9 @@ gwflow_solute
 
 this subroutine distributes potential plant evaporation through
 
+**Called from:** [`pl_community`](#pl_community)
+
+
 Source: `pl_waterup.f90`
 
 <pre>
@@ -2272,6 +2617,9 @@ pl_waterup
 ## pl_biomass_gro
 
 Source: `pl_biomass_gro.f90`
+
+**Called from:** [`pl_grow`](#pl_grow)
+
 
 <pre>
 pl_biomass_gro
@@ -2287,6 +2635,9 @@ pl_biomass_gro
 
 this subroutine predicts daily potential growth of total plant
 
+**Called from:** [`pl_grow`](#pl_grow)
+
+
 Source: `pl_nut_demand.f90`
 
 <pre>
@@ -2301,6 +2652,9 @@ pl_nut_demand
 
 calculate root depth
 
+**Called from:** [`mgt_transplant`](#mgt_transplant), [`pl_grow`](#pl_grow), [`plant_init`](#plant_init)
+
+
 Source: `pl_root_gro.f90`
 
 <pre>
@@ -2313,6 +2667,9 @@ pl_root_gro
 ## sq_volq
 
 Call subroutines to calculate the current day"s CN for the HRU and
+
+**Called from:** [`surface`](#surface)
+
 
 Source: `sq_volq.f90`
 
@@ -2328,6 +2685,9 @@ sq_volq
 
 this subroutine finds the effective lateral hydraulic conductivity
 
+**Called from:** [`swr_percmain`](#swr_percmain)
+
+
 Source: `swr_drains.f90`
 
 <pre>
@@ -2341,6 +2701,9 @@ swr_drains
 
 this subroutine calculates chemical reactions in gwflow cells.
 
+**Called from:** [`gwflow_solute`](#gwflow_solute)
+
+
 Source: `gwflow_chem.f90`
 
 <pre>
@@ -2353,6 +2716,9 @@ gwflow_chem
 ## salt_chem_soil_single
 
 this subroutine calculates salt ion concentrations based on equilibrium chemical reactions
+
+**Called from:** [`pl_waterup`](#pl_waterup)
+
 
 Source: `salt_chem_soil_single.f90`
 
@@ -2373,6 +2739,9 @@ salt_chem_soil_single
 
 This subroutine calculates plant nitrogen uptake
 
+**Called from:** [`pl_biomass_gro`](#pl_biomass_gro)
+
+
 Source: `pl_nup.f90`
 
 <pre>
@@ -2386,6 +2755,9 @@ pl_nup
 ## pl_pup
 
 this subroutine calculates plant phosphorus uptake
+
+**Called from:** [`pl_biomass_gro`](#pl_biomass_gro)
+
 
 Source: `pl_pup.f90`
 
