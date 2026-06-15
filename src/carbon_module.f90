@@ -2,55 +2,64 @@
       
       implicit none
 
-      logical :: cbn_diagnostics = .false.   !        |This controls what is printed out in soil_nutcarb_write.f90. 
-                                             !        |If .false. only hru_cbn_lyr(.txt, .csv) and hru_seq_lyr(.txt, .csv) will be printed out
-      
-      type carbon_terrestrial_inputs
-        real :: er_POC_para = 1.5       !           |POC enrichment ratio ! 0-10 ! 0.0-5.0  MOST SENSITIVE  
-        real :: CFB_para = 0.42         !           |Carbon fraction of residue (0.42; from data of Pinck et al., 1950) 
-        real :: Sf_para_sur = 0.05      !           |Fraction of mineral N sorbed to litter: 0.05 for surface litter, 0.1 for below ground litter
-        real :: Sf_para_sub = 0.10      !           |Fraction of mineral N sorbed to litter: 0.05 for surface litter, 0.1 for belowg round litter
-        !Dissovled carbon
-        real :: ABL_para = 0.0          !           |Calculated - Carbon allocation from Microbial Biomass to Leaching          
-        real :: peroc_DIC_para = 0.95   !0-1        |DIC percolation coefficient  
-        real :: peroc_DOC_para  = 0.70  !0-1        |DOC percolation coefficient
-        real :: part_DOC_para = 4000.   !           |organic carbon partition coefficient 1000 to 1200 ! 500-2000 !replacing KOC=Liquid-solid partition coefficient for Microbial Biomass (10^3 m3 Mg-1)
-        real :: hlife_doc_para = 50. !days       |DOC half life in groundwater, calculating DOC decay in groundwater ! 0-100
-        !Allocation of CO2 and Carbon transformation
-        real :: ABCO2_para_sur = 0.6    !           |Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 x (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
-        real :: ABCO2_para_sub = 0. !           |Calculated -Allocation from Microbial Biomass C pool to CO2; 0.6 (surface Litter), 0.85 - 0.68 x (CLAY+SILT) (all other layers) (Parton et al., 1993, 1994)
-        real :: ABP_para_sur = 0.0      !           |Allocation from Biomass to passive Humus; 0 (surface Litter), 0.003 + 0.032 x SOL_CLAY (all other layers) (Parton et al., 1993, 1994)
-        real :: ABP_para_sub = 0.0      !           |Calculated - Allocation from Biomass to passive Humus; 0 (surface Litter), 0.003 + 0.032 x SOL_CLAY (all other layers) (Parton et al., 1993, 1994)
-        real :: ALMCO2_para_sur = 0.6 !           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ALMCO2_para_sub = 0.55 !           |Allocation from metabolic Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ALSLNCO2_para_sur = 0.6 !           |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ALSLNCO2_para_sub =0.55 !           |Allocation from non-lignin of structural Litter to CO2; 0.6 (surface Litter), 0.55 (all other layers) (Parton et al., 1993, 1994)
-        real :: ASP_para_sur = 0.0     !           |Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 x CLAF (all other layers) (Parton et al., 1993, 1994)
-        real :: ASP_para_sub = 0.0     !           |Calculated - Allocation from slow Humus to passive; 0 (surface Litter), 0.003 + 0.00009 x CLAF (all other layers) (Parton et al., 1993, 1994)
-        real :: ALSLCO2_para = 0.3     !           |Allocation from lignin of structural Litter to CO2; 0.3 (Parton et al., 1993, 1994)
-        real :: APCO2_para = 0.55     !           |Allocation from passive Humus to CO2; 0.55 (Parton et al., 1993, 1994)
-        real :: ASCO2_para = 0.55     !           |Allocation from slow Humus to CO2; 0.55 (Parton et al., 1993, 1994)
-        !decomposition rates
-        real :: PRMT_51_para = 1.0     !           |COEF ADJUSTS MICROBIAL ACTIVITY FUNCTION IN TOP SOIL LAYER (0.1_1.),
-        real :: PRMT_45_para = 0.003 !           |COEF IN CENTURY EQ ALLOCATING SLOW TO PASSIVE HUMUS(0.001_0.05) ORIGINAL VALUE = 0.003, ASP=MAX(.001,PRMT_45-.00009*sol_clay(k,j)), ASP=MAX(.001,PRMT_45+.009*sol_clay(k,j)/100)
-        real :: BMR_para_sur = 0.0164 !           |Rate of transformation of microbial Biomass and associated products under optimal conditions (surface = 0.0164 d-1; all other layers = 0.02 d-1) (Parton et al., 1993, 1994)
-        real :: BMR_para_sub = 0.02     !           |Rate of transformation of microbial Biomass and associated products under optimal conditions (surface = 0.0164 d-1; all other layers = 0.02 d-1) (Parton et al., 1993, 1994)
-        real :: HPR_para = 0.000012     !           |Rate of transformation of passive Humus under optimal conditions (subsurface layers = 0.000012 d-1) (Parton et al., 1993, 1994)
-        real :: HSR_para = 0.000548     !           |Rate of transformation of slow Humus under optimal conditions (all layers = 0.0005 d-1) (Parton et al., 1993, 1994; Vitousek et al., 1993)
-        real :: LMR_para_sur = 0.0405 !           |Rate of transformation of metabolic Litter under optimal conditions (surface = 0.0405 d-1; all other layers = 0.0507 d-1) (Parton et al., 1994)
-        real :: LMR_para_sub = 0.0507 !           |Rate of transformation of metabolic Litter under optimal conditions (surface = 0.0405 d-1; all other layers = 0.0507 d-1) (Parton et al., 1994)
-        real :: LSR_para_sur = 0.0107 !           |Rate of potential transformation of structural Litter under optimal conditions (surface = 0.0107 d-1; all other layers = 0.0132 d-1) (Parton et al., 1994)
-        real :: LSR_para_sub = 0.0132 !           |Rate of potential transformation of structural Litter under optimal conditions (surface = 0.0107 d-1; all other layers = 0.0132 d-1) (Parton et al., 1994)
-        !Soil texture controls of microbial activity
-        real :: XBM_para_sur = 1.0     !           |Control on transformation of microbial Biomass by soil texture and structure. Its values: surface Litter layer = 1; all other layers = 1  0.75 x (SILT + CLAY) (Parton et al., 1993, 1994)
-        real :: XBM_para_sub = 0.0     !           |Calculated - Control on transformation of microbial Biomass by soil texture and structure. Its values: surface Litter layer = 1; all other layers = 1  0.75 x (SILT + CLAY) (Parton et al., 1993, 1994)
-        real :: XLSLF_para = 0.0     !           |Calculated - Control on potential transformation of structural Litter by lignin fraction of structural Litter [XLSLF = exp(-3 x LSLF) (Parton et al., 1993, 1994)]
-        !Oxygen factor control parameters
-        real :: OX_aa_para = 10.0     !           !Coefficient in calculating oxygen factor 
-        real :: OX_bb_para = 0.035     !           |Coefficient in calculating oxygen factor 
-      end type carbon_terrestrial_inputs
-      type (carbon_terrestrial_inputs) :: cbn_tes
+      !! per-family output gating for the standard carbon files lives in print.prt (hru_cb_* rows).
+      !! cbn_diagnostics only drives the legacy CSU output path (hru_cb / hru_cb_vars rows). it is
+      !! set in carbon_legacy_open from the cb_hru flag at startup, so no input file is needed for
+      !! it. the .false. here is only the pre-run default; it is assigned its real value before any
+      !! writer runs, so it does not disable legacy diagnostics. will be removed in revision 63.
+      logical :: cbn_diagnostics = .false.   !! turns on the legacy plc/cflux/cpool and soil-prop files
 
+      !! basin-wide residue decomposition tunables (read from carbon.bsn)
+      real :: n_act_frac = 0.02    !! frac    |fraction of organic N in the active humus pool (used in nut_nminrl active to stable flow)
+      real :: cnr_cap    = 500.    !! none    |upper cap on residue C:N ratio before computing decomp factor
+      real :: cnr_ref    = 25.     !! none    |reference C:N ratio where decomp factor equals 1
+      real :: cpr_cap    = 5000.   !! none    |upper cap on residue C:P ratio before computing decomp factor
+      real :: cpr_ref    = 200.    !! none    |reference C:P ratio where decomp factor equals 1
+
+      !! number of soil layers to include in per-layer carbon outputs.
+      !! if carbon_layers.prt is supplied it sets this explicitly; otherwise it
+      !! defaults to the largest soil layer count across all HRUs (set in
+      !! output_landscape_init). the 7 here is only a fallback.
+      integer :: cb_n_layers = 7
+      logical :: cb_n_layers_explicit = .false.   !! .true. when carbon_layers.prt set the count
+      real, parameter :: cb_lyr_missing = -99.0   !! sentinel written when a soil has fewer layers than cb_n_layers
+
+      !! variable-name lists for the wide-per-layer carbon output files.
+      !! the helper cb_write_wide_header appends _lyr1..._lyrN to each entry.
+      character(len=16), parameter :: cpool_vars(10) = [character(len=16) :: &
+        "residue_c", "structural_c", "metabolic_c", "hs_c", "hp_c", &
+        "microbial_c", "lignin_c", "nonlignin_c", "root_mass", "soil_water"]
+
+      character(len=16), parameter :: n_p_pool_vars(18) = [character(len=16) :: &
+        "tot_pool_n", "residue_n", "structural_n", "metabolic_n", "hs_n", "hp_n", &
+        "microbial_n", "lignin_n", "nonlignin_n", &
+        "tot_pool_p", "residue_p", "structural_p", "metabolic_p", "hs_p", "hp_p", &
+        "microbial_p", "lignin_p", "nonlignin_p"]
+
+      character(len=16), parameter :: cflux_vars(37) = [character(len=16) :: &
+        "cfmets1", "cfstrs1", "cfstrs2", "efmets1", "efstrs1", "efstrs2", &
+        "immmets1", "immstrs1", "immstrs2", "mnrmets1", "mnrstrs1", "mnrstrs2", &
+        "co2fmet", "co2fstr", &
+        "cfs1s2", "cfs1s3", "cfs2s1", "cfs2s3", "cfs3s1", &
+        "efs1s2", "efs1s3", "efs2s1", "efs2s3", "efs3s1", &
+        "imms1s2", "imms1s3", "imms2s1", "imms2s3", "imms3s1", &
+        "mnrs1s2", "mnrs1s3", "mnrs2s1", "mnrs2s3", "mnrs3s1", &
+        "co2fs1", "co2fs2", "co2fs3"]
+
+      character(len=16), parameter :: carb_drv_vars(14) = [character(len=16) :: &
+        "sut", "tillagef", "cons_bmix", "tillagef_biomix", "tillagef_tillmix", &
+        "till_eff", "cdg", "ox", "cs", "no3", "nh4", "co2_resp", "soil_temp", "emix"]
+
+      character(len=16), parameter :: carb_dyn_vars(21) = [character(len=16) :: &
+        "asp", "abp", "abco2", "a1co2", "asco2", "apco2", &
+        "ncbm", "nchp", "nchs", &
+        "bmctp", "bmntp", "hsctp", "hsntp", "hpctp", "hpntp", &
+        "lmctp", "lmntp", "lsctp", "lslctp", "lslnctp", "lsntp"]
+
+      character(len=16), parameter :: soil_snap_vars(13) = [character(len=16) :: &
+        "bd", "awc", "soil_k", "tot_c", "clay", "silt", "sand", "rock", &
+        "alb", "usle_k", "ec", "caco3", "ph"]
+      
       type carbon_inputs
           real :: hp_rate = 0.          !               |rate of transformation of passive humus under optimal conditions
           real :: hs_rate = 0.          !               |rate of transformation of slow humus under optimal conditions
@@ -63,9 +72,8 @@
           real :: min_n_frac = 0.       !               |fraction of mineral n sorbed to litter
           real :: c_org_frac = 0.       !               |carbon fraction of organic materials      
       end type carbon_inputs
-      type (carbon_inputs), dimension(2) :: carbdb 
-      type (carbon_inputs) :: carbz  
-      logical :: carbon_coef_file = .false. !           !set to true if carbon_coef.cbn file exits.
+      type (carbon_inputs), dimension(2) :: carbdb
+      type (carbon_inputs) :: carbz
 
       type manure_coef
           real :: rtof = 0.5            !none          |weighting factor used to partition the 
@@ -226,6 +234,7 @@
       type (carbon_soil_transformations), dimension (:), allocatable :: lscf_d
       type (carbon_soil_transformations), dimension (:), allocatable :: lscf_m
       type (carbon_soil_transformations), dimension (:), allocatable :: lscf_y
+      type (carbon_soil_transformations), dimension (:), allocatable :: lscf_a
       type (carbon_soil_transformations), dimension (:), allocatable :: lcsf_a
       !! basin soil carbon transformations
       type (carbon_soil_transformations) :: bscf_d
@@ -236,18 +245,12 @@
       type carbon_soil_gain_losses
         real :: sed_c = 0.              !kg C/ha            |C transported with sediment yield
         real :: surq_c = 0.             !kg C/ha            |total dissolved C transported with surface runoff
-        real :: surq_doc = 0.           !kg C/ha            |dissolved organic C transported with surface runoff
-        real :: surq_dic = 0.           !kg C/ha            |dissolved inorganic C transported with surface runoff
         real :: latq_c = 0.             !kg C/ha            |dissolved organic C transported with lateral flow (all layers)
-        real :: latq_doc= 0.            !kg C/ha            |total dissolved C transported with lateral flow (all layers)
-        real :: latq_dic = 0.           !kg C/ha            |dissolved inorganic C transported with lateral flow (all layers)
         real :: perc_c = 0.             !kg C/ha            |total dissolved C transported with percolate
-        real :: perc_doc = 0.           !kg C/ha            |dissolved organic C transported with percolate
-        real :: perc_dic = 0.           !kg C/ha            |dissolved inorganic C transported with percolate
         real :: rsd_decay_c = 0.        !kg C/ha            |carbon added to soil from residue decay
         real :: man_app_c = 0.          !kg C/ha            |amount of carbon applied to soil from manure
         real :: man_graz_c = 0.         !kg C/ha            |amount of carbon manure from grazing animals
-        real :: rsp_c = 0.              !kg C/ha            |CO2 production from soil respiration summarized for the profile  
+        real :: rsp_c = 0.              !kg C/ha            |CO2 production from soil respiration summarized for the profile
         real :: emit_c = 0.             !kg C/ha            |CO2 production from burning soil carbon
       end type carbon_soil_gain_losses
       type (carbon_soil_gain_losses) :: hscz 
@@ -261,7 +264,7 @@
       type (carbon_soil_gain_losses), dimension (:), allocatable :: lsc_d
       type (carbon_soil_gain_losses), dimension (:), allocatable :: lsc_m
       type (carbon_soil_gain_losses), dimension (:), allocatable :: lsc_y
-      type (carbon_soil_gain_losses), dimension (:), allocatable :: lcs_a
+      type (carbon_soil_gain_losses), dimension (:), allocatable :: lsc_a
       !! basin soil carbon gains and losses
       type (carbon_soil_gain_losses) :: bsc_d
       type (carbon_soil_gain_losses) :: bsc_m
@@ -287,7 +290,7 @@
       type (carbon_residue_gain_losses), dimension (:), allocatable :: lrc_d
       type (carbon_residue_gain_losses), dimension (:), allocatable :: lrc_m
       type (carbon_residue_gain_losses), dimension (:), allocatable :: lrc_y
-      type (carbon_residue_gain_losses), dimension (:), allocatable :: lrs_a
+      type (carbon_residue_gain_losses), dimension (:), allocatable :: lrc_a
       !! basin residue carbon gains and losses
       type (carbon_residue_gain_losses) :: brc_d
       type (carbon_residue_gain_losses) :: brc_m
@@ -313,7 +316,7 @@
       type (carbon_plant_gain_losses), dimension (:), allocatable :: lpc_d
       type (carbon_plant_gain_losses), dimension (:), allocatable :: lpc_m
       type (carbon_plant_gain_losses), dimension (:), allocatable :: lpc_y
-      type (carbon_plant_gain_losses), dimension (:), allocatable :: lps_a
+      type (carbon_plant_gain_losses), dimension (:), allocatable :: lpc_a
       !! basin plant carbon gains and losses
       type (carbon_plant_gain_losses) :: bpc_d
       type (carbon_plant_gain_losses) :: bpc_m
@@ -433,14 +436,8 @@
         type (carbon_soil_gain_losses) :: hru3
         hru3%sed_c = hru1%sed_c + hru2%sed_c
         hru3%surq_c = hru1%surq_c + hru2%surq_c
-        hru3%surq_doc = hru1%surq_doc + hru2%surq_doc
-        hru3%surq_dic = hru1%surq_dic + hru2%surq_dic
         hru3%latq_c = hru1%latq_c + hru2%latq_c
-        hru3%latq_doc = hru1%latq_doc + hru2%latq_doc
-        hru3%latq_dic = hru1%latq_dic + hru2%latq_dic
         hru3%perc_c = hru1%perc_c + hru2%perc_c
-        hru3%perc_doc = hru1%perc_doc + hru2%perc_doc
-        hru3%perc_dic = hru1%perc_dic + hru2%perc_dic
         hru3%rsd_decay_c = hru1%rsd_decay_c + hru2%rsd_decay_c
         hru3%man_app_c = hru1%man_app_c + hru2%man_app_c
         hru3%man_graz_c = hru1%man_graz_c + hru2%man_graz_c
@@ -454,14 +451,8 @@
         type (carbon_soil_gain_losses) :: hru2
         hru2%sed_c = hru1%sed_c * const
         hru2%surq_c = hru1%surq_c * const
-        hru2%surq_doc = hru1%surq_doc * const
-        hru2%surq_dic = hru1%surq_dic * const
         hru2%latq_c = hru1%latq_c * const
-        hru2%latq_doc = hru1%latq_doc * const
-        hru2%latq_dic = hru1%latq_dic * const
         hru2%perc_c = hru1%perc_c * const
-        hru2%perc_doc = hru1%perc_doc * const
-        hru2%perc_dic = hru1%perc_dic * const
         hru2%rsd_decay_c = hru1%rsd_decay_c * const
         hru2%man_app_c = hru1%man_app_c * const
         hru2%man_graz_c = hru1%man_graz_c * const
@@ -475,14 +466,8 @@
         type (carbon_soil_gain_losses) :: hru2
         hru2%sed_c = hru1%sed_c / const
         hru2%surq_c = hru1%surq_c / const
-        hru2%surq_doc = hru1%surq_doc / const
-        hru2%surq_dic = hru1%surq_dic / const
         hru2%latq_c = hru1%latq_c / const
-        hru2%latq_doc = hru1%latq_doc / const
-        hru2%latq_dic = hru1%latq_dic / const
         hru2%perc_c = hru1%perc_c / const
-        hru2%perc_doc = hru1%perc_doc / const
-        hru2%perc_dic = hru1%perc_dic / const
         hru2%rsd_decay_c = hru1%rsd_decay_c / const
         hru2%man_app_c = hru1%man_app_c / const
         hru2%man_graz_c = hru1%man_graz_c / const
@@ -561,5 +546,174 @@
         hru2%grazeat_c = hru1%grazeat_c / const
         hru2%emit_c = hru1%emit_c / const
       end function carbon_plant_gl_div
-      
-     end module carbon_module   
+
+      !! helpers for wide-per-layer carbon outputs.
+
+      subroutine cb_write_flat_header(unit_no, var_names, is_csv)
+        !! emits a header line for non-layered carbon files (no soil layers).
+        !! id columns + each var_name once (no _lyrK suffix).
+        integer, intent(in) :: unit_no
+        character(len=*), intent(in) :: var_names(:)
+        logical, intent(in) :: is_csv
+
+        character(len=32) :: tag
+        integer :: i
+
+        if (is_csv) then
+          write (unit_no, '(a)', advance='no') "jday,mon,day,yr,unit,gis_id,name"
+          do i = 1, size(var_names)
+            write (unit_no, '(a,a)', advance='no') ",", trim(var_names(i))
+          end do
+          write (unit_no, '(a)') ""
+        else
+          write (unit_no, '(a)', advance='no') "        jday         mon         day          yr        unit                gis_id    name        "
+          do i = 1, size(var_names)
+            tag = var_names(i)
+            write (unit_no, '(1x,a22)', advance='no') tag
+          end do
+          write (unit_no, '(a)') ""
+        end if
+      end subroutine cb_write_flat_header
+
+      subroutine cb_write_wide_header(unit_no, var_names, is_csv)
+        !! emits the header line for any wide-per-layer carbon file.
+        !! id columns + depth_lyr1..depth_lyrN + for each var_name: <var>_lyr1..<var>_lyrN
+        !! caller already wrote the banner row; this writes the column-label row.
+        integer, intent(in) :: unit_no
+        character(len=*), intent(in) :: var_names(:)
+        logical, intent(in) :: is_csv
+
+        character(len=32) :: tag
+        integer :: i, k
+
+        if (is_csv) then
+          write (unit_no, '(a)', advance='no') "jday,mon,day,yr,unit,gis_id,name"
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') ",depth_lyr", k
+            write (unit_no, '(a)', advance='no') trim(tag)
+          end do
+          do i = 1, size(var_names)
+            do k = 1, cb_n_layers
+              write (tag, '(a,a,i0)') ",", trim(var_names(i))//"_lyr", k
+              write (unit_no, '(a)', advance='no') trim(tag)
+            end do
+          end do
+          write (unit_no, '(a)') ""
+        else
+          write (unit_no, '(a)', advance='no') "        jday         mon         day          yr        unit                gis_id    name        "
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') "depth_lyr", k
+            write (unit_no, '(1x,a22)', advance='no') tag
+          end do
+          do i = 1, size(var_names)
+            do k = 1, cb_n_layers
+              write (tag, '(a,a,i0)') trim(var_names(i))//"_lyr", "", k
+              write (unit_no, '(1x,a22)', advance='no') tag
+            end do
+          end do
+          write (unit_no, '(a)') ""
+        end if
+      end subroutine cb_write_wide_header
+
+      subroutine cb_write_cbn_lyr_header(unit_no, is_csv)
+        !! header for the hru_cbn_lyr files. Unlike the generic wide header, this
+        !! one interleaves the 300 mm scalar sums (tot_300_sum, seq_300_sum)
+        !! between the per-layer blocks, so it is built explicitly here. Column
+        !! widths match the data row (1x,g22.7 per value), so labels line up.
+        integer, intent(in) :: unit_no
+        logical, intent(in) :: is_csv
+
+        character(len=32) :: tag
+        integer :: k
+
+        if (is_csv) then
+          write (unit_no, '(a)', advance='no') "jday,mon,day,yr,unit,gis_id,name"
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') ",depth_lyr", k
+            write (unit_no, '(a)', advance='no') trim(tag)
+          end do
+          write (unit_no, '(a)', advance='no') ",tot_300_sum"
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') ",tot_lyr", k
+            write (unit_no, '(a)', advance='no') trim(tag)
+          end do
+          write (unit_no, '(a)', advance='no') ",seq_300_sum"
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') ",seq_lyr", k
+            write (unit_no, '(a)', advance='no') trim(tag)
+          end do
+          write (unit_no, '(a)') ""
+        else
+          write (unit_no, '(a)', advance='no') "        jday         mon         day          yr        unit                gis_id    name        "
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') "depth_lyr", k
+            write (unit_no, '(1x,a22)', advance='no') tag
+          end do
+          write (unit_no, '(1x,a22)', advance='no') "tot_300_sum"
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') "tot_lyr", k
+            write (unit_no, '(1x,a22)', advance='no') tag
+          end do
+          write (unit_no, '(1x,a22)', advance='no') "seq_300_sum"
+          do k = 1, cb_n_layers
+            write (tag, '(a,i0)') "seq_lyr", k
+            write (unit_no, '(1x,a22)', advance='no') tag
+          end do
+          write (unit_no, '(a)') ""
+        end if
+      end subroutine cb_write_cbn_lyr_header
+
+      subroutine cb_write_depth_row(unit_no, depths, n_use, is_csv, advance_str)
+        !! emits the depth columns for a data row, padded with cb_lyr_missing past n_use.
+        !! caller has already emitted the id columns and must continue with var columns after.
+        integer, intent(in) :: unit_no
+        real, intent(in) :: depths(:)            !! depth at each soil layer (size >= n_use)
+        integer, intent(in) :: n_use             !! actual number of soil layers in this HRU
+        logical, intent(in) :: is_csv
+        character(len=*), intent(in) :: advance_str  !! "no" to keep building the row, "yes" to terminate
+
+        integer :: k
+        real :: v
+
+        do k = 1, cb_n_layers
+          if (k <= n_use) then
+            v = depths(k)
+          else
+            v = cb_lyr_missing
+          end if
+          if (is_csv) then
+            write (unit_no, '(a,g0.7)', advance='no') ",", v
+          else
+            write (unit_no, '(1x,g22.7)', advance='no') v
+          end if
+        end do
+        if (advance_str == "yes") write (unit_no, '(a)') ""
+      end subroutine cb_write_depth_row
+
+      subroutine cb_write_var_block(unit_no, vals, n_use, is_csv, advance_str)
+        !! emits one variable's per-layer values, padded with cb_lyr_missing past n_use.
+        integer, intent(in) :: unit_no
+        real, intent(in) :: vals(:)
+        integer, intent(in) :: n_use
+        logical, intent(in) :: is_csv
+        character(len=*), intent(in) :: advance_str
+
+        integer :: k
+        real :: v
+
+        do k = 1, cb_n_layers
+          if (k <= n_use) then
+            v = vals(k)
+          else
+            v = cb_lyr_missing
+          end if
+          if (is_csv) then
+            write (unit_no, '(a,g0.7)', advance='no') ",", v
+          else
+            write (unit_no, '(1x,g22.7)', advance='no') v
+          end if
+        end do
+        if (advance_str == "yes") write (unit_no, '(a)') ""
+      end subroutine cb_write_var_block
+
+     end module carbon_module

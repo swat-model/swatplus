@@ -45,11 +45,7 @@
       real :: decr = 0.     !              |
       integer :: ipl = 0      !              |plant number in plant community
       real :: idp = 0.      !              |plant number in plant data module
-      real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
-                            !              |of organic nitrogen in the active pool. 
-
       j = ihru
-      nactfr = .02
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.

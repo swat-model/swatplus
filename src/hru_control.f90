@@ -143,7 +143,7 @@
       hwb_d(j)%wet_out = 0.
       hnb_d(j)%denit = 0.
 
-      if (bsn_cc%cswat == 1) then
+      if (bsn_cc%cswat == 2) then
         if (tillage_switch(ihru) .eq. 1) then
           if (tillage_days(ihru) .ge. till_eff_days) then
             ! no more tillage effect from last tillage.
@@ -383,7 +383,7 @@
           !call nut_nitvol
         end if
 
-        if (bsn_cc%cswat == 1) then
+        if (bsn_cc%cswat == 2) then
           if (bmix_eff > 1.e-6 ) call mgt_biomix (ihru, bmix_eff)
           !! compute surface residue decomposition for each plant in community
           call cbn_surfrsd_decomp
@@ -531,7 +531,7 @@
             end if
         
             !! SWAT-C Xuesong -- c and organic n in runoff
-            if (bsn_cc%cswat == 1) then
+            if (bsn_cc%cswat == 2) then
               call nut_orgnc2
             end if
             call nut_psed

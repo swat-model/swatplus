@@ -54,7 +54,7 @@
       !! add plant carbon for printing
       hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + pl_mass(j)%ab_gr(ipl)%c
       hrc_d(j)%plant_root_c = hrc_d(j)%plant_root_c + pl_mass(j)%root(ipl)%c
-      hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_mass(j)%ab_gr(ipl)%c
+      hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_mass(j)%ab_gr(ipl)%c + pl_mass(j)%root(ipl)%c  !! include root mass in drop_c so it matches the actual residue C transfer
 
       !! zero all plant mass
       pl_mass(j)%tot(ipl) = plt_mass_z

@@ -142,14 +142,10 @@
           soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         end if
         
-        if (bsn_cc%cswat == 1 ) then
-          !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
-          if (org_frac%frac_seq < 1.0) then
-            org_frac%frac_not_seq = 1.0 - org_frac%frac_seq
-          else
-            org_frac%frac_not_seq = 1.e-6
-          endif
-            
+        if (bsn_cc%cswat == 2 ) then
+          !! initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
+          !! frac_not_seq is the residue/litter share derived from the user-supplied init_seq (carbon.bsn)
+          org_frac%frac_not_seq = 1.0 - org_frac%frac_seq
 
           !!initialize passive humus pool
           soil1(ihru)%hp(ly)%m = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m

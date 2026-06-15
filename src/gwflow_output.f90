@@ -1224,14 +1224,10 @@
       if(gwflag_day == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
-            if(grid_type == "structured") then
-              gis_id = cell_row(i)*grid_ncol + cell_col(i)
-            else
-              gis_id = i
-            endif
+            gis_id = cell_gis_id(i)
             write(out_gwcell_day,140) time%day, time%mo, time%day_mo, &
               time%yrc, i, gis_id, &
-              'gw_', i, &
+              cell_name(i), &
               gw_state(i)%head, &
               gw_state(i)%elev - gw_state(i)%head, &
               gw_hyd_ss(i)%rech, gw_hyd_ss(i)%gwet, &
@@ -1262,7 +1258,7 @@
       !format statements (subroutine-local)
 119   format(i8,i8,i8,1000(f12.3))
 130   format(i8,i8,1000(e13.4))
-140   format(i8,i6,i6,i8,i8,i10,4x,a4,i4.4,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
 8100  format(4i6,2a,2x,a16,f10.3,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
 8102  format(4i6,2i8,a18,5e13.4)
@@ -1363,15 +1359,11 @@
         if(gwflag_mon == 1) then
           do i=1,ncell
             if(gw_state(i)%stat == 1) then
-              if(grid_type == "structured") then
-                gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
-              else
-                gis_id = i
-              endif
+              gis_id = cell_gis_id(i)
               wtdepth = gw_state(i)%elev - gw_state(i)%hdmo
               write(out_gwcell_mon,140) time%day, time%mo, &
                 time%day_mo, time%yrc, i, gis_id, &
-                'gw_', i, &
+                cell_name(i), &
                 gw_state(i)%hdmo, wtdepth, &
                 gw_hyd_ss_mo(i)%rech, gw_hyd_ss_mo(i)%gwet, &
                 gw_hyd_ss_mo(i)%gwsw, gw_hyd_ss_mo(i)%swgw, &
@@ -1533,7 +1525,7 @@
       endif !end_mo
 
       !format statements (subroutine-local)
-140   format(i8,i6,i6,i8,i8,i10,4x,a4,i4.4,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
 8100  format(4i6,2a,2x,a16,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
 8102  format(4i6,2i8,a18,5e13.4)
@@ -1624,15 +1616,11 @@
       if(gwflag_yr == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
-            if(grid_type == "structured") then
-              gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
-            else
-              gis_id = i
-            endif
+            gis_id = cell_gis_id(i)
             wtdepth = gw_state(i)%elev - gw_state(i)%hdyr
             write(out_gwcell_yr,140) time%day, time%mo, &
               time%day_mo, time%yrc, i, gis_id, &
-              'gw_', i, &
+              cell_name(i), &
               gw_state(i)%hdyr, wtdepth, &
               gw_hyd_ss_yr(i)%rech, gw_hyd_ss_yr(i)%gwet, &
               gw_hyd_ss_yr(i)%gwsw, gw_hyd_ss_yr(i)%swgw, &
@@ -1950,7 +1938,7 @@
       endif
 
       !format statements (subroutine-local)
-140   format(i8,i6,i6,i8,i8,i10,4x,a4,i4.4,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
 8100  format(4i6,2a,2x,a16,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
 8102  format(4i6,2i8,a18,5e13.4)
@@ -2031,15 +2019,11 @@
       if(gwflag_aa == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
-            if(grid_type == "structured") then
-              gis_id = (cell_row(i)-1)*grid_ncol + cell_col(i)
-            else
-              gis_id = i
-            endif
+            gis_id = cell_gis_id(i)
             wtdepth = gw_state(i)%elev - (gw_head_sum_aa(i) / nbyr_r)
             write(out_gwcell_aa,140) time%day, time%mo, &
               time%day_mo, time%yrc, i, gis_id, &
-              'gw_', i, &
+              cell_name(i), &
               gw_head_sum_aa(i) / nbyr_r, wtdepth, &
               gw_hyd_ss_aa(i)%rech / nbyr_r, &
               gw_hyd_ss_aa(i)%gwet / nbyr_r, &
@@ -2188,7 +2172,7 @@
 
       !format statements (subroutine-local)
 105   format(i8,1000(e13.4))
-140   format(i8,i6,i6,i8,i8,i10,4x,a4,i4.4,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
 8100  format(4i6,2a,2x,a16,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
 8102  format(4i6,2i8,a18,5e13.4)

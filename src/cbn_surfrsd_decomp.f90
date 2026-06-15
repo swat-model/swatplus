@@ -32,11 +32,12 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru 
+      use hru_module, only : ihru
       use soil_module
       use plant_module
       use plant_data_module
       use output_landscape_module, only : hnb_d
+      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
       
       implicit none 
        
@@ -53,14 +54,11 @@
       real :: cprf = 0.     !              |carbon phosphorus ratio factor
       real :: ca = 0.       !              |
       real :: decr = 0.     !              |
-      real :: ipl = 0.      !              |plant number in plant community
-      real :: idp = 0.      !              |plant number in plant data module
+      integer :: ipl = 0    !              |plant number in plant community  !! was declared real
+      integer :: idp = 0    !              |plant number in plant data module !! was declared real
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
-      real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
-                            !              |of organic nitrogen in the active pool. 
       j = ihru
-      nactfr = .02
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.
@@ -73,9 +71,12 @@
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
           ! mineralization can occur only if temp above 0 deg
-          photo_decomp = photo_degrade_factor * pl_mass(j)%rsd(ipl) 
+          photo_decomp = photo_degrade_factor * pl_mass(j)%rsd(ipl)
           pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
           pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
+          !! book photo-degraded residue C as a residue emission
+          !! so mass and carbon balance close. Previously photo_decomp was destroyed silently.
+          hrc_d(j)%emit_c = hrc_d(j)%emit_c + photo_decomp%c
           if (soil(j)%phys(1)%tmp > 0.) then
             !! compute soil water factor
             sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
@@ -97,16 +98,16 @@
             rmp = 0.
             if (pl_mass(j)%rsd(ipl)%n > 1.e-4) then
               cnr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%n
-              if (cnr > 500.) cnr = 500.
-              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+              if (cnr > cnr_cap) cnr = cnr_cap
+              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)    !! -.693 = -ln(2)
             else
               cnrf = 1.
             end if
-            
+
             if (pl_mass(j)%rsd(ipl)%p > 1.e-4) then
               cpr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%p
-              if (cpr > 5000.) cpr = 5000.
-              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+              if (cpr > cpr_cap) cpr = cpr_cap
+              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)    !! -.693 = -ln(2)
             else
               cprf = 1.
             end if

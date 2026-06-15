@@ -32,6 +32,8 @@
       real, dimension (:,:), allocatable :: grid_val          !generic array for reading in values for structured grid
       integer, dimension (:), allocatable :: cell_row          !structured grid row for each cell (for cell definition output)
       integer, dimension (:), allocatable :: cell_col          !structured grid column for each cell (for cell definition output)
+      integer, dimension (:), allocatable :: cell_gis_id       !authoritative gis_id per cell (gwflowcells.shp id), from gwflow.cells col 22
+      character(len=16), dimension (:), allocatable :: cell_name  !authoritative cell name (cellNNNN), from gwflow.cells col 2
       integer :: out_gw_celldef = 1416                         !file unit for cell definition output
 
       !groundwater state variables for each cell ----------------------------------------------------------------------
@@ -86,12 +88,9 @@
       !variables for linking HRUs to grid cells
       integer :: hru_cells_link = 0                                          !        |
       integer, dimension (:), allocatable :: hru_num_cells                   !        |
-      integer, dimension (:), allocatable :: cell_num_hrus                   !        |
       integer, dimension (:,:), allocatable :: hru_cells                     !        |
-      integer, dimension (:,:), allocatable :: cell_hrus                     !        |
       real, dimension (:,:), allocatable :: hru_cells_fract                  !        |
       real, dimension (:,:), allocatable :: cells_fract                      !        |
-      real, dimension (:,:), allocatable :: cell_hrus_fract                  !        |
       integer, dimension (:), allocatable :: hrus_connected                  !        |flag: which HRUs are connected to cells
       !variables for linking LSUs (landscape units) to grid cells
       integer :: lsu_cells_link = 0                                          !        |
@@ -186,6 +185,7 @@
       real, dimension (:), allocatable :: gw_chan_thick     !           |
       real :: gw_bed_change = 0.                            !           |
       integer, dimension (:), allocatable :: gw_chan_dpzn   !           |depth zone per channel-cell connection
+      integer, dimension (:), allocatable :: gw_chan_obs    !           |obs flag (0/1) per channel-cell connection (from chancell.gw)
       integer :: gw_chan_dep_flag = 0                        !           |flag for channel depth zones
       integer :: gw_chan_ndpzn = 0                           !           |number of channel depth zones
       real, dimension (:), allocatable :: gw_chan_dep        !m          |specified daily channel depths
@@ -382,6 +382,7 @@
 
       !pond: variables for recharge pond seepage --------------------------------------------------
       integer :: gw_pond_flag = 0                        !     |flag = 0 (off) or 1 (on)
+      integer :: gw_pond_div_flag = 0                    !     |flag: daily pond diversion series present (pond_div.gw)
       integer :: gw_npond = 0                            !     |number of recharge ponds in the model domain
       integer :: in_ponds = 1219                         !     |input file unit for ponds
       !pond features
