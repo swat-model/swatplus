@@ -37,7 +37,7 @@ main
 │   ├── water_pipe_read / water_canal_read / water_allocation_read
 │   ├── hru_dtbl_actions_init
 │   ├── <a href="#proc_res">proc_res</a> / wet_read_hyd / wet_read / wet_read_salt_cs
-│   ├── [if db_mx%wet_dat > 0]  wet_all_initial
+│   ├── [if db_mx%wet_dat > 0]  <a href="#wet_all_initial">wet_all_initial</a>
 │   ├── wet_fp_init
 │   ├── [loop ihru = 1, sp_ob%hru]  <a href="#soil_nutcarb_init">soil_nutcarb_init</a>
 │   ├── <a href="#proc_cal">proc_cal</a>              calibration setup
@@ -48,9 +48,9 @@ main
 └── SIMULATION ─────────────────────────────────────────────────────────
     ├── [if time%step &lt; 0]  <a href="#command">command</a>         export-coefficient (average annual) mode
     └── [else]              <a href="#time_control">time_control</a>    standard year/day simulation loop
-          [after loop] [if cal_soft == "y"]  calsoft_control
+          [after loop] [if cal_soft == "y"]  <a href="#calsoft_control">calsoft_control</a>
                        [if cal_hard == "y"]  cal_parmchg_read → calhard_control
-                       [if bsn_cc%swift_out == 1]  swift_output
+                       [if bsn_cc%swift_out == 1]  <a href="#swift_output">swift_output</a>
 </pre>
 
 ---
@@ -111,7 +111,7 @@ proc_db
 
 <pre>
 proc_read
-├── ch_read_temp / cli_read_atmodep / cli_staread
+├── ch_read_temp / cli_read_atmodep / <a href="#cli_staread">cli_staread</a>
 ├── constit_db_read / pest_metabolite_read
 ├── soil_plant_init / solt_db_read
 ├── pest_hru_aqu_read / path_hru_aqu_read / hmet_hru_aqu_read
@@ -287,7 +287,7 @@ command
 │
 ├── [linked-list loop: icmd walks ob(:)%cmd_next until icmd == 0]
 │   │
-│   ├── [pre-object]  wallo_control   water allocation without channel source
+│   ├── [pre-object]  <a href="#wallo_control">wallo_control</a>   water allocation without channel source
 │   │
 │   ├── [accumulate incoming hydrographs from all upstream objects]
 │   │   (surface, lateral, tile, aquifer components routed separately for HRUs)
@@ -334,7 +334,7 @@ command
 │   │       ├── [if chl > 1e-3]  <a href="#sd_channel_control3">sd_channel_control3</a>
 │   │       └── [else: artificial channel (length≈0) — pass-through, zero morphology outputs]
 │   │
-│   └── [post-object]  wallo_control / [if pco%fdcout == "y"] flow_dur_curve
+│   └── [post-object]  <a href="#wallo_control">wallo_control</a> / [if pco%fdcout == "y"] flow_dur_curve
 │
 └── OUTPUT SECTION  (daily, after all objects processed)
     │
@@ -457,7 +457,7 @@ hru_control
 │   │   └── nut_nminrl            N and P mineralisation from soil residue
 │   │
 │   └── [if bsn_cc%cswat == 1]   ── CENTURY 5-pool model ───────────────────
-│       ├── [if bmix_eff > 1e-6]  mgt_biomix (ihru, bmix_eff)   biological mixing
+│       ├── [if bmix_eff > 1e-6]  <a href="#mgt_biomix">mgt_biomix</a> (ihru, bmix_eff)   biological mixing
 │       ├── cbn_surfrsd_decomp    surface residue → meta/str litter in layer 1
 │       ├── cbn_rsd_transfer      root death + incorporated residue → soil pools
 │       └── <a href="#cbn_zhang2">cbn_zhang2</a>            CENTURY 5-pool C/N transformations (layer loop)
@@ -2788,3 +2788,304 @@ pl_pup
 </pre>
 
 ---
+
+---
+
+## wet_all_initial
+
+Initialises all wetland/pond objects before the simulation loop.
+
+**Called from:** [`main`](#main)
+
+<pre>
+wet_all_initial
+└── [loop iihru = 1, sp_ob%hru]  wet_initial(iihru)
+</pre>
+
+---
+
+## mgt_biomix
+
+Performs daily biological mixing of CENTURY carbon pools within the tillage depth.
+Called only when `bsn_cc%cswat == 1` and `bmix_eff > 1e-6`.
+
+**Called from:** [`hru_control`](#hru_control)
+
+<pre>
+mgt_biomix
+└── mgt_tillfactor           compute tillage factor for biological mixing efficiency
+</pre>
+
+---
+
+## calsoft_control
+
+Top-level soft-calibration controller. Runs repeated simulations adjusting parameters
+to minimise objective function residuals.
+
+**Called from:** [`main`](#main)
+
+<pre>
+calsoft_control
+├── <a href="#calsoft_hyd">calsoft_hyd</a>            calibrate hydrologic components (surface, lateral, perc, ET)
+├── <a href="#calsoft_hyd_bfr">calsoft_hyd_bfr</a>        calibrate baseflow recession parameters
+├── <a href="#caltsoft_hyd">caltsoft_hyd</a>           calibrate time-of-travel (storage-coefficient) routing
+├── <a href="#calsoft_plant">calsoft_plant</a>          calibrate plant growth parameters
+├── <a href="#calsoft_sed">calsoft_sed</a>            calibrate sediment parameters
+└── pl_write_parms_cal     write calibrated plant parameters
+</pre>
+
+---
+
+## calsoft_hyd
+
+Calibrates hydrologic parameters (CN2, ESCO, etc.) by iterating the full simulation.
+
+**Called from:** [`calsoft_control`](#calsoft_control)
+
+<pre>
+calsoft_hyd
+├── re_initialize          reset all state variables to initial conditions
+├── <a href="#time_control">time_control</a>           run full simulation with current parameters
+└── curno                  recompute CN lookup table after CN2 adjustment
+</pre>
+
+---
+
+## calsoft_hyd_bfr
+
+Calibrates baseflow parameters by iterating sub-objective functions for each component.
+
+**Called from:** [`calsoft_control`](#calsoft_control)
+
+<pre>
+calsoft_hyd_bfr
+├── <a href="#calsoft_hyd_bfr_pet">calsoft_hyd_bfr_pet</a>    calibrate PET-related baseflow parameters
+├── <a href="#calsoft_hyd_bfr_et">calsoft_hyd_bfr_et</a>     calibrate actual ET baseflow contribution
+├── <a href="#calsoft_hyd_bfr_surq">calsoft_hyd_bfr_surq</a>   calibrate surface-runoff influence on baseflow
+├── <a href="#calsoft_hyd_bfr_latq">calsoft_hyd_bfr_latq</a>   calibrate lateral-flow influence on baseflow
+└── <a href="#calsoft_hyd_bfr_perc">calsoft_hyd_bfr_perc</a>   calibrate percolation influence on baseflow
+</pre>
+
+---
+
+## calsoft_hyd_bfr_pet
+
+Calibrates PET parameter contribution to baseflow objective.
+
+**Called from:** [`calsoft_hyd_bfr`](#calsoft_hyd_bfr)
+
+<pre>
+calsoft_hyd_bfr_pet
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## calsoft_hyd_bfr_et
+
+Calibrates actual ET parameter contribution to baseflow objective.
+
+**Called from:** [`calsoft_hyd_bfr`](#calsoft_hyd_bfr)
+
+<pre>
+calsoft_hyd_bfr_et
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## calsoft_hyd_bfr_surq
+
+Calibrates surface-runoff influence on baseflow; adjusts CN2 before each run.
+
+**Called from:** [`calsoft_hyd_bfr`](#calsoft_hyd_bfr)
+
+<pre>
+calsoft_hyd_bfr_surq
+├── curno
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## calsoft_hyd_bfr_latq
+
+Calibrates lateral-flow influence on baseflow.
+
+**Called from:** [`calsoft_hyd_bfr`](#calsoft_hyd_bfr)
+
+<pre>
+calsoft_hyd_bfr_latq
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## calsoft_hyd_bfr_perc
+
+Calibrates percolation influence on baseflow.
+
+**Called from:** [`calsoft_hyd_bfr`](#calsoft_hyd_bfr)
+
+<pre>
+calsoft_hyd_bfr_perc
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## calsoft_plant
+
+Calibrates plant growth parameters by iterating the full simulation.
+
+**Called from:** [`calsoft_control`](#calsoft_control)
+
+<pre>
+calsoft_plant
+├── calsoft_plant_zero     zero plant calibration accumulators
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## calsoft_sed
+
+Calibrates sediment parameters by iterating the full simulation.
+
+**Called from:** [`calsoft_control`](#calsoft_control)
+
+<pre>
+calsoft_sed
+├── re_initialize
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## caltsoft_hyd
+
+Calibrates time-of-travel (storage-coefficient) routing parameters.
+
+**Called from:** [`calsoft_control`](#calsoft_control)
+
+<pre>
+caltsoft_hyd
+├── ascrv                  compute storage-coefficient routing curve
+└── <a href="#time_control">time_control</a>
+</pre>
+
+---
+
+## swift_output
+
+Writes SWIFT-format output files after the simulation completes.
+
+**Called from:** [`main`](#main)
+
+<pre>
+swift_output
+├── [loop output files]  copy_file(src, "SWIFT/" // file_name)
+└── hyd_convert_mass_to_conc    convert hydrograph mass fluxes to concentrations
+</pre>
+
+---
+
+## wallo_control
+
+Water allocation controller; processes all demand, withdrawal, transfer, and treatment
+operations for one allocation object on the current day.
+
+**Called from:** [`command`](#command), [`sd_channel_control3`](#sd_channel_control3)
+
+<pre>
+wallo_control
+├── <a href="#wallo_demand">wallo_demand</a>           determine water demand for each use type
+├── <a href="#wallo_withdraw">wallo_withdraw</a>         withdraw water from source (stream, reservoir, gwflow)
+├── wallo_canal            route water through irrigation canal
+├── wallo_transfer         transfer withdrawn water to destination object
+├── <a href="#wallo_treatment">wallo_treatment</a>        apply water treatment processes
+├── <a href="#wallo_use">wallo_use</a>              apply water to HRU/crop use
+├── [if num_salts > 0]  salt_irrig   add salt load to irrigation water
+├── [if num_cs > 0]     cs_irrig     add constituent load to irrigation water
+└── [if src == reservoir]  <a href="#res_control">res_control</a>  update reservoir state after withdrawal
+</pre>
+
+---
+
+## wallo_demand
+
+Determines water demand for each use object by evaluating conditions and actions.
+
+**Called from:** [`wallo_control`](#wallo_control)
+
+<pre>
+wallo_demand
+├── <a href="#conditions">conditions</a>    evaluate demand trigger conditions
+└── <a href="#actions">actions</a>       set demand amounts based on triggered actions
+</pre>
+
+---
+
+## wallo_withdraw
+
+Withdraws water from the allocated source (stream, reservoir, or groundwater).
+
+**Called from:** [`wallo_control`](#wallo_control)
+
+<pre>
+wallo_withdraw
+└── [if gwflow source]  gwflow_pump_allo   extract water from gwflow grid cell
+</pre>
+
+---
+
+## wallo_treatment
+
+Applies water treatment processes to withdrawn water before use.
+
+**Called from:** [`wallo_control`](#wallo_control)
+
+<pre>
+wallo_treatment
+├── hyd_convert_conc_to_mass   convert concentrations to mass in hydrograph
+├── hyd_min                    apply minimum-flow constraint
+└── hydcsout_conc_mass         compute constituent mass from outflow concentration
+</pre>
+
+---
+
+## wallo_use
+
+Applies allocated water to the HRU or crop use object.
+
+**Called from:** [`wallo_control`](#wallo_control)
+
+<pre>
+wallo_use
+├── hyd_convert_conc_to_mass   convert concentrations to mass in hydrograph
+└── hydcsout_conc_mass         compute constituent mass from outflow concentration
+</pre>
+
+
+---
+
+## cli_staread
+
+Reads weather station configuration and maps each station to its gage files (WGN, precipitation,
+temperature, solar radiation, humidity, wind, PET, atmospheric deposition).
+
+**Called from:** [`proc_read`](#proc_read)
+
+<pre>
+cli_staread
+└── [loop weather stations, per gage type if db_mx%*files > 0]
+    └── search    look up gage name in array and return its index
+</pre>
+
