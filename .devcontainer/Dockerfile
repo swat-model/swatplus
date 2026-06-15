@@ -17,21 +17,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python3 -m pip install fortls ipykernel plotly pandas nbformat
 
 # 2. Add Intel’s GPG key and repository for oneAPI
-RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
-    | gpg --dearmor \
-    | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+#RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
+#    | gpg --dearmor \
+#    | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
 
-RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" \
-    > /etc/apt/sources.list.d/oneAPI.list
+#RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" \
+#    > /etc/apt/sources.list.d/oneAPI.list
 
 # 3. Install Intel oneAPI Fortran Compiler
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        intel-oneapi-compiler-fortran \
-        && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && apt-get install -y --no-install-recommends \
+#        intel-oneapi-compiler-fortran \
+#        && rm -rf /var/lib/apt/lists/*
 
 # 4. Source Intel’s setvars script automatically for all users
 #    (In a dev container, /etc/bash.bashrc is typically read by non-login shells)
-RUN echo "source /opt/intel/oneapi/setvars.sh" >> /etc/bash.bashrc
+#RUN echo "source /opt/intel/oneapi/setvars.sh" >> /etc/bash.bashrc
 
 # 5. Prepend ifx path to the global PATH environment
 # ENV PATH=/opt/intel/oneapi/compiler/2025.0/bin:$PATH
