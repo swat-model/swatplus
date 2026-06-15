@@ -334,11 +334,16 @@ command
 │   │       ├── [if chl > 1e-3]  <a href="#sd_channel_control3">sd_channel_control3</a>
 │   │       └── [else: artificial channel (length≈0) — pass-through, zero morphology outputs]
 │   │
-│   └── [post-object]  <a href="#wallo_control">wallo_control</a> / [if pco%fdcout == "y"] flow_dur_curve
+│   ├── [post-object]  <a href="#wallo_control">wallo_control</a> / [if pco%fdcout == "y"] flow_dur_curve
+│   └── [if ob%src_tot > 0]  hydout_output        write object-to-object hydrograph output
 │
 └── OUTPUT SECTION  (daily, after all objects processed)
     │
     ├── obj_output
+    │
+    ├── [loop iwro]  wallo_allo_output / wallo_trn_output / wallo_treat_output / wallo_use_output
+    ├── [loop mallo] manure_source_output / manure_demand_output
+    ├── [loop hru_lte]  hru_lte_output
     │
     ├── [loop ihru = 1, sp_ob%hru]
     │   ├── <a href="#hru_output">hru_output</a>
@@ -358,6 +363,7 @@ command
     ├── [loop chan]   channel_output
     ├── [loop chandeg]  sd_chanmorph_output / sd_chanbud_output / sd_channel_output
     │                   cha_pesticide_output / ch_salt_output / ch_cs_output
+    │                   [if num_cs > 0]  cs_str_output
     ├── [loop res]    reservoir_output / res_pesticide_output / res_salt_output / res_cs_output
     ├── [loop ru]     ru_output / ru_salt_output / ru_cs_output
     ├── [loop recall] recall_output
