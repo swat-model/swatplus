@@ -49,6 +49,7 @@
          if (bsn_prm%c_factor < 1.e-6) bsn_prm%c_factor = 0.      !!
          if (bsn_prm%ch_d50 < 1.e-6) bsn_prm%ch_d50 = 0.          !! median particle diameter of main channel (mm)
          if (bsn_prm%co2 < 100.) bsn_prm%co2 = 400.               !! assume co2 concentration = 400 ppm
+         if (bsn_prm%harg_expo < 1.e-6) bsn_prm%harg_expo = 0.5
 
          !! set additional parameters
          uptake%water_dis = 10.0       !! the uptake distribution for water is hardwired - users are not allowed to modify
