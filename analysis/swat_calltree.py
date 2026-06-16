@@ -158,6 +158,266 @@ def _find_condition(line):
     return None, None
 
 
+# ---------------------------------------------------------------------------
+# Body annotation helpers (for enhanced flow charts)
+# ---------------------------------------------------------------------------
+
+def _format_context(block_type, text):
+    """Format a structural context entry for display inside <pre> blocks."""
+    text = text.strip()
+    if block_type == 'do':
+        return f'DO {text}' if text else 'DO loop'
+    elif block_type == 'do_while':
+        return f'DO WHILE ({text})' if text else 'DO WHILE loop'
+    elif block_type == 'if':
+        return f'IF ({text}) THEN'
+    elif block_type == 'elif':
+        return f'ELSE IF ({text}) THEN'
+    elif block_type == 'else':
+        return 'ELSE branch'
+    elif block_type == 'select':
+        return f'SELECT CASE ({text})'
+    elif block_type == 'case':
+        return f'CASE ({text})'
+    else:
+        return text
+
+
+def _parse_call_annotations(logical_lines, sub_name):
+    """
+    Walk the body of *sub_name* within *logical_lines* (output of
+    _join_continuations) and return per-call annotation data:
+
+        [(callee_lower, comment_or_None, context_list), ...]
+
+    *context_list* is a list of at most 3 human-readable strings describing
+    the structural blocks (DO, IF, SELECT CASE) that enclose the call at that
+    point in the source.
+
+    *comment_or_None* is the text of the last ``!!`` comment line that
+    appeared immediately before the call (resetting on any intervening
+    non-comment, non-blank line).
+    """
+    SUB_START = re.compile(
+        r'^\s*(subroutine|program)\s+' + re.escape(sub_name) + r'\b',
+        re.IGNORECASE)
+    SUB_END = re.compile(r'^\s*end\s*(subroutine|program)', re.IGNORECASE)
+
+    in_sub = False
+    body_pairs = []   # (log_stripped, clean_stripped)
+
+    for log_line in logical_lines:
+        log_stripped = log_line.strip()
+        if not in_sub:
+            if SUB_START.match(log_stripped):
+                in_sub = True
+            continue
+        if SUB_END.match(log_stripped):
+            break
+        clean = _strip_comment(log_line).strip()
+        body_pairs.append((log_stripped, clean))
+
+    struct_stack = []   # list of (type_str, summary_str)
+    recent_comment = None
+    result = []
+
+    for log_stripped, clean in body_pairs:
+        s = clean.lower()
+
+        # !! comment lines — capture as pending annotation
+        if log_stripped.startswith('!!'):
+            text = log_stripped.lstrip('!').strip()
+            if text and '~' not in text and len(text) > 3:
+                recent_comment = text[:100]
+            continue
+
+        # Single ! comment — ignore but do not reset pending !! comment
+        if log_stripped.startswith('!'):
+            continue
+
+        # Blank line — preserve pending comment
+        if not clean:
+            continue
+
+        # DO loop start
+        m = re.match(r'do\s+(\w+\s*=\s*.+)', s)
+        if m:
+            struct_stack.append(('do', m.group(1).strip()[:45]))
+            recent_comment = None
+            continue
+        m = re.match(r'do\s+while\s*\((.+)\)', s)
+        if m:
+            struct_stack.append(('do_while', m.group(1).strip()[:45]))
+            recent_comment = None
+            continue
+        if re.match(r'do\s*$', s) or re.match(r'do\s+\d+\b', s):
+            struct_stack.append(('do', ''))
+            recent_comment = None
+            continue
+
+        # END DO
+        if re.match(r'end\s*do\b', s):
+            if struct_stack and struct_stack[-1][0] in ('do', 'do_while'):
+                struct_stack.pop()
+            recent_comment = None
+            continue
+
+        # SELECT CASE
+        m = re.match(r'select\s+case\s*\((.+)\)', s)
+        if m:
+            struct_stack.append(('select', m.group(1).strip()[:30]))
+            recent_comment = None
+            continue
+
+        # CASE branch
+        m = re.match(r'case\s*\((.+)\)', s)
+        if m:
+            if struct_stack and struct_stack[-1][0] in ('select', 'case'):
+                struct_stack[-1] = ('case', m.group(1).strip()[:30])
+            recent_comment = None
+            continue
+        if re.match(r'case\s+default\b', s):
+            if struct_stack and struct_stack[-1][0] in ('select', 'case'):
+                struct_stack[-1] = ('case', 'default')
+            recent_comment = None
+            continue
+
+        # END SELECT
+        if re.match(r'end\s*select\b', s):
+            if struct_stack and struct_stack[-1][0] in ('select', 'case'):
+                struct_stack.pop()
+            recent_comment = None
+            continue
+
+        # IF ... THEN  (block form, not inline)
+        m = re.match(r'if\s*\(.+\)\s*then\b', s)
+        if m and not re.search(r'\bcall\b', s):
+            # Extract condition text between the outer parens
+            depth = 0
+            start_i = s.index('(')
+            end_i = start_i
+            for ci, ch in enumerate(s[start_i:], start_i):
+                if ch == '(':
+                    depth += 1
+                elif ch == ')':
+                    depth -= 1
+                    if depth == 0:
+                        end_i = ci
+                        break
+            cond = clean[start_i + 1:end_i].strip()[:50]
+            struct_stack.append(('if', cond))
+            recent_comment = None
+            continue
+
+        # ELSE IF ... THEN
+        m = re.match(r'else\s*if\s*\(.+\)\s*then\b', s)
+        if m:
+            depth = 0
+            start_i = s.index('(')
+            end_i = start_i
+            for ci, ch in enumerate(s[start_i:], start_i):
+                if ch == '(':
+                    depth += 1
+                elif ch == ')':
+                    depth -= 1
+                    if depth == 0:
+                        end_i = ci
+                        break
+            cond = clean[start_i + 1:end_i].strip()[:50]
+            if struct_stack and struct_stack[-1][0] in ('if', 'elif', 'else'):
+                struct_stack[-1] = ('elif', cond)
+            recent_comment = None
+            continue
+
+        # ELSE
+        if re.match(r'^else\s*$', s) or re.match(r'^else\s+!', s):
+            if struct_stack and struct_stack[-1][0] in ('if', 'elif'):
+                struct_stack[-1] = ('else', '')
+            recent_comment = None
+            continue
+
+        # END IF
+        if re.match(r'end\s*if\b', s) or re.match(r'endif\b', s):
+            if struct_stack and struct_stack[-1][0] in ('if', 'elif', 'else'):
+                struct_stack.pop()
+            recent_comment = None
+            continue
+
+        # Inline conditional: if (...) call foo
+        cond_inline, callee = _find_condition(clean)
+        if callee and callee not in INTRINSICS:
+            ctx = [_format_context(t, v) for t, v in struct_stack[:3]]
+            result.append((callee.lower(), recent_comment, ctx))
+            recent_comment = None
+            continue
+
+        # Direct call: call foo(...)
+        m2 = re.match(r'call\s+(\w+)', s)
+        if m2:
+            callee = m2.group(1).lower()
+            if callee not in INTRINSICS:
+                ctx = [_format_context(t, v) for t, v in struct_stack[:3]]
+                result.append((callee, recent_comment, ctx))
+                recent_comment = None
+            continue
+
+        # Any other executable line: reset pending comment
+        if clean and not clean.lower().startswith(('implicit ', 'use ', 'integer ',
+                                                    'real ', 'logical ', 'character ',
+                                                    'type(', 'external ', 'intrinsic ')):
+            recent_comment = None
+
+    return result
+
+
+def compute_call_meta(sub_info, src_dir):
+    """
+    Enrich each entry in *sub_info* with ``'call_meta'``: a list of
+    ``{'comment': str|None, 'context': list[str]}`` dicts, one per entry in
+    ``info['calls']``, providing the ``!!`` comment immediately before each
+    call and the structural context (DO/IF/SELECT) that surrounds it.
+
+    Reads each source file once, annotating all subroutines in that file.
+    """
+    by_file = defaultdict(list)
+    for sub_name, info in sub_info.items():
+        by_file[info['file']].append(sub_name)
+
+    for fname, subs in by_file.items():
+        filepath = os.path.join(src_dir, fname)
+        try:
+            with open(filepath, errors='ignore') as fh:
+                raw = fh.readlines()
+        except OSError:
+            for sub_name in subs:
+                info = sub_info[sub_name]
+                info['call_meta'] = [{'comment': None, 'context': []}
+                                     for _ in info['calls']]
+            continue
+
+        logical = _join_continuations(raw)
+
+        for sub_name in subs:
+            info = sub_info[sub_name]
+
+            # Get per-call annotations in source order (pre-dedup)
+            all_anns = _parse_call_annotations(logical, sub_name)
+
+            # Keep only first occurrence of each callee (matches dedup in parse_source)
+            first_ann = {}
+            for callee, comment, context in all_anns:
+                if callee not in first_ann:
+                    first_ann[callee] = (comment, context)
+
+            # Build call_meta parallel to info['calls']
+            call_meta = []
+            for callee, _cond in info['calls']:
+                ann = first_ann.get(callee, (None, []))
+                call_meta.append({'comment': ann[0], 'context': ann[1]})
+
+            info['call_meta'] = call_meta
+
+
 def parse_source(src_dir):
     """
     Scan every .f90 / .F90 / .f95 / .F95 file in *src_dir*.
@@ -397,7 +657,10 @@ def generate_flow_markdown(sub_info, start='main',
     out.append('Step numbers show execution order.  `[if ...]` marks conditional calls.')
     out.append("Links in each step navigate to the callee's own flow section.")
     out.append('The **↑ Call Tree** link at the top of each section returns to the'
-               ' full call tree.\n')
+               ' full call tree.')
+    out.append('`← description` after each step summarises what the callee does.')
+    out.append('`!! note` lines show key source comments preceding a call.')
+    out.append('`┌─ context` lines mark entry into DO loops, IF blocks, or SELECT CASE.\n')
     out.append('---\n')
 
     for sub in order:
@@ -408,6 +671,7 @@ def generate_flow_markdown(sub_info, start='main',
             continue   # leaf — skip
 
         parents = sorted(rev.get(sub, set()) & reachable)
+        call_meta = info.get('call_meta', [])
 
         # ----- Section header ------------------------------------------------
         out.append(f'## {sub}\n')
@@ -429,21 +693,45 @@ def generate_flow_markdown(sub_info, start='main',
         out.append('└' + '─' * box_width + '┘')
 
         n_total = len(calls)
+        prev_ctx_top = None   # track outermost structural context for transitions
+
         for i, (callee, cond) in enumerate(calls, 1):
             is_last = (i == n_total)
+            meta = call_meta[i - 1] if i - 1 < len(call_meta) else {}
+            context  = meta.get('context', [])
+            comment  = meta.get('comment')
+
             out.append('│')
+
+            # Structural context — show outermost block when it changes
+            curr_ctx_top = context[0] if context else None
+            if curr_ctx_top != prev_ctx_top and curr_ctx_top is not None:
+                ctx_escaped = _html_escape(curr_ctx_top)
+                out.append(f'│  ┌─ {ctx_escaped}')
+            prev_ctx_top = curr_ctx_top
+
+            # !! comment annotation preceding this call in source
+            if comment:
+                out.append(f'│  !! {_html_escape(comment[:90])}')
 
             prefix = '└' if is_last else '├'
             step   = f'({i:02d})'
             cond_s = (f'[if {_html_escape(cond)}]  ') if cond else ''
 
             if callee in has_flow:
-                # Link to callee's section in the same flow file
                 name_s = f'<a href="#{_anchor(callee)}">{callee}</a>'
             else:
-                name_s = callee   # leaf or external — plain text
+                name_s = callee
 
-            out.append(f'{prefix}─{step}─ {cond_s}{name_s}')
+            # Callee description from its own PURPOSE comment
+            callee_desc = ''
+            if callee in sub_info:
+                desc = sub_info[callee].get('description', '')
+                if desc:
+                    desc = desc[:62] if len(desc) <= 62 else desc[:59] + '...'
+                    callee_desc = f'  ← {_html_escape(desc)}'
+
+            out.append(f'{prefix}─{step}─ {cond_s}{name_s}{callee_desc}')
 
         # Return footer
         out.append('│')
@@ -760,6 +1048,9 @@ def main():
     if args.flow:
         ct_name = (os.path.basename(args.update_links)
                    if args.update_links else 'swatplus_call_tree.md')
+
+        print(f'Computing call annotations ...', file=sys.stderr)
+        compute_call_meta(sub_info, args.src)
 
         print(f'Generating flow charts {args.flow} ...', file=sys.stderr)
         flow_md = generate_flow_markdown(sub_info, start=args.start,
