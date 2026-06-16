@@ -129,6 +129,7 @@
                                     !!  overland flow erosion
         real :: ch_d50 = 0.         !! median particle diameter of main channel (mm)
         real :: co2 = 400.          !! co2 concentration at start of simulation (ppm)
+        real :: harg_expo = 0.5     !! none - Hargreaves temp-range exponent (0.3-0.8)
         real :: pet_const = 0.      !! mm/day - constant PET if bsn_cc%pet == 4
         integer :: day_lag_mx = 0   !! max days to lag hydrographs for hru, ru and channels
                                     !!  non-draining soils

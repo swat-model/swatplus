@@ -264,7 +264,7 @@
         ramm = w%solradmx  * 37.59 / 30. 
 
         if (w%tmax > w%tmin) then
-         pet_day = 0.0023 * (ramm / xl) * (w%tave + 17.8) * (w%tmax - w%tmin)**0.5
+         pet_day = 0.0023 * (ramm / xl) * (w%tave + 17.8) * (w%tmax - w%tmin) ** bsn_prm%harg_expo
          pet_day = Max(0., pet_day)
         else
           pet_day = 0.
@@ -274,10 +274,8 @@
         iob = hru(j)%obj_no
         iwst = ob(iob)%wst
         pet_day = wst(iwst)%weat%pet
-      
        case (4) !! CONSTANT DAILY PET (basin-wide)
         call pet_constant (pet_day)
-  
       end select
        
       pet_day = hru(j)%hyd%pet_co * pet_day
