@@ -21,6 +21,8 @@
                                  !!   0 = Priestley-Taylor 
                                  !!   1 = Penman-Monteith
                                  !!   2 = Hargreaves method
+                                 !! 3 = read PET from file
+                                 !! 4 = constant (bsn_prm%pet_const)
         integer :: nam1 = 0      !! not used
         integer :: crk = 0       !! crack flow code 
                                  !!   1 = compute flow in cracks
@@ -127,6 +129,7 @@
                                     !!  overland flow erosion
         real :: ch_d50 = 0.         !! median particle diameter of main channel (mm)
         real :: co2 = 400.          !! co2 concentration at start of simulation (ppm)
+        real :: pet_const = 0.      !! mm/day - constant PET if bsn_cc%pet == 4
         integer :: day_lag_mx = 0   !! max days to lag hydrographs for hru, ru and channels
                                     !!  non-draining soils
         integer :: igen = 5         !!  random generator code: 

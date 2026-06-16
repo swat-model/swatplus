@@ -25,6 +25,7 @@
          if (bsn_prm%msk_co1 < 1.e-6) bsn_prm%msk_co1 = 0.75      !! calibration coeff to control impact of the storage
                                                                   !!  time constant for the reach at bankfull depth
          if (bsn_prm%msk_co2 < 1.e-6) bsn_prm%msk_co2 = 0.25      !! 
+         if (bsn_prm%pet_const < 0.) bsn_prm%pet_const = 0.
          if (bsn_prm%msk_x < 1.e-6) bsn_prm%msk_x = 0.20          !! weighting factor control relative importance of inflow rate 
                                                                   !!  and outflow rate in determining storage on reach
          if (bsn_prm%nperco_lchtile < 1.e-6) bsn_prm%nperco_lchtile = 0.50        !! n concentration coeff for tile flow and 
