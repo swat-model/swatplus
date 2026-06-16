@@ -19,37 +19,37 @@ main
 │   └── <a href="#dr_db_read">dr_db_read</a>
 │
 ├── OBJECT SETUP ───────────────────────────────────────────────────────
-│   ├── cli_lapse
-│   ├── object_read_output
-│   ├── om_water_init
-│   ├── pest_cha_res_read / path_cha_res_read
-│   ├── salt_cha_read / cs_cha_read
+│   ├── <a href="#cli_lapse">cli_lapse</a>
+│   ├── <a href="#object_read_output">object_read_output</a>
+│   ├── <a href="#om_water_init">om_water_init</a>
+│   ├── <a href="#pest_cha_res_read">pest_cha_res_read</a> / <a href="#path_cha_res_read">path_cha_res_read</a>
+│   ├── <a href="#salt_cha_read">salt_cha_read</a> / <a href="#cs_cha_read">cs_cha_read</a>
 │   ├── <a href="#lsu_read_elements">lsu_read_elements</a>
 │   ├── <a href="#proc_hru">proc_hru</a>              HRU initialisation
 │   ├── <a href="#proc_cha">proc_cha</a>              channel initialisation
 │   ├── <a href="#proc_aqu">proc_aqu</a>              aquifer initialisation
-│   ├── dtbl_lum_read
-│   ├── <a href="#hru_lte_read">hru_lte_read</a> / proc_cond
-│   ├── res_read_weir / dtbl_res_read / dtbl_scen_read / cal_cond_read
-│   ├── manure_allocation_read / dtbl_flocon_read
-│   ├── om_treat_read / om_use_read / om_osrc_read
-│   ├── water_treatment_read / water_use_read / water_tower_read
-│   ├── water_pipe_read / water_canal_read / water_allocation_read
-│   ├── hru_dtbl_actions_init
-│   ├── <a href="#proc_res">proc_res</a> / wet_read_hyd / wet_read / wet_read_salt_cs
+│   ├── <a href="#dtbl_lum_read">dtbl_lum_read</a>
+│   ├── <a href="#hru_lte_read">hru_lte_read</a> / <a href="#proc_cond">proc_cond</a>
+│   ├── <a href="#res_read_weir">res_read_weir</a> / <a href="#dtbl_res_read">dtbl_res_read</a> / <a href="#dtbl_scen_read">dtbl_scen_read</a> / <a href="#cal_cond_read">cal_cond_read</a>
+│   ├── <a href="#manure_allocation_read">manure_allocation_read</a> / <a href="#dtbl_flocon_read">dtbl_flocon_read</a>
+│   ├── <a href="#om_treat_read">om_treat_read</a> / <a href="#om_use_read">om_use_read</a> / <a href="#om_osrc_read">om_osrc_read</a>
+│   ├── <a href="#water_treatment_read">water_treatment_read</a> / <a href="#water_use_read">water_use_read</a> / <a href="#water_tower_read">water_tower_read</a>
+│   ├── <a href="#water_pipe_read">water_pipe_read</a> / <a href="#water_canal_read">water_canal_read</a> / <a href="#water_allocation_read">water_allocation_read</a>
+│   ├── <a href="#hru_dtbl_actions_init">hru_dtbl_actions_init</a>
+│   ├── <a href="#proc_res">proc_res</a> / <a href="#wet_read_hyd">wet_read_hyd</a> / <a href="#wet_read">wet_read</a> / <a href="#wet_read_salt_cs">wet_read_salt_cs</a>
 │   ├── [if db_mx%wet_dat > 0]  <a href="#wet_all_initial">wet_all_initial</a>
-│   ├── wet_fp_init
+│   ├── <a href="#wet_fp_init">wet_fp_init</a>
 │   ├── [loop ihru = 1, sp_ob%hru]  <a href="#soil_nutcarb_init">soil_nutcarb_init</a>
 │   ├── <a href="#proc_cal">proc_cal</a>              calibration setup
 │   ├── <a href="#proc_open">proc_open</a>             open output files, write headers
-│   ├── <a href="#unit_hyd_ru_hru">unit_hyd_ru_hru</a> / dr_ru
-│   └── hyd_connect_out
+│   ├── <a href="#unit_hyd_ru_hru">unit_hyd_ru_hru</a> / <a href="#dr_ru">dr_ru</a>
+│   └── <a href="#hyd_connect_out">hyd_connect_out</a>
 │
 └── SIMULATION ─────────────────────────────────────────────────────────
     ├── [if time%step &lt; 0]  <a href="#command">command</a>         export-coefficient (average annual) mode
     └── [else]              <a href="#time_control">time_control</a>    standard year/day simulation loop
           [after loop] [if cal_soft == "y"]  <a href="#calsoft_control">calsoft_control</a>
-                       [if cal_hard == "y"]  cal_parmchg_read → calhard_control
+                       [if cal_hard == "y"]  <a href="#cal_parmchg_read">cal_parmchg_read</a> → <a href="#calhard_control">calhard_control</a>
                        [if bsn_cc%swift_out == 1]  <a href="#swift_output">swift_output</a>
 </pre>
 
@@ -63,15 +63,15 @@ main
 <pre>
 proc_bsn
 ├── <a href="#readcio_read">readcio_read</a>             read file.cio
-├── basin_read_cc            read basins.bsn  (sets bsn_cc%cswat, %crk, %lapse, etc.)
-├── basin_read_objs
+├── <a href="#basin_read_cc">basin_read_cc</a>            read basins.bsn  (sets bsn_cc%cswat, %crk, %lapse, etc.)
+├── <a href="#basin_read_objs">basin_read_objs</a>
 ├── <a href="#time_read">time_read</a>
-├── basin_read_prm
-├── basin_prm_default
-├── basin_print_codes_read   read print.prt  → sets all output flags
+├── <a href="#basin_read_prm">basin_read_prm</a>
+├── <a href="#basin_prm_default">basin_prm_default</a>
+├── <a href="#basin_print_codes_read">basin_print_codes_read</a>   read print.prt  → sets all output flags
 ├── <a href="#co2_read">co2_read</a>
-├── carbon_coef_read         read carbon_coef.cbn if present (overrides CENTURY rates)
-└── open_output_file         open files.out, diagnostics.out, area_calc.out
+├── <a href="#carbon_coef_read">carbon_coef_read</a>         read carbon_coef.cbn if present (overrides CENTURY rates)
+└── <a href="#open_output_file">open_output_file</a>         open files.out, diagnostics.out, area_calc.out
 </pre>
 
 ---
@@ -83,23 +83,23 @@ proc_bsn
 
 <pre>
 proc_db
-├── plant_parm_read          plants.plt
+├── <a href="#plant_parm_read">plant_parm_read</a>          plants.plt
 ├── <a href="#plantparm_init">plantparm_init</a>
-├── plant_transplant_read
-├── till_parm_read           tillage.til  (till_eff used in cbn_zhang2)
-├── pest_parm_read
-├── fert_parm_read
-├── manure_orgmin_read / manure_db_read
-├── urban_parm_read
-├── path_parm_read / septic_parm_read
-├── mgt_read_irrops / mgt_read_chemapp / mgt_read_harvops
-├── mgt_read_grazeops / mgt_read_sweepops / mgt_read_fireops
-├── <a href="#mgt_read_mgtops">mgt_read_mgtops</a> / mgt_read_puddle
-├── sdr_read / sep_read
-├── scen_read_grwway / scen_read_filtstrip / scen_read_bmpuser / sat_buff_read
-├── readpcom
-├── cntbl_read / cons_prac_read / overland_n_read
-└── landuse_read
+├── <a href="#plant_transplant_read">plant_transplant_read</a>
+├── <a href="#till_parm_read">till_parm_read</a>           tillage.til  (till_eff used in <a href="#cbn_zhang2">cbn_zhang2</a>)
+├── <a href="#pest_parm_read">pest_parm_read</a>
+├── <a href="#fert_parm_read">fert_parm_read</a>
+├── <a href="#manure_orgmin_read">manure_orgmin_read</a> / <a href="#manure_db_read">manure_db_read</a>
+├── <a href="#urban_parm_read">urban_parm_read</a>
+├── <a href="#path_parm_read">path_parm_read</a> / <a href="#septic_parm_read">septic_parm_read</a>
+├── <a href="#mgt_read_irrops">mgt_read_irrops</a> / <a href="#mgt_read_chemapp">mgt_read_chemapp</a> / <a href="#mgt_read_harvops">mgt_read_harvops</a>
+├── <a href="#mgt_read_grazeops">mgt_read_grazeops</a> / <a href="#mgt_read_sweepops">mgt_read_sweepops</a> / <a href="#mgt_read_fireops">mgt_read_fireops</a>
+├── <a href="#mgt_read_mgtops">mgt_read_mgtops</a> / <a href="#mgt_read_puddle">mgt_read_puddle</a>
+├── <a href="#sdr_read">sdr_read</a> / <a href="#sep_read">sep_read</a>
+├── <a href="#scen_read_grwway">scen_read_grwway</a> / <a href="#scen_read_filtstrip">scen_read_filtstrip</a> / <a href="#scen_read_bmpuser">scen_read_bmpuser</a> / <a href="#sat_buff_read">sat_buff_read</a>
+├── <a href="#readpcom">readpcom</a>
+├── <a href="#cntbl_read">cntbl_read</a> / <a href="#cons_prac_read">cons_prac_read</a> / <a href="#overland_n_read">overland_n_read</a>
+└── <a href="#landuse_read">landuse_read</a>
 </pre>
 
 ---
@@ -111,19 +111,19 @@ proc_db
 
 <pre>
 proc_read
-├── ch_read_temp / cli_read_atmodep / <a href="#cli_staread">cli_staread</a>
-├── constit_db_read / pest_metabolite_read
-├── soil_plant_init / solt_db_read
-├── pest_hru_aqu_read / path_hru_aqu_read / hmet_hru_aqu_read
-├── salt_hru_read / salt_aqu_read / salt_irr_read / salt_plant_read
-├── cli_read_atmodep_salt / salt_roadsalt_read / salt_uptake_read
-├── salt_urban_read / salt_fert_read
-├── cs_hru_read / cs_aqu_read / cli_read_atmodep_cs / cs_irr_read
-├── cs_plant_read / cs_uptake_read / cs_reactions_read / cs_urban_read / cs_fert_read
-├── topo_read / field_read / hydrol_read / shade_factor_read
-├── snowdb_read
-├── soil_db_read             soils.sol — organic C% used to initialise carbon pools
-└── soil_lte_db_read
+├── <a href="#ch_read_temp">ch_read_temp</a> / <a href="#cli_read_atmodep">cli_read_atmodep</a> / <a href="#cli_staread">cli_staread</a>
+├── <a href="#constit_db_read">constit_db_read</a> / <a href="#pest_metabolite_read">pest_metabolite_read</a>
+├── <a href="#soil_plant_init">soil_plant_init</a> / <a href="#solt_db_read">solt_db_read</a>
+├── <a href="#pest_hru_aqu_read">pest_hru_aqu_read</a> / <a href="#path_hru_aqu_read">path_hru_aqu_read</a> / <a href="#hmet_hru_aqu_read">hmet_hru_aqu_read</a>
+├── <a href="#salt_hru_read">salt_hru_read</a> / <a href="#salt_aqu_read">salt_aqu_read</a> / <a href="#salt_irr_read">salt_irr_read</a> / <a href="#salt_plant_read">salt_plant_read</a>
+├── <a href="#cli_read_atmodep_salt">cli_read_atmodep_salt</a> / <a href="#salt_roadsalt_read">salt_roadsalt_read</a> / <a href="#salt_uptake_read">salt_uptake_read</a>
+├── <a href="#salt_urban_read">salt_urban_read</a> / <a href="#salt_fert_read">salt_fert_read</a>
+├── <a href="#cs_hru_read">cs_hru_read</a> / <a href="#cs_aqu_read">cs_aqu_read</a> / <a href="#cli_read_atmodep_cs">cli_read_atmodep_cs</a> / <a href="#cs_irr_read">cs_irr_read</a>
+├── <a href="#cs_plant_read">cs_plant_read</a> / <a href="#cs_uptake_read">cs_uptake_read</a> / <a href="#cs_reactions_read">cs_reactions_read</a> / <a href="#cs_urban_read">cs_urban_read</a> / <a href="#cs_fert_read">cs_fert_read</a>
+├── <a href="#topo_read">topo_read</a> / <a href="#field_read">field_read</a> / <a href="#hydrol_read">hydrol_read</a> / <a href="#shade_factor_read">shade_factor_read</a>
+├── <a href="#snowdb_read">snowdb_read</a>
+├── <a href="#soil_db_read">soil_db_read</a>             soils.sol — organic C% used to initialise carbon pools
+└── <a href="#soil_lte_db_read">soil_lte_db_read</a>
 </pre>
 
 ---
@@ -135,15 +135,15 @@ proc_read
 
 <pre>
 proc_hru
-├── hru_allo / <a href="#hru_read">hru_read</a> / hrudb_init
-├── <a href="#hru_lum_init_all">hru_lum_init_all</a> / <a href="#topohyd_init">topohyd_init</a> / hru_output_allo
-├── carbon_read              read initial carbon state (organic C%, litter)
+├── <a href="#hru_allo">hru_allo</a> / <a href="#hru_read">hru_read</a> / <a href="#hrudb_init">hrudb_init</a>
+├── <a href="#hru_lum_init_all">hru_lum_init_all</a> / <a href="#topohyd_init">topohyd_init</a> / <a href="#hru_output_allo">hru_output_allo</a>
+├── <a href="#carbon_read">carbon_read</a>              read initial carbon state (organic C%, litter)
 ├── [loop HRUs]  <a href="#structure_set_parms">structure_set_parms</a>("septic")
 ├── <a href="#soils_init">soils_init</a>               compute FC, WP, BD for each layer
-├── <a href="#structure_init">structure_init</a> / <a href="#plant_all_init">plant_all_init</a> / <a href="#cn2_init_all">cn2_init_all</a> / hydro_init
-├── pesticide_init / pathogen_init / salt_hru_init / cs_hru_init
-├── rte_read_nut
-└── open_output_file         open erosion.out, checker.out
+├── <a href="#structure_init">structure_init</a> / <a href="#plant_all_init">plant_all_init</a> / <a href="#cn2_init_all">cn2_init_all</a> / <a href="#hydro_init">hydro_init</a>
+├── <a href="#pesticide_init">pesticide_init</a> / <a href="#pathogen_init">pathogen_init</a> / <a href="#salt_hru_init">salt_hru_init</a> / <a href="#cs_hru_init">cs_hru_init</a>
+├── <a href="#rte_read_nut">rte_read_nut</a>
+└── <a href="#open_output_file">open_output_file</a>         open erosion.out, checker.out
 </pre>
 
 ---
@@ -175,12 +175,12 @@ Called from `main` in a loop over every HRU after `proc_hru` returns.
 
 <pre>
 proc_cha
-├── ch_read_init / ch_read_init_cs
-├── sd_hydsed_read / ch_read_hyd / ch_read_sed / ch_read_nut
-├── ch_read / sd_channel_read / <a href="#sd_hydsed_init">sd_hydsed_init</a>
-├── aqu2d_init
-├── [loop channels]  ch_ttcoef / ch_initial
-└── overbank_read / sd_channel_surf_link / time_conc_init
+├── <a href="#ch_read_init">ch_read_init</a> / <a href="#ch_read_init_cs">ch_read_init_cs</a>
+├── <a href="#sd_hydsed_read">sd_hydsed_read</a> / <a href="#ch_read_hyd">ch_read_hyd</a> / <a href="#ch_read_sed">ch_read_sed</a> / <a href="#ch_read_nut">ch_read_nut</a>
+├── <a href="#ch_read">ch_read</a> / <a href="#sd_channel_read">sd_channel_read</a> / <a href="#sd_hydsed_init">sd_hydsed_init</a>
+├── <a href="#aqu2d_init">aqu2d_init</a>
+├── [loop channels]  <a href="#ch_ttcoef">ch_ttcoef</a> / <a href="#ch_initial">ch_initial</a>
+└── <a href="#overbank_read">overbank_read</a> / <a href="#sd_channel_surf_link">sd_channel_surf_link</a> / <a href="#time_conc_init">time_conc_init</a>
 </pre>
 
 ---
@@ -192,8 +192,8 @@ proc_cha
 
 <pre>
 proc_aqu
-├── aqu_read / aqu_initial
-└── aqu_read_init / aqu_read_init_cs
+├── <a href="#aqu_read">aqu_read</a> / <a href="#aqu_initial">aqu_initial</a>
+└── <a href="#aqu_read_init">aqu_read_init</a> / <a href="#aqu_read_init_cs">aqu_read_init_cs</a>
 </pre>
 
 ---
@@ -205,12 +205,12 @@ proc_aqu
 
 <pre>
 proc_cal
-├── cal_parm_read / <a href="#cal_parmchg_read">cal_parmchg_read</a>
+├── <a href="#cal_parm_read">cal_parm_read</a> / <a href="#cal_parmchg_read">cal_parmchg_read</a>
 ├── <a href="#pl_read_regions_cal">pl_read_regions_cal</a> / <a href="#pl_read_parms_cal">pl_read_parms_cal</a> / <a href="#cal_conditions">cal_conditions</a>
-├── calsoft_read_codes / lcu_read_softcal / ls_read_lsparms_cal
+├── <a href="#calsoft_read_codes">calsoft_read_codes</a> / <a href="#lcu_read_softcal">lcu_read_softcal</a> / <a href="#ls_read_lsparms_cal">ls_read_lsparms_cal</a>
 ├── <a href="#aqu_read_elements">aqu_read_elements</a> / <a href="#ch_read_elements">ch_read_elements</a> / <a href="#res_read_elements">res_read_elements</a> / <a href="#rec_read_elements">rec_read_elements</a>
-├── ch_read_orders_cal / ch_read_parms_cal
-└── cal_allo_init
+├── <a href="#ch_read_orders_cal">ch_read_orders_cal</a> / <a href="#ch_read_parms_cal">ch_read_parms_cal</a>
+└── <a href="#cal_allo_init">cal_allo_init</a>
 </pre>
 
 ---
@@ -245,30 +245,30 @@ time_control
 ├── [year loop: curyr = 1 to time%nbyr]
 │   │
 │   ├── [if pco%sw_init == "n" and yrs > nyskip]
-│   │   ├── basin_sw_init
-│   │   └── aqu_pest_output_init
+│   │   ├── <a href="#basin_sw_init">basin_sw_init</a>
+│   │   └── <a href="#aqu_pest_output_init">aqu_pest_output_init</a>
 │   │
 │   ├── [day loop: julian_day = day_start to day_end_yr]
-│   │   ├── xmon                          day-of-year → month, day-of-month
-│   │   ├── sim_initday                   zero daily HRU accumulators
+│   │   ├── <a href="#xmon">xmon</a>                          day-of-year → month, day-of-month
+│   │   ├── <a href="#sim_initday">sim_initday</a>                   zero daily HRU accumulators
 │   │   ├── <a href="#climate_control">climate_control</a>               read/generate weather
-│   │   ├── cli_atmodep_time_control      set atmospheric deposition array counter
+│   │   ├── <a href="#cli_atmodep_time_control">cli_atmodep_time_control</a>      set atmospheric deposition array counter
 │   │   ├── [loop db_mx%cond_up]  <a href="#conditions">conditions</a> / <a href="#actions">actions</a>   conditional land-use reset
 │   │   ├── [if db_mx%mallo_db > 0]  <a href="#mallo_control">mallo_control</a>        manure allocation
 │   │   └── <a href="#command">command</a>                       daily object routing loop
 │   │
 │   └── [end-of-year]
-│       ├── calsoft_sum_output
+│       ├── <a href="#calsoft_sum_output">calsoft_sum_output</a>
 │       ├── [crop yield accounting — basin and regional totals]
 │       ├── [loop sp_ob%hru]
 │       │   ├── [if bsn_cc%cswat == 0 and biomix > 1e-6]
-│       │   │     mgt_newtillmix_cswat0 (j, biomix, 0)   annual biological mixing
-│       │   │     (cswat==1 biological mixing occurs daily in hru_control via mgt_biomix)
+│       │   │     <a href="#mgt_newtillmix_cswat0">mgt_newtillmix_cswat0</a> (j, biomix, 0)   annual biological mixing
+│       │   │     (cswat==1 biological mixing occurs daily in <a href="#hru_control">hru_control</a> via <a href="#mgt_biomix">mgt_biomix</a>)
 │       │   ├── [update perennial plant maturity ages]
 │       │   └── [reset phubase, yr_skip; advance schedule past "skip" ops]
 │       └── [reset yearly HRU/channel/LTE output accumulators]
 │
-├── calsoft_ave_output
+├── <a href="#calsoft_ave_output">calsoft_ave_output</a>
 └── [channel morphology summary: ch_order_sed.txt, ch_budget.txt]
     [reservoir trap efficiencies]
 </pre>
@@ -290,20 +290,20 @@ command
 │   ├── [pre-object]  <a href="#wallo_control">wallo_control</a>   water allocation without channel source
 │   │
 │   ├── [accumulate incoming hydrographs from all upstream objects]
-│   │   (surface, lateral, tile, aquifer components routed separately for HRUs)
+│   │   (<a href="#surface">surface</a>, lateral, tile, aquifer components routed separately for HRUs)
 │   │
 │   ├── select case (ob(icmd)%typ)
 │   │   │
 │   │   ├── case "hru"
 │   │   │   ├── <a href="#hru_control">hru_control</a>               land-phase daily simulation
-│   │   │   └── [if ob%rcv_tot > 0]  hyddep_output
+│   │   │   └── [if ob%rcv_tot > 0]  <a href="#hyddep_output">hyddep_output</a>
 │   │   │
 │   │   ├── case "hru_lte"
 │   │   │   └── <a href="#hru_lte_control">hru_lte_control</a>
 │   │   │
 │   │   ├── case "ru"
 │   │   │   ├── <a href="#ru_control">ru_control</a>
-│   │   │   └── [if ob%rcv_tot > 0]  hyddep_output
+│   │   │   └── [if ob%rcv_tot > 0]  <a href="#hyddep_output">hyddep_output</a>
 │   │   │
 │   │   ├── case "gwflow"
 │   │   │   └── <a href="#gwflow_simulate">gwflow_simulate</a>
@@ -318,14 +318,14 @@ command
 │   │   │   ├── select case (recall_db%org_min%tstep)
 │   │   │   │   ├── "sub"  — load subdaily hydrograph array
 │   │   │   │   ├── "day"  — load daily hydrograph
-│   │   │   │   │     [if flow &lt; 0]  recall_nut   (nutrient diversion)
+│   │   │   │   │     [if flow &lt; 0]  <a href="#recall_nut">recall_nut</a>   (nutrient diversion)
 │   │   │   │   ├── "mo"   — load monthly hydrograph
 │   │   │   │   └── "yr"   — load yearly hydrograph
-│   │   │   ├── [if cs_db%num_salts > 0]  recall_salt
-│   │   │   └── [if cs_db%num_cs > 0]    recall_cs
+│   │   │   ├── [if cs_db%num_salts > 0]  <a href="#recall_salt">recall_salt</a>
+│   │   │   └── [if cs_db%num_cs > 0]    <a href="#recall_cs">recall_cs</a>
 │   │   │
 │   │   ├── case "dr"
-│   │   │   └── [if cs_db%num_tot > 0]  constit_hyd_mult   (apply delivery ratio to constituents)
+│   │   │   └── [if cs_db%num_tot > 0]  <a href="#constit_hyd_mult">constit_hyd_mult</a>   (apply delivery ratio to constituents)
 │   │   │
 │   │   ├── case "outlet"
 │   │   │   └── [pass-through: hd(1) = hin]
@@ -334,47 +334,47 @@ command
 │   │       ├── [if chl > 1e-3]  <a href="#sd_channel_control3">sd_channel_control3</a>
 │   │       └── [else: artificial channel (length≈0) — pass-through, zero morphology outputs]
 │   │
-│   ├── [post-object]  <a href="#wallo_control">wallo_control</a> / [if pco%fdcout == "y"] flow_dur_curve
-│   └── [if ob%src_tot > 0]  hydout_output        write object-to-object hydrograph output
+│   ├── [post-object]  <a href="#wallo_control">wallo_control</a> / [if pco%fdcout == "y"] <a href="#flow_dur_curve">flow_dur_curve</a>
+│   └── [if ob%src_tot > 0]  <a href="#hydout_output">hydout_output</a>        write object-to-object hydrograph output
 │
 └── OUTPUT SECTION  (daily, after all objects processed)
     │
-    ├── obj_output
+    ├── <a href="#obj_output">obj_output</a>
     │
-    ├── [loop iwro]  wallo_allo_output / wallo_trn_output / wallo_treat_output / wallo_use_output
-    ├── [loop mallo] manure_source_output / manure_demand_output
-    ├── [loop hru_lte]  hru_lte_output
+    ├── [loop iwro]  <a href="#wallo_allo_output">wallo_allo_output</a> / <a href="#wallo_trn_output">wallo_trn_output</a> / <a href="#wallo_treat_output">wallo_treat_output</a> / <a href="#wallo_use_output">wallo_use_output</a>
+    ├── [loop mallo] <a href="#manure_source_output">manure_source_output</a> / <a href="#manure_demand_output">manure_demand_output</a>
+    ├── [loop hru_lte]  <a href="#hru_lte_output">hru_lte_output</a>
     │
     ├── [loop ihru = 1, sp_ob%hru]
     │   ├── <a href="#hru_output">hru_output</a>
-    │   ├── hru_carbon_output
+    │   ├── <a href="#hru_carbon_output">hru_carbon_output</a>
     │   ├── [if surf_stor > 0]
-    │   │   ├── wetland_output
-    │   │   ├── [if num_salts > 0]  wet_salt_output
-    │   │   └── [if num_cs > 0]    wet_cs_output
-    │   ├── [if num_tot > 0]    hru_pesticide_output / hru_pathogen_output
-    │   ├── [if num_salts > 0]  hru_salt_output
-    │   ├── [if num_cs > 0]     hru_cs_output
-    │   ├── [if pco%cb_hru%d/m/y/l set]       soil_nutcarb_write    → hru_cb.csv
+    │   │   ├── <a href="#wetland_output">wetland_output</a>
+    │   │   ├── [if num_salts > 0]  <a href="#wet_salt_output">wet_salt_output</a>
+    │   │   └── [if num_cs > 0]    <a href="#wet_cs_output">wet_cs_output</a>
+    │   ├── [if num_tot > 0]    <a href="#hru_pesticide_output">hru_pesticide_output</a> / <a href="#hru_pathogen_output">hru_pathogen_output</a>
+    │   ├── [if num_salts > 0]  <a href="#hru_salt_output">hru_salt_output</a>
+    │   ├── [if num_cs > 0]     <a href="#hru_cs_output">hru_cs_output</a>
+    │   ├── [if pco%cb_hru%d/m/y/l set]       <a href="#soil_nutcarb_write">soil_nutcarb_write</a>    → hru_cb.csv
     │   └── [if bsn_cc%cswat == 1]
-    │         [if pco%cb_vars_hru%d/m/y/l set] soil_carbvar_write   → hru_cb_vars.csv
+    │         [if pco%cb_vars_hru%d/m/y/l set] <a href="#soil_carbvar_write">soil_carbvar_write</a>   → hru_cb_vars.csv
     │
-    ├── [loop iaq]    aquifer_output / aqu_salt_output / aqu_cs_output / aqu_pesticide_output
-    ├── [loop chan]   channel_output
-    ├── [loop chandeg]  sd_chanmorph_output / sd_chanbud_output / sd_channel_output
-    │                   cha_pesticide_output / ch_salt_output / ch_cs_output
-    │                   [if num_cs > 0]  cs_str_output
-    ├── [loop res]    reservoir_output / res_pesticide_output / res_salt_output / res_cs_output
-    ├── [loop ru]     ru_output / ru_salt_output / ru_cs_output
-    ├── [loop recall] recall_output
-    ├── hydin_output
-    ├── basin_output / basin_aquifer_output / basin_reservoir_output
-    ├── basin_channel_output / basin_chanmorph_output / basin_chanbud_output
-    ├── basin_sdchannel_output / basin_recall_output
-    ├── basin_ch_pest_output / basin_res_pest_output / basin_ls_pest_output / basin_aqu_pest_output
-    ├── lsu_output
-    ├── [if num_salts > 0]  salt_balance
-    └── [if num_cs > 0]     cs_balance
+    ├── [loop iaq]    <a href="#aquifer_output">aquifer_output</a> / <a href="#aqu_salt_output">aqu_salt_output</a> / <a href="#aqu_cs_output">aqu_cs_output</a> / <a href="#aqu_pesticide_output">aqu_pesticide_output</a>
+    ├── [loop chan]   <a href="#channel_output">channel_output</a>
+    ├── [loop chandeg]  <a href="#sd_chanmorph_output">sd_chanmorph_output</a> / <a href="#sd_chanbud_output">sd_chanbud_output</a> / <a href="#sd_channel_output">sd_channel_output</a>
+    │                   <a href="#cha_pesticide_output">cha_pesticide_output</a> / <a href="#ch_salt_output">ch_salt_output</a> / <a href="#ch_cs_output">ch_cs_output</a>
+    │                   [if num_cs > 0]  <a href="#cs_str_output">cs_str_output</a>
+    ├── [loop res]    <a href="#reservoir_output">reservoir_output</a> / <a href="#res_pesticide_output">res_pesticide_output</a> / <a href="#res_salt_output">res_salt_output</a> / <a href="#res_cs_output">res_cs_output</a>
+    ├── [loop ru]     <a href="#ru_output">ru_output</a> / <a href="#ru_salt_output">ru_salt_output</a> / <a href="#ru_cs_output">ru_cs_output</a>
+    ├── [loop recall] <a href="#recall_output">recall_output</a>
+    ├── <a href="#hydin_output">hydin_output</a>
+    ├── <a href="#basin_output">basin_output</a> / <a href="#basin_aquifer_output">basin_aquifer_output</a> / <a href="#basin_reservoir_output">basin_reservoir_output</a>
+    ├── <a href="#basin_channel_output">basin_channel_output</a> / <a href="#basin_chanmorph_output">basin_chanmorph_output</a> / <a href="#basin_chanbud_output">basin_chanbud_output</a>
+    ├── <a href="#basin_sdchannel_output">basin_sdchannel_output</a> / <a href="#basin_recall_output">basin_recall_output</a>
+    ├── <a href="#basin_ch_pest_output">basin_ch_pest_output</a> / <a href="#basin_res_pest_output">basin_res_pest_output</a> / <a href="#basin_ls_pest_output">basin_ls_pest_output</a> / <a href="#basin_aqu_pest_output">basin_aqu_pest_output</a>
+    ├── <a href="#lsu_output">lsu_output</a>
+    ├── [if num_salts > 0]  <a href="#salt_balance">salt_balance</a>
+    └── [if num_cs > 0]     <a href="#cs_balance">cs_balance</a>
 </pre>
 
 ---
@@ -398,14 +398,14 @@ hru_control
 │         increment tillage_days(ihru)
 │         [if tillage_days >= till_eff_days]  reset switch=0, days=0, tillagef=0
 │
-├── varinit                   zero daily output variables
+├── <a href="#varinit">varinit</a>                   zero daily output variables
 │
 ├── [auto-operations from decision table]
 │   └── [loop sched%num_autos]
 │         <a href="#conditions">conditions</a> / <a href="#actions">actions</a>
-│         [if future fertilizer scheduled today]  pl_fert
+│         [if future fertilizer scheduled today]  <a href="#pl_fert">pl_fert</a>
 │
-├── albedo                    compute daily albedo
+├── <a href="#albedo">albedo</a>                    compute daily <a href="#albedo">albedo</a>
 │
 ├── [salt equilibrium chemistry]
 │   └── [if cs_db%num_salts > 0]  <a href="#salt_chem_hru">salt_chem_hru</a>
@@ -413,137 +413,137 @@ hru_control
 ├── [constituent reactions and sorption]
 │   └── [if cs_db%num_cs > 0]
 │         ├── <a href="#cs_rctn_hru">cs_rctn_hru</a>
-│         └── cs_sorb_hru
+│         └── <a href="#cs_sorb_hru">cs_sorb_hru</a>
 │
-├── stmp_solt                 soil temperature profile
-├── sq_canopyint              canopy interception
-├── sq_snom                   snow accumulation and melt
+├── <a href="#stmp_solt">stmp_solt</a>                 soil temperature profile
+├── <a href="#sq_canopyint">sq_canopyint</a>              canopy interception
+├── <a href="#sq_snom">sq_snom</a>                   snow accumulation and melt
 │
 ├── [surface and subsurface runon routing]
-│   ├── [if hin_sur%flo > 1e-6 and ires == 0]  rls_routesurf
+│   ├── [if hin_sur%flo > 1e-6 and ires == 0]  <a href="#rls_routesurf">rls_routesurf</a>
 │   ├── [if hin_sur%flo > 1e-6 and ires > 0]   add to wetland (ht1)
-│   ├── [if hin_lat%flo > 0]                    rls_routesoil
-│   ├── [if this HRU is a saturated-buffer receiver]  rls_routetile
-│   └── [if hin_aqu%flo > 0]                    rls_routeaqu
+│   ├── [if hin_lat%flo > 0]                    <a href="#rls_routesoil">rls_routesoil</a>
+│   ├── [if this HRU is a saturated-buffer receiver]  <a href="#rls_routetile">rls_routetile</a>
+│   └── [if hin_aqu%flo > 0]                    <a href="#rls_routeaqu">rls_routeaqu</a>
 │
 ├── [shrink-swell cracking]
-│   └── [if bsn_cc%crk == 1]  sq_crackvol
+│   └── [if bsn_cc%crk == 1]  <a href="#sq_crackvol">sq_crackvol</a>
 │
-├── et_pot                    potential evapotranspiration
-├── et_act                    actual evapotranspiration
+├── <a href="#et_pot">et_pot</a>                    potential evapotranspiration
+├── <a href="#et_act">et_act</a>                    actual evapotranspiration
 │
 ├── [scheduled management operations]
 │   └── [if yr_skip(j) == 0]  <a href="#mgt_operatn">mgt_operatn</a>
 │
 ├── [surface runoff generation]
 │   ├── [if ires == 0]   <a href="#surface">surface</a>
-│   │     ├── sq_dailycn       SCS curve number update
-│   │     └── [if CN method == Green-Ampt]  sq_greenampt
-│   └── [if ires > 0]   (wetland present — surfq=0, sedyld=0; no surface calculation)
+│   │     ├── <a href="#sq_dailycn">sq_dailycn</a>       SCS curve number update
+│   │     └── [if CN method == Green-Ampt]  <a href="#sq_greenampt">sq_greenampt</a>
+│   └── [if ires > 0]   (wetland present — surfq=0, sedyld=0; no <a href="#surface">surface</a> calculation)
 │
 ├── [paddy continuous irrigation]
-│   └── [if hru%paddy_irr > 0 and wet_ob%depth &lt; irr_hmin]  wet_irrp
+│   └── [if hru%paddy_irr > 0 and wet_ob%depth &lt; irr_hmin]  <a href="#wet_irrp">wet_irrp</a>
 │
 ├── [wetland/paddy processes]
 │   ├── [if ires > 0]  <a href="#wetland_control">wetland_control</a>
 │   └── [if ires == 0]  pass saturation excess to qday directly
 │
 ├── <a href="#swr_percmain">swr_percmain</a>              percolation through soil profile
-│   ├── swr_percmicro         micropore (matrix) flow
-│   └── swr_percmacro         macropore (bypass) flow
+│   ├── <a href="#swr_percmicro">swr_percmicro</a>         micropore (matrix) flow
+│   └── <a href="#swr_percmacro">swr_percmacro</a>         macropore (bypass) flow
 │
 ├── [grazing]
-│   └── [if igrz(j) == 1]  pl_graze
-│         igrz set to 1 by mgt_sched case "graz"; counts down grz_days then resets
+│   └── [if igrz(j) == 1]  <a href="#pl_graze">pl_graze</a>
+│         igrz set to 1 by <a href="#mgt_sched">mgt_sched</a> case "graz"; counts down grz_days then resets
 │
 ├── ─── DECOMPOSITION AND CARBON CYCLING ───────────────────────────────────
 │   │
 │   ├── [if bsn_cc%cswat == 0]   ── static model ───────────────────────────
-│   │   ├── rsd_decomp            surface residue decomposition
-│   │   └── nut_nminrl            N and P mineralisation from soil residue
+│   │   ├── <a href="#rsd_decomp">rsd_decomp</a>            <a href="#surface">surface</a> residue decomposition
+│   │   └── <a href="#nut_nminrl">nut_nminrl</a>            N and P mineralisation from soil residue
 │   │
 │   └── [if bsn_cc%cswat == 1]   ── CENTURY 5-pool model ───────────────────
 │       ├── [if bmix_eff > 1e-6]  <a href="#mgt_biomix">mgt_biomix</a> (ihru, bmix_eff)   biological mixing
-│       ├── cbn_surfrsd_decomp    surface residue → meta/str litter in layer 1
-│       ├── cbn_rsd_transfer      root death + incorporated residue → soil pools
+│       ├── <a href="#cbn_surfrsd_decomp">cbn_surfrsd_decomp</a>    <a href="#surface">surface</a> residue → meta/str litter in layer 1
+│       ├── <a href="#cbn_rsd_transfer">cbn_rsd_transfer</a>      root death + incorporated residue → soil pools
 │       └── <a href="#cbn_zhang2">cbn_zhang2</a>            CENTURY 5-pool C/N transformations (layer loop)
 │
 ├── ─── (both cswat paths continue here) ──────────────────────────────────
 │
-├── nut_nitvol                N volatilization
+├── <a href="#nut_nitvol">nut_nitvol</a>                N volatilization
 │
 ├── [phosphorus mineralisation]
-│   ├── [if bsn_cc%sol_P_model == 1]  nut_pminrl2
-│   └── [else]                        nut_pminrl
+│   ├── [if bsn_cc%sol_P_model == 1]  <a href="#nut_pminrl2">nut_pminrl2</a>
+│   └── [else]                        <a href="#nut_pminrl">nut_pminrl</a>
 │
 ├── [septic biozone]
-│   └── [if sep%opt != 0 and yrc >= sep%yr and soil_temp > 0]  sep_biozone
+│   └── [if sep%opt != 0 and yrc >= sep%yr and soil_temp > 0]  <a href="#sep_biozone">sep_biozone</a>
 │
 ├── <a href="#pl_community">pl_community</a>              plant community phenology decisions
 ├── <a href="#pl_grow">pl_grow</a>                   daily plant growth (LAI, biomass, root, N/P uptake)
 │
 ├── [pesticide processes]
-│   ├── [if w%precip >= 2.54]  pest_washp      pesticide washoff by rain
-│   ├── pest_pl_up                             pesticide plant uptake
-│   ├── pest_decay                             pesticide degradation
-│   ├── pest_lch                               pesticide leaching
-│   └── pest_soil_tot                          sum pesticide in soil
+│   ├── [if w%precip >= 2.54]  <a href="#pest_washp">pest_washp</a>      pesticide washoff by rain
+│   ├── <a href="#pest_pl_up">pest_pl_up</a>                             pesticide plant uptake
+│   ├── <a href="#pest_decay">pest_decay</a>                             pesticide degradation
+│   ├── <a href="#pest_lch">pest_lch</a>                               pesticide leaching
+│   └── <a href="#pest_soil_tot">pest_soil_tot</a>                          sum pesticide in soil
 │
 ├── [nutrient/pollutant transport with surface runoff]
 │   └── [if surfq > 0 and peak rate > 0 and precip_eff > 0]
-│         ├── pest_enrsb                       enrichment ratio
-│         ├── [if sedyld > 0]  pest_pesty      pesticide with sediment
-│         ├── [if bsn_cc%cswat == 0]  nut_orgn      organic N in runoff (static)
-│         ├── [if bsn_cc%cswat == 1]  nut_orgnc2    organic N in runoff (CENTURY)
-│         └── nut_psed                         P with sediment
+│         ├── <a href="#pest_enrsb">pest_enrsb</a>                       enrichment ratio
+│         ├── [if sedyld > 0]  <a href="#pest_pesty">pest_pesty</a>      pesticide with sediment
+│         ├── [if bsn_cc%cswat == 0]  <a href="#nut_orgn">nut_orgn</a>      organic N in runoff (static)
+│         ├── [if bsn_cc%cswat == 1]  <a href="#nut_orgnc2">nut_orgnc2</a>    organic N in runoff (CENTURY)
+│         └── <a href="#nut_psed">nut_psed</a>                         P with sediment
 │
-├── nut_nrain                 NO3 in rainfall added to soil
-├── nut_nlch                  nitrate leaching
-├── nut_solp                  soluble P movement
+├── <a href="#nut_nrain">nut_nrain</a>                 NO3 in rainfall added to soil
+├── <a href="#nut_nlch">nut_nlch</a>                  nitrate leaching
+├── <a href="#nut_solp">nut_solp</a>                  soluble P movement
 │
 ├── [salt processes]
 │   └── [if cs_db%num_salts > 0]
-│         ├── [if salt_atmo == "y"]  salt_rain       atmospheric deposition
-│         ├── salt_roadsalt                          road salt application
-│         └── salt_lch                               salt leaching
+│         ├── [if salt_atmo == "y"]  <a href="#salt_rain">salt_rain</a>       atmospheric deposition
+│         ├── <a href="#salt_roadsalt">salt_roadsalt</a>                          road salt application
+│         └── <a href="#salt_lch">salt_lch</a>                               salt leaching
 │
 ├── [constituent (cs) processes]
 │   └── [if cs_db%num_cs > 0]
-│         ├── [if cs_atmo == "y"]  cs_rain
-│         └── cs_lch
+│         ├── [if cs_atmo == "y"]  <a href="#cs_rain">cs_rain</a>
+│         └── <a href="#cs_lch">cs_lch</a>
 │
 ├── [pathogen processes]
 │   └── [if cs_db%num_paths > 0]
-│         ├── path_ls_swrouting
-│         ├── path_ls_runoff
-│         └── path_ls_process
+│         ├── <a href="#path_ls_swrouting">path_ls_swrouting</a>
+│         ├── <a href="#path_ls_runoff">path_ls_runoff</a>
+│         └── <a href="#path_ls_process">path_ls_process</a>
 │
 ├── [urban area loadings]
 │   └── [if hru%luse%urb_lu > 0]
-│         ├── [if time%step == 1]  hru_urban    (daily simulation)
+│         ├── [if time%step == 1]  <a href="#hru_urban">hru_urban</a>    (daily simulation)
 │         └── [if time%step > 1]  <a href="#hru_urbanhr">hru_urbanhr</a>  (subdaily simulation)
 │
-├── swr_latsed                sediment in lateral flow
-├── stor_surfstor             lag surface runoff and pollutants
-├── swr_substor               lag subsurface flow and nitrate
+├── <a href="#swr_latsed">swr_latsed</a>                sediment in lateral flow
+├── <a href="#stor_surfstor">stor_surfstor</a>             lag <a href="#surface">surface</a> runoff and pollutants
+├── <a href="#swr_substor">swr_substor</a>               lag subsurface flow and nitrate
 │
 ├── [edge-of-field filter strip]
 │   └── [if lumv%vfsi > 0]
-│         ├── smp_filter
-│         └── [if filterw(j) > 0]  smp_buffer
+│         ├── <a href="#smp_filter">smp_filter</a>
+│         └── [if filterw(j) > 0]  <a href="#smp_buffer">smp_buffer</a>
 │
 ├── [in-field grass waterway]
-│   └── [if lumv%grwat_i == 1]  smp_grass_wway
+│   └── [if lumv%grwat_i == 1]  <a href="#smp_grass_wway">smp_grass_wway</a>
 │
 ├── [fixed BMP efficiency]
-│   └── [if lumv%bmp_flag == 1]  smp_bmpfixed
+│   └── [if lumv%bmp_flag == 1]  <a href="#smp_bmpfixed">smp_bmpfixed</a>
 │
 ├── [saturated buffer — source HRU side]
 │   └── [if sb%hru_src == j]  <a href="#conditions">conditions</a> / <a href="#actions">actions</a>   (tile diversion decision table)
 │
-├── sq_surfst                 store/release surface runoff
-├── swr_subwq                 chl-a, CBOD, dissolved O₂
-├── [if sed/nut concentrations > 0]  hru_urb_bmp
+├── <a href="#sq_surfst">sq_surfst</a>                 store/release <a href="#surface">surface</a> runoff
+├── <a href="#swr_subwq">swr_subwq</a>                 chl-a, CBOD, dissolved O₂
+├── [if sed/nut concentrations > 0]  <a href="#hru_urb_bmp">hru_urb_bmp</a>
 └── <a href="#hru_hyds">hru_hyds</a>                  assemble outflow hydrographs (hd arrays)
 </pre>
 
@@ -586,7 +586,7 @@ mgt_sched(isched)
     ├── case "plnt" ── plant ──────────────────────────────────────────────────
     │   └── [loop ipl = 1, pcom%npl]
     │         [if crop name matches and crop NOT already growing]
-    │         ├── mgt_plantop              initialise plant state variables
+    │         ├── <a href="#mgt_plantop">mgt_plantop</a>              initialise plant state variables
     │         └── [if mgt%op3 > 0 and transplant record found]
     │               ├── <a href="#mgt_transplant">mgt_transplant</a>(itr)
     │               └── log "TRANSPLANT" to mgt.out
@@ -598,23 +598,23 @@ mgt_sched(isched)
     │         [if mgt%op3 == 0 and not yet triggered during monsoon]
     │           reset phuacc=0, gro="y", idorm="n", mseas="n"
     │         [if mgt%op3 == 1]
-    │           set mseas="y"  (begin monsoon season; growth triggered by P/PET in hru_control)
+    │           set mseas="y"  (begin monsoon season; growth triggered by P/PET in <a href="#hru_control">hru_control</a>)
     │
     ├── case "harv" ── harvest only ──────────────────────────────────────────
     │   └── [loop ipl = 1, pcom%npl]
     │         [if gro == "y" and crop matches and biomass > bm_min]
     │         │   select case (harvop_db(iharvop)%typ)
-    │         │   ├── "biomass"  → mgt_harvbiomass(j, ipl, iharvop)
-    │         │   ├── "grain"    → mgt_harvgrain  (j, ipl, iharvop)
-    │         │   ├── "residue"  → mgt_harvresidue(j, harveff, iharvop)
-    │         │   ├── "tree"     → mgt_harvbiomass(j, ipl, iharvop)
+    │         │   ├── "biomass"  → <a href="#mgt_harvbiomass">mgt_harvbiomass</a>(j, ipl, iharvop)
+    │         │   ├── "grain"    → <a href="#mgt_harvgrain">mgt_harvgrain</a>  (j, ipl, iharvop)
+    │         │   ├── "residue"  → <a href="#mgt_harvresidue">mgt_harvresidue</a>(j, harveff, iharvop)
+    │         │   ├── "tree"     → <a href="#mgt_harvbiomass">mgt_harvbiomass</a>(j, ipl, iharvop)
     │         │   ├── "tuber"    → <a href="#mgt_harvtuber">mgt_harvtuber</a>  (j, ipl, iharvop)
     │         │   ├── "peanuts"  → <a href="#mgt_harvtuber">mgt_harvtuber</a>  (j, ipl, iharvop)
-    │         │   ├── "stripper" → mgt_harvbiomass(j, ipl, iharvop)
-    │         │   └── "picker"   → mgt_harvgrain  (j, ipl, iharvop)
+    │         │   ├── "stripper" → <a href="#mgt_harvbiomass">mgt_harvbiomass</a>(j, ipl, iharvop)
+    │         │   └── "picker"   → <a href="#mgt_harvgrain">mgt_harvgrain</a>  (j, ipl, iharvop)
     │         [if crop NOT growing]
     │             select case (harvop_db%typ)
-    │             └── "residue"  → mgt_harvresidue(j, harveff, iharvop)
+    │             └── "residue"  → <a href="#mgt_harvresidue">mgt_harvresidue</a>(j, harveff, iharvop)
     │
     ├── case "kill" ── kill ───────────────────────────────────────────────────
     │   └── [loop ipl = 1, pcom%npl]
@@ -626,50 +626,50 @@ mgt_sched(isched)
     │   └── [loop ipl = 1, pcom%npl]
     │         [if gro == "y" and crop matches and biomass > bm_min]
     │         │   select case (harvop_db(iharvop)%typ)
-    │         │   ├── "biomass"  → mgt_harvbiomass(j, ipl, iharvop)
-    │         │   ├── "grain"    → mgt_harvgrain  (j, ipl, iharvop)
-    │         │   ├── "residue"  → mgt_harvresidue(j, harveff, iharvop)
+    │         │   ├── "biomass"  → <a href="#mgt_harvbiomass">mgt_harvbiomass</a>(j, ipl, iharvop)
+    │         │   ├── "grain"    → <a href="#mgt_harvgrain">mgt_harvgrain</a>  (j, ipl, iharvop)
+    │         │   ├── "residue"  → <a href="#mgt_harvresidue">mgt_harvresidue</a>(j, harveff, iharvop)
     │         │   ├── "tuber"    → <a href="#mgt_harvtuber">mgt_harvtuber</a>  (j, ipl, iharvop)
     │         │   ├── "peanuts"  → <a href="#mgt_harvtuber">mgt_harvtuber</a>  (j, ipl, iharvop)
-    │         │   ├── "stripper" → mgt_harvgrain  (j, ipl, iharvop)
-    │         │   └── "picker"   → mgt_harvgrain  (j, ipl, iharvop)
+    │         │   ├── "stripper" → <a href="#mgt_harvgrain">mgt_harvgrain</a>  (j, ipl, iharvop)
+    │         │   └── "picker"   → <a href="#mgt_harvgrain">mgt_harvgrain</a>  (j, ipl, iharvop)
     │         └── <a href="#mgt_killop">mgt_killop</a>(j, ipl)   always called after harvest portion
     │         [if NOT growing]
     │             select case (harvop_db%typ)
-    │             └── "residue"  → mgt_harvresidue(j, harveff, iharvop)
+    │             └── "residue"  → <a href="#mgt_harvresidue">mgt_harvresidue</a>(j, harveff, iharvop)
     │
     ├── case "till" ── tillage ────────────────────────────────────────────────
     │   ├── [if bsn_cc%cswat == 1]  <a href="#mgt_newtillmix_cswat1">mgt_newtillmix_cswat1</a>(j, 0., idtill)
     │   │     mixes CENTURY pool masses between layers; sets tillage_switch=1,
-    │   │     tillage_days=0 → till_eff=1.6 in cbn_zhang2 for till_eff_days
-    │   └── [if bsn_cc%cswat == 0]  mgt_newtillmix_cswat0(j, 0., idtill)
+    │   │     tillage_days=0 → till_eff=1.6 in <a href="#cbn_zhang2">cbn_zhang2</a> for till_eff_days
+    │   └── [if bsn_cc%cswat == 0]  <a href="#mgt_newtillmix_cswat0">mgt_newtillmix_cswat0</a>(j, 0., idtill)
     │         mixes residue and humus variables between layers
     │
     ├── case "irrm" ── date-scheduled irrigation ─────────────────────────────
     │   └── [no subroutine called]
     │         sets irrig(j)%applied and %runoff from irrop_db
-    │         water enters soil profile via swr_percmain in hru_control
+    │         water enters soil profile via <a href="#swr_percmain">swr_percmain</a> in <a href="#hru_control">hru_control</a>
     │
     ├── case "fert" ── fertilizer application ────────────────────────────────
     │   ├── [if wet(j)%flo > 0]  standing water present (paddy/wetland)
-    │   │   ├── pl_fert_wet(ifrt, frt_kg)         add nutrients to ponded water
-    │   │   ├── salt_fert_wet(j, ifrt, frt_kg)
-    │   │   └── cs_fert_wet(j, ifrt, frt_kg)
+    │   │   ├── <a href="#pl_fert_wet">pl_fert_wet</a>(ifrt, frt_kg)         add nutrients to ponded water
+    │   │   ├── <a href="#salt_fert_wet">salt_fert_wet</a>(j, ifrt, frt_kg)
+    │   │   └── <a href="#cs_fert_wet">cs_fert_wet</a>(j, ifrt, frt_kg)
     │   └── [else]  dry soil
-    │       └── pl_fert(ifrt, frt_kg, ifertop)    add nutrients to soil profile
+    │       └── <a href="#pl_fert">pl_fert</a>(ifrt, frt_kg, ifertop)    add nutrients to soil profile
     │
     ├── case "manu" ── manure application ────────────────────────────────────
-    │   ├── pl_manure(ifrt, frt_kg, ifertop)      add organic/mineral N and P
-    │   ├── salt_fert(j, ifrt, frt_kg, ifertop)
-    │   └── cs_fert(j, ifrt, frt_kg, ifertop)
+    │   ├── <a href="#pl_manure">pl_manure</a>(ifrt, frt_kg, ifertop)      add organic/mineral N and P
+    │   ├── <a href="#salt_fert">salt_fert</a>(j, ifrt, frt_kg, ifertop)
+    │   └── <a href="#cs_fert">cs_fert</a>(j, ifrt, frt_kg, ifertop)
     │
     ├── case "pest" ── pesticide application ─────────────────────────────────
-    │   └── pest_apply(j, ipest, pest_kg, ipestop)
+    │   └── <a href="#pest_apply">pest_apply</a>(j, ipest, pest_kg, ipestop)
     │
     ├── case "graz" ── grazing initiation ────────────────────────────────────
     │   └── [no subroutine called]
     │         sets igrz(j)=1, grz_days(j)=Int(mgt%op3)
-    │         pl_graze is called per-day in hru_control while igrz(j)==1
+    │         <a href="#pl_graze">pl_graze</a> is called per-day in <a href="#hru_control">hru_control</a> while igrz(j)==1
     │         igrz resets to 0 after grz_days days
     │
     ├── case "cnup" ── curve number update ───────────────────────────────────
@@ -682,18 +682,18 @@ mgt_sched(isched)
     ├── case "swep" ── street sweeping ────────────────────────────────────────
     │   └── [no subroutine called]
     │         sets sweepop parameters (sweepeff, fr_curb)
-    │         used in hru_urban / hru_urbanhr on the same day
+    │         used in <a href="#hru_urban">hru_urban</a> / <a href="#hru_urbanhr">hru_urbanhr</a> on the same day
     │
     ├── case "dwm" ── drainage water management ──────────────────────────────
     │   └── [no subroutine called]
     │         sets hru%lumv%sdr_dep and %ldrain
     │         ldrain controls which soil layer is the tile drain target
-    │         used in swr_percmain
+    │         used in <a href="#swr_percmain">swr_percmain</a>
     │
     ├── case "weir" ── weir height adjustment ────────────────────────────────
     │   └── [no subroutine called]
     │         sets wet_ob(j)%weir_hgt, %pvol, %iweir
-    │         new weir height takes effect in wetland_control next call
+    │         new weir height takes effect in <a href="#wetland_control">wetland_control</a> next call
     │
     ├── case "irrp" ── paddy continuous irrigation ────────────────────────────
     │   └── [no subroutine called]
@@ -704,7 +704,7 @@ mgt_sched(isched)
     │         │     paddy_irr=1; irr_hmax=mgt%op3
     │         └── [if mgt%op3 == 0]  stop paddy irrigation
     │               paddy_irr=0; irr_hmin=0
-    │         wet_irrp called daily in hru_control when depth &lt; irr_hmin
+    │         <a href="#wet_irrp">wet_irrp</a> called daily in <a href="#hru_control">hru_control</a> when depth &lt; irr_hmin
     │
     ├── case "irpm" ── date-scheduled rice field irrigation ───────────────────
     │   └── [no subroutine called]
@@ -715,16 +715,16 @@ mgt_sched(isched)
     │   ├── [no subroutine for soil adjustment]
     │   │     sets hru%wet_hc from pudl_db; sets wet%sed from pudl_db%sed
     │   └── tillage mixing
-    │         ├── [if wet_ob(j)%depth > 0.001]   mgt_newtillmix_wet(j, idtill)
+    │         ├── [if wet_ob(j)%depth > 0.001]   <a href="#mgt_newtillmix_wet">mgt_newtillmix_wet</a>(j, idtill)
     │         ├── [else if bsn_cc%cswat == 1]    <a href="#mgt_newtillmix_cswat1">mgt_newtillmix_cswat1</a>(j, 0., idtill)
-    │         └── [else if bsn_cc%cswat == 0]    mgt_newtillmix_cswat0(j, 0., idtill)
+    │         └── [else if bsn_cc%cswat == 0]    <a href="#mgt_newtillmix_cswat0">mgt_newtillmix_cswat0</a>(j, 0., idtill)
     │
     └── case "skip" ── skip a simulation year ────────────────────────────────
           └── [no subroutine called]
                 sets yr_skip(j) = 1
-                mgt_operatn exits immediately on yr_skip
-                hru_control skips mgt_operatn for the rest of this calendar year
-                yr_skip reset to 0 at year end in time_control
+                <a href="#mgt_operatn">mgt_operatn</a> exits immediately on yr_skip
+                <a href="#hru_control">hru_control</a> skips <a href="#mgt_operatn">mgt_operatn</a> for the rest of this calendar year
+                yr_skip reset to 0 at year end in <a href="#time_control">time_control</a>
 </pre>
 
 ---
@@ -747,7 +747,7 @@ cbn_zhang2
     │   ├── cdg      temperature scalar  fcgd(stemp(k))
     │   ├── ox       oxygen/depth scalar  (reduced below ~30 cm)
     │   ├── till_eff tillage disturbance scalar
-    │   │     = 1.6 for till_eff_days days after mgt_newtillmix_cswat1
+    │   │     = 1.6 for till_eff_days days after <a href="#mgt_newtillmix_cswat1">mgt_newtillmix_cswat1</a>
     │   │     = 1.0 otherwise
     │   └── cs = min(15,  sqrt(cdg × sut) × 0.9 × ox × till_eff)
     │         composite rate modifier applied to all transformations
@@ -765,7 +765,7 @@ cbn_zhang2
     │   │     → passive hp (abp) + slow hs (abs) + CO2 (abco2)
     │   ├── hs (slow humus)
     │   │     → microb (asx) + passive hp (asp) + CO2 (asco2)
-    │   └── hp (passive humus, k > 1 only — zero in surface layer)
+    │   └── hp (passive humus, k > 1 only — zero in <a href="#surface">surface</a> layer)
     │         → microb (apx) + CO2 (apco2)
     │
     ├── N supply–demand balance → reduction factor (reduc)
@@ -776,7 +776,7 @@ cbn_zhang2
     ├── Pool mass updates
     │   microb(k)%c, hs(k)%c, hp(k)%c, str(k)%c, meta(k)%c, lig(k)%c, nonlig(k)%c
     │
-    ├── nut_np_flow              N flux accounting for each pool-to-pool transfer
+    ├── <a href="#nut_np_flow">nut_np_flow</a>              N flux accounting for each pool-to-pool transfer
     │   → updates meta%n, str%n, microb%n, hs%n, hp%n, NO3, NH4
     │
     ├── CO2 respiration summed into hsc_d(j)%rsp_c  (soil respiration output)
@@ -890,13 +890,13 @@ Called from `main` during INITIALIZATION; reads all measured weather time series
 
 <pre>
 proc_date_time
-├── cli_petmeas          read PET measurement files
-├── cli_pmeas            read precipitation measurement files
-├── cli_tmeas            read temperature measurement files
-├── cli_smeas            read solar radiation measurement files
-├── cli_hmeas            read relative humidity measurement files
-├── cli_wmeas            read wind speed measurement files
-└── cli_wgnread          read weather generator parameter files
+├── <a href="#cli_petmeas">cli_petmeas</a>          read PET measurement files
+├── <a href="#cli_pmeas">cli_pmeas</a>            read precipitation measurement files
+├── <a href="#cli_tmeas">cli_tmeas</a>            read temperature measurement files
+├── <a href="#cli_smeas">cli_smeas</a>            read solar radiation measurement files
+├── <a href="#cli_hmeas">cli_hmeas</a>            read relative humidity measurement files
+├── <a href="#cli_wmeas">cli_wmeas</a>            read wind speed measurement files
+└── <a href="#cli_wgnread">cli_wgnread</a>          read weather generator parameter files
 </pre>
 
 ---
@@ -911,10 +911,10 @@ Reads routing network configuration files and builds the object connectivity gra
 <pre>
 hyd_connect
 │
-├── [if sp_ob%hru > 0]      hyd_read_connect(hru.con)
-├── [if sp_ob%hru_lte > 0]  hyd_read_connect(hru_lte.con)
+├── [if sp_ob%hru > 0]      <a href="#hyd_read_connect">hyd_read_connect</a>(hru.con)
+├── [if sp_ob%hru_lte > 0]  <a href="#hyd_read_connect">hyd_read_connect</a>(hru_lte.con)
 ├── [if sp_ob%ru > 0]
-│   ├── hyd_read_connect(rout_unit.con)
+│   ├── <a href="#hyd_read_connect">hyd_read_connect</a>(rout_unit.con)
 │   ├── <a href="#ru_read_elements">ru_read</a>              read routing unit definitions
 │   └── <a href="#ru_read_elements">ru_read_elements</a>     map HRUs/elements to routing units
 ├── [if sp_ob%aqu > 0]
@@ -922,7 +922,7 @@ hyd_connect
 │   └── <a href="#aqu2d_read">aqu2d_read</a>           read 2-D aquifer connections
 ├── [if sp_ob%chan > 0]
 │   ├── <a href="#hyd_read_connect">hyd_read_connect</a>(channel.con)
-│   └── overbank_read        read overbank floodplain linkages
+│   └── <a href="#overbank_read">overbank_read</a>        read overbank floodplain linkages
 ├── [if sp_ob%res > 0]      <a href="#hyd_read_connect">hyd_read_connect</a>(reservoir.con)
 ├── [if sp_ob%recall > 0]   <a href="#hyd_read_connect">hyd_read_connect</a>(recall.con)
 ├── [if sp_ob%exco > 0]     <a href="#hyd_read_connect">hyd_read_connect</a>(exco.con)
@@ -932,7 +932,7 @@ hyd_connect
 ├── [if sp_ob%outlet > 0]   <a href="#hyd_read_connect">hyd_read_connect</a>(outlet.con)
 ├── [if sp_ob%chandeg > 0]  <a href="#hyd_read_connect">hyd_read_connect</a>(chandeg.con)
 └── [if sp_ob%gwflow > 0]
-    ├── gwflow_chan_read      read gwflow–channel cell linkage
+    ├── <a href="#gwflow_chan_read">gwflow_chan_read</a>      read gwflow–channel cell linkage
     ├── <a href="#hyd_read_connect">hyd_read_connect</a>(gwflow.con)
     └── <a href="#gwflow_read">gwflow_read</a>          read gwflow spatial parameters
 </pre>
@@ -948,7 +948,7 @@ Called from `main` after `hyd_connect`; loops over all recall objects and loads 
 
 <pre>
 recalldb_read
-└── [loop i = 1, sp_ob%recall]  recall_read(i)
+└── [loop i = 1, sp_ob%recall]  <a href="#recall_read">recall_read</a>(i)
 </pre>
 
 ---
@@ -962,11 +962,11 @@ Called from `main`; reads export-coefficient object parameters.
 
 <pre>
 exco_db_read
-├── exco_read_om
-├── [if cs_db%num_pests > 0]   exco_read_pest
-├── [if cs_db%num_paths > 0]   exco_read_path
-├── [if cs_db%num_hmet > 0]    exco_read_hmet
-└── [if cs_db%num_salts > 0]   exco_read_salt
+├── <a href="#exco_read_om">exco_read_om</a>
+├── [if cs_db%num_pests > 0]   <a href="#exco_read_pest">exco_read_pest</a>
+├── [if cs_db%num_paths > 0]   <a href="#exco_read_path">exco_read_path</a>
+├── [if cs_db%num_hmet > 0]    <a href="#exco_read_hmet">exco_read_hmet</a>
+└── [if cs_db%num_salts > 0]   <a href="#exco_read_salt">exco_read_salt</a>
 </pre>
 
 ---
@@ -980,11 +980,11 @@ Called from `main` (and conditionally from `hyd_connect` when `sp_ob%dr > 0`); r
 
 <pre>
 dr_db_read
-├── dr_read_om
-├── [if cs_db%num_pests > 0]   dr_read_pest
-├── [if cs_db%num_paths > 0]   dr_path_read
-├── [if cs_db%num_hmet > 0]    dr_read_hmet
-└── [if cs_db%num_salts > 0]   dr_read_salt
+├── <a href="#dr_read_om">dr_read_om</a>
+├── [if cs_db%num_pests > 0]   <a href="#dr_read_pest">dr_read_pest</a>
+├── [if cs_db%num_paths > 0]   <a href="#dr_path_read">dr_path_read</a>
+├── [if cs_db%num_hmet > 0]    <a href="#dr_read_hmet">dr_read_hmet</a>
+└── [if cs_db%num_salts > 0]   <a href="#dr_read_salt">dr_read_salt</a>
 </pre>
 
 ---
@@ -999,30 +999,30 @@ Called daily from `time_control` at the start of each day loop. Reads measured d
 <pre>
 climate_control
 │
-├── cli_precip_control (1)      read/generate today's precipitation for all gages
+├── <a href="#cli_precip_control">cli_precip_control</a> (1)      read/generate today's precipitation for all gages
 │
 └── [loop iwst = 1, db_mx%wst]  per weather station:
-    ├── cli_weatgn(iwgn)         update WGN state for this station/month
+    ├── <a href="#cli_weatgn">cli_weatgn</a>(iwgn)         update WGN state for this station/month
     ├── [temperature]
-    │   ├── [if simulated]    cli_tgen(iwgn)      generate Tmax, Tmin
-    │   └── [if measured]     read tmp(:)%ts; cli_tgen on missing/out-of-bounds
-    │                         cli_bounds_check (tmp bounds)
+    │   ├── [if simulated]    <a href="#cli_tgen">cli_tgen</a>(iwgn)      generate Tmax, Tmin
+    │   └── [if measured]     read tmp(:)%ts; <a href="#cli_tgen">cli_tgen</a> on missing/out-of-bounds
+    │                         <a href="#cli_bounds_check">cli_bounds_check</a> (tmp bounds)
     ├── [solar radiation]
-    │   ├── cli_clgen(iwgn)       update sub-daily storm parameters
-    │   ├── [if simulated]    cli_slrgen(iwgn)    generate solar radiation
-    │   └── [if measured]     read slr(:)%ts; cli_slrgen on missing
-    │                         cli_bounds_check (slr bounds)
+    │   ├── <a href="#cli_clgen">cli_clgen</a>(iwgn)       update sub-daily storm parameters
+    │   ├── [if simulated]    <a href="#cli_slrgen">cli_slrgen</a>(iwgn)    generate solar radiation
+    │   └── [if measured]     read slr(:)%ts; <a href="#cli_slrgen">cli_slrgen</a> on missing
+    │                         <a href="#cli_bounds_check">cli_bounds_check</a> (slr bounds)
     ├── [relative humidity]
-    │   ├── [if simulated]    cli_rhgen(iwgn)     generate relative humidity
-    │   └── [if measured]     read hmd(:)%ts; cli_rhgen on missing
-    │                         cli_bounds_check (hmd bounds)
+    │   ├── [if simulated]    <a href="#cli_rhgen">cli_rhgen</a>(iwgn)     generate relative humidity
+    │   └── [if measured]     read hmd(:)%ts; <a href="#cli_rhgen">cli_rhgen</a> on missing
+    │                         <a href="#cli_bounds_check">cli_bounds_check</a> (hmd bounds)
     ├── [wind speed]
-    │   ├── [if simulated]    cli_wndgen(iwgn)    generate wind speed
-    │   └── [if measured]     read wnd(:)%ts; cli_wndgen on missing
-    │                         cli_bounds_check (wnd bounds)
+    │   ├── [if simulated]    <a href="#cli_wndgen">cli_wndgen</a>(iwgn)    generate wind speed
+    │   └── [if measured]     read wnd(:)%ts; <a href="#cli_wndgen">cli_wndgen</a> on missing
+    │                         <a href="#cli_bounds_check">cli_bounds_check</a> (wnd bounds)
     ├── [PET — if measured gage configured]
     │   └── read petm(:)%ts; Hargreaves method as fallback on missing values
-    │       cli_bounds_check (petm bounds)
+    │       <a href="#cli_bounds_check">cli_bounds_check</a> (petm bounds)
     ├── [CMI / 30-day P–PET rolling sum — inline, no sub-call]
     ├── [half-hour rainfall fraction — inline via Atri() function]
     └── [climate change adjustments — inline scaling of precip, T, solrad, rhum]
@@ -1047,7 +1047,7 @@ Source: `cal_parmchg_read.f90`
 
 <pre>
 cal_parmchg_read
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1063,7 +1063,7 @@ Source: `calhard_control.f90`
 
 <pre>
 calhard_control
-├── re_initialize                       reset basin soil water for next simulation
+├── <a href="#re_initialize">re_initialize</a>                       reset basin soil water for next simulation
 └── <a href="#time_control">time_control</a>                        this subroutine contains the loops governing the modeling of processes
 </pre>
 
@@ -1078,7 +1078,7 @@ Source: `hru_lte_read.f90`
 
 <pre>
 hru_lte_read
-└── ascrv                               this subroutine computes shape parameters x5 and x6 for the S curve
+└── <a href="#ascrv">ascrv</a>                               this subroutine computes shape parameters x5 and x6 for the S curve
 </pre>
 
 ---
@@ -1094,7 +1094,7 @@ Source: `lsu_read_elements.f90`
 
 <pre>
 lsu_read_elements
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1110,18 +1110,18 @@ Source: `proc_res.f90`
 
 <pre>
 proc_res
-├── res_allo
+├── <a href="#res_allo">res_allo</a>
 ├── <a href="#res_initial">res_initial</a>                         set initial volumes for res and hru types and convert units
-├── res_objects                         set reservoir object numbers for reservoir objects
-├── res_read                            read reservoir.res
-├── res_read_conds
-├── res_read_csdb                       this subroutine reads reservoir water quality parameters for constituents
-├── res_read_hyd
-├── res_read_init                       read init
-├── res_read_nut                        this subroutine reads data from the lake water quality input file (.lwq).
-├── res_read_salt_cs                    read reservoir.res_cs
-├── res_read_saltdb                     this subroutine reads reservoir water quality parameters for salt ions
-└── res_read_sed                        this subroutine reads data from the lake water quality input file (.lwq).
+├── <a href="#res_objects">res_objects</a>                         set reservoir object numbers for reservoir objects
+├── <a href="#res_read">res_read</a>                            read reservoir.res
+├── <a href="#res_read_conds">res_read_conds</a>
+├── <a href="#res_read_csdb">res_read_csdb</a>                       this subroutine reads reservoir water quality parameters for constituents
+├── <a href="#res_read_hyd">res_read_hyd</a>
+├── <a href="#res_read_init">res_read_init</a>                       read init
+├── <a href="#res_read_nut">res_read_nut</a>                        this subroutine reads data from the lake water quality input file (.lwq).
+├── <a href="#res_read_salt_cs">res_read_salt_cs</a>                    read reservoir.res_cs
+├── <a href="#res_read_saltdb">res_read_saltdb</a>                     this subroutine reads reservoir water quality parameters for salt ions
+└── <a href="#res_read_sed">res_read_sed</a>                        this subroutine reads data from the lake water quality input file (.lwq).
 </pre>
 
 ---
@@ -1137,7 +1137,7 @@ Source: `unit_hyd_ru_hru.f90`
 
 <pre>
 unit_hyd_ru_hru
-└── unit_hyd                            This subroutine computes variables related to the watershed hydrology:
+└── <a href="#unit_hyd">unit_hyd</a>                            This subroutine computes variables related to the watershed hydrology:
 </pre>
 
 ---
@@ -1154,7 +1154,7 @@ Source: `aqu_1d_control.f90`
 <pre>
 aqu_1d_control
 ├── <a href="#cs_rctn_aqu">cs_rctn_aqu</a>                         this subroutine updates constituent concentrations based on chemical reactions in groundwater
-├── cs_sorb_aqu                         this subroutine updates constituent concentrations based on sorption in the aquifer
+├── <a href="#cs_sorb_aqu">cs_sorb_aqu</a>                         this subroutine updates constituent concentrations based on sorption in the aquifer
 └── <a href="#salt_chem_aqu">salt_chem_aqu</a>                       this subroutine calculates salt ion concentrations based on equilibrium chemical reactions, for an HRU
 </pre>
 
@@ -1171,18 +1171,18 @@ Source: `gwflow_simulate.f90`
 
 <pre>
 gwflow_simulate
-├── gwflow_canal_div                    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
-├── gwflow_canal_ext                    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
-├── gwflow_gwet                         this subroutine determines the volume of groundwater that is removed from the
+├── <a href="#gwflow_canal_div">gwflow_canal_div</a>                    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
+├── <a href="#gwflow_canal_ext">gwflow_canal_ext</a>                    this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
+├── <a href="#gwflow_gwet">gwflow_gwet</a>                         this subroutine determines the volume of groundwater that is removed from the
 ├── <a href="#gwflow_lateral">gwflow_lateral</a>                      this subroutine calculates lateral groundwater flow between adjacent cells
 ├── <a href="#gwflow_output_aa">gwflow_output_aa</a>                    this subroutine writes average annual gwflow output in SWAT+ long format:
-├── gwflow_output_day                   this subroutine computes and writes daily gwflow output:
-├── gwflow_output_mon                   writes monthly gwflow output
-├── gwflow_output_yr                    writes yearly gwflow output
-├── gwflow_phreatophyte                 this subroutine calculates the water removed from the aquifer via phreatophyte extraction
-├── gwflow_pond                         this subroutine calculates the volume of seepage from recharge ponds;
-├── gwflow_pump_ext                     this subroutine determines the volume of groundwater that is extracted
-└── gwflow_rech                         this subroutine determines the volume of groundwater that is added to the aquifer via recharge (soil percolation)
+├── <a href="#gwflow_output_day">gwflow_output_day</a>                   this subroutine computes and writes daily gwflow output:
+├── <a href="#gwflow_output_mon">gwflow_output_mon</a>                   writes monthly gwflow output
+├── <a href="#gwflow_output_yr">gwflow_output_yr</a>                    writes yearly gwflow output
+├── <a href="#gwflow_phreatophyte">gwflow_phreatophyte</a>                 this subroutine calculates the water removed from the aquifer via phreatophyte extraction
+├── <a href="#gwflow_pond">gwflow_pond</a>                         this subroutine calculates the volume of seepage from recharge ponds;
+├── <a href="#gwflow_pump_ext">gwflow_pump_ext</a>                     this subroutine determines the volume of groundwater that is extracted
+└── <a href="#gwflow_rech">gwflow_rech</a>                         this subroutine determines the volume of groundwater that is added to the aquifer via recharge (soil percolation)
 </pre>
 
 ---
@@ -1197,7 +1197,7 @@ Source: `hru_lte_control.f90`
 <pre>
 hru_lte_control
 ├── <a href="#actions">actions</a>
-└── <a href="#conditions">conditions</a>                          current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
+└── <a href="#conditions">conditions</a>                          current <a href="#conditions">conditions</a> include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
 </pre>
 
 ---
@@ -1213,7 +1213,7 @@ Source: `hru_output.f90`
 
 <pre>
 hru_output
-└── soil_nutcarb_write                  this subroutine writes soil carbon output.
+└── <a href="#soil_nutcarb_write">soil_nutcarb_write</a>                  this subroutine writes soil carbon output.
 </pre>
 
 ---
@@ -1227,16 +1227,16 @@ Source: `res_control.f90`
 
 <pre>
 res_control
-├── [if bsn_cc%lapse == 1]  cli_lapse   lapse-rate weather adjustment for reservoir elevation
-├── <a href="#conditions">conditions</a>                          current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
-├── gwflow_reservoir                    this subroutine calculates the water exchange volume between the reservoir and the connected grid cells
-├── res_cs                              this subroutine computes the reservoir constituent mass balance
-├── res_hydro                           Jose T 2025 |  Doell method
-├── res_nutrient                        if reservoir volume less than 1 m^3, set all nutrient levels to
-├── res_pest                            this subroutine computes the lake hydrologic pesticide balance.
+├── [if bsn_cc%lapse == 1]  <a href="#cli_lapse">cli_lapse</a>   lapse-rate weather adjustment for reservoir elevation
+├── <a href="#conditions">conditions</a>                          current <a href="#conditions">conditions</a> include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
+├── <a href="#gwflow_reservoir">gwflow_reservoir</a>                    this subroutine calculates the water exchange volume between the reservoir and the connected grid cells
+├── <a href="#res_cs">res_cs</a>                              this subroutine computes the reservoir constituent mass balance
+├── <a href="#res_hydro">res_hydro</a>                           Jose T 2025 |  Doell method
+├── <a href="#res_nutrient">res_nutrient</a>                        if reservoir volume less than 1 m^3, set all nutrient levels to
+├── <a href="#res_pest">res_pest</a>                            this subroutine computes the lake hydrologic pesticide balance.
 ├── <a href="#res_rel_conds">res_rel_conds</a>                       ictbl = 1     nbs
-├── res_salt                            this subroutine computes the reservoir salt ion balance
-├── res_sediment                        reservoir is empty
+├── <a href="#res_salt">res_salt</a>                            this subroutine computes the reservoir salt ion balance
+├── <a href="#res_sediment">res_sediment</a>                        reservoir is empty
 │
 [+ 1 calls to external/intrinsic routines not in src/]
 </pre>
@@ -1254,7 +1254,7 @@ Source: `ru_control.f90`
 
 <pre>
 ru_control
-└── flow_hyd_ru_hru                     this subroutine determines the subdaily flow hydrographs for hru's, ru's and inflow fractions
+└── <a href="#flow_hyd_ru_hru">flow_hyd_ru_hru</a>                     this subroutine determines the subdaily flow hydrographs for hru's, ru's and inflow fractions
 </pre>
 
 ---
@@ -1270,17 +1270,17 @@ Source: `sd_channel_control3.f90`
 
 <pre>
 sd_channel_control3
-├── [if bsn_cc%lapse == 1]  cli_lapse   lapse-rate weather adjustment
-├── wallo_control               water allocation for channel objects
+├── [if bsn_cc%lapse == 1]  <a href="#cli_lapse">cli_lapse</a>   lapse-rate weather adjustment
+├── <a href="#wallo_control">wallo_control</a>               water allocation for channel objects
 ├── <a href="#ch_rtmusk">ch_rtmusk</a>                           this subroutine routes a daily flow through a reach using the
-├── ch_rtpath                           this subroutine routes bacteria through the stream network
-├── ch_rtpest                           this subroutine computes the daily stream pesticide balance
-├── ch_temp                             parameters for temperature model
+├── <a href="#ch_rtpath">ch_rtpath</a>                           this subroutine routes bacteria through the stream network
+├── <a href="#ch_rtpest">ch_rtpest</a>                           this subroutine computes the daily stream pesticide balance
+├── <a href="#ch_temp">ch_temp</a>                             parameters for temperature model
 ├── <a href="#ch_watqual4">ch_watqual4</a>                         this subroutine performs in-stream nutrient transformations and water
-├── gwflow_canal                        this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
-├── gwflow_channel_exch                 this subroutine calculates the water exchange volume between the channel and the connected grid cells
-├── gwflow_satexcess                    this subroutine calculates the groundwater volume that enters the channel via saturation excess flow
-├── gwflow_tile                         this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
+├── <a href="#gwflow_canal">gwflow_canal</a>                        this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
+├── <a href="#gwflow_channel_exch">gwflow_channel_exch</a>                 this subroutine calculates the water exchange volume between the channel and the connected grid cells
+├── <a href="#gwflow_satexcess">gwflow_satexcess</a>                    this subroutine calculates the groundwater volume that enters the channel via saturation excess flow
+├── <a href="#gwflow_tile">gwflow_tile</a>                         this subroutine calculates the water exchange volume between irrigation canals and connected grid cells
 ├── <a href="#rcurv_interp_flo">rcurv_interp_flo</a>                    this subroutine interpolates between points on a rating curve given flow rate
 └── <a href="#sd_channel_sediment3">sd_channel_sediment3</a>
 </pre>
@@ -1298,7 +1298,7 @@ Source: `aqu2d_read.f90`
 
 <pre>
 aqu2d_read
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1330,7 +1330,7 @@ Source: `hyd_read_connect.f90`
 
 <pre>
 hyd_read_connect
-└── search
+└── <a href="#search">search</a>
 </pre>
 
 ---
@@ -1346,7 +1346,7 @@ Source: `ru_read_elements.f90`
 
 <pre>
 ru_read_elements
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1362,7 +1362,7 @@ Source: `co2_read.f90`
 
 <pre>
 co2_read
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1378,7 +1378,7 @@ Source: `readcio_read.f90`
 
 <pre>
 readcio_read
-└── init_output_path                    Detect OS - Runtime check is more robust if preprocessor fails
+└── <a href="#init_output_path">init_output_path</a>                    Detect OS - Runtime check is more robust if preprocessor fails
 </pre>
 
 ---
@@ -1394,7 +1394,7 @@ Source: `time_read.f90`
 
 <pre>
 time_read
-└── xmon                                this subroutine determines the month, given the julian date and leap
+└── <a href="#xmon">xmon</a>                                this subroutine determines the month, given the julian date and leap
 </pre>
 
 ---
@@ -1408,7 +1408,7 @@ Source: `aqu_read_elements.f90`
 
 <pre>
 aqu_read_elements
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1436,7 +1436,7 @@ Source: `ch_read_elements.f90`
 
 <pre>
 ch_read_elements
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1450,7 +1450,7 @@ Source: `pl_read_parms_cal.f90`
 
 <pre>
 pl_read_parms_cal
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1464,7 +1464,7 @@ Source: `pl_read_regions_cal.f90`
 
 <pre>
 pl_read_regions_cal
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1478,7 +1478,7 @@ Source: `rec_read_elements.f90`
 
 <pre>
 rec_read_elements
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1492,7 +1492,7 @@ Source: `res_read_elements.f90`
 
 <pre>
 res_read_elements
-└── define_unit_elements                save the object number of each defining unit
+└── <a href="#define_unit_elements">define_unit_elements</a>                save the object number of each defining unit
 </pre>
 
 ---
@@ -1506,9 +1506,9 @@ Source: `sd_hydsed_init.f90`
 
 <pre>
 sd_hydsed_init
-├── hyd_convert_conc_to_mass            m3/s to m3
+├── <a href="#hyd_convert_conc_to_mass">hyd_convert_conc_to_mass</a>            m3/s to m3
 ├── <a href="#rcurv_interp_dep">rcurv_interp_dep</a>                    this subroutine interpolates between points on a rating curve given flow rate
-└── sd_rating_curve                     use hydrograph_module
+└── <a href="#sd_rating_curve">sd_rating_curve</a>                     use hydrograph_module
 </pre>
 
 ---
@@ -1524,7 +1524,7 @@ Source: `cli_tmeas.f90`
 
 <pre>
 cli_tmeas
-└── xmon                                this subroutine determines the month, given the julian date and leap
+└── <a href="#xmon">xmon</a>                                this subroutine determines the month, given the julian date and leap
 </pre>
 
 ---
@@ -1540,8 +1540,8 @@ Source: `cli_wgnread.f90`
 
 <pre>
 cli_wgnread
-├── cli_initwgn                         this subroutine initializes the HRU weather generator parameters from the
-└── gcycl                               This subroutine initializes the random number seeds. If the user
+├── <a href="#cli_initwgn">cli_initwgn</a>                         this subroutine initializes the HRU weather generator parameters from the
+└── <a href="#gcycl">gcycl</a>                               This subroutine initializes the random number seeds. If the user
 </pre>
 
 ---
@@ -1557,7 +1557,7 @@ Source: `mgt_read_mgtops.f90`
 
 <pre>
 mgt_read_mgtops
-└── read_mgtops
+└── <a href="#read_mgtops">read_mgtops</a>
 </pre>
 
 ---
@@ -1573,7 +1573,7 @@ Source: `plantparm_init.f90`
 
 <pre>
 plantparm_init
-└── ascrv                               this subroutine computes shape parameters x5 and x6 for the S curve
+└── <a href="#ascrv">ascrv</a>                               this subroutine computes shape parameters x5 and x6 for the S curve
 </pre>
 
 ---
@@ -1603,7 +1603,7 @@ Source: `hru_lum_init_all.f90`
 
 <pre>
 hru_lum_init_all
-└── hru_lum_init                        assign land use pointers for the hru
+└── <a href="#hru_lum_init">hru_lum_init</a>                        assign land use pointers for the hru
 </pre>
 
 ---
@@ -1649,9 +1649,9 @@ Source: `soils_init.f90`
 
 <pre>
 soils_init
-├── soil_phys_init                      this subroutine initializes soil physical properties
-├── soils_test_adjust                   Adjust the input soil values based input soil test values.
-└── layersplit                          split soil layer for thickness adjustments (called twice)
+├── <a href="#soil_phys_init">soil_phys_init</a>                      this subroutine initializes soil physical properties
+├── <a href="#soils_test_adjust">soils_test_adjust</a>                   Adjust the input soil values based input soil test values.
+└── <a href="#layersplit">layersplit</a>                          split soil layer for thickness adjustments (called twice)
 </pre>
 
 ---
@@ -1683,7 +1683,7 @@ Source: `structure_set_parms.f90`
 
 <pre>
 structure_set_parms
-└── ttcoef_wway                         this subroutine computes travel time coefficients for routing
+└── <a href="#ttcoef_wway">ttcoef_wway</a>                         this subroutine computes travel time coefficients for routing
 </pre>
 
 ---
@@ -1699,7 +1699,7 @@ Source: `topohyd_init.f90`
 
 <pre>
 topohyd_init
-└── ascrv                               this subroutine computes shape parameters x5 and x6 for the S curve
+└── <a href="#ascrv">ascrv</a>                               this subroutine computes shape parameters x5 and x6 for the S curve
 </pre>
 
 ---
@@ -1715,7 +1715,7 @@ Source: `header_aquifer.f90`
 
 <pre>
 header_aquifer
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1731,7 +1731,7 @@ Source: `header_channel.f90`
 
 <pre>
 header_channel
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1745,7 +1745,7 @@ Source: `header_const.f90`
 
 <pre>
 header_const
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1761,7 +1761,7 @@ Source: `header_hyd.f90`
 
 <pre>
 header_hyd
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1777,7 +1777,7 @@ Source: `header_lu_change.f90`
 
 <pre>
 header_lu_change
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1793,7 +1793,7 @@ Source: `header_mgt.f90`
 
 <pre>
 header_mgt
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1809,7 +1809,7 @@ Source: `header_path.f90`
 
 <pre>
 header_path
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1825,7 +1825,7 @@ Source: `header_pest.f90`
 
 <pre>
 header_pest
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1841,7 +1841,7 @@ Source: `header_reservoir.f90`
 
 <pre>
 header_reservoir
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1855,7 +1855,7 @@ Source: `header_salt.f90`
 
 <pre>
 header_salt
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1871,7 +1871,7 @@ Source: `header_sd_channel.f90`
 
 <pre>
 header_sd_channel
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1887,7 +1887,7 @@ Source: `header_water_allocation.f90`
 
 <pre>
 header_water_allocation
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1903,7 +1903,7 @@ Source: `header_wetland.f90`
 
 <pre>
 header_wetland
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1917,7 +1917,7 @@ Source: `header_write.f90`
 
 <pre>
 header_write
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1933,7 +1933,7 @@ Source: `header_yield.f90`
 
 <pre>
 header_yield
-└── open_output_file                    Get full path
+└── <a href="#open_output_file">open_output_file</a>                    Get full path
 </pre>
 
 ---
@@ -1949,8 +1949,8 @@ Source: `output_landscape_init.f90`
 
 <pre>
 output_landscape_init
-├── open_output_file                    Get full path
-└── soil_nutcarb_write                  this subroutine writes soil carbon output.
+├── <a href="#open_output_file">open_output_file</a>                    Get full path
+└── <a href="#soil_nutcarb_write">soil_nutcarb_write</a>                  this subroutine writes soil carbon output.
 </pre>
 
 ---
@@ -1966,7 +1966,7 @@ Source: `res_initial.f90`
 
 <pre>
 res_initial
-└── res_convert_mass
+└── <a href="#res_convert_mass">res_convert_mass</a>
 </pre>
 
 ---
@@ -1981,29 +1981,29 @@ Source: `actions.f90`
 <pre>
 actions
 ├── <a href="#cn2_init">cn2_init</a>                            assign cn2
-├── cs_fert                             this subroutine adds constituent fertilizer to the soil profile
-├── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture conditions
-├── hru_fr_change                       read data for each element in all routing units
-├── hru_lum_init                        assign land use pointers for the hru
-├── mgt_harvbiomass                     this subroutine performs the harvest operation for above ground biomass (no kill)
-├── mgt_harvgrain                       this subroutine performs the harvest grain only operation
-├── mgt_harvresidue                     this subroutine performs the harvest residue operation
+├── <a href="#cs_fert">cs_fert</a>                             this subroutine adds constituent fertilizer to the soil profile
+├── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture <a href="#conditions">conditions</a>
+├── <a href="#hru_fr_change">hru_fr_change</a>                       read data for each element in all routing units
+├── <a href="#hru_lum_init">hru_lum_init</a>                        assign land use pointers for the hru
+├── <a href="#mgt_harvbiomass">mgt_harvbiomass</a>                     this subroutine performs the harvest operation for above ground biomass (no kill)
+├── <a href="#mgt_harvgrain">mgt_harvgrain</a>                       this subroutine performs the harvest grain only operation
+├── <a href="#mgt_harvresidue">mgt_harvresidue</a>                     this subroutine performs the harvest residue operation
 ├── <a href="#mgt_harvtuber">mgt_harvtuber</a>                       this subroutine performs the harvest grain only operation
 ├── <a href="#mgt_killop">mgt_killop</a>                          this subroutine performs the kill operation
-├── mgt_newtillmix_cswat0               this subroutine mixes residue and nutrients during tillage and
+├── <a href="#mgt_newtillmix_cswat0">mgt_newtillmix_cswat0</a>               this subroutine mixes residue and nutrients during tillage and
 ├── <a href="#mgt_newtillmix_cswat1">mgt_newtillmix_cswat1</a>               this subroutine mixes residue and nutrients during tillage and
-├── mgt_newtillmix_wet                  this subroutine mixes residue and nutrients in soil layers and ponding water during tillage
+├── <a href="#mgt_newtillmix_wet">mgt_newtillmix_wet</a>                  this subroutine mixes residue and nutrients in soil layers and ponding water during tillage
 ├── <a href="#mgt_transplant">mgt_transplant</a>                      set initial heat units and other data
-├── pest_apply                          this subroutine applies pesticide
+├── <a href="#pest_apply">pest_apply</a>                          this subroutine applies pesticide
 ├── <a href="#pl_burnop">pl_burnop</a>                           this subroutine performs all management operations
-├── pl_fert                             this subroutine applies N and P specified by date and
-├── pl_fert_wet                         this subroutine applies N and P specified by date and
-├── pl_graze                            graze only if adequate biomass in HRU
-├── pl_manure                           this subroutine applies N and P specified by date and
+├── <a href="#pl_fert">pl_fert</a>                             this subroutine applies N and P specified by date and
+├── <a href="#pl_fert_wet">pl_fert_wet</a>                         this subroutine applies N and P specified by date and
+├── <a href="#pl_graze">pl_graze</a>                            graze only if adequate biomass in HRU
+├── <a href="#pl_manure">pl_manure</a>                           this subroutine applies N and P specified by date and
 ├── <a href="#plant_init">plant_init</a>                          use hru_lte_module
-├── salt_fert                           this subroutine adds salt fertilizer to the soil profile
+├── <a href="#salt_fert">salt_fert</a>                           this subroutine adds salt fertilizer to the soil profile
 ├── <a href="#structure_set_parms">structure_set_parms</a>                 this subroutine controls the simulation of the land phase of the
-└── <a href="#wet_initial">wet_initial</a>                         check if hru can store surface water
+└── <a href="#wet_initial">wet_initial</a>                         check if hru can store <a href="#surface">surface</a> water
 </pre>
 
 ---
@@ -2019,9 +2019,9 @@ Source: `cli_precip_control.f90`
 
 <pre>
 cli_precip_control
-├── cli_bounds_check                    this subroutine checks to see if climate data is in current simulation day
-├── cli_pgen                            this subroutine generates precipitation data when the user chooses to
-└── cli_pgenhr                          this subroutine distributes daily rainfall exponentially within the day
+├── <a href="#cli_bounds_check">cli_bounds_check</a>                    this subroutine checks to see if climate data is in current simulation day
+├── <a href="#cli_pgen">cli_pgen</a>                            this subroutine generates precipitation data when the user chooses to
+└── <a href="#cli_pgenhr">cli_pgenhr</a>                          this subroutine distributes daily rainfall exponentially within the day
 </pre>
 
 ---
@@ -2037,8 +2037,8 @@ Source: `conditions.f90`
 
 <pre>
 conditions
-├── cond_integer                        current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
-└── cond_real                           current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
+├── <a href="#cond_integer">cond_integer</a>                        current <a href="#conditions">conditions</a> include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
+└── <a href="#cond_real">cond_real</a>                           current <a href="#conditions">conditions</a> include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
 </pre>
 
 ---
@@ -2055,8 +2055,8 @@ Source: `mallo_control.f90`
 <pre>
 mallo_control
 ├── <a href="#actions">actions</a>
-├── <a href="#conditions">conditions</a>                          current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
-└── pl_fert                             this subroutine applies N and P specified by date and
+├── <a href="#conditions">conditions</a>                          current <a href="#conditions">conditions</a> include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
+└── <a href="#pl_fert">pl_fert</a>                             this subroutine applies N and P specified by date and
 </pre>
 
 ---
@@ -2072,7 +2072,7 @@ Source: `cs_rctn_aqu.f90`
 
 <pre>
 cs_rctn_aqu
-└── se_reactions_aquifer                get concentration of SeO4 and SeO3
+└── <a href="#se_reactions_aquifer">se_reactions_aquifer</a>                get concentration of SeO4 and SeO3
 </pre>
 
 ---
@@ -2088,14 +2088,14 @@ Source: `salt_chem_aqu.f90`
 
 <pre>
 salt_chem_aqu
-├── activity_coefficient
-├── caco3
-├── caso4
-├── cationexchange                      CEC selected based on soil type; for simplicity, for now used one value based on the sandy-loam soil type
-├── ionic_strength
-├── mgco3
-├── mgso4
-└── nacl
+├── <a href="#activity_coefficient">activity_coefficient</a>
+├── <a href="#caco3">caco3</a>
+├── <a href="#caso4">caso4</a>
+├── <a href="#cationexchange">cationexchange</a>                      CEC selected based on soil type; for simplicity, for now used one value based on the sandy-loam soil type
+├── <a href="#ionic_strength">ionic_strength</a>
+├── <a href="#mgco3">mgco3</a>
+├── <a href="#mgso4">mgso4</a>
+└── <a href="#nacl">nacl</a>
 </pre>
 
 ---
@@ -2111,7 +2111,7 @@ Source: `gwflow_lateral.f90`
 
 <pre>
 gwflow_lateral
-├── gwflow_heat                         this subroutine calculates heat advection and dispersion for groundwater
+├── <a href="#gwflow_heat">gwflow_heat</a>                         this subroutine calculates heat advection and dispersion for groundwater
 └── <a href="#gwflow_solute">gwflow_solute</a>                       this subroutine calculates solute advection, dispersion, chemical
 </pre>
 
@@ -2128,7 +2128,7 @@ Source: `gwflow_output.f90`
 
 <pre>
 gwflow_output_aa
-└── gwflow_write_cell_array             Writes active cell values as a single row.
+└── <a href="#gwflow_write_cell_array">gwflow_write_cell_array</a>             Writes active cell values as a single row.
 </pre>
 
 ---
@@ -2144,7 +2144,7 @@ Source: `cs_rctn_hru.f90`
 
 <pre>
 cs_rctn_hru
-└── se_reactions_soil                   suppress unused variable warning
+└── <a href="#se_reactions_soil">se_reactions_soil</a>                   suppress unused variable warning
 </pre>
 
 ---
@@ -2160,7 +2160,7 @@ Source: `hru_hyds.f90`
 
 <pre>
 hru_hyds
-└── flow_hyd_ru_hru                     this subroutine determines the subdaily flow hydrographs for hru's, ru's and inflow fractions
+└── <a href="#flow_hyd_ru_hru">flow_hyd_ru_hru</a>                     this subroutine determines the subdaily flow hydrographs for hru's, ru's and inflow fractions
 </pre>
 
 ---
@@ -2176,7 +2176,7 @@ Source: `hru_urbanhr.f90`
 
 <pre>
 hru_urbanhr
-└── hru_sweep                           the subroutine performs the street sweeping operation
+└── <a href="#hru_sweep">hru_sweep</a>                           the subroutine performs the street sweeping operation
 </pre>
 
 ---
@@ -2207,14 +2207,14 @@ Source: `pl_grow.f90`
 <pre>
 pl_grow
 ├── <a href="#pl_biomass_gro">pl_biomass_gro</a>
-├── pl_dormant                          this subroutine checks the dormant status of the different plant types
-├── [if time%end_yr == 1]  pl_mortality  annual plant mortality
-├── pl_leaf_gro                         this subroutine adjusts plant biomass, leaf area index, and canopy height
-├── pl_leaf_senes                       lai decline for annuals - if dlai < phuacc < 1
+├── <a href="#pl_dormant">pl_dormant</a>                          this subroutine checks the dormant status of the different plant types
+├── [if time%end_yr == 1]  <a href="#pl_mortality">pl_mortality</a>  annual plant mortality
+├── <a href="#pl_leaf_gro">pl_leaf_gro</a>                         this subroutine adjusts plant biomass, leaf area index, and canopy height
+├── <a href="#pl_leaf_senes">pl_leaf_senes</a>                       lai decline for annuals - if dlai < phuacc < 1
 ├── <a href="#pl_nut_demand">pl_nut_demand</a>                       this subroutine predicts daily potential growth of total plant
-├── pl_partition                        update plant mass for daily biomass/c increase
+├── <a href="#pl_partition">pl_partition</a>                        update plant mass for daily biomass/c increase
 ├── <a href="#pl_root_gro">pl_root_gro</a>                         calculate root depth
-└── pl_seed_gro                         calculate plant ET values when heat units exceed 0.5
+└── <a href="#pl_seed_gro">pl_seed_gro</a>                         calculate plant ET values when heat units exceed 0.5
 </pre>
 
 ---
@@ -2230,14 +2230,14 @@ Source: `salt_chem_hru.f90`
 
 <pre>
 salt_chem_hru
-├── activity_coefficient
-├── caco3
-├── caso4
-├── cationexchange                      CEC selected based on soil type; for simplicity, for now used one value based on the sandy-loam soil type
-├── ionic_strength
-├── mgco3
-├── mgso4
-└── nacl
+├── <a href="#activity_coefficient">activity_coefficient</a>
+├── <a href="#caco3">caco3</a>
+├── <a href="#caso4">caso4</a>
+├── <a href="#cationexchange">cationexchange</a>                      CEC selected based on soil type; for simplicity, for now used one value based on the sandy-loam soil type
+├── <a href="#ionic_strength">ionic_strength</a>
+├── <a href="#mgco3">mgco3</a>
+├── <a href="#mgso4">mgso4</a>
+└── <a href="#nacl">nacl</a>
 </pre>
 
 ---
@@ -2253,13 +2253,13 @@ Source: `surface.f90`
 
 <pre>
 surface
-├── ero_cfactor                         this subroutine predicts daily soil loss caused by water erosion
-├── ero_eiusle                          This subroutine computes the USLE erosion index (EI)
-├── ero_ovrsed                          this subroutine computes splash erosion by raindrop impact and flow erosion by overland flow
-├── ero_pkq                             this subroutine computes the peak runoff rate for each HRU
-├── ero_ysed                            this subroutine predicts daily soil loss caused by water erosion
-├── sq_dailycn                          Calculates curve number for the day in the HRU
-├── [if surfq > 0 and bsn_cc%crk == 1]  sq_crackflow   route surface runoff into soil cracks
+├── <a href="#ero_cfactor">ero_cfactor</a>                         this subroutine predicts daily soil loss caused by water erosion
+├── <a href="#ero_eiusle">ero_eiusle</a>                          This subroutine computes the USLE erosion index (EI)
+├── <a href="#ero_ovrsed">ero_ovrsed</a>                          this subroutine computes splash erosion by raindrop impact and flow erosion by overland flow
+├── <a href="#ero_pkq">ero_pkq</a>                             this subroutine computes the peak runoff rate for each HRU
+├── <a href="#ero_ysed">ero_ysed</a>                            this subroutine predicts daily soil loss caused by water erosion
+├── <a href="#sq_dailycn">sq_dailycn</a>                          Calculates curve number for the day in the HRU
+├── [if surfq > 0 and bsn_cc%crk == 1]  <a href="#sq_crackflow">sq_crackflow</a>   route <a href="#surface">surface</a> runoff into soil cracks
 └── <a href="#sq_volq">sq_volq</a>                             Call subroutines to calculate the current day"s CN for the HRU and
 </pre>
 
@@ -2276,12 +2276,12 @@ Source: `swr_percmain.f90`
 
 <pre>
 swr_percmain
-├── gwflow_soil                         this subroutine calculates the water exchange volume between the aquifer and the soil profile
+├── <a href="#gwflow_soil">gwflow_soil</a>                         this subroutine calculates the water exchange volume between the aquifer and the soil profile
 ├── <a href="#swr_drains">swr_drains</a>                          this subroutine finds the effective lateral hydraulic conductivity
-├── swr_origtile                        this subroutine computes tile drainage using basic tile equations
-├── swr_percmacro                       this surboutine computes percolation by crack flow
-├── swr_percmicro                       this subroutine computes percolation and lateral subsurface flow
-└── swr_satexcess                       this subroutine moves water to upper layers if saturated and can't perc
+├── <a href="#swr_origtile">swr_origtile</a>                        this subroutine computes tile drainage using basic tile equations
+├── <a href="#swr_percmacro">swr_percmacro</a>                       this surboutine computes percolation by crack flow
+├── <a href="#swr_percmicro">swr_percmicro</a>                       this subroutine computes percolation and lateral subsurface flow
+└── <a href="#swr_satexcess">swr_satexcess</a>                       this subroutine moves water to upper layers if saturated and can't perc
 </pre>
 
 ---
@@ -2295,15 +2295,15 @@ Source: `wetland_control.f90`
 
 <pre>
 wetland_control
-├── <a href="#conditions">conditions</a>                          current conditions include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
-├── ero_cfactor                         this subroutine predicts daily soil loss caused by water erosion
-├── gwflow_wetland                      this subroutine determines the volume of groundwater exchanged with wetlands
-├── res_hydro                           Jose T 2025 |  Doell method
-├── res_nutrient                        if reservoir volume less than 1 m^3, set all nutrient levels to
-├── res_sediment                        reservoir is empty
-├── res_weir_release                    suppress unused variable warning
-├── wet_cs                              this subroutine computes the wetland constituent mass balance
-└── wet_salt                            this subroutine computes the wetland salt ion mass balance
+├── <a href="#conditions">conditions</a>                          current <a href="#conditions">conditions</a> include: w_stress, n_stress, phu_plant, phu_base0, soil_water, jday, month, vol
+├── <a href="#ero_cfactor">ero_cfactor</a>                         this subroutine predicts daily soil loss caused by water erosion
+├── <a href="#gwflow_wetland">gwflow_wetland</a>                      this subroutine determines the volume of groundwater exchanged with wetlands
+├── <a href="#res_hydro">res_hydro</a>                           Jose T 2025 |  Doell method
+├── <a href="#res_nutrient">res_nutrient</a>                        if reservoir volume less than 1 m^3, set all nutrient levels to
+├── <a href="#res_sediment">res_sediment</a>                        reservoir is empty
+├── <a href="#res_weir_release">res_weir_release</a>                    suppress unused variable warning
+├── <a href="#wet_cs">wet_cs</a>                              this subroutine computes the wetland constituent mass balance
+└── <a href="#wet_salt">wet_salt</a>                            this subroutine computes the wetland salt ion mass balance
 </pre>
 
 ---
@@ -2319,8 +2319,8 @@ Source: `res_rel_conds.f90`
 
 <pre>
 res_rel_conds
-├── cond_integer_c
-└── cond_real_c
+├── <a href="#cond_integer_c">cond_integer_c</a>
+└── <a href="#cond_real_c">cond_real_c</a>
 </pre>
 
 ---
@@ -2368,7 +2368,7 @@ Source: `rcurv_interp_flo.f90`
 
 <pre>
 rcurv_interp_flo
-└── chrc_interp
+└── <a href="#chrc_interp">chrc_interp</a>
 </pre>
 
 ---
@@ -2382,7 +2382,7 @@ Source: `sd_channel_sediment3.f90`
 
 <pre>
 sd_channel_sediment3
-├── gwflow_floodplain                   this subroutine calculates the water exchange volume between the floodplain and the connected grid cells
+├── <a href="#gwflow_floodplain">gwflow_floodplain</a>                   this subroutine calculates the water exchange volume between the floodplain and the connected grid cells
 └── <a href="#rcurv_interp_flo">rcurv_interp_flo</a>                    this subroutine interpolates between points on a rating curve given flow rate
 </pre>
 
@@ -2399,7 +2399,7 @@ Source: `gwflow_output.f90`
 
 <pre>
 gwflow_output_init
-└── gwflow_write_celldef                Writes gwflow_cell_definition.txt once during initialization.
+└── <a href="#gwflow_write_celldef">gwflow_write_celldef</a>                Writes gwflow_cell_definition.txt once during initialization.
 </pre>
 
 ---
@@ -2415,9 +2415,9 @@ Source: `cal_parm_select.f90`
 
 <pre>
 cal_parm_select
-├── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture conditions
-├── soil_awc_init                       this subroutine initializes soil parameters based on awc
-└── soil_text_init                      this subroutine initializes soil parameters based on awc
+├── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture <a href="#conditions">conditions</a>
+├── <a href="#soil_awc_init">soil_awc_init</a>                       this subroutine initializes soil parameters based on awc
+└── <a href="#soil_text_init">soil_text_init</a>                      this subroutine initializes soil parameters based on awc
 </pre>
 
 ---
@@ -2433,7 +2433,7 @@ Source: `rcurv_interp_dep.f90`
 
 <pre>
 rcurv_interp_dep
-└── chrc_interp
+└── <a href="#chrc_interp">chrc_interp</a>
 </pre>
 
 ---
@@ -2449,7 +2449,7 @@ Source: `cn2_init.f90`
 
 <pre>
 cn2_init
-└── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture conditions
+└── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture <a href="#conditions">conditions</a>
 </pre>
 
 ---
@@ -2465,10 +2465,10 @@ Source: `allocate_parms.f90`
 
 <pre>
 allocate_parms
-├── zero0                               this subroutine initializes the values for some of the arrays
-├── zero1                               this subroutine initializes the values for some of the arrays
-├── zero2                               this subroutine zeros all array values
-└── zeroini                             this subroutine zeros values for single array variables
+├── <a href="#zero0">zero0</a>                               this subroutine initializes the values for some of the arrays
+├── <a href="#zero1">zero1</a>                               this subroutine initializes the values for some of the arrays
+├── <a href="#zero2">zero2</a>                               this subroutine zeros all array values
+└── <a href="#zeroini">zeroini</a>                             this subroutine zeros values for single array variables
 </pre>
 
 ---
@@ -2484,11 +2484,11 @@ Source: `plant_init.f90`
 
 <pre>
 plant_init
-├── pl_partition                        update plant mass for daily biomass/c increase
+├── <a href="#pl_partition">pl_partition</a>                        update plant mass for daily biomass/c increase
 ├── <a href="#pl_root_gro">pl_root_gro</a>                         calculate root depth
-├── pl_rootfr                           This subroutine distributes dead root mass through the soil profile
-├── pl_seed_gro                         calculate plant ET values when heat units exceed 0.5
-└── xmon                                this subroutine determines the month, given the julian date and leap
+├── <a href="#pl_rootfr">pl_rootfr</a>                           This subroutine distributes dead root mass through the soil profile
+├── <a href="#pl_seed_gro">pl_seed_gro</a>                         calculate plant ET values when heat units exceed 0.5
+└── <a href="#xmon">xmon</a>                                this subroutine determines the month, given the julian date and leap
 </pre>
 
 ---
@@ -2504,7 +2504,7 @@ Source: `curno.f90`
 
 <pre>
 curno
-└── ascrv                               this subroutine computes shape parameters x5 and x6 for the S curve
+└── <a href="#ascrv">ascrv</a>                               this subroutine computes shape parameters x5 and x6 for the S curve
 </pre>
 
 ---
@@ -2520,7 +2520,7 @@ Source: `mgt_harvtuber.f90`
 
 <pre>
 mgt_harvtuber
-└── pl_rootfr                           This subroutine distributes dead root mass through the soil profile
+└── <a href="#pl_rootfr">pl_rootfr</a>                           This subroutine distributes dead root mass through the soil profile
 </pre>
 
 ---
@@ -2536,8 +2536,8 @@ Source: `mgt_killop.f90`
 
 <pre>
 mgt_killop
-├── pl_rootfr                           This subroutine distributes dead root mass through the soil profile
-└── plg_zero
+├── <a href="#pl_rootfr">pl_rootfr</a>                           This subroutine distributes dead root mass through the soil profile
+└── <a href="#plg_zero">plg_zero</a>
 </pre>
 
 ---
@@ -2553,7 +2553,7 @@ Source: `mgt_newtillmix_cswat1.f90`
 
 <pre>
 mgt_newtillmix_cswat1
-└── mgt_tillfactor                      Armen 16 January 2008
+└── <a href="#mgt_tillfactor">mgt_tillfactor</a>                      Armen 16 January 2008
 </pre>
 
 ---
@@ -2569,9 +2569,9 @@ Source: `mgt_transplant.f90`
 
 <pre>
 mgt_transplant
-├── pl_partition                        update plant mass for daily biomass/c increase
+├── <a href="#pl_partition">pl_partition</a>                        update plant mass for daily biomass/c increase
 ├── <a href="#pl_root_gro">pl_root_gro</a>                         calculate root depth
-└── pl_seed_gro                         calculate plant ET values when heat units exceed 0.5
+└── <a href="#pl_seed_gro">pl_seed_gro</a>                         calculate plant ET values when heat units exceed 0.5
 </pre>
 
 ---
@@ -2587,7 +2587,7 @@ Source: `pl_burnop.f90`
 
 <pre>
 pl_burnop
-└── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture conditions
+└── <a href="#curno">curno</a>                               this subroutine determines the curve numbers for moisture <a href="#conditions">conditions</a>
 </pre>
 
 ---
@@ -2603,7 +2603,7 @@ Source: `wet_initial.f90`
 
 <pre>
 wet_initial
-└── res_convert_mass
+└── <a href="#res_convert_mass">res_convert_mass</a>
 </pre>
 
 ---
@@ -2651,9 +2651,9 @@ Source: `pl_biomass_gro.f90`
 pl_biomass_gro
 ├── <a href="#pl_nup">pl_nup</a>                              This subroutine calculates plant nitrogen uptake
 ├── <a href="#pl_pup">pl_pup</a>                              this subroutine calculates plant phosphorus uptake
-├── pl_tstr                             computes temperature stress for crop growth - strstmp
-├── salt_uptake                         this subroutine simulates salt ion uptake in the root zone
-└── [if cs_db%num_cs > 0]  cs_uptake   constituent uptake by plants
+├── <a href="#pl_tstr">pl_tstr</a>                             computes temperature stress for crop growth - strstmp
+├── <a href="#salt_uptake">salt_uptake</a>                         this subroutine simulates salt ion uptake in the root zone
+└── [if cs_db%num_cs > 0]  <a href="#cs_uptake">cs_uptake</a>   constituent uptake by plants
 </pre>
 
 ---
@@ -2669,8 +2669,8 @@ Source: `pl_nut_demand.f90`
 
 <pre>
 pl_nut_demand
-├── pl_nupd                             This subroutine calculates plant nitrogen demand
-└── pl_pupd                             this subroutine calculates plant phosphorus demand
+├── <a href="#pl_nupd">pl_nupd</a>                             This subroutine calculates plant nitrogen demand
+└── <a href="#pl_pupd">pl_pupd</a>                             this subroutine calculates plant phosphorus demand
 </pre>
 
 ---
@@ -2686,7 +2686,7 @@ Source: `pl_root_gro.f90`
 
 <pre>
 pl_root_gro
-└── pl_rootfr                           This subroutine distributes dead root mass through the soil profile
+└── <a href="#pl_rootfr">pl_rootfr</a>                           This subroutine distributes dead root mass through the soil profile
 </pre>
 
 ---
@@ -2702,8 +2702,8 @@ Source: `sq_volq.f90`
 
 <pre>
 sq_volq
-├── sq_daycn                            Predicts daily runoff given daily precipitation and snow melt
-└── sq_greenampt                        Predicts daily runoff given breakpoint precipitation and snow melt
+├── <a href="#sq_daycn">sq_daycn</a>                            Predicts daily runoff given daily precipitation and snow melt
+└── <a href="#sq_greenampt">sq_greenampt</a>                        Predicts daily runoff given breakpoint precipitation and snow melt
 </pre>
 
 ---
@@ -2719,7 +2719,7 @@ Source: `swr_drains.f90`
 
 <pre>
 swr_drains
-└── swr_depstor                         this subroutine computes maximum surface depressional storage depth based on
+└── <a href="#swr_depstor">swr_depstor</a>                         this subroutine computes maximum <a href="#surface">surface</a> depressional storage depth based on
 </pre>
 
 ---
@@ -2735,7 +2735,7 @@ Source: `gwflow_chem.f90`
 
 <pre>
 gwflow_chem
-└── gwflow_minl                         this subroutine calculates salt mineral precipitation-dissolution
+└── <a href="#gwflow_minl">gwflow_minl</a>                         this subroutine calculates salt mineral precipitation-dissolution
 </pre>
 
 ---
@@ -2751,13 +2751,13 @@ Source: `salt_chem_soil_single.f90`
 
 <pre>
 salt_chem_soil_single
-├── activity_coefficient
-├── caco3
-├── caso4
-├── ionic_strength
-├── mgco3
-├── mgso4
-└── nacl
+├── <a href="#activity_coefficient">activity_coefficient</a>
+├── <a href="#caco3">caco3</a>
+├── <a href="#caso4">caso4</a>
+├── <a href="#ionic_strength">ionic_strength</a>
+├── <a href="#mgco3">mgco3</a>
+├── <a href="#mgso4">mgso4</a>
+└── <a href="#nacl">nacl</a>
 </pre>
 
 ---
@@ -2773,8 +2773,8 @@ Source: `pl_nup.f90`
 
 <pre>
 pl_nup
-├── nuts                                this function calculates the plant stress factor caused by limited
-└── pl_nfix                             this subroutine estimates nitrogen fixation by legumes
+├── <a href="#nuts">nuts</a>                                this function calculates the plant stress factor caused by limited
+└── <a href="#pl_nfix">pl_nfix</a>                             this subroutine estimates nitrogen fixation by legumes
 </pre>
 
 ---
@@ -2790,7 +2790,7 @@ Source: `pl_pup.f90`
 
 <pre>
 pl_pup
-└── nuts                                this function calculates the plant stress factor caused by limited
+└── <a href="#nuts">nuts</a>                                this function calculates the plant stress factor caused by limited
 </pre>
 
 ---
@@ -2805,7 +2805,7 @@ Initialises all wetland/pond objects before the simulation loop.
 
 <pre>
 wet_all_initial
-└── [loop iihru = 1, sp_ob%hru]  wet_initial(iihru)
+└── [loop iihru = 1, sp_ob%hru]  <a href="#wet_initial">wet_initial</a>(iihru)
 </pre>
 
 ---
@@ -2819,7 +2819,7 @@ Called only when `bsn_cc%cswat == 1` and `bmix_eff > 1e-6`.
 
 <pre>
 mgt_biomix
-└── mgt_tillfactor           compute tillage factor for biological mixing efficiency
+└── <a href="#mgt_tillfactor">mgt_tillfactor</a>           compute tillage factor for biological mixing efficiency
 </pre>
 
 ---
@@ -2833,12 +2833,12 @@ to minimise objective function residuals.
 
 <pre>
 calsoft_control
-├── <a href="#calsoft_hyd">calsoft_hyd</a>            calibrate hydrologic components (surface, lateral, perc, ET)
+├── <a href="#calsoft_hyd">calsoft_hyd</a>            calibrate hydrologic components (<a href="#surface">surface</a>, lateral, perc, ET)
 ├── <a href="#calsoft_hyd_bfr">calsoft_hyd_bfr</a>        calibrate baseflow recession parameters
 ├── <a href="#caltsoft_hyd">caltsoft_hyd</a>           calibrate time-of-travel (storage-coefficient) routing
 ├── <a href="#calsoft_plant">calsoft_plant</a>          calibrate plant growth parameters
 ├── <a href="#calsoft_sed">calsoft_sed</a>            calibrate sediment parameters
-└── pl_write_parms_cal     write calibrated plant parameters
+└── <a href="#pl_write_parms_cal">pl_write_parms_cal</a>     write calibrated plant parameters
 </pre>
 
 ---
@@ -2851,9 +2851,9 @@ Calibrates hydrologic parameters (CN2, ESCO, etc.) by iterating the full simulat
 
 <pre>
 calsoft_hyd
-├── re_initialize          reset all state variables to initial conditions
+├── <a href="#re_initialize">re_initialize</a>          reset all state variables to initial <a href="#conditions">conditions</a>
 ├── <a href="#time_control">time_control</a>           run full simulation with current parameters
-└── curno                  recompute CN lookup table after CN2 adjustment
+└── <a href="#curno">curno</a>                  recompute CN lookup table after CN2 adjustment
 </pre>
 
 ---
@@ -2868,7 +2868,7 @@ Calibrates baseflow parameters by iterating sub-objective functions for each com
 calsoft_hyd_bfr
 ├── <a href="#calsoft_hyd_bfr_pet">calsoft_hyd_bfr_pet</a>    calibrate PET-related baseflow parameters
 ├── <a href="#calsoft_hyd_bfr_et">calsoft_hyd_bfr_et</a>     calibrate actual ET baseflow contribution
-├── <a href="#calsoft_hyd_bfr_surq">calsoft_hyd_bfr_surq</a>   calibrate surface-runoff influence on baseflow
+├── <a href="#calsoft_hyd_bfr_surq">calsoft_hyd_bfr_surq</a>   calibrate <a href="#surface">surface</a>-runoff influence on baseflow
 ├── <a href="#calsoft_hyd_bfr_latq">calsoft_hyd_bfr_latq</a>   calibrate lateral-flow influence on baseflow
 └── <a href="#calsoft_hyd_bfr_perc">calsoft_hyd_bfr_perc</a>   calibrate percolation influence on baseflow
 </pre>
@@ -2883,7 +2883,7 @@ Calibrates PET parameter contribution to baseflow objective.
 
 <pre>
 calsoft_hyd_bfr_pet
-├── re_initialize
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2897,7 +2897,7 @@ Calibrates actual ET parameter contribution to baseflow objective.
 
 <pre>
 calsoft_hyd_bfr_et
-├── re_initialize
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2911,8 +2911,8 @@ Calibrates surface-runoff influence on baseflow; adjusts CN2 before each run.
 
 <pre>
 calsoft_hyd_bfr_surq
-├── curno
-├── re_initialize
+├── <a href="#curno">curno</a>
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2926,7 +2926,7 @@ Calibrates lateral-flow influence on baseflow.
 
 <pre>
 calsoft_hyd_bfr_latq
-├── re_initialize
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2940,7 +2940,7 @@ Calibrates percolation influence on baseflow.
 
 <pre>
 calsoft_hyd_bfr_perc
-├── re_initialize
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2954,8 +2954,8 @@ Calibrates plant growth parameters by iterating the full simulation.
 
 <pre>
 calsoft_plant
-├── calsoft_plant_zero     zero plant calibration accumulators
-├── re_initialize
+├── <a href="#calsoft_plant_zero">calsoft_plant_zero</a>     zero plant calibration accumulators
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2969,7 +2969,7 @@ Calibrates sediment parameters by iterating the full simulation.
 
 <pre>
 calsoft_sed
-├── re_initialize
+├── <a href="#re_initialize">re_initialize</a>
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2983,7 +2983,7 @@ Calibrates time-of-travel (storage-coefficient) routing parameters.
 
 <pre>
 caltsoft_hyd
-├── ascrv                  compute storage-coefficient routing curve
+├── <a href="#ascrv">ascrv</a>                  compute storage-coefficient routing curve
 └── <a href="#time_control">time_control</a>
 </pre>
 
@@ -2997,8 +2997,8 @@ Writes SWIFT-format output files after the simulation completes.
 
 <pre>
 swift_output
-├── [loop output files]  copy_file(src, "SWIFT/" // file_name)
-└── hyd_convert_mass_to_conc    convert hydrograph mass fluxes to concentrations
+├── [loop output files]  <a href="#copy_file">copy_file</a>(src, "SWIFT/" // file_name)
+└── <a href="#hyd_convert_mass_to_conc">hyd_convert_mass_to_conc</a>    convert hydrograph mass fluxes to concentrations
 </pre>
 
 ---
@@ -3014,12 +3014,12 @@ operations for one allocation object on the current day.
 wallo_control
 ├── <a href="#wallo_demand">wallo_demand</a>           determine water demand for each use type
 ├── <a href="#wallo_withdraw">wallo_withdraw</a>         withdraw water from source (stream, reservoir, gwflow)
-├── wallo_canal            route water through irrigation canal
-├── wallo_transfer         transfer withdrawn water to destination object
+├── <a href="#wallo_canal">wallo_canal</a>            route water through irrigation canal
+├── <a href="#wallo_transfer">wallo_transfer</a>         transfer withdrawn water to destination object
 ├── <a href="#wallo_treatment">wallo_treatment</a>        apply water treatment processes
 ├── <a href="#wallo_use">wallo_use</a>              apply water to HRU/crop use
-├── [if num_salts > 0]  salt_irrig   add salt load to irrigation water
-├── [if num_cs > 0]     cs_irrig     add constituent load to irrigation water
+├── [if num_salts > 0]  <a href="#salt_irrig">salt_irrig</a>   add salt load to irrigation water
+├── [if num_cs > 0]     <a href="#cs_irrig">cs_irrig</a>     add constituent load to irrigation water
 └── [if src == reservoir]  <a href="#res_control">res_control</a>  update reservoir state after withdrawal
 </pre>
 
@@ -3033,8 +3033,8 @@ Determines water demand for each use object by evaluating conditions and actions
 
 <pre>
 wallo_demand
-├── <a href="#conditions">conditions</a>    evaluate demand trigger conditions
-└── <a href="#actions">actions</a>       set demand amounts based on triggered actions
+├── <a href="#conditions">conditions</a>    evaluate demand trigger <a href="#conditions">conditions</a>
+└── <a href="#actions">actions</a>       set demand amounts based on triggered <a href="#actions">actions</a>
 </pre>
 
 ---
@@ -3047,7 +3047,7 @@ Withdraws water from the allocated source (stream, reservoir, or groundwater).
 
 <pre>
 wallo_withdraw
-└── [if gwflow source]  gwflow_pump_allo   extract water from gwflow grid cell
+└── [if gwflow source]  <a href="#gwflow_pump_allo">gwflow_pump_allo</a>   extract water from gwflow grid cell
 </pre>
 
 ---
@@ -3060,9 +3060,9 @@ Applies water treatment processes to withdrawn water before use.
 
 <pre>
 wallo_treatment
-├── hyd_convert_conc_to_mass   convert concentrations to mass in hydrograph
-├── hyd_min                    apply minimum-flow constraint
-└── hydcsout_conc_mass         compute constituent mass from outflow concentration
+├── <a href="#hyd_convert_conc_to_mass">hyd_convert_conc_to_mass</a>   convert concentrations to mass in hydrograph
+├── <a href="#hyd_min">hyd_min</a>                    apply minimum-flow constraint
+└── <a href="#hydcsout_conc_mass">hydcsout_conc_mass</a>         compute constituent mass from outflow concentration
 </pre>
 
 ---
@@ -3075,8 +3075,8 @@ Applies allocated water to the HRU or crop use object.
 
 <pre>
 wallo_use
-├── hyd_convert_conc_to_mass   convert concentrations to mass in hydrograph
-└── hydcsout_conc_mass         compute constituent mass from outflow concentration
+├── <a href="#hyd_convert_conc_to_mass">hyd_convert_conc_to_mass</a>   convert concentrations to mass in hydrograph
+└── <a href="#hydcsout_conc_mass">hydcsout_conc_mass</a>         compute constituent mass from outflow concentration
 </pre>
 
 
@@ -3092,7 +3092,7 @@ temperature, solar radiation, humidity, wind, PET, atmospheric deposition).
 <pre>
 cli_staread
 └── [loop weather stations, per gage type if db_mx%*files > 0]
-    └── search    look up gage name in array and return its index
+    └── <a href="#search">search</a>    look up gage name in array and return its index
 </pre>
 
 Parsing source...
