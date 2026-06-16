@@ -1,6 +1,6 @@
 // .devcontainer/devcontainer.json
 {
-	"name": "Intel Fortran Dev Container",
+	"name": "SWAT+ Dev Container",
 	// 1. Build our custom Dockerfile
 	"build": {
 	  "dockerfile": "Dockerfile"
