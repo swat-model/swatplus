@@ -17,10 +17,12 @@
         !character(len=16) :: update     !! pointer to basin updates in schedule.upd                                      
         character(len=16) :: petfile ='         pet.cli'    !! potential et filename
         character(len=16) :: wwqfile = ""  !! watershed stream water quality filename
-        integer :: pet = 0       !! potential ET method code
-                                 !!   0 = Priestley-Taylor 
-                                 !!   1 = Penman-Monteith
-                                 !!   2 = Hargreaves method
+        integer :: pet = 0 !! potential ET method code
+                          !! 0 = Priestley-Taylor
+                          !! 1 = Penman-Monteith
+                          !! 2 = Hargreaves
+                          !! 3 = read PET from file
+                          !! 4 = constant (bsn_prm%pet_const)
         integer :: nam1 = 0      !! not used
         integer :: crk = 0       !! crack flow code 
                                  !!   1 = compute flow in cracks
@@ -128,6 +130,7 @@
         real :: ch_d50 = 0.         !! median particle diameter of main channel (mm)
         real :: co2 = 400.          !! co2 concentration at start of simulation (ppm)
         real :: harg_expo = 0.5     !! none - Hargreaves temp-range exponent (0.3-0.8)
+        real :: pet_const = 0.      !! mm/day - constant PET if bsn_cc%pet == 4
         integer :: day_lag_mx = 0   !! max days to lag hydrographs for hru, ru and channels
                                     !!  non-draining soils
         integer :: igen = 5         !!  random generator code: 
