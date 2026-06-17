@@ -382,6 +382,18 @@
         !! _tot file gated specifically by cb_snap_hru%a (begsim + endsim rows).
         if (pco%cb_snap_hru%a == "y") then
           call open_cb_wide_pair(4601, 4605, "hru_soil_snap_tot.txt", "hru_soil_snap_tot.csv", soil_snap_vars)
+          call open_output_file(4610, "hru_begsim_wp_lyr.txt", 1500)
+          write (4610,*) bsn%name, prog
+          write (4610,*) "freq", "soil_name", "soil_lyr", "soil_depth", "mon", "day", "yr", &
+                         "hru", "gis_id", "name", "wp", "wpmm"
+          write (9000,*) "HRU                       hru_begsim_wp_lyr.txt"
+          if (pco%csvout == "y") then
+            call open_output_file(4611, "hru_begsim_wp_lyr.csv", 1500)
+            write (4611,*) bsn%name, prog
+            write (4611,'(*(G0.6,:,","))') "freq", "soil_name", "soil_lyr", "soil_depth", "mon", "day", "yr", "hru", &
+                                           "gis_id", "name", "wp", "wpmm"
+            write (9000,*) "HRU                       hru_begsim_wp_lyr.csv"
+          end if
           if (bsn_cc%cswat == 2) call soil_nutcarb_write(" b")  !! emit begsim row to hru_soil_snap_tot
         end if
 
@@ -1260,7 +1272,7 @@
         if (pco%csvout == "y") then
             call open_output_file(4011, "crop_yld_yr.csv")
             write (4011,*) bsn%name, prog
-            write (4011,'(*(G0.6,:,","))') "jday","mon","day","year","unit","plantnm","yield"
+            write (4011,'(*(G0.6,:,","))') "jday","mon","day","year","unit","plantnm","mass","c","n","p"
             write (9000,*) "CROP                      crop_yld_yr.csv"
         end if
       end if
@@ -1274,7 +1286,7 @@
         if (pco%csvout == "y") then
             call open_output_file(4009, "crop_yld_aa.csv")
             write (4009,*) bsn%name, prog
-            write (4009,'(*(G0.6,:,","))') "jday","mon","day","year","unit","plantnm","yield"
+            write (4009,'(*(G0.6,:,","))') "jday","mon","day","year","unit","plantnm","mass","c","n","p"
             write (9000,*) "CROP                      crop_yld_aa.csv"
         end if
       end if

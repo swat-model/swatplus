@@ -84,6 +84,19 @@
           do j = 1, sp_ob%hru
             iob = sp_ob1%hru + j - 1
             call cb_soil_snap_emit(4601, 4605, freq_label, j, iob)
+            if (freq_label == "begsim") then
+              do ly = 1, soil(j)%nly
+                write (4610,*) freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), time%mo, time%day_mo, &
+                              time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil(j)%phys(ly)%wp, soil(j)%phys(ly)%wpmm
+              end do
+              if (pco%csvout == "y") then
+                do ly = 1, soil(j)%nly
+                  write (4611,'(*(G0.7,:,","))') freq_label, soil(j)%snam, ly, int(soil(j)%phys(ly)%d), &
+                                                time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                                                soil(j)%phys(ly)%wp, soil(j)%phys(ly)%wpmm
+                end do
+              end if
+            end if
           enddo
         endif
         return

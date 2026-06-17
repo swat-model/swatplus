@@ -226,6 +226,17 @@
                                                                 hpw_y(j), lum(ilu)%plant_cov, lum(ilu)%mgt_ops  
                end if 
            end if
+
+           if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
+             do ipl = 1, pcom(j)%npl
+               idp = pcom(j)%plcur(ipl)%idplt
+               write (4010,103) time%day, time%mo, time%day_mo, time%yrc, j, pldb(idp)%plantnm, pl_mass(j)%yield_yr(ipl)
+               if (pco%csvout == "y") then
+                 write (4011,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, pldb(idp)%plantnm, &
+                                                               pl_mass(j)%yield_yr(ipl)
+               end if
+             end do
+           end if
           hpw_y(j)%bm_max = 0.0
            
           !reset yearly parameters in time_control - for calibration runs
