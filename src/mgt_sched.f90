@@ -1,4 +1,4 @@
-      subroutine mgt_sched (isched)
+subroutine mgt_sched (isched)
 
       use plant_data_module
       use mgt_operations_module
