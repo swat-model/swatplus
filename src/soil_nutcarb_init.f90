@@ -175,13 +175,13 @@
             !! initialize humus passive pool by Mathers approach ref: "Updating carbon pool initialization with DSSAT-CENTURY"
             !! mathers_fac is the humas passive fraction. It is recalculated based on mathers equations.
             if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 0.35 ) then
-              mathers_frac = (.41 + 0.0053 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0 
+              mathers_frac = (.41 + 0.0053 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) 
               soil1(ihru)%hp(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c
               soil1(ihru)%hp(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
               soil1(ihru)%hp(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
               soil1(ihru)%hp(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
             else
-              mathers_frac = (.069 + 0.015 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0
+              mathers_frac = (.069 + 0.015 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt))
               soil1(ihru)%hp(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c  
               soil1(ihru)%hp(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
               soil1(ihru)%hp(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
