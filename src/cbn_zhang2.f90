@@ -190,7 +190,7 @@
        real :: w1  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
        real :: w2  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
        real :: svoid = 0.        !                     | the amount voids in soil layer after accounting for water content.
-       real :: mid_depth         !mm                   | depth to the middle of the soil layer
+       real :: mid_depth = 0.    !mm                   | depth to the middle of the soil layer
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
