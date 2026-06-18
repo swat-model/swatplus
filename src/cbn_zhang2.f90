@@ -104,9 +104,10 @@
        
        integer :: j = 0          !                     |number of hru
        integer :: k = 0          !none                 |counte
-       real :: lmnta = 0      !                     |      
-       real :: min_n_ppm = 0  !                     |
-       real :: min_n = 0      !                     |
+       real :: lmnta = 0         !                     |      
+       integer :: kk = 0         !                     | soil layer index if k > 1 else kk = 2
+       real :: min_n_ppm = 0     !                     |
+       real :: min_n = 0         !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
@@ -305,8 +306,10 @@
          
         ! if k = 1, then using temperature, soil moisture in layer 2 to calculate decomposition factor
         if (k == 1) then
+          kk = 2
           cf_lyr = 1
         else
+          kk = k
           cf_lyr = 2
         end if
         
@@ -408,12 +411,7 @@
             org_con%cdg = 0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1
           endif
 
-          !!compute oxygen (ox)
-          if (k == 1) then
-           mid_depth = soil(j)%phys(k)%d / 2.0
-          else
-           mid_depth = (soil(j)%phys(k-1)%d + soil(j)%phys(k)%d)  / 2.0
-          endif
+          mid_depth = (soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d)  / 2.0
           
           org_con%ox = 1. - 0.8 * mid_depth / (mid_depth + exp(18.40961 - 0.023683632 * mid_depth))
           
