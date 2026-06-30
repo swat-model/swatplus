@@ -26,7 +26,8 @@
       real :: solp = 0.
       real :: ssp = 0.
       real :: psp = 0.  
-      real :: mathers_frac              !frac       !The fraction of carbon that is slow humas pool
+      real :: mathers_stable_carbon_pct !pct        !The percent of carbon that is slow humas pool
+      real :: mathers_stable_carbon_frac !frac      !The fraction of carbon that is slow humas pool
       real :: tot_mass                  !kg/ha      |total mass of the soil layer
 
       !! suppress unused variable warning
@@ -173,25 +174,27 @@
               
           if (org_frac%mathers_method .eqv. .true.) then
             !! initialize humus passive pool by Mathers approach ref: "Updating carbon pool initialization with DSSAT-CENTURY"
-            !! mathers_fac is the humas passive fraction. It is recalculated based on mathers equations.
-            if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 0.35 ) then
-              mathers_frac = (.41 + 0.0053 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) 
-              ! soil1(ihru)%hp(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c
-              soil1(ihru)%hp(ly)%m = mathers_frac * soil1(ihru)%tot(ly)%m
+          !! mathers_stable_carbon_pct is the humas passive carbon percent. It is recalculated based on mathers equations.
+            if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 35.0) then
+              mathers_stable_carbon_pct = .41 + 0.0053 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) 
+              mathers_stable_carbon_frac = mathers_stable_carbon_pct/100.0
+              ! soil1(ihru)%hp(ly)%c = mathers_stable_carbon_pct * soil1(ihru)%tot(ly)%c
+              soil1(ihru)%hp(ly)%m = mathers_stable_carbon_frac * soil1(ihru)%tot(ly)%m
               ! soil1(ihru)%hp(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
-              soil1(ihru)%hp(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c
+              soil1(ihru)%hp(ly)%c = mathers_stable_carbon_frac * soil1(ihru)%tot(ly)%c
               soil1(ihru)%hp(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
               soil1(ihru)%hp(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
             else
-              mathers_frac = (.069 + 0.015 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt))
-              soil1(ihru)%hp(ly)%m = mathers_frac * soil1(ihru)%tot(ly)%m  
-              soil1(ihru)%hp(ly)%c = mathers_frac * soil1(ihru)%tot(ly)%c
+              mathers_stable_carbon_pct = .069 + 0.015 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)
+              mathers_stable_carbon_frac = mathers_stable_carbon_pct/100.0
+              soil1(ihru)%hp(ly)%m = mathers_stable_carbon_frac * soil1(ihru)%tot(ly)%m  
+              soil1(ihru)%hp(ly)%c = mathers_stable_carbon_frac * soil1(ihru)%tot(ly)%c
               soil1(ihru)%hp(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
               soil1(ihru)%hp(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
             endif
 
-            !! Reset frac_humas_passive to mathers_frac
-            org_frac%frac_hum_passive = mathers_frac
+            !! Reset frac_humas_passive to mathers_stable_carbon_pct
+            org_frac%frac_hum_passive = mathers_stable_carbon_pct
 
             !! Recalculate humus_slow_fraction based on the fact that the
             !! sum of org_frac%frac_humas_passive, frac_hum_microb, and  frac_humas slow must equal 1.0
