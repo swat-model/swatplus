@@ -104,10 +104,10 @@
        
        integer :: j = 0          !                     |number of hru
        integer :: k = 0          !none                 |counte
-       integer :: kk = 0         !                     |
-       real :: lmnta = 0      !                     |      
-       real :: min_n_ppm = 0  !                     |
-       real :: min_n = 0      !                     |
+       real :: lmnta = 0         !                     |      
+       integer :: kk = 0         !                     | soil layer index if k > 1 else kk = 2
+       real :: min_n_ppm = 0     !                     |
+       real :: min_n = 0         !                     |
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
@@ -191,6 +191,7 @@
        real :: w1  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
        real :: w2  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
        real :: svoid = 0.        !                     | the amount voids in soil layer after accounting for water content.
+       real :: mid_depth = 0.    !mm                   | depth to the middle of the soil layer
        logical :: ufc = .false. !Use File Coefficients (ufc) from carbon_coef.cbn file
 
        ufc = carbon_coef_file
@@ -329,7 +330,7 @@
 
           if (org_con%watf == 1) then
             if (wc - soil(j)%phys(k)%wpmm < 0.) then
-              org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
+              org_con%sut = .1 * (soil(j)%phys(k)%st /soil(j)%phys(k)%wpmm) ** 2
             else
               org_con%sut = .1 + .9 * sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
             end if             
@@ -410,9 +411,9 @@
             org_con%cdg = 0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1
           endif
 
-          !!compute oxygen (ox)
-          org_con%ox = 1. - 0.8 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2) / (((soil(j)%phys(kk)%d + &
-             soil(j)%phys(kk-1)%d) / 2) + exp(18.40961 - 0.023683632 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2))) 
+          mid_depth = (soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d)  / 2.0
+          
+          org_con%ox = 1. - 0.8 * mid_depth / (mid_depth + exp(18.40961 - 0.023683632 * mid_depth))
           
           !! compute combined factor
           org_con%cs = min(15., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * org_con%till_eff) 
@@ -535,8 +536,6 @@
               org_tran%hsntp = soil1(j)%hs(k)%n * org_con%x1
               
         !     potential transformations passive humus
-              ! Note for surface layer (k==1), hp(k)%c and hp(k)%n are zero because
-              ! there is no passive pool for the surface layer.
               org_con%x1 = org_con%cs * carbdb(cf_lyr)%hp_rate
               org_tran%hpctp = soil1(j)%hp(k)%c * org_con%x1
               org_tran%hpntp = soil1(j)%hp(k)%n * org_con%x1
@@ -914,11 +913,13 @@
               !soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)   ! instead of this, should be the sum lignon and non lignin c
               soil1(j)%lig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslcta)
               ! soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
-              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslncta)
+              ! soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslncta)
+              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%nonlig(k)%c - lslncta) ! CC error correction.
               soil1(j)%str(k)%c = soil1(j)%nonlig(k)%c +  soil1(j)%lig(k)%c
                             
               soil1(j)%lig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslcta / .42)
-              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslncta / .42)
+              ! soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslncta / .42)
+              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%nonlig(k)%m - lslncta / .42) ! CC error correcton
           
               soil1(j)%str(k)%m = max(1.e-10, soil1(j)%str(k)%m - lscta / .42)
               
