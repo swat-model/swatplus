@@ -189,7 +189,7 @@
               mathers_stable_carbon_pct = frac_hum_passive * soil(ihru)%phys(ly)%cbn !recalculate because of reduction in hp_cbn_frac 
               frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb
             else
-              frac_hum_slow = org_frac%frac_hum_slow
+              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb
             endif
 
             mathers_stable_carbon_frac = mathers_stable_carbon_pct/100.0
