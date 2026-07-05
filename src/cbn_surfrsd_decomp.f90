@@ -58,7 +58,12 @@
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
       real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
-                            !              |of organic nitrogen in the active pool. 
+                            !              |of organic nitrogen in the active pool.
+      real :: clg = 0.      !none          |lignin fraction of the residue
+      real :: rln = 0.      !none          |lignin-to-nitrogen ratio of the residue
+      real :: lmf = 0.      !none          |metabolic fraction of residue (CENTURY: 0.85-0.018*RLN)
+      real :: lsf = 0.      !none          |structural fraction of residue (1-LMF)
+      real :: rlr = 0.      !none          |lignin fraction going to structural (<= LSF)
       j = ihru
       nactfr = .02
       !zero transformations for summing layers
@@ -134,16 +139,21 @@
             ! soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_1_part_fracs(idp)%str_frac_abg * decomp%c
             ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%c
             
-            soil1(j)%meta(1) = soil1(j)%meta(1) + cswat_1_part_fracs(idp)%meta_frac_abg * decomp
-            soil1(j)%str(1) = soil1(j)%str(1) + cswat_1_part_fracs(idp)%str_frac_abg * decomp
-            soil1(j)%lig(1) = soil1(j)%lig(1) + cswat_1_part_fracs(idp)%lig_frac_abg * decomp
-            !! Give the nonlignin structural CARBON pool its residue share (see cbn_rsd_decomp.f90).
-            !! Without this, nonlig%c decays to zero and structural carbon becomes 100% lignin.
-            !! The whole-struct str add above still sets str%c, but cbn_zhang2 overwrites str%c as
-            !! nonlig%c + lig%c, so this carbon-only line is what actually carries the nonlignin C.
-            !! (Kept the whole-struct str add here because it also feeds str%m/%n/%p; N/P unchanged.)
-            soil1(j)%nonlig(1)%c = soil1(j)%nonlig(1)%c &
-                 + (cswat_1_part_fracs(idp)%str_frac_abg - cswat_1_part_fracs(idp)%lig_frac_abg) * decomp%c
+            !! CENTURY metabolic/structural split (item B, option 3), ported from
+            !! SWAT-C (dormant_change.f90): metabolic fraction from the residue
+            !! lignin-to-N ratio, all residue lignin to structural. Replaces the
+            !! str_frac = lig_frac/0.80 partitioning. See cbn_rsd_transfer.f90.
+            clg = cswat_1_part_fracs(idp)%lig_frac_abg               ! residue lignin fraction
+            rln = clg * decomp%m / (decomp%n + 1.e-5)               ! lignin mass / N mass
+            lmf = 0.85 - 0.018 * rln
+            lmf = max(0.01, min(0.7, lmf))
+            lsf = 1.0 - lmf
+            rlr = min(0.8, clg)                                      ! lignin fraction (capped)
+            rlr = min(rlr, lsf)                                      ! lignin <= structural (nonlig >= 0)
+            soil1(j)%meta(1) = soil1(j)%meta(1) + lmf * decomp
+            soil1(j)%str(1)  = soil1(j)%str(1)  + lsf * decomp       ! str%c reconstituted in cbn_zhang2; feeds str%m/%n/%p
+            soil1(j)%lig(1)  = soil1(j)%lig(1)  + rlr * decomp       ! all residue lignin -> structural lignin
+            soil1(j)%nonlig(1)%c = soil1(j)%nonlig(1)%c + (lsf - rlr) * decomp%c
             
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural

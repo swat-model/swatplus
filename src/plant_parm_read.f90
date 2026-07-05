@@ -60,7 +60,10 @@
           pldb(ic)%mat_yrs = Max (1, pldb(ic)%mat_yrs)
           if (bsn_cc%cswat == 1) then
             cswat_1_part_fracs(ic)%lig_frac_blg = pldb(ic)%res_part_fracs%lig_frac
-            cswat_1_part_fracs(ic)%lig_frac_abg = pldb(ic)%res_part_fracs%str_frac
+            ! Fix: above-ground lignin fraction must be the residue lignin
+            ! fraction, not the structural fraction (was res_part_fracs%str_frac).
+            ! Used as CLG in cbn_surfrsd_decomp's CENTURY split.
+            cswat_1_part_fracs(ic)%lig_frac_abg = pldb(ic)%res_part_fracs%lig_frac
             cswat_1_part_fracs(ic)%str_frac_blg = cswat_1_part_fracs(ic)%lig_frac_blg / .80 
             cswat_1_part_fracs(ic)%str_frac_abg = cswat_1_part_fracs(ic)%lig_frac_abg / .80 
             cswat_1_part_fracs(ic)%meta_frac_blg = 1.0 - cswat_1_part_fracs(ic)%str_frac_blg 
