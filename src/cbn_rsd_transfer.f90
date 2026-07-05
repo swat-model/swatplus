@@ -79,7 +79,17 @@
             soil1(j)%meta(k) = soil1(j)%meta(k) + cswat_1_part_fracs(idp)%meta_frac_blg * transfer
             soil1(j)%str(k)  = soil1(j)%str(k)  + cswat_1_part_fracs(idp)%str_frac_blg  * transfer
             soil1(j)%lig(k)  = soil1(j)%lig(k)  + cswat_1_part_fracs(idp)%lig_frac_blg  * transfer
-            
+            !! Give the nonlignin structural CARBON pool its residue share (see
+            !! cbn_surfrsd_decomp.f90 / cbn_rsd_decomp.f90). This is the ACTIVE subsurface
+            !! residue->litter routine (hru_control.f90 calls cbn_rsd_transfer, not
+            !! cbn_rsd_decomp). Without this, nonlig%c stays zero and subsurface structural
+            !! carbon is 100% lignin (rlr->1), throttling below-ground structural decomposition.
+            !! The whole-struct str add above still sets str%c, but cbn_zhang2 overwrites str%c
+            !! as nonlig%c + lig%c, so this carbon-only line carries the nonlignin C.
+            !! (Whole-struct str add kept because it also feeds str%m/%n/%p; N/P unchanged.)
+            soil1(j)%nonlig(k)%c = soil1(j)%nonlig(k)%c &
+                 + (cswat_1_part_fracs(idp)%str_frac_blg - cswat_1_part_fracs(idp)%lig_frac_blg) * transfer%c
+
           end if    ! soil temp > 0
           
         end do      ! ipl = 1, pcom(j)%npl
