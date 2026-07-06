@@ -145,8 +145,10 @@
           
           !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in structural litter pool
           soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + str_c * .175
-          !non-lignin part of the structural litter C is also updated;
-          soil1(j)%lig(l)%n = soil1(j)%lig(l)%n + str_c * (1.-.175) 
+          !non-lignin part of the structural litter C is also updated (was mistakenly
+          !added to lig%n); str%c = nonlig%c + lig%c reconstitutes in cbn_zhang2, so
+          !without this ~82.5% of the manure structural carbon is lost.
+          soil1(j)%nonlig(l)%c = soil1(j)%nonlig(l)%c + str_c * (1.-.175)
           
           
           ! str_m = fr_ly - meta_m  ! I think this is wrong.  
