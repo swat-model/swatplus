@@ -141,8 +141,16 @@
             soil1(j)%str(k)%m  = soil1(j)%str(k)%m  + cswat_1_part_fracs(idp)%str_frac_blg  * decomp%m
             soil1(j)%lig(k)%m  = soil1(j)%lig(k)%m  + cswat_1_part_fracs(idp)%lig_frac_blg  * decomp%m
             soil1(j)%meta(k)%c = soil1(j)%meta(k)%c + cswat_1_part_fracs(idp)%meta_frac_blg * decomp%c
-            soil1(j)%str(k)%c  = soil1(j)%str(k)%c  + cswat_1_part_fracs(idp)%str_frac_blg  * decomp%c
             soil1(j)%lig(k)%c  = soil1(j)%lig(k)%c  + cswat_1_part_fracs(idp)%lig_frac_blg  * decomp%c
+            !! Nonlignin structural carbon = structural share minus lignin share. This pool
+            !! previously received NO residue input, so it decayed to zero; combined with
+            !! cbn_zhang2 reconstituting str%c = nonlig%c + lig%c, structural carbon became
+            !! 100% lignin (rlr->1), zeroing the fast nonlignin->microbial decomposition route
+            !! and choking the structural->humus pathway that builds sequestered carbon.
+            !! The direct str%c residue add is removed (str%c is reconstituted downstream, so it
+            !! was redundant); carbon now enters via nonlig%c + lig%c. (N/P left unchanged.)
+            soil1(j)%nonlig(k)%c = soil1(j)%nonlig(k)%c &
+                 + (cswat_1_part_fracs(idp)%str_frac_blg - cswat_1_part_fracs(idp)%lig_frac_blg) * decomp%c
             !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
             !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
             !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
