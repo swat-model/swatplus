@@ -81,65 +81,18 @@
 
       end do    !! plant loop
         
-        !! apply manure
+        !! apply manure deposited by the grazing animals to the soil SURFACE only
+        !! (surf_frac = 1.0). Use the manure constituent database (manure_om) via
+        !! pl_manure -- the same routine and inputs the "manu" operation uses --
+        !! instead of the fertilizer database. graze%manure_id is the manure.frt
+        !! index (crosswalked in mgt_read_grazeops.f90).
         it = graze%manure_id
         manure_kg = graze%manure
-        if (manure_kg > 0.) then 
-          l = 1
-          if (bsn_cc%cswat == 0) then
-            soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 + manure_kg * (1. - fertdb(it)%fnh3n) * fertdb(it)%fminn
-            soil1(j)%tot(l)%n = soil1(j)%tot(l)%n + manure_kg * fertdb(it)%forgn 
-            soil1(j)%mn(l)%nh4 = soil1(j)%mn(l)%nh4 + manure_kg * fertdb(it)%fnh3n * fertdb(it)%fminn
-            soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab + manure_kg * fertdb(it)%fminp
-            soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + manure_kg * fertdb(it)%forgp
-            grazn = manure_kg * (fertdb(it)%forgn + fertdb(it)%fminn)
-            grazp = manure_kg * (fertdb(it)%forgp + fertdb(it)%fminp)
-          end if
-          
-          !!By Zhang for C/N cycling
-          !!===============================  
-          if (bsn_cc%cswat == 1 ) then
-          soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 + manure_kg *        &   
-                       (1. - fertdb(it)%fnh3n) * fertdb(it)%fminn
-          !sol_fon(l,j) = sol_fon(l,j) + manure_kg(j) * forgn(it)
-          orgc_f = 0.35  
-          X1 = manure_kg
-          X8 = X1 * orgc_f          
-          RLN = .175 *(orgc_f)/(fertdb(it)%fminp + fertdb(it)%forgn + 1.e-5)
-          X10 = .85-.018*RLN
-          if (X10<0.01) then
-            X10 = 0.01
-          else
-            if (X10 > .7) then
-                X10 = .7
-            end if
-          end if
-          XX = X8 * X10
-          soil1(j)%meta(l)%c = soil1(j)%meta(l)%c + XX
-          YY = manure_kg * X10
-          soil1(j)%meta(l)%m = soil1(j)%meta(l)%m + YY
-          ZZ = manure_kg * fertdb(it)%forgn * X10
-          soil1(j)%meta(l)%n = soil1(j)%meta(l)%n + ZZ
-          soil1(j)%str(l)%n = soil1(j)%str(l)%n + manure_kg * fertdb(it)%forgn - ZZ
-          XZ = manure_kg * orgc_f-XX
-          soil1(j)%str(l)%c = soil1(j)%str(l)%c + XZ
-          soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + XZ * .175
-          !! Nonlignin structural C (was mistakenly added to lig%n). Without this,
-          !! str%c = nonlig%c + lig%c (reconstituted in cbn_zhang2) loses ~82.5% of
-          !! the grazed manure structural carbon.
-          soil1(j)%nonlig(l)%c = soil1(j)%nonlig(l)%c + XZ * (1.-.175)
-          YZ = manure_kg - YY
-          soil1(j)%str(l)%m = soil1(j)%str(l)%m + YZ
-          soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ *.175
-          soil1(j)%tot(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
-          soil1(j)%mn(l)%nh4 = soil1(j)%mn(l)%nh4 + manure_kg *       &   
-                       fertdb(it)%fnh3n * fertdb(it)%fminn
-          soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab + manure_kg *       & 
-                       fertdb(it)%fminp
-          soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + manure_kg *       &   
-                       fertdb(it)%forgp  
-          end if
-
+        if (manure_kg > 0. .and. it > 0) then
+          call pl_manure (it, manure_kg, 1.0)
+          !! grazing manure N and P for the grazn/grazp landscape output
+          grazn = manure_kg * (manure_om(it)%forgn + manure_om(it)%fminn)
+          grazp = manure_kg * (manure_om(it)%forgp + manure_om(it)%fminp)
         end if
 
       return

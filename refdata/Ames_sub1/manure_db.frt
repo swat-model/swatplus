@@ -112,3 +112,16 @@ sw_sw_lq_  sw_sw_lq     null   null   null   null   null      Southwest_Swine_Li
 sw_sw_sl_  sw_sw_sl     null   null   null   null   null      Southwest_Swine_Slurry_Salt
 sw_sw_ss_  sw_sw_ss     null   null   null   null   null      Southwest_Swine_Semi-solid_Salt
 sw_sw_sd_  sw_sw_sd     null   null   null   null   null      Southwest_Swine_Solid_Salt
+dairy_fr   dairy_fr     null   null   null   null   null      Dairy_FreshManure
+beef_fr    beef_fr      null   null   null   null   null      Beef_FreshManure
+veal_fr    veal_fr      null   null   null   null   null      Veal_FreshManure
+swine_fr   swine_fr     null   null   null   null   null      Swine_FreshManure
+sheep_fr   sheep_fr     null   null   null   null   null      Sheep_FreshManure
+goat_fr    goat_fr      null   null   null   null   null      Goat_FreshManure
+horse_fr   horse_fr     null   null   null   null   null      Horse_FreshManure
+layer_fr   layer_fr     null   null   null   null   null      Layer_FreshManure
+broil_fr   broil_fr     null   null   null   null   null      Broiler_FreshManure
+trkey_fr   trkey_fr     null   null   null   null   null      Turkey_FreshManure
+duck_fr    duck_fr      null   null   null   null   null      Duck_FreshManure
+livestk_fr livestk_fr   null   null   null   null   null      Livestock_FreshManure
+
