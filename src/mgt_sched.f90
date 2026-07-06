@@ -397,7 +397,7 @@
             ifrt = mgt%op1                          !fertilizer type from fert data base
             frt_kg = mgt%op3                        !amount applied in kg/ha
             ifertop = mgt%op4                       !surface application fraction from chem app data base
-              call pl_manure (ifrt, frt_kg, ifertop)
+              call pl_manure (ifrt, frt_kg, chemapp_db(ifertop)%surf_frac)
               call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
               call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
               if (pco%mgtout == "y") then
