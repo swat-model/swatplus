@@ -84,6 +84,7 @@
       mix_org%microb = orgz
       mix_org%str = orgz
       mix_org%lig = orgz
+      mix_org%nonlig = orgz
       mix_org%meta = orgz
       mix_org%man = orgz
       mix_org%water = orgz
@@ -242,6 +243,7 @@
               mix_org%microb = mix_org%microb + frac_mixed * soil1(jj)%microb(l)
               mix_org%str = mix_org%str + frac_mixed * soil1(jj)%str(l)
               mix_org%lig = mix_org%lig + frac_mixed * soil1(jj)%lig(l)
+              mix_org%nonlig = mix_org%nonlig + frac_mixed * soil1(jj)%nonlig(l)
               mix_org%meta = mix_org%meta + frac_mixed * soil1(jj)%meta(l)
               mix_org%man = mix_org%man + frac_mixed * soil1(jj)%man(l)
               mix_org%water = mix_org%water + frac_mixed * soil1(jj)%water(l)
@@ -282,6 +284,7 @@
               soil1(jj)%microb(l) = frac_non_mixed * soil1(jj)%microb(l) + frac_dep(l) * mix_org%microb
               soil1(jj)%str(l) = frac_non_mixed * soil1(jj)%str(l) + frac_dep(l) * mix_org%str
               soil1(jj)%lig(l) = frac_non_mixed * soil1(jj)%lig(l) + frac_dep(l) * mix_org%lig
+              soil1(jj)%nonlig(l) = frac_non_mixed * soil1(jj)%nonlig(l) + frac_dep(l) * mix_org%nonlig
               soil1(jj)%meta(l) = frac_non_mixed * soil1(jj)%meta(l) + frac_dep(l) * mix_org%meta
               soil1(jj)%man(l) = frac_non_mixed * soil1(jj)%man(l) + frac_dep(l) * mix_org%man
               soil1(jj)%water(l) = frac_non_mixed * soil1(jj)%water(l) + frac_dep(l) * mix_org%water

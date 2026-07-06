@@ -122,6 +122,9 @@
           
           !! add lignin manure pool
           soil1(j)%lig(l) = soil1(j)%lig(l) + 0.175 * pool_fr * org_frt
+          !! add nonlignin structural C (str%c = nonlig%c + lig%c is reconstituted
+          !! in cbn_zhang2; without this ~82.5% of the fertilizer structural C is lost)
+          soil1(j)%nonlig(l)%c = soil1(j)%nonlig(l)%c + (1. - 0.175) * pool_fr * org_frt%c
           
           !! total residue pool is metabolic + structural
           ! soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
