@@ -1,6 +1,6 @@
 file.cio: AMES
 simulation        time.sim          print.prt         null              object.cnt        null              
-basin             codes.bsn         parameters.bsn    
+basin             codes.bsn         parameters.bsn    carbon.bsn
 climate           weather-sta.cli   weather-wgn.cli   null              pcp.cli           tmp.cli           null              null              null              null              
 connect           hru.con           null              null              null              null              null              null              null              null              null              null              null              null       
 channel           null       null       null        null         null        null        null        null              
