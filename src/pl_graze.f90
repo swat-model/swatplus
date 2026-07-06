@@ -124,7 +124,10 @@
           XZ = manure_kg * orgc_f-XX
           soil1(j)%str(l)%c = soil1(j)%str(l)%c + XZ
           soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + XZ * .175
-          soil1(j)%lig(l)%n = soil1(j)%lig(l)%n + XZ * (1.-.175) 
+          !! Nonlignin structural C (was mistakenly added to lig%n). Without this,
+          !! str%c = nonlig%c + lig%c (reconstituted in cbn_zhang2) loses ~82.5% of
+          !! the grazed manure structural carbon.
+          soil1(j)%nonlig(l)%c = soil1(j)%nonlig(l)%c + XZ * (1.-.175)
           YZ = manure_kg - YY
           soil1(j)%str(l)%m = soil1(j)%str(l)%m + YZ
           soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ *.175
