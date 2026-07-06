@@ -338,7 +338,7 @@
               frt_kg = d_tbl%act(iac)%const           !amount applied in kg/ha
               ifertop = d_tbl%act_app(iac)            !surface application fraction from chem app data base
 
-              call pl_manure (ifrt, frt_kg, ifertop)
+              call pl_manure (ifrt, frt_kg, chemapp_db(ifertop)%surf_frac)
               call salt_fert(j,ifrt,frt_kg,ifertop) !rtb salt 
               call cs_fert(j,ifrt,frt_kg,ifertop) !rtb cs
               if (pco%mgtout == "y") then

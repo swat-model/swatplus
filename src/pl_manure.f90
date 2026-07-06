@@ -1,4 +1,4 @@
-      subroutine pl_manure (ifrt, frt_kg, fertop)
+      subroutine pl_manure (ifrt, frt_kg, surf_frac)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine applies N and P specified by date and
@@ -27,7 +27,8 @@
       integer :: j = 0                    !none          |counter
       integer :: l = 0                    !none          |counter 
       integer, intent (in) :: ifrt        !              |fertilizer type from fert data base
-      integer, intent (in) :: fertop      !              | 
+      real, intent (in) :: surf_frac      !frac          |fraction of manure applied to the surface layer
+                                          !              |(from chem_app.ops surf_frac for "manu"; 1.0 for "graz")
       real, intent (in) :: frt_kg         !kg/ha         |amount of fertilizer applied
       real :: fr_ly = 0.                  !              |fraction of fertilizer applied to layer
       
@@ -70,9 +71,9 @@
       do l = 1, 2
         fr_ly = 0.
         if (l == 1) then
-          fr_ly = chemapp_db(fertop)%surf_frac
+          fr_ly = surf_frac
         else
-          fr_ly = 1. - chemapp_db(fertop)%surf_frac                     
+          fr_ly = 1. - surf_frac
         endif
         
         fr_mass = fr_ly * frt_kg ! mass of applied manure in kg/ha to the soil layer
