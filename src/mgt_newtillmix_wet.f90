@@ -43,7 +43,7 @@
       real :: frac_non_mixed = 0.      !               |
       !!by zhang
       !!=============   
-      real :: smix(22+cs_db%num_pests+12)         !varies         |amount of substance in soil profile
+      real :: smix(22+cs_db%num_pests+13)         !varies         |amount of substance in soil profile
                                        !               |that is being redistributed between mixed layers
       !CB 12/2/09 thtill is not used. mjw rev 490
       !!changed the dimension from 22 + npmx to 22 + npmx + 12
@@ -139,6 +139,7 @@
           if (bsn_cc%cswat == 1) then         
               smix(20+npmx+1) = smix(20+npmx+1) + soil1(jj)%str(l)%c * frac_mixed
               smix(20+npmx+2) = smix(20+npmx+2) + soil1(jj)%lig(l)%c * frac_mixed
+              smix(20+npmx+13) = smix(20+npmx+13) + soil1(jj)%nonlig(l)%c * frac_mixed
               smix(20+npmx+3) = smix(20+npmx+3) + soil1(jj)%lig(l)%n* frac_mixed
               smix(20+npmx+4) = smix(20+npmx+4) + soil1(jj)%meta(l)%c * frac_mixed
               smix(20+npmx+5) = smix(20+npmx+5) + soil1(jj)%meta(l)%m * frac_mixed
@@ -199,6 +200,7 @@
           if (bsn_cc%cswat == 1) then         
             soil1(jj)%str(l)%c = soil1(jj)%str(l)%c * frac_non_mixed + smix(20+npmx+1) * frac_dep(l)
             soil1(jj)%lig(l)%c = soil1(jj)%lig(l)%c * frac_non_mixed + smix(20+npmx+2) * frac_dep(l)
+            soil1(jj)%nonlig(l)%c = soil1(jj)%nonlig(l)%c * frac_non_mixed + smix(20+npmx+13) * frac_dep(l)
             soil1(jj)%lig(l)%n = soil1(jj)%lig(l)%n * frac_non_mixed + smix(20+npmx+3) * frac_dep(l)
             soil1(jj)%meta(l)%c = soil1(jj)%meta(l)%c * frac_non_mixed + smix(20+npmx+4) * frac_dep(l)
             soil1(jj)%meta(l)%m = soil1(jj)%meta(l)%m * frac_non_mixed + smix(20+npmx+5) * frac_dep(l)
