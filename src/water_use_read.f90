@@ -26,7 +26,14 @@
 
       inquire (file='water_use.wal', exist=i_exist)
       if (.not. i_exist .or. 'water_use.wal' == "null") then
-        allocate (wuse(0:0))
+        allocate (wuse(0:0))          
+        allocate (wuse_om_stor(0:0))
+        allocate (wuse_om_out(0:0))
+        allocate (wuse_cs_stor(0:0))
+        allocate (wal_use_omd(0:0))
+        allocate (wal_use_omm(0:0))
+        allocate (wal_use_omy(0:0))
+        allocate (wal_use_oma(0:0))
       else
       do 
         open (107,file='water_use.wal')
