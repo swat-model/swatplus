@@ -492,7 +492,7 @@
       
       !rtb hydrograph separation
       !write out hydrograph components for selected channels
-      if(gwflow_flag) then
+      if (gwflow_flag == 1) then
       do i_chan=1,sp_ob%chandeg
         if(hydsep_flag(i_chan).eq.1) then
           write(out_hyd_sep,102) time%yrc,time%day,i_chan,(hyd_sep_array(i_chan,i_count),i_count=1,7)
