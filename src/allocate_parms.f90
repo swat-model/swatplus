@@ -12,6 +12,10 @@
       use time_module
       use hydrograph_module
       use constituent_mass_module
+
+      nteger :: mhru
+      integer :: mch
+      integer :: mpc
       
 !! initialize variables    
       mhyd = 1  !!added for jaehak vars
