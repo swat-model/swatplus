@@ -82,7 +82,7 @@
          endif
 	   endif
    !rtb gwflow: store phosphorus leaching concentration for gwflow module
-   if(gwflow_flag .and. gw_transport_flag) then
+   if (gwflow_flag == 1 .and. gw_transport_flag == 1) then
      gwflow_percp(j) = hls_d(j)%lchlabp  
    endif
       end do
