@@ -117,7 +117,7 @@
               
               
               !rtb gwflow - connect irrigation to groundwater pumping from aquifer
-              if(gwflow_flag) then
+              if(gwflow_flag ==1) then
                 irrig_total = (irrop_db(irrop)%amt_mm/1000.) * hru(j)%area_ha * 10000. !m3 of irrigation water
                 if(hru_num_cells(j).gt.0) then
                   gwvol_demand = irrig_total / hru_num_cells(j) !groundwater to remove from each cell connected to the HRU
