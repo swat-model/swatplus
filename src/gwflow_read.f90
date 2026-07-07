@@ -124,7 +124,7 @@
       gw_delay = Exp(-1./(delay + 1.e-6))
       gw_rech = 0.
       read(in_gw,*) gw_transport_flag
-      if(gw_transport_flag) then
+      if (gw_transport_flag == 1) then
         gw_rechn = 0.
         gw_rechp = 0.
       endif
@@ -826,7 +826,7 @@
       write(out_gwbal,*) 'satfr:              fraction of cells that have water table at ground'
       write(out_gwbal,*) 'wtdep:         m    average depth to water table for watershed'
       write(out_gwbal,*)
-      gwflow_hdr_day = (/"  year","   day","ts","vol_bef","vol_aft","rech","gwet","gwsw","swgw","satex","gwsoil", &
+      gwflow_hdr_day = (/ character(len=16) :: "  year","   day","ts","vol_bef","vol_aft","rech","gwet","gwsw","swgw","satex","gwsoil", &
                          "bound","pump_ag","pump_ex","tile","lake","error","satfr","wtdepth"/)
       write(out_gwbal,119) (gwflow_hdr_day(j),j=1,19)
       endif
@@ -854,7 +854,7 @@
       write(out_gwbal_yr,*) 'tile:          mm   groundwater removed via tile drains'
       write(out_gwbal_yr,*) 'lake:          mm   groundwater exchanged with lakes'
       write(out_gwbal_yr,*)
-      gwflow_hdr_yr = (/"  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil","bound","pump_ag","pump_ex","tile","lake"/)
+      gwflow_hdr_yr = (/ character(len=16) :: "  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil","bound","pump_ag","pump_ex","tile","lake"/)
       write(out_gwbal_yr,120) (gwflow_hdr_yr(j),j=1,13)
       vol_change_yr = 0.
       ss_rech_yr = 0.
@@ -892,7 +892,7 @@
       write(out_gwbal_aa,*) 'tile:          mm   groundwater removed via tile drains'
       write(out_gwbal_aa,*) 'lake:          mm   groundwater exchanged with lakes'
       write(out_gwbal_aa,*)
-      gwflow_hdr_aa = (/"  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil","bound","pump_ag","pump_ex","tile","lake"/)
+      gwflow_hdr_aa = (/ character(len=16) :: "  year","delvol","rech","gwet","gwsw","swgw","satex","gwsoil","bound","pump_ag","pump_ex","tile","lake"/)
       write(out_gwbal_aa,120) (gwflow_hdr_aa(j),j=1,13)
       vol_change_total = 0.
       ss_rech_total = 0.
@@ -936,7 +936,7 @@
         write(out_gwbaln,*) 'lake:          kg   NO3 mass loaded to/from lakes'
         write(out_gwbaln,*) 'error:         --   mass balance error for aquifer'
         write(out_gwbaln,*)
-        gwflown_hdr_day = (/"  year","   day","ts","massbef","massaft","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct", &
+        gwflown_hdr_day = (/ character(len=16) :: "  year","   day","ts","massbef","massaft","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct", &
                             "pump_ag","pump_ex","tile","lake","error"/)
         write(out_gwbaln,119) (gwflown_hdr_day(j),j=1,18)
         open(out_gwbalp,file='gwflow_balance_p_day')
@@ -962,7 +962,7 @@
         write(out_gwbalp,*) 'lake:          kg   P mass loaded to/from lakes'
         write(out_gwbalp,*) 'error:         --   mass balance error for aquifer'
         write(out_gwbalp,*)
-        gwflowp_hdr_day = (/"  year","   day","ts","massbef","massaft","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct", &
+        gwflowp_hdr_day = (/ character(len=16) :: "  year","   day","ts","massbef","massaft","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct", &
                             "pump_ag","pump_ex","tile","lake","error"/)
         write(out_gwbalp,119) (gwflowp_hdr_day(j),j=1,18)
         endif
@@ -989,7 +989,7 @@
         write(out_gwbaln_yr,*) 'tile:          kg   NO3 mass removed by tile drains'
         write(out_gwbaln_yr,*) 'lake:          kg   NO3 mass loaded to/from lakes'
         write(out_gwbaln_yr,*)
-        gwflown_hdr_yr = (/"  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
+        gwflown_hdr_yr = (/ character(len=16) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
         write(out_gwbaln_yr,120) (gwflown_hdr_yr(j),j=1,14)
         nmass_change_yr = 0.
         ss_rechn_yr = 0.
@@ -1023,7 +1023,7 @@
         write(out_gwbalp_yr,*) 'tile:          kg   P mass removed by tile drains'
         write(out_gwbalp_yr,*) 'lake:          kg   P mass loaded to/from lakes'
         write(out_gwbalp_yr,*)
-        gwflowp_hdr_yr = (/"  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
+        gwflowp_hdr_yr = (/ character(len=16) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
         write(out_gwbalp_yr,120) (gwflowp_hdr_yr(j),j=1,14)
         pmass_change_yr = 0.
         ss_rechp_yr = 0.
@@ -1061,7 +1061,7 @@
         write(out_gwbaln_aa,*) 'tile:          kg   NO3 mass removed by tile drains'
         write(out_gwbaln_aa,*) 'lake:          kg   NO3 mass loaded to/from lakes'
         write(out_gwbaln_aa,*)
-        gwflown_hdr_aa = (/"  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
+        gwflown_hdr_aa = (/ character(len=16) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
         write(out_gwbaln_aa,120) (gwflown_hdr_aa(j),j=1,14)
         nmasschange_total = 0.
         ss_rechn_total = 0.
@@ -1095,7 +1095,7 @@
         write(out_gwbalp_aa,*) 'tile:          kg   P mass removed by tile drains'
         write(out_gwbalp_aa,*) 'lake:          kg   P mass loaded to/from lakes'
         write(out_gwbalp_aa,*)
-        gwflowp_hdr_aa = (/"  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
+        gwflowp_hdr_aa = (/ character(len=16) :: "  year","delmass","rech","gwsw","swgw","satex","gwsoil","adv","dsp","rct","pump_ag","pump_ex","tile","lake"/)
         write(out_gwbalp_aa,120) (gwflowp_hdr_aa(j),j=1,14)
         pmasschange_total = 0.
         ss_rechp_total = 0.
@@ -1378,7 +1378,7 @@
       write(out_hyd_sep,*) 'chan_satexsw:  channel flow contributed from saturation excess runoff' 
       write(out_hyd_sep,*) 'chan_tile:     channel flow contributed from tile drain flow' 
       write(out_hyd_sep,*)
-      hydsep_hdr = (/"  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw","chan_satexgw","chan_satexsw","chan_tile"/)
+      hydsep_hdr = (/ character(len=16) :: "  year","   day","channel","chan_surf","chan_lat","chan_gwsw","chan_swgw","chan_satexgw","chan_satexsw","chan_tile"/)
       write(out_hyd_sep,121) (hydsep_hdr(j),j=1,10)      
       
       
