@@ -2,9 +2,9 @@
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine determines the curve numbers for moisture conditions
-!!    I and III and calculates coefficients and shape parameters for the 
+!!    I and III and calculates coefficents and shape parameters for the 
 !!    water retention curve
-!!    the coefficients and shape parameters are calculated by one of two methods:
+!!    the coefficents and shape parameters are calculated by one of two methods:
 !!    the default method is to make them a function of soil water, the 
 !!    alternative method (labeled new) is to make them a function of 
 !!    accumulated PET, precipitation and surface runoff.
@@ -35,21 +35,19 @@
       use soil_module
       
       implicit none
-      
-      external :: ascrv
    
       integer, intent (in) :: h            !none          |HRU number
       real, intent (in) :: cnn             !cnn           |none          |SCS runoff curve number for moisture condition II
-      real :: c2 = 0.                      !none          |variable used to hold calculated value 
-      real :: cn1 = 0.                     !none          |SCS runoff curve number for moisture condition I
-      real :: cn3 = 0.                     !none          |SCS runoff curve number for moisture condition III
-      real :: s3 = 0.                      !none          |retention parameter for CN3
-      real :: rto3 = 0.                    !none          |fraction difference between CN3 and CN1 retention parameters
-      real :: rtos = 0.                    !none          |fraction difference between CN=99 and CN1 retention parameters
-      real :: smxold = 0.                  !              | 
-      real :: sumul = 0.                   !mm H2O        |amount of water held in soil profile at saturation
-      real :: sumfc = 0.                   !mm H2O        |amount of water held in the soil profile at field capacity
-      real :: max                          !              |
+      real :: c2                           !none          |variable used to hold calculated value 
+      real :: cn1                          !none          |SCS runoff curve number for moisture condition I
+      real :: cn3                          !none          |SCS runoff curve number for moisture condition III
+      real :: s3                           !none          |retention parameter for CN3
+      real :: rto3                         !none          |fraction difference between CN3 and CN1 retention parameters
+      real :: rtos                         !none          |fraction difference between CN=99 and CN1 retention parameters
+      real :: smxold                       !              | 
+      real :: sumul                        !mm H2O        |amount of water held in soil profile at saturation
+      real :: sumfc                        !mm H2O        |amount of water held in the soil profile at field capacity
+      real :: amax1                        !              |
       real :: amin1                        !              |
       
       cn2(h) = cnn
@@ -72,10 +70,7 @@
       rtos = 1. - 2.54 / smx(h)
       sumul = soil(h)%sumul
       sumfc = soil(h)%sumfc + hru(h)%hyd%cn3_swf * (soil(h)%sumul - soil(h)%sumfc)
-      if (sumfc < 0.) then
-        sumfc = 10.
-      end if
-      sumfc = max (.05, sumfc)
+      sumfc = amax1 (.05, sumfc)
       sumfc = amin1 (sumul-.05, sumfc)
       !! calculate shape parameters
       call ascrv(rto3, rtos, sumfc, sumul, wrt(1,h), wrt(2,h))

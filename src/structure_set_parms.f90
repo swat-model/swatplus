@@ -12,15 +12,13 @@
       use soil_module
       
       implicit none
-      
-      external :: ttcoef_wway
     
       character (len=16), intent (in) :: str_name     !              |
       integer, intent (in) :: istr                    !              |
       integer, intent (in) :: j                       !none          |HRU number
-      integer :: jj = 0                               !none          |counter
-      real :: tch = 0.                                !              |
-      real :: b = 0.                                  !m             |bottom width of channel
+      integer :: jj                                   !none          |counter
+      real :: tch                                     !              |
+      real :: b                                       !m             |bottom width of channel
 
       select case(str_name)
 
@@ -64,8 +62,8 @@
 
       case ("grassww")
         hru(j)%lumv%ngrwat = istr
-        if (istr > 0)  then
-          hru(j)%lumv%grwat_i = 1
+        if (istr < 0)  then
+          hru(j)%lumv%grwat_i = grwaterway_db(istr)%grwat_i
           hru(j)%lumv%grwat_n = grwaterway_db(istr)%grwat_n
           hru(j)%lumv%grwat_spcon = grwaterway_db(istr)%grwat_spcon
           hru(j)%lumv%grwat_d = grwaterway_db(istr)%grwat_d
@@ -95,7 +93,7 @@
           !! Depth and Width not possible with 8:1 sideslope and trapazoidal channel assume b =.25*width
           if (b <= 0.) hru(j)%lumv%grwat_d = 3. / 64. * hru(j)%lumv%grwat_w
 
-          call ttcoef_wway(j)
+          call ttcoef_wway
         end if
 
       case ("user_def")                 !user defined Upland CP removal MJW

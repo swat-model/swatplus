@@ -3,18 +3,18 @@
       use hru_module, only : hru
       use plant_module, only : pcom
       use landuse_data_module, only : lum, lum_str, lum_grp
-      use hydrograph_module, only : ob
+      use hydrograph_module, only : ob, sp_ob
       use climate_module, only : wst
       
       implicit none
 
       integer, intent (in)  :: iihru    !none       |hru number
-      integer :: iob = 0                !           |spatial object number
-      integer :: ilu = 0                !none       |land use number 
-      integer :: ilug = 0               !none       |counter 
-      integer :: isched = 0             !           |management schedule number
-      integer :: iwst = 0               !           |weather station number
-      integer :: iwgn = 0               !           |weather generator number
+      integer :: iob                    !           |spatial object number
+      integer :: ilu                    !none       |land use number 
+      integer :: ilug                   !none       |counter 
+      integer :: isched                 !           |management schedule number
+      integer :: iwst                   !           |weather station number
+      integer :: iwgn                   !           |weather generator number
 
         !!assign land use pointers for the hru
         ilu = hru(iihru)%land_use_mgt

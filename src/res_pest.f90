@@ -13,29 +13,30 @@
       
       implicit none      
       
-      real :: tpest1 = 0.           !mg pst        |amount of pesticide in water
-      real :: tpest2 = 0.           !mg pst        |amount of pesticide in benthic sediment
-      real :: kd = 0.               !(mg/kg)/(mg/L) |koc * carbon
-      real :: fd1 = 0.              !              |frac of soluble pesticide in water column
-      real :: fd2 = 0.              !              |frac of sorbed pesticide in water column
-      real :: fp1 = 0.              !              |frac of soluble pesticide in benthic column
-      real :: fp2 = 0.              !              |frac of sorbed pesticide in benthic column
-      real :: depth = 0.            !              |average depth of reservoir
-      real :: solpesto = 0.         !mg pst        |soluble pesticide transported out of reservoir
-      real :: sorpesto = 0.         !mg pst        |sorbed pesticide transported out of reservoir
-      real :: sedmass_watervol = 0. !kg/L or t/m3  |sediment mass divided by water volume in water and benthic
-      real :: pest_init = 0.        !mg            |amount of pesticide before decay
-      real :: pest_end = 0.         !mg            |amount of pesticide after decay
-      real :: mol_wt_rto = 0.   !ratio      |molecular weight ratio of duaghter to parent pesticide
-      integer :: ipest_db = 0   !none       |pesticide number from pesticide data base
-      integer :: ipseq = 0      !none       |sequential basin pesticide number
-      integer :: ipdb = 0       !none       |sequential pesticide number of daughter pesticide
-      integer :: imeta = 0      !none       |pesticide metabolite counter
+      real :: tpest1                !mg pst        |amount of pesticide in water
+      real :: tpest2                !mg pst        |amount of pesticide in benthic sediment
+      real :: kd                    !(mg/kg)/(mg/L) |koc * carbon
+      real :: fd1                   !              |frac of soluble pesticide in water column
+      real :: fd2                   !              |frac of sorbed pesticide in water column
+      real :: fp1                   !              |frac of soluble pesticide in benthic column
+      real :: fp2                   !              |frac of sorbed pesticide in benthic column
+      real :: depth                 !              |average depth of reservoir
+      real :: bedvol                !m^3           |volume of river bed sediment
+      real :: solpesto              !mg pst        |soluble pesticide transported out of reservoir
+      real :: sorpesto              !mg pst        |sorbed pesticide transported out of reservoir
+      real :: sedmass_watervol      !kg/L or t/m3  |sediment mass divided by water volume in water and benthic
+      real :: pest_init             !mg            |amount of pesticide before decay
+      real :: pest_end              !mg            |amount of pesticide after decay
+      real :: mol_wt_rto        !ratio      |molecular weight ratio of duaghter to parent pesticide
+      integer :: ipest_db       !none       |pesticide number from pesticide data base
+      integer :: ipseq          !none       |sequential basin pesticide number
+      integer :: ipdb           !none       |seqential pesticide number of daughter pesticide
+      integer :: imeta          !none       |pesticide metabolite counter
       integer :: jres               !none          |reservoir number  
-      integer :: ipst = 0           !none          |counter
-      integer :: icmd = 0           !none          |
-      integer :: jsed = 0           !none          |counter
-      integer :: idb = 0            !none          |
+      integer :: ipst               !none          |counter
+      integer :: icmd               !none          |
+      integer :: jsed               !none          |counter
+      integer :: idb                !none          |
 
       if (res(jres)%flo > 1.) then
           
@@ -44,9 +45,10 @@
         idb = ob(icmd)%props
         ipest_db = cs_db%pest_num(ipst)
         jsed = res_dat(idb)%sed
-        respst_d(jres)%pest(ipst)%tot_in = obcs(icmd)%hin(1)%pest(ipst)
-        tpest1 = obcs(icmd)%hin(1)%pest(ipst) + res_water(jres)%pest(ipst)
-        tpest2 = res_benthic(jres)%pest(ipst)
+        respst_d(jres)%pest(ipst)%tot_in = obcs(icmd)%hin%pest(ipst)
+        tpest1 = obcs(icmd)%hin%pest(ipst) + res_water(jres)%pest(ipst)
+        bedvol = 1000. * res_wat_d(jres)%area_ha * pestdb(ipest_db)%ben_act_dep + .01
+        tpest2 = res_benthic(jres)%pest(ipst) * bedvol
 
         !! calculate average depth of reservoir
         depth = res(jres)%flo / (res_wat_d(jres)%area_ha * 10000.)
@@ -192,18 +194,11 @@
         !! update concentration of pesticide in lake water and sediment
         if (tpest1 < 1.e-10) tpest1 = 0.0
         if (tpest2 < 1.e-10) tpest2 = 0.0
-        res_water(jres)%pest(ipst) = tpest1
-        res_benthic(jres)%pest(ipst) = tpest2
-        
-        !! set pesticide stored in water and benthic at end of day for output
-        respst_d(jres)%pest(ipst)%water = tpest1
-        respst_d(jres)%pest(ipst)%benthic = tpest2
-        
-        !! set outgoing pesticide for routing
-        hcs2%pest(ipst) = solpesto + sorpesto
+        res_water(jres)%pest(ipst) = tpest1 / res(jres)%flo
+        res_benthic(jres)%pest(ipst) = tpest2 / bedvol
 
-      end do    ! ipst = 1, cs_db%num_pests
-      end if    ! res(jres)%flo > 1.
+      end do
+      end if
 
       return
       end subroutine res_pest

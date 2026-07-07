@@ -15,13 +15,14 @@
       real, intent (in) :: tileq            !m3         |tile flow
       real, intent (in), dimension(bsn_prm%day_lag_mx,time%step) :: uh              !unit hydrograph
       real, intent (in out), dimension(bsn_prm%day_lag_mx,time%step) :: hyd_flo     !surface runoff hydrograph
-      integer :: istep = 0                  !none       |counter  
-      integer :: iday = 0                   !           | 
-      integer :: iday_prev = 0              !           |
-      integer :: iday_cur = 0               !           |
-      real :: ssq = 0.                      !           |
-      real :: sq = 0.                       !           |
-      real :: sumflo = 0.                   !           |
+      integer :: istep                      !none       |counter  
+      integer :: iday                       !           | 
+      integer :: iday_prev                  !           |
+      integer :: iday_cur                   !           |
+      real :: ssq                           !           |
+      real :: sq                            !           |
+      real :: sumflo                        !           |
+      real :: sumflo_day                    !           |
 
       !! set subdaily hydrographs
       iday_cur = iday_start

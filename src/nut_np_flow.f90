@@ -1,4 +1,4 @@
-    !Purpose: Calculate N or P flow from Pool A to Pool B, as well as immobilization or mineralization
+    !Purpose: Calcualte N or P flow from Pool A to Pool B, as well as immobilization or mineralization
     SUBROUTINE nut_np_flow (                                           &                                 
         C_A, E_A, CEtoB, C_AtoB, CO2fromA,                                  &   !Input             
         E_AtoB, IMM_AtoB, MNR_AtoB)                          !Output
@@ -15,8 +15,8 @@
     real, intent(out) :: MNR_AtoB      !         | Mineralization of E as the result of pool A to Pool B transformation (kg N or P ha-1 day-1)
 
     !!Local
-    real :: EfromCO2 = 0.              !         |
-    real :: efco2 = 0.                 !         |E mineralization resulting from CO2 respiration as result of pool A decomposition (kg N or P ha-1 day-1)  
+    real :: EfromCO2                   !         |
+    real :: efco2                      !         |E mineralization resulting from CO2 respiration as result of pool A decomposition (kg N or P ha-1 day-1)  
 
     !Initialize to zero. 
     E_AtoB = 0.
@@ -24,10 +24,10 @@
     MNR_AtoB = 0.
     IMM_AtoB = 0.
 
-    ! IF N or P in pool A is zero or no C flows from pool A to B, then skip the rest of the calculation and return
+    ! IF N or P in pool A is zero or no C flows from pool A to B, then skip the rest of the calculationg and return
     IF (E_A .LT. 1.E-6 .OR. C_AtoB .LT. 1.E-6 .OR. C_A .LT. 1.E-6) RETURN
 
-    !Calculating E (N or P) transformed from pool A to pool B by assuming E flow is proportional to C flow
+    !Calcualting E (N or P) transformed from pool A to pool B by assuming E flow is proportional to C flow
     E_AtoB = E_A * (C_AtoB / C_A)
 
     !E supply due to CO2 emission during the transformation of C from Pool A to B.
@@ -42,7 +42,7 @@
     !N or P is required to lower C:E ratio of the transformed material to meet
     ! the requirement by pool B.
     IF (C_AtoB / E_AtoB .GT. CEtoB) THEN
-        !Potential immobilization is calculated as:
+        !Potential immobilization is calcualted as:
         IMM_AtoB = C_AtoB / CEtoB - E_AtoB
 
     ELSE

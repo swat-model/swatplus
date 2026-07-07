@@ -12,11 +12,11 @@
       
       implicit none
       
-      integer :: ipest = 0
+      integer :: ipest
       integer :: j
-      integer :: iob = 0
-      real :: const = 0.
-      real :: stor_init = 0. !kg         |store initial pesticide when entire object is zero'd
+      integer :: iob
+      real :: const
+      real :: stor_init      !kg         |store initial pesticide when entire object is zero'd
                          
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs HRU variables on daily, monthly and annual time steps
@@ -34,7 +34,7 @@
              write (3008,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest),&
                aqupst_d(j)%pest(ipest)   !! pesticide balance
              if (pco%csvout == "y") then
-               write (3012,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+               write (3012,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                     cs_db%pests(ipest), aqupst_d(j)%pest(ipest)
              end if
           end if
@@ -52,7 +52,7 @@
              write (3009,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
                aqupst_m(j)%pest(ipest)
                if (pco%csvout == "y") then
-                 write (3013,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (3013,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                    cs_db%pests(ipest), aqupst_m(j)%pest(ipest)
                end if
            end if
@@ -74,7 +74,7 @@
              write (3010,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
                aqupst_y(j)%pest(ipest)
                if (pco%csvout == "y") then
-                 write (3014,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (3014,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                    cs_db%pests(ipest), aqupst_y(j)%pest(ipest)
                end if
            end if
@@ -92,7 +92,7 @@
            write (3011,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
              aqupst_a(j)%pest(ipest)
            if (pco%csvout == "y") then
-             write (3015,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+             write (3015,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                cs_db%pests(ipest), aqupst_a(j)%pest(ipest)
            end if
            

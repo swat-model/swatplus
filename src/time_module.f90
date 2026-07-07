@@ -3,9 +3,7 @@
       implicit none
 
       !integer :: int_print = 1       !! current interval between daily prints
-      character (len=29) :: cal_sim = " Original Simulation"
-      real :: cal_adj = 0.0
-      real :: yrs_print = 0.
+      character (len=25) :: cal_sim = " Original Simulation"
       integer, dimension (13) :: ndays = (/0,31,60,91,121,152,182,213,244,274,305,335,366/)
       integer, dimension (13) :: ndays_leap = (/0,31,60,91,121,152,182,213,244,274,305,335,366/)
       integer, dimension (13) :: ndays_noleap = (/0,31,59,90,120,151,181,212,243,273,304,334,365/)
@@ -37,14 +35,11 @@
         real :: days_prt = 0.         !! number of days for average annual printing for entire time period
         real :: yrs_prt = 0.          !! number of years for average annual printing for entire time period
         real :: yrs_prt_int = 0.      !! number of years for average annual printing for printing interval- pco%aa_yrs()
-        integer :: num_leap = 0       !! number of leap years in simulation for average annual printing
+        integer :: num_leap = 0       !! number of leap years in sumulation for average annual printing
         integer :: prt_int_cur = 1    !! current average annual print interval
         integer :: yrc_tot = 0
       end type time_current
       type (time_current) :: time
       type (time_current) :: time_init
 
-      !elapsed simulation time
-      !real :: sim_start,sim_finish
-      
       end module time_module

@@ -1,4 +1,4 @@
-      subroutine ttcoef_wway(k)     
+      subroutine ttcoef_wway     
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine computes travel time coefficients for routing
 !!    along the main channel - grassed waterways
@@ -24,31 +24,34 @@
 !!    SWAT: Qman
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
-      use hru_module, only : hru
+      use hru_module, only : hru, ihru
       use channel_velocity_module
       
       implicit none
-      
        
+      integer :: jj             !none          |counter
       integer :: k              !none          |dummy argument (HRU number)
-      real :: fps = 0.          !none          |change in horizontal distance per unit
+      real :: fps               !none          |change in horizontal distance per unit
                                 !              |change in vertical distance on floodplain side
                                 !              |slopes; always set to 4 (slope=1/4)
-      real :: b = 0.            !m             |bottom width of channel
-      real :: d = 0.            !m             |depth of flow 
-      real :: p = 0.            !m             |wetting perimeter
-      real :: a = 0.            !m^2           |cross-sectional area of channel
-      real :: qq1 = 0.          !m^3/s         |flow rate for a specified depth
-      real :: rh = 0.           !m             |hydraulic radius of channel
-      real :: tt1 = 0.          !km s/m        |time coefficient for specified depth
-      real :: tt2 = 0.          !km s/m        |time coefficient for bankfull depth
-      real :: aa = 0.           !none          |area/area=1 (used to calculate velocity with
+      real :: b                 !m             |bottom width of channel
+      real :: d                 !m             |depth of flow 
+      real :: p                 !m             |wetting perimeter
+      real :: a                 !m^2           |cross-sectional area of channel
+      real :: qq1               !m^3/s         |flow rate for a specified depth
+      real :: rh                !m             |hydraulic radius of channel
+      real :: tt1               !km s/m        |time coefficient for specified depth
+      real :: tt2               !km s/m        |time coefficient for bankfull depth
+      real :: aa                !none          |area/area=1 (used to calculate velocity with
                                 !              |Manning"s equation)
-      real :: chsslope = 0.     !none          |change in horizontal distance per unit
+      real :: chsslope          !none          |change in horizontal distance per unit
                                 !              |change in vertical distance on channel side
                                 !              |slopes; always set to 2 (slope=1/2) 
-      real, external :: qman    !m^3/s or m/s  |flow rate or flow velocity
+      real :: qman              !m^3/s or m/s  |flow rate or flow velocity
+      integer :: j              !none          |hru number
       
+      k = ihru
+
       aa = 1.
       b = 0.
       d = 0.
@@ -117,8 +120,8 @@
       qq1 = Qman(a, rh, hru(k)%lumv%grwat_n, hru(k)%lumv%grwat_s)
       tt1 = hru(k)%lumv%grwat_l * a / qq1
       grwway_vel(k)%vel_1bf = Qman(aa, rh, hru(k)%lumv%grwat_n, hru(k)%lumv%grwat_s)
-      grwway_vel(k)%celerity_1bf = grwway_vel(k)%vel_1bf * 5. / 3.
-      grwway_vel(k)%stor_dis_1bf = hru(k)%lumv%grwat_l / grwway_vel(k)%celerity_1bf / 3.6
+      grwway_vel(k)%celerity_1bf = grwway_vel(j)%vel_1bf * 5. / 3.
+      grwway_vel(j)%stor_dis_1bf = hru(k)%lumv%grwat_l / grwway_vel(k)%celerity_1bf / 3.6
 
       return
-      end subroutine ttcoef_wway
+      end

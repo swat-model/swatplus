@@ -9,8 +9,8 @@
       implicit none
       
       integer, intent (in) :: j   !                |
-      integer :: iob = 0          !                |
-      real :: const = 0.          !                |
+      integer :: iob              !                |
+      real :: const               !                |
       
       iob = sp_ob1%res + j - 1
 
@@ -20,7 +20,7 @@
             write (2540,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, res_wat_d(j), res(j), &
                 res_in_d(j), res_out_d(j)
                if (pco%csvout == "y") then
-                 write (2544,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                 write (2544,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                     res_wat_d(j), res(j), res_in_d(j), res_out_d(j)
              end if
           end if 
@@ -43,7 +43,7 @@
             write (2541,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, res_wat_m(j), res(j), &
                 res_in_m(j), res_out_m(j)
               if (pco%csvout == "y") then
-                write (2545,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                write (2545,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                     res_wat_m(j), res(j), res_in_m(j), res_out_m(j)
               end if 
           end if
@@ -58,12 +58,11 @@
           res_out_a(j) = res_out_a(j) + res_out_y(j)
           res_wat_y(j) = res_wat_y(j) // 12.
           res_wat_a(j) = res_wat_a(j) + res_wat_y(j)
-          !write (7780,*) res_in_y(j)
           if (pco%res%y == "y") then
             write (2542,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, res_wat_y(j), res(j), &
                 res_in_y(j), res_out_y(j)
               if (pco%csvout == "y") then
-                write (2546,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                write (2546,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                     res_wat_y(j), res(j), res_in_y(j), res_out_y(j)
               end if
           end if
@@ -80,7 +79,7 @@
           write (2543,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, res_wat_a(j), res(j), &
             res_in_a(j), res_out_a(j)
           if (pco%csvout == "y") then
-            write (2547,'(*(G0.6,:","))')time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+            write (2547,'(*(G0.3,:","))')time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 res_wat_a(j), res(j), res_in_a(j), res_out_a(j)
           end if 
           res_in_a(j) = resmz
@@ -90,6 +89,6 @@
         
       return
 
-100   format (4i6,2i10,2x,a,63e15.4)       
+100   format (4i6,2i10,2x,a,60e15.4)       
      
       end subroutine reservoir_output

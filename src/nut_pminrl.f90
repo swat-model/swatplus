@@ -11,27 +11,29 @@
 
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : hru, ihru
+      use hru_module, only : ihru
       use soil_module
       use output_landscape_module, only : hnb_d
       
       implicit none
 
-      real, parameter :: bk = 0.01      !              |was .0006
-      integer :: j = 0                  !none          |HRU number
-      integer :: l = 0                  !none          |counter 
-      real :: rto = 0.                  !              |
-      real :: rmp1 = 0.                 !kg P/ha       |amount of phosphorus moving from the solution
-                                        !              |mineral to the active mineral pool in the soil layer
-      real :: roc = 0.                  !kg P/ha       |amount of phosphorus moving from the active
-                                        !              |mineral to the stable mineral pool in the soil layer
+      real, parameter :: bk = .0006     !              |
+      integer :: j                      !none          |HRU number
+      integer :: l                      !none          |counter 
+      real :: rto                       !              |
+      real :: rmp1                      !kg P/ha       |amount of phosphorus moving from the solution
+                                        !              |mineral to the active mineral pool in the
+                                        !              |soil layer
+      real :: roc                       !kg P/ha       |amount of phosphorus moving from the active
+                                        !              |mineral to the stable mineral pool in the 
+                                        !              |soil layer
 
       j = ihru
 
       hnb_d(j)%lab_min_p = 0.
       hnb_d(j)%act_sta_p = 0.
 
-      rto = hru(j)%nut%psp / (1. - hru(j)%nut%psp)
+      rto = bsn_prm%psp / (1. - bsn_prm%psp)
 
       do l = 1, soil(j)%nly
         rmp1 = (soil1(j)%mp(l)%lab - soil1(j)%mp(l)%act * rto)

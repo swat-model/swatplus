@@ -2,7 +2,8 @@
       
       use plant_data_module
       use basin_module
-      use hru_module, only : ipl
+      use hru_module, only : hru, uapd, uno3d, par, bioday, ep_day, es_day,              &
+         ihru, ipl, pet_day, rto_no3, rto_solp, sum_no3, sum_solp, uapd_tot, uno3d_tot, vpd
       use plant_module
       use carbon_module
       use organic_mineral_mass_module
@@ -11,9 +12,11 @@
       implicit none 
       
       integer, intent (in) :: j     !none               |HRU number
-      integer :: idp = 0            !                   |
-      real :: rto = 0.              !none               |ratio of current years of growth:years to maturity of perennial
-      real :: phumax = 0.
+      integer :: idp                !                   |
+      real :: rto                   !none               |ratio of current years of growth:years to maturity of perennial
+      integer :: min                !                   |
+      real :: biomxyr               !                   |
+      real :: phumax
              
       idp = pcom(j)%plcur(ipl)%idplt
 
@@ -21,11 +24,11 @@
       if (pldb(idp)%typ == "warm_annual" .or. pldb(idp)%typ == "cold_annual" .or.  &
              pldb(idp)%typ == "warm_annual_tuber" .or. pldb(idp)%typ == "cold_annual_tuber") then
         pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc * 1000. * pldb(idp)%rdmx
+        if (pcom(j)%plg(ipl)%root_dep > soil(j)%zmx) pcom(j)%plg(ipl)%root_dep = soil(j)%zmx
+        if (pcom(j)%plg(ipl)%root_dep < 10.) pcom(j)%plg(ipl)%root_dep = 10.
       else
-        pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc_p * 1000. * pldb(idp)%rdmx
+        pcom(j)%plg(ipl)%root_dep = amin1 (soil(j)%zmx, 1000. * pldb(idp)%rdmx)
       end if
-      if (pcom(j)%plg(ipl)%root_dep > soil(j)%zmx) pcom(j)%plg(ipl)%root_dep = soil(j)%zmx
-      if (pcom(j)%plg(ipl)%root_dep < 25.4) pcom(j)%plg(ipl)%root_dep = 25.4
 
       !! calculate total root mass
       if (pldb(idp)%typ == "perennial") then 
@@ -44,10 +47,11 @@
       else    !!annuals
         !! calculate fraction of total biomass that is in the roots for annuals
         phumax = amin1 (1., pcom(j)%plcur(ipl)%phuacc)
-        pcom(j)%plg(ipl)%root_frac = pldb(idp)%rsr1 - (pldb(idp)%rsr1 - pldb(idp)%rsr2) * phumax
+        pcom(j)%plg(ipl)%root_frac = pldb(idp)%rsr1 - pldb(idp)%rsr2 * phumax
       end if
-
-      call pl_rootfr(j)
       
+      !! root mass
+      pl_mass(j)%root(ipl)%m = pcom(j)%plg(ipl)%root_frac * pl_mass(j)%tot(ipl)%m
+
       return
       end subroutine pl_root_gro

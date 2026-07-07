@@ -7,7 +7,7 @@
       implicit none
       
       integer, intent (in) :: irec            !          |     
-      integer :: iob = 0                      !          |
+      integer :: iob                          !          |
    
       iob = sp_ob1%recall + irec - 1   !!!!!! added for new output write
              
@@ -20,9 +20,9 @@
         !! daily print - RECALL
          if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
           if (pco%recall%d == "y") then
-            write (4600,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_d(irec)
+            write (4600,*) time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_d(irec)
             if (pco%csvout == "y") then
-              write (4604,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_d(irec)
+              write (4604,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_d(irec)
             end if
           end if
         end if
@@ -31,9 +31,9 @@
         if (time%end_mo == 1) then
           rec_y(irec) = rec_y(irec) + rec_m(irec)
           if (pco%recall%m == "y") then
-            write (4601,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_m(irec)
+            write (4601,*) time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_m(irec)
             if (pco%csvout == "y") then
-              write (4605,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_m(irec)
+              write (4605,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_m(irec)
             endif
           end if
           rec_m(irec) = hz
@@ -43,9 +43,9 @@
         if (time%end_yr == 1) then
           rec_a(irec) = rec_a(irec) + rec_y(irec)
           if (pco%recall%y == "y") then
-            write (4602,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_y(irec)
+            write (4602,*) time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_y(irec)
             if (pco%csvout == "y") then
-              write (4606,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_y(irec) 
+              write (4606,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_y(irec) 
             end if
           end if
           !! zero yearly variables        
@@ -55,9 +55,9 @@
       !! average annual print - RECALL
           if (time%end_sim == 1 .and. pco%recall%a == "y") then
           rec_a(irec) = rec_a(irec) / time%yrs_prt
-            write (4603,*) time%day, time%mo, time%day_mo, time%yrc, ob(iob)%name, ob(iob)%typ, rec_a(irec)
+            write (4603,*) time%day, time%mo, time%day_mo, time%yrc, ob(irec)%name, ob(irec)%typ, rec_a(irec)
             if (pco%csvout == "y") then 
-              write (4607,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ob(iob)%name, ob(iob)%typ, rec_a(irec)  
+              write (4607,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, ob(irec)%name, ob(irec)%typ, rec_a(irec)  
             end if 
           end if
 

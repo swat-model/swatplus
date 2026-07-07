@@ -8,12 +8,12 @@
 
       implicit none
       
-      character (len=80) :: titldum = "" !          |title of file
-      character (len=80) :: header = ""  !          |header of file
-      integer :: eof = 0               !          |end of file
-      integer :: imax = 0              !units     |description
+      character (len=80) :: titldum    !          |title of file
+      character (len=80) :: header     !          |header of file
+      integer :: eof                   !          |end of file
+      integer :: imax                  !units     |description
       logical :: i_exist               !          |check to determine if file exists
-      integer :: ich = 0               !none      |counter
+      integer :: ich                   !none      |counter
       
       eof = 0
       imax = 0
@@ -54,5 +54,5 @@
       enddo
       endif
 
-      return 
+      return    
       end subroutine ch_read_init

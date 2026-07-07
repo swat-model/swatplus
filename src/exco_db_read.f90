@@ -4,19 +4,10 @@
       use constituent_mass_module
       use input_file_module
       use maximum_data_module
-
-      implicit none
-      
-      external :: exco_read_om, ee, exco_read_hmet, exco_read_path, exco_read_pest, exco_read_salt
  
-      character (len=80) :: titldum = ""
-      character (len=80) :: header = ""
-      integer :: eof = 0
-      integer :: imax = 0
+      character (len=80) :: titldum, header
+      integer :: eof, imax
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i = 0
-      integer :: ii = 0
-      integer :: k = 0
 
       eof = 0
       
@@ -26,8 +17,6 @@
         do
           open (107,file=in_exco%exco)
           read (107,*,iostat=eof) titldum
-          if (eof < 0) exit
-          read (107,*,iostat=eof) header
           if (eof < 0) exit
           read (107,*,iostat=eof) header
           if (eof < 0) exit
@@ -46,14 +35,10 @@
           if (eof < 0) exit
           read (107,*,iostat=eof) header
           if (eof < 0) exit
-          read (107,*,iostat=eof) header
-          if (eof < 0) exit
           
         do ii = 1, imax
-          read (107,*,iostat=eof) i
+          read (107,*,iostat=eof) exco_db(ii)
           if (eof < 0) exit
-          backspace (107)
-          read (107,*,iostat=eof) k, exco_db(i)
         end do
           close (107)
           exit

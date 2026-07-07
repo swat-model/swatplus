@@ -1,12 +1,12 @@
       subroutine calsoft_sed
 
-      use hru_module, only : hru, ihru, tconc
+      use hru_module, only : hru, hru_init, ihru, tconc
       use soil_module
       use plant_module
       use hydrograph_module
       use ru_module
       use aquifer_module
-      ! use channel_module
+      use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -18,22 +18,20 @@
       
       implicit none
       
-      external :: re_initialize, time_control
-      
-      integer :: isim = 0      !          |
-      integer :: ireg = 0      !none      |counter
-      integer :: ilum = 0      !none      |counter
-      integer :: iihru = 0     !none      |counter
-      integer :: ihru_s = 0    !none      |counter
-      integer :: iter = 0      !none      |counter
-      integer :: isl = 0       !none      |counter
-      real :: rmeas = 0.       !          |
-      real :: denom = 0.       !          |
-      real :: soft = 0.        !          |
-      real :: diff = 0.        !          |
-      real :: chg_val = 0.     !          | 
-      real :: xm = 0.          !          |    
-      real :: sin_sl = 0.      !          | 
+      integer :: isim          !          |
+      integer :: ireg          !none      |counter
+      integer :: ilum          !none      |counter
+      integer :: iihru         !none      |counter
+      integer :: ihru_s        !none      |counter
+      integer :: iter          !none      |counter
+      integer :: isl           !none      |counter
+      real :: rmeas            !          |
+      real :: denom            !          |
+      real :: soft             !          |
+      real :: diff             !          |
+      real :: chg_val          !          | 
+      real :: xm               !          |    
+      real :: sin_sl           !          | 
 
       !calibrate sediment
 
@@ -211,5 +209,5 @@
         end do      ! isl
         end do      ! iter
       
-      return
+	  return
       end subroutine calsoft_sed

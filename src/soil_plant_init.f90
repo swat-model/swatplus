@@ -1,19 +1,14 @@
       subroutine soil_plant_init
     
       use hru_module
-      use basin_module
       use input_file_module
       use maximum_data_module
       use constituent_mass_module
-
-      implicit none
  
-      character (len=80) :: titldum = ""
-      character (len=80) :: header = ""
-      integer :: eof = 0
-      integer :: imax = 0
+      character (len=80) :: titldum
+      character (len=80) :: header
+      integer :: eof, imax
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ii = 0
 
       eof = 0
       
@@ -43,14 +38,8 @@
           if (eof < 0) exit
           
           do ii = 1, imax
-            if (bsn_cc%nam1 == 0) then
-              read (107,*,iostat=eof) sol_plt_ini(ii)%name, sol_plt_ini(ii)%sw_frac, sol_plt_ini(ii)%nutc,  &
+            read (107,*,iostat=eof) sol_plt_ini(ii)%name, sol_plt_ini(ii)%sw_frac, sol_plt_ini(ii)%nutc,  &
                 sol_plt_ini(ii)%pestc, sol_plt_ini(ii)%pathc, sol_plt_ini(ii)%saltc, sol_plt_ini(ii)%hmetc
-            else
-              read (107,*,iostat=eof) sol_plt_ini(ii)%name, sol_plt_ini(ii)%sw_frac, sol_plt_ini(ii)%nutc,  &
-                sol_plt_ini(ii)%pestc, sol_plt_ini(ii)%pathc, sol_plt_ini(ii)%saltc, sol_plt_ini(ii)%hmetc, &
-                sol_plt_ini(ii)%csc
-            end if
             if (eof < 0) exit
           end do
           close (107)

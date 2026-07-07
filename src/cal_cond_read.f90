@@ -1,7 +1,7 @@
       subroutine cal_cond_read
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this function computes new parameter value based on 
+!!    this function computes new paramter value based on 
 !!    user defined change
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
@@ -14,6 +14,9 @@
 
 !!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
 !!    name        |units         |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    chg_par     |variable      |new parameter value
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
       
@@ -24,13 +27,13 @@
       
       implicit none
 
-      character (len=80) :: titldum = ""                 !           |title of file
-      character (len=80) :: header = ""                  !           |header of file
-      integer :: eof = 0                                 !           |end of file
+      character (len=80) :: titldum                      !           |title of file
+      character (len=80) :: header                       !           |header of file
+      integer :: eof                                     !           |end of file
       logical :: i_exist                                 !none       |check to determine if file exists
-      integer :: num_dtls = 0                            !none       |end of loop
-      integer :: i = 0                                   !none       |counter
-      integer :: icond = 0                               !none       |counter
+      integer :: num_dtls                                !none       |end of loop
+      integer :: i                                       !none       |counter
+      integer :: icond                                   !none       |counter
 
       num_dtls = 0
         

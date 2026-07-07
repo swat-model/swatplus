@@ -7,9 +7,9 @@
       
       implicit none
 
-      integer :: ii = 0             !none          |counter
-      integer :: ielem = 0          !none          |counter
-      real :: rto = 0.              !none          |cloud cover factor
+      integer :: ii                 !none          |counter
+      integer :: ielem              !none          |counter
+      real :: rto                   !none          |cloud cover factor
       
      ! compute delivery ratio for each hru in the sub
       do iru = 1, sp_ob%ru
@@ -40,4 +40,5 @@
       end do
       
       return
-      end subroutine dr_ru   
+      end subroutine dr_ru
+      

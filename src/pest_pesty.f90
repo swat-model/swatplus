@@ -3,6 +3,15 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine calculates pesticide transported with suspended sediment 
 
+!!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
+!!    name          |units        |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    enratio       |none         |enrichment ratio calculated for day in HRU
+!!    ihru          |none         |HRU number
+!!    pst_enr(:,:)  |none         |pesticide enrichment ratio
+!!    zdb(:,:)      |mm           |division term from net pesticide equation
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
       use hru_module, only : hru, sedyld, ihru, enratio
       use soil_module
       use constituent_mass_module
@@ -12,14 +21,15 @@
       
       implicit none 
 
-      real :: conc = 0.   !              |concentration of pesticide in soil
-      real :: er = 0.     !none          |enrichment ratio for pesticides
-      real :: zdb1 = 0.   !              |
-      real :: kd = 0.     !(mg/kg)/(mg/L) |koc * carbon
-      integer :: j = 0    !none          |HRU number
-      integer :: k = 0    !none          |counter
-      integer :: ipest_db = 0!none          |pesticide number from database
-      real :: pest_init = 0.!kg/ha         |amount of pesticide in soil
+      real :: conc        !              |concentration of pesticide in soil
+      real :: er          !none          |enrichment ratio for pesticides
+      real :: zdb1        !              |
+      real :: kd          !(mg/kg)/(mg/L) |koc * carbon
+      integer :: j        !none          |HRU number
+      integer :: k        !none          |counter
+      integer :: ipest_db !none          |pesticide number from database
+      real :: pest_init   !kg/ha         |amount of pesticide in soil
+      integer :: icmd     !              | 
 
       j = ihru
 

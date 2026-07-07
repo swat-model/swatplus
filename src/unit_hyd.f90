@@ -44,24 +44,28 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
+      !use hru_module, only : itb
       use basin_module
       use time_module
+      use hydrograph_module, only : sp_ob
       
       implicit none
       
-      real :: ql = 0.           !           | 
-      real :: sumq = 0.         !           |
-      real :: tb = 0.           !           |
-      real :: tp = 0.           !           |
-      integer :: i = 0          !none       |counter
-      real :: q = 0.            !           |
+      integer :: j              !none       |counter
+      real :: ql                !           | 
+      real :: sumq              !           |
+      real :: tb                !           |
+      real :: tp                !           |
+      integer :: int            !           |
+      integer :: i              !none       |counter
+      real :: xi                !           |
+      real :: q                 !           |
       integer :: max            !           |
-      integer :: istep = 0      !none       |time step that corresponds to time%step for routing
-      integer :: iday = 0       !none       |current day in the unit hydrograph
-      integer :: t_inc = 0      !none       |time increments within the time step to sum the unit hyd
-      integer :: ts_base = 0    !none       |number of time steps in base of hydrograph
-      real :: t_inc_hr = 0.     !hr         |time increment
-      real :: t_tot = 0.        !hr         |total time in the hydrograph
+      integer :: itb            !           |
+      integer :: istep          !none       |time step that corresponds to time%step for routing
+      integer :: iday           !none       |current day in the unit hydrograph
+      real :: t_inc             !hr         |time increment to sum the unit hyd
+      real :: t_tot             !hr         |total time in the hydrograph
       
       real, intent (in)  :: tc
       real, intent (out), dimension(bsn_prm%day_lag_mx,time%step) :: uh
@@ -71,55 +75,72 @@
       sumq = 0.
       uh = 0.
       tb = .5 + .6 * tc + bsn_prm%tb_adj    !baseflow time, hr
-      if (tb > 48.) tb = 48.                !maximum 48hrs
+      if (tb > 48.) tb = 48.			    !maximum 48hrs
       tp = .375 * tb                        ! time to peak flow
 
       !! sum 20 points on the unit hydrograph to get sum for the time%step
+	  itb = 20 
       t_inc = tb / 20.
       t_tot = 0.
-      
-      !!
-      ts_base = int(tb / (time%dtm / 60.))
-      ts_base = max (1, ts_base)
-      t_inc = 20 / ts_base + 2
-      t_inc_hr = time%dtm / float(t_inc) / 60.
-       
-      do iday = 1, 2
-        do istep = 1, time%step
-          !! increment within the time step to get accurate estimates near peak
-          do i = 1, t_inc
-            t_tot = t_tot + t_inc_hr
-            
-            !! Triangular Unit Hydrograph
-            if (bsn_cc%uhyd == 0) then
-              if (t_tot < tp) then
-                !! rising limb of hydrograph
-                q = t_tot / tp
-              else
-                !! falling limb of hydrograph
-                q = (tb - t_tot) / (tb - tp)
-              end if
-            end if
-            
-            !! Gamma Function Unit Hydrograph
-            if (bsn_cc%uhyd == 1) then
-              q = (t_tot / tp) ** bsn_prm%uhalpha * exp((1. - t_tot / tp) * bsn_prm%uhalpha)
-            end if
-            
-            q = Max(0.,q)
-            uh(iday,istep) = uh(iday,istep) + (q + ql) / 2.
-            sumq = sumq + (q + ql) / 2.
-            ql = q
-          end do
-          if (q < 1.e-4) exit
+      istep = 1
+      iday = 1
+        
+	  !! Triangular Unit Hydrograph
+	  if (bsn_cc%uhyd == 0) then
+        !! increment for number of points to estimate uh
+	    do i = 1, itb
+          t_tot = t_tot + t_inc
+          if (t_tot > float(istep * time%step / 24)) then
+            istep = istep + 1
+          end if
+          if (t_tot > float(iday * 24)) then
+            iday = iday + 1
+            t_tot = 0
+          end if
+          
+ 	      if (t_tot < tp) then
+            !! rising limb of hydrograph
+            q = t_tot / tp
+          else
+            !! falling limb of hydrograph
+            q = (tb - t_tot) / (tb - tp)
+          end if
+          q = Max(0.,q)
+          uh(iday,istep) = uh(iday,istep) + (q + ql) / 2.
+          sumq = sumq + (q + ql) / 2.
+          ql = q
         end do
-      end do
-      
-      do i = 1, 2
+
+	  ! Gamma Function Unit Hydrograph
+	  else if (bsn_cc%uhyd == 1) then
+        i = 1; q = 1.
+		do while (q > 0.0001)
+          t_tot = t_tot + t_inc
+          if (t_tot > float(istep * time%step / 24)) then
+            istep = istep + 1
+          end if
+          if (t_tot > float(iday * 24)) then
+            iday = iday + 1
+            t_tot = 0
+          end if
+          
+          xi = float(i)
+          q = (xi / tp) ** bsn_prm%uhalpha * exp((1. - xi / tp) * bsn_prm%uhalpha)
+          q = Max(0.,q)
+          uh(iday,istep) = (q + ql) / 2.
+          ql = q
+          sumq = sumq + uh(iday,istep)
+	      i = i + 1
+	      if (i > 3. * time%step) exit
+        end do
+
+	  end if 
+          
+      do i = 1, iday
         do istep = 1, time%step
           uh(i,istep) = uh(i, istep) / sumq
         end do
       end do
-        
+	  
       return
       end subroutine unit_hyd

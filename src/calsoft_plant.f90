@@ -1,10 +1,10 @@
       subroutine calsoft_plant
 
-      use hru_module, only : hru, hru_init
+      use hru_module, only : ihru, hru, hru_init
       use hydrograph_module
       use ru_module
       use aquifer_module
-      ! use channel_module
+      use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -12,31 +12,28 @@
       use calibration_data_module
       use conditional_module
       use reservoir_module
-      use soil_module
       use plant_module
       use output_landscape_module
       
       implicit none
       
-      external :: calsoft_plant_zero, re_initialize, time_control
-      
-      integer :: iter_all = 0  !          |end of loop
-      integer :: iterall = 0   !none      |counter
-      integer :: isim = 0      !          |
-      integer :: ireg = 0      !none      |counter
-      integer :: ilum = 0      !none      |counter
-      integer :: iihru = 0     !none      |counter
-      integer :: ihru_s = 0    !none      |counter
-      integer :: iter_ind = 0  !          !end of loop
-      integer :: ist = 0       !          |
-      integer :: ipl = 0       !none      |counter for plants in the hru
-      integer :: nvar = 0      !          |number of plant cal variables (1=lai_pot, 2=harv_idx)
-      real :: rmeas = 0.       !          |
-      real :: denom = 0.       !          |
-      real :: soft = 0.        !          |
-      real :: diff = 0.        !          |
-      real :: chg_val = 0.     !          | 
-      real :: perc_ln_func = 0.
+      integer :: iter_all      !          |end of loop
+      integer :: iterall       !none      |counter
+      integer :: isim          !          |
+      integer :: ireg          !none      |counter
+      integer :: ilum          !none      |counter
+      integer :: iihru         !none      |counter
+      integer :: ihru_s        !none      |counter
+      integer :: iter_ind      !          !end of loop
+      integer :: ist           !          |
+      integer :: ipl           !none      |counter for plants in the hru
+      integer :: nvar          !          |number of plant cal variables (1=lai_pot, 2=harv_idx)
+      real :: rmeas            !          |
+      real :: denom            !          |
+      real :: soft             !          |
+      real :: diff             !          |
+      real :: chg_val          !          | 
+      real :: perc_ln_func
       
       !calibrate crop yields
         iter_all = 1
@@ -92,11 +89,6 @@
         do ireg = 1, db_mx%plcal_reg
           nvar = plcal(ireg)%lum_num    ! epco is second variable
           do ilum = 1, plcal(ireg)%lum_num
-            !! use actual value for epco and not change in value like other parms
-            if (iterall == 1) then
-              plcal(ireg)%lum(ilum)%prm%epco = pl_prms(ireg)%prm(ilum)%init_val
-            end if
-            
             soft = plcal(ireg)%lum(ilum)%meas%yield
             diff = 0.
             if (soft > 1.e-6) diff = abs((soft - plcal(ireg)%lum(ilum)%aa%yield) / soft)
@@ -533,5 +525,6 @@
         end do      ! ist
           
       end do    ! iter_all loop
-      return
+
+	  return
       end subroutine calsoft_plant

@@ -10,7 +10,7 @@
         character(len=25) :: prt = "print.prt"
         character(len=25) :: object_prt = "object.prt"
         character(len=25) :: object_cnt = "object.cnt"
-        character(len=25) :: cs_db = "constituents.cs"
+        character(len=25) :: cs_db = "constituents.cs"		
       end type input_sim
       type (input_sim) :: in_sim
 
@@ -20,13 +20,12 @@
        character(len=25) :: parms_bas = "parameters.bsn"
       end type input_basin
       type (input_basin) :: in_basin
-              
+      	  	  
 !! climate
       type input_cli
        character(len=25) :: weat_sta = "weather-sta.cli"
        character(len=25) :: weat_wgn = "weather-wgn.cli"
-       character(len=25) :: pet_cli = "pet.cli"
-       !character(len=25) :: wind_dir = "wind-dir.cli"
+       character(len=25) :: wind_dir = "wind-dir.cli"
        character(len=25) :: pcp_cli = "pcp.cli"
        character(len=25) :: tmp_cli = "tmp.cli"
        character(len=25) :: slr_cli = "slr.cli"
@@ -95,7 +94,7 @@
        character(len=25) :: hru_ez   = "hru-lte.hru"
       end type input_hru
       type (input_hru) :: in_hru
-      
+	  
 !! exco (recall constant)
       type input_exco
        character(len=25) :: exco = "exco.exc"
@@ -106,7 +105,7 @@
        character(len=25) :: salt = "exco_salt.exc"
       end type input_exco
       type (input_exco) :: in_exco
-      
+	  
 !! recall (daily, monthly and annual)
       type input_rec 
        character(len=25) :: recall_rec = "recall.rec"
@@ -116,11 +115,11 @@
 !! delivery ratio
       type input_delr
        character(len=25) :: del_ratio = "delratio.del"
-       character(len=25) :: om = "dr_om.del"
-       character(len=25) :: pest = "dr_pest.del"
-       character(len=25) :: path = "dr_path.del"
-       character(len=25) :: hmet = "dr_hmet.del"
-       character(len=25) :: salt = "dr_salt.del"
+	   character(len=25) :: om = "dr_om.del"
+	   character(len=25) :: pest = "dr_pest.del"
+	   character(len=25) :: path = "dr_path.del"
+	   character(len=25) :: hmet = "dr_hmet.del"
+	   character(len=25) :: salt = "dr_salt.del"
       end type input_delr
       type (input_delr) :: in_delr
 
@@ -141,9 +140,9 @@
       
 !! water-rights
       type input_water_rights
-        character(len=25) :: transfer_wro = "water_allocation.wro"  !! transferring water using water rights objects (using decision tables)
+        character(len=25) :: transfer_wro = "transfer.wro"      !! transferring water using water rights objects (using decision tables)
         character(len=25) :: element = "element.wro"
-        character(len=25) :: water_rights = "water_rights.wro"      !! 2 sources and compensation (used for NAM)
+        character(len=25) :: water_rights = "water_rights.wro"  !! 2 sources and compensation (used for NAM)
       end type input_water_rights
       type (input_water_rights) :: in_watrts
       
@@ -178,9 +177,9 @@
        character(len=25) :: fert_frt = "fertilizer.frt"
        character(len=25) :: till_til = "tillage.til"
        character(len=25) :: pest = "pesticide.pes"
-       character(len=25) :: pathcom_db = "pathogens.pth"
-       character(len=25) :: hmetcom_db = "metals.mtl"
-       character(len=25) :: saltcom_db = "salt.slt"
+	   character(len=25) :: pathcom_db = "pathogens.pth"
+	   character(len=25) :: hmetcom_db = "metals.mtl"
+	   character(len=25) :: saltcom_db = "salt.slt"
        character(len=25) :: urban_urb = "urban.urb"
        character(len=25) :: septic_sep = "septic.sep"
        character(len=25) :: snow = "snow.sno"
@@ -224,17 +223,17 @@
       
 !! initial conditions
       type input_init
-       character(len=25) :: plant = "plant.ini"
+	   character(len=25) :: plant = "plant.ini"
        character(len=25) :: soil_plant_ini = "soil_plant.ini"
        character(len=25) :: om_water = "om_water.ini"
-       character(len=25) :: pest_soil = "pest_hru.ini"
-       character(len=25) :: pest_water = "pest_water.ini"
-       character(len=25) :: path_soil = "path_hru.ini"
-       character(len=25) :: path_water = "path_water.ini"
-       character(len=25) :: hmet_soil = "hmet_hru.ini"
-       character(len=25) :: hmet_water = "hmet_water.ini"
-       character(len=25) :: salt_soil = "salt_hru.ini"
-       character(len=25) :: salt_water = "salt_water.ini"
+	   character(len=25) :: pest_soil = "pest_hru.ini"
+	   character(len=25) :: pest_water = "pest_water.ini"
+	   character(len=25) :: path_soil = "path_hru.ini"
+	   character(len=25) :: path_water = "path_water.ini"
+	   character(len=25) :: hmet_soil = "hmet_hru.ini"
+	   character(len=25) :: hmet_water = "hmet_water.ini"
+	   character(len=25) :: salt_soil = "salt_hru.ini"
+	   character(len=25) :: salt_water = "salt_water.ini"
        end type input_init
       type (input_init) :: in_init
 
@@ -242,7 +241,7 @@
       type input_soils
        character(len=25) :: soils_sol = "soils.sol"
        character(len=25) :: nut_sol = "nutrients.sol"
-       character(len=25) :: lte_sol = "soils_lte.sol"
+       character(len=25) :: lte_sol = "soils_lte.sol"      
       end type input_soils
       type (input_soils) :: in_sol
 
@@ -251,7 +250,7 @@
        character(len=25) :: dtbl_lum = "lum.dtl"
        character(len=25) :: dtbl_res = "res_rel.dtl"
        character(len=25) :: dtbl_scen = "scen_lu.dtl"
-       character(len=25) :: dtbl_flo = "flo_con.dtl"
+       character(len=25) :: dtbl_flo = "flo_con.dtl"       
       end type input_condition
       type (input_condition) :: in_cond
            
@@ -276,42 +275,31 @@
         character(len=25) :: def_psc_reg = "rec_reg.def"
       end type input_regions
       type (input_regions) :: in_regs
-
-      !! shade factor
-      type shade_factor
-          character(len=25) :: ssff_shf = "shade_factor.shf"
-      end type shade_factor
-      type (shade_factor) :: in_shf
-
+      
       type input_path_pcp
-        character(len=80) :: pcp = " "
+        character(len=50) :: pcp = " "  
       end type input_path_pcp
       type (input_path_pcp) :: in_path_pcp
       
      type input_path_tmp
-        character(len=80) :: tmp = " "
+        character(len=50) :: tmp = " "  
       end type input_path_tmp
       type (input_path_tmp) :: in_path_tmp
       
      type input_path_slr
-        character(len=80) :: slr = " "
+        character(len=50) :: slr = " "  
       end type input_path_slr
       type (input_path_slr) :: in_path_slr
            
      type input_path_hmd
-        character(len=80) :: hmd = " "
+        character(len=50) :: hmd = " "  
       end type input_path_hmd
       type (input_path_hmd) :: in_path_hmd
       
      type input_path_wnd
-        character(len=80) :: wnd = " "
+        character(len=50) :: wnd = " "  
       end type input_path_wnd
       type (input_path_wnd) :: in_path_wnd
-      
-    type input_path_pet
-        character(len=80) :: peti = " "
-      end type input_path_pet
-      type (input_path_pet) :: in_path_pet
       
       contains
 

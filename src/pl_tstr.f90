@@ -35,10 +35,10 @@
       
       implicit none 
       
-      integer :: j = 0         !none        |HRU number
-      integer :: idp = 0       !            | 
-      real :: tgx = 0.         !            |
-      real :: rto = 0.         !none        |cloud cover factor
+      integer :: j             !none        |HRU number
+      integer :: idp           !            | 
+      real :: tgx              !            |
+      real :: rto              !none        |cloud cover factor
 
       j = ihru
 
@@ -72,9 +72,6 @@
       else
         pcom(j)%plstr(ipl)%strst = 0.
       end if
-      
-      pcom(j)%plstr(ipl)%strst = max (0., pcom(j)%plstr(ipl)%strst)
-      pcom(j)%plstr(ipl)%strst = amin1 (1., pcom(j)%plstr(ipl)%strst)
 
       return
       end subroutine pl_tstr

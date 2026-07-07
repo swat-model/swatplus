@@ -30,21 +30,19 @@
       
       implicit none
 
-      integer :: j = 0          !none          |HRU number
+      integer :: j              !none          |HRU number
 
+      j = 0
       j = ihru
 
-      !! add sediment from lateral and tile flow - t=ppm*ha*mm*10/100,000;  m3=ha*mm*10; ppm=t/m3/1.e-6
-      sedyld(j) = sedyld(j) + hru(j)%hyd%lat_sed * hru(j)%area_ha * (latq(j) + qtile) / 100000.
-      
-      !! update sediment yield for sediment in lateral and tile flow
-      !! mm * 1 t/m3 * 10,000 m2/ha * mm/1,000 m * 1/1,000,000 ppm = 1/10,000
+      !! update sediment yield for sediment in lateral flow
+      !! mm * 1 t/m3 * 10,000 m2/ha * mm/1,000 mm * 1/1,000,000 ppm = 1/10,000
       sedyld(j)=sedyld(j) + (latq(j) + qtile) * hru(j)%hyd%lat_sed / 100000.
-      sanyld(j)=sanyld(j)+ latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_san
-      silyld(j)=silyld(j)+ latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_sil
-      clayld(j)=clayld(j)+ latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_cla
-      sagyld(j)=sagyld(j)+ latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_sag
-      lagyld(j)=lagyld(j)+ latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_lag
+      sanyld(j)=sanyld(j)+latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_san
+      silyld(j)=silyld(j)+latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_sil
+      clayld(j)=clayld(j)+latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_cla
+      sagyld(j)=sagyld(j)+latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_sag
+      lagyld(j)=lagyld(j)+latq(j) * hru(j)%km * hru(j)%hyd%lat_sed * soil(j)%det_lag
 
       !! organic n and p in the lateral flow     - by J.Jeong BREC 2011  
       !mm*mg/L*1000L/m3*kg/1000000mg*m3/10ha-mm=kg/ha

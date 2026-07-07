@@ -6,12 +6,11 @@
  
       implicit none 
         
-      character (len=80) :: titldum = ""
-      character (len=80) :: header = ""
-      integer :: eof = 0
-      integer :: imax = 0
-      integer :: ipest = 0
-      integer :: ipesti = 0
+      character (len=80) :: titldum
+      character (len=80) :: header
+      integer :: eof, imax
+      integer :: ipest
+      integer :: ipesti
       logical :: i_exist              !none       |check to determine if file exists
 
       eof = 0
@@ -42,8 +41,8 @@
           allocate (cs_pest_solsor(cs_db%num_pests))
           
           do ipest = 1, imax
-            allocate (pest_soil_ini(ipest)%soil(cs_db%num_pests), source = 0.)
-            allocate (pest_soil_ini(ipest)%plt(cs_db%num_pests), source = 0.)
+            allocate (pest_soil_ini(ipest)%soil(cs_db%num_pests))
+            allocate (pest_soil_ini(ipest)%plt(cs_db%num_pests))
           end do
           
           rewind (107)

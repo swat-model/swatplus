@@ -7,23 +7,22 @@
       use reservoir_module
       
       implicit none
-      
-      external :: define_unit_elements
 
-      character (len=500) :: header = "" !              |header of file
-      character (len=80) :: titldum = "" !              |title of file
-      integer :: eof = 0               !              |end of file
+      character (len=500) :: header    !              |header of file
+      character (len=80) :: titldum    !              |title of file
+      integer :: eof                   !              |end of file
       logical :: i_exist               !              |check to determine if file exists
-      integer :: imax = 0              !none          |determine max number for array (imax) and total number in file
-      integer :: mcal = 0              !              |
-      integer :: mreg = 0               !             |
-      integer :: i = 0                  !none         |counter
-      integer :: k = 0                  !             |
-      integer :: nspu = 0               !             | 
-      integer :: isp = 0                !             |
-      integer :: ielem1 = 0             !none         |counter
-      integer :: ireg = 0               !none         |counter
-      integer :: ires = 0               !none         |counter
+      integer :: ii                    !none          |counter
+      integer :: imax                  !none          |determine max number for array (imax) and total number in file
+      integer :: mcal                  !              |
+      integer :: mreg                   !             |
+      integer :: i                      !none         |counter
+      integer :: k                      !             |
+      integer :: nspu                   !             | 
+      integer :: isp                    !             |
+      integer :: ielem1                 !none         |counter
+      integer :: ireg                   !none         |counter
+      integer :: ires                   !none         |counter
       
       imax = 0
       mcal = 0
@@ -48,20 +47,20 @@
         read (107,*,iostat=eof) k, rcu_out(i)%name, rcu_out(i)%area_ha, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu), source = 0)
+          allocate (elem_cnt(nspu))
           backspace (107)
           read (107,*,iostat=eof) k, rcu_out(i)%name, rcu_out(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (rcu_out(i)%num(ielem1), source = 0)
+          allocate (rcu_out(i)%num(ielem1))
           rcu_out(i)%num = defunit_num
           rcu_out(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (rcu_out(i)%num(sp_ob%hru), source = 0)
+          allocate (rcu_out(i)%num(sp_ob%hru))
           rcu_out(i)%num_tot = sp_ob%res
           do ires = 1, sp_ob%res
             rcu_out(i)%num(ires) = ires
@@ -73,7 +72,7 @@
          
       db_mx%res_out = mreg
       end do 
-      end if
+      end if	  
         
     !! setting up regions for reservoir soft cal and/or output by type
     inquire (file=in_regs%def_res_reg, exist=i_exist)
@@ -92,20 +91,20 @@
         read (107,*,iostat=eof) k, rcu_cal(i)%name, rcu_cal(i)%area_ha, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu), source = 0)
+          allocate (elem_cnt(nspu))
           backspace (107)
           read (107,*,iostat=eof) k, rcu_cal(i)%name, rcu_cal(i)%area_ha, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (rcu_cal(i)%num(ielem1), source = 0)
+          allocate (rcu_cal(i)%num(ielem1))
           rcu_cal(i)%num = defunit_num
           rcu_cal(i)%num_tot = ielem1
           deallocate (defunit_num)
         else
           !!all hrus are in region 
-          allocate (rcu_reg(i)%num(sp_ob%hru), source = 0)
+          allocate (rcu_reg(i)%num(sp_ob%hru))
           rcu_reg(i)%num_tot = sp_ob%res
           do ires = 1, sp_ob%res
             rcu_reg(i)%num(ires) = ires
@@ -117,7 +116,7 @@
          
       db_mx%res_reg = mreg
       end do 
-      end if
+      end if	  
       
       !! if no regions are input, don"t need elements
       if (mreg > 0) then

@@ -1,7 +1,7 @@
       subroutine cal_parm_read
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this function computes new parameter value based on 
+!!    this function computes new paramter value based on 
 !!    user defined change
 
       use input_file_module
@@ -10,13 +10,14 @@
       
       implicit none
 
-      character (len=80) :: titldum = ""                   !         |title of file
-      character (len=80) :: header = ""                    !         |header of file
-      integer :: eof = 0                                   !         |end of file
-      integer :: imax = 0                                  !         |determine max number for array (imax) and total number in file
-      integer :: mchg_par = 0                              !         |
+      integer, dimension (:), allocatable :: elem_cnt      !         |
+      character (len=80) :: titldum                        !         |title of file
+      character (len=80) :: header                         !         |header of file
+      integer :: eof                                       !         |end of file
+      integer :: imax                                      !         |determine max number for array (imax) and total number in file
+      integer :: mchg_par                                  !         |
       logical :: i_exist                                   !         |check to determine if file exists
-      integer :: i = 0                                     !none     |counter
+      integer :: i                                         !none     |counter
             
       imax = 0
       mchg_par = 0

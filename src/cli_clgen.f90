@@ -15,7 +15,7 @@
 !!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
 !!    name        |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    frad(:,:)   |none          |fraction of solar radiation occurring during 
+!!    frad(:,:)   |none          |fraction of solar radiation occuring during 
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 !!    ~ ~ ~ LOCAL DEFINITIONS ~ ~ ~
@@ -45,18 +45,18 @@
       
       implicit none
 
-      integer :: ii = 0           !none          |counter
+      integer :: ii               !none          |counter
       integer :: iwgn             !units         |description 
-      real :: sd = 0.             !radians       |solar declination: latitude at which the sun
+      real :: sd                  !radians       |solar declination: latitude at which the sun
                                   !              |is directly overhead at noon
-      real :: sdlat = 0.          !none          |(-Tan(sd)*Tan(lat))
-      real :: h = 0.              !none          |Acos(-Tan(sd)*Tan(lat))
-      real :: ys = 0.             !none          |Sin(sd)*Sin(lat) 
-      real :: yc = 0.             !none          |Cos(sd)*Cos(lat)
-      real :: dd = 0.             !none          |relative distance of the earth from the sun
+      real :: sdlat               !none          |(-Tan(sd)*Tan(lat))
+      real :: h                   !none          |Acos(-Tan(sd)*Tan(lat))
+      real :: ys                  !none          |Sin(sd)*Sin(lat) 
+      real :: yc                  !none          |Cos(sd)*Cos(lat)
+      real :: dd                  !none          |relative distance of the earth from the sun
       real :: cosrho(time%step)   !none          |Cos(zenith angle for hour)
-      real :: totrho = 0.         !none          |sum of cosrho values for all hours of day
-      real :: hr_angle = 0.       !none          |hour angle
+      real :: totrho              !none          |sum of cosrho values for all hours of day
+      real :: hr_angle            !none          |hour angle
 
       !! Reset prior day category for precipitation     
       if (wst(iwst)%weat%precip >= 0.1) then
@@ -93,7 +93,7 @@
       yc = wgn_pms(iwgn)%latcos * Cos(sd)
       wst(iwst)%weat%solradmx = 30. * dd * (h * ys + yc * Sin(h))
 
-      !! Calculate fraction of radiation received during each hour in day
+      !! Calculate fraction of radiation recieved during each hour in day
       !! this calculation assumes solar noon (when the angle between the
       !! observer on the earth to the sun and a line normal to the earth"s
       !! at that position is at a minimum) falls at 12 noon in day.

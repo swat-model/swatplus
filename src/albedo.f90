@@ -10,16 +10,16 @@
       
       implicit none
         
-      real :: cej = 0.  !none           |constant
-      real :: eaj = 0.  !none           |soil cover index      
-      integer :: j = 0  ! none          |HRU number
-      real :: cover = 0.  !kg/ha          |soil cover
+      real :: cej       !none           |constant
+      real :: eaj       !none           |soil cover index      
+      integer :: j      ! none          |HRU number
+      real :: cover     !kg/ha          |soil cover
       
       j = ihru
 
 !! calculate albedo
       cej = -5.e-5
-      cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
+      cover = pl_mass(j)%ab_gr_com%m + rsd1(j)%tot_com%m
       eaj = Exp(cej * (cover + .1))   !! equation 2.2.16 in SWAT manual
 
       if (hru(j)%sno_mm <= .5) then

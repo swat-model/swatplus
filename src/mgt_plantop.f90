@@ -40,21 +40,18 @@
 
       implicit none
 
-      integer :: j = 0        !none          |HRU number
+      integer :: j            !none          |HRU number
+      integer :: nly          !none          |number of soil layer
       integer :: min          !              | 
-      real :: plt_zmx = 0.    !mm            |rooting depth of plant
+      real :: plt_zmx         !mm            |rooting depth of plant
       
       j = ihru
       
       pcom(j)%plcur(ipl)%gro = "y"
       pcom(j)%plcur(ipl)%idorm = "n"
       pcom(j)%plcur(ipl)%phuacc = 0.
-      pl_mass(j)%tot(ipl) = orgz
-      pl_mass(j)%ab_gr(ipl) = orgz
-      pl_mass(j)%leaf(ipl) = orgz
-      pl_mass(j)%stem(ipl) = orgz
-      pl_mass(j)%seed(ipl) = orgz
-      pl_mass(j)%root(ipl) = orgz
+      pl_mass(j)%tot(ipl)%n = 0.
+      pl_mass(j)%tot(ipl)%p = 0.
       pcom(j)%plg(ipl)%plet = 0.
       pcom(j)%plg(ipl)%plpet = 0.                         
       pcom(j)%plg(ipl)%laimxfr = 0.

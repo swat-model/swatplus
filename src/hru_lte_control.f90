@@ -11,85 +11,85 @@
       
       implicit none
       
-      external :: actions, conditions
-      
       integer :: isd                    !             |
       !real :: timeint(1000)
       real :: a1 = .2                   !             |
       real :: a2 = .8                   !             | 
-      integer :: ihlt_db = 0            !             |
-      integer :: iwgn = 0               !             |
-      integer :: iplt = 0               !none         |counter
-      real :: precip = 0.               !mm           |precipitation
-      real :: tmax = 0.                 !deg C        |maximum average monthly temperature
-      real :: tmin = 0.                 !deg C        |minimum average monthly temperature
-      real :: raobs = 0.                !             | 
-      real :: rmx = 0.                  !             | 
-      real :: tave = 0.                 !             |  
-      real :: yield = 0.                !             | 
-      real :: ws = 0.                   !             | 
-      real :: strsair = 0.              !             | 
-      real :: snowfall = 0.             !             |
-      real :: snowmelt = 0.             !             | 
-      real :: runoff = 0.               !             | 
-      real :: xx = 0.                   !             | 
+      integer :: ihlt_db                !             |
+      integer :: iwgn                   !             |
+      integer :: iplt                   !none         |counter
+      real :: precip                    !mm           |precipitation
+      real :: tmax                      !deg C        |maximum average monthly temperature
+      real :: tmin                      !deg C        |minimum average monthly temperature
+      real :: raobs                     !             | 
+      real :: rmx                       !             | 
+      real :: tave                      !             |  
+      real :: yield                     !             | 
+      real :: ws                        !             | 
+      real :: strsair                   !             | 
+      real :: snowfall                  !             |
+      real :: snowmelt                  !             | 
+      real :: runoff                    !             | 
+      real :: xx                        !             | 
       real :: exp                       !             |  
-      real :: r2 = 0.                   !             | 
-      real :: max                     !             | 
-      real :: cn_sd = 0.                !             | 
-      real :: precipeff = 0.            !             | 
-      real :: xxi = 0.                  !             | 
-      real :: xsd = 0.                  !             | 
-      real :: ch = 0.                   !             | 
+      real :: r2                        !             | 
+      real :: amax1                     !             | 
+      real :: cn_sd                     !             | 
+      real :: precipeff                 !             | 
+      real :: xxi                       !             | 
+      real :: xsd                       !             | 
+      real :: ch                        !             | 
       real :: tan                       !             | 
-      real :: hlat = 0.                 !             | 
+      real :: hlat                      !             | 
       real :: acos                      !             | 
-      real :: ramm = 0.                 !MJ/m2        |extraterrestrial radiation  
-      real :: pet = 0.                  !             | 
-      real :: tstress = 0.              !             |sum of temperature stress
-      real :: tk = 0.                   !deg C        |mean air temperature
-      real :: alb = 0.                  !none         |albedo when soil is moist
-      real :: d = 0.                    !cm           |displacement height for plant type
-      real :: gma = 0.                  !kPa/deg C    |psychrometric constant
-      real :: ho = 0.                   !none         |variable to hold intermediate calculation
+      real :: ramm                      !MJ/m2        |extraterrestrial radiation  
+      real :: pet                       !             | 
+      real :: tstress                   !             |sum of temperature stress
+      real :: tk                        !deg C        |mean air temperature
+      real :: alb                       !none         |albedo when soil is moist
+      real :: d                         !cm           |displacement height for plant type
+      real :: gma                       !kPa/deg C    |psychrometric constant
+      real :: ho                        !none         |variable to hold intermediate calculation
                                         !             |result
-      real :: aph = 0.                  !             | 
-      real :: aet = 0.                  !mm            |sum of actual et during growing season (for hi water stress)
-      real :: b1 = 0.                   !             |
-      real :: delg = 0.                 !             |
-      real :: parad = 0.                !             |
-      real :: drymat = 0.               !             |
-      real :: satco = 0.                !             |
-      real :: pl_aerfac = 0.            !             |
-      integer :: iend = 0               !             |points to rule set in d_table
-      integer :: istart = 0             !none         |points to rule set in d_table  
-      real :: scparm = 0.               !             |
-      real :: air = 0.                  !             |
+      real :: aph                       !             | 
+      real :: aet                       !mm            |sum of actual et during growing season (for hi water stress)
+      real :: b1                        !             |
+      real :: delg                      !             |
+      real :: parad                     !             |
+      real :: drymat                    !             |
+      real :: satco                     !             |
+      real :: pl_aerfac                 !             |
+      integer :: iend                   !             |points to rule set in d_table
+      integer :: istart                 !none         |points to rule set in d_table  
+      real :: scparm                    !             |
+      real :: air                       !             |
       real :: amin1                     !             |
-      real :: tgx = 0.                  !             |
-      real :: rto = 0.                  !none         |cloud cover factor
-      real :: reg = 0.                  !             |
-      real :: deltalai = 0.             !             |
-      real :: sw_excess = 0.            !mm H2O       |amount of water in excess of field capacity
+      real :: tgx                       !             |
+      real :: rto                       !none         |cloud cover factor
+      real :: reg                       !             |
+      real :: deltalai                  !             |
+      real :: sw_excess                 !mm H2O       |amount of water in excess of field capacity
                                         !             |stored in soil layer on the current day
-      real :: swf = 0.                  !cfu          |fraction of manure containing active colony forming units
-      real :: flowlat = 0.              !             |
-      real :: f = 0.                    !             |
-      real :: ff = 0.                   !             |
-      real :: flow_tile = 0.            !             |
-      real :: perc = 0.                 !             |
-      real :: revap = 0.                !mm           |revap
-      real :: percdeep = 0.             !             |
-      real :: chflow = 0.               !             |
-      real :: chflow_m3 = 0.            !m^3/s        |Runoff in CMS
-      real :: runoff_m3 = 0.            !             |
-      real :: bf_m3 = 0.                !             | 
-      real :: peakr = 0.                !m^3/s        |peak runoff rate in channel
-      real :: peakrbf = 0.              !             |
-      real :: sedin = 0.                !             | 
-      real :: qssubconc = 0.            !             |
-      real :: qssub = 0.                !             |
-      real :: cnv = 0.                  !none         |conversion factor (mm => m^3)
+      real :: swf                       !cfu          |fraction of manure containing active colony forming units
+      real :: flowlat                   !             |
+      real :: f                         !             |
+      real :: ff                        !             |
+      real :: flow_tile                 !             |
+      real :: perc                      !             |
+      real :: revap                     !mm           |revap
+      real :: percdeep                  !             |
+      real :: chflow                    !             |
+      real :: chflow_m3                 !m^3/s        |Runoff in CMS
+      real :: runoff_m3                 !             |
+      real :: bf_m3                     !             | 
+      real :: peakr                     !m^3/s        |peak runoff rate in channel
+      real :: peakrbf                   !             |
+      real :: sedin                     !             | 
+      real :: qssubconc                 !             |
+      real :: qssub                     !             |
+      real :: cnv                       !none         |conversion factor (mm => m^3)
+      real :: wndspd                    !none         |windspeed 
+      real :: rhum                      !none         |relative humidity
         
       ihlt_db = ob(icmd)%props
       iwst = ob(icmd)%wst
@@ -117,7 +117,7 @@
           if ((hlt(isd)%sw + Exp(xx)) > 0.001) then
             r2 = hlt(isd)%smx * (1. - hlt(isd)%sw / (hlt(isd)%sw + Exp(xx)))
           end if
-          r2 = max(3.,r2)
+          r2 = amax1(3.,r2)
           cn_sd = 25400. / (r2 + 254.)
           
           IF (tave .lt.0.) THEN 
@@ -348,22 +348,22 @@
           chflow = runoff + flowlat + flow_tile + hlt(isd)%gwflow
 
 !!        compute channel peak rate using SCS triangular unit hydrograph
-          chflow_m3 = 1000. * chflow * ob(icmd)%area_ha
-          runoff_m3 = 1000. * runoff * ob(icmd)%area_ha
-          bf_m3 = 1000. * (flowlat + hlt(isd)%gwflow)*ob(icmd)%area_ha
+          chflow_m3 = 1000. * chflow * hlt_db(ihlt_db)%dakm2
+	      runoff_m3 = 1000. * runoff * hlt_db(ihlt_db)%dakm2
+	      bf_m3 = 1000. * (flowlat + hlt(isd)%gwflow)*hlt_db(ihlt_db)%dakm2
           peakr = 2. * runoff_m3 / (1.5 * hlt_db(ihlt_db)%tc)
-          peakrbf = bf_m3 / 86400.
+	      peakrbf = bf_m3 / 86400.
           peakr = (peakr + peakrbf)     !* prf     
           
 !!        compute sediment yield with MUSLE
-          sedin = (runoff * peakr * 1000. * ob(icmd)%area_ha) ** .56 * hlt(isd)%uslefac
+          sedin = (runoff * peakr * 1000. * hlt_db(ihlt_db)%dakm2) ** .56 * hlt(isd)%uslefac
           
-        !! add subsurf sediment - t=ppm*mm*km2/1000.
-        qssubconc = 500.
-        qssub = qssubconc * (flowlat + hlt(isd)%gwflow) * ob(icmd)%area_ha / 1000.
-        sedin = sedin + qssub
+	    !! add subsurf sediment - t=ppm*mm*km2/1000.
+	    qssubconc = 500.
+	    qssub = qssubconc * (flowlat + hlt(isd)%gwflow) * hlt_db(ihlt_db)%dakm2 / 1000.
+	    sedin = sedin + qssub
 
-          cnv = ob(icmd)%area_ha * 1000.
+          cnv = hlt_db(ihlt_db)%dakm2 * 1000.
           
          !   output_waterbal - SWAT-DEG0140
         hltwb_d(isd)%precip = precip             
@@ -390,14 +390,14 @@
 !    output_nutbal - no nutrients currently in SWAT-DEG
 
 !    output_losses - SWAT-DEG
-        hltls_d(isd)%sedyld = sedin / (100. * ob(icmd)%area_ha) !! sedyld(isd) / hru_ha(isd)
+        hltls_d(isd)%sedyld = sedin / (100. * hlt_db(ihlt_db)%dakm2) !! sedyld(isd) / hru_ha(isd)
         hltls_d(isd)%sedorgn = 0.   !! sedorgn(isd)
         hltls_d(isd)%sedorgp = 0.   !! sedorgp(isd)
         hltls_d(isd)%surqno3 = 0.   !! surqno3(isd)
         hltls_d(isd)%latno3 = 0.    !! latno3(isd)
         hltls_d(isd)%surqsolp = 0.  !! surqsolp(isd)
         hltls_d(isd)%usle = 0.      !! usle
-        hltls_d(isd)%sedminp = 0.    !! sedminpa(isd) + sedminps(isd)
+        hltls_d(isd)%sedmin = 0.    !! sedminpa(isd) + sedminps(isd)
         hltls_d(isd)%tileno3 = 0.   !! tileno3(isd)
         
 !    output_plantweather - SWAT-DEG
@@ -411,7 +411,6 @@
         hltpw_d(isd)%strstmp = 1. - tstress  !! (1.-strstmp_av)
         hltpw_d(isd)%strsn = 0.              !! (1.-strsn_av)        
         hltpw_d(isd)%strsp = 0.              !! (1.-strsp_av)
-        hltpw_d(isd)%strss = 0.              !! (1.-strss_av)
         hltpw_d(isd)%nplnt = 0.              !! nplnt(isd)
         hltpw_d(isd)%percn = 0.              !! percn(isd)
         hltpw_d(isd)%pplnt = 0.              !! pplnt(isd)

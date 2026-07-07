@@ -9,16 +9,16 @@
       
       implicit none 
       
-      integer :: ii = 0            !none         |counter
-      integer :: ielem = 0         !none         |counter
-      integer :: iob = 0           !             | 
-      integer :: ith = 0           !             | 
-      integer :: ifld = 0          !             |
-      real :: tov = 0.             !             |
-      real :: ch_slope = 0.        !             |
-      real :: ch_n = 0.            !             |
-      real :: ch_l = 0.            !             | 
-      real :: t_ch = 0.            !hr           |time for flow entering the farthest upstream 
+      integer :: ii                !none         |counter
+      integer :: ielem             !none         |counter
+      integer :: iob               !             | 
+      integer :: ith               !             | 
+      integer :: ifld              !             |
+      real :: tov                  !             |
+      real :: ch_slope             !             |
+      real :: ch_n                 !             |
+      real :: ch_l                 !             | 
+      real :: t_ch                 !hr           |time for flow entering the farthest upstream 
                                    !             |channel to reach the subbasin outlet
 
      ! compute weighted Mannings n for each subbasin
@@ -57,19 +57,16 @@
         ith = hru(ihru)%dbs%topo
         ifld = hru(ihru)%dbs%field
         t_ov(ihru) = .0556 * (hru(ihru)%topo%slope_len *                    &
-           hru(ihru)%luse%ovn) ** .6 / (hru(ihru)%topo%slope + .0001) ** .3
+           hru(ihru)%luse%ovn) ** .6 / (hru(ihru)%topo%slope + .001) ** .3
         ch_slope = .5 * topo_db(ith)%slope
         ch_n = hru(ihru)%luse%ovn
-        !! assume length to width (l/w) ratio of 2 --> A=l*w - A=l*l/2 - l=sqrt(A/2)
-        !! assume channel begins at 1/2 of distance
-        ch_l = 0.5 * sqrt(hru(ihru)%area_ha / 2.)
-        !ch_l = hru(ihru)%field%length / 1000.
-        t_ch = .31 * ch_l * ch_n**.75 / (hru(ihru)%km**.125 * (ch_slope + .001)**.375)
+        ch_l = hru(ihru)%field%length / 1000.
+        t_ch = .62 * ch_l * ch_n**.75 / (hru(ihru)%km**.125 * (ch_slope + .001)**.375)
         tconc(ihru) = t_ov(ihru) + t_ch
         !! compute fraction of surface runoff that is reaching the main channel
-        if (time%step > 1) then
+        if (time%step > 0) then
           brt(ihru) = 1.-Exp(-bsn_prm%surlag / (tconc(ihru) /               &
-              (time%dtm / 60.)))    !! urban modeling by J.Jeong
+              (time%dtm / 60.)))	!! urban modeling by J.Jeong
         else
           brt(ihru) = 1. - Exp(-bsn_prm%surlag / tconc(ihru))
         endif

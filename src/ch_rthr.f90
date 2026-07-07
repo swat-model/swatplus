@@ -3,7 +3,7 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    This subroutine routes flow at any required time step through the reach 
 !!    using a constant storage coefficient  
-!!  Routing method: Variable Storage routing   
+!!	Routing method: Variable Storage routing   
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name            |units         |definition
@@ -18,9 +18,11 @@
 !!    ~ ~ ~ LOCAL DEFINITIONS ~ ~ ~
 !!    name        |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    c           |none          |inverse of channel side slope
 !!    ii          |none          |counter (hour)
 !!    inhyd       |none          |inflow hydrograph storage location number
 !!    jrch        |none          |reach number
+!!    p           |m             |wetted perimeter
 !!    scoef       |none          |storage coefficient
 !!    topw        |m             |width of channel at water level
 !!    vol         |m^3 H2O       |volume of water in reach
@@ -29,12 +31,13 @@
 
 !!    ~ ~ ~ SUBROUTINES/FUNCTIONS CALLED ~ ~ ~
 !!    Intrinsic: Sum, Min, Sqrt
+!!    SWAT: Qman
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
 !!    subroutine developed by A. Van Griensven,
 !!    Hydrology-Vrije Universiteit Brussel, Belgium
-!!    Modified by Jeahak Jeong, Blackland Research, Temple, USA
+!!	  Modified by Jeahak Jeong, Blackland Research, Temple, USA
 
       use basin_module
       use climate_module
@@ -46,27 +49,29 @@
       
       implicit none
 
-      
-      
-      
-      external :: ch_rtmusk
-      integer :: ii = 0    !none          |counter (hour)
-      integer :: jrch = 0  !none          |reach number
-      real :: scoef = 0.   !none          |storage coefficient
-      real :: vol = 0.     !m^3 H2O       |volume of water in reach
-      real :: topw = 0.    !m             |width of channel at water level
-      real :: inflo_rate = 0.!m^3/s         |inflow rate
-      real :: ttime = 0.   !hr            |travel time through the reach
-      real :: t_inc = 0.   !hr            |time in routing step - 1/time%step
-      real :: outflo = 0.  !m^3           |outflow water volume
-      real :: tl = 0.      !m^3           |transmission losses during time step
-      real :: trans_loss = 0.!m^3           |transmission losses during day
-      real :: ev = 0.      !m^3           |evaporation during time step
-      real :: evap = 0.    !m^3           |evaporation losses during day
-      real :: rto = 0.     !              |ratio for interpolating rating curve
-      real :: outflo_sum = 0.!m^3           |total outflow for the day
-      integer :: iwst = 0
-      integer :: ielev = 0
+      integer :: ii        !none          |counter (hour)
+      integer :: jrch      !none          |reach number
+      real :: c            !none          |inverse of channel side slope
+      real :: p            !m             |wetted perimeter
+      real :: scoef        !none          |storage coefficient
+      real :: vol          !m^3 H2O       |volume of water in reach
+      real :: topw         !m             |width of channel at water level
+      real :: qman         !m^3/s or m/s  |flow rate or flow velocity
+      real :: inflo_rate   !m^3/s         |inflow rate
+      real :: xs_area      !m^2           |cross section area of channel
+      real :: dep_flo      !m             |depth of flow
+      real :: wet_perim    !m             |wetted perimeter
+      real :: ttime        !hr            |travel time through the reach
+      real :: t_inc        !hr            |time in routing step - 1/time%step
+      real :: outflo       !m^3           |outflow water volume
+      real :: tl           !m^3           |transmission losses during time step
+      real :: trans_loss   !m^3           |transmission losses during day
+      real :: ev           !m^3           |evaporation during time step
+      real :: evap         !m^3           |evaporation losses during day
+      real :: rto          !              |ratio for interpolating rating curve
+      real :: outflo_sum   !m^3           |total outflow for the day
+      integer :: iwst
+      integer :: ielev
 
       jrch = isdch
       jhyd = sd_dat(jrch)%hyd
@@ -78,7 +83,6 @@
       outflo = 0.
       outflo_sum = 0.
       hyd_rad = 0.
-      vol = 0.
       
       !! volume at start of day
       rcurv = ch_rcurv(jrch)%out2
@@ -105,7 +109,7 @@
             if (ielev > 1) then
               rto = (inflo_rate - ch_rcurv(jrch)%elev(ielev-1)%flo_rate) /     &
                 (ch_rcurv(jrch)%elev(ielev)%flo_rate - ch_rcurv(jrch)%elev(ielev-1)%flo_rate)
-              call chrc_interp (ch_rcurv(jrch)%elev(ielev-1), ch_rcurv(jrch)%elev(ielev), rto, rcurv)
+              call chrc_interp (ch_rcurv(jrch)%elev(ielev-1), ch_rcurv(jrch)%elev(ielev), ielev, rto, rcurv)
               exit
             end if
           end if
@@ -122,7 +126,7 @@
           
         end do
 
-        !! flood routing using variable storage coefficient
+        !! flood routing using variable storage coeffiecient
         if (rcurv%flo_rate > 0.) then
           !! interpolated travel time
           ttime = rcurv%ttime
@@ -148,7 +152,7 @@
           
           
           !! calculate transmission losses
-          tl = sd_ch(jrch)%chk * sd_ch(jrch)%chl * rcurv%wet_perim * 24. / real(time%step)   !mm/hr * km * mm * hr = m3       
+          tl = sd_ch(jrch)%chk * sd_ch(jrch)%chl * rcurv%wet_perim * 24. / time%step   !mm/hr * km * mm * hr = m3       
           tl = Min(tl, outflo)
           outflo = outflo - tl
           trans_loss = trans_loss + tl
@@ -171,7 +175,7 @@
           end if
 
           !! set volume of water in channel at end of hour
-          !write (2612,*) ii, ttime, scoef, vol, ob(icmd)%tsin(ii), outflo
+          write (2612,*) ii, ttime, scoef, vol, ob(icmd)%tsin(ii), outflo
           vol = vol - outflo !- tl - ev
           ob(icmd)%hyd_flo(1,ii) = outflo
           outflo_sum = outflo_sum + outflo

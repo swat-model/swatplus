@@ -1,7 +1,7 @@
       subroutine wet_fp_init
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine routes computes the initial storage in flood plain wetlands
+!!    this subroutine routes computes the intial storage in flood plain wetlands
 
       use sd_channel_module
       use hydrograph_module
@@ -9,7 +9,7 @@
       
       implicit none
       
-      integer :: ihru = 0   !none       |hru number
+      integer :: ihru       !none       |hru number
 
       !! total wetland flood plain volume at start of simulation
       do jrch = 1, sp_ob%chandeg

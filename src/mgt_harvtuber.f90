@@ -18,70 +18,46 @@
       use mgt_operations_module
       use carbon_module
       use organic_mineral_mass_module
-      use soil_module
-      use constituent_mass_module
       
       implicit none
-      
-      external :: pl_rootfr
  
-      integer :: j = 0                  !none           |HRU number
-      integer :: k = 0                  !none           |pesticide number
-      integer :: ly = 0                 !none           |soil layer number
+      integer :: j                      !none           |HRU number
       integer, intent (in) :: jj        !none           |hru number
       integer, intent (in) :: iplant    !               |plant number from plant community
       integer, intent (in) :: iharvop   !               |harvest operation type
-      real :: harveff = 0.              !0-1            |harvest efficiency
-      integer :: idp = 0                !none           |plant number from plants.plt
-      real :: yld_rto = 0.              !0-1            |yield to total biomass ratio
-      real :: yldpst = 0.               !kg pst/ha          |pesticide removed in yield
+      real :: harveff                   !0-1            |harvest efficiency
+      integer :: idp                    !none           |plant number from plants.plt
+      real :: harveff1                  !0-1            |1.-harveff
+      real :: remain                    !0-1            |
+      real :: hvst                      !0-1            |
+      
       j = jj
       ipl = iplant
       idp = pcom(j)%plcur(ipl)%idplt
       harveff = harvop_db(iharvop)%eff
       
-      !! multiply root biomass by harvest efficiency
-      pl_yield = harveff * pl_mass(j)%root(ipl)
+      !! hi is tuber mass -- yield = 1 - 1/(hi+1)
+      remain = 1. / (pcom(j)%plcur(ipl)%harv_idx + 1.)
+      hvst = 1. - remain
+      pl_mass(j)%tot(ipl) = remain * pl_mass(j)%tot(ipl)
+      pl_yield = hvst * pl_yield
       
-      !! remove harvested root mass from existing root mass
-      pl_mass(j)%root(ipl) = pl_mass(j)%root(ipl) - pl_yield
-      
-      !! update root fractions in each layer
-      call pl_rootfr(j)
-      
-      !! allocate remaining dead roots, N, P to soil layers
-      do ly = 1, soil(j)%nly
-        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly) *  &
-                                                                      pl_mass(j)%root(ipl)
-      end do
-      
+      !! multiply by harvest efficiency
+      pl_yield = harveff * pl_mass(j)%seed(ipl)
+            
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
       pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
       
-      !! adjust foliar and internal pesticide for grain removal
-      do k = 1, cs_db%num_pests
-        !! calculate amount of pesticide removed with yield
-        yld_rto = pl_yield%m / pl_mass(j)%tot(ipl)%m
-        yldpst = yld_rto * (cs_pl(j)%pl_in(ipl)%pest(k) + cs_pl(j)%pl_on(ipl)%pest(k))
-        cs_pl(j)%pl_in(ipl)%pest(k) = cs_pl(j)%pl_in(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_in(ipl)%pest(k)
-        cs_pl(j)%pl_in(ipl)%pest(k) = Max (0., cs_pl(j)%pl_in(ipl)%pest(k))
-        cs_pl(j)%pl_on(ipl)%pest(k) = cs_pl(j)%pl_on(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_on(ipl)%pest(k)
-        cs_pl(j)%pl_on(ipl)%pest(k) = Max (0., cs_pl(j)%pl_on(ipl)%pest(k))
-      end do   
-
-      !! add above ground mass to residue pool
-      pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%ab_gr(ipl)
-      pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
-
-      !! zero all plant components - assume tuber harvest kills plant
-      pl_mass(j)%tot(ipl) = plt_mass_z
-      pl_mass(j)%ab_gr(ipl) = plt_mass_z
-      pl_mass(j)%leaf(ipl) = plt_mass_z
-      pl_mass(j)%stem(ipl) = plt_mass_z
+      !! add remaining tuber (seed) mass to slow humus pool of soil - to preserve balances
+      harveff1 = 1. - harveff
+      soil1(j)%hact(1) = harveff1 * pl_mass(j)%seed(ipl) + soil1(j)%hact(1)
+      
+      !! set other masses
+      pl_mass(j)%ab_gr(ipl) = pl_mass(j)%tot(ipl)
       pl_mass(j)%seed(ipl) = plt_mass_z
       pl_mass(j)%root(ipl) = plt_mass_z
+      pl_mass(j)%leaf(ipl) = plt_mass_z
+      pl_mass(j)%stem(ipl) = plt_mass_z
 
       return
-      end subroutine mgt_harvtuber
+      end  subroutine mgt_harvtuber

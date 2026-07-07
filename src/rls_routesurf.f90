@@ -1,4 +1,4 @@
-      subroutine rls_routesurf (iob, tile_fr_surf)
+      subroutine rls_routesurf (iob)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 
@@ -18,22 +18,21 @@
       
       implicit none
       
-      integer :: j = 0                  !       |
-      integer :: iob                    !       |
-      integer :: ifield = 0             !       |
-      real, intent (in)  :: tile_fr_surf    !m3     |overland tile flow
-      real :: sed = 0.                  !       |
-      real :: trancap = 0.              !       |
+      integer :: j              !            |
+      integer :: iob            !            |
+      integer :: ifield         !            |
+      real :: sed               !            |
+      real :: trancap           !            |
 
       j = ihru
       ifield = hru(j)%dbs%field
 
-      !! compute infiltration from surface runon and tile flow to next landscape unit
-      ls_overq = ob(iob)%hin_sur%flo + (ob(iob)%hin_til%flo * tile_fr_surf) / (10. * hru(j)%area_ha)   ! m3/10*ha = mm
+      !! compute infiltration from surface runon to next landscape unit
+      ls_overq = ob(iob)%hin_sur%flo        !/ (10. * hru(j)%area_ha)   ! m3/10*ha = mm
       precip_eff = precip_eff + ls_overq
       
       !! add surface runon to subdaily effective precip
-      if (time%step > 1) then
+      if (time%step > 0) then
           w%ts(:) = w%ts(:) + ls_overq / time%step
       end if
       

@@ -5,6 +5,26 @@
 !!    pesticide transported with lateral subsurface flow, and pesticide
 !!    transported with surface runoff
 
+!!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
+!!    name         |units         |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    ihru         |none          |HRU number
+!!    surfq(:)     |mm H2O        |surface runoff generated on day in HRU
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+!!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
+!!    name         |units         |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    lat_pst(:)   |kg pst/ha     |amount of pesticide in lateral flow in HRU
+!!                                |for the day
+!!    zdb(:,:)     |
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+!!    ~ ~ ~ SUBROUTINES/FUNCTIONS CALLED ~ ~ ~
+!!    Intrinsic: Exp, Min
+
+!!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
+
       use pesticide_data_module
       use basin_module
       use hru_module, only : hru, surfq, qtile, ihru
@@ -15,17 +35,20 @@
       
       implicit none        
       
-      integer :: j = 0     !none          |HRU number
-      integer :: k = 0     !none          |counter
-      integer :: ipest_db = 0!none          |pesticide number from pest.dat
-      integer :: ly = 0    !none          |counter (soil layers)
-      real :: kd = 0.           !(mg/kg)/(mg/L) |koc * carbon
-      real :: yy = 0.      !              |
-      real :: vf = 0.      !              |
-      real :: xx = 0.      !kg/ha         |amount of pesticide removed from soil layer
-      real :: zdb1 = 0.    !              |
-      real :: co = 0.      !kg/mm-ha      |concentration of pesticide in water
-      real :: csurf = 0.   !kg/mm-ha      |concentration of pesticide in surq and latq            | 
+      integer :: j         !none          |HRU number
+      integer :: k         !none          |counter
+      integer :: ipest_db  !none          |pesticide number from pest.dat
+      integer :: ly        !none          |counter (soil layers)
+      real :: kd                !(mg/kg)/(mg/L) |koc * carbon
+      real :: yy           !              |
+      real :: qsurf        !mm H2O        |surface runoff for layer
+      real :: vf           !              |
+      real :: xx           !kg/ha         |amount of pesticide removed from soil layer
+      real :: zdb1         !              |
+      real :: co           !kg/mm-ha      |concentration of pesticide in water
+      real :: cocalc       !kg/mm-ha      |calc concentration of pesticide in water
+      real :: csurf        !kg/mm-ha      |concentration of pesticide in surq and latq
+      integer :: icmd      !              | 
 
       j = ihru
 

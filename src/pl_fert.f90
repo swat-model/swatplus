@@ -1,4 +1,4 @@
-      subroutine pl_fert (ifrt, frt_kg, fertop)
+      subroutine pl_fert (jj, ifrt, frt_kg, fertop)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine applies N and P specified by date and
@@ -16,121 +16,158 @@
       use organic_mineral_mass_module
       use hru_module, only : ihru, fertn, fertp, fertnh3, fertno3, fertorgn, fertorgp, fertp,  &
         fertsolp  
-
+      
       implicit none 
       
-      real :: rtof             !none          |weighting factor used to partition the 
+      real, parameter :: rtof=0.5         !none          |weighting factor used to partition the 
                                           !              |organic N & P concentration of septic effluent
-                                          !              |between the fresh organic and the stable organic pools
-      integer :: j = 0                    !none          |hru counter
-      integer :: l = 0                    !none          |layer counter 
+                                          !              |between the fresh organic and the stable 
+                                          !              |organic pools
+      integer :: j                        !none          |counter
+      integer :: l                        !none          |counter 
+      integer, intent (in) :: jj          !none          |counter
       integer, intent (in) :: ifrt        !              |fertilizer type from fert data base
-      integer, intent (in) :: fertop      !              |fertilizer operation type
-      real, intent (in) :: frt_kg         !kg/ha         |total mass of fertilizer applied
-      real :: fr_ly = 0.                  !fraction      |fraction of fertilizer applied to layer
-      real :: c_n_rto                     !              |carbon nitrogen ratio
-      real :: meta_fr                     !              |fraction of metabolic applied to layer
-      real :: pool_fr                     !              |fraction of structural or lignin applied to layer
-      logical :: organic_flag
+      integer, intent (in) :: fertop      !              | 
+      real, intent (in) :: frt_kg         !kg/ha         |amount of fertilizer applied
+      real :: xx                          !              |
+      real :: gc                          !none          |fraction of ground covered by plant foliage
+      real :: gc1                         !              |
+      real :: swf                         !cfu           |fraction of manure containing active colony forming units 
+      real :: frt_t                       !              |
+      
 
-      organic_flag = .false.
-      org_frt%m = 0.
-      org_frt%c = 0.
-      org_frt%n = 0.
-      org_frt%p = 0.
-      c_n_rto = 0.
-      meta_fr = 0.
-
+      !!added by zhang
+      !!======================
+      real :: X1, X8, X10, XXX, YY, ZZ, XZ, YZ, RLN, orgc_f
+      
       j = ihru
       
-      rtof = man_coef%rtof
-      !! calculate c:n ratio for manure applications for SWAT-C
-      if (bsn_cc%cswat == 1 ) then
-        if (fertdb(ifrt)%forgn > 0. .or. fertdb(ifrt)%forgp > 0. ) then
-          organic_flag = .true.
-        endif
-      endif
-        
-      if (organic_flag) then
-        org_frt%m = frt_kg
-        org_frt%c = fertdb(ifrt)%forgn * frt_kg * 10.0  ! assume a 10:1 carbon to nitrogen ratio.
-        org_frt%n = fertdb(ifrt)%forgn * frt_kg
-        org_frt%p = fertdb(ifrt)%forgp * frt_kg
-        c_n_rto = .175 * org_frt%c / (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn + 1.e-5)
-        !! meta_fr is the fraction of fertilizer that is allocated to metabolic litter pool
-        meta_fr = .85 - .018 * c_n_rto
-      endif
+      X1 = 0.
+      X8 = 0.
+      X10 = 0.
+      XXX = 0.
+      YY = 0.
+      ZZ = 0.
+      XZ = 0.
+      YZ = 0.
+      RLN = 0.
+      orgc_f = 0.
+      !!added by zhang
+      !!======================  
 
-      if (meta_fr < 0.01) then
-        meta_fr = 0.01
-      else
-        if (meta_fr > .7) then
-          meta_fr = .7
-        end if
-      end if
-      
-      !! add fertilizer to first and/or second layer
+      !j = jj
+
       do l = 1, 2
+        xx = 0.
         if (l == 1) then
-          fr_ly = chemapp_db(fertop)%surf_frac
+          xx = chemapp_db(fertop)%surf_frac
         else
-          fr_ly = 1. - chemapp_db(fertop)%surf_frac                     
+          xx = 1. - chemapp_db(fertop)%surf_frac                     
         endif
 
-        !! add mineral n and p for all methods
-        soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 + fr_ly * frt_kg *          &
-                       (1. - fertdb(ifrt)%fnh3n) * fertdb(ifrt)%fminn
-        soil1(j)%mn(l)%nh4 = soil1(j)%mn(l)%nh4 + fr_ly * frt_kg *          &
-                       fertdb(ifrt)%fnh3n * fertdb(ifrt)%fminn
-        soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab + fr_ly * frt_kg *          & 
-                       fertdb(ifrt)%fminp
+        soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 + xx * frt_kg *          &
+            (1. - fertdb(ifrt)%fnh3n) * fertdb(ifrt)%fminn
 
-        !! add total organic n and p for all methods
-        soil1(j)%tot(l)%n = soil1(j)%tot(l)%n + rtof * fr_ly * frt_kg *     &
-                       fertdb(ifrt)%forgn
-        soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * fr_ly * frt_kg *     &
-                       fertdb(ifrt)%forgp
-
-        !! for stable carbon - add n and p to active humus pool
         if (bsn_cc%cswat == 0) then
-          soil1(j)%pl(1)%rsd(l)%n = soil1(j)%pl(1)%rsd(l)%n + rtof * fr_ly *            &
-                       frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%pl(1)%rsd(l)%p = soil1(j)%pl(1)%rsd(l)%p + rtof * fr_ly * frt_kg *   &
+        soil1(j)%tot(l)%n = soil1(j)%tot(l)%n + rtof * xx * frt_kg *   &
+                       fertdb(ifrt)%forgn
+        soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * xx * &
+            frt_kg * fertdb(ifrt)%forgn
+        soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx * frt_kg *   &
                        fertdb(ifrt)%forgp
-          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *               &
-                       frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%hact(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * fr_ly * frt_kg *      &
+        soil1(j)%hsta(l)%p = soil1(j)%hsta(l)%p + (1. - rtof)*xx*frt_kg *  &
                        fertdb(ifrt)%forgp
         end if
+	  if (bsn_cc%cswat == 1) then
+	  soil1(j)%man(l)%c = soil1(j)%man(l)%c + xx * frt_kg *            &
+      		fertdb(ifrt)%forgn * 10.
+	  soil1(j)%man(l)%n = soil1(j)%man(l)%n + xx * frt_kg *            &
+      		fertdb(ifrt)%forgn
+	  soil1(j)%man(l)%p = soil1(j)%man(l)%p + xx * frt_kg *            &
+      		fertdb(ifrt)%forgp
+	  end if
+
+        !!By Zhang for C/N cycling 
+        !!===========================
+	  if (bsn_cc%cswat == 2) then
+        soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * xx *           &
+            frt_kg * fertdb(ifrt)%forgp
+        soil1(j)%hsta(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * xx *  &
+            frt_kg * fertdb(ifrt)%forgp
         
-        !! for SWAT-C add to slow humus pool and fresh residue pools
-        if ((bsn_cc%cswat == 1 ) .and. organic_flag) then
+        !!Allocate organic fertilizer to Slow (SWAT_active) N pool;
+          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * xx *  &
+                        frt_kg * fertdb(ifrt)%forgn
+        
+          !orgc_f is the fraction of organic carbon in fertilizer
+          !for most fertilziers this value is set to 0.
+          orgc_f = 0.0
+          !X1 is fertlizer applied to layer (kg/ha)
+          !xx is fraction of fertilizer applied to layer
+          X1 = xx * frt_kg 
+          !X8: organic carbon applied (kg C/ha)
+          X8 = X1 * orgc_f
+          !RLN is calculated as a function of C:N ration in fertilizer          
+          RLN = .175 *(orgc_f)/(fertdb(ifrt)%fminn + fertdb(ifrt)%forgn  & 
+                                                               + 1.e-5)
           
-          !! add 1-rtof to slow humus pool
-          pool_fr = (1. - rtof) * fr_ly
-          soil1(j)%tot(l) = soil1(j)%tot(l) + pool_fr * org_frt
-          soil1(j)%hs(l) = soil1(j)%hs(l) + pool_fr * org_frt
-        
-          !! add rtof to fresh residue pools
-          !! add metabolic manure pool
-          pool_fr = (1. - rtof) * meta_fr * fr_ly
-          soil1(j)%meta(l) = soil1(j)%meta(l) + pool_fr * org_frt
+          !X10 is the fraction of carbon in fertilizer that is allocated to metabolic litter C pool
+          X10 = .85-.018*RLN
+          if (X10<0.01) then
+            X10 = 0.01
+          else
+            if (X10 > .7) then
+                X10 = .7
+            end if
+          end if
+          
+          !XXX is the amount of organic carbon allocated to metabolic litter C pool
+          XXX = X8 * X10
+          soil1(j)%meta(l)%c = soil1(j)%meta(l)%c + XXX
+          !YY is the amount of fertilizer (including C and N) allocated into metabolic litter SOM pool
+          YY = X1 * X10
+          soil1(j)%meta(l)%m = soil1(j)%meta(l)%m + YY
+          
+          !ZZ is amount of organic N allocated to metabolic litter N pool
+          ZZ = X1 *rtof * fertdb(ifrt)%forgn * X10
+          
+          
+          soil1(j)%meta(l)%n = soil1(j)%meta(l)%n + ZZ
            
-          !! add structural manure pool
-          pool_fr = (1. - rtof) * (1. - meta_fr) * fr_ly
-          soil1(j)%str(l) = soil1(j)%str(l) + pool_fr * org_frt
+          !!remaining organic N is llocated to structural litter N pool
+          soil1(j)%str(l)%n = soil1(j)%str(l)%n + X1 * fertdb(ifrt)%forgn - ZZ
+          !XZ is the amount of organic carbon allocated to structural litter C pool   
+          XZ = X1 *orgc_f-XXX
+          soil1(j)%str(l)%c = soil1(j)%str(l)%c + XZ
           
-          !! add lignin manure pool
-          soil1(j)%lig(l) = soil1(j)%lig(l) + 0.175 * pool_fr * org_frt
+          !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in strucutral litter pool
+          soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + XZ * .175
+          !non-lignin part of the structural litter C is also updated;
+          soil1(j)%lig(l)%n = soil1(j)%lig(l)%n + XZ * (1.-.175) 
           
-          !! total residue pool is metabolic + structural
-          ! soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
+          !YZ is the amount of fertilizer (including C and N) allocated into strucutre litter SOM pool
+          YZ = X1 - YY
+          soil1(j)%str(l)%m = soil1(j)%str(l)%m + YZ
+          !assuming lignin fraction of the organic fertilizer allocated into structure litter SOM pool to be 0.175;
+          !update lignin weight in structural litter.
+          soil1(j)%lig(l)%m = soil1(j)%lig(l)%m + YZ*.175
+          soil1(j)%tot(l)%n = soil1(j)%meta(l)%n + soil1(j)%str(l)%n
           
-        end if
-        
+          !end if
+      
+	  end if
+        !!By Zhang for C/N cycling 
+        !!=========================== 
+
+        soil1(j)%mn(l)%nh4 = soil1(j)%mn(l)%nh4 + xx * frt_kg *          &
+            fertdb(ifrt)%fnh3n * fertdb(ifrt)%fminn
+
+        soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab + xx * frt_kg *          & 
+            fertdb(ifrt)%fminp
+
       end do 
 
-      !! summary calculations
+!! summary calculations
       fertno3 = frt_kg * fertdb(ifrt)%fminn * (1. - fertdb(ifrt)%fnh3n)
       fertnh3 = frt_kg * (fertdb(ifrt)%fminn * fertdb(ifrt)%fnh3n)
       fertorgn = frt_kg * fertdb(ifrt)%forgn
@@ -138,6 +175,5 @@
       fertorgp = frt_kg * fertdb(ifrt)%forgp  
       fertn = fertn + frt_kg * (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn)
       fertp = fertp + frt_kg * (fertdb(ifrt)%fminp + fertdb(ifrt)%forgp)
-      
       return
       end subroutine pl_fert

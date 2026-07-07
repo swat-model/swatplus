@@ -1,18 +1,17 @@
       subroutine cn2_init (j)
 
-      use hru_module, only : cn2, hru
+      use hru_module, only : cn2, hru, ihru
       use soil_module
       use maximum_data_module
       use landuse_data_module
+      use hydrograph_module, only : sp_ob
       
       implicit none
-      
-      external :: curno
   
       integer, intent (in)  :: j
-      integer :: icn = 0             !none       |counter 
-      integer :: isol = 0            !none       |counter 
-      integer :: ilum = 0            !none       |counter 
+      integer :: icn                 !none       |counter 
+      integer :: isol                !none       |counter 
+      integer :: ilum                !none       |counter 
       
       !!assign cn2
         ilum = hru(j)%land_use_mgt
@@ -29,6 +28,7 @@
         case ("D")
           cn2(j) = cn(icn)%cn(4)
         end select
+        
         call curno(cn2(j), j)
       
       return

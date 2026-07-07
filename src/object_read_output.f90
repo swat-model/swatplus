@@ -2,22 +2,22 @@
       
       use input_file_module
       use hydrograph_module
-      use maximum_data_module
-        
+      
       implicit none
        
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      integer :: eof = 0              !           |end of file
-      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      integer :: eof                  !           |end of file
+      integer :: imax                 !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i = 0                !none       |counter
-      integer :: ii = 0               !none       !counter
-      integer :: k = 0                !           |
-      integer :: iunit = 0
-      
+      integer :: i                    !none       |counter
+      integer :: iobj                 !           |
+      integer :: ii                   !none       !counter
+      integer :: k                    !           |
+      integer :: iunit                !           | 
+            
       mobj_out = 0
-      imax = 0      
+      imax = 0
       
       !! read old saveconc properties
       inquire (file=in_sim%object_prt,exist=i_exist)
@@ -37,7 +37,6 @@
             mobj_out = mobj_out + 1
           end do
           
-        db_mx%object_prt = mobj_out
         allocate (ob_out(0:imax))
         rewind (107)
         read (107,*,iostat=eof) titldum
@@ -86,39 +85,22 @@
                ob_out(i)%hydno = 4
             case ("til")   !tile
                ob_out(i)%hydno = 5 
-            case ("sol_water")  !soil moisture by layer 
-               ob_out(i)%hydno = 6 
-            case ("solnut_ly")  !soil n and p by layer 
-               ob_out(i)%hydno = 7
-            case ("solnut_pr")  !soil n and p for profile 
-               ob_out(i)%hydno = 8
-            case ("plant")  !plants status  
-               ob_out(i)%hydno = 9
-            case ("cha_fp")  !channel and flood plain water balance  
-               ob_out(i)%hydno = 10
+            case ("sol")  !soil moisture by layer 
+               ob_out(i)%hydno = 6
             end select
          iunit = ob_out(i)%unitno
          
-         !! open file and write header
          open (iunit+i,file = ob_out(i)%filename,recl=2000)
          !write (iunit+i,*) "OBJECT.PRT                ", ob_out(i)%filename
-         select case (ob_out(i)%hydno)
-         case (1,2,3,4,5)
-           write (iunit+i,*) hyd_hdr_time, hyd_hdr
-         !case (1-5)
-         !write (iunit+i,*) hyd_hdr_time, hyd_hdr
-         case (6)
-           write (iunit+i,*) hyd_hdr_time, sol_hdr
-         case (9)
-           write (iunit+i, '(1X4A,16(4XA),2A,14(4XA))') hyd_hdr_time, plt_hdr, plt_hdr
-         case (10)
-           write (iunit+i,*) hyd_hdr_time, fp_hdr
-         end select
-         
-        end do  ! mobj_out  
+           if (ob_out(i)%hydno == 6) then
+              write (iunit+i,*) hyd_hdr_time, sol_hdr
+           else
+             write (iunit+i,*) hyd_hdr_time, hyd_hdr !! write header
+           end if
+        enddo    
         exit
-      end do
-      end if
+      enddo
+      endif
         
       close (107)
       

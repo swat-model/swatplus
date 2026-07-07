@@ -4,16 +4,17 @@
       use input_file_module
       use maximum_data_module
       use pesticide_data_module
-      use utils
       
       implicit none
 
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      integer :: eof = 0              !           |end of file
-      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      integer :: eof                  !           |end of file
+      integer :: imax                 !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ip = 0               !none       |counter 
+      integer :: i                    !none       |counter
+      integer :: num                  !           |
+      integer :: ip                   !none       |counter 
       
       eof = 0
       imax = 0
@@ -56,23 +57,23 @@
           !! pesticide. k can be calculate with the equation k = 0.693/hlife.
           !! decay_f or decay_s = Exp(-k)
           if (pestdb(ip)%foliar_hlife > 0.) then
-            pestcp(ip)%decay_f = exp_w(-.693 / pestdb(ip)%foliar_hlife)
+            pestcp(ip)%decay_f = Exp(-.693 / pestdb(ip)%foliar_hlife)
           else
             pestcp(ip)%decay_f = 0.
           endif
           if (pestdb(ip)%soil_hlife > 0.) then
-            pestcp(ip)%decay_s = exp_w(-.693 / pestdb(ip)%soil_hlife)
+            pestcp(ip)%decay_s = Exp(-.693 / pestdb(ip)%soil_hlife)
           else
             pestcp(ip)%decay_s = 0.
           endif
           
           if (pestdb(ip)%aq_hlife > 0.) then
-            pestcp(ip)%decay_a = exp_w(-.693 / pestdb(ip)%aq_hlife)
+            pestcp(ip)%decay_a = Exp(-.693 / pestdb(ip)%aq_hlife)
           else
             pestcp(ip)%decay_a = 0.
           endif
           if (pestdb(ip)%ben_hlife > 0.) then
-            pestcp(ip)%decay_b = exp_w(-.693 / pestdb(ip)%ben_hlife)
+            pestcp(ip)%decay_b = Exp(-.693 / pestdb(ip)%ben_hlife)
           else
             pestcp(ip)%decay_b = 0.
           endif

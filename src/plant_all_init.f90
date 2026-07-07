@@ -7,18 +7,14 @@
       use maximum_data_module
             
       implicit none
-      
-      external :: plant_init
 
-      integer :: iihru = 0          !none   |hru number to send to plant_init
-      integer :: ipl = 0
-      integer :: iplt = 0
-      integer :: ipl_bsn = 0
-      integer :: num_plts_cur = 0   !none   |temporary counter for number of different plants in basin
+      integer :: iihru              !none   |hru number to send to plant_init
+      integer :: ipl
+      integer :: iplt
+      integer :: ipl_bsn
+      integer :: num_plts_cur       !none   |temporary counter for number of different plants in basin
 
       allocate (plts_bsn(db_mx%plantparm))
-      allocate (bsn_crop_yld(db_mx%plantparm))
-      allocate (bsn_crop_yld_aa(db_mx%plantparm))
       
       !!assign land use pointers for the hru
       !!allocate and initialize land use and management
@@ -36,7 +32,7 @@
           if (basin_plants == 0) then
             plts_bsn(1) = pcom(iihru)%pl(ipl)
             basin_plants = 1
-          else
+          end if
           num_plts_cur = basin_plants
           do iplt = 1, num_plts_cur
             if (pcom(iihru)%pl(ipl) == plts_bsn(iplt)) exit
@@ -45,9 +41,13 @@
               basin_plants = basin_plants + 1
             end if
           end do
-          end if
         end do
       end do
+
+      !! set all plants simulated in the basin
+      allocate (plants_bsn(basin_plants))
+      allocate (bsn_crop_yld(basin_plants))
+      allocate (bsn_crop_yld_aa(basin_plants))
 
       !! zero basin crop yields and harvested areas
       do ipl_bsn = 1, basin_plants
@@ -55,10 +55,12 @@
         bsn_crop_yld_aa(ipl_bsn) = bsn_crop_yld_z
       end do
 
+      plants_bsn = plts_bsn(1:basin_plants)
+      deallocate (plts_bsn)
       do iihru = 1, sp_ob%hru
         do ipl = 1, pcom(iihru)%npl
           do ipl_bsn = 1, basin_plants
-            if (pcom(iihru)%pl(ipl) == plts_bsn(ipl_bsn)) then
+            if (pcom(iihru)%pl(ipl) == plants_bsn(ipl_bsn)) then
               pcom(iihru)%plcur(ipl)%bsn_num = ipl_bsn
               exit
             end if

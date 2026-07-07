@@ -9,17 +9,17 @@
       
       implicit none
        
-      integer :: ireg = 0      !none      |counter
-      integer :: ilu = 0       !none      |counter
-      integer :: iord = 0      !none      |counter
-      integer :: ihru_s = 0    !none      |counter
-      integer :: ich = 0       !          |
-      integer :: ich_s = 0     !none      |counter
-      real :: ha_hru = 0.      !          |
+      integer :: ireg          !none      |counter
+      integer :: ilu           !none      |counter
+      integer :: iord          !none      |counter
+      integer :: ihru_s        !none      |counter
+      integer :: ich           !          |
+      integer :: ich_s         !none      |counter
+      real :: ha_hru           !          |
       
       
         !! sum landscape output for soft data calibration
-        if (cal_codes%hyd_hru /= "n" .or. cal_codes%hyd_hrul == "y") then
+        if (cal_codes%hyd_hru == "y" .or. cal_codes%hyd_hru == "y") then
           !calibrate hru"s
           do ireg = 1, db_mx%lsu_reg
             do ilu = 1, region(ireg)%nlum
@@ -30,8 +30,6 @@
               do ihru_s = 1, region(ireg)%num_tot
                 ihru = region(ireg)%num(ihru_s)
                 if (lscal(ireg)%lum(ilu)%meas%name == hru(ihru)%lum_group_c .or. lscal(ireg)%lum(ilu)%meas%name == "basin") then
-                  !if (hru(ihru)%dbs%surf_stor == 0) then
-                  if (hru(ihru)%irr == 0) then
                   ha_hru = region(ireg)%hru_ha(ihru)      ! 10 * ha * mm --> m3
                   lscal(ireg)%lum(ilu)%ha = lscal(ireg)%lum(ilu)%ha + ha_hru
                   lscal(ireg)%lum(ilu)%precip = lscal(ireg)%lum(ilu)%precip + (10. * ha_hru * hwb_y(ihru)%precip + &
@@ -48,8 +46,6 @@
                                                                     hwb_y(ihru)%latq + hwb_y(ihru)%perc+ hwb_y(ihru)%qtile)
                   lscal(ireg)%lum(ilu)%sim%sed = lscal(ireg)%lum(ilu)%sim%sed + (ha_hru * hls_y(ihru)%sedyld)
                   !add nutrients
-                  end if
-                  !end if
                 end if
               end do
             end do  !lum_num
@@ -157,7 +153,7 @@
               chcal(ireg)%ord(iord)%sim = chcal_z  !! zero all calibration parameters
               do ich_s = 1, chcal(ireg)%num_tot
                 ich = chcal(ireg)%num(ich_s)
-                if (chcal(ireg)%ord(iord)%meas%name == "basin") then
+                if (chcal(ireg)%ord(iord)%meas%name == sd_ch(ich)%order .or. chcal(ireg)%ord(iord)%meas%name == "basin") then
                   chcal(ireg)%ord(iord)%length = chcal(ireg)%ord(iord)%length + sd_ch(ich)%chl
                   chcal(ireg)%ord(iord)%sim%chw = chcal(ireg)%ord(iord)%sim%chw + chsd_y(ich)%deg_bank_m / sd_ch(ich)%chw * &
                     sd_ch(ich)%chl

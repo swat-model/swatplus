@@ -22,20 +22,20 @@
       use basin_module
       use time_module
       use hydrograph_module
-      use hru_module, only : hru, surfq, ihru,    &
-        qp_cms, precip_eff, qday                  !rtb gwflow
+      use climate_module, only:  wst
+      use hru_module, only : hru, surfq, ovrlnd_dt, ihru, &
+        qp_cms, precip_eff, qday, satexq !rtb gwflow
       use soil_module
       use urban_data_module
       use output_landscape_module
       
       implicit none
-      
-      external :: ero_cfactor, ero_eiusle, ero_ovrsed, ero_pkq, ero_ysed, sq_dailycn, sq_volq, sq_crackflow
 
-      integer :: j = 0            !none          |HRU number 
-      real :: ulu = 0.            !              |
-      real :: hruirrday = 0.      !              |
-      integer :: irmmdt = 0       !              |
+      integer :: j                !none          |HRU number 
+      real :: ulu                 !              |
+      real :: hruirrday           !              |
+      integer :: irmmdt           !              |
+      integer :: ii               !none          |counter
 
       j = ihru
       ulu = hru(j)%luse%urb_lu
@@ -59,8 +59,8 @@
 
       !! calculate amount of surface runoff reaching main channel during day
       !! (qday) and store the remainder
-      !call sq_surfst
-      qday =  surfq(j)
+      call sq_surfst
+      !qday =  surfq(j)
 
       if (qday > 1.e-6) then
         !! compute peak rate - qp_cms in m3/s  
@@ -70,17 +70,15 @@
       if (qday > 1.e-6 .and. qp_cms > 1.e-6) then
         call ero_eiusle
 
-    !! calculate sediment erosion by rainfall and overland flow
-        call ero_ovrsed
+	!! calculate sediment erosion by rainfall and overland flow
+		call ero_ovrsed
       end if
 
-      if (surfq(j) > 1.e-6 .and. qp_cms > 1.e-6) then
-        call ero_cfactor
-        call ero_ysed
-      end if
+      call ero_cfactor
+      if (surfq(j) > 1.e-6 .and. qp_cms > 1.e-6) call ero_ysed
 
       if (qday < 0.) qday = 0.
 
-!*** tu Wunused-label: 1010  format (2(i4,1x),a5,a4,1x,10f8.3)
+1010  format (2(i4,1x),a5,a4,1x,10f8.3)
       return
       end subroutine surface

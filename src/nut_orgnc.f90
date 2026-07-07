@@ -15,23 +15,22 @@
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
       use organic_mineral_mass_module
-      use hru_module, only : hru, ihru, sedorgn, sedyld, enratio, ipl 
+      use hru_module, only : hru, ihru, sedorgn, sedyld, enratio 
       use soil_module
-      use plant_module
       
       implicit none
 
-      integer :: j = 0    !none          |HRU number
-      real :: xx = 0.     !kg N/ha       |amount of organic N in first soil layer
-      real :: wt1 = 0.    !none          |conversion factor (mg/kg => kg/ha)
-      real :: er = 0.     !none          |enrichment ratio
-      real :: conc = 0.   !              |concentration of organic N in soil
-      real :: xx1 = 0.    !              |
+      integer :: j        !none          |HRU number
+      real :: xx          !kg N/ha       |amount of organic N in first soil layer
+      real :: wt1         !none          |conversion factor (mg/kg => kg/ha)
+      real :: er          !none          |enrichment ratio
+      real :: conc        !              |concentration of organic N in soil
+      real :: xx1         !              |
  
       j = ihru
 
       !! HRU calculations
-      xx = soil1(j)%hact(1)%n + soil1(j)%hsta(1)%n + pl_mass(j)%rsd_tot%n + soil1(j)%man(1)%n
+      xx = soil1(j)%tot(1)%n + rsd1(j)%tot(1)%n + rsd1(j)%man%n
       wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
       if (hru(j)%hyd%erorgn > .001) then
@@ -43,16 +42,12 @@
       conc = xx * er / wt1
       sedorgn(j) = .001 * conc * sedyld(j) / hru(j)%area_ha
 
-      !! update soil nitrogen pools only for HRU calculations
+	  !! update soil nitrogen pools only for HRU calculations
       if (xx > 1.e-6) then
         xx1 = (1. - sedorgn(j) / xx)
-        soil1(j)%tot(1)%n = soil1(j)%tot(1)%n * xx1
-        soil1(j)%hact(1)%n = soil1(j)%hact(1)%n * xx1
-        soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n * xx1
-        do ipl = 1, pcom(j)%npl
-          pl_mass(j)%rsd(ipl)%n =   pl_mass(j)%rsd(ipl)%n * xx1
-        end do
-        soil1(j)%man(1)%n = soil1(j)%man(1)%n * xx1
+		soil1(j)%tot(1)%n = soil1(j)%tot(1)%n * xx1
+		rsd1(j)%tot(1)%n = rsd1(j)%tot(1)%n * xx1
+		rsd1(j)%man%n = rsd1(j)%man%n * xx1
       end if
 
       return

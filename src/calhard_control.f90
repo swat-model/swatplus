@@ -6,7 +6,7 @@
       
       implicit none
       
-      external :: re_initialize, time_control
+      integer :: ihru        !none      |counter
 
       !! re-initialize all objects
       call re_initialize

@@ -33,17 +33,16 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, usle,       &
+      use hru_module, only : hru, usle_cfac, cklsp, surfq, sedyld, sanyld, silyld, clayld, lagyld, sagyld,  &
          ihru, qp_cms, usle_ei
       use soil_module
-      use erosion_module
-      use climate_module
       
       implicit none
 
-      integer :: j = 0       !none                   |HRU number
-      !real :: usle = 0.      !metric tons/ha         | daily soil loss predicted with USLE equation
-      real :: rock = 0.      !percent                |rock fragments
+      integer :: j           !none                   |HRU number
+      real :: c              !                       |
+      real :: usle           !metric tons/ha         | daily soil loss predicted with USLE equation
+      real :: rock           !percent                |rock fragments
 
       j = ihru
       
@@ -51,13 +50,12 @@
       cklsp(j) = usle_cfac(j) * hru(j)%lumv%usle_mult
       rock = Exp(-.053 * soil(j)%phys(1)%rock)
 
-      !! compute sediment yield with musle - t
+      !! compute sediment yield with musle
       sedyld(j) = (10. * surfq(j) * qp_cms * hru(j)%area_ha) ** .56 * cklsp(j)
-      !qp_cms = qp_cms * 3.6 / hru(j)%km !cms--> mm/h
-      !! this is the form of MUSLE in APEX documentation - same results as swat equation above ! t/ha
-      !sedyld(j) = 1.586 * rock * (surfq(j) * qp_cms) ** .56 * (hru(j)%area_ha) ** 0.12 * &
-      !           usle_cfac(j) * soil(j)%ly(1)%usle_k * hru(j)%lumv%usle_p * hru(j)%lumv%usle_ls
-      !sedyld(j) = sedyld(j) * hru(j)%area_ha
+      qp_cms = qp_cms * 3.6 / hru(j)%km !cms--> mm/h
+      sedyld(j) = 1.586 * rock * (surfq(j) * qp_cms) ** .56 * (hru(j)%area_ha) ** 0.12 * &
+                 usle_cfac(j) * soil(j)%ly(1)%usle_k * hru(j)%lumv%usle_p * hru(j)%lumv%usle_ls
+      !sedyld(j) = (surfq(j) * qp_cms) ** .56 * cklsp(j)
 
       if (sedyld(j) < 0.) sedyld(j) = 0.
 
@@ -70,24 +68,15 @@
         sedyld(j) = sedyld(j) / Exp(hru(j)%sno_mm * 3. / 25.4)
       end if
 
-      !! Particle size distribution of sediment yield
-      !sanyld(j) = sedyld(j) * soil(j)%det_san    !! Sand yield
-      !silyld(j) = sedyld(j) * soil(j)%det_sil    !! Silt yield
-      !clayld(j) = sedyld(j) * soil(j)%det_cla    !! Clay yield
-      !sagyld(j) = sedyld(j) * soil(j)%det_sag    !! Small Aggregate yield
-      !lagyld(j) = sedyld(j) * soil(j)%det_lag    !! Large Aggregate yield
+	!!Particle size distribution of sediment yield
+	  sanyld(j) = sedyld(j) * soil(j)%det_san    !! Sand yield
+	  silyld(j) = sedyld(j) * soil(j)%det_sil    !! Silt yield
+	  clayld(j) = sedyld(j) * soil(j)%det_cla    !! Clay yield
+	  sagyld(j) = sedyld(j) * soil(j)%det_sag    !! Small Aggregate yield
+	  lagyld(j) = sedyld(j) * soil(j)%det_lag    !! Large Aggregate yield
 
       !! compute erosion with usle (written to output for comparison)
       usle = 1.292 * usle_ei * cklsp(j) / 11.8
 
-      !! erosion output variables
-      ero_output(j)%ero_d%sedyld = sedyld(j)
-      ero_output(j)%ero_d%precip = w%precip
-      ero_output(j)%ero_d%surfq = surfq(j)
-      ero_output(j)%ero_d%peak = qp_cms
-      !! sum daily erosion output
-      ero_output(j)%n_events = ero_output(j)%n_events
-      ero_output(j)%ero_ave = ero_output(j)%ero_ave + ero_output(j)%ero_d
-        
       return
       end subroutine ero_ysed

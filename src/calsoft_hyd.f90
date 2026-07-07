@@ -19,26 +19,27 @@
       
       implicit none
       
-      external :: curno, re_initialize, time_control
-      
-      integer :: iter_all = 0  !none      |counter
-      integer :: iterall = 0   !none      |counter
-      integer :: isim = 0      !          |
-      integer :: ireg = 0      !none      |counter
-      integer :: ilum = 0      !none      |counter
-      integer :: iihru = 0     !none      |counter
-      integer :: icn = 0       !none      |counter
-      integer :: ihru_s = 0    !none      |counter
-      integer :: iter_ind = 0  !          |end of loop
-      integer :: ietco = 0     !none      |counter
-      integer :: ik = 0        !none      |counter
-      integer :: iperco = 0    !none      |counter
-      real :: rmeas = 0.       !          |
-      real :: denom = 0.       !          |
-      real :: soft = 0.        !          |
-      real :: diff = 0.        !          |
-      real :: chg_val = 0.     !          | 
-      real :: perc_ln_func = 0.
+      integer :: iter_all      !none      |counter
+      integer :: iterall       !none      |counter
+      integer :: isim          !          |
+      integer :: ireg          !none      |counter
+      integer :: ilum          !none      |counter
+      integer :: iihru         !none      |counter
+      integer :: icn           !none      |counter
+      integer :: ihru_s        !none      |counter
+      integer :: iter_ind      !          |end of loop
+      integer :: ietco         !none      |counter
+      integer :: ik            !none      |counter
+      integer :: nly           !          |end of loop
+      integer :: iperco        !none      |counter
+      real :: rmeas            !          |
+      real :: denom            !          |
+      real :: soft             !          |
+      real :: diff             !          |
+      real :: rto              !          |
+      real :: chg_val          !          | 
+      real :: dep_below_soil   !          |  
+      real :: perc_ln_func
 
       ! calibrate hydrology
         iter_all = 1
@@ -109,7 +110,6 @@
         ! 1st esco adjustment 
         if (isim > 0) then
           cal_sim =  " first esco adj "
-          cal_adj = chg_val
           call time_control
         end if
         
@@ -186,7 +186,6 @@
           ! et adjustment 
           if (isim > 0) then
             cal_sim =  " esco adj "
-            cal_adj = chg_val
             call time_control
           end if
         
@@ -236,10 +235,10 @@
               iihru = region(ireg)%num(ihru_s)
               if (lscal(ireg)%lum(ilum)%meas%name == hru(iihru)%lum_group_c .or. lscal(ireg)%lum(ilum)%meas%name == "basin") then
                 !set parms for pet adjustment and run
-                hru(iihru)%hyd%pet_co = chg_val * hru(iihru)%hyd%pet_co
-                hru(iihru)%hyd%pet_co = amin1 (hru(iihru)%hyd%pet_co, ls_prms(4)%up)
-                hru(iihru)%hyd%pet_co = Max (hru(iihru)%hyd%pet_co, ls_prms(4)%lo)
-                hru_init(iihru)%hyd%pet_co = hru(iihru)%hyd%pet_co
+                hru(iihru)%hyd%harg_pet = chg_val * hru(iihru)%hyd%harg_pet
+                hru(iihru)%hyd%harg_pet = amin1 (hru(iihru)%hyd%harg_pet, ls_prms(4)%up)
+                hru(iihru)%hyd%harg_pet = Max (hru(iihru)%hyd%harg_pet, ls_prms(4)%lo)
+                hru_init(iihru)%hyd%harg_pet = hru(iihru)%hyd%harg_pet
               end if
             end do
             
@@ -255,8 +254,7 @@
 
         ! 1st cover adjustment 
         if (isim > 0) then
-          cal_sim =  " pet adj "
-          cal_adj = chg_val
+          cal_sim =  " first pet adj "
           call time_control
         end if
 
@@ -324,7 +322,6 @@
         ! 1st cn3_swf adjustment 
         if (isim > 0) then
           cal_sim =  " first cn3_swf adj "
-          cal_adj = chg_val
           call time_control
         end if
 
@@ -394,7 +391,6 @@
         ! cn3_swf adjustment
         if (isim > 0) then
           cal_sim =  " cn3_swf adj "
-          cal_adj = chg_val
           !pco%wb_hru%a = "y"
           !if (icn == 2) pco%wb_hru%d = "y"
           call time_control
@@ -529,7 +525,6 @@
         ! latq_co adjustment for lateral soil flow
         if (isim > 0) then
           cal_sim =  " latq_co adj "
-          cal_adj = chg_val
           call time_control
         end if
         end do  
@@ -612,7 +607,6 @@
         ! 1st perco adjustment 
         if (isim > 0) then
           cal_sim =  " first perco adj "
-          cal_adj = chg_val
           call time_control
         end if
   
@@ -697,7 +691,6 @@
         ! perco adjustment 
         if (isim > 0) then
           cal_sim =  " perco adj "
-          cal_adj = chg_val
           call time_control
         end if
         
@@ -765,7 +758,6 @@
         ! 1st cn3_swf adjustment 
         if (isim > 0) then
           cal_sim =  " first cn3_swf adj "
-          cal_adj = chg_val
           call time_control
         end if
 
@@ -835,7 +827,6 @@
         ! cn3_swf adjustment
         if (isim > 0) then
           cal_sim =  " cn3_swf adj "
-          cal_adj = chg_val
           !pco%wb_hru%a = "y"
           !if (icn == 2) pco%wb_hru%d = "y"
           call time_control
@@ -846,5 +837,5 @@
         
       !cal_codes%hyd_hru = "n"
       
-      return
+	  return
       end subroutine calsoft_hyd

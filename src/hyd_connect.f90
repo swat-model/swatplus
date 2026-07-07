@@ -15,47 +15,56 @@
       
       implicit none
       
-      external :: aqu2d_read, dr_db_read, gwflow_chan_read, gwflow_read, hyd_read_connect, overbank_read, &
-                  recall_read, recall_read_cs, recall_read_salt, ru_read, ru_read_elements
-
-      integer :: eof = 0              !           |end of file
-      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
-      character (len=3) :: iob_out = "" !           !object type out
-      character (len=3) :: iobtyp = ""  !none       |object type
-      integer :: nspu = 0             !           |
-      integer :: cmdno = 0            !           |
-      integer :: idone = 0            !           | 
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      character (len=16) :: namedum   !           |
+      integer :: eof                  !           |end of file
+      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      character (len=3) :: iob_out    !           !object type out
+      character (len=3) :: iobtyp     !none       |object type
+      character (len=3) :: ihtyp      !           |
+      integer :: nspu                 !           |
+      !integer :: isp
+      integer :: cmdno                !           |
+      integer :: idone                !           | 
       !integer :: hydno
-      integer :: cmd_prev = 0         !           |
-      integer :: ob1 = 0              !none       |beginning of loop
-      integer :: ob2 = 0              !none       |ending of loop
-      integer :: iobj_tot = 0         !           |
-      real :: mexco_sp = 0.           !           |
-      integer :: i = 0                !none       |counter
-      integer :: ii = 0               !none       |counter
-      integer :: ielem = 0            !none       |counter 
-      integer :: k = 0                !none       |counter
-      integer :: iob = 0              !           |
-      integer :: kk = 0               !none       |counter
-      integer :: j = 0                !           |
-      integer :: ielem_db = 0         !           |
-      integer :: jj = 0               !none       |counter
-      integer :: iord = 0             !none       |counter
-      integer :: isrc_tot = 0         !           |
-      integer :: iorder = 0           !           |
-      integer :: ircv = 0             !none       |counter
-      integer :: ircv_ob = 0          !           |
+      integer :: cmd_prev             !           |
+      integer :: ob1                  !none       |beginning of loop
+      integer :: ob2                  !none       |ending of loop
+      integer :: iobj_tot             !           |
+      real :: mexco_sp                !           |
+      integer :: i                    !none       |counter
+      integer :: ii                   !none       |counter
+      integer :: ielem                !none       |counter 
+      integer :: k                    !none       |counter
+      integer :: iob                  !           |
+      integer :: kk                   !none       |counter
+      integer :: j                    !           |
+      integer :: ielem_db             !           |
+      integer :: jj                   !none       |counter
+      integer :: iord                 !none       |counter
+      integer :: isrc_tot             !           |
+      integer :: iorder               !           |
+      integer :: ircv                 !none       |counter
+      integer :: ircv_ob              !           |
       integer :: max                  !           |
-      logical :: i_exist
-    
+      integer :: ipath
+      integer :: ihmet
+      integer :: isalt
+      integer :: npests
+      integer :: npaths
+      integer :: nmetals
+      integer :: nsalts
+      
+      
       eof = 0
       imax = 0
       mexco_sp = 0
       cmd_prev = 0
 
-      allocate (rcv_sum(sp_ob%objs), source = 0)
-      allocate (dfn_sum(sp_ob%objs), source = 0)
-      allocate (ru_seq(sp_ob%objs), source = 0)
+      allocate (rcv_sum(sp_ob%objs))
+      allocate (dfn_sum(sp_ob%objs))
+      allocate (ru_seq(sp_ob%objs))
       rcv_sum = 0
       dfn_sum = 0
       ru_seq = 0
@@ -150,6 +159,7 @@
       if (sp_ob%chan > 0) then
         call hyd_read_connect(in_con%chan_con, "chan    ", sp_ob1%chan, sp_ob%chan, hd_tot%chan, bsn_prm%day_lag_mx) 
         call overbank_read
+        call channel_surf_link
       end if
                                   
       !read connect file for reservoirs
@@ -159,7 +169,8 @@
                 
       !read connect file for recalls
       if (sp_ob%recall > 0) then
-        call hyd_read_connect(in_con%rec_con, "recall  ", sp_ob1%recall, sp_ob%recall, hd_tot%recall, 1)
+        call hyd_read_connect(in_con%rec_con, "recall  ", sp_ob1%recall, sp_ob%recall, hd_tot%recall, 1) 
+        call recall_read
       end if
                 
       !read connect file for export coefficients
@@ -181,20 +192,23 @@
       !read connect file for swat-deg channels
       if (sp_ob%chandeg > 0) then
         call hyd_read_connect(in_con%chandeg_con, "chandeg ", sp_ob1%chandeg, sp_ob%chandeg, hd_tot%chandeg, bsn_prm%day_lag_mx)
+        
       end if
       
       !read connect file for gwflow
       if (sp_ob%gwflow > 0) then
-        call gwflow_chan_read !first, read in channel cell information
+        call gwflow_riv !first, read in river cell information
         call hyd_read_connect(in_con%gwflow_con, "gwflow  ", sp_ob1%gwflow, sp_ob%gwflow, hd_tot%gwflow, 1)
         call gwflow_read
       end if
       
+      
+
       !! for each hru or defining unit, set all subbasins that contain it 
         do i = 1, sp_ob%objs
           nspu = ob(i)%ru_tot
           if (nspu > 0) then
-            allocate (ob(i)%obj_subs(nspu), source = 0)
+            allocate (ob(i)%obj_subs(nspu))
           end if
         end do
 
@@ -212,7 +226,7 @@
           end do
         end do
       
-      !! determine number of receiving units and set object numbers for outflow hyds
+      !! determine number of recieving units and set object numbers for outflow hyds
         do i = 1, sp_ob%objs
           do ii = 1, ob(i)%src_tot
             iob_out = ob(i)%obtyp_out(ii)          !object type out
@@ -294,51 +308,41 @@
         end do
 
       !! allocate zero arrays for constituents
-      allocate (hin_csz%pest(cs_db%num_pests), source = 0.)
-      allocate (hin_csz%path(cs_db%num_paths), source = 0.)
-      allocate (hin_csz%hmet(cs_db%num_metals), source = 0.)
-      allocate (hin_csz%salt(cs_db%num_salts), source = 0.) !rtb salt
-      allocate (hin_csz%cs(cs_db%num_cs), source = 0.) !rtb se 
+      allocate (hin_csz%pest(cs_db%num_pests))
+      allocate (hin_csz%path(cs_db%num_paths))
+      allocate (hin_csz%hmet(cs_db%num_metals))
+      allocate (hin_csz%salt(cs_db%num_salts))
           
-      allocate (hcs1%pest(cs_db%num_pests), source = 0.)
-      allocate (hcs1%path(cs_db%num_paths), source = 0.)
-      allocate (hcs1%hmet(cs_db%num_metals), source = 0.)
-      allocate (hcs1%salt(cs_db%num_salts), source = 0.) !rtb salt
-      allocate (hcs1%cs(cs_db%num_cs), source = 0.) !rtb cs
+      allocate (hcs1%pest(cs_db%num_pests))
+      allocate (hcs1%path(cs_db%num_paths))
+      allocate (hcs1%hmet(cs_db%num_metals))
+      allocate (hcs1%salt(cs_db%num_salts))
         
-      allocate (hcs2%pest(cs_db%num_pests), source = 0.)
-      allocate (hcs2%path(cs_db%num_paths), source = 0.)
-      allocate (hcs2%hmet(cs_db%num_metals), source = 0.)
-      allocate (hcs2%salt(cs_db%num_salts), source = 0.) !rtb salt
-      allocate (hcs2%cs(cs_db%num_cs), source = 0.) !rtb cs
-      
-      allocate (hcs3%pest(cs_db%num_pests), source = 0.)
-      allocate (hcs3%path(cs_db%num_paths), source = 0.)
-      allocate (hcs3%hmet(cs_db%num_metals), source = 0.)
-      allocate (hcs3%salt(cs_db%num_salts), source = 0.) !rtb salt
-      allocate (hcs3%cs(cs_db%num_cs), source = 0.) !rtb cs
+      allocate (hcs2%pest(cs_db%num_pests))
+      allocate (hcs2%path(cs_db%num_paths))
+      allocate (hcs2%hmet(cs_db%num_metals))
+      allocate (hcs2%salt(cs_db%num_salts))
 
       hin_csz%pest = 0.
       hin_csz%path = 0.
       hin_csz%hmet = 0.
-      hin_csz%salt = 0. !rtb salt
-      hin_csz%cs = 0. !rtb cs
+      hin_csz%salt = 0.
 
       !! allocate receiving arrays
       do i = 1, sp_ob%objs
         if (ob(i)%rcv_tot > 0) then
           nspu = ob(i)%rcv_tot
-          allocate (ob(i)%obj_in(nspu), source = 0)
+          allocate (ob(i)%obj_in(nspu))
           allocate (ob(i)%obtyp_in(nspu))
-          allocate (ob(i)%obtypno_in(nspu), source = 0)
+          allocate (ob(i)%obtypno_in(nspu))
           allocate (ob(i)%htyp_in(nspu))
-          allocate (ob(i)%ihtyp_in(nspu), source = 0)
-          allocate (ob(i)%frac_in(nspu), source = 0.)
+          allocate (ob(i)%ihtyp_in(nspu))
+          allocate (ob(i)%frac_in(nspu))
           allocate (ob(i)%hin_uh(nspu))
           !! allocate unit hyd for all incoming hyd's
           do ii = 1, nspu
-            allocate (ob(i)%hin_uh(ii)%uh(bsn_prm%day_lag_mx,time%step), source = 0.)
-            allocate (ob(i)%hin_uh(ii)%hyd_flo(bsn_prm%day_lag_mx,time%step), source = 0.)
+            allocate (ob(i)%hin_uh(ii)%uh(bsn_prm%day_lag_mx,time%step))
+            allocate (ob(i)%hin_uh(ii)%hyd_flo(bsn_prm%day_lag_mx,time%step))
             ob(i)%hin_uh(ii)%uh = 0.
             ob(i)%hin_uh(ii)%hyd_flo = 0.
           end do
@@ -362,7 +366,7 @@
             do ich = 1, sp_ob%chan
               kk = sp_ob1%chan + ich - 1
               rcv_sum(kk) = rcv_sum(kk) + 1                   ! setting sequential inflow number
-              jj = rcv_sum(kk)                                ! jj=sequential receiving number
+              jj = rcv_sum(kk)                                ! jj=seqential receiving number
               ob(kk)%obj_in(jj) = i                           ! source object number (for receiving unit)
               ob(kk)%obtyp_in(jj) = ob(i)%typ
               ob(kk)%htyp_in(jj) = ob(i)%htyp_out(ii)
@@ -372,7 +376,7 @@
           else
             kk = ob(i)%obj_out(ii)                          ! kk=object number of outflow object
             rcv_sum(kk) = rcv_sum(kk) + 1                   ! setting sequential receiving hyd number
-            jj = rcv_sum(kk)                                ! jj=sequential receiving number
+            jj = rcv_sum(kk)                                ! jj=seqential receiving number
             ob(kk)%obj_in(jj) = i                           ! source object number (for receiving unit)
             ob(kk)%obtyp_in(jj) = ob(i)%typ
             ob(kk)%obtypno_in(jj) = ob(i)%num
@@ -386,8 +390,6 @@
               do ielem = 1, ru_def(iru)%num_tot
                 ielem_db = ru_def(iru)%num(ielem)
                 kk = ru_elem(ielem_db)%obj
-                rcv_sum(kk) = rcv_sum(kk) + 1               ! setting sequential receiving hyd number
-                jj = rcv_sum(kk)  
                 ob(kk)%obj_in(jj) = i                       ! source object number (for receiving unit)
                 ob(kk)%obtyp_in(jj) = ob(i)%typ
                 ob(kk)%obtypno_in(jj) = ob(i)%props
@@ -413,18 +415,21 @@
     do while (idone == 0)
         do i = 1, sp_ob%objs
         
-        if (iord > 5000) then        
-          open (9002,file="looping.con",recl = 8000)
-          write (9002, *) "LOOPING.CON CHECKING INFINITE LOOPS"
-          do iob = 1, sp_ob%objs
-            if (ob(iob)%fired == 0 .and. ob(iob)%rcv_tot > 0) then
-              kk=1
-              write (9002, *) ob(iob)%typ, ob(iob)%num, ob(iob)%rcv_tot, (ob(iob)%obtyp_in(jj),  &
-                                    ob(iob)%obtypno_in(jj), jj = 1, ob(iob)%rcv_tot)
-            end if 
-          end do
-          write (*,1002)
-          call exit(1)
+        if (iord > 1000) then
+          if (ob(i)%fired == 0) then         
+
+            do iob = 1, sp_ob%objs
+              if (ob(iob)%fired == 0 .and. ob(iob)%rcv_tot > 0) then
+                  kk=1
+                write (9001, *) iob, ob(iob)%fired, ob(iob)%typ, ob(iob)%num, ob(iob)%rcv_tot, (ob(iob)%obtyp_in(jj),  &
+                                    ob(iob)%obtypno_in(jj), ob(iob)%obj_in(jj), jj = 1, ob(iob)%rcv_tot)
+              end if 
+            end do
+            write (*,1002)
+            !pause   !!! stop the simulation run (ob(i)%fired == 0)
+            !stop
+            call exit(1)
+          end if
         end if 
    
       
@@ -484,7 +489,7 @@
                 !! modflow - for all inflow objects
                 if (ob(i)%typ == "modflow") then
                   iobtyp = ob(i)%obtyp_out(ii)
-                  !! add receiving for all channels from modflow
+                  !! add recieving for all channels from modflow
                   if (iobtyp == "cha") then
                     ob1 = sp_ob1%chan
                     ob2 = sp_ob1%chan + sp_ob%chan - 1
@@ -530,18 +535,27 @@
         end do
         iord = iord + 1
       end do
-
-    !! write calculated and input drainage areas for all objects except hru's
+      
+      !! write calculated and input drainage areas for all objects except hru's
+      !! the following file is for debugging purposes
+      open (9002,file="drareas.out",recl = 8000)
       do iob = 1, sp_ob%objs
         if (ob(iob)%typ /= "hru" .and. ob(iob)%typ /= "ru") then
-          write (9004,*) iob, ob(iob)%typ, ob(iob)%num, ob(iob)%area_ha, ob(iob)%area_ha_calc,             &
+        !!! write to diagnostics.out file
+          write (9001, *) iob, ob(iob)%typ, ob(iob)%num, ob(iob)%area_ha, ob(iob)%area_ha_calc,             &
+            ob(iob)%rcv_tot, (ob(iob)%obtyp_in(jj), ob(iob)%obtypno_in(jj), ob(iob)%obj_in(jj),             &
+            ob(iob)%frac_in(jj), &
+            ob(ob(iob)%obj_in(jj))%area_ha, ob(ob(iob)%obj_in(jj))%area_ha_calc, jj = 1, ob(iob)%rcv_tot)
+        !!! write to drareas.out file
+          write (9002, *) iob, ob(iob)%typ, ob(iob)%num, ob(iob)%area_ha, ob(iob)%area_ha_calc,             &
             ob(iob)%rcv_tot, (ob(iob)%obtyp_in(jj), ob(iob)%obtypno_in(jj), ob(iob)%obj_in(jj),             &
             ob(iob)%frac_in(jj), &
             ob(ob(iob)%obj_in(jj))%area_ha, ob(ob(iob)%obj_in(jj))%area_ha_calc, jj = 1, ob(iob)%rcv_tot)
         end if 
       end do
       
+      
 1002  format (5x,/,"ERROR - An infinite loop is detected in the connect file(s)",/, 15x, "the simulation will end",       &
-                       /, 9x, "(review looping.con file for more info)",/)
+                       /, 9x, "(review diagnostics.out file for more info)",/)
       return
       end subroutine hyd_connect

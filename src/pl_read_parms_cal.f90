@@ -9,29 +9,27 @@
        
        implicit none        
       
-      external :: define_unit_elements
-      
-       character (len=80) :: titldum = ""!           |title of file
-       character (len=80) :: header = "" !           |header of file
-       integer :: eof = 0              !           |end of file
+       character (len=80) :: titldum   !           |title of file
+       character (len=80) :: header    !           |header of file
+       integer :: eof                  !           |end of file
        logical :: i_exist              !none       |check to determine if file exists
-       integer :: mreg = 0             !none       |end of loop
-       integer :: i = 0                !none       |counter
-       integer :: ilum = 0
-       integer :: ilum_mx = 0
-       integer :: isp = 0              !none       |counter 
-       integer :: ielem1 = 0           !none       |counter 
-       integer :: iihru = 0            !none       |counter  
-       integer :: ihru = 0             !none       |counter 
-       integer :: nspu = 0             !           | 
-       integer :: ipl = 0              !           | 
+       integer :: mreg                 !none       |end of loop
+       integer :: i                    !none       |counter
+       integer :: ilum
+       integer :: ilum_mx
+       integer :: isp                  !none       |counter 
+       integer :: ielem1               !none       |counter 
+       integer :: iihru                !none       |counter  
+       integer :: ihru                 !none       |counter 
+       integer :: nspu                 !           | 
+       integer :: ipl                  !           | 
        
        mreg = 0
        eof = 0
 
        inquire (file=in_chg%plant_parms_sft, exist=i_exist)
        if (.not. i_exist .or. in_chg%plant_parms_sft == "null") then
-        allocate (pl_prms(0:0))
+        allocate (pl_prms(0:0))	   	   
        else   
       do
         open (107,file=in_chg%plant_parms_sft)
@@ -48,14 +46,14 @@
         read (107,*,iostat=eof) pl_prms(i)%name, pl_prms(i)%lum_num, pl_prms(i)%parms, nspu       
         if (eof < 0) exit
         if (nspu > 0) then
-          allocate (elem_cnt(nspu), source = 0)
+          allocate (elem_cnt(nspu))
           backspace (107)
           read (107,*,iostat=eof) pl_prms(i)%name, pl_prms(i)%lum_num,  nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (pl_prms(i)%num(ielem1), source = 0)
+          allocate (pl_prms(i)%num(ielem1))
           pl_prms(i)%num = defunit_num
           pl_prms(i)%num_tot = ielem1
           do ihru = 1, pl_prms(i)%num_tot
@@ -65,7 +63,7 @@
           deallocate (defunit_num)
         else
           !!all hrus are in region
-          allocate (pl_prms(i)%num(sp_ob%hru), source = 0)
+          allocate (pl_prms(i)%num(sp_ob%hru))
           pl_prms(i)%num_tot = sp_ob%hru
           do ihru = 1, sp_ob%hru
             pl_prms(i)%num(ihru) = ihru
@@ -88,6 +86,10 @@
         !! set parms for each plant
         ilum_mx = pl_prms(i)%lum_num * pl_prms(i)%parms
         do ilum = 1, ilum_mx
+          !! use actual value for epco and not change in value like other parms
+          if (pl_prms(i)%prm(ilum)%var == "epco") then
+            plcal(i)%lum(ilum-pl_prms(i)%lum_num)%prm%epco = pl_prms(i)%prm(ilum)%init_val
+          end if
           do ihru = 1, pl_prms(i)%num_tot
             iihru = pl_prms(i)%num(ihru)
             do ipl = 1, pcom(iihru)%npl
@@ -111,10 +113,10 @@
       exit
          
       end do 
-      end if      
+      end if	  
         
       db_mx%plcal_reg = mreg
-      
+	  
        close(107)
        return
        end subroutine pl_read_parms_cal

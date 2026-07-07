@@ -28,40 +28,40 @@
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
         use hru_module, only : hru, sedyld, sedorgp, sedminpa, sedminps, ihru, enratio,  &
-          ihru 
+          ihru, ipl 
         use soil_module
         use plant_module
         use organic_mineral_mass_module
       
         implicit none       
 
-        integer :: j = 0            !none           |HRU number
-        real :: sedp_attach = 0.    !kg P/ha        |amount of phosphorus attached to sediment 
+        integer :: j                !none           |HRU number
+        integer :: sb               !none           |subbasin number
+        real :: sedp_attach         !kg P/ha        |amount of phosphorus attached to sediment 
                                     !               |in soil
-        real :: wt1 = 0.            !kg/ha          |weight of upper soil layer
-        real :: er = 0.             !none           |enrichment ratio
-        real :: frac = 0.           !none           |fraction of organic P in soil
-        real :: sedp = 0.           !kg P/ha        |total amount of P removed in sediment erosion 
-        real :: sed_orgp = 0.       !kg P/ha        |total amount of P in organic pools
-        real :: sed_hump = 0.       !kg P/ha        |amount of P in humus pool
-        real :: sed_manp = 0.       !kg P/ha        |amount of P in manure soil pool
-        real :: sed_rsd_manp = 0.   !kg P/ha        |maount of P in residue manure pool
-        real :: fr_orgp = 0.        !kg P/ha        |fraction of organic phosphorus in soil (humus + manure in soil + manure in residue)
-        real :: fr_actmin = 0.      !kg P/ha        |fraction of active mineral phosphorus in soil
-        real :: fr_stamin = 0.      !kg P/ha        |fraction of stable mineral phosphorus in soil
+        real :: wt1                 !none           |conversion factor (mg/kg => kg/ha)
+        real :: er                  !none           |enrichment ratio
+        real :: conc                !               |concentration of organic N in soil
+        real :: sedp                !kg P/ha        |total amount of P removed in sediment erosion 
+        real :: sed_orgp            !kg P/ha        |total amount of P in organic pools
+        real :: sed_hump            !kg P/ha        |amount of P in humus pool
+        real :: sed_manp            !kg P/ha        |amount of P in manure soil pool
+        real :: sed_rsd_manp        !kg P/ha        |maount of P in residue manure pool
+        real :: fr_orgp             !kg P/ha        |fraction of organic phosphorus in soil (humus + manure in soil + manure in residue)
+        real :: fr_actmin           !kg P/ha        |fraction of active mineral phosphorus in soil
+        real :: fr_stamin           !kg P/ha        |fraction of stable mineral phosphorus in soil
 
         j = ihru
 
         !! HRU sediment calculations
-        sedp_attach = soil1(j)%hsta(1)%p + soil1(j)%man(1)%p + soil1(j)%man(1)%p + soil1(j)%mp(1)%sta + soil1(j)%mp(1)%act
+        sedp_attach = soil1(j)%hsta(1)%p + soil1(j)%man(1)%p + rsd1(j)%man%p + soil1(j)%mp(1)%sta + soil1(j)%mp(1)%act
         if (sedp_attach > 1.e-9) then
-          fr_orgp = (soil1(j)%hsta(1)%p + soil1(j)%man(1)%p  + soil1(j)%man(1)%p) / sedp_attach
+          fr_orgp = (soil1(j)%hsta(1)%p + soil1(j)%man(1)%p  + rsd1(j)%man%p) / sedp_attach
           fr_actmin = soil1(j)%mp(1)%sta / sedp_attach
           fr_stamin = soil1(j)%mp(1)%act / sedp_attach
         end if
 
-        !! kg/ha = t/m3 * mm * 10,000 m2/ha * m/1000 mm * 1000 kg/t
-        wt1 = 10000. * soil(j)%phys(1)%bd * soil(j)%phys(1)%d
+        wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
         if (hru(j)%hyd%erorgp > .001) then
           er = hru(j)%hyd%erorgp
@@ -69,9 +69,8 @@
           er = enratio
         end if
       
-        frac = sedp_attach * er / wt1
-        !! kg/ha = t / ha * 1000. kg/t
-        sedp = 1000. * frac * sedyld(j) / hru(j)%area_ha
+        conc = sedp_attach * er / wt1
+        sedp = .001 * conc * sedyld(j) / hru(j)%area_ha
         
         if (sedp > 1.e-9) then
           sedorgp(j) = sedp * fr_orgp
@@ -82,7 +81,7 @@
           sedminps(j) = amin1 (sedminps(j), soil1(j)%mp(1)%sta)
           soil1(j)%mp(1)%sta = soil1(j)%mp(1)%sta - sedminps(j)
         
-          sed_orgp = soil1(j)%hsta(1)%p + soil1(j)%man(1)%p
+          sed_orgp = soil1(j)%hsta(1)%p + soil1(j)%man(1)%p  + rsd1(j)%man%p
           if (sed_orgp > 1.e-6) then
             sed_hump = sedorgp(j) * (soil1(j)%hsta(1)%p / sed_orgp)
             sed_hump = amin1 (sed_hump, soil1(j)%hsta(1)%p)
@@ -92,9 +91,9 @@
             sed_manp = amin1 (sed_manp, soil1(j)%man(1)%p)
             soil1(j)%man(1)%p = soil1(j)%man(1)%p - sed_manp
         
-            sed_rsd_manp = sedorgp(j) * (soil1(j)%man(1)%p / sed_orgp)
-            sed_rsd_manp = amin1 (sed_rsd_manp, soil1(j)%man(1)%p)
-            soil1(j)%man(1)%p = soil1(j)%man(1)%p - sed_rsd_manp
+            sed_rsd_manp = sedorgp(j) * (rsd1(j)%man%p / sed_orgp)
+            sed_rsd_manp = amin1 (sed_rsd_manp, rsd1(j)%man%p)
+            rsd1(j)%man%p = rsd1(j)%man%p - sed_rsd_manp
           end if
         else
           sedorgp(j) = 0.

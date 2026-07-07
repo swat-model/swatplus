@@ -38,50 +38,52 @@
       use calibration_data_module
       use plant_data_module
       use mgt_operations_module
-      use hru_module, only : hru, ihru, ipl, phubase, yr_skip
+      use hru_module, only : hru, ihru, ipl, phubase, yr_skip, timest
       use plant_module
-      use soil_module
       use time_module
       use climate_module
       use basin_module
       use sd_channel_module
       use hru_lte_module
-      use hydrograph_module
+      use basin_module
+      use hydrograph_module, only : sp_ob, sp_ob1, ob, chaz, ch_stor_y, ch_in_y, ch_out_y
       use output_landscape_module
       use conditional_module
       use constituent_mass_module
       use output_ls_pesticide_module
       use water_body_module
       use water_allocation_module
-      !use reservoir_data_module
       
       implicit none
       
-      external :: actions, aqu_pest_output_init, basin_sw_init, calsoft_ave_output, calsoft_sum_output, &
-                  cli_atmodep_time_control, cli_precip_control, climate_control, command, conditions, &
-                  mallo_control, xmon, sim_initday, wallo_control, mgt_newtillmix_cswat0
+      !rtb floodplain
+      !integer :: flood_count
 
-      integer :: j = 0               !none          |counter
-      integer :: julian_day = 0      !none          |counter
-      integer :: id = 0              !              |
-      integer :: isched = 0          !              |
-      !integer :: ich = 0             !none          |counter
-      integer :: idp = 0             !              |
-      integer :: iplt = 0
-      integer :: iupd = 0            !none          |counter
-      integer :: ipest = 0           !none          |counter
-      integer :: date_time(8) = 0    !              | 
+      integer :: j                   !none          |counter
+      integer :: julian_day          !none          |counter
+      integer :: id                  !              |
+      integer :: isched              !              |
+      integer :: ich                 !none          |counter
+      integer :: idp                 !              |
+      integer :: iplt
+      integer :: iupd                !none          |counter
+      integer :: ipest               !none          |counter
+      integer :: date_time(8)        !              | 
       character*10 b(3)              !              |
-      real :: crop_yld_t_ha = 0.     !t/ha          |annual and ave annual basin crop yields
-      real :: sw_init = 0.
-      real :: sno_init = 0.
-      integer :: iob = 0             !              |
-      integer :: iord
-      integer :: curyr = 0           !              |
-      integer :: mo = 0              !              |
-      integer :: day_mo = 0          !              |
-      integer :: imallo = 0
-      integer :: ires = 0
+      real :: crop_yld_t_ha          !t/ha          |annual and ave annual basin crop yields
+      real :: sw_init
+      real :: sno_init
+      integer :: iob                 !              |
+      integer :: curyr               !              |
+      integer :: iwgn                !              |
+      integer :: ipg                 !              |
+      integer :: ireg                !              |
+      integer :: ilu                 !              |
+      integer :: mo                    !           |
+      integer :: day_mo                !           |
+      integer :: iwallo
+
+      integer :: day_index !rtb gwflow
       
       time%yrc = time%yrc_start
       
@@ -100,10 +102,10 @@
       call cli_precip_control (0)
 
       do curyr = 1, time%nbyr
-    !!!!!  uncomment next three lines for RELEASE version only (Srin/Karim)
+    !!!!!  uncomment next two lines for RELEASE version only (Srin/Karim)
           !call DATE_AND_TIME (b(1), b(2), b(3), date_time)
           !write (*,1235) cal_sim, time%yrc
-    !1235  format (1x, a, 2x, i4)
+    !1235 format (1x, a, 2x, i4)
           
         time%yrs = curyr
 
@@ -148,7 +150,7 @@
         !! set initial soil water for hru, basin and lsu - for checking water balance
         if (pco%sw_init == "n") then
           if (time%yrs > pco%nyskip) then
-            call basin_sw_init     !***jga 
+            call basin_sw_init
             call aqu_pest_output_init
             pco%sw_init = "y"  !! won't reset again
           end if
@@ -216,13 +218,6 @@
           !! initialize variables at beginning of day for hru's
           if (sp_ob%hru > 0) call sim_initday
 
-          !! initialize variables at beginning of day for water allocation
-          !! zero demand, withdrawal, and unmet for entire allocation object
-          wallo(:)%tot = walloz
-          !! zero water treatment and use outflow in case they receive water multiple times
-          if (allocated(wtp_om_out)) wtp_om_out(:) = hz
-          if (allocated(wuse_om_out)) wuse_om_out(:) = hz
-
           if (time%yrs > pco%nyskip) ndmo(time%mo) = ndmo(time%mo) + 1
 
           call climate_control      !! read in/generate weather
@@ -233,21 +228,41 @@
           do iupd = 1, db_mx%cond_up
             id = upd_cond(iupd)%cond_num
             d_tbl => dtbl_scen(id)
-            do j = 1, sp_ob%hru
-              call conditions (j, id)
-              call actions (j, iob, id)
-            end do
+            !if (upd_cond(iupd)%num_hits < upd_cond(iupd)%max_hits) then
+            !  upd_cond(iupd)%num_hits = upd_cond(iupd)%num_hits + 1
+              !! all hru fractions are set at once
+              if (upd_cond(iupd)%typ == "hru_fr_change") then
+                call conditions (j, id)
+                call actions (j, iob, id)
+              end if
+              !! have to check every hru for land use change
+              if (upd_cond(iupd)%typ == "lu_change") then
+                do j = 1, sp_ob%hru
+                  call conditions (j, id)
+                  call actions (j, iob, id)
+                end do
+              end if
+            !end if            
           end do
 
-          !! allocate manure to appropriate demand objects
-          if (db_mx%mallo_db > 0) then
-            do imallo = 1, db_mx%mallo_db
-              call mallo_control (imallo)
+          !! allocate water for water rights objects
+          if (db_mx%wallo_db > 0) then
+            do iwallo = 1, db_mx%wallo_db
+              !! if a channel is not an object, call at beginning of day
+              j = iwallo    ! to avoid a compiler warning
+              if (wallo(iwallo)%cha_ob == "n") call wallo_control (j)
             end do
           end if
-          
+
+          !rtb floodplain
+          !flood_freq = 0
+
           call command              !! command loop 
           
+          !rtb floodplain - output array of floodplain flags
+          !write(5555,1235) (flood_freq(flood_count),flood_count=1,2407)
+
+        
           ! reset base0 heat units and yr_skip at end of year for southern hemisphere
           ! near winter solstace (winter solstice is around June 22)
           if (time%day == 181) then
@@ -276,24 +291,18 @@
         !! write annual basin crop yields and harvested areas
         if (sp_ob%hru > 0) then
         do iplt = 1, basin_plants
-          if (time%yrs > pco%nyskip) then
-            crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
-            if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
-              write (5100,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld(iplt)%area_ha,          &
-                                                  bsn_crop_yld(iplt)%yield, crop_yld_t_ha
-            end if
-            bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
-            bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
-          end if
+          crop_yld_t_ha = bsn_crop_yld(iplt)%yield / (bsn_crop_yld(iplt)%area_ha + 1.e-6)
+          write (5100,*) time%yrc, iplt, plants_bsn(iplt), bsn_crop_yld(iplt)%area_ha,            &
+                                                bsn_crop_yld(iplt)%yield, crop_yld_t_ha
+          bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha + bsn_crop_yld(iplt)%area_ha
+          bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield + bsn_crop_yld(iplt)%yield
           bsn_crop_yld(iplt) = bsn_crop_yld_z
           if (time%end_sim == 1) then
             crop_yld_t_ha = bsn_crop_yld_aa(iplt)%yield / (bsn_crop_yld_aa(iplt)%area_ha + 1.e-6)
             bsn_crop_yld_aa(iplt)%area_ha = bsn_crop_yld_aa(iplt)%area_ha / time%yrs_prt
             bsn_crop_yld_aa(iplt)%yield = bsn_crop_yld_aa(iplt)%yield / time%yrs_prt
-            if (pco%crop_yld == "y" .or. pco%crop_yld == "b") then
-              write (5101,*) time%yrc, iplt, plts_bsn(iplt), bsn_crop_yld_aa(iplt)%area_ha,   &
+            write (5101,*) time%yrc, iplt, plants_bsn(iplt), bsn_crop_yld_aa(iplt)%area_ha,   &
                                                 bsn_crop_yld_aa(iplt)%yield, crop_yld_t_ha
-            end if
             bsn_crop_yld_aa(iplt) = bsn_crop_yld_z
           end if
         end do
@@ -334,9 +343,7 @@
           end if
         
           !! compute biological mixing at the end of every year
-          if (bsn_cc%cswat == 0) then  !! fg added this because when cswat == 0, biomixing occurs every day that the soil layer is above freezing not at the end of the year.
-            if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix_cswat0 (j, hru(j)%hyd%biomix, 0)
-          end if
+          if (hru(j)%hyd%biomix > 1.e-6) call mgt_newtillmix (j, hru(j)%hyd%biomix, 0)
 
           !! update sequence number for year in rotation to that of
           !! the next year and reset sequence numbers for operations
@@ -346,6 +353,7 @@
               if (pldb(idp)%typ == "perennial") then
                 pcom(j)%plcur(ipl)%curyr_mat = pcom(j)%plcur(ipl)%curyr_mat + 1
                 pcom(j)%plcur(ipl)%curyr_mat = Min(pcom(j)%plcur(ipl)%curyr_mat,pldb(idp)%mat_yrs)
+                pcom(j)%plcur(ipl)%curyr_gro = pcom(j)%plcur(ipl)%curyr_gro + 1
               end if
             end if
           end do
@@ -354,9 +362,6 @@
           ! on December 31 (winter solstice is around December 22)
           iob = sp_ob1%hru + j - 1
           if (ob(iob)%lat >= 0) then
-            ! zero yearly irrigation for dtbl conditioning jga6-25
-            !hru(j)%irr_yr = 0.
-            
             phubase(j) = 0.
             yr_skip(j) = 0
             isched = hru(j)%mgt_ops
@@ -369,83 +374,15 @@
           end if
         end do      
 
-        !! update simulation year
-        time%yrc = time%yrc + 1
+      !! update simulation year
+      time%yrc = time%yrc + 1
       end do            !!     end annual loop
+     
+      !! write output for SWIFT input
+      !if (bsn_cc%swift_out == 1) call swift_output
       
-      !! write channel morphology - downcutting and widening
-      bsn_sedbud%upland_t = bls_a%sedyld * bsn%area_ls_ha
-      
-      do ich = 1, sp_ob%chandeg
-        iord = sd_ch(ich)%order
-        !! sum tons by stream order - w_yr, d_yr and fp_mm are still in tons
-        ch_morph_ord(iord)%num = ch_morph_ord(iord)%num + 1
-        
-        !! compute w_yr, d_yr and fp dep in mm
-        ch_morph(ich)%w_yr = ch_morph(ich)%ebank_m / sd_ch(ich)%chw / time%yrs_prt
-        ch_morph(ich)%d_yr = ch_morph(ich)%ebtm_m / sd_ch(ich)%chd / time%yrs_prt
-        !! mm = t / (3.*bd*w*l) -> assume fp width = 3*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
-        ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (3. * sd_ch(ich)%chw *           &
-                                                sd_ch(ich)%chl) / time%yrs_prt
-        
-        !! basin flood plain deposition and bank erosion
-        bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t + ch_morph(ich)%fp_t
-        bsn_sedbud%ch_ebank_t = bsn_sedbud%ch_ebank_t + ch_morph(ich)%ebank_t
-        ch_morph_ord(iord)%fp_t = ch_morph_ord(iord)%fp_t + ch_morph(ich)%fp_t
-        
-        !! sum to compute average per year
-        ch_morph_ord(iord)%ebank_t = ch_morph_ord(iord)%ebank_t + ch_morph(ich)%ebank_t
-        ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr + ch_morph(ich)%w_yr
-        ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr + ch_morph(ich)%d_yr
-        ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm + ch_morph(ich)%fp_mm
-        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr + ch_morph(ich)%w_yr
-        
-        iob = sp_ob1%chandeg + ich - 1
-        !! ch_budget.txt
-        write (8000,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chw,  &
-                ch_morph(ich)%w_yr, sd_ch(ich)%chd, ch_morph(ich)%d_yr,      &
-                                                      ch_morph(ich)%fp_mm
-      end do
-      
-      !! average and write by stream order
-      if (sp_ob%chandeg > 0) then
-        do iord = 1, 12
-          if (ch_morph_ord(iord)%num > 0) then
-            ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / ch_morph_ord(iord)%num
-            ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / ch_morph_ord(iord)%num
-            ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / ch_morph_ord(iord)%num
-          end if
-        end do
-      end if
-      
-      !! write ch_order_sed.txt
-      if (sp_ob%chandeg > 0) then
-        do iord = 1, 12
-          write (8001,*) iord, ch_morph_ord(iord)%num, ch_morph_ord(iord)%ebank_t,     &
-            ch_morph_ord(iord)%w_yr, ch_morph_ord(iord)%fp_t, ch_morph_ord(iord)%fp_mm
-        end do
-      end if
-      
-      !! upland/channel sediment ratio
-      if (bsn_sedbud%ch_ebank_t > 0.) then
-        bsn_sedbud%up_ch_rto = bsn_sedbud%upland_t / bsn_sedbud%ch_ebank_t
-        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr / sp_ob%chandeg
-      end if
-      
-      do ires= 1, sp_ob%res
-        !! write reservoir trap efficiencies
-        if (res_in_a(ires)%sed > 1.e-6) then
-          res_trap(ires)%sed =  res_out_a(ires)%sed /  res_in_a(ires)%sed
-          bsn_sedbud%res_dep_t = bsn_sedbud%res_dep_t + res_in_a(ires)%sed - res_out_a(ires)%sed
-          bsn_sedbud%res_trap_eff = bsn_sedbud%res_trap_eff + res_trap(ires)%sed
-          !iob = sp_ob1%res + ires - 1
-          !write (7778,*) ires, ob(iob)%name, ob(iob)%area_ha, res_trap(ires)
-        end if
-      end do
-          
       !! ave annual calibration output and reset time for next simulation
       call calsoft_ave_output
-      yrs_print = time%yrs_prt
       time = time_init
 
       return

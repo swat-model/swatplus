@@ -9,8 +9,8 @@
       
       integer, intent (in) :: icha      !none       !channel number
       real, intent (in) :: flo_rate     !m3/s       !flow rate to interpolate rating curve
-      integer :: ielev = 0              !none       |counter for point on the rating curve
-      real :: rto = 0.                  !ratio      |storage time constant for the reach on
+      integer :: ielev                  !none       |counter for point on the rating curve
+      real :: rto                       !ratio      |storage time constant for the reach on
       
         !! interpolate rating curve using inflow rates
         do ielev = 1, ch_rcurv(icha)%npts
@@ -24,7 +24,7 @@
             if (ielev > 1) then
               rto = (flo_rate - ch_rcurv(icha)%elev(ielev-1)%flo_rate) /     &
                 (ch_rcurv(icha)%elev(ielev)%flo_rate - ch_rcurv(icha)%elev(ielev-1)%flo_rate)
-              call chrc_interp (ch_rcurv(icha)%elev(ielev-1), ch_rcurv(icha)%elev(ielev), rto, rcurv)
+              call chrc_interp (ch_rcurv(icha)%elev(ielev-1), ch_rcurv(icha)%elev(ielev), ielev, rto, rcurv)
               exit
             end if
           end if

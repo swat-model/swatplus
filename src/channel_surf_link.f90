@@ -4,22 +4,26 @@
       use channel_module
       use ru_module
       use maximum_data_module
-      use hru_module, only : hru
+      use hru_module, only : hru, hru_db
       
       implicit none
       
-      character (len=3) :: iobtyp = ""!none          |object type
-      integer :: ics = 0            !none          |counter 
-      integer :: ii = 0             !none          |counter 
-      integer :: i = 0              !units         |description  
-      integer :: iob = 0            !units         |description   
-      integer :: ihru = 0           !none          |counter 
-      integer :: ichan = 0
-      real :: tot_ha = 0.           !units         |description 
-      integer :: iobtypno = 0
+      character (len=3) :: iobtyp   !none          |object type
+      integer :: isdc               !none          |counter
+      integer :: ics                !none          |counter 
+      integer :: ii                 !none          |counter 
+      integer :: i                  !units         |description  
+      integer :: iob                !units         |description   
+      integer :: ihru               !none          |counter 
+      integer :: ith                !units         |description    
+      integer :: ifld               !units         |description   
+      integer :: iele               !units         |description   
+      integer :: ichan
+      real :: tot_ha                !units         |description 
+      integer :: iobtypno
+      integer :: ires  
 
       tot_ha = 0
-      i = 0
       
       do ics = 1, db_mx%ch_surf
         
@@ -52,13 +56,13 @@
             iru = ch_sur(ics)%obtypno(ii)
 
             !set flood plain link and landscape element (1==closest to river)
-            do ihru = 1, ru_def(iru)%num_tot
-              iob = ru_def(iru)%num(ihru)
-              ob(iob)%flood_ch_lnk = ichan   !pointer back to channel
-              ob(iob)%flood_ch_elem = ics   !pointer to link
-              tot_ha = tot_ha + ob(iob)%area_ha
-              hru(iob)%wet_fp = "y"
-            end do
+                do ihru = 1, ru_def(iru)%num_tot
+                iob = ru_def(iru)%num(ihru)
+                ob(iob)%flood_ch_lnk = ichan   !pointer back to channel
+                ob(iob)%flood_ch_elem = ics   !pointer to link
+                tot_ha = tot_ha + ob(iob)%area_ha
+ 
+                end do
             
           case ("cha")   !channel
             !

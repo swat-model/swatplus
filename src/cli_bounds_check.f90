@@ -1,4 +1,4 @@
-      subroutine cli_bounds_check (st_day, st_yr, end_day, end_yr, out_bounds)
+      subroutine cli_bounds_check (cur_day, st_day, st_yr, end_day, end_yr, out_bounds)
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine checks to see if climate data is in current simulation day
 !!
@@ -13,6 +13,7 @@
       integer :: end_day                ! none          |end day of measured climate data
       integer :: st_yr                  ! none          |start year of measured climate data
       integer :: end_yr                 ! none          |end year of measured climate data
+      integer :: cur_day
 
       !! check id climate data starts before simulation
       if (st_yr > time%yrc) then

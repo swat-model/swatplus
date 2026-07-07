@@ -3,18 +3,13 @@
       use dr_module
       use input_file_module
       use constituent_mass_module
+      !use organic_mineral_mass_module
       use maximum_data_module
-
-      implicit none
-      
-      external :: dr_read_om, dr_path_read, dr_read_hmet, dr_read_pest, dr_read_salt, ee
  
-      character (len=80) :: titldum = ""
-      character (len=80) :: header = ""
-      integer :: eof = 0
-      integer :: imax = 0
+      character (len=80) :: titldum, header
+      character (len=16) :: namedum
+      integer :: eof, imax
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ii = 0
 
       eof = 0
       

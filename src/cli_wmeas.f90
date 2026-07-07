@@ -7,16 +7,16 @@
       
       implicit none
       
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      integer :: eof = 0              !           |end of file
-      integer :: i = 0                !none       |counter  
-      integer :: imax = 0             !none       |ending of loop
-      integer :: iyr = 0              !none       |number of years 
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      integer :: eof                  !           |end of file
+      integer :: i                    !none       |counter  
+      integer :: imax                 !none       |ending of loop
+      integer :: iyr                  !none       |number of years 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: istep = 0            !           |
-      integer :: iyr_prev = 0          !none      |previous year
-      integer :: iyrs = 0             !           |
+      integer :: istep                !           |
+      integer :: iyr_prev              !none      |previous year
+      integer :: iyrs                 !           |
 
        eof = 0
        imax = 0
@@ -101,7 +101,7 @@
        do 
          read (108,*,iostat=eof) iyr, istep
          if (eof < 0) exit
-         if (iyr >= time%yrc .and. istep >= time%day_start) exit
+         if (iyr == time%yrc .and. istep == time%day_start) exit
        end do
  
        backspace (108)

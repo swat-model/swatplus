@@ -3,16 +3,26 @@
        use maximum_data_module
        use calibration_data_module
        use hydrograph_module
+       use hru_module, only : hru
        use input_file_module
        use plant_module
        
        implicit none        
       
-       integer :: eof = 0              !           |end of file
-       integer :: mreg = 0             !none       |end of loop
-       integer :: i = 0                !none       |counter
-       integer :: ilum = 0
-       integer :: ilum_mx = 0
+       character (len=80) :: titldum   !           |title of file
+       character (len=80) :: header    !           |header of file
+       integer :: eof                  !           |end of file
+       logical :: i_exist              !none       |check to determine if file exists
+       integer :: mreg                 !none       |end of loop
+       integer :: i                    !none       |counter
+       integer :: ilum
+       integer :: ilum_mx
+       integer :: isp                  !none       |counter 
+       integer :: ielem1               !none       |counter 
+       integer :: iihru                !none       |counter  
+       integer :: ihru                 !none       |counter 
+       integer :: nspu                 !           | 
+       integer :: ipl                  !           | 
        
        mreg = 0
        eof = 0

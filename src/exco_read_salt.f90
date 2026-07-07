@@ -6,21 +6,10 @@
       use maximum_data_module
       use exco_module
       use constituent_mass_module
-
-      implicit none
  
-      character (len=80) :: titldum = ""
-      character (len=80) :: header = ""
-      integer :: eof = 0
-      integer :: imax = 0
-      integer :: ob1 = 0
-      integer :: ob2 = 0
+      character (len=80) :: titldum, header
+      integer :: eof, imax, ob1, ob2
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: iexco_salt = 0
-      integer :: ii = 0
-      integer :: isalt = 0
-      integer :: iexco = 0
-      integer :: iob = 0
 
       eof = 0
       imax = 0
@@ -45,9 +34,9 @@
           
           allocate (exco_salt(imax))
           do iexco_salt = 1, imax
-            allocate (exco_salt(iexco_salt)%salt(cs_db%num_salts), source = 0.)
+            allocate (exco_salt(iexco_salt)%salt(cs_db%num_salts))
           end do
-          allocate (exco_salt_num(imax), source = 0)
+          allocate (exco_salt_num(imax))
           allocate (exco_salt_name(imax))
           rewind (107)
           read (107,*,iostat=eof) titldum
@@ -84,10 +73,10 @@
         iexco = ob(iob)%props
         if (exco_db(iexco)%salts_file == "null") then
           obcs(iob)%hd(1)%salt = 0.
-        else
+        else		
           iexco_salt = exco_salt_num(iexco)
           obcs(iob)%hd(1)%salt = exco_salt(iexco_salt)%salt
-        end if
+		end if
       end do
       
       return

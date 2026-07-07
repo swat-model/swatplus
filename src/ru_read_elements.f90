@@ -6,31 +6,29 @@
       use dr_module
       
       implicit none
-      
-      external :: define_unit_elements
   
-      character (len=3) :: iobtyp = ""  !none       |object type   
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      character (len=16) :: namedum = ""!           |
-      integer :: eof = 0              !           |end of file
-      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
-      integer :: nspu = 0             !           |
+      character (len=3) :: iobtyp     !none       |object type   
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      character (len=16) :: namedum   !           |
+      integer :: eof                  !           |end of file
+      integer :: imax                 !none       |determine max number for array (imax) and total number in file
+      integer :: nspu                 !           |
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i = 0                !none       |counter
+      integer :: i                    !none       |counter
       integer :: max                  !           | 
-      integer :: isp = 0              !none       |counter
-      integer :: k = 0                !           |
-      integer :: iob = 0              !           |
-      integer :: iob1 = 0             !none       |beginning of loop
-      integer :: iob2 = 0             !none       |ending of loop
-      integer :: iru = 0              !none       |counter
-      integer :: idr = 0              !none       |counter
-      integer :: numb = 0             !           |
-      integer :: ielem1 = 0           !none       |counter
-      integer :: ii = 0               !none       |counter
-      integer :: ie = 0               !none       |counter
-      integer :: iru_tot = 0          !           |
+      integer :: isp                  !none       |counter
+      integer :: k                    !           |
+      integer :: iob                  !           |
+      integer :: iob1                 !none       |beginning of loop
+      integer :: iob2                 !none       |ending of loop
+      integer :: iru                  !none       |counter
+      integer :: idr                  !none       |counter
+      integer :: numb                 !           |
+      integer :: ielem1               !none       |counter
+      integer :: ii                   !none       |counter
+      integer :: ie                   !none       |counter
+      integer :: iru_tot              !           |
       
       eof = 0
       imax = 0
@@ -54,7 +52,7 @@
         db_mx%ru_elem = imax
         allocate (ru_def(imax))
         allocate (ru_elem(imax))
-        allocate (ielem_ru(imax), source = 0)
+        allocate (ielem_ru(imax))
         
         rewind (107)
         read (107,*,iostat=eof) titldum
@@ -122,13 +120,13 @@
         
         if (nspu > 0) then
           backspace (107)
-          allocate (elem_cnt(nspu), source = 0)
+          allocate (elem_cnt(nspu))
           read (107,*,iostat=eof) numb, ru_def(iru)%name, nspu, (elem_cnt(isp), isp = 1, nspu)
           if (eof < 0) exit
 
           call define_unit_elements (nspu, ielem1)
           
-          allocate (ru_def(iru)%num(ielem1), source = 0)
+          allocate (ru_def(iru)%num(ielem1))
           ru_def(iru)%num = defunit_num
           ru_def(iru)%num_tot = ielem1
           deallocate (defunit_num)
@@ -176,7 +174,7 @@
             ie = ru_def(iru)%num(ielem1)
             iob = ru_elem(ie)%obj
             iru_tot = ob(iob)%ru_tot
-            allocate (ob(iob)%ru(1), source = 0)
+            allocate (ob(iob)%ru(1))
           end do
 
           do ielem1 = 1, ru_def(iru)%num_tot

@@ -44,17 +44,20 @@
       use output_landscape_module
 
       implicit none
-      
-      external :: nuts, pl_nfix
 
-      integer :: j = 0       !none      |hru number
-      integer :: l = 0       !none      |counter (soil layer)
-      real :: uno3l = 0.     !kg N/ha   |plant nitrogen demand
-      integer :: idp = 0     !          |       
-      real :: root_depth = 0.  !mm        |root depth
-      real :: unmx = 0.      !kg N/ha   |maximum amount of nitrogen that can be removed from soil layer
-      real :: soil_depth = 0.  !mm        |lowest depth in layer from which nitrogen may be removed
-      real :: xx = 0.        !          |  
+      integer :: icrop       !none      |land cover code
+      integer :: j           !none      |hru number
+      integer :: l           !none      |counter (soil layer)
+      real :: uno3l          !kg N/ha   |plant nitrogen demand
+      integer :: idp         !          |       
+      real :: root_depth     !mm        |root depth
+      real :: unmx           !kg N/ha   |maximum amount of nitrogen that can be removed from soil layer
+      real :: soil_depth     !mm        |lowest depth in layer from which nitrogen may be removed
+      real :: uobn           !none      |nitrogen uptake normalization parameter
+                             !          |This variable normalizes the nitrogen uptake
+                             !          |so that the model can easily verify that
+                             !          |upake from the different soil layers sums to 1.0
+      real :: xx             !          |  
       integer :: max         !          |
   
       j = ihru
@@ -65,7 +68,7 @@
       if (uno3d(ipl) < 1.e-6) return
       
       !! find depth of soil layer the roots are into
-      root_depth = max (10.1, pcom(j)%plg(ipl)%root_dep)
+      root_depth = amax1 (10.1, pcom(j)%plg(ipl)%root_dep)
       soil_depth = 0.
       do l = 1, soil(j)%nly
         soil_depth = soil(j)%phys(l)%d
@@ -83,7 +86,6 @@
         !uno3l = Min(unmx, soil1(j)%mn(l)%no3)
         nplnt(j) = nplnt(j) + uno3l 
         soil1(j)%mn(l)%no3 = soil1(j)%mn(l)%no3 - uno3l
-        ! print*, "in pl_nup.f90", l, soil1(j)%mn(l)%no3, uno3l 
       end do
       if (nplnt(j) < 0.) nplnt(j) = 0.
 

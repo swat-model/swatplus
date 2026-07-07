@@ -1,11 +1,12 @@
       subroutine calsoft_hyd_bfr
 
+      use hru_module, only : cn2, hru, hru_init
       use soil_module
       use plant_module
       use hydrograph_module
       use ru_module
       use aquifer_module
-      ! use channel_module
+      use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -18,32 +19,16 @@
       
       implicit none
       
-      external :: calsoft_hyd_bfr_et, calsoft_hyd_bfr_latq, calsoft_hyd_bfr_perc, calsoft_hyd_bfr_pet, calsoft_hyd_bfr_surq
-      
-      integer :: iter_all = 0  !none      |counter
-      integer :: iterall = 0   !none      |counter
+      integer :: iter_all      !none      |counter
+      integer :: iterall       !none      |counter
 
       ! calibrate hydrology
-      iter_all = 1
+        iter_all = 1
         
       do iterall = 1, iter_all
 
-        ! calibrate petco for actual ET
-        ! start with half the range
-        ls_prms(4)%neg = ls_prms(4)%neg / 2.
-        ls_prms(4)%pos = ls_prms(4)%pos / 2.
-        ls_prms(4)%lo = (1. - ls_prms(4)%lo) / 2. + ls_prms(4)%lo
-        ls_prms(4)%up = ls_prms(4)%up - (ls_prms(4)%up - 1.) / 2.
-        call calsoft_hyd_bfr_pet
-        ! calibrate esco for actual ET
+        ! calibrate harg_pet for potentail ET
         call calsoft_hyd_bfr_et
-        ! calibrate petco for actual ET
-        ! allow full range
-        ls_prms(4)%neg = 2. * ls_prms(4)%neg
-        ls_prms(4)%pos = 2. * ls_prms(4)%pos
-        ls_prms(4)%lo = ls_prms(4)%lo - (1. - ls_prms(4)%lo)
-        ls_prms(4)%up = ls_prms(4)%up + (ls_prms(4)%up - 1.)
-        call calsoft_hyd_bfr_pet
 
         ! calibrate cn3_swf for surface runoff
         call calsoft_hyd_bfr_surq
@@ -61,5 +46,5 @@
         
       !cal_codes%hyd_hru = "n"
       
-      return
+	  return
       end subroutine calsoft_hyd_bfr

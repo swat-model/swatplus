@@ -22,18 +22,17 @@
       
       implicit none
 
-      integer :: j = 0         !none          |HRU number
-      real :: orgn_kgha = 0.   !kg N/ha       |amount of organic N in first soil layer
-      real :: wt1 = 0.         !kg/ha         |weight of upper soil layer
-      real :: er = 0.          !none          |enrichment ratio           
-      real :: frac = 0.        !              |fraction of organic N in soil
+      integer :: j             !none          |HRU number
+      real :: xx               !kg N/ha       |amount of organic N in first soil layer
+      real :: wt1              !none          |conversion factor (mg/kg => kg/ha)
+      real :: er               !none          |enrichment ratio           
+      real :: conc             !              |concentration of organic N in soil
 
       j = ihru
 
       !! HRU calculations
-      orgn_kgha = soil1(j)%hsta(1)%n + soil1(j)%hact(1)%n
-      !! kg/ha = t/m3 * mm * 10,000 m2/ha * m/1000 mm * 1000 kg/t
-      wt1 = 10000. * soil(j)%phys(1)%bd * soil(j)%phys(1)%d
+      xx = soil1(j)%hsta(1)%n + soil1(j)%hact(1)%n
+      wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
       if (hru(j)%hyd%erorgn > .001) then
         er = hru(j)%hyd%erorgn
@@ -41,16 +40,15 @@
         er = enratio
       end if
 
-      frac = orgn_kgha * er / wt1
+      conc = xx * er / wt1
 
       !! HRU calculations
-      !! kg/ha = t / ha * 1000. kg/t
-      sedorgn(j) = 1000. * frac * sedyld(j) / hru(j)%area_ha
+      sedorgn(j) = .001 * conc * sedyld(j) / hru(j)%area_ha
 
-      !! update soil nitrogen pools only for HRU calculations
-      if (orgn_kgha > 1.e-6) then
-       soil1(j)%hact(1)%n = soil1(j)%hact(1)%n - sedorgn(j) * (soil1(j)%hact(1)%n / orgn_kgha)
-       soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n - sedorgn(j) * (soil1(j)%hsta(1)%n / orgn_kgha)
+	  !! update soil nitrogen pools only for HRU calculations
+      if (xx > 1.e-6) then
+       soil1(j)%hact(1)%n = soil1(j)%hact(1)%n - sedorgn(j) * (soil1(j)%hact(1)%n / xx)
+       soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n - sedorgn(j) * (soil1(j)%hsta(1)%n / xx)
 
        if (soil1(j)%hact(1)%n < 0.) then
          sedorgn(j) = sedorgn(j) + soil1(j)%hact(1)%n

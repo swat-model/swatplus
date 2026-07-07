@@ -1,7 +1,7 @@
-      function chg_par (val_cur, chg_typ, chg_val, absmin, absmax)
+      function chg_par (val_cur, ielem, chg_typ, chg_val, absmin, absmax, num_db)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this function computes new parameter value based on 
+!!    this function computes new paramter value based on 
 !!    user defined change
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
@@ -28,10 +28,12 @@
                                                       !              |the standard temperature (20 degrees C)
       real, intent (in) :: chg_val                    !variable      |amount of change
       character(len=16), intent (in) :: chg_typ       !variable      |type of change (absval, abschg, pctchg) 
+      integer, intent (in) :: num_db                  !crosswalk number of parameter, structure or land use to get database array number
       real :: chg_par                                 !variable      |new parameter value
       real :: absmin                                  !minimum range for variable
       real :: absmax                                  !maximum change for variable
-      real :: amin1                                   !units         |description 
+      real :: amin1                                   !units         |description   
+      integer :: ielem                                !none          |counter
 
       select case (chg_typ)
 

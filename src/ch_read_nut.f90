@@ -9,18 +9,18 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine reads data from the lake water quality input file (.lwq).
 !!    This file contains data related to initial pesticide and nutrient levels
-!!    in the lake/reservoir and transformation processes occurring within the 
+!!    in the lake/reservoir and transformation processes occuring within the 
 !!    lake/reservoir. Data in the lake water quality input file is assumed to
 !!    apply to all reservoirs in the watershed.     
 
       implicit none
 
-      integer :: eof = 0               !          |end of file
-      integer :: imax = 0              !units     |description
-      character (len=80) :: titldum = "" !          |title of file
-      character (len=80) :: header = ""  !          |header of file
+      integer :: eof                   !          |end of file
+      integer :: imax                  !units     |description
+      character (len=80) :: titldum    !          |title of file
+      character (len=80) :: header     !          |header of file
       logical :: i_exist               !          |check to determine if file exists
-      integer :: ich = 0               !none      |counter
+      integer :: ich                   !none      |counter
 
       eof = 0
       imax = 0
@@ -83,10 +83,10 @@
       ch_nut(ich)%k_l = ch_nut(ich)%k_l * 1.e-3 * 60.
 
 !! change units from day to hour if hourly (subdaily) routing is performed
-      !if (time%step > 0) then
-        ch_nut(ich)%mumax = ch_nut(ich)%mumax / real(time%step)
-        ch_nut(ich)%rhoq = ch_nut(ich)%rhoq / real(time%step)
-      !end if
+      if (time%step > 0) then
+        ch_nut(ich)%mumax = ch_nut(ich)%mumax / 24.
+        ch_nut(ich)%rhoq = ch_nut(ich)%rhoq / 24.
+      end if
      
 !!    set default values for undefined parameters
       if (ch_nut(ich)%rs1 <= 0.) ch_nut(ich)%rs1 = 1.0
@@ -107,21 +107,21 @@
       if (ch_nut(ich)%bc4 <= 0.) ch_nut(ich)%bc4 = 0.35
       
 !! change units from day to hour if hourly routing is performed
-      !if (time%step > 0) then
-        ch_nut(ich)%rs1 = ch_nut(ich)%rs1 / real(time%step)
-        ch_nut(ich)%rs2 = ch_nut(ich)%rs2 / real(time%step)
-        ch_nut(ich)%rs3 = ch_nut(ich)%rs3 / real(time%step)
-        ch_nut(ich)%rs4 = ch_nut(ich)%rs4 / real(time%step)
-        ch_nut(ich)%rs5 = ch_nut(ich)%rs5 / real(time%step)
-        ch_nut(ich)%rk1 = ch_nut(ich)%rk1 / real(time%step)
-        ch_nut(ich)%rk2 = ch_nut(ich)%rk2 / real(time%step)
-        ch_nut(ich)%rk3 = ch_nut(ich)%rk3 / real(time%step)
-        ch_nut(ich)%rk4 = ch_nut(ich)%rk4 / real(time%step)
-        ch_nut(ich)%bc1 = ch_nut(ich)%bc1 / real(time%step)
-        ch_nut(ich)%bc2 = ch_nut(ich)%bc2 / real(time%step)
-        ch_nut(ich)%bc3 = ch_nut(ich)%bc3 / real(time%step)
-        ch_nut(ich)%bc4 = ch_nut(ich)%bc4 / real(time%step)
-      !end if
+      if (time%step > 0) then
+        ch_nut(ich)%rs1 = ch_nut(ich)%rs1 / 24.
+        ch_nut(ich)%rs2 = ch_nut(ich)%rs2 / 24.
+        ch_nut(ich)%rs3 = ch_nut(ich)%rs3 / 24.
+        ch_nut(ich)%rs4 = ch_nut(ich)%rs4 / 24.
+        ch_nut(ich)%rs5 = ch_nut(ich)%rs5 / 24.
+        ch_nut(ich)%rk1 = ch_nut(ich)%rk1 / 24.
+        ch_nut(ich)%rk2 = ch_nut(ich)%rk2 / 24.
+        ch_nut(ich)%rk3 = ch_nut(ich)%rk3 / 24.
+        ch_nut(ich)%rk4 = ch_nut(ich)%rk4 / 24.
+        ch_nut(ich)%bc1 = ch_nut(ich)%bc1 / 24.
+        ch_nut(ich)%bc2 = ch_nut(ich)%bc2 / 24.
+        ch_nut(ich)%bc3 = ch_nut(ich)%bc3 / 24.
+        ch_nut(ich)%bc4 = ch_nut(ich)%bc4 / 24.
+      end if
         end do
         exit
       enddo

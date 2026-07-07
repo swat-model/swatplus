@@ -29,10 +29,10 @@
 
       type channel_data_char_input
         character(len=16) :: name = "default"
-        character(len=16) :: init = ""                  !points to initial_cha
-        character(len=16) :: hyd = ""                   !points to hydrology.res for hydrology inputs
-        character(len=16) :: sed = ""                   !sediment inputs-points to sediment.res
-        character(len=16) :: nut = ""                   !nutrient inputs-points to nutrient.res
+        character(len=16) :: init                       !points to initial_cha
+        character(len=16) :: hyd                        !points to hydrology.res for hydrology inputs
+        character(len=16) :: sed                        !sediment inputs-points to sediment.res
+        character(len=16) :: nut                        !nutrient inputs-points to nutrient.res
       end type channel_data_char_input
       type (channel_data_char_input), dimension(:), allocatable :: ch_dat_c
 
@@ -46,17 +46,6 @@
       end type channel_init_datafiles
       type (channel_init_datafiles), dimension(:), allocatable :: ch_init
 
-      !rtb salt/cs
-      type channel_init_datafiles_cs
-        character(len=16) :: name = "default"
-        character(len=16) :: pest = ""                !points to initial pesticide input file
-        character(len=16) :: path = ""                !points to initial pathogen input file
-        character(len=16) :: hmet = ""                !points to initial heavy metals input file
-        character(len=16) :: salt = ""                !points to initial salt input file
-        character(len=16) :: cs = ""                  !points to initial constituent input file
-      end type channel_init_datafiles_cs
-      type (channel_init_datafiles_cs), dimension(:), allocatable :: ch_init_cs
-      
       type channel_data
         character(len=16) :: name = "default"
         integer :: init = 0                   !initial data-points to initial.res
@@ -84,10 +73,10 @@
       type (channel_hyd_data), dimension(:), allocatable :: ch_hyd
       
       type channel_sed_data
-        character(len=16) :: name = ""
+        character(len=16) :: name
         integer :: eqn  = 0      !               |sediment routine methods: 
                                    !                   0 = original SWAT method
-                                   !                   1 = Bagnold"seqn        
+                                   !                   1 = Bagnold"s
                                    !                   2 = Kodatie
                                    !                   3 = Molinas WU
                                    !                   4 = Yang
@@ -107,7 +96,7 @@
       type (channel_sed_data), dimension(:), allocatable :: ch_sed
             
       type channel_nut_data
-        character(len=16) :: name = ""
+        character(len=16) :: name
         real :: onco = 0.        ! ppm           |channel organic n concentration
         real :: opco = 0.        ! ppm           |channel organic p concentration
         real :: rs1 = 1.          ! m/day or m/hr   |local algal settling rate in reach at 20 deg C
@@ -157,32 +146,13 @@
       type (channel_nut_data), dimension(:), allocatable :: ch_nut
 
       type channel_temperature_data
-        character(len=16) :: name = ""
+        character(len=16) :: name
         real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
         real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
-        real :: sur_lat = 1.        ! none          |coefficient influencing surface and lateral flow temperature contributions
+        real :: sur_lat = 1.        ! none          |coefficient influencing suface and lateral flow temperature contributions
         real :: bulk_co = .0025     ! 1/hour        |bulk coefficient of heat transfer
         real :: air_lag = 6.        ! days          |average air temperature lag
       end type channel_temperature_data
-      !type (channel_temperature_data), dimension(:), allocatable :: ch_temp  !commented out: conflicts with ch_temp subroutine; replaced by w_temp
-
-       type water_temperature_data
-        character(len=13) :: name
-        real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
-        real :: gw = 1.             ! none          |coefficient influencing groundwater temperature contributions
-        real :: sur_lat = 1.        ! none          |coefficient influencing surface and lateral flow temperature contributions
-        real :: sno_lag = 2         ! days          |average air temperature lag to snowmelt (1-3)
-        real :: gw_lag = 250        ! days          |average air temperature lag to gw flow (200-365)
-        real :: surf_lag = 5        ! days          |average air temperature lag to surface runoff (2-5)
-        real :: lat_lag = 10        ! days          |average air temperature lag to lateral flow  (5-10)
-        real :: lat_lag_coef = 0.75 ! none          |lat air lag coefficient
-        real :: surf_lag_coef = 0.75 ! none         |surf air lag coefficient (used also for snow)
-        real :: gw_lag_coef = 0.75  ! none          |gw air lag coefficient
-        real :: hex_coef1 = 0.75       ! none       |calibrate dew point
-        real :: hex_coef2 = 1.5        !none        |calibrate channel geometry
-        integer :: sf_on = 0        ! none          |shade factor file activation, 1= file, 0= take value from cal file
-        real :: ssff = 0.5          ! none          |ssff value default 0.5, range 0-1
-      end type water_temperature_data
-      type (water_temperature_data), dimension (:), allocatable ::  w_temp
-
-      end module channel_data_module
+      type (channel_temperature_data), dimension(:), allocatable :: ch_temp
+       
+      end module channel_data_module 

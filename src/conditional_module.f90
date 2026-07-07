@@ -5,36 +5,34 @@
       !integer :: rndseed_cond = 748932582   ! random number seed for dtbl conditional
 
       type conditions_var
-        character(len=25) :: var = ""       ! condition variable (ie volume, flow, sw, time, etc)
-        character(len=25) :: ob = ""        ! object variable (ie res, hru, canal, etc)
-        integer :: ob_num = 0               ! object number
-        character(len=25) :: lim_var = ""   ! limit variable (ie evol, pvol, fc, ul, etc)
-        character(len=25) :: lim_op = ""    ! limit operator (*,+,-)
-        real :: lim_const = 0.              ! limit constant
+        character(len=25) :: var            ! condition variable (ie volume, flow, sw, time, etc)
+        character(len=25) :: ob             ! object variable (ie res, hru, canal, etc)
+        integer :: ob_num                   ! object number
+        character(len=25) :: lim_var        ! limit variable (ie evol, pvol, fc, ul, etc)
+        character(len=25) :: lim_op         ! limit operator (*,+,-)
+        real :: lim_const                   ! limit constant
       end type conditions_var
               
       type actions_var
-        character(len=25) :: typ = ""       ! type of action (ie reservoir release, irrigate, fertilize, etc)
-        character(len=25) :: ob = ""        ! object variable (ie res, hru, canal, etc)
-        integer :: ob_num = 0               ! object number
-        character(len=25) :: name = ""      ! name of action
-        character(len=40) :: option = ""    ! action option - specific to type of action (ie for reservoir, option to
+        character(len=25) :: typ            ! type of action (ie reservoir release, irrigate, fertilize, etc)
+        character(len=25) :: ob             ! object variable (ie res, hru, canal, etc)
+        integer :: ob_num                   ! object number
+        character(len=25) :: name           ! name of action
+        character(len=25) :: option         ! action option - specific to type of action (ie for reservoir, option to
                                             ! input rate, days of drawdown, weir equation pointer, etc
-        real :: const = 0.                  ! constant used for rate, days, etc
+        real :: const                       ! constant used for rate, days, etc
         real :: const2 = 1                  ! additional constant used for rate, days, etc
-        character(len=25) :: file_pointer = ""! pointer for option (ie weir equation pointer)
+        character(len=25) :: file_pointer   ! pointer for option (ie weir equation pointer)
       end type actions_var
        
       type decision_table
-        character (len=40) :: name = ""                                 ! name of the decision table
-        integer :: conds = 0                                            ! number of conditions
-        integer :: alts = 0                                             ! number of alternatives
-        integer :: acts = 0                                             ! number of actions
+        character (len=25) :: name                                      ! name of the decision table
+        integer :: conds                                                ! number of conditions
+        integer :: alts                                                 ! number of alternatives
+        integer :: acts                                                 ! number of actions
         type (conditions_var), dimension(:), allocatable :: cond        ! conditions
         character(len=25), dimension(:,:), allocatable :: alt           ! condition alternatives
         type (actions_var), dimension(:), allocatable :: act            ! actions
-        integer, dimension(:), allocatable :: lu_chg_mx                 ! max times lu change can occur
-        integer, dimension(:), allocatable :: snow_chg_mx               ! max times snow change can occur
         character(len=1), dimension(:,:), allocatable :: act_outcomes   ! action outcomes ("y" to perform action; "n" to not perform)
         character(len=1), dimension(:), allocatable :: act_hit          ! "y" if all condition alternatives (rules) are met; "n" if not
         integer, dimension(:), allocatable :: act_typ                   ! pointer to action type (ie plant, fert type, tillage implement, release type, etc)
@@ -44,7 +42,7 @@
         real :: ha_lu = 0.                                              ! area of land_use in ha
         integer :: hru_lu_cur = 0                                       ! number of hru's in the land_use condition(s) that have currently been applied
         real :: hru_ha_cur = 0.                                         ! area of land_use in ha that has currently been applied
-        integer :: days_prob = 1                                        ! days since start of application window
+        integer :: days_prob = 0                                        ! days since start of application window
         integer :: day_prev = 0                                         ! to check if same day - don't increment day in application window
         real :: prob_cum  = 0.                                          ! cumulative probability of application on current day of window
         real :: frac_app  = 0.                                          ! fraction of time (during each window) the application occurs

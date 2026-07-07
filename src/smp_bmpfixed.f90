@@ -36,27 +36,29 @@
       
       implicit none
       
-      integer :: j = 0       !none           |hru number
+      integer :: j           !none           |hru number
         
-      !! set variables
+!!	set variables
       j = ihru
 
-      !! Subtract reductions from sediment, nutrients, bacteria, NOT SURFACE RUNOFF to protect water balance
-      !! Sediment
-      sedyld(j) = sedyld(j) * (1. - hru(j)%lumv%bmp_sed)
+!! Subtract reductions from sediment, nutrients, bacteria, NOT SURFACE RUNOFF to protect water balance
+!! Sediment
+	sedyld(j) = sedyld(j) * (1 - hru(j)%lumv%bmp_sed/100)
 
-      !! Particulate Phosphorus
-      sedminpa(j) = sedminpa(j) * (1. - hru(j)%lumv%bmp_pp)
-      sedminps(j) = sedminps(j) * (1. - hru(j)%lumv%bmp_pp)
-      sedorgp(j) = sedorgp(j) * (1. - hru(j)%lumv%bmp_pp)
-      !! Soluble Phosphorus
-      surqsolp(j) = surqsolp(j) * (1. - hru(j)%lumv%bmp_sp)
+!! Phosphorus
+      !! Particulate
+	sedminpa(j) = sedminpa(j) * (1 - hru(j)%lumv%bmp_pp/100)
+	sedminps(j) = sedminps(j) * (1 - hru(j)%lumv%bmp_pp/100)
+	sedorgp(j) = sedorgp(j) * (1 - hru(j)%lumv%bmp_pp/100)
+      !! Soluble
+	surqsolp(j) = surqsolp(j) * (1 - hru(j)%lumv%bmp_sp/100)
 
-      !! Particulate Nitrogen
-      sedorgn(j) = sedorgn(j) * (1. - hru(j)%lumv%bmp_pn)
-      !! Soluble Nitrogen
-      surqno3(j) = surqno3(j) * (1. - hru(j)%lumv%bmp_sn)
-      latno3(j) = latno3(j) * (1. - hru(j)%lumv%bmp_sn)
+!! Nitrogen
+	!! Particulate
+	sedorgn(j) = sedorgn(j) * (1 - hru(j)%lumv%bmp_pn/100)
+      !! Soluble
+      surqno3(j) = surqno3(j) * (1 - hru(j)%lumv%bmp_sn/100)
+	latno3(j) = latno3(j) * (1 - hru(j)%lumv%bmp_sn/100)
 
       return
       end subroutine smp_bmpfixed

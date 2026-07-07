@@ -5,17 +5,17 @@
       
       implicit none  
 
-      real :: sum = 0.                    !             |
-      integer :: iyr = 0                  !none         |number of years
-      integer :: next = 0                 !             |
-      integer :: npts = 0                 !             |
-      integer :: ipts = 0                 !             |
-      integer :: iprv = 0                 !             |
-      integer :: mle = 0                  !             |
-      integer :: nprob = 0                !             |
-      integer :: iday = 0                 !             |
-      integer :: mfe = 0                  !             |
-      integer :: iyr_ch = 0               !             | 
+      real :: sum                         !             |
+      integer :: iyr                      !none         |number of years
+      integer :: next                     !             |
+      integer :: npts                     !             |
+      integer :: ipts                     !             |
+      integer :: iprv                     !             |
+      integer :: mle                      !             |
+      integer :: nprob                    !             |
+      integer :: iday                     !             |
+      integer :: mfe                      !             |
+      integer :: iyr_ch                   !             | 
 
         !set linked list for daily flow duration curves
         ob(icmd)%fdc_ll(time%day)%val = ob(icmd)%hd(1)%flo
@@ -136,14 +136,8 @@
           ob(icmd)%fdc%p_md%p = ob(icmd)%fdc%p_md%p / 86400.
           ob(icmd)%fdc%p_md%max = ob(icmd)%fdc%p_md%max / 86400.
           ob(icmd)%fdc%p_md%min = ob(icmd)%fdc%p_md%min / 86400.
-          
-          !compute flashiness index
-          if (ob(icmd)%flash_idx%sum_q > 1.e-6) then
-            ob(icmd)%flash_idx%index = ob(icmd)%flash_idx%sum_q_q1 / ob(icmd)%flash_idx%sum_q
-          end if
-          
-          write (6000,*) ob(icmd)%typ, ob(icmd)%props, ob(icmd)%area_ha, ob(icmd)%flash_idx%index,  &
-            ob(icmd)%fdc%p_md%mean, ob(icmd)%fdc%p_md%max, ob(icmd)%fdc%p_md%p, ob(icmd)%fdc%p_md%min
+          write (6000,*) ob(icmd)%typ, ob(icmd)%props, ob(icmd)%area_ha, ob(icmd)%fdc%p_md%mean,        &
+              ob(icmd)%fdc%p_md%max, ob(icmd)%fdc%p_md%p, ob(icmd)%fdc%p_md%min
           
           !convert to mm -- m3 * 1 / ha * ha/ 10,000 m3 * 1,000 mm/m = mm
           !normalize by dividing by mean flow in mm
@@ -158,4 +152,4 @@
         !master duration curve from annual curves (median)
    
       return
-      end subroutine flow_dur_curve
+      end  subroutine flow_dur_curve

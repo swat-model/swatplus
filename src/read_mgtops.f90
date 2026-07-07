@@ -10,17 +10,13 @@
       
       implicit none      
       
-      
-      
-      
-      external :: search, jdt
-      integer :: iyear = 0   !            |
-      integer :: day = 0     !            |
-      integer :: mon = 0     !            |
-      integer :: iop = 0     !none        |
+      integer :: iyear       !            |
+      integer :: day         !            |
+      integer :: mon         !            |
+      integer :: iop         !none        |
       integer :: isched      !            |
       integer :: jdt         !none        |julian date
-      integer :: idb = 0     !none        | 
+      integer :: idb         !none        | 
 
       iyear = 1
       do iop = 1, sched(isched)%num_ops                             !! operation loop
@@ -91,7 +87,7 @@
               endif
           end do
           
-        case ("irrm","irrp")
+        case ("irrm")
           sched(isched)%irr = 1
           do idb = 1, db_mx%irrop_db
             if (sched(isched)%mgt_ops(iop)%op_char == irrop_db(idb)%name) then
@@ -104,22 +100,6 @@
           !xwalk fert name with fertilizer data base
           do idb = 1, db_mx%fertparm
             if (sched(isched)%mgt_ops(iop)%op_char == fertdb(idb)%fertnm) then
-              sched(isched)%mgt_ops(iop)%op1 = idb
-              exit
-            endif
-          end do
-          !xwalk application type with chemical application data base
-          do idb = 1, db_mx%chemapp_db
-            if (sched(isched)%mgt_ops(iop)%op_plant == chemapp_db(idb)%name) then
-              sched(isched)%mgt_ops(iop)%op4 = idb
-              exit
-            endif
-          end do
-
-        case ("manu")
-          !xwalk fert name with fertilizer data base
-          do idb = 1, db_mx%manureparm
-            if (sched(isched)%mgt_ops(iop)%op_char == manure_db(idb)%name) then
               sched(isched)%mgt_ops(iop)%op1 = idb
               exit
             endif
@@ -176,4 +156,4 @@
       end do                                  !! operation loop
     
       return
-      end subroutine read_mgtops
+      end

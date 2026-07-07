@@ -41,11 +41,11 @@
       
       implicit none      
       
-      
-      
-      
-      real, external :: qman
-      integer :: j = 0       !none          |HRU number  
+      integer :: j           !none          |HRU number
+      integer :: k           !none          |counter
+      integer :: icmd        !              |  
+      integer :: ipst_db     !              |  
+
 
       j = ihru
 

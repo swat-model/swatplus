@@ -2,41 +2,34 @@
       
       use plant_data_module
       use basin_module
-      use hru_module, only : ihru, ipl
+      use hru_module, only : hru, uapd, uno3d, par, bioday, ep_day, es_day,              &
+         ihru, ipl, pet_day, rto_no3, rto_solp, sum_no3, sum_solp, uapd_tot, uno3d_tot, vpd
       use plant_module
       use carbon_module
       use organic_mineral_mass_module
       use time_module
-      use output_landscape_module
       
       implicit none 
       
-      external :: pl_biomass_gro, pl_dormant, pl_leaf_gro, pl_leaf_senes, pl_nut_demand, pl_partition, &
-                  pl_root_gro, pl_seed_gro, chg_par, theta, pl_mortality
-      
-      integer :: j = 0          !none               |HRU number
-      integer :: idp = 0        !none               |plant number from plants.plt
- 
+      integer :: j              !none               |HRU number
+      integer :: idp            !none               |plant number from plants.plt
+      real :: resnew_n          !                   |
+      real :: resnew            !                   |  
+
       j = ihru
         
       call pl_nut_demand
-
-      hpw_d(j)%bm_grow = 0.0
-      hpw_d(j)%c_gro = 0.0
 
       do ipl = 1, pcom(j)%npl
         !! zero biomass increase and nutrient uptake
         pl_mass_up = plt_mass_z
         
         !! check for start and end of dormancy of temp-based growth plant
-        if (pcom(j)%plcur(ipl)%gro == "y") then
-            idp = pcom(j)%plcur(ipl)%idplt
-            if (pldb(idp)%trig == "temp_gro") then
-              call pl_dormant
-            end if
+        idp = pcom(j)%plcur(ipl)%idplt
+        if (pldb(idp)%trig == "temp_gro") then
+          call pl_dormant
         end if
        
-        
         !! plant will not undergo stress if dormant
         if (pcom(j)%plcur(ipl)%idorm == "n" .and. pcom(j)%plcur(ipl)%gro == "y") then
 
@@ -50,7 +43,7 @@
 
           call pl_seed_gro(j)
           
-          call pl_partition(j, 0)
+          call pl_partition(j)
 
         end if
         

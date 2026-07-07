@@ -27,8 +27,9 @@
       
       implicit none
       
-      integer :: j = 0          !none             |hru number
-      real :: reduc = 0.        !none             |fraction of water uptake by plants achieved 
+      integer :: j              !none             |hru number
+      integer :: k              !none             |counter
+      real :: reduc             !none             |fraction of water uptake by plants achieved 
 
       j = 0
       j = ihru

@@ -4,48 +4,115 @@
 !!     this subroutine computes the daily stream pesticide balance
 !!     (soluble and sorbed)     
 
+!!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
+!!    name          |units         |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    chpst_conc(:) |mg/(m**3)     |initial pesticide concentration in reach
+!!    chpst_koc(:)  |m**3/g        |pesticide partition coefficient between
+!!                                 |water and sediment in reach
+!!    chpst_mix(:)  |m/day         |mixing velocity (diffusion/dispersion) for
+!!                                 |pesticide in reach
+!!    chpst_rea(:)  |1/day         |pesticide reaction coefficient in reach
+!!    chpst_rsp(:)  |m/day         |resuspension velocity in reach for pesticide
+!!                                 |sorbed to sediment
+!!    chpst_stl(:)  |m/day         |settling velocity in reach for pesticide
+!!                                 |sorbed to sediment
+!!    chpst_vol(:)  |m/day         |pesticide volatilization coefficient in 
+!!                                 |reach
+!!    drift(:)      |kg            |amount of pesticide drifting onto main
+!!                                 |channel in subbasin
+!!    rchdep        |m             |depth of flow on day
+!!    rchwtr        |m^3 H2O       |water stored in reach at beginning of day
+!!    sedpst_rea(:) |1/day         |pesticide reaction coefficient in river bed
+!!                                 |sediment
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
+!!    name        |units         |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    bury        |mg pst        |loss of pesticide from active sediment layer
+!!                               |by burial
+!!    difus       |mg pst        |diffusion of pesticide from sediment to reach
+!!    reactb      |mg pst        |amount of pesticide in sediment that is lost
+!!                               |through reactions
+!!    reactw      |mg pst        |amount of pesticide in reach that is lost
+!!                               |through reactions
+!!    resuspst    |mg pst        |amount of pesticide moving from sediment to
+!!                               |reach due to resuspension
+!!    setlpst     |mg pst        |amount of pesticide moving from water to
+!!                               |sediment due to settling
+!!    solpesto    |mg pst/m^3    |soluble pesticide concentration in outflow
+!!                               |on day
+!!    sorpesto    |mg pst/m^3    |sorbed pesticide concentration in outflow
+!!                               |on day
+!!    volatpst    |mg pst        |amount of pesticide in reach lost by
+!!                               |volatilization
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+!!    ~ ~ ~ LOCAL DEFINITIONS ~ ~ ~
+!!    name        |units         |definition
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+!!    chpstmass   |mg pst        |mass of pesticide in reach
+!!    depth       |m             |depth of water in reach
+!!    fd2         |
+!!    frsol       |none          |fraction of pesticide in reach that is soluble
+!!    frsrb       |none          |fraction of pesticide in reach that is sorbed
+!!    jrch        |none          |reach number
+!!    pstin       |mg pst        |total pesticide transported into reach
+!!                               |during time step
+!!    sedcon      |g/m^3         |sediment concentration
+!!    sedpstmass  |mg pst        |mass of pesticide in bed sediment
+!!    solpstin    |mg pst        |soluble pesticide entering reach during 
+!!                               |time step
+!!    sorpstin    |mg pst        |sorbed pesticide entering reach during
+!!                               |time step
+!!    tday        |days          |flow duration
+!!    wtrin       |m^3 H2O       |volume of water entering reach during time
+!!                               |step
+!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+!!    ~ ~ ~ SUBROUTINES/FUNCTIONS CALLED ~ ~ ~
+!!    Intrinsic: Abs
+
+!!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
+      
       use channel_data_module
       use channel_module
       use sd_channel_module
       use ch_pesticide_module
-      use hydrograph_module, only : jrch, ht1, ht2, ch_stor
+      use hydrograph_module, only : ob, jrch, ht1, ch_stor
       use constituent_mass_module
       use pesticide_data_module
 
       implicit none
       
-
-      
-
-      external :: theta
-      integer :: ipest = 0      !none                   |pesticide counter - sequential
-      integer :: jpst = 0       !none                   |pesticide counter from data base
-      integer :: ipseq = 0      !none                   |sequential basin pesticide number
-      integer :: ipdb = 0       !none                   |sequential pesticide number of daughter pesticide
-      integer :: imeta = 0      !none                   |pesticide metabolite counter
-      real :: mol_wt_rto = 0.   !ratio                  |molecular weight ratio of duaghter to parent pesticide
-      real :: pstin = 0.        !mg pst                 |total pesticide transported into reach during time step
-      real :: kd = 0.           !(mg/kg)/(mg/L)         |koc * carbon
-      real :: depth = 0.        !m             |depth of water in reach
-      real :: chpstmass = 0.    !mg pst        |mass of pesticide in reach
-      real :: sedpstmass = 0.   !mg pst        |mass of pesticide in bed sediment
-      real :: fd2 = 0.          !units         |description
-      real :: solmax = 0.       !units         |description
-      real :: sedcon = 0.       !g/m^3         |sediment concentration 
-      real :: tday = 0.         !none          |flow duration (fraction of 24 hr)
-      real :: por = 0.          !none          |porosity of bottom sediments
-      real :: pest_init = 0.    !mg            |amount of pesticide before decay
-      real :: pest_end = 0.     !mg            |amount of pesticide after decay
-      real :: rto_out = 0.      !none          |ratio of outflow to sum of outflow and storage
+      integer :: ipest          !none                   |pesticide counter - sequential
+      integer :: jpst           !none                   |pesticide counter from data base
+      integer :: ipseq          !none                   |sequential basin pesticide number
+      integer :: ipdb           !none                   |seqential pesticide number of daughter pesticide
+      integer :: imeta          !none                   |pesticide metabolite counter
+      real :: mol_wt_rto        !ratio                  |molecular weight ratio of duaghter to parent pesticide
+      real :: pstin             !mg pst                 |total pesticide transported into reach during time step
+      real :: kd                !(mg/kg)/(mg/L)         |koc * carbon
+      real :: depth             !m             |depth of water in reach
+      real :: chpstmass         !mg pst        |mass of pesticide in reach
+      real :: sedpstmass        !mg pst        |mass of pesticide in bed sediment
+      real :: fd2               !units         |description
+      real :: solmax            !units         |description
+      real :: sedcon            !g/m^3         |sediment concentration 
+      real :: tday              !none          |flow duration (fraction of 24 hr)
+      real :: rchwtr            !m^3 H2O       |water stored in reach at beginning of day
+      real :: por               !none          |porosity of bottom sediments
+      real :: pest_init         !mg            |amount of pesticide before decay
+      real :: pest_end          !mg            |amount of pesticide after decay
 
       !! zero outputs
       chpst_d(jrch) = chpstz
       
       !! initialize depth of water for pesticide calculations
-
-      depth = rcurv%dep
-      if (depth < 0.01) then
+      if (rchdep < 0.01) then
         depth = .01
+      else
+        depth = rchdep
       endif
 
       do ipest = 1, cs_db%num_pests
@@ -67,7 +134,7 @@
           ch_water(jrch)%pest(ipest) = 0.
           ch_benthic(jrch)%pest(ipest) = 0.
         end if
-        if (chpstmass + sedpstmass < 1.e-12) cycle
+        if (chpstmass + sedpstmass < 1.e-12) return
 
         !!in-stream processes
         if (wtrin / 86400. > 1.e-9) then
@@ -88,12 +155,12 @@
           !! calculate flow duration
           tday = rttime / 24.0
           if (tday > 1.0) tday = 1.0
-          !tday = 1.0
+          tday = 1.0
 
           !! calculate amount of pesticide that undergoes chemical or biological degradation on day in reach
           pest_init = chpstmass
           if (pest_init > 1.e-12) then
-            pest_end = chpstmass * (pestcp(jpst)%decay_a ** tday)
+            pest_end = chpstmass * pestcp(jpst)%decay_a
             chpstmass = pest_end
             chpst%pest(ipest)%react = pest_init - pest_end
             !! add decay to daughter pesticides
@@ -204,12 +271,6 @@
         end if
         ch_benthic(jrch)%pest(ipest) = sedpstmass
 
-        !! calculate outflow and storage in water column
-        rto_out = ht2%flo / (1.e-6 + ht2%flo + ch_stor(jrch)%flo)
-        rto_out = Min (1., rto_out)
-        hcs2%pest(ipest) = rto_out * chpstmass
-        ch_water(jrch)%pest(ipest) = (1. - rto_out) * chpstmass
-        
       end do
 
       return

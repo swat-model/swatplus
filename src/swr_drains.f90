@@ -1,4 +1,4 @@
-    subroutine swr_drains
+	subroutine swr_drains
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine finds the effective lateral hydraulic conductivity 
@@ -8,10 +8,11 @@
 !!    name        |units         |definition
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    drain_co(:) |mm/day        |drainage coefficient 
-!!    ddrain(:)   |mm            |depth of drain tube from the soil surface                          
+!!    ddrain(:)   |mm            |depth of drain tube from the soil surface							 
 !!    latksatf(:) |none          |multiplication factor to determine conk(j1,j) from sol_k(j1,j) for HRU
 !!    pc(:)       |mm/hr         |pump capacity (default pump capacity = 1.042mm/hr or 25mm/day)
 !!    sdrain(:)   |mm            |distance between two drain tubes or tiles
+!!    sstmaxd(:)  |mm            |static maximum depressional storage; read from .sdr
 !!    stmaxd(:)   |mm            |maximum surface depressional storage for the day in a given HRU
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -40,57 +41,55 @@
 
       use basin_module
       use hydrograph_module
-      use hru_module, only : hru, ihru, wnan, stmaxd, surfq, etday, inflpcp, &  
-           precip_eff, qtile, wt_shall
+      use climate_module, only : wst
+      use hru_module, only : hru, ihru, wnan, stmaxd, sstmaxd, surfq, etday, inflpcp, &  
+          mlyr, precip_eff, qtile, wt_shall
       use soil_module
       use time_module
       use reservoir_module
       
       implicit none
-      
-      external :: swr_depstor
 
-      integer :: j1 = 0          !none          |counter
-      integer :: j = 0           !none          |HRU number 
-      integer :: m = 0           !none          |counter
-      real:: cone = 0.           !mm/hr         |effective saturated lateral conductivity - based
+      integer :: j1              !none          |counter
+      integer :: j               !none          |HRU number 
+      integer :: m               !none          |counter
+      real:: cone                !mm/hr         |effective saturated lateral conductivity - based
                                  !              |on water table depth and conk/sol_k of layers
-      real:: depth = 0.          !mm            |actual depth from surface to impermeable layer 
-      real:: dg = 0.             !mm            |depth of soil layer
-      real:: ad = 0.             !              | 
-      real:: ap = 0.             !              |
-      real:: hdrain = 0.         !mm            |equivalent depth from water surface in drain tube to
+      real:: depth               !mm            |actual depth from surface to impermeable layer 
+      real:: dg                  !mm            |depth of soil layer
+      real:: ad                  !              | 
+      real:: ap                  !              |
+      real:: hdrain              !mm            |equivalent depth from water surface in drain tube to
                                  !              |impermeable layer
-      real:: gee = 0.            !none          |factor -g- in Kirkham equation
-      real:: gee1 = 0.           !              | 
-      real:: gee2 = 0.           !              | 
-      real:: gee3 = 0.           !              | 
-      real:: pi = 0.             !              |
-      real:: k2 = 0.             !              |
-      real:: k3 = 0.             !              |
-      real:: k4 = 0.             !              |
-      real:: k5 = 0.             !              |
-      real:: k6 = 0.             !              |
-      real :: y1 = 0.            !mm            |dummy variable for dtwt 
-      integer :: isdr = 0        !              |
-      real :: above = 0.         !mm            |depth of top layer considered
-      real :: x = 0.             !              |
-      real :: sum = 0.           !              | 
-      real :: deep = 0.          !mm            |total thickness of saturated zone
-      real :: xx = 0.            !              |
-      real :: hdmin = 0.         !              |
-      real :: storro = 0.        !mm            |surface storage that must b
+      real:: gee                 !none          |factor -g- in Kirkham equation
+      real:: e                   !              |
+      real:: gee1                !              | 
+      real:: gee2                !              | 
+      real:: gee3                !              | 
+      real:: pi	                 !              |
+      real:: k2                  !              |
+      real:: k3                  !              |
+      real:: k4                  !              |
+      real:: k5                  !              |
+      real:: k6                  !              |
+      real :: y1                 !mm            |dummy variable for dtwt 
+      integer :: isdr            !              |
+      real :: above              !mm            |depth of top layer considered
+      real :: x                  !              |
+      real :: sum                !              | 
+      real :: deep               !mm            |total thickness of saturated zone
+      real :: xx                 !              |
+      real :: hdmin              !              |
+      real :: storro             !mm            |surface storage that must b
                                  !              |can move to the tile drain tube
-      real :: stor = 0.          !mm            |surface storage for the day in a given HRU
-      real :: dflux = 0.         !mm/hr         |drainage flux
-      real :: em = 0.            !mm            |distance from water level in the drains to water table 
+      real :: stor               !mm            |surface storage for the day in a given HRU
+      real :: dflux              !mm/hr         |drainage flux
+      real :: em                 !mm            |distance from water level in the drains to water table 
                                  !              |at midpoint: em is negative during subirrigation
-      real :: ddranp = 0.        !              |
-      real :: dot = 0.           !mm            |actual depth from impermeable layer to water level
+      real :: ddranp             !              |
+      real :: dot                !mm            |actual depth from impermeable layer to water level
                                  !              |above drain during subsurface irrigation
-      real :: cosh
-      real :: cos
-      
+   
       !! initialize variables
 
       j = ihru
@@ -107,11 +106,11 @@
         if(y1 > soil(j)%phys(j1)%d) then  
           wnan(j1) = 0.
         else
-        wnan(j1) = soil(j)%phys(j1)%d - y1  
-        x = soil(j)%phys(j1)%d -  above  
+	    wnan(j1) = soil(j)%phys(j1)%d - y1  
+	    x = soil(j)%phys(j1)%d -  above  
           if(wnan(j1) > x) wnan(j1) = x
-      end if
-      above = soil(j)%phys(j1)%d
+	  end if
+	  above = soil(j)%phys(j1)%d
       end do
       sum = 0.
       deep = 0.
@@ -124,27 +123,27 @@
         sum = 0.
         deep = 0.001
         do j1=1,soil(j)%nly
-          sum = sum + soil(j)%ly(j1)%conk * soil(j)%phys(j1)%thick !Daniel 10/09/07
-          deep = deep + dg   !Daniel 10/09/07
+		  sum = sum + soil(j)%ly(j1)%conk * soil(j)%phys(j1)%thick !Daniel 10/09/07
+		  deep = deep + dg   !Daniel 10/09/07
         end do
-      cone=sum/deep
-    else
-      cone=sum/deep
+	  cone=sum/deep
+	else
+	  cone=sum/deep
       end if
 
-      !!    calculate parameters hdrain and gee1
+      !!	calculate parameters hdrain and gee1
       ad = soil(j)%zmx - hru(j)%lumv%sdr_dep
       ad = Max (10., ad)
-      ap = 3.55 - ((1.6 * ad) / hru(j)%sdr%dist) + 2 *                   &
+	  ap = 3.55 - ((1.6 * ad) / hru(j)%sdr%dist) + 2 *                   &
                                            ((2 / hru(j)%sdr%dist)**2)
-      if (ad / hru(j)%sdr%dist < 0.3) then
+	  if (ad / hru(j)%sdr%dist < 0.3) then
         hdrain= ad / (1 + ((ad / hru(j)%sdr%dist) * (((8 / pi) *       &
-            Log(ad / hru(j)%sdr%radius) - ap))))
+     	    Log(ad / hru(j)%sdr%radius) - ap))))
       else
         hdrain = ad
           !hdrain = (hru(j)%sdr%dist * pi) / (8 * ((log(hru(j)%sdr%dist /  &
           !         hru(j)%sdr%radius)/ log(e)) - 1.15))
-      end if
+	  end if
       !! calculate Kirkham G-Factor, gee
         k2 = tan((pi * ((2. * ad) - hru(j)%sdr%radius)) / (4. * soil(j)%zmx))
         k3 = tan((pi * hru(j)%sdr%radius) / (4. * soil(j)%zmx))
@@ -166,11 +165,15 @@
        if (gee > 12.) gee = 12.
 
       !! calculate drainage and subirrigation flux section
-      ! drainage flux for ponded surface
+      !	drainage flux for ponded surface
       depth = hru(j)%lumv%sdr_dep + hdrain
       hdmin = depth - hru(j)%lumv%sdr_dep
-      call swr_depstor ! dynamic stmaxd(j): compute current HRU stmaxd based 
-               ! on cumulative rainfall and cum. intensity
+      if (bsn_cc%smax == 1) then
+        call swr_depstor ! dynamic stmaxd(j): compute current HRU stmaxd based 
+	           ! on cumulative rainfall and cum. intensity
+	else
+	  stmaxd(j) = sstmaxd(j)
+	end if 
       storro = 0.2 * stmaxd(j) !surface storage that must be filled before surface
                    !water can move to the tile drain tube
       !! Determine surface storage for the day in a given HRU (stor)
@@ -189,7 +192,7 @@
         dflux= (12.56637 * 24.0 * cone* (depth - hdrain + stor)) / (gee * hru(j)%sdr%dist) !eq.10
         if (dflux > hru(j)%sdr%drain_co) dflux = hru(j)%sdr%drain_co !eq.11
       else
-!   subirrigation flux 
+!	subirrigation flux 
         em = depth - y1 - hdrain
         if(em < -1.0) then
 !!          ddranp=ddrain(j)-1.0
@@ -200,15 +203,15 @@
           if (abs(dflux) > hru(j)%sdr%pumpcap) then
             dflux = - hru(j)%sdr%pumpcap * 24.0 
           end if
-!   drainage flux - for WT below the surface and for ponded depths < storro (S1)
+!	drainage flux - for WT below the surface and for ponded depths < storro (S1)
         else
         dflux = 4.0 * 24.0 * cone * em * (2.0 * hdrain + em) / hru(j)%sdr%dist**2 !eq.5
         if(dflux > hru(j)%sdr%drain_co) dflux = hru(j)%sdr%drain_co !eq.11
         if(dflux < 0.) dflux=0.
         if(em < 0.) dflux=0.
         end if
-    end if
-    qtile = dflux
+	end if
+ 	qtile = dflux
 
        return
        end subroutine swr_drains

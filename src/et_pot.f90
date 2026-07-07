@@ -40,52 +40,48 @@
       use basin_module
       use hydrograph_module
       use climate_module
-      use hru_module, only : hru, ihru, albday, ipl, pet_day, vpd, ep_max
+      use hru_module, only : hru, ihru, albday, epmax, ipl, pet_day, vpd, ep_max
       use plant_module
       
       implicit none
       
-      
-      
-      
-      external :: ee
-      integer :: j = 0             !none          |HRU number            
-      integer :: idp = 0           !              |
-      integer :: iob = 0           !              |
-      real :: tk = 0.              !deg K         |average air temperature on current day for HRU
-      real :: pb = 0.              !kPa           |mean atmospheric pressure
-      real :: gma = 0.             !kPa/deg C     |psychrometric constant
-      real :: xl = 0.              !MJ/kg         |latent heat of vaporization
-      real :: ea = 0.              !kPa           |saturated vapor pressure
-      real :: ed = 0.              !              |
-      real :: dlt = 0.             !kPa/deg C     |slope of the saturation vapor pressure-
+      integer :: j                 !none          |HRU number            
+      integer :: idp               !              |
+      integer :: iob               !              |
+      real :: tk                   !deg K         |average air temperature on current day for HRU
+      real :: pb                   !kPa           |mean atmospheric pressure
+      real :: gma                  !kPa/deg C     |psychrometric constant
+      real :: xl                   !MJ/kg         |latent heat of vaporization
+      real :: ea                   !kPa           |saturated vapor pressure
+      real :: ed                   !              |
+      real :: dlt                  !kPa/deg C     |slope of the saturation vapor pressure-
                                    !              |temperature curve 
-      real :: ramm = 0.            !MJ/m2         |extraterrestrial radiation
-      real :: ralb1 = 0.           !MJ/m2         |net incoming radiation
-      real :: ralb = 0.            !MJ/m2         |net incoming radiation for PET
-      real :: xx = 0.              !kPa           |difference between vpd and vpthreshold
-      real :: rbo = 0.             !none          |net emissivity
-      real :: rto = 0.             !none          |cloud cover factor 
-      real :: rn = 0.              !MJ/m2         |net radiation
-      real :: uzz = 0.             !m/s           |wind speed at height zz
-      real :: zz = 0.              !cm            |height at which wind speed is determined
-      real :: zom = 0.             !cm            |roughness length for momentum transfer
-      real :: zov = 0.             !cm            |roughness length for vapor transfer
-      real :: rv = 0.              !s/m           |aerodynamic resistance to sensible heat and
+      real :: ramm                 !MJ/m2         |extraterrestrial radiation
+      real :: ralb1                !MJ/m2         |net incoming radiation
+      real :: ralb                 !MJ/m2         |net incoming radiation for PET
+      real :: xx                   !kPa           |difference between vpd and vpthreshold
+      real :: rbo                  !none          |net emissivity
+      real :: rto                  !none          |cloud cover factor 
+      real :: rn                   !MJ/m2         |net radiation
+      real :: uzz                  !m/s           |wind speed at height zz
+      real :: zz                   !cm            |height at which wind speed is determined
+      real :: zom                  !cm            |roughness length for momentum transfer
+      real :: zov                  !cm            |roughness length for vapor transfer
+      real :: rv                   !s/m           |aerodynamic resistance to sensible heat and
                                    !              |vapor transfer
-      real :: rn_pet = 0.          !MJ/m2         |net radiation for continuous crop cover 
-      real :: fvpd = 0.            !kPa           |amount of vapor pressure deficit over 
+      real :: rn_pet               !MJ/m2         |net radiation for continuous crop cover 
+      real :: fvpd                 !kPa           |amount of vapro pressure deficit over 
                                    !              |threshold value
-      real :: rc = 0.              !s/m           |canopy resistance
-      real :: rho = 0.             !MJ/(m3*kPa)   |K1*0.622*xl*rho/pb
-      real :: rout = 0.            !MJ/m2         |outgoing radiation
-      real :: d = 0.               !cm            |displacement height for plant type
-      real :: chz = 0.             !cm            |vegetation height
-      real :: gsi_adj = 0.         !              |
-      real :: pet_alpha = 0.       !none          |alpha factor in Priestley-Taylor PET equation
+      real :: rc                   !s/m           |canopy resistance
+      real :: rho                  !MJ/(m3*kPa)   |K1*0.622*xl*rho/pb
+      real :: rout                 !MJ/m2         |outgoing radiation
+      real :: d                    !cm            |displacement height for plant type
+      real :: chz                  !cm            |vegetation height
+      real :: gsi_adj              !              |
+      real :: pet_alpha            !none          |alpha factor in Priestley-Taylor PET equation
       real :: ee                   !              | 
-      real :: gsi_wav = 0.         !              | 
-      integer :: igrocom = 0       !              | 
+      real ::  gsi_wav             !              | 
+      integer :: igrocom           !              | 
 
       !! initialize local variables
       j = ihru
@@ -109,7 +105,7 @@
 
       !!calculate the slope of the saturation vapor pressure curve
       dlt = 4098. * ea / (w%tave + 237.3)**2
-
+	
 !! DETERMINE POTENTIAL ET
 
       select case (bsn_cc%pet)
@@ -131,7 +127,7 @@
 
           !! cloud cover factor equation 2.2.19
             if (w%solradmx < 1.e-4) then
-              rto = 0.
+		    rto = 0.
             else
               rto = 0.9 * (w%solrad / w%solradmx) + 0.1
             end if
@@ -146,6 +142,7 @@
           pet_alpha = 1.28
           pet_day = pet_alpha * (dlt / (dlt + gma)) * rn_pet / xl
           pet_day = Max(0., pet_day)
+          pet_day = bsn_prm%petco_pmpt * pet_day
 
        case (1)   !! PENMAN-MONTEITH POTENTIAL EVAPOTRANSPIRATION METHOD
 
@@ -184,9 +181,11 @@
 
            !! potential ET: reference crop alfalfa at 40 cm height
            rv = 114. / (w%windsp * (170./1000.)**0.2)
-           rc = 49. / (1.4 - 0.4 * co2y(time%yrs) / 330.)
+           rc = 49. / (1.4 - 0.4 * bsn_prm%co2 / 330.)
            pet_day = (dlt * rn_pet + gma * rho * vpd / rv) / (xl * (dlt + gma * (1. + rc / rv)))
+
            pet_day = Max(0., pet_day)
+           pet_day = bsn_prm%petco_pmpt * pet_day
  
         !! maximum plant ET
           igrocom = 0
@@ -248,7 +247,7 @@
           
             !! calculate canopy resistance
             rc = 1. / (gsi_adj + 0.01)           !single leaf resistance
-            rc = rc / (0.5 * (pcom(j)%lai_sum + 0.01) * (1.4 - 0.4 * co2y(time%yrs) / 330.))
+            rc = rc / (0.5 * (pcom(j)%lai_sum + 0.01) * (1.4 - 0.4 * bsn_prm%co2 / 330.))
 
             !! calculate maximum plant ET
             ep_max = (dlt * rn + gma * rho * vpd / rv) / (xl * (dlt + gma * (1. + rc / rv)))
@@ -264,7 +263,7 @@
         ramm = w%solradmx  * 37.59 / 30. 
 
         if (w%tmax > w%tmin) then
-         pet_day = 0.0023 * (ramm / xl) * (w%tave + 17.8) * (w%tmax - w%tmin) ** bsn_prm%harg_expo
+         pet_day = hru(j)%hyd%harg_pet * (ramm / xl) * (w%tave + 17.8) * (w%tmax - w%tmin)**0.5
          pet_day = Max(0., pet_day)
         else
           pet_day = 0.
@@ -274,11 +273,8 @@
         iob = hru(j)%obj_no
         iwst = ob(iob)%wst
         pet_day = wst(iwst)%weat%pet
-       case (4) !! CONSTANT DAILY PET (basin-wide)
-        call pet_constant (pet_day)
+  
       end select
-       
-      pet_day = hru(j)%hyd%pet_co * pet_day
 
       return
       end subroutine et_pot

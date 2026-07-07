@@ -24,9 +24,9 @@
       
       implicit none
 
-      integer :: j = 0  !none          |HRU number
-      real :: voli = 0. !none          |volume available for crack flow
-      integer :: ii = 0 !none          |counter
+      integer :: j      !none          |HRU number
+      real :: voli      !none          |volume available for crack flow
+      integer :: ii     !none          |counter
 
       j = ihru
 
@@ -37,7 +37,7 @@
         surfq(j) = 0.
       endif
 
-      if (time%step > 1) then
+      if (time%step > 0) then
         voli = 0.
         voli = voltot
         do ii = 1, time%step  !j.jeong 4/24/2009

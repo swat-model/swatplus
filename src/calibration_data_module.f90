@@ -3,39 +3,37 @@
       implicit none
       
        type calibration_parameters
-        character(len=25) :: name = "default"   !         |cn2, esco, awc, etc.
-        character(len=25) :: ob_typ = "plt"     !         |object type the parameter is associated with (hru, chan, res, basin, etc)
+        character(len=16) :: name = "default"   !         |cn2, esco, awc, etc.
+        character(len=16) :: ob_typ = "plt"     !         |object type the parameter is associated with (hru, chan, res, basin, etc)
         real :: absmin = 0.                     !         |minimum range for variable
         real :: absmax = 1.e6                   !         |maximum change for variable
-        character(len=25) :: units = "null"     !         |units used for each parameter
+        character(len=16) :: units = "null"     !         |units used for each parameter
       end type calibration_parameters
       type (calibration_parameters), dimension (:), allocatable :: cal_parms    !dimensioned to db_mx%cal_parms_tot
       
       type calibration_conditions
-        character(len=25) :: var = ""
-        character(len=25) :: alt = ""
-        real :: targ = 0.
-        character(len=25) :: targc = ""
+        character(len=16) :: var
+        character(len=16) :: alt
+        real :: targ
+        character(len=16) :: targc
       end type calibration_conditions   
 
       type update_parameters
-        character(len=25) :: name = ""  !! cn2, terrace, land use, mgt, etc.
+        character(len=16) :: name       !! cn2, terrace, land use, mgt, etc.
         integer :: num_db = 0           !! crosswalk number of parameter, structure or land use to get database array number
-        character(len=16) :: chg_typ = "" !! type of change (absval,abschg,pctchg)
-        real :: val = 0.                !! value of change
-        real :: val1 = 0.               !! lower bound of numerical condition
-        real :: val2 = 0.               !! upper bound of numerical condition
-        integer :: conds = 0            !! number of conditions
-        integer :: lyr1 = 0             !! first layer in range for soil variables (0 assumes all layers are modified)
-        integer :: lyr2 = 0             !! last layer in range for soil variables (0 assumes through last layer)
-        integer :: year1 = 0            !! first year for precip and temp
-        integer :: year2 = 0            !! last year for precip and temp
-        integer :: day1 = 0             !! first day in range for precip and temp
-        integer :: day2 = 0             !! last day in range for precip and temp
+        character(len=16) :: chg_typ    !! type of change (absval,abschg,pctchg)
+        real :: val                     !! value of change
+        integer :: conds                !! number of conditions
+        integer :: lyr1                 !! first layer in range for soil variables (0 assumes all layers are modified)
+        integer :: lyr2                 !! last layer in range for soil variables (0 assumes through last layer)
+        integer :: year1                !! first year for precip and temp
+        integer :: year2                !! last year for precip and temp
+        integer :: day1                 !! first day in range for precip and temp
+        integer :: day2                 !! last day in range for precip and temp
         integer :: num_tot = 0          !! total number of integers read in
         integer :: num_elem = 0         !! total number of elements modified (ie - 1 -5 18; num_tot=3 and num_elem=6)
         integer, dimension(:), allocatable :: num
-        integer :: num_cond = 0
+        integer :: num_cond
         type (calibration_conditions), dimension(:), allocatable :: cond
       end type update_parameters
 
@@ -45,16 +43,14 @@
       type update_conditional
         integer :: max_hits = 0         !! maximum number of times the table will be executed
         integer :: num_hits = 0         !! current number of times the table will be executed
-        character(len=25) :: typ = ""   !! type of table- "lu_change" checks all hru; "hru_fr_change" sets all hru fractions
-        character(len=25) :: dtbl = ""  !! points to ruleset in conditional.ctl for scheduling the update
-        integer :: cond_num = 0         !! integer pointer to d_table in conditional.ctl
+        character(len=25) :: typ        !! type of table- "lu_change" checks all hru; "hru_fr_change" sets all hru fractions
+        character(len=25) :: dtbl       !! points to ruleset in conditional.ctl for scheduling the update
+        integer :: cond_num             !! integer pointer to d_table in conditional.ctl
       end type update_conditional
       type (update_conditional), dimension (:), allocatable :: upd_cond
       
       type soft_calibration_codes
-        character (len=1) :: hyd_hru = "n"      !! if a, calibrate all hydrologic balance processes for hru by land use in each region
-                                                !! if b, calibrate baseflow and total runoff for hru by land use in each region
-                                                !! if y, defaults to b for existing NAM simulations
+        character (len=1) :: hyd_hru = "n"      !! if y, calibrate hydrologic balance for hru by land use in each region
         character (len=1) :: hyd_hrul = "n"     !! if y, calibrate hydrologic balance for hru_lte by land use in each region
         character (len=1) :: plt = "n"          !! if y, calibrate plant growth by land use (by plant) in each region
         character (len=1) :: sed = "n"          !! if y, calibrate sediment yield by land use in each region  
@@ -68,13 +64,13 @@
       character (len=1) :: cal_hard = "n"       !! if y, perform hard calibration
       
       type soft_calib_parms
-        character(len=16) :: name = ""  !! cn2, terrace, land use, mgt, etc.
+        character(len=16) :: name       !! cn2, terrace, land use, mgt, etc.
         integer :: num_db = 0           !! crosswalk number of parameter, structure or land use to get database array number
-        character(len=16) :: chg_typ = "" !! type of change (absval,abschg,pctchg)
-        real :: neg = 0.                !! negative limit of change
-        real :: pos = 0.                !! positive limit of change
-        real :: lo = 0.                 !! lower limit of parameter
-        real :: up = 0.                 !! upper limit of parameter
+        character(len=16) :: chg_typ    !! type of change (absval,abschg,pctchg)
+        real :: neg                     !! negative limit of change
+        real :: pos                     !! positive limit of change
+        real :: lo                      !! lower limit of parameter
+        real :: up                      !! upper limit of parameter
       end type soft_calib_parms
       type (soft_calib_parms), dimension(:), allocatable :: ls_prms
       type (soft_calib_parms), dimension(:), allocatable :: ch_prms
@@ -112,8 +108,8 @@
 
       type ls_calib_regions
         character(len=16) :: name = "default"
-        integer :: lum_no = 0                                   !xwalk lum()%name with lscal()%lum()%name
-        real :: ha = 0.                                         !ha of each land use
+        integer :: lum_no                                       !xwalk lum()%name with lscal()%lum()%name
+        real :: ha                                              !ha of each land use
         integer :: nbyr = 0                                     !number of years the land use occurred 
         type (soft_calib_ls_processes) :: meas                  !input soft calibration parms of each land use - ratio,t/ha,kg/ha
         real :: precip = 0.                                     !model precip for each land use to determine ratios
@@ -128,21 +124,14 @@
         type (soft_calib_ls_adjust) :: prm                      !parameter adjustments used in landscape calibration
         type (soft_calib_ls_adjust) :: prm_prev                 !parameter adjustments used in landscape calibration
         type (soft_calib_ls_adjust) :: prm_lim                  !code if parameters are at limits
-        type (soft_calib_ls_adjust) :: pcur                     !current parameter
-        type (soft_calib_ls_adjust) :: phi                      !high parameter
-        type (soft_calib_ls_adjust) :: plo                      !low parameter
-        type (soft_calib_ls_processes) :: scur                  !simulated sum of soft calibration parms of each land use - m3,t,kg
-        type (soft_calib_ls_processes) :: shi                   !average annual soft calibration parms of each land use - mm,t/ha,kg/ha
-        type (soft_calib_ls_processes) :: slo                   !simulated sum of soft calibration parms of previous run - m3,t,kg
-
       end type ls_calib_regions
             
       type soft_data_calib_landscape
         character(len=16) :: name = "default"                               !name of region - (number of regions = db_mx%lsu_reg)
-        integer :: lum_num = 0                                              !number of land uses in each region
-        integer :: num_tot = 0                                              !number of hru"s in each region
+        integer :: lum_num                                                  !number of land uses in each region
+        integer :: num_tot                                                  !number of hru"s in each region
         integer, dimension(:), allocatable :: num                           !hru"s that are included in the region
-        integer :: num_reg = 0                                              !number of regions the soft data applies to
+        integer :: num_reg                                                  !number of regions the soft data applies to
         character(len=16), dimension(:), allocatable :: reg                 !name of regions the soft data applies to
         integer, dimension(:), allocatable :: ireg                          !name of regions the soft data applies to
         type (ls_calib_regions), dimension(:), allocatable :: lum           !dimension for land uses within a region
@@ -153,19 +142,19 @@
       type pl_parms_cal
         character(len=16) :: var = "default"
         character(len=16) :: name = "default"
-        real :: init_val = 0.                       !! xwalk lum()%name with lscal()%lum()%name
-        character(len=16) :: chg_typ = ""           !! type of change (absval,abschg,pctchg)
-        real :: neg = 0.                !! negative limit per iteration
-        real :: pos = 0.                !! positive limit per iteration
-        real :: lo = 0.                 !! ultimate lower limit of parameter
-        real :: up = 0.                 !! ultimate upper limit of parameter
+        real :: init_val                            !! xwalk lum()%name with lscal()%lum()%name
+        character(len=16) :: chg_typ                !! type of change (absval,abschg,pctchg)
+        real :: neg                     !! negative limit of change
+        real :: pos                     !! positive limit of change
+        real :: lo                      !! lower limit of parameter
+        real :: up                      !! upper limit of parameter
       end type pl_parms_cal
 
       type pl_parm_region
         character(len=16) :: name = "default"                           !name of region - (number of regions = db_mx%lsu_reg)
-        integer :: lum_num = 0                                          !number of land uses in each region
+        integer :: lum_num                                              !number of land uses in each region
         integer :: parms = 2                                            !number of plant parameters used in calibration
-        integer :: num_tot = 0                                          !number of hru"s in each region
+        integer :: num_tot                                              !number of hru"s in each region
         integer, dimension(:), allocatable :: num                       !hru"s that are included in the region
         type (pl_parms_cal), dimension(:), allocatable :: prm           !dimension for land uses within a region
       end type pl_parm_region
@@ -173,10 +162,10 @@
  
       type cataloging_units
         character(len=16) :: name = "basin"                     !name of region - (number of regions = db_mx%lsu_reg)
-        real :: area_ha = 0.                                    !area of landscape cataloging unit -hectares
-        integer :: num_tot = 0                                  !number of hru"s in each region
+        real :: area_ha                                         !area of landscape cataloging unit -hectares
+        integer :: num_tot                                      !number of hru"s in each region
         integer, dimension(:), allocatable :: num               !hru"s that are included in the region
-        integer :: nlum = 0                                     !number of land use and mgt in the region
+        integer :: nlum                                         !number of land use and mgt in the region
         character(len=16), dimension(:), allocatable :: lumc    !land use groups
         integer, dimension(:), allocatable :: lum_num           !db number of land use in the region - dimensioned by lum in the region
         integer, dimension(:), allocatable :: lum_num_tot       !db number of land use in the region each year- dimensioned by lum in database
@@ -192,8 +181,8 @@
           
       type landscape_units
         character(len=16) :: name = "basin"                     !name of region - (number of regions = db_mx%lsu_out)
-        real :: area_ha = 0.                                    !area of landscape cataloging unit -hectares
-        integer :: num_tot = 0                                  !number of hru"s in each region
+        real :: area_ha                                         !area of landscape cataloging unit -hectares
+        integer :: num_tot                                      !number of hru"s in each region
         integer, dimension(:), allocatable :: num               !hru"s that are included in the region
       end type landscape_units
       type (landscape_units), dimension(:), allocatable :: lsu_out     !dimension by region for hrus
@@ -208,18 +197,18 @@
       type (landscape_units), dimension(:), allocatable :: pcu_reg     !dimension by region for point sources
       
       type landscape_region_elements
-        character(len=16) :: name = ""
-        real :: ha = 0.                 !area of region element -hectares
+        character(len=16) :: name
+        real :: ha                      !area of region element -hectares
         integer :: obj = 1              !object number
-        character (len=3) :: obtyp = "" !object type- hru, hru_lte, lsu, etc
+        character (len=3) :: obtyp      !object type- hru, hru_lte, lsu, etc
         integer :: obtypno = 0          !2-number of hru_lte"s or 1st hru_lte command
       end type landscape_region_elements
       type (landscape_region_elements), dimension(:), allocatable :: reg_elem       !landscape region elements
       
       type landscape_elements
-        character(len=16) :: name = ""
+        character(len=16) :: name
         integer :: obj = 1              !object number
-        character (len=3) :: obtyp = "" !object type- 1=hru, 2=hru_lte, 11=export coef, etc
+        character (len=3) :: obtyp      !object type- 1=hru, 2=hru_lte, 11=export coef, etc
         integer :: obtypno = 0          !2-number of hru_lte"s or 1st hru_lte command
         real :: bsn_frac = 0            !fraction of element in basin (expansion factor)
         real :: ru_frac = 0             !fraction of element in ru (expansion factor)
@@ -252,8 +241,8 @@
 
       type pl_calib_regions
         character(len=16) :: name = "default"
-        integer :: plant_no = 0                                 !xwalk lum()%name with lscal()%lum()%name
-        real :: ha = 0.                                         !ha of each land use
+        integer :: plant_no                                     !xwalk lum()%name with lscal()%lum()%name
+        real :: ha                                              !ha of each land use
         integer :: nbyr = 0                                     !number of years the land use occurred 
         type (soft_calib_pl_processes) :: meas                  !input soft calibration parms of each land use - ratio,t/ha,kg/ha
         real :: precip = 0.                                     !model precip for each land use to determine ratios
@@ -271,8 +260,8 @@
       
       type soft_data_calib_plant
         character(len=16) :: name = "default"   !name of region - (number of regions = db_mx%lsu_reg)
-        integer :: lum_num = 0                                              !number of land uses in each region
-        integer :: num_tot = 0                                              !number of hru"s in each region
+        integer :: lum_num                                                  !number of land uses in each region
+        integer :: num_tot                                                  !number of hru"s in each region
         integer, dimension(:), allocatable :: num                           !hru"s that are included in the region
         type (pl_calib_regions), dimension(:), allocatable :: lum           !dimension for land uses within a region
       end type soft_data_calib_plant
@@ -287,7 +276,7 @@
       
       type soft_calib_chan_processes
         !database of soft ave annual landscape calibration values
-        character(len=16) :: name = ""
+        character(len=16) :: name
         real :: chw = 0.    !mm/yr          |channel widening 
         real :: chd = 0.    !mm/yr          |channel downcutting or accretion
         real :: hc = 0.     !m/yr           |head cut advance
@@ -297,7 +286,7 @@
 
       type chan_calib_regions
         character(len=16) :: name = "default"
-        real :: length = 0.                                     !ha of each land use
+        real :: length                                          !ha of each land use
         integer :: nbyr = 0                                     !number of years the land use occurred 
         type (soft_calib_chan_processes) :: meas                !input soft calibration parms of each land use - ratio,t/ha,kg/ha
         type (soft_calib_chan_processes) :: sim                 !simulated sum of soft calibration parms of each land use - m3,t,kg
@@ -310,8 +299,8 @@
       
       type soft_data_calib_channel
         character(len=16) :: name = "default"   !name of region - (number of regions = db_mx%lsu_reg)
-        integer :: ord_num = 0                                              !number of stream orders in each region
-        integer :: num_tot = 0                                              !number of channels in each region
+        integer :: ord_num                                                  !number of stream orders in each region
+        integer :: num_tot                                                  !number of channels in each region
         integer, dimension(:), allocatable :: num                           !channels that are included in the region
         type (chan_calib_regions), dimension(:), allocatable :: ord         !dimension for stream order within a region
       end type soft_data_calib_channel

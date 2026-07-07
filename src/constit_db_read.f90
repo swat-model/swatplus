@@ -9,15 +9,21 @@
 
       implicit none
          
-      character (len=80) :: titldum = ""!           |title of file
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: eof = 0              !           |end of file
-      integer :: i = 0                !           |
-      integer :: imax = 0             !           |
-      integer :: ipest = 0            !none       |counter
-      integer :: ipestdb = 0          !none       |counter
-      integer :: ipath = 0            !none       |counter
-      integer :: ipathdb = 0          !none       |counter
+      integer :: eof                  !           |end of file
+      integer :: i                    !           |
+      integer :: imax                 !           |
+      integer :: ip                   !none       |counter
+      integer :: ipest                !none       |counter
+      integer :: ipestdb              !none       |counter
+      integer :: ipath                !none       |counter
+      integer :: ipathdb              !none       |counter
+      integer :: ihmet                !none       |counter
+      integer :: ihmetdb              !none       |counter
+      integer :: isalt                !none       |counter
+      integer :: isaltdb              !none       |counter
        
       eof = 0
       imax = 0
@@ -36,33 +42,26 @@
         read (106,*,iostat=eof) cs_db%num_pests
         if (eof < 0) exit
         allocate (cs_db%pests(0:cs_db%num_pests))
-        allocate (cs_db%pest_num(0:cs_db%num_pests), source = 0)
+        allocate (cs_db%pest_num(0:cs_db%num_pests))
         read (106,*,iostat=eof) (cs_db%pests(i), i = 1, cs_db%num_pests)
         if (eof < 0) exit
         read (106,*,iostat=eof) cs_db%num_paths
         if (eof < 0) exit
         allocate (cs_db%paths(cs_db%num_paths))
-        allocate (cs_db%path_num(0:cs_db%num_paths), source = 0)
+        allocate (cs_db%path_num(0:cs_db%num_paths))
         read (106,*,iostat=eof) (cs_db%paths(i), i = 1, cs_db%num_paths)
         if (eof < 0) exit
         read (106,*,iostat=eof) cs_db%num_metals
         if (eof < 0) exit
         allocate (cs_db%metals(cs_db%num_metals))
-        allocate (cs_db%metals_num(0:cs_db%num_metals), source = 0)
+        allocate (cs_db%metals_num(0:cs_db%num_metals))
         read (106,*,iostat=eof) (cs_db%metals(i), i = 1, cs_db%num_metals)
         if (eof < 0) exit
-        !salt ions
         read (106,*,iostat=eof) cs_db%num_salts
         if (eof < 0) exit
         allocate (cs_db%salts(cs_db%num_salts))
-        allocate (cs_db%salts_num(0:cs_db%num_salts), source = 0)
+        allocate (cs_db%salts_num(0:cs_db%num_salts))
         read (106,*,iostat=eof) (cs_db%salts(i), i = 1, cs_db%num_salts)
-        !other constituents
-        read (106,*,iostat=eof) cs_db%num_cs
-        if (eof < 0) exit
-        allocate (cs_db%cs(cs_db%num_cs))
-        allocate (cs_db%cs_num (0:cs_db%num_cs), source = 0)
-        read (106,*,iostat=eof) (cs_db%cs(i), i = 1, cs_db%num_cs)
         exit
       end do
       end if
@@ -103,9 +102,7 @@
 !        end do
 !      end do
           
-      !sum up the number of pesticides, pathogens, metals, salt ions, and other constituents
-      cs_db%num_tot = cs_db%num_pests + cs_db%num_paths + cs_db%num_metals + cs_db%num_salts + cs_db%num_cs !rtb salt, cs
-      
+      cs_db%num_tot = cs_db%num_pests + cs_db%num_paths + cs_db%num_metals + cs_db%num_salts
       
       close (106)
       return

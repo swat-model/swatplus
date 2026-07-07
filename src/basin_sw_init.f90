@@ -11,11 +11,11 @@
       
       implicit none
 
-      integer :: ihru = 0 !none      |counter
-      integer :: iihru = 0  !          |
-      integer :: ilsu = 0 !none      |counter
-      integer :: ielem = 0  !          |
-      real :: const = 0.  !          |constant used for rate, days, etc
+      integer :: ihru     !none      |counter
+      integer :: iihru    !          |
+      integer :: ilsu     !none      |counter
+      integer :: ielem    !          |
+      real :: const       !          |constant used for rate, days, etc
             
       ! initialize hru soil and snow water
       do ihru = 1, sp_ob%hru
@@ -30,8 +30,6 @@
       end do
       
         ! summing subbasin output for the basin
-        bwb_d%sw_init = 0.
-        bwb_d%sno_init = 0.
         do ihru = 1, sp_ob%hru
           iihru = lsu_elem(ihru)%obtypno
           if (lsu_elem(iihru)%bsn_frac > 1.e-12) then

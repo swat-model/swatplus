@@ -1,12 +1,12 @@
       subroutine calsoft_hyd_bfr_perc
 
-      use hru_module, only : hru, hru_init
+      use hru_module, only : cn2, hru, hru_init
       use soil_module
       use plant_module
       use hydrograph_module
       use ru_module
       use aquifer_module
-      ! use channel_module
+      use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -19,21 +19,27 @@
       
       implicit none
       
-      external :: re_initialize, time_control
-      
-      integer :: isim = 0      !          |
-      integer :: ireg = 0      !none      |counter
-      integer :: ilum = 0      !none      |counter
-      integer :: iihru = 0     !none      |counter
-      integer :: ihru_s = 0    !none      |counter
-      integer :: iter_ind = 0  !          |end of loop
-      integer :: iperco = 0    !none      |counter
-      real :: rmeas = 0.       !          |
-      real :: denom = 0.       !          |
-      real :: soft = 0.        !          |
-      real :: diff = 0.        !          |
-      real :: chg_val = 0.     !          | 
-      real :: perc_ln_func = 0.
+      integer :: iter_all      !none      |counter
+      integer :: iterall       !none      |counter
+      integer :: isim          !          |
+      integer :: ireg          !none      |counter
+      integer :: ilum          !none      |counter
+      integer :: iihru         !none      |counter
+      integer :: icn           !none      |counter
+      integer :: ihru_s        !none      |counter
+      integer :: iter_ind      !          |end of loop
+      integer :: ietco         !none      |counter
+      integer :: ik            !none      |counter
+      integer :: nly           !          |end of loop
+      integer :: iperco        !none      |counter
+      real :: rmeas            !          |
+      real :: denom            !          |
+      real :: soft             !          |
+      real :: diff             !          |
+      real :: rto              !          |
+      real :: chg_val          !          | 
+      real :: dep_below_soil   !          |  
+      real :: perc_ln_func
 
       ! calibrate percolation
         iter_ind = 3
@@ -116,7 +122,6 @@
         ! 1st perco adjustment 
         if (isim > 0) then
           cal_sim =  " first perco adj "
-          cal_adj = chg_val
           call time_control
         end if
   
@@ -185,17 +190,26 @@
           end do
           end do
           
+        !zero plant calibration data in case plants are calibrated
+        !do ireg = 1, db_mx%plcal_reg
+        !  do ilum = 1, plcal(ireg)%lum_num
+        !    plcal(ireg)%lum(ilum)%nbyr = 0
+        !    plcal(ireg)%lum(ilum)%precip_aa = 0.
+        !    plcal(ireg)%lum(ilum)%ha = 0.
+        !    plcal(ireg)%lum(ilum)%aa = plcal_z
+        !  end do
+        !end do
+        
         !! re-initialize all objects
         call re_initialize
 
         ! perco adjustment 
         if (isim > 0) then
           cal_sim =  " perco adj "
-          cal_adj = chg_val
           call time_control
         end if
         
         end do      ! iperco  
 
-      return
+	  return
       end subroutine calsoft_hyd_bfr_perc

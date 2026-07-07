@@ -31,6 +31,7 @@
 !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !!    ~ ~ ~ SUBROUTINES/FUNCTIONS CALLED ~ ~ ~
 !!    Intrinsic: Exp, Min, Max
+!!    SWAT: Expo
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
  
@@ -43,51 +44,51 @@
       use climate_module
       use hydrograph_module
       use water_body_module
-      use reservoir_data_module
       
       implicit none
 
-      integer :: j = 0           !none          |HRU number
+      integer :: j               !none          |HRU number
+      integer :: ib              !none          |counter
+      integer :: lym             !none          |counter
 !!    real, parameter :: esd = 500., etco = 0.80, effnup = 0.1
-      real :: esd = 0.           !mm            |maximum soil depth from which evaporation
+      real :: esd                !mm            |maximum soil depth from which evaporation
                                  !              |is allowed to occur
-      real :: etco = 0.          !              |
-      real :: effnup = 0.        !              ! 
-      real :: no3up = 0.         !kg N/ha       |amount of nitrate moving upward in profile 
-      real :: es_max = 0.        !mm H2O        |maximum amount of evaporation (soil et)
+      real :: etco               !              |
+      real :: effnup             !              ! 
+      real :: no3up              !kg N/ha       |amount of nitrate moving upward in profile 
+      real :: es_max             !mm H2O        |maximum amount of evaporation (soil et)
                                  !              |that can occur on current day in HRU
-      real :: eos1 = 0.          !none          |variable to hold intermediate calculation
+      real :: eos1               !none          |variable to hold intermediate calculation
                                  !              |result
-      real :: xx = 0.            !none          |variable to hold intermediate calculation 
+      real :: xx                 !none          |variable to hold intermediate calculation 
                                  !              |result
-      real :: cej = 0.           !              |
-      real :: eaj = 0.           !none          |weighting factor to adjust PET for impact of
+      real :: cej                !              |
+      real :: eaj                !none          |weighting factor to adjust PET for impact of
                                  !              |plant cover    
-      real :: pet = 0.           !mm H2O        |amount of PET remaining after water stored
+      real :: pet                !mm H2O        |amount of PET remaining after water stored
                                  !              |in canopy is evaporated
-      real :: esleft = 0.        !mm H2O        |potential soil evap that is still available
-      real :: evzp = 0.          !              |
-      real :: eosl = 0.          !mm H2O        |maximum amount of evaporation that can occur
+      real :: esleft             !mm H2O        |potenial soil evap that is still available
+      real :: sumsnoeb           !mm H2O        |amount of snow in elevation bands whose air
+                                 !              |temperature is greater than 0 degrees C
+      real :: evzp               !              |
+      real :: eosl               !mm H2O        |maximum amount of evaporation that can occur
                                  !              |from soil profile
-      real :: dep = 0.           !mm            |soil depth from which evaporation will occur
+      real :: dep                !mm            |soil depth from which evaporation will occur
                                  !              |in current soil layer
-      real :: evz = 0.           !              | 
-      real :: sev = 0.           !mm H2O        |amount of evaporation from soil layer
-      real :: sev_st = 0.        !mm H2O        |evaporation / soil water for no3 flux from layer 1 -> 2
-      real :: cover = 0.         !kg/ha         |soil cover
-      real :: wetvol_mm = 0.     !mm            |wetland water volume - average depth over hru
-      integer :: ly = 0          !none          |counter     
-      integer:: ires = 0  !Jaehak 2022
-      integer:: ihyd = 0  !Jaehak 2022
+      real :: evz                !              | 
+      real :: sev                !mm H2O        |amount of evaporation from soil layer
+      real :: sev_st             !mm H2O        |evaporation / soil water for no3 flux from layer 1 -> 2
+      real :: expo               !              |
+      real :: cover              !kg/ha         |soil cover
+      real :: wetvol_mm          !mm            |wetland water volume - average depth over hru
+      integer :: ly              !none          |counter                               
 
       j = ihru
       pet = pet_day
 !!    added statements for test of real statement above
-      esd = 500.  !soil(j)%zmx
-      etco = 0.80
-      effnup = 0.05
-      ires= hru(j)%dbs%surf_stor !Jaehak 2022
-
+	esd = 500.  !soil(j)%zmx
+	etco = 0.80
+	effnup = 0.05
 
 !! evaporate canopy storage first
 !! canopy storage is calculated by the model only if the Green & Ampt
@@ -124,7 +125,7 @@
         eaj = 0.
         es_max = 0.
         eos1 = 0.
-        cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
+        cover = pl_mass(j)%ab_gr_com%m + rsd1(j)%tot_com%m
         if (hru(j)%sno_mm >= 0.5) then
           eaj = 0.5
         else
@@ -136,24 +137,12 @@
         es_max = Min(es_max, eos1)
         es_max = Max(es_max, 0.)
 
-        if (wet(j)%flo > 0.) then !wetlands water evaporation reduced by canopy Jaehak 2022
-        
-          if (pcom(j)%lai_sum <= 4.0) then 
-            ihyd = wet_dat(ires)%hyd
-            es_max = wet_hyd(ihyd)%evrsv * (1.-pcom(j)%lai_sum / 4.) * pet !adapted from Sakaguchi et al. 2014
-          else
-            es_max = 0.
-          endif
-
-        else  
-        
-          !! make sure maximum plant and soil ET doesn't exceed potential ET
-          if (pet_day < es_max + ep_max) then
-            es_max = pet_day - ep_max
-            if (pet < es_max + ep_max) then
-              es_max = pet * es_max / (es_max + ep_max)
-              ep_max = pet * ep_max / (es_max + ep_max)
-            end if
+        !! make sure maximum plant and soil ET doesn't exceed potential ET
+        if (pet_day < es_max + ep_max) then
+          es_max = pet_day - ep_max
+          if (pet < es_max + ep_max) then
+            es_max = pet * es_max / (es_max + ep_max)
+            ep_max = pet * ep_max / (es_max + ep_max)
           end if
         end if
         
@@ -182,7 +171,7 @@
         !! compute evaporation from ponded water
         wet_wat_d(j)%evap = 0.
         if (wet(j)%flo > 0.) then
-          wetvol_mm = wet(j)%flo / (10. *  hru(j)%area_ha)    !mm=m3/(10.*ha)
+          wetvol_mm = wet(j)%flo / (10. *  hru(j)%area_ha)    !mm*ha*10.=m3
           !! take all soil evap from wetland storage before taking from soil
           if (wetvol_mm >= esleft) then
             wetvol_mm = wetvol_mm - esleft
@@ -216,12 +205,12 @@
              Exp(2.374 - .00713 * soil(j)%phys(ly)%d))
           sev = evz - evzp * (1. - hru(j)%hyd%esco)
           evzp = evz
-          if (soil(j)%phys(ly)%st < soil(j)%phys(ly)%fc) then
-            xx =  2.5 * (soil(j)%phys(ly)%st - soil(j)%phys(ly)%fc) /    &
-             soil(j)%phys(ly)%fc
-            sev = sev * exp(xx)
-          end if
-          sev = Min(sev, soil(j)%phys(ly)%st * etco)
+          !if (soil(j)%phys(ly)%st < soil(j)%phys(ly)%fc) then
+          !  xx =  2.5 * (soil(j)%phys(ly)%st - soil(j)%phys(ly)%fc) /    &
+          !   soil(j)%phys(ly)%fc
+          !  sev = sev * expo(xx)
+          !end if
+          !sev = Min(sev, soil(j)%phys(ly)%st * etco)
 
           if (sev < 0.) sev = 0.
           if (sev > esleft) sev = esleft
@@ -247,8 +236,8 @@
           sev_st = amin1 (1., sev_st)
           no3up = effnup * sev_st * soil1(j)%mn(2)%no3
           no3up = Min(no3up, soil1(j)%mn(2)%no3)
-          soil1(j)%mn(2)%no3 = max(0.0001,soil1(j)%mn(2)%no3 - no3up)
-          soil1(j)%mn(1)%no3 = max(0.0001,soil1(j)%mn(1)%no3 + no3up)
+          soil1(j)%mn(2)%no3 = soil1(j)%mn(2)%no3 - no3up
+          soil1(j)%mn(1)%no3 = soil1(j)%mn(1)%no3 + no3up
         endif
 
       end do    !layer loop

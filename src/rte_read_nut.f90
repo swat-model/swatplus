@@ -3,7 +3,7 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine reads data from the lake water quality input file (.lwq).
 !!    This file contains data related to initial pesticide and nutrient levels
-!!    in the lake/reservoir and transformation processes occurring within the 
+!!    in the lake/reservoir and transformation processes occuring within the 
 !!    lake/reservoir. Data in the lake water quality input file is assumed to
 !!    apply to all reservoirs in the watershed.    
 
@@ -11,12 +11,13 @@
       
       implicit none      
       
-      character (len=80) :: titldum = ""  !             |title of file
-      character (len=80) :: header = "" !             |header of file
-      integer :: eof = 0                !             |end of file
-      integer :: imax = 0               !             |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum     !             |title of file
+      character (len=80) :: header      !             |header of file
+      integer :: eof                    !             |end of file
+      integer :: imax                   !             |determine max number for array (imax) and total number in file
       logical :: i_exist                !none         |check to determine if file exists
-      integer :: ich = 0                !none         |counter
+      integer :: i                      !none         |counter
+      integer :: ich                    !none         |counter
 
       eof = 0
       imax = 0

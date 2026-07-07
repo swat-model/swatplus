@@ -57,20 +57,22 @@
       
       implicit none
 
-      
-      
-      
       real, external :: Theta  !units         |description        
-      real :: path_tot = 0.    !10^4 cfu      |mass persistent bacteria
-      real :: netwtr = 0.      !m^3 H2O       |net amount of water in reach during time step
-      real :: tday = 0.        !day           |routing time for the reach
-      real :: wtmp = 0.        !deg C         |temperature of water in reach
-      real :: rchwtr = 0.      !m^3 H2O       |water stored in reach at beginning of day
-      integer :: iwst = 0      !units         |description
-      integer :: ipath = 0     !none          |pathogen counter
-      integer :: jrch = 0      !none          |reach number
-      integer :: iob = 0       !none          |
-      integer :: icmd = 0      !none          |
+      real :: path_tot         !10^4 cfu      |mass persistent bacteria
+      real :: totbactlp        !10^4 cfu      |mass less persistent bacteria
+      real :: netwtr           !m^3 H2O       |net amount of water in reach during time step
+      real :: initlp           !# cfu/100mL   |bacteria concentration in reach at beginning
+      real :: initp            !# cfu/100mL   |bacteria concentration in reach at beginning
+      real :: tday             !day           |routing time for the reach
+      real :: wtmp             !deg C         |temperature of water in reach
+      real :: rchwtr           !m^3 H2O       |water stored in reach at beginning of day
+      integer :: iwst          !units         |description
+      integer :: ipath         !none          |pathogen counter
+      integer :: ipath_db      !none          |pathogen number from data file
+      integer :: isp_ini       !none          |soil-plant initialization number from data fil
+      integer :: jrch          !none          |reach number
+      integer :: iob           !none          |
+      integer :: icmd          !none          |
 
       if (rtwtr > 0. .and. rchdep > 0.) then
 
@@ -92,9 +94,9 @@
 
           !! new concentration
           netwtr = ob(icmd)%hin%flo  + rchwtr
-    
-          !! change made by CS while running region 4; date 2 jan 2006  
-          if (path_tot < 1.e-6) path_tot = 0.0 
+	
+  	      !! change made by CS while running region 4; date 2 jan 2006	
+	      if (path_tot < 1.e-6) path_tot = 0.0 
           if (netwtr >= 1.) then
             ch_water(jrch)%path(ipath) = path_tot / netwtr
           else

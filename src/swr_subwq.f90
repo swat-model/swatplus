@@ -43,25 +43,32 @@
       
       implicit none
 
-      integer :: j = 0         !none          |HRU number
-      real :: soxy = 0.        !mg/L          |dissolved oxygen saturation concentration 
-      real :: tp = 0.          !kmoles P      |kilomoles of phosphorus in nutrient loading to
+      integer :: j             !none          |HRU number
+      real :: soxy             !mg/L          |dissolved oxygen saturation concentration 
+      real :: tn               !kmoles N      |kilomoles of nitrogen in nutrient loading to
                                !              |main channel
-      real :: org_c = 0.       !kg            |organic carbon content of surface runoff on
+      real :: tp               !kmoles P      |kilomoles of phosphorus in nutrient loading to
+                               !              |main channel
+      real :: qtot             !mm H2O        |total loadings to main channel generated on
                                !              |day in HRU
-      real :: wtmp = 0.        !deg K         |temperature of surface runoff
-      real :: ww = 0.          !none          |variable to hold intermediate calculation
+      real :: org_c            !kg            |organic carbon content of surface runoff on
+                               !              |day in HRU
+      real :: tn_tp            !mol N/mol P   |atomic ratio of N to P in surface runoff
+      real :: wtmp             !deg K         |temperature of surface runoff
+      real :: ww               !none          |variable to hold intermediate calculation
                                !              |result
-      real :: xx = 0.          !none          |variable to hold intermediate calculation
+      real :: xx               !none          |variable to hold intermediate calculation
                                !              |result
-      real :: yy = 0.          !none          |variable to hold intermediate calculation
+      real :: yy               !none          |variable to hold intermediate calculation
                                !              |result
-      real :: zz = 0.          !none          |variable to hold intermediate calculation
+      real :: zz               !none          |variable to hold intermediate calculation
                                !              |result
-      
+      real :: flow_cms         !m^3/s H2O     |rate of flow to main channel generated on
+                               !              |day in HRU
+
       j = ihru
 
-        !! calculate water temperature
+        !! calculcate water temperature
         !! Stefan and Preudhomme. 1993.  Stream temperature estimation
         !!from air temperature.  Water Res. Bull. p. 27-45
         !! SWAT manual 2.3.13
@@ -75,20 +82,19 @@
  
           !! calculate organic carbon loading to main channel
           org_c = 0.
-          org_c = (soil1(j)%cbn(1) / 100.) * enratio * sedyld(j) * 1000.
+          org_c = (soil1(j)%tot(1)%c / 100.) * enratio*sedyld(j) * 1000.
           
           !!add by zhang
           !!========================
-          if (bsn_cc%cswat == 1 ) then
-            org_c = hsc_d(j)%sed_c * hru(j)%area_ha
+          if (bsn_cc%cswat == 2) then
+            org_c = cbn_loss(j)%sedc_d * hru(j)%area_ha
           end if
           !!add by zhang
           !!========================
           
                   
-          !! calculate carbonaceous biological oxygen demand (ppm or mg/L)
-          !! other equations - BOD5 = 2.9 * TOC; CBOD5 = 23.7 + 1.68 * TOC; BOD = 1.813(TOC)**0.4244
-          cbodu(j) = 2.7 * org_c / (qdr(j) * hru(j)%km) / 10000.  !JAEHAK 2016
+          !! calculate carbonaceous biological oxygen demand (CBOD)
+          cbodu(j) = cbodu(j) + 2.7 * org_c / (qdr(j) * hru(j)%km) !JAEHAK 2016
 
           !! calculate dissolved oxygen saturation concentration
           !! QUAL2E equation III-29

@@ -16,8 +16,6 @@
       use basin_module
       
       implicit none
-      
-      external :: sq_daycn, sq_greenampt
 
 !! Compute surface runoff for day
       if (bsn_cc%gampt == 0) then

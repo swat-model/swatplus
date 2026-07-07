@@ -37,36 +37,34 @@
       
       implicit none
 
-      integer :: j = 0       !none          |HRU number
-      integer :: k = 0       !none          |counter
+      integer :: j           !none          |HRU number
+      integer :: k           !none          |counter
 
       j = ihru
 
-      if (bsn_cc%gampt == 0) then   
+      if (bsn_cc%gampt == 0) then	
         bsprev = surf_bs(1,j)
-        surf_bs(1,j) = Max(1.e-6, surf_bs(1,j) + surfq(j))
+	    surf_bs(1,j) = Max(1.e-6, surf_bs(1,j) + surfq(j))
         qday = surf_bs(1,j) * brt(j)
         surf_bs(1,j) = surf_bs(1,j) - qday
-      else
-        bsprev = hhsurf_bs(1,j,time%step)       ! lag from previous day J.Jeong 4/06/2009
+	  else
+		bsprev = hhsurf_bs(1,j,time%step)		! lag from previous day J.Jeong 4/06/2009
         qday = 0.
-        do k=1,time%step
-          !! Left-over (previous timestep) + inflow (current  timestep)
-          ! hhsurf_bs(1,j,k) = Max(0., bsprev + hhsurfq(j,k))
-          hhsurf_bs(1,j,k) = Max(1.e-9, bsprev + hhsurfq(j,k))
-          if (hhsurf_bs(1,j,k) == 1.e-9) hhsurf_bs(1,j,k) =  0.0
-    
-          !! new estimation of runoff and sediment reaching the main channel
-          hhsurfq(j,k) = hhsurf_bs(1,j,k) * brt(j)
-          hhsurf_bs(1,j,k) = hhsurf_bs(1,j,k) - hhsurfq(j,k)
-      
-          !! lagged at the end of time step  
-          bsprev = hhsurf_bs(1,j,k)
+	    do k=1,time%step
+	      !! Left-over (previous timestep) + inflow (current  timestep)
+          hhsurf_bs(1,j,k) = Max(0., bsprev + hhsurfq(j,k))
+   	
+	      !! new estimation of runoff and sediment reaching the main channel
+	      hhsurfq(j,k) = hhsurf_bs(1,j,k) * brt(j)
+	      hhsurf_bs(1,j,k) = hhsurf_bs(1,j,k) - hhsurfq(j,k)
+   	  
+	      !! lagged at the end of time step  
+	      bsprev = hhsurf_bs(1,j,k)
           
           !! daily total yield from the HRU
-          qday = qday + hhsurfq(j,k)
-        end do
-      end if
+	      qday = qday + hhsurfq(j,k)
+	    end do
+	  end if
      
-    return
-    end subroutine sq_surfst
+      return
+      end subroutine sq_surfst

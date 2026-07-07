@@ -55,37 +55,37 @@
       use time_module
       
       implicit none
-      
-      external :: hru_sweep
 
-      real :: sus_sol = 0. !kg            |suspended solid loading in surface runoff
+      real :: cod          !kg            |carbonaceous biological oxygen demand of 
+                           !              |surface runoff from urban area
+      real :: sus_sol      !kg            |suspended solid loading in surface runoff
                            !              |from urban area
-      real :: tn = 0.      !kg            |total nitrogen in surface runoff from
+      real :: tn           !kg            |total nitrogen in surface runoff from
                            !              |urban area
 
-      real :: tp = 0.      !kg            |total phosphorus in surface runoff from 
+      real :: tp           !kg            |total phosphorus in surface runoff from 
                            !              |urban area
-      real :: urbk = 0.    !1/hr          | 
-      real :: dirto = 0.   !kg/ha         |amount of solids built up on impervious
+      real :: urbk         !1/hr          | 
+      real :: dirto        !kg/ha         |amount of solids built up on impervious
                            !              |surfaces at the beginning of time step
-      integer :: j = 0     !none          |HRU number
-      real :: qdt = 0.     !              |
-      real*8 :: dirt = 0.d0  !kg/curb km    |amount of solids built up on impervious
+      integer :: j         !none          |HRU number
+      real :: qdt          !              |
+	  real*8 :: dirt       !kg/curb km    |amount of solids built up on impervious
                            !              |surfaces
-      integer :: k = 0     !none          |counter 
-      integer :: tno3 = 0  !              |
+      integer :: k         !none          |counter 
+      integer :: tno3      !              |
 
       j = ihru
       ulu = hru(j)%luse%urb_lu
 
-      do k = 1, time%step
+	  do k = 1, time%step
 
           !! build-up/wash-off algorithm
 
           !! rainy day: no build-up, street cleaning allowed
-          
-           qdt = ubnrunoff(k) * 60./ real(time%dtm) !urban runoff in mm/hr
-          if (qdt > 0.025 .and. surfq(j) > 0.1) then   ! SWMM : 0.001 in/hr (=0.0254mm/hr)
+		  
+		   qdt = ubnrunoff(k) * 60./ real(time%dtm) !urban runoff in mm/hr
+	      if (qdt > 0.025 .and. surfq(j) > 0.1) then   ! SWMM : 0.001 in/hr (=0.0254mm/hr)
        
           !! calculate amount of dirt on streets prior to wash-off
               dirt = 0.
@@ -93,7 +93,7 @@
               dirto = urbdb(ulu)%dirtmx * twash(j) / (urbdb(ulu)%thalf + twash(j))
 
           !! calculate wash-off of solids
-              urbk = 0.             ! qp_cms -> hhqday for subdaily time steps 6/19/09 JJ
+              urbk = 0.				! qp_cms -> hhqday for subdaily time steps 6/19/09 JJ
               urbk = urbdb(ulu)%urbcoef * qdt  
                                      
               dirt=dirto * Exp (- urbk * real(time%dtm) / 60.)
@@ -121,7 +121,7 @@
                                              (1. - urbdb(ulu)%fimp)
               surqsolp(j) = .25 * tp * urbdb(ulu)%fimp + surqsolp(j) *     &
                                              (1. - urbdb(ulu)%fimp)
-          else
+	      else
           !! no surface runoff
               twash(j) = twash(j) + time%dtm / 1440.
  
@@ -137,26 +137,26 @@
           end if
         end if
 
-      sus_sol=0
-      
-      ! Compute evaporation of water (initial abstraction) from impervious cover
-      init_abstrc(j) = init_abstrc(j) - etday / time%step
-      init_abstrc(j) = max(0.,init_abstrc(j))
-    end do
+	  sus_sol=0
+	  
+	  ! Compute evaporation of water (initial abstraction) from impervious cover
+	  init_abstrc(j) = init_abstrc(j) - etday / time%step
+	  init_abstrc(j) = max(0.,init_abstrc(j))
+	end do
 
       !! perform street sweeping
       if(surfq(j) < 0.1) then
-      if (isweep(j) > 0 .and. time%day >= isweep(j)) then
+	  if (isweep(j) > 0 .and. time%day >= isweep(j)) then
                 call hru_sweep
         else if (phusw(j) > 0.0001) then
           if (pcom(j)%plcur(ipl)%gro == "n") then
             if (phubase(j) > phusw(j)) then
-            call hru_sweep
-          endif
+		    call hru_sweep
+	      endif
           else 
             if (pcom(j)%plcur(1)%phuacc > phusw(j)) then
-            call hru_sweep
-          endif
+		    call hru_sweep
+	      endif
           end if
         end if
       end if

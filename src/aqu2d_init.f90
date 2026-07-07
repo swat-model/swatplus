@@ -3,20 +3,21 @@
       use hydrograph_module
       use sd_channel_module
       use maximum_data_module
-      use constituent_mass_module
 
       implicit none
 
-      integer :: iaq = 0            !none       |counter
-      integer :: mfe = 0            !none       |my first element (channel with smallest area)
-      integer :: next1 = 0          !none       |counter
-      integer :: iprv = 0           !none       |counter 
-      integer :: ipts = 0           !none       |counter
-      integer :: npts = 0           !none       |counter
-      integer :: icha = 0           !none       |counter
-      integer :: ichd = 0           !none       |counter
-      integer :: iob = 0            !none       |counter
-      real :: sum_len = 0.          !km         |total length of channel in aquifer
+      integer :: iaq                !none       |counter
+      integer :: iaq_db             !none       |counter
+      integer :: mfe                !none       |my first element (channel with smallest area)
+      integer :: next1              !none       |counter
+      integer :: iprv               !none       |counter 
+      integer :: ipts               !none       |counter
+      integer :: npts               !none       |counter
+      integer :: icha               !none       |counter
+      integer :: ichd               !none       |counter
+      integer :: iob                !none       |counter
+      real :: sum_len               !km         |total length of channel in aquifer
+      real :: sum_left              !km         |lenght of channels after the baseflow stops
       real, dimension(:), allocatable :: next   !!next channel to dry up - sorted by drainage area
       
       !! set parameters needed to distribute gwflow to channels using geomorphical model
@@ -25,7 +26,7 @@
         !! set channel drainage areas
         allocate (aq_ch(iaq)%ch(aq_ch(iaq)%num_tot))
         allocate (aqu_cha(aq_ch(iaq)%num_tot))
-        allocate (next(aq_ch(iaq)%num_tot), source = 0.)
+        allocate (next(aq_ch(iaq)%num_tot))
         sum_len = 0.
         do icha = 1, aq_ch(iaq)%num_tot
           ich = aq_ch(iaq)%num(icha)
@@ -82,24 +83,5 @@
         
       end do
 
-      !rtb salt/cs
-      if(cs_db%num_tot > 0) then
-        allocate (aq_chcs(sp_ob%aqu))
-        do iaq = 1, sp_ob%aqu
-          !allocate groundwater loading array
-          allocate (aq_chcs(iaq)%hd(1))
-          !salts
-          if(cs_db%num_salts > 0) then
-            allocate (aq_chcs(iaq)%hd(1)%salt(cs_db%num_salts), source = 0.)
-            aq_chcs(iaq)%hd(1)%salt = 0.
-          endif
-          !other constituents
-          if(cs_db%num_cs > 0) then
-            allocate (aq_chcs(iaq)%hd(1)%cs(cs_db%num_cs), source = 0.)
-            aq_chcs(iaq)%hd(1)%cs = 0.
-          endif
-        enddo
-      endif
- 
       return
       end subroutine aqu2d_init

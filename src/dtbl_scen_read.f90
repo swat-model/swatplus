@@ -8,20 +8,23 @@
       use fertilizer_data_module
       use input_file_module
       use conditional_module
-      use hru_module, only : snodb
       
       implicit none
                   
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      integer :: eof = 0              !           |end of file
-      integer :: i = 0                !none       |counter 
-      integer :: mdtbl = 0            !none       |ending of loop
-      integer :: ic = 0               !none       |counter 
-      integer :: ial = 0              !none       |counter 
-      integer :: iac = 0              !none       !counter 
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      character (len=13) :: file
+      integer :: eof                  !           |end of file
+      integer :: i                    !none       |counter 
+      integer :: mdtbl                !none       |ending of loop
+      integer :: ic                   !none       |counter 
+      integer :: ial                  !none       |counter 
+      integer :: iac                  !none       !counter 
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: ilum = 0             !none       |counter      
+      integer :: idb                  !none       |counter
+      integer :: ilum                 !none       |counter
+      integer :: iburn                !none       |counter
+      
       
       mdtbl = 0
       eof = 0
@@ -29,7 +32,7 @@
       !! read all data from hydrol.dat
       inquire (file=in_cond%dtbl_scen, exist=i_exist)
       if (.not. i_exist .or. in_cond%dtbl_scen == "null") then
-        allocate (dtbl_scen(0:0))
+        allocate (dtbl_scen(0:0)) 
       else
         do
           open (107,file=in_cond%dtbl_scen)
@@ -50,11 +53,8 @@
             allocate (dtbl_scen(i)%alt(dtbl_scen(i)%conds,dtbl_scen(i)%alts))
             allocate (dtbl_scen(i)%act(dtbl_scen(i)%acts))
             allocate (dtbl_scen(i)%act_hit(dtbl_scen(i)%alts))
-            allocate (dtbl_scen(i)%act_typ(dtbl_scen(i)%acts), source = 0)
-            allocate (dtbl_scen(i)%act_app(dtbl_scen(i)%acts), source = 0)
-            allocate (dtbl_scen(i)%lu_chg_mx(dtbl_scen(i)%acts), source = 0)
-            allocate (dtbl_scen(i)%snow_chg_mx(dtbl_scen(i)%acts), source = 0)
-
+            allocate (dtbl_scen(i)%act_typ(dtbl_scen(i)%acts))
+            allocate (dtbl_scen(i)%act_app(dtbl_scen(i)%acts))
             allocate (dtbl_scen(i)%act_outcomes(dtbl_scen(i)%acts,dtbl_scen(i)%alts))
             
             !read conditions and condition alternatives
@@ -81,13 +81,6 @@
                 case ("lu_change")
                   do ilum = 1, db_mx%landuse
                     if (dtbl_scen(i)%act(iac)%file_pointer == lum(ilum)%name) then
-                      dtbl_scen(i)%act_typ(iac) = ilum
-                      exit
-                    end if
-                  end do
-                case ("snow_change")
-                  do ilum = 1, db_mx%sno
-                    if (dtbl_scen(i)%act(iac)%file_pointer == snodb(ilum)%name) then
                       dtbl_scen(i)%act_typ(iac) = ilum
                       exit
                     end if

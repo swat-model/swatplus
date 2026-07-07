@@ -4,16 +4,11 @@
          
       implicit none
       
-      external :: aqu2d_init, ch_initial, ch_read, ch_read_hyd, ch_read_init, ch_read_init_cs, ch_read_nut, &
-                  ch_read_sed, ch_ttcoef, overbank_read, sd_channel_read, sd_channel_surf_link, &
-                  sd_hydsed_init, sd_hydsed_read, time_conc_init, cli_lapse
-      
-      integer :: irch = 0               !              |
-      integer :: idat = 0               !              |
-      integer :: i = 0                  !none          |counter
+      integer :: irch                   !              |
+      integer :: idat                   !              |
+      integer :: i                      !none          |counter
          
       call ch_read_init
-      call ch_read_init_cs
 
       call sd_hydsed_read
       call ch_read_hyd
@@ -23,9 +18,9 @@
       call sd_channel_read
       call sd_hydsed_init
 
-      !call channel_allo
+      call channel_allo
           
-      !! initialize stream-aquifer interactions for geomorphic baseflow
+      !! intialize stream-aquifer interactions for geomorphic baseflow
       !! aquifer to channel flow
       call aqu2d_init
       
@@ -46,6 +41,6 @@
       
       call time_conc_init
 
-      return
+	  return
       
       end subroutine proc_cha

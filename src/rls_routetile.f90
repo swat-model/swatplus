@@ -1,4 +1,4 @@
-      subroutine rls_routetile (iob, tile_fr_surf)
+      subroutine rls_routetile (iob)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 
@@ -16,23 +16,17 @@
       
       implicit none
  
-      integer, intent (in) :: iob   !           |unused object number
-      integer :: j = 0              !           |hru number
-      integer :: lyr = 0            !           |tile soil layer
-      real, intent (in)  :: tile_fr_surf    !m3     |overland tile flow
-
-      !! suppress unused variable warning
-      if (iob < 0) continue
+      integer, intent (in) :: iob   !           |object number
+      integer :: j                  !           |hru number
+      integer :: lyr                !           |tile soil layer 
 
       j = ihru
 
       !! add tile inflow and nitrate to soil layer the tile is in
       !! if exceeds saturation, it will be redistributed in swr_satexcess
-      lyr = hru(j)%sb%sb_db%lyr
-      soil(j)%phys(lyr)%st = soil(j)%phys(lyr)%st + hru(j)%sb%inflo * (1. - tile_fr_surf)
-      soil1(j)%mn(lyr)%no3 = soil1(j)%mn(lyr)%no3 + hru(j)%sb%no3 * (1. - tile_fr_surf)
-      hru(j)%sb%inflo = 0.
-      hru(j)%sb%no3 = 0.
+      lyr = hru(j)%lumv%ldrain
+      soil(j)%phys(lyr)%st = soil(j)%phys(lyr)%st + ob(iob)%hin_til%flo
+      soil1(j)%mn(lyr)%no3 = soil1(j)%mn(lyr)%no3 + ob(iob)%hin_til%no3
 
       return
       end subroutine rls_routetile

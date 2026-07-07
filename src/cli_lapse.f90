@@ -9,10 +9,10 @@
       
       implicit none
 
-      integer :: iob = 0    !       |object number
-      integer :: iwst = 0   !       |weather station number
-      integer :: iwgn = 0   !       |weather generator station number
-      integer :: igage = 0  !       |number of measured precip or temperature gage
+      integer :: iob        !       |object number
+      integer :: iwst       !       |weather station number
+      integer :: iwgn       !       |weather generator station number
+      integer :: igage      !       |number of measured precip or temperature gage
       
       !! set precip and temp lapse for each object
       do iob = 1, sp_ob%objs
@@ -27,9 +27,13 @@
         end if
         if (wst(iwst)%wco_c%tgage == "sim") then
           iwgn = wst(iwst)%wco%wgn
-          ob(iob)%tlaps = bsn_prm%tlaps * (wgn(iwgn)%elev - ob(iob)%elev) / 1000.
+          ob(iob)%tlaps = bsn_prm%tlaps * (tmp(igage)%elev - ob(iob)%elev) / 1000.
+          ob(iob)%tlaps = bsn_prm%tlaps * (tmp(igage)%elev - ob(iob)%elev) / 1000.
+          ob(iob)%tlaps = bsn_prm%tlaps * (tmp(igage)%elev - ob(iob)%elev) / 1000.
         else
           igage = wst(iwst)%wco%tgage
+          ob(iob)%tlaps = bsn_prm%tlaps * (tmp(igage)%elev - ob(iob)%elev) / 1000.
+          ob(iob)%tlaps = bsn_prm%tlaps * (tmp(igage)%elev - ob(iob)%elev) / 1000.
           ob(iob)%tlaps = bsn_prm%tlaps * (tmp(igage)%elev - ob(iob)%elev) / 1000.
         end if
       end do

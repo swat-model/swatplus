@@ -2,20 +2,20 @@
       
        use input_file_module
        use aquifer_module
-       use basin_module !rtb gwflow
+       use gwflow_module !rtb gwflow
        use maximum_data_module
        
        implicit none
       
-       character (len=500) :: header = ""
-       character (len=80) :: titldum = ""
-       integer :: eof = 0         !                |end of file
-       integer :: i = 0           !none            |counter
-       integer :: imax = 0        !                |maximum count
-       integer :: msh_aqp = 0     !none            |counter
+       character (len=500) :: header
+       character (len=80) :: titldum
+       integer :: eof             !                |end of file
+       integer :: i               !none            |counter
+       integer :: imax            !                |maximum count
+       integer :: msh_aqp         !none            |counter
        logical :: i_exist         !                |check to determine if file exists
-       integer :: ish_aqp = 0     !none            |counter  
-       integer :: k = 0           !                |index
+       integer :: ish_aqp         !none            |counter  
+       integer :: k               !                |index
        
        msh_aqp = 0
        eof = 0
@@ -59,7 +59,7 @@
           close (107)
           exit
           
-          bsn_cc%gwflow = 0 ! rtb set gwflow module flag to 0
+          gwflow_flag = 0 ! rtbset gwflow module flag to 0
        enddo
        endif
           

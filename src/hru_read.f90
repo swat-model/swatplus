@@ -4,6 +4,7 @@
       use reservoir_data_module
       use landuse_data_module
       use hydrology_data_module
+      use hydrograph_module, only : sp_ob
       use topography_data_module
       use soil_data_module
       use input_file_module
@@ -12,24 +13,24 @@
       
       implicit none
       
-      external :: allocate_parms
-      
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      integer :: eof = 0              !           |end of file
-      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      character (len=16) :: namedum   !           |
+      integer :: eof                  !           |end of file
+      integer :: imax                 !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i = 0                !           |
+      integer :: i                    !           |
       integer :: max                  !           |
-      integer :: k = 0                !           |
-      integer :: ilum = 0             !none       |counter
-      integer :: ith = 0              !none       |counter 
-      integer :: ithyd = 0            !none       |counter
-      integer :: isol = 0             !none       |counter
-      integer :: isno = 0             !none       |counter
-      integer :: ifld = 0             !none       |counter
-      integer :: isp_ini = 0          !none       |counter
-      integer :: ics = 0              !none       |counter
+      integer :: k                    !           |
+      integer :: ilum                 !none       |counter
+      integer :: ith                  !none       |counter 
+      integer :: ithyd                !none       |counter
+      integer :: isol                 !none       |counter
+      integer :: isolt                !none       |counter
+      integer :: isno                 !none       |counter
+      integer :: ifld                 !none       |counter
+      integer :: isp_ini              !none       |counter
+      integer :: ics                  !none       |counter
       
       eof = 0
       imax = 0
@@ -60,7 +61,7 @@
         read (113,*,iostat=eof) header
         if (eof < 0) exit
 
-      do ihru = 1, imax
+      do ihru = 1, sp_ob%hru
         read (113,*,iostat=eof) i
         if (eof < 0) exit
         backspace (113)
@@ -106,7 +107,7 @@
               end do
               ! initial heavy metals
               do ics = 1, db_mx%hmet_ini
-                if (sol_plt_ini(isp_ini)%hmetc == hmet_soil_ini(ics)%name) then
+                if (sol_plt_ini(isp_ini)%hmetc == hmet_water_ini(ics)%name) then
                   sol_plt_ini(isp_ini)%hmet = ics
                   exit
                 end if
@@ -115,13 +116,6 @@
               do ics = 1, db_mx%salt_ini
                 if (sol_plt_ini(isp_ini)%saltc == salt_soil_ini(ics)%name) then
                   sol_plt_ini(isp_ini)%salt = ics
-                  exit
-                end if
-              end do
-              ! initial constituents
-              do ics = 1, db_mx%cs_ini
-                if (sol_plt_ini(isp_ini)%csc == cs_soil_ini(ics)%name) then
-                  sol_plt_ini(isp_ini)%cs = ics
                   exit
                 end if
               end do

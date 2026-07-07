@@ -7,25 +7,19 @@
       use hydrograph_module, only : ru_d, ru_m, ru_y, ru_a, sp_ob
       use maximum_data_module
       use topography_data_module
-      use constituent_mass_module
-      use salt_module !rtb salt
-      use cs_module !rtb cs
       
       implicit none
       
       ! read subbasin parameters (ie drainage area and topographic inputs)
-      character (len=80) :: titldum = ""!           |title of file
-      character (len=80) :: header = "" !           |header of file
-      integer :: eof = 0              !           |end of file
-      integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
+      character (len=80) :: titldum   !           |title of file
+      character (len=80) :: header    !           |header of file
+      integer :: eof                  !           |end of file
+      integer :: imax                 !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-      integer :: i = 0                !           |
+      integer :: i                    !           |
       integer :: max                  !           |
-      integer :: k = 0                !           |
-      integer :: ith = 0              !none       |counter
-      integer :: isalt = 0            !none       |salt ion counter (rtb salt)
-      integer :: ics = 0              !none       |constituent counter (rtb cs)
-      integer :: ihyd = 0             !none       |hydrograph counter
+      integer :: k                    !           |
+      integer :: ith                  !none       |counter
       
       mru_db = 0
       eof = 0
@@ -53,169 +47,10 @@
         allocate (ru_m(sp_ob%ru))
         allocate (ru_y(sp_ob%ru))
         allocate (ru_a(sp_ob%ru))
-        allocate (ru_tc(0:sp_ob%ru), source = 0.)
-        allocate (ru_n(0:sp_ob%ru), source = 0.)
-        allocate (itsb(sp_ob%ru), source = 0)
+        allocate (ru_tc(0:sp_ob%ru))
+        allocate (ru_n(0:sp_ob%ru))
+        allocate (itsb(sp_ob%ru))
 
-        !rtb salt
-        if (cs_db%num_salts > 0) then
-          allocate (rusaltb_d(sp_ob%ru))
-          allocate (rusaltb_m(sp_ob%ru))
-          allocate (rusaltb_y(sp_ob%ru))
-          allocate (rusaltb_a(sp_ob%ru))
-          allocate (ru_hru_saltb_d(sp_ob%ru))
-          allocate (ru_hru_saltb_m(sp_ob%ru))
-          allocate (ru_hru_saltb_y(sp_ob%ru))
-          allocate (ru_hru_saltb_a(sp_ob%ru))
-          do iru=1,sp_ob%ru
-            !routing unit loadings
-            allocate (rusaltb_d(iru)%hd(5))
-            allocate (rusaltb_m(iru)%hd(5))
-            allocate (rusaltb_y(iru)%hd(5))
-            allocate (rusaltb_a(iru)%hd(5))
-            do ihyd=1,5
-              allocate (rusaltb_d(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
-              allocate (rusaltb_m(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
-              allocate (rusaltb_y(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
-              allocate (rusaltb_a(iru)%hd(ihyd)%salt(cs_db%num_salts), source = 0.)
-              rusaltb_d(iru)%hd(ihyd)%salt = 0.
-              rusaltb_m(iru)%hd(ihyd)%salt = 0.
-              rusaltb_y(iru)%hd(ihyd)%salt = 0.
-              rusaltb_a(iru)%hd(ihyd)%salt = 0.
-            enddo
-            !routing unit - other salt sources and sinks
-            allocate (ru_hru_saltb_d(iru)%salt(cs_db%num_salts))
-            allocate (ru_hru_saltb_m(iru)%salt(cs_db%num_salts))
-            allocate (ru_hru_saltb_y(iru)%salt(cs_db%num_salts))
-            allocate (ru_hru_saltb_a(iru)%salt(cs_db%num_salts))
-            do isalt=1,cs_db%num_salts
-              ru_hru_saltb_d(iru)%salt(isalt)%wtsp = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%irsw = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%irgw = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%irwo = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%rain = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%dryd = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%road = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%fert = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%amnd = 0.
-              ru_hru_saltb_d(iru)%salt(isalt)%uptk = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%wtsp = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%irsw = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%irgw = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%irwo = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%rain = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%dryd = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%road = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%fert = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%amnd = 0.
-              ru_hru_saltb_m(iru)%salt(isalt)%uptk = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%wtsp = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%irsw = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%irgw = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%irwo = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%rain = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%dryd = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%road = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%fert = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%amnd = 0.
-              ru_hru_saltb_y(iru)%salt(isalt)%uptk = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%wtsp = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%irsw = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%irgw = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%irwo = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%rain = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%dryd = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%road = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%fert = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%amnd = 0.
-              ru_hru_saltb_a(iru)%salt(isalt)%uptk = 0.
-            enddo
-            ru_hru_saltb_m(iru)%salt(1)%diss = 0.
-            ru_hru_saltb_y(iru)%salt(1)%diss = 0.
-            ru_hru_saltb_a(iru)%salt(1)%diss = 0.
-          enddo  
-        endif !rtb salt
-        
-        !rtb cs
-        if (cs_db%num_cs > 0) then
-          allocate (rucsb_d(sp_ob%ru))
-          allocate (rucsb_m(sp_ob%ru))
-          allocate (rucsb_y(sp_ob%ru))
-          allocate (rucsb_a(sp_ob%ru))
-          allocate (ru_hru_csb_d(sp_ob%ru))
-          allocate (ru_hru_csb_m(sp_ob%ru))
-          allocate (ru_hru_csb_y(sp_ob%ru))
-          allocate (ru_hru_csb_a(sp_ob%ru))
-          do iru=1,sp_ob%ru
-            !routing unit loadings
-            allocate (rucsb_d(iru)%hd(5))
-            allocate (rucsb_m(iru)%hd(5))
-            allocate (rucsb_y(iru)%hd(5))
-            allocate (rucsb_a(iru)%hd(5))
-            do ihyd=1,5
-              allocate (rucsb_d(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
-              allocate (rucsb_m(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
-              allocate (rucsb_y(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
-              allocate (rucsb_a(iru)%hd(ihyd)%cs(cs_db%num_cs), source = 0.)
-              rucsb_d(iru)%hd(ihyd)%cs = 0.
-              rucsb_m(iru)%hd(ihyd)%cs = 0.
-              rucsb_y(iru)%hd(ihyd)%cs = 0.
-              rucsb_a(iru)%hd(ihyd)%cs = 0.
-            enddo
-            !routing unit - other constituent sources and sinks
-            allocate (ru_hru_csb_d(iru)%cs(cs_db%num_cs))
-            allocate (ru_hru_csb_m(iru)%cs(cs_db%num_cs))
-            allocate (ru_hru_csb_y(iru)%cs(cs_db%num_cs))
-            allocate (ru_hru_csb_a(iru)%cs(cs_db%num_cs))
-            do ics=1,cs_db%num_cs
-              ru_hru_csb_d(iru)%cs(ics)%sedm = 0.
-              ru_hru_csb_d(iru)%cs(ics)%wtsp = 0.
-              ru_hru_csb_d(iru)%cs(ics)%irsw = 0.
-              ru_hru_csb_d(iru)%cs(ics)%irgw = 0.
-              ru_hru_csb_d(iru)%cs(ics)%irwo = 0.
-              ru_hru_csb_d(iru)%cs(ics)%rain = 0.
-              ru_hru_csb_d(iru)%cs(ics)%dryd = 0.
-              ru_hru_csb_d(iru)%cs(ics)%fert = 0.
-              ru_hru_csb_d(iru)%cs(ics)%uptk = 0.
-              ru_hru_csb_d(iru)%cs(ics)%rctn = 0.
-              ru_hru_csb_d(iru)%cs(ics)%sorb = 0.
-              ru_hru_csb_m(iru)%cs(ics)%sedm = 0.
-              ru_hru_csb_m(iru)%cs(ics)%wtsp = 0.
-              ru_hru_csb_m(iru)%cs(ics)%irsw = 0.
-              ru_hru_csb_m(iru)%cs(ics)%irgw = 0.
-              ru_hru_csb_m(iru)%cs(ics)%irwo = 0.
-              ru_hru_csb_m(iru)%cs(ics)%rain = 0.
-              ru_hru_csb_m(iru)%cs(ics)%dryd = 0.
-              ru_hru_csb_m(iru)%cs(ics)%fert = 0.
-              ru_hru_csb_m(iru)%cs(ics)%uptk = 0.
-              ru_hru_csb_m(iru)%cs(ics)%rctn = 0.
-              ru_hru_csb_m(iru)%cs(ics)%sorb = 0.
-              ru_hru_csb_y(iru)%cs(ics)%sedm = 0.
-              ru_hru_csb_y(iru)%cs(ics)%wtsp = 0.
-              ru_hru_csb_y(iru)%cs(ics)%irsw = 0.
-              ru_hru_csb_y(iru)%cs(ics)%irgw = 0.
-              ru_hru_csb_y(iru)%cs(ics)%irwo = 0.
-              ru_hru_csb_y(iru)%cs(ics)%rain = 0.
-              ru_hru_csb_y(iru)%cs(ics)%dryd = 0.
-              ru_hru_csb_y(iru)%cs(ics)%fert = 0.
-              ru_hru_csb_y(iru)%cs(ics)%uptk = 0.
-              ru_hru_csb_y(iru)%cs(ics)%rctn = 0.
-              ru_hru_csb_y(iru)%cs(ics)%sorb = 0.
-              ru_hru_csb_a(iru)%cs(ics)%sedm = 0.
-              ru_hru_csb_a(iru)%cs(ics)%wtsp = 0.
-              ru_hru_csb_a(iru)%cs(ics)%irsw = 0.
-              ru_hru_csb_a(iru)%cs(ics)%irgw = 0.
-              ru_hru_csb_a(iru)%cs(ics)%irwo = 0.
-              ru_hru_csb_a(iru)%cs(ics)%rain = 0.
-              ru_hru_csb_a(iru)%cs(ics)%dryd = 0.
-              ru_hru_csb_a(iru)%cs(ics)%fert = 0.
-              ru_hru_csb_a(iru)%cs(ics)%uptk = 0.
-              ru_hru_csb_a(iru)%cs(ics)%rctn = 0.
-              ru_hru_csb_a(iru)%cs(ics)%sorb = 0.
-            enddo
-          enddo  
-        endif !rtb cs
-        
         rewind (107)
         read (107,*,iostat=eof) titldum
         if (eof < 0) exit

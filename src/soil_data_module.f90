@@ -3,16 +3,16 @@
       implicit none
       
       type soil_lte_database
-       character(len=16) :: texture = ""
-       real :: awc = 0.
-       real :: por = 0.
-       real :: scon = 0.
+       character(len=16) :: texture
+       real :: awc
+       real :: por
+       real :: scon
       end type soil_lte_database
       type (soil_lte_database), dimension(:), allocatable :: soil_lte
     
        type soiltest_db
         character(len=16) :: name = "default"
-        real :: exp_co = .001         !        |depth coefficient to adjust concentrations for depth
+        real :: exp_co = .001         !	       |depth coefficient to adjust concentrations for depth
         real :: lab_p = 5.            !ppm     |labile P in soil surface
         real :: nitrate = 7.          !ppm     |nitrate N in soil surface
         real :: fr_hum_act = .02      !0-1     |fraction of soil humus that is active
@@ -29,7 +29,7 @@
 !!!!!! OLD type 
       type soiltest_db_old
         character(len=16) :: name = "default"
-        real :: exp_co = .001         !        |depth coefficient to adjust concentrations for depth
+        real :: exp_co = .001         !	       |depth coefficient to adjust concentrations for depth
         real :: totaln = 13.          !ppm     |total N in soil
         real :: inorgn = 6.           !ppm     |inorganic N in soil surface
         real :: orgn = 3.             !ppm     |organic N in soil surface
@@ -62,7 +62,7 @@
       
       type soil_profile_db
         character(len=20) :: snam = " "       !! NA            |soil series name 
-        integer :: nly  = 1                   !! none          |number of soil layers  
+        integer ::  nly  = 1                  !! none          |number of soil layers  
         character(len=16) :: hydgrp = "A"     !! NA            |hydrologic soil group
         real :: zmx = 1500.                   !! mm            |maximum rooting depth
         real :: anion_excl = 0.5              !! none          |fraction of porosity from which anions are excluded

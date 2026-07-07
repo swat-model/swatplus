@@ -30,9 +30,9 @@
       implicit none
 
       integer :: isol         !              |
-      real :: sa = 0.         !ha            |surface area of impounded water body
-      real :: cl = 0.         !              |
-      real :: si = 0.         !m/n           |slope of main channel
+      real :: sa              !ha            |surface area of impounded water body
+      real :: cl              !              |
+      real :: si              !m/n           |slope of main channel
 
       sa = soil(isol)%phys(1)%sand / 100.
       cl = soil(isol)%phys(1)%clay  / 100.
@@ -54,13 +54,13 @@
           soil(isol)%det_sil - soil(isol)%det_cla - soil(isol)%det_sag  !! Large Aggregate fraction
 
       !! Error check. May happen for soils with more sand
-      !! Soil not typical of mid-western USA The fraction won't add upto 1.0
-      if (soil(isol)%det_lag < 0.) then
-        soil(isol)%det_san = soil(isol)%det_san/(1 - soil(isol)%det_lag) 
-        soil(isol)%det_sil = soil(isol)%det_sil/(1 - soil(isol)%det_lag) 
-        soil(isol)%det_cla = soil(isol)%det_cla/(1 - soil(isol)%det_lag) 
-        soil(isol)%det_sag = soil(isol)%det_sag/(1 - soil(isol)%det_lag) 
-        soil(isol)%det_lag = 0.
+      !! Soil not typical of mid-western USA The fraction wont add upto 1.0
+	  if (soil(isol)%det_lag < 0.) then
+	    soil(isol)%det_san = soil(isol)%det_san/(1 - soil(isol)%det_lag) 
+	    soil(isol)%det_sil = soil(isol)%det_sil/(1 - soil(isol)%det_lag) 
+	    soil(isol)%det_cla = soil(isol)%det_cla/(1 - soil(isol)%det_lag) 
+	    soil(isol)%det_sag = soil(isol)%det_sag/(1 - soil(isol)%det_lag) 
+	    soil(isol)%det_lag = 0.
       end if
 
       return
