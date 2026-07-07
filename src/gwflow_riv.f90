@@ -47,7 +47,7 @@
       
       !write out gwflow.con input file (connection file)
       write(in_con,*) 'gwflow.con: river cell spatial connections'
-      col_head_con = (/"NUMB","NAME","GISID","AREA","LAT","LONG","ELEV","CELL","WST","CONST","OVER","RULE","SRC_TOT ","OBTYPE_OUT1 ","OBTYPNO_OUT1 ","HTYPE_OUT1 ","FRAC_OUT1 "/)
+      col_head_con = (/ character(len=20) :: "NUMB","NAME","GISID","AREA","LAT","LONG","ELEV","CELL","WST","CONST","OVER","RULE","SRC_TOT ","OBTYPE_OUT1 ","OBTYPNO_OUT1 ","HTYPE_OUT1 ","FRAC_OUT1 "/)
       write(in_con,103) (col_head_con(j),j=1,17)
       dum1 = 1
       dum2 = 0
