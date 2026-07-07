@@ -632,7 +632,7 @@
         hpw_d(j)%nplnt = nplnt(j)
         hpw_d(j)%percn = percn(j)
         !rtb gwflow: store nitrate leaching concentration for gwflow module
-        if(gwflow_flag .and. gw_transport_flag) then
+        if (gwflow_flag == 1 .and. gw_transport_flag == 1) then
           gwflow_percn(j) = percn(j)
         endif
         hpw_d(j)%pplnt = pplnt(j)
