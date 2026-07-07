@@ -13,7 +13,7 @@
       use hydrograph_module
       use constituent_mass_module
 
-      nteger :: mhru
+      integer :: mhru
       integer :: mch
       integer :: mpc
       
