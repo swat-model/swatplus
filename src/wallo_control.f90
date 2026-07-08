@@ -18,6 +18,13 @@
       real :: dmd_m3                        !m3     |demand
       real :: irr_mm                        !mm     |irrigation applied
 
+      !! no water allocation objects defined
+      if (.not. allocated(wallo)) return
+      if (size(wallo) == 0) return
+
+      !! invalid water allocation object number
+      if (iwallo <= 0 .or. iwallo > size(wallo)) return
+
       do idmd = 1, wallo(iwallo)%dmd_obs
                
         !! zero demand, withdrawal, and unmet for each source
