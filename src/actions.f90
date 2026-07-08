@@ -532,12 +532,16 @@
                   bsn_crop_yld(iplt_bsn)%yield = bsn_crop_yld(iplt_bsn)%yield + pl_yield%m * hru(j)%area_ha / 1000.
                   !! sum regional crop yields for soft calibration
                   ireg = hru(j)%crop_reg
-                  do ilum = 1, plcal(ireg)%lum_num
-                    if (plcal(ireg)%lum(ilum)%meas%name == d_tbl%act(iac)%option) then
-                      plcal(ireg)%lum(ilum)%ha = plcal(ireg)%lum(ilum)%ha + hru(j)%area_ha
-                      plcal(ireg)%lum(ilum)%sim%yield = plcal(ireg)%lum(ilum)%sim%yield + pl_yield%m * hru(j)%area_ha / 1000.
+                  if (ireg > 0 .and. ireg <= size(plcal)) then
+                    if (plcal(ireg)%lum_num > 0) then
+                      do ilum = 1, plcal(ireg)%lum_num
+                        if (plcal(ireg)%lum(ilum)%meas%name == d_tbl%act(iac)%option) then
+                          plcal(ireg)%lum(ilum)%ha = plcal(ireg)%lum(ilum)%ha + hru(j)%area_ha
+                          plcal(ireg)%lum(ilum)%sim%yield = plcal(ireg)%lum(ilum)%sim%yield + pl_yield%m * hru(j)%area_ha / 1000.
+                        end if
+                      end do
                     end if
-                  end do
+                  end if
             
                   idp = pcom(j)%plcur(ipl)%idplt
                   if (pco%mgtout == "y") then
