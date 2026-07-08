@@ -12,6 +12,13 @@
       integer :: icom                !none       |plant community counter 
       integer :: idp                 !none       |plant database number - plants.plt
 
+      !! no transplant management operations defined
+      if (.not. allocated(transpl)) return
+      if (size(transpl) == 0) return
+
+      !! invalid transplant operation number
+      if (itrans <= 0 .or. itrans > size(transpl)) return
+
       j = ihru
       icom = hru(j)%plant_cov
       idp = pcom(j)%plcur(ipl)%idplt
