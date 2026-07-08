@@ -84,18 +84,17 @@ elseif(WIN32)
         set(FFC             "ifx")
 
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            set(fdialect "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow -ffree-line-length-none -fbacktrace -finit-local-zero")
-            set(fdebug   "-Wall")
-        else()
-            set(fdialect "-cpp -ffree-line-length-none -fbacktrace")
-            set(fdebug   "")
-        endif()
-
-        set(FFC      "gnu")
-        set(frelease "-O")
-        link_libraries("-static")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(fdialect "-cpp -ffree-line-length-none -fbacktrace -g -O0")
+        set(fdebug   "-Wall")
+    else()
+        set(fdialect "-cpp -ffree-line-length-none -fbacktrace")
+        set(fdebug   "")
     endif()
+
+    set(FFC      "gnu")
+    set(frelease "-O")
+    link_libraries("-static")
 endif()
 
 # Get linker properties for later output.
