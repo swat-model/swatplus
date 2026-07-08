@@ -95,7 +95,7 @@ jobs:
           cmake -B build -G "${gen} Makefiles" \
               -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
               -D TAG=$RELEASE_VERSION \
-              -D CMAKE_BUILD_TYPE=Debug
+              -D CMAKE_BUILD_TYPE=Release
 
           # build
           cmake --build build --parallel 4
