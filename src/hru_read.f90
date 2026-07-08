@@ -9,11 +9,19 @@
       use input_file_module
       use hru_module, only : hru_db, ihru, sol_plt_ini, snodb
       use constituent_mass_module
-      
+      use name_index_module
+
       implicit none
-      
+
       external :: allocate_parms
-      
+
+      ! name->index hash maps so per-HRU database lookups are O(1) instead of an
+      ! O(N_hru x N_db) linear scan (the per-HRU topography/hydrology matching on
+      ! large models was a top for_cpstr_eq startup hotspot).
+      type (name_index) :: ix_topo, ix_hyd, ix_soil, ix_field
+      character (len=40), allocatable :: nm(:)
+      integer :: jj = 0               !none       |index-build counter
+
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
       integer :: eof = 0              !           |end of file
@@ -53,6 +61,29 @@
           end do
           
         allocate (hru_db(0:imax))
+
+        ! build name->index maps once for the databases with many entries
+        ! (topography and hydrology are per-HRU and dominate the O(N^2) scan)
+        if (db_mx%topo > 0) then
+          allocate (nm(db_mx%topo))
+          do jj = 1, db_mx%topo; nm(jj) = topo_db(jj)%name; end do
+          call nix_build (ix_topo, nm, db_mx%topo); deallocate (nm)
+        end if
+        if (db_mx%hyd > 0) then
+          allocate (nm(db_mx%hyd))
+          do jj = 1, db_mx%hyd; nm(jj) = hyd_db(jj)%name; end do
+          call nix_build (ix_hyd, nm, db_mx%hyd); deallocate (nm)
+        end if
+        if (db_mx%soil > 0) then
+          allocate (nm(db_mx%soil))
+          do jj = 1, db_mx%soil; nm(jj) = soildb(jj)%s%snam; end do
+          call nix_build (ix_soil, nm, db_mx%soil); deallocate (nm)
+        end if
+        if (db_mx%field > 0) then
+          allocate (nm(db_mx%field))
+          do jj = 1, db_mx%field; nm(jj) = field_db(jj)%name; end do
+          call nix_build (ix_field, nm, db_mx%field); deallocate (nm)
+        end if
 
         rewind (113)
         read (113,*,iostat=eof) titldum
@@ -129,31 +160,19 @@
             exit
             end if
           end do
-          do ith = 1, db_mx%topo
-            if (hru_db(i)%dbsc%topo == topo_db(ith)%name) then
-               hru_db(i)%dbs%topo = ith
-            exit
-            end if
-          end do
-          
+          ith = nix_get (ix_topo, hru_db(i)%dbsc%topo)
+          if (ith > 0) hru_db(i)%dbs%topo = ith
+
          if (hru_db(i)%dbs%topo == 0) write (9001,*) hru_db(i)%dbsc%topo, "not found (topography.hyd)"
-        
-         do ithyd = 1, db_mx%hyd
-            if (hru_db(i)%dbsc%hyd == hyd_db(ithyd)%name) then
-               hru_db(i)%dbs%hyd = ithyd
-            exit
-            end if
-         end do
-         
+
+         ithyd = nix_get (ix_hyd, hru_db(i)%dbsc%hyd)
+         if (ithyd > 0) hru_db(i)%dbs%hyd = ithyd
+
          if (hru_db(i)%dbs%hyd == 0) write (9001,*) hru_db(i)%dbsc%hyd, "not found (hydrograph.hyd)"
-         
-         do isol = 1, db_mx%soil
-            if (hru_db(i)%dbsc%soil == soildb(isol)%s%snam) then
-               hru_db(i)%dbs%soil = isol
-            exit
-            end if
-         end do
-         
+
+         isol = nix_get (ix_soil, hru_db(i)%dbsc%soil)
+         if (isol > 0) hru_db(i)%dbs%soil = isol
+
          if (hru_db(i)%dbs%soil == 0) write (9001,*) hru_db(i)%dbsc%soil, "not found (soils.sol)"
 
          do isno = 1, db_mx%sno
@@ -165,13 +184,9 @@
          
          if (hru_db(i)%dbs%snow == 0 .and. hru_db(i)%dbsc%snow /= 'null') write (9001,*) hru_db(i)%dbsc%snow, "not found (snow.sno)"
          
-         do ifld = 1, db_mx%field
-             if (hru_db(i)%dbsc%field == field_db(ifld)%name) then
-               hru_db(i)%dbs%field = ifld
-            exit
-            end if
-         end do
-         
+         ifld = nix_get (ix_field, hru_db(i)%dbsc%field)
+         if (ifld > 0) hru_db(i)%dbs%field = ifld
+
         if (hru_db(i)%dbs%field == 0 .and. hru_db(i)%dbsc%field /= 'null') write (9001,*) &
           hru_db(i)%dbsc%field, "not found (field.fld)"
 
