@@ -331,7 +331,7 @@ fertilize                  hru         0    ammonia_spring           anh_nh3    
 fertilize                  hru         0        side_dress              urea      50.00000       2.00000         broadcast  n   y   n   
 fertilize                  hru         0        side_dress            elem_p      30.00000       1.00000         broadcast  n   n   y   
 
-name                     conds      alts      acts       !apply elemental n and p when plant stress < 0.9 and plant has not reached maturity; generic case - ensures adequate fertilizer and minimun nutrient stress
+name                     conds      alts      acts       !apply elemental n and p when plant stress < 0.9 and plant has not reached maturity; generic case - ensures adequate fertilizer and minimum nutrient stress
 fert_stress              4         2         2  
 var                        obj   obj_num           lim_var            lim_op     lim_const      alt1      alt2  
 n_stress                   hru         0              null                 -       0.90000         <         -       !nitrogen stress < this value

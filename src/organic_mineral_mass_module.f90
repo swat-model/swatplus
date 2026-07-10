@@ -75,7 +75,7 @@
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
         real :: salt = 0.                                           !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
-        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile wich does not include the surface layer
+        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile which does not include the surface layer
         type (organic_mass) :: surf_org                             !       |soil surface layer soil soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon

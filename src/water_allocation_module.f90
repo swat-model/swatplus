@@ -80,9 +80,9 @@
       !! water treatment and use data
       type water_treatment_use_data
         character (len=25) :: name = ""         !name of the water treatment plant
-        !character (len=25) :: init = ""         !name of the intitial concentrations in wtp storage
+        !character (len=25) :: init = ""         !name of the initial concentrations in wtp storage
         real :: stor_mx                   !m3   !maximum storage in plant
-        real :: lag_days                  !days !treatement time - lag outflow
+        real :: lag_days                  !days !treatment time - lag outflow
         real :: loss_fr                         !water loss during treament
         character (len=25) :: org_min = ""      !sediment, carbon, and nutrients
         character (len=25) :: pests = ""        !pesticides - ppm
@@ -104,7 +104,7 @@
       type outside_basin_source
         character (len=25) :: name = ""         !name of outside basin source
         real :: stor_mx                   !m3   !maximum storage in plant
-        real :: lag_days                  !days !treatement time - lag outflow
+        real :: lag_days                  !days !treatment time - lag outflow
         real :: loss_fr                         !water loss during treament
         integer :: iorg_min = 0                 !sediment, carbon, and nutrients - pointer to om_use.wal
         integer :: ipests = 0                   !pesticides
@@ -129,7 +129,7 @@
       !! water_transfer_data
       type water_transfer_data
         character (len=25) :: name = ""         !name of the water tower or pipe
-        character (len=25) :: init = ""         !name of the intitial concentrations
+        character (len=25) :: init = ""         !name of the initial concentrations
         real :: stor_mx                   !m3   !maximum storage in plant
         real :: ddown_days                !days !days to drawdown the storage to zero
         real :: loss_fr                         !water loss during treament
@@ -143,7 +143,7 @@
       type water_canal_data
         character (len=25) :: name = ""         !name of the canal
         character (len=25) :: w_sta = ""        !name of nearby weather station
-        character (len=25) :: init = ""         !name of the intitial concentrations in canal
+        character (len=25) :: init = ""         !name of the initial concentrations in canal
         character (len=25) :: dtbl = ""         !name of decision table to determine canal outflow
         real :: ddown_days                !days !days to drawdown the storage to zero
         real :: w                         !m    !top width of canal

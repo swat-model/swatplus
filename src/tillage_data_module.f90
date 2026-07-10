@@ -4,7 +4,7 @@
            
       integer :: bmix_idtill = 0    !!              |none          |the tilldb index of the biomix tillage. 
       integer :: till_eff_days = 30  !!              |none          |length of days a tillage operation will have an effect
-      real    :: bmix_eff = 0.      !!              |none          |biological mixing efficieny
+      real    :: bmix_eff = 0.      !!              |none          |biological mixing efficiency
       real    :: bmix_depth = 0.    !!              |mm            |maximum potential biological mixing depth
       real    :: dtill      = 0.    !!              |mm            |actual biological or tillage mixing  mixing depth
       real    :: bmix_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for biomixing
