@@ -17,7 +17,7 @@
       
       type swatdeg_hydsed_data
         character(len=25) :: name = ""
-        character(len=16) :: order = ""
+        integer :: order = 0
         real :: chw = 0.            !m          |channel width
         real :: chd = 0.            !m          |channel depth
         real :: chs = 0.            !m/m        |channel slope
@@ -97,11 +97,18 @@
       type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
 
       type channel_morphology_output
+        integer :: num              !           |number of channels in each order
         real :: w_yr = 0.           !ratio      |bank cutting - widths per year 
         real :: d_yr = 0.           !ratio      |bed down cutting - depths per year
         real :: fp_mm = 0.          !mm/yr      |flood plain deposition - uniform across the flood plain
+        real :: ebank_m = 0.        !tons       |bank cutting
+        real :: ebtm_m = 0.         !m          |bed down cutting
+        real :: ebank_t = 0.        !tons       |bank cutting  
+        real :: ebtm_t = 0.         !tons       |bed down cutting
+        real :: fp_t = 0.           !mm/yr      |flood plain deposition
       end type channel_morphology_output
       type (channel_morphology_output), dimension (:), allocatable :: ch_morph
+      type (channel_morphology_output), dimension (12) :: ch_morph_ord
       
       type gully_data
         character(len=16) :: name = ""
@@ -163,7 +170,7 @@
         integer :: aqu_link = 0             !aquifer the channel is linked to
         integer :: aqu_link_ch = 0          !sequential channel number in the aquifer
         character(len=25) :: region = ""
-        character(len=25) :: order = ""
+        integer :: order = 1
         real :: chw = 3.        !m          |channel width
         real :: chd = .5        !m          |channel depth
         real :: chs = .01       !m/m        |channel slope

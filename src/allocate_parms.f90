@@ -15,6 +15,8 @@
 
       implicit none
       
+      external :: zero0, zero1, zero2, zeroini
+      
       integer :: mhru = 0
       integer :: mch = 0
       integer :: mpc = 0
@@ -42,7 +44,6 @@
 
 !!    arrays for plant communities
       allocate (cvm_com(mhru), source = 0.)
-      allocate (rsdco_plcom(mhru), source = 0.)
       allocate (percn(mhru), source = 0.)
 
 !! septic changes added 1/28/09 gsm
@@ -59,7 +60,6 @@
       
       allocate (hhqday(mhru,time%step), source = 0.)
       
- !!  added per JGA for Srini by gsm 9/8/2011
  !! arrays for management output (output.mgt)  
       allocate (sol_sumno3(mhru), source = 0.)
       allocate (sol_sumsolp(mhru), source = 0.)
@@ -221,4 +221,4 @@
 
 !!    zero reservoir module
       return
-      end
+      end subroutine allocate_parms

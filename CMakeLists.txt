@@ -5,7 +5,13 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}" OR
    message(FATAL_ERROR "'in-source' builds not permitted, e.g. use 'cmake -B build' instead.")
 endif()
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22)
+
+# Query the host system information
+cmake_host_system_information(RESULT os_id QUERY DISTRIB_ID)
+cmake_host_system_information(RESULT os_version QUERY DISTRIB_RELEASE)
+cmake_host_system_information(RESULT os_like QUERY DISTRIB_ID_LIKE)
+cmake_host_system_information(RESULT pretty_name QUERY DISTRIB_PRETTY_NAME)
 
 project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
@@ -30,46 +36,71 @@ endif()
 
 if (UNIX)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
-        set(fdialect        "-free -fpe0 -traceback -diag-disable=10448")
+        set(fdialect        "-fpp -free -fpe0 -traceback -diag-disable=10448")
         set(fdebug          "-warn all")
         set(frelease        "-O")
         set(FFC             "ifo")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
-        set(fdialect        "-free -fpe0 -traceback")
-        set(fdebug          "-warn all -O0")
+        set(fdialect        "-fpp -free -fpe0 -traceback")
+        set(fdebug          "-warn all -O0 -check bounds")
         set(frelease        "-O")
         set(FFC             "ifx")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect        "-fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
-        set(fdebug          "-Wall")
+        # -fcheck=all / -ffpe-trap / -fsignaling-nans are DEBUG diagnostics — they belong in
+        # fdebug, not fdialect (which is applied to every config, including Release). With them in
+        # Release the binary aborts (EXC_BAD_INSTRUCTION/SIGILL) when optimized system math
+        # routines such as expf() internally raise benign FP flags. Keep only the dialect and the
+        # semantic/numeric flags (-finit-local-zero, -frounding-math, …) on by default.
+        set(fdialect        "-cpp -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math")
+        set(fdebug          "-Wall -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fsignaling-nans")
         set(frelease        "-O")
         set(FFC             "gnu")
+
         if(NOT APPLE)
-            link_libraries("-static")
+            # Check if the OS is not Arch Linux or is not based on Arch Linux and is not Fedpra based
+            # For non-Arch and non-FedoraLinux based systems using gfortran (GNU), set the link_library static flag to build a static executable.")
+            # For Arch Linux based and Fedora based systems using gfortran, omit the link_library static flagt to build a dynamic executable.")
+            if (NOT ("${os_id}" STREQUAL "Arch" OR
+                     "${os_like}" MATCHES ".*arch.*" OR
+                     "${os_id}" STREQUAL "fedora" ))
+                link_libraries("-static")
+            endif()
+        else()
+            # macOS cannot statically link libSystem (Apple ships no static libc), so a fully
+            # static binary like the Linux build isn't possible. Instead, statically link the
+            # gfortran/quadmath/gcc runtimes so the executable no longer depends on Homebrew's
+            # gcc dylibs (libgfortran.5.dylib, libquadmath.0.dylib); only /usr/lib/libSystem
+            # remains dynamic. This makes it portable across Macs without `brew install gcc`.
+            link_libraries("-static-libgfortran" "-static-libquadmath" "-static-libgcc")
         endif()
     endif()
+
 elseif(WIN32)
     if(CMAKE_Fortran_COMPILER_ID STREQUAL Intel)
-        set(fdialect        "/free /fpe0 /traceback /Qdiag-disable:all /Qdiag-disable:remarks")
-        set(fdebug          "/warn:all")
+        set(fdialect        "/fpp /free /fpe0 /traceback /Qdiag-disable:all /Qdiag-disable:remarks")
+        set(fdebug          "/warn:all /check:bounds")
         set(frelease        "/O")
         set(FFC             "ifo")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL IntelLLVM)
-        set(fdialect        "/free /fpe0 /traceback")
-        set(fdebug          "/warn:all")
+        set(fdialect        "/fpp /free /fpe0 /traceback")
+        set(fdebug          "/warn:all /check:bounds")
         set(frelease        "/O")
         set(FFC             "ifx")
-        link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect        "-fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
         set(fdebug          "-Wall ")
         set(FFC             "gnu")
         set(frelease        "-O")
+        link_libraries("-static")
     endif()
 endif()
+
+# Get linker properties for later output.
+get_property(CURRENT_LINK_LIBS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY LINK_LIBRARIES)
+
 
 string(TOLOWER ${CMAKE_HOST_SYSTEM_PROCESSOR} ARCH)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -138,7 +169,7 @@ install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION ${PROJECT_SOURCE
 
 #############################################################################
 # Testing
-find_package(Python3 REQUIRED)
+find_package(Python3 QUIET)
 
 set(spcheck "${PROJECT_SOURCE_DIR}/test/spcheck.py")
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
@@ -155,19 +186,24 @@ add_test(Ames_sub1   ${Python3_EXECUTABLE} ${spcheck} ctest ${exe_path} ${ref_di
 
 #############################################################################
 # Summary
-message( "-- Verbose Makefile   ${CMAKE_VERBOSE_MAKEFILE}")
-message( "-- Generator          ${CMAKE_GENERATOR_TOOLSET}")
-message( "-- VS Platform        ${CMAKE_VS_PLATFORM_TOOLSET}")
-message( "-- Build Type         ${CMAKE_BUILD_TYPE}")
-message( "-- Compiler           ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
-message( "-- FFLAGS            ${CMAKE_Fortran_FLAGS}")
-message( "--  RELEASE           ${CMAKE_Fortran_FLAGS_RELEASE}")
-message( "--  DEBUG             ${CMAKE_Fortran_FLAGS_DEBUG}")
-message( "-- PROJECT_DIR        ${PROJECT_SOURCE_DIR}")
-message( "-- BINARY_DIR         ${PROJECT_BINARY_DIR}")
-message( "-- Install Prefix     ${CMAKE_INSTALL_PREFIX}")
-message( "-- Executable         ${SWATPLUS_EXE}, rev/tag: ${SWAT_VERSION}")
-message( "-- FORD project       ${PROJECT_SOURCE_DIR}/ford.md")
-message( "-- Test Data Dir      ${ref_dir}")
-message( "--  Abs Error         ${aerr}")
-message( "--  Rel Error         ${rerr}")
+message( "-- Verbose Makefile      ${CMAKE_VERBOSE_MAKEFILE}")
+message( "-- Generator             ${CMAKE_GENERATOR_TOOLSET}")
+message( "-- VS Platform           ${CMAKE_VS_PLATFORM_TOOLSET}")
+message( "-- Detected OS ID:       ${os_id}")
+message( "-- Detected OS Version:  ${os_version}")
+message( "-- Detected OS Like:     ${os_like}")
+message( "-- Detected Pretty Name: ${pretty_name}")
+message( "-- Build Type            ${CMAKE_BUILD_TYPE}")
+message( "-- Compiler              ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
+message( "-- FFLAGS                ${CMAKE_Fortran_FLAGS}")
+message( "--  RELEASE              ${CMAKE_Fortran_FLAGS_RELEASE}")
+message( "--  DEBUG                ${CMAKE_Fortran_FLAGS_DEBUG}")
+message( "-- Link_libraries        ${CURRENT_LINK_LIBS}")
+message( "-- PROJECT_DIR           ${PROJECT_SOURCE_DIR}")
+message( "-- BINARY_DIR            ${PROJECT_BINARY_DIR}")
+message( "-- Install Prefix        ${CMAKE_INSTALL_PREFIX}")
+message( "-- Executable            ${SWATPLUS_EXE}, rev/tag: ${SWAT_VERSION}")
+message( "-- FORD project          ${PROJECT_SOURCE_DIR}/ford.md")
+message( "-- Test Data Dir         ${ref_dir}")
+message( "--  Abs Error            ${aerr}")
+message( "--  Rel Error            ${rerr}")

@@ -16,8 +16,9 @@
 
 !! basin
       type input_basin
-       character(len=25) :: codes_bas = "codes.bsn"
-       character(len=25) :: parms_bas = "parameters.bsn"
+       character(len=25) :: codes_bas       = "codes.bsn"
+       character(len=25) :: parms_bas       = "parameters.bsn"
+       character(len=25) :: carbon_bsn      = "carbon.bsn"
       end type input_basin
       type (input_basin) :: in_basin
               
@@ -276,7 +277,13 @@
         character(len=25) :: def_psc_reg = "rec_reg.def"
       end type input_regions
       type (input_regions) :: in_regs
-      
+
+      !! shade factor
+      type shade_factor
+          character(len=25) :: ssff_shf = "shade_factor.shf"
+      end type shade_factor
+      type (shade_factor) :: in_shf
+
       type input_path_pcp
         character(len=80) :: pcp = " "
       end type input_path_pcp

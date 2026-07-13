@@ -82,4 +82,4 @@
       regres = regres / 2.205      !! convert from lbs to kg
 
       return
-      end
+      end function regres

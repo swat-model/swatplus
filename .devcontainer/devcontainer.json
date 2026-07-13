@@ -1,0 +1,46 @@
+// .devcontainer/devcontainer.json
+{
+	"name": "Intel Fortran Dev Container",
+	// 1. Build our custom Dockerfile
+	"build": {
+	  "dockerfile": "Dockerfile"
+	},
+	// Copy the reference data into the working directories.
+    "postCreateCommand": "mkdir -p workdata/Ames_sub1 && cp -r refdata/Ames_sub1/* workdata/Ames_sub1",
+	"postCreateCommand": "mkdir -p workdata/my_data && cp -r refdata/Ames_sub1/* workdata/my_data",
+	// 2. VS Code customizations
+	"customizations": {
+	  "vscode": {
+
+		// 2B. VS Code settings for CMake + ifx
+		"settings": {
+          "extensions.verifySignature": false,
+		  "cmake.cmakePath": "/usr/bin/cmake",
+		  "cmake.configureSettings": {
+			// If you want to always use ifx in your CMake configs
+			"CMAKE_Fortran_COMPILER": "ifx"
+		  },
+		  "cmake.environment": {
+			// Additional environment variables for Fortran
+			"FC": "ifx",
+			// Not strictly needed if your Dockerfile sets PATH/LD_LIBRARY_PATH
+			"PATH": "/opt/intel/oneapi/compiler/2025.0/bin:${env:PATH}",
+			"LD_LIBRARY_PATH": "/opt/intel/oneapi/compiler/2025.0/lib:${env:LD_LIBRARY_PATH}"
+		  }
+		},
+		// 2A. Install relevant extensions automatically
+		"extensions": [
+		  "ms-vscode.cmake-tools",
+		  "fortran-lang.linter-gfortran",
+		  "ms-vscode.cpptools",
+		  "mhutchie.git-graph",
+		  "GitHub.remotehub",
+		  "ms-toolsai.jupyter",
+		  "ms-toolsai.jupyter-keymap",
+		  "ms-toolsai.jupyter-renderers",
+		  "ms-toolsai.jupyter-vscode-jupyter-cell-tags",
+		  "ms-python.python"
+		]
+	  }
+	}
+  }

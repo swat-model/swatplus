@@ -29,6 +29,8 @@
       use time_module
 
       implicit none
+      
+      external :: activity_coefficient, CaCO3, CaSO4, cationexchange, Ionic_strength, MgCO3, MgSO4, NaCl
 
       integer :: j = 0
       integer :: jj = 0
@@ -71,6 +73,7 @@
           K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,&                 
           error1ST,error2ND,error3RD,errorTotal
       
+      SkipedIEX = 0.
       
       !hru ID
       j = ihru
@@ -368,7 +371,7 @@
 !*** tu Wunused-label: 101   format(i8,i8,i8,i8,50(e13.4)) 
       
       return
-      end
+      end subroutine salt_chem_hru
 
       
 
@@ -394,11 +397,7 @@
           +CharBal(7)**2*G)
      
       return
-      end
-      
-      
-
-      
+      end subroutine Ionic_Strength
       
       ! Calculate Activity Coefficient **********************************************************************
       subroutine activity_coefficient(I_Prep_in)
@@ -436,11 +435,8 @@
       endif
       
       return
-      end
+      end subroutine activity_coefficient
            
-      
-
-
 
       ! CaSO4 ***********************************************************************************************
       !disp('**************************************************************')
@@ -504,11 +500,7 @@
       Sul_Conc(salt_c4+1) = Sulfate_Conc
 
       return
-      end
-
-
-
-
+      end subroutine CaSO4
 
       ! MgCO3 ***********************************************************************************************
       !disp('**************************************************************')
@@ -572,11 +564,7 @@
       Car_Conc(c22+2) =  Carbonate_Conc  
          
       return
-      end
-
-
-
-
+      end subroutine MgCO3
 
       ! NaCl ************************************************************************************************
       !disp('**************************************************************')
@@ -641,11 +629,7 @@
       Cl_Conc(c5+1) = Chloride_Conc
       
       return
-      end
-
-
-
-
+      end subroutine NaCl
 
       ! MgSO4 ***********************************************************************************************
       !disp('**************************************************************')
@@ -710,11 +694,7 @@
       Sul_Conc(salt_c4+2) = Sulfate_Conc
       
       return
-      end
-
-
-
-
+      end subroutine MgSO4
 
       ! CaCO3 ***********************************************************************************************
       !disp('**************************************************************')
@@ -776,11 +756,7 @@
       Car_Conc(c22+1) = Carbonate_Conc 
       
       return
-      end
-
-
-
-
+      end subroutine CaCO3
 
       ! Calculate Cation Exchange ***************************************************************************   
       ! Developed by Saman Tavakoli 
@@ -900,4 +876,4 @@
       endif
 
       return 
-      end ! end subroutine cation exchange 
+      end subroutine cationexchange  ! end subroutine cation exchange 

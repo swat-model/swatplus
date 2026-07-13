@@ -41,7 +41,9 @@
                                  !!   2 = turn off nutrient plant stress only
         integer :: cn = 0        !! not used
         integer :: cfac = 0      !! not used     
-        integer :: cswat = 0     !! carbon code
+        integer :: cswat = 0     !! carbon code: 0 = off (static), 1 = C-FARM (reserved,
+                                 !! not implemented), 2 = dynamic CENTURY/SWAT-C model.
+                                 !! numbering aligned with legacy SWAT as directed by Srinivasan.
                                  !!  = 0 Static soil carbon (old mineralization routines)
                                  !!  = 1 C-FARM one carbon pool model 
                                  !!  = 2 Century model
@@ -68,7 +70,7 @@
         integer :: gwflow = 0    !!   0 = gwflow module not active; 1 = gwflow module active
         integer :: idc_till = 3  !! 1 = Use dssat tillage method to use if cswat = 2 
                                  !! 2 = Use epic tillage method to use if cswat = 2
-                                 !! 3 = Use Kamanian tillage method to use if cswat = 2
+                                 !! 3 = Use Kemanian tillage method to use if cswat = 2
                                  !! 4 = Use dndc tillage method to use if cswat = 2
 
       end type basin_control_codes
@@ -140,6 +142,7 @@
         character(len=1) :: m = "n"
         character(len=1) :: y = "n"
         character(len=1) :: a = "n"
+        logical :: already_read_in
       end type print_interval
       
       type basin_print_codes
@@ -164,7 +167,10 @@
         integer, dimension(:), allocatable :: aa_yrs  !! end years for ave annual output
       ! SPECIAL OUTPUTS
         character(len=1) :: csvout   = "n"            !!  code to print .csv files n=no print; y=print;
-        character(len=1) :: carbout  = "n"            !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
+        ! character(len=1) :: carbout  = "n"         !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;
+        character(len=1) :: use_obj_labels  = "n"    !!  code to read in the print.prt print objects respecting the label of 
+                                                     !!  in the row (1st column) to identify name of the print object 
+
         character(len=1) :: cdfout   = "n"            !!  code to print netcdf (cdf) files n=no print; y=print;
       ! OTHER OUTPUTS
         !!   nbs   character(len=1) :: snutc  = "    n"         !!  not used - soils nutrients carbon output (default ave annual-d,m,y,a input)
@@ -202,7 +208,23 @@
         type(print_interval) :: nb_hru          !!  nutrient balance HRU output
         type(print_interval) :: ls_hru          !!  losses HRU output
         type(print_interval) :: pw_hru          !!  plant weather HRU output
-        type(print_interval) :: cb_hru          !!  plant weather HRU output
+        type(print_interval) :: cb_hru          !!  legacy carbon flag (kept for backward compat with print.prt readers; no longer referenced by writers)
+        type(print_interval) :: cb_vars_hru     !!  legacy carbon variable flag (same)
+        !! per-family carbon output flags (10 rows)
+        type(print_interval) :: cb_gl_hru       !!  hru_carb_gl_*    HRU C gain/loss
+        type(print_interval) :: cb_trf_hru      !!  hru_scf_*        HRU C transformations
+        type(print_interval) :: cb_lyr_hru      !!  hru_cbn_lyr_*    per-layer SOC totals + sequestered
+        type(print_interval) :: cb_cpool_hru    !!  hru_cpool_stat_* per-layer C pools
+        type(print_interval) :: cb_npool_hru    !!  hru_n_p_pool_stat_*  per-layer N+P pools
+        type(print_interval) :: cb_plt_hru      !!  hru_plc_stat_*   plant C state
+        type(print_interval) :: cb_flux_hru     !!  hru_cflux_stat_* per-layer flux diagnostic
+        type(print_interval) :: cb_drv_hru      !!  hru_carb_drv_*   per-layer drivers diagnostic
+        type(print_interval) :: cb_dyn_hru      !!  hru_carb_dyn_*   per-layer dynamics diagnostic
+        type(print_interval) :: cb_snap_hru     !!  hru_soil_snap_*  soil property snapshot
+        !! LSU-level area-weighted aggregations (Option 1: HRU-aggregated families only)
+        type(print_interval) :: cb_gl_lsu       !!  lsu_carb_gl_*    LSU-area-weighted C gain/loss
+        type(print_interval) :: cb_trf_lsu      !!  lsu_scf_*        LSU-area-weighted C transformations
+        type(print_interval) :: cb_plt_lsu      !!  lsu_plc_stat_*   LSU-area-weighted plant C state
         ! HRU-LTE
         type(print_interval) :: wb_sd           !!  water balance SWAT-DEG output 
         type(print_interval) :: nb_sd           !!  nutrient balance SWAT-DEG output
@@ -239,9 +261,28 @@
         type(print_interval) :: cs_chn          !!  constituent output for channels
         type(print_interval) :: cs_res          !!  constituent output for reservoirs
         type(print_interval) :: cs_wet          !!  constituent output for reservoirs
+        type(print_interval) :: gwflow_wb       !!  gwflow cell + basin water balance (day/mon/yr/aa)
+        type(print_interval) :: gwflow_flux     !!  gwflow canal, pond, tile, gwsw, chan obs diagnostic output
+        type(print_interval) :: gwflow_heat     !!  gwflow basin heat balance output
+        type(print_interval) :: gwflow_solute   !!  gwflow basin solute balance output
+        type(print_interval) :: gwflow_obs      !!  gwflow observation well output
+        type(print_interval) :: gwflow_pump     !!  gwflow HRU pumping output
       end type basin_print_codes
       type (basin_print_codes) :: pco
       type (basin_print_codes) :: pco_init
+      
+      !! basin sediment budget
+      type basin_sediment_budget
+        real :: upland_t = 0.          !! total upland sediment yield - all land uses - tons
+        real :: ch_ebank_t = 0.        !! total bank erosion - all stream orders - tons
+        real :: up_ch_rto = 0.         !! upland/channel ratio
+        real :: ch_w_yr = 0.           !! basin average widths per year
+        real :: fp_dep_t = 0.          !! total flood plain deposition - stream orders - tons
+        real :: fp_dep_mm = 0.         !! basin flood plain deposition - mm/year
+        real :: res_dep_t = 0.         !! total reservoir deposition - all reservoirs - tons
+        real :: res_trap_eff = 0.      !! average reservoir trap efficiency - all reservoirs
+      end type basin_sediment_budget
+      type (basin_sediment_budget) :: bsn_sedbud
       
       type mgt_header         
           character (len=12) :: hru =       "        hru"
@@ -395,5 +436,16 @@
           character (len=16) :: yield_tha =  " yld(t/ha)      "
       end type basin_yld_header
       type (basin_yld_header) :: bsn_yld_hdr
+
+      contains
+
+      function print_prt_error(name) result (r)
+         character (len=16), intent (in) :: name
+         integer :: r
+         r = 1
+         write(*, fmt="(a,a,a)", advance="no") "Error: ", name, "print object is duplicated in the input file print.prt.  Aborting"
+         print*; print*
+         error stop
+      end function
       
       end module basin_module

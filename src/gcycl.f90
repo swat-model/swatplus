@@ -46,6 +46,9 @@
       
       implicit none 
 
+      
+      
+      
       real :: xx = 0.      !none          |dummy variable to accept function value
                            !              |which is then discarded
       real :: rn = 0.      !none          |random number between 0.0 and 1.0
@@ -55,8 +58,8 @@
       integer :: rndseed10 = 0!none          |seed for random number generator that is 
                            !              |used to reset other random number seeds 
       integer :: iwgn = 0  !none          |counter 
-      real :: aunif        !              |
-      
+      real, external :: aunif
+
       
 !!    initialize random number array locator
       idg = (/1,2,3,4,5,6,7,8,9/)

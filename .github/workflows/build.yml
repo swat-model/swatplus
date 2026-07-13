@@ -146,15 +146,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        
         toolchain:
-          - {compiler: intel, version: '2024.1'}
+          - {compiler: intel, version: '2025.2'}
           - {compiler: intel-classic, version: '2021.9'}
         exclude:
           - os: macos-latest
-            toolchain: {compiler: intel, version: '2024.1'}
-          - os: windows-latest
-            toolchain: {compiler: intel-classic, version: '2021.9'}
+            toolchain: {compiler: intel, version: '2025.2'}
+          # - os: windows-latest
+          #   toolchain: {compiler: intel-classic, version: '2021.9'}
           - os: ubuntu-latest
             toolchain: {compiler: intel-classic, version: '2021.9'}
 
@@ -183,6 +185,7 @@ jobs:
         run: |
           echo ${{ env.FC }}
           cmake --version
+          which ${{ env.FC }}
 
           # RELEASE_VERSION=${GITHUB_REF#refs/*/}
           RELEASE_VERSION=`cat v.txt`
@@ -196,7 +199,7 @@ jobs:
             e="build/swatplus-*"
           elif [ "$RUNNER_OS" == "Windows" ]; then
             cmake -B build -G "MinGW Makefiles" \
-              -D CMAKE_Fortran_COMPILER="C:\Program Files (x86)\Intel\oneAPI\compiler\2024.1\bin\${{ env.FC }}.exe" \
+              -D CMAKE_Fortran_COMPILER=${{ env.FC }} \
               -D TAG=$RELEASE_VERSION \
               -D CMAKE_BUILD_TYPE=Release
             e="build/swatplus-*.exe"
@@ -276,10 +279,10 @@ jobs:
       with:
         name: intel-Linux
 
-    - name: Download Intel Windows
-      uses: actions/download-artifact@v4
-      with:
-        name: intel-Windows
+    # - name: Download Intel Windows
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: intel-Windows
 
     - name: Download Intel macOS
       uses: actions/download-artifact@v4

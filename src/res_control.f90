@@ -12,7 +12,7 @@
       
       implicit none
 
-      integer :: ii = 0               !none          |counter 
+      integer :: ii = 0               !none          |counter
       integer :: jres                 !none          |reservoir number
       integer :: idat = 0             !              |
       integer :: irel = 0             !              |
@@ -26,8 +26,19 @@
       real :: alpha_up = 0.
       real :: alpha_down = 0.
 
+      external :: gwflow_reservoir
+      integer :: dom            = 0                                           !           |Day of month
+      integer :: mon            = 0                                           !           |Month of year
+      integer :: end_of_mo      = 0                                           !           |End of month flag
+      integer :: n_days         = 0                                           !           |Number of days in current month
+      real    :: daily_inflow   = 0.                                          !m3         |Daily inflow from the past day
+      real, dimension(:), allocatable :: temp_array                           !           |Temporary to store new values
+      real :: daily_demand      = 0.                                          !m3         |Daily irrigation demand
+      integer :: irrig_track_b  = 0                                           !none       |Tracker to update daily irrigation demand
+
       ht1 = ob(icmd)%hin    !! set incoming flow
-      ht2 = resz            !! zero outgoing flow
+      ht2 = resz            !! zero outgoing flow, sediment and nutrients
+      hcs2 = hin_csz        !! zero outgoing constituents
 
       if (time%yrc > res_hyd(jres)%iyres .or. (time%mo >= res_hyd(jres)%mores   &
                                    .and. time%yrc == res_hyd(jres)%iyres)) then
@@ -47,14 +58,76 @@
         !! add incoming flow to reservoir
         res(jres) = res(jres) + ht1
 
+        dom          = time%day_mo
+        mon          = time%mo
+        end_of_mo    = time%end_mo
+        daily_inflow = ht1%flo
+
+        if (irrig_track_b == res_ob(jres)%irrig_track) then
+            daily_demand = 0
+
+        else
+            irrig_track_b = res_ob(jres)%irrig_track
+            daily_demand = res_ob(jres)%d_irrig_day
+
+        end if
+
+        !! Store values in daily inflow array for the month and reset if month has ended
+        if (dom == 1) then
+            if (allocated(res_ob(jres)%daily_inflow_array)) then                                    ! Deallocate array to start over
+                deallocate(res_ob(jres)%daily_inflow_array)
+            end if
+
+            if (allocated(res_ob(jres)%daily_demand_array)) then                                    ! Deallocate array to start over
+                deallocate(res_ob(jres)%daily_demand_array)
+            end if
+
+            allocate(res_ob(jres)%daily_inflow_array(1))
+            res_ob(jres)%daily_inflow_array(1) = daily_inflow                                       ! Store first inflow of the month
+
+            allocate(res_ob(jres)%daily_demand_array(1))
+            res_ob(jres)%daily_demand_array(1) = daily_demand                                       ! Store first irrigation demand of the month
+
+        else
+        !! Append inflow of current day
+            n_days = size(res_ob(jres)%daily_inflow_array)
+
+            allocate(temp_array(n_days+1))
+            temp_array(1:n_days)   = res_ob(jres)%daily_inflow_array(1:n_days)
+            temp_array(n_days +1)  = daily_inflow
+
+            call move_alloc(temp_array, res_ob(jres)%daily_inflow_array)                            !Replace original array with move_alloc
+
+        !! Append irrigaton demand of current day
+            allocate(temp_array(n_days+1))
+            temp_array(1:n_days)   = res_ob(jres)%daily_demand_array(1:n_days)
+            temp_array(n_days +1)  = daily_demand
+
+            call move_alloc(temp_array, res_ob(jres)%daily_demand_array)                            !Replace original array with move_alloc
+
+        end if
+
+
+        !! Get mean and store in reservoir's memory if end of month
+        if (end_of_mo == 1) then
+            ! Shift rolling window to the left
+            res_ob(jres)%I_mon_past(1:12*(res_ob(jres)%N_memory)-1)     = res_ob(jres)%I_mon_past(2:12*(res_ob(jres)%N_memory))
+            res_ob(jres)%I_mon_past(12*(res_ob(jres)%N_memory))         = sum(res_ob(jres)%daily_inflow_array) / real(size(res_ob(jres)%daily_inflow_array), kind=8)
+
+            ! Do the same for irrigation
+            res_ob(jres)%d_mon_past(1:12*(res_ob(jres)%N_memory)-1)     = res_ob(jres)%d_mon_past(2:12*(res_ob(jres)%N_memory))
+            res_ob(jres)%d_mon_past(12*(res_ob(jres)%N_memory))         = sum(res_ob(jres)%daily_demand_array) / real(size(res_ob(jres)%daily_demand_array), kind=8)
+
+        end if
+
         !! perform reservoir water/sediment balance
         idat = res_ob(jres)%props
         if(res_ob(jres)%rel_tbl == "d") then
           !! determine reservoir outflow
           irel = res_dat(idat)%release
           d_tbl => dtbl_res(irel)
-          pvol_m3 = 0.5 * res_ob(jres)%pvol
-          evol_m3 = 0.5 * res_ob(jres)%evol
+          pvol_m3 = res_ob(jres)%pvol
+          evol_m3 = res_ob(jres)%evol
           if (res_wat_d(jres)%area_ha > 1.e-6) then
             dep = wbody%flo / res_wat_d(jres)%area_ha / 10000.     !m = m3 / ha / 10000m2/ha
           else
@@ -62,6 +135,9 @@
           end if
           weir_hgt = res_ob(jres)%weir_hgt
           call conditions (jres, irel)
+
+                  !! Retrospective information -> Inflow and irrigation demand memory of the reservoir
+
           call res_hydro (jres, irel, pvol_m3, evol_m3)
           
           !! new lag to smooth condition jumps (volume or month conditions)
@@ -85,8 +161,10 @@
         !! calculate water balance for day
         res_wat_d(jres)%evap = 10. * res_hyd(jres)%evrsv * wst(iwst)%weat%pet * res_wat_d(jres)%area_ha
         res_wat_d(jres)%precip = 10. * wst(iwst)%weat%precip * res_wat_d(jres)%area_ha
-        if(bsn_cc%gwflow == 0) then !if gwflow active, seepage calculated in gwflow_simulate (rtb gwflow)
+        if(bsn_cc%gwflow == 0) then !if gwflow active, seepage calculated via gwflow_reservoir (rtb gwflow)
           res_wat_d(jres)%seep = 240. * res_hyd(jres)%k * res_wat_d(jres)%area_ha
+        else
+          call gwflow_reservoir(jres)
         endif
 
         !! add precip to reservoir storage
@@ -178,14 +256,11 @@
       else
         !! reservoir has not been constructed yet
         ob(icmd)%hd(1) = ob(icmd)%hin
+        if (cs_db%num_tot > 0) obcs(icmd)%hd(1) = obcs(icmd)%hin(1)
       end if
-
-  !!!! for Luis only    
-      !if (jres == 1) then
-      !  write (7777,*) time%day, time%yrc, jres, res(jres)%flo, ht1%flo, ht2%flo,   &
-      !                                           res(jres)%sed, ht1%sed, ht2%sed
-      !end if
-  !!!! for Luis only
       
+      !! if called from water allocation, set flag to indicate reservoir has been processed for the day
+      res_ob(jres)%wallo_call = 1
+
       return
       end subroutine res_control

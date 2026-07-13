@@ -12,7 +12,7 @@
       use plant_data_module
       use constituent_mass_module
       use hydrograph_module, only : sp_ob
-      use hru_module, only : hru
+      use hru_module, only : hru, snodb
       
       implicit none
                   
@@ -59,6 +59,8 @@
             allocate (dtbl_lum(i)%act_hit(dtbl_lum(i)%alts))
             allocate (dtbl_lum(i)%act_typ(dtbl_lum(i)%acts), source = 0)
             allocate (dtbl_lum(i)%act_app(dtbl_lum(i)%acts), source = 0)
+            allocate (dtbl_lum(i)%lu_chg_mx(dtbl_lum(i)%acts), source = 0)
+            allocate (dtbl_lum(i)%snow_chg_mx(dtbl_lum(i)%acts), source = 0)
             allocate (dtbl_lum(i)%act_outcomes(dtbl_lum(i)%acts,dtbl_lum(i)%alts))
             
             !read conditions and condition alternatives
@@ -134,6 +136,14 @@
                   end do
                 
                 case ("irr_demand")
+                  do idb = 1, db_mx%irrop_db
+                    if (dtbl_lum(i)%act(iac)%option == irrop_db(idb)%name) then
+                      dtbl_lum(i)%act_typ(iac) = idb
+                      exit
+                    end if
+                  end do
+                       
+                case ("irr_wallo")
                   do idb = 1, db_mx%irrop_db
                     if (dtbl_lum(i)%act(iac)%option == irrop_db(idb)%name) then
                       dtbl_lum(i)%act_typ(iac) = idb
@@ -227,6 +237,22 @@
                   do iburn = 1, db_mx%fireop_db
                     if (dtbl_lum(i)%act(iac)%option == fire_db(iburn)%name) then
                       dtbl_lum(i)%act_typ(iac) = iburn
+                      exit
+                    end if
+                  end do
+                  
+                case ("lu_change")
+                  do idb = 1, db_mx%landuse
+                    if (dtbl_lum(i)%act(iac)%file_pointer == lum(idb)%name) then
+                      dtbl_lum(i)%act_typ(iac) = idb
+                      exit
+                    end if
+                  end do
+                  
+                case ("snow_change")
+                  do idb = 1, db_mx%sno
+                    if (dtbl_lum(i)%act(iac)%file_pointer == snodb(idb)%name) then
+                      dtbl_lum(i)%act_typ(iac) = idb
                       exit
                     end if
                   end do

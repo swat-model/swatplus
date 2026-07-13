@@ -39,7 +39,6 @@
        end do
        end if
 
-    
        close(107)
        
        return

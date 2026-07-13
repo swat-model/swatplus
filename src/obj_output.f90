@@ -59,17 +59,27 @@
               if (iob == 0) then
                 do j = 1, sp_ob%hru
                   do nly = 1, soil(iob)%nly
+                    soil1(ihru)%rsd_tot(nly) = orgz
+                    do ipl = 1, pcom(ihru)%npl
+                      soil1(ihru)%rsd_tot(nly) = soil1(ihru)%rsd_tot(nly) + soil1(ihru)%pl(ipl)%rsd(nly)
+                    end do
                     write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,      &    
                      soil1(j)%mn(nly), soil1(j)%hact(nly)%n, soil1(j)%hsta(nly)%n, soil1(j)%hs(nly)%n,         &
-                     soil1(j)%hp(nly)%n, soil1(j)%rsd(nly)%n, soil1(j)%mp(nly), soil1(j)%hact(nly)%p,          &
-                     soil1(j)%hsta(nly)%p, soil1(j)%hs(nly)%p, soil1(j)%hp(nly)%p, soil1(j)%rsd(nly)%p
+                     soil1(j)%hp(nly)%n, soil1(j)%rsd_tot(nly)%n, soil1(j)%mp(nly), soil1(j)%hact(nly)%p,          &
+                     soil1(j)%hsta(nly)%p, soil1(j)%hs(nly)%p, soil1(j)%hp(nly)%p, soil1(j)%rsd_tot(nly)%p
                   end do
                 end do
               else
-                write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,       &    
+                do nly = 1, soil(iob)%nly
+                  soil1(j)%rsd_tot(nly) = orgz
+                  do ipl = 1, pcom(j)%npl
+                    soil1(j)%rsd_tot(nly) = soil1(j)%rsd_tot(nly) + soil1(j)%pl(ipl)%rsd(nly)
+                  end do
+                  write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,     &    
                    soil1(j)%mn(nly), soil1(j)%hact(nly)%n, soil1(j)%hsta(nly)%n, soil1(j)%hs(nly)%n,        &
-                   soil1(j)%hp(nly)%n, soil1(j)%rsd(nly)%n, soil1(j)%mp(nly), soil1(j)%hact(nly)%p,         &
-                   soil1(j)%hsta(nly)%p, soil1(j)%hs(nly)%p, soil1(j)%hp(nly)%p, soil1(j)%rsd(nly)%p
+                   soil1(j)%hp(nly)%n, soil1(j)%rsd_tot(nly)%n, soil1(j)%mp(nly), soil1(j)%hact(nly)%p,         &
+                   soil1(j)%hsta(nly)%p, soil1(j)%hs(nly)%p, soil1(j)%hp(nly)%p, soil1(j)%rsd_tot(nly)%p
+                end do
               end if
               
             case (8)    ! soil entire profile nutrients 
@@ -82,10 +92,15 @@
                     soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
                     soil_prof_hs = soil_prof_hs + soil1(j)%hs(ly)
                     soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
-                    soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
+                    soil1(j)%rsd_tot(ly) = orgz
+                    do ipl = 1, pcom(ihru)%npl
+                      soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+                    end do
+                    soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd_tot(ly)
                   end do
-                  write (iunit+itot,*) soil_prof_mn, soil_prof_mp, soil_prof_hact,       &
-                     soil_prof_hsta,  soil_prof_hs, soil_prof_hp, soil_prof_rsd
+                  write (iunit+itot,*)  time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,     &
+                      soil_prof_mn, soil_prof_mp, soil_prof_hact, soil_prof_hsta,  soil_prof_hs,             &
+                      soil_prof_hp, soil_prof_rsd
                 end do
               else
                 j = iob
@@ -96,12 +111,26 @@
                   soil_prof_hsta = soil_prof_hsta + soil1(j)%hsta(ly)
                   soil_prof_hs = soil_prof_hs + soil1(j)%hs(ly)
                   soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
-                  soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd(ly)
+                  soil1(j)%rsd_tot(ly) = orgz
+                  do ipl = 1, pcom(j)%npl
+                    soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+                  end do
+                  soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd_tot(ly)
                 end do
-                 write (iunit+itot,*) soil_prof_mn, soil_prof_mp, soil_prof_hact,       &
-                  soil_prof_hsta,  soil_prof_hs, soil_prof_hp, soil_prof_rsd          
+                write (iunit+itot,*)  time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,     &
+                    soil_prof_mn, soil_prof_mp, soil_prof_hact, soil_prof_hsta,  soil_prof_hs,             &
+                    soil_prof_hp, soil_prof_rsd   
               end if
-            
+              
+              !! zero out accumulators
+              soil_prof_mn = mnz 
+              soil_prof_mp = mpz
+              soil_prof_hact = orgz
+              soil_prof_hsta = orgz
+              soil_prof_hs = orgz
+              soil_prof_hp = orgz
+              soil_prof_rsd = orgz
+              
             case (9)    ! plant status
               if (iob == 0) then
                 do j = 1, sp_ob%hru

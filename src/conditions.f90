@@ -20,6 +20,8 @@
       use water_allocation_module
 
       implicit none
+      
+      external :: cond_integer, cond_real, aunif
 
       integer, intent (in)  :: ob_cur         !          |
       integer, intent (in)  :: idtbl          !none      |
@@ -54,7 +56,6 @@
       real :: p_lab_tot = 0.
       real :: p_lab_ppm = 0.
       real :: rto = 0.
-      real :: var_cur = 0.
       character(len=1) :: pl_chk = ""
       
       d_tbl%act_hit = "y"
@@ -263,7 +264,14 @@
           ivar_cur = time%day_start 
           ivar_tbl = int(d_tbl%cond(ic)%lim_const)
           call cond_integer (ic, ivar_cur, ivar_tbl)
-                                           
+                                          
+        !yearly irrigation - mm jga6-25
+        case ("irr_year")
+          ob_num = d_tbl%cond(ic)%ob_num
+          if (ob_num == 0) ob_num = ob_cur
+          
+          call cond_real (ic, hru(ob_num)%irr_yr, d_tbl%cond(ic)%lim_const, idtbl)
+                                     
         !slope
         case ("slope")
           ob_num = d_tbl%cond(ic)%ob_num
@@ -605,7 +613,7 @@
           if (ob_num == 0) ob_num = ob_cur
           !ob_num is channel number - need object number
           iob = sp_ob1%chandeg + ob_num - 1
-          flo_m3 = ob(iob)%hd(1)%flo / 86400. 
+          flo_m3 = ht2%flo / 86400. 
           call cond_real (ic, flo_m3, d_tbl%cond(ic)%lim_const, idtbl)
                 
         !tile flow
@@ -715,7 +723,7 @@
           
           do ialt = 1, d_tbl%alts
             if (d_tbl%alt(ic,ialt) == "=") then
-              if (sd_ch(ob_num)%order /= d_tbl%cond(ic)%lim_var) then
+              if (sd_ch(ob_num)%order /= d_tbl%cond(ic)%lim_const) then
                 d_tbl%act_hit(ialt) = "n"
               end if
             end if

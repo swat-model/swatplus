@@ -30,6 +30,8 @@
       use salt_aquifer
       
       implicit none
+      
+      external :: activity_coefficient, CaCO3, CaSO4, cationexchange, Ionic_strength, MgCO3, MgSO4, NaCl
 
       integer :: iaq = 0
       integer :: m = 0
@@ -56,6 +58,8 @@
       real :: mass_before = 0.
       real :: mass_after = 0.
       double precision IonStr,IS_temp,K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,error1ST,error2ND,error3RD,errorTotal
+
+      SkipedIEX = 0.
       
       !aquifer ID
       iaq = ob(icmd)%num
@@ -260,4 +264,4 @@
       asaltb_d(iaq)%salt(1)%diss = mass_after - mass_before
       
       return
-      end
+      end subroutine salt_chem_aqu

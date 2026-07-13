@@ -57,6 +57,8 @@
       use climate_module
       
       implicit none
+      
+      real, external :: regres
 
       real :: cod = 0.     !kg            |carbonaceous biological oxygen demand of 
                            !              |surface runoff from urban area
@@ -77,7 +79,6 @@
                            !              |surfaces 
       integer :: j = 0     !none          |HRU number
       integer :: iob = 0   !              |
-      real :: regres       !              |
       real :: xx = 0.      !              |
       real :: exp          !              |
       real :: tno3 = 0.    !              |

@@ -7,8 +7,14 @@
       use constituent_mass_module
       use landuse_data_module
       use erosion_module
-    
+      use output_path_module
+      
       implicit none
+      
+      external :: cn2_init_all, hru_allo, hru_lum_init_all, hru_output_allo, hru_read, &
+                  hrudb_init, hydro_init, plant_all_init, rte_read_nut, soils_init, structure_init, &
+                  structure_set_parms, topohyd_init, cli_lapse, dr_ru, lsu_read_elements, unit_hyd_ru_hru, &
+                  pesticide_init, pathogen_init, salt_hru_init, cs_hru_init
       
       integer :: j = 0          !none       |counter
       integer :: ilum = 0       !none       |counter
@@ -21,8 +27,7 @@
         call hru_lum_init_all
         call topohyd_init
         call hru_output_allo
-        call carbon_read
-        
+
         !! septic has to be set before soils are initialized (making a soil layer for the septic zone)
         do j = 1, sp_ob%hru
           ilum = hru(j)%land_use_mgt
@@ -43,13 +48,13 @@
         
       !! allocate erosion output and open file
       allocate (ero_output(sp_ob%hru))
-      open (4001,file = "erosion.out",recl=1200)
+      call open_output_file(4001, "erosion.out", 1200)
       write (4001,*) bsn%name, prog
       write (4001,*) ero_hdr
       write (4001,*) ero_hdr_units
             
 !!!!! new checker.out file - always prints
-      open (4000,file = "checker.out",recl=1200)
+      call open_output_file(4000, "checker.out", 1200)
       write (4000,*) bsn%name, prog
       write (4000,*) chk_hdr
       write (4000,*) chk_unit

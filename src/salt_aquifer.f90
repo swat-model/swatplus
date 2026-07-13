@@ -100,4 +100,4 @@
       end type output_salt_header      
       type (output_salt_header) :: salt_hdr_aqu
       
-      end module     
+      end module salt_aquifer    

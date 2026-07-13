@@ -8,7 +8,7 @@
       use organic_mineral_mass_module
       use output_landscape_module
       use aquifer_module
-      use hru_module, only : hru,ihru
+      use hru_module, only : hru
       use soil_module
       use time_module
       use salt_module
@@ -27,21 +27,14 @@
       integer :: jj = 0
       real :: saltsum = 0.
       real :: hru_area_m2 = 0.
-      real :: sol_thick = 0.
       real :: soil_volume = 0.
       real :: soil_mass = 0.
       real :: aquifer_thickness = 0.
       real :: aquifer_volume = 0.
       real :: aquifer_mass = 0.
-      real :: sub_ha = 0.
       real :: soil_thick = 0.
-      real :: sum_conc = 0.
-      real :: avg_conc(cs_db%num_salts)
-      real :: sum_load = 0.
-      real :: avg_load(11) = 0.
       real :: salt_basin(28) = 0.
-
-      
+  
       !basin-wide salt mass balance -------------------------------------------------------------------------------------------------------
       
       !lateral salt loading to channels
@@ -509,4 +502,4 @@
 !*** tu Wunused-label: 7001  format(20e16.8)
 
       return
-      end
+      end subroutine salt_balance

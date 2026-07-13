@@ -23,6 +23,10 @@
       
       implicit none
       
+      
+      
+      
+      external :: aunif
       real :: v6 = 0.             !none          |random number between 0.0 and 1.0
       real :: v7 = 0.             !              |
       real :: rdir2 = 0.          !              |

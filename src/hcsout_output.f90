@@ -23,7 +23,7 @@
                ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),  &
                ob(iob)%frac_out(iiout), (hcs1%pest(ipest), ipest = 1, cs_db%num_pests)          
               if (pco%csvout == "y") then
-                write (2756,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  & 
+                write (2756,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  & 
                   ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),              &
                   ob(iob)%frac_out(iiout), (hcs1%pest(ipest), ipest = 1, cs_db%num_pests)
               end if                             !! cvs pests
@@ -34,7 +34,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout), &
                  ob(iob)%frac_out(iiout), (hcs1%path(ipath), ipath = 1, cs_db%num_paths)          
               if (pco%csvout == "y") then
-                write (2760,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  & 
+                write (2760,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  & 
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),               &
                  ob(iob)%frac_out(iiout), (hcs1%path(ipath), ipath = 1, cs_db%num_paths)
               end if                            !! cvs paths
@@ -45,7 +45,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout), &
                  ob(iob)%frac_out(iiout), (hcs1%hmet(imetal), imetal = 1, cs_db%num_metals)          
               if (pco%csvout == "y") then
-                write (2764,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  &
+                write (2764,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),               &
                  ob(iob)%frac_out(iiout), (hcs1%hmet(imetal), imetal = 1, cs_db%num_metals)
               end if                            !! cvs metals
@@ -56,7 +56,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),  &
                  ob(iob)%frac_out(iiout), (hcs1%salt(isalt), isalt = 1, cs_db%num_salts)          
               if (pco%csvout == "y") then
-                write (2768,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  &
+                write (2768,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),               &
                  ob(iob)%frac_out(iiout), (hcs1%salt(isalt), isalt = 1, cs_db%num_salts)
               end if                            !! cvs salts
@@ -74,7 +74,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),   &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%pest(ipest), ipest = 1, cs_db%num_pests)          
               if (pco%csvout == "y") then
-                write (2757,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  &
+                write (2757,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,  &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),               &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%pest(ipest), ipest = 1, cs_db%num_pests)
               end if                             !! cvs pests
@@ -85,7 +85,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),   &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%path(ipath), ipath = 1, cs_db%num_paths)          
               if (pco%csvout == "y") then
-                write (2761,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2761,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%path(ipath), ipath = 1, cs_db%num_paths)
               end if                            !! cvs paths
@@ -96,7 +96,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),     &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%hmet(imetal), imetal = 1, cs_db%num_metals)          
               if (pco%csvout == "y") then
-                write (2765,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2765,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%hmet(imetal), imetal = 1, cs_db%num_metals)
               end if                            !! cvs metals
@@ -107,7 +107,7 @@
                 ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),   &
                 ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%salt(isalt), isalt = 1, cs_db%num_salts)          
               if (pco%csvout == "y") then
-                write (2769,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2769,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_m(iiout)%salt(isalt), isalt = 1, cs_db%num_salts)
               end if                            !! cvs salts
@@ -125,7 +125,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),   &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%pest(ipest), ipest = 1, cs_db%num_pests)          
               if (pco%csvout == "y") then
-                write (2752,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2752,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%pest(ipest), ipest = 1, cs_db%num_pests)
               end if                             !! cvs pests
@@ -136,7 +136,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),    &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%path(ipath), ipath = 1, cs_db%num_paths)          
               if (pco%csvout == "y") then
-                write (2762,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2762,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%path(ipath), ipath = 1, cs_db%num_paths)
               end if                            !! cvs paths
@@ -147,7 +147,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),    &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%hmet(imetal), imetal = 1, cs_db%num_metals)          
               if (pco%csvout == "y") then
-                write (2766,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2766,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%hmet(imetal), imetal = 1, cs_db%num_metals)
               end if                            !! cvs metals
@@ -158,7 +158,7 @@
                 ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),   &
                 ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%salt(isalt), isalt = 1, cs_db%num_salts)          
               if (pco%csvout == "y") then
-                write (2770,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2770,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_y(iiout)%salt(isalt), isalt = 1, cs_db%num_salts)
               end if                            !! cvs salts
@@ -176,7 +176,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),   &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%pest(ipest), ipest = 1, cs_db%num_pests)          
               if (pco%csvout == "y") then
-                write (2759,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,    &
+                write (2759,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,    &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                 &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%pest(ipest), ipest = 1, cs_db%num_pests)
               end if                             !! cvs pests
@@ -187,7 +187,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),  &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%path(ipath), ipath = 1, cs_db%num_paths)          
               if (pco%csvout == "y") then
-                write (2763,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2763,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%path(ipath), ipath = 1, cs_db%num_paths)
               end if                            !! cvs paths
@@ -198,7 +198,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),    &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%hmet(imetal), imetal = 1, cs_db%num_metals)          
               if (pco%csvout == "y") then
-                write (2767,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2767,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%hmet(imetal), imetal = 1, cs_db%num_metals)
               end if                            !! cvs metals
@@ -209,7 +209,7 @@
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),  &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%salt(isalt), isalt = 1, cs_db%num_salts)          
               if (pco%csvout == "y") then
-                write (2771,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
+                write (2771,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iob, ob(iob)%gis_id, ob(iob)%typ,   &
                  ob(iob)%num, ob(iob)%obtyp_out(iiout), ob(iob)%obtypno_out(iiout), ob(iob)%htyp_out(iiout),                &
                  ob(iob)%frac_out(iiout), (obcs(iob)%hcsout_a(iiout)%salt(isalt), isalt = 1, cs_db%num_salts)
               end if                            !! cvs salts

@@ -5,12 +5,14 @@
       use plant_data_module
       
       implicit none 
+      
+      external :: ascrv
 
       integer :: ic = 0       !none        |counter
       real :: c1 = 0.         !            |
       real :: b1 = 0.         !            | 
       real :: b2 = 0.         !            |
-      real :: b3 = 0.         !            |
+      real :: b3 = 0.         !            |    
       
       do ic = 1, db_mx%plantparm
         if (pldb(ic)%bm_dieoff <= 1.e-6) pldb(ic)%bm_dieoff = 1.00

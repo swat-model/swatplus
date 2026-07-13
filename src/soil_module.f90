@@ -16,7 +16,10 @@
         real :: prk = 0.         !! mm H2O         percolation from soil layer on current day
         real :: volcr = 0.       !! mm             crack volume for soil layer 
         real :: tillagef = 0.
-        real :: rtfr = 0.        !! none           root fraction
+        real :: tillagef_biomix = 0.
+        real :: tillagef_tillmix = 0.
+        real :: bmix
+        real :: init_bmix
         real :: watp = 0.
         integer :: a_days = 0
         integer :: b_days = 0
@@ -30,12 +33,13 @@
       
       type soil_physical_properties
         real :: d = 0.              !! mm           ! depth to bottom of soil layer
-        real :: thick = 0.          !! mm           ! thichness of soil layer
+        real :: thick = 0.          !! mm           ! thickness of soil layer
         real :: bd = 0.             !! Mg/m**3      ! bulk density of the soil
         real :: k = 0.              !! mm/hr        ! saturated hydraulic conductivity of soil layer. Index:(layer,HRU)
-        real :: clay = 0.           !! none         ! fraction clay content in soil material (UNIT CHANGE!)
+        real :: cbn = 0.            !! mm/hr        ! percent organic carbon of soil layer
+        real :: clay = 0.           !! %            ! percent clay content in soil material (UNIT CHANGE!)
         real :: silt = 0.           !! %            ! percent silt content in soil material
-        real :: sand = 0.           !! none         ! fraction of sand in soil material
+        real :: sand = 0.           !! %            ! percent of sand in soil material
         real :: rock = 0.           !! %            ! percent of rock fragments in soil layer 
         real :: conv_wt = 0.        !! none         ! factor which converts kg/kg to kg/ha
         real :: crdep = 0.          !! mm           ! maximum or potential crack volume
@@ -49,8 +53,21 @@
         real :: up = 0.             !! mm H2O/mm    ! soil water content of soil at -0.033 MPa (field capacity)
         real :: wp = 0.             !! mm H20/mm    ! soil water content of soil at -1.5 MPa (wilting point)
         real :: wpmm = 0.           !! mm H20       ! water content of soil at -1.5 MPa (wilting point)
+        real :: tot_sw = 0.         !! mm H20       ! total soil water content in mm/mm by layer that includes wilting point water content   
       end type soil_physical_properties
       type (soil_physical_properties),dimension (:), allocatable:: phys1
+
+      type soil_test
+        character(len=16) :: snam = ""     !! NA            soil series name  
+        real :: d = 0.                !! mm           ! depth in mm of soil carbon test
+        real :: bd = 0.               !! Mg/m^3       | bulk density soil test
+        real :: cbn = 0.              !! %            ! percent organic carbon from soil test
+        real :: sand = 0.             !! %            | percent sand
+        real :: silt = 0.             !! %            | percent silt
+        real :: clay = 0.             !! %            | percent clay
+      end type soil_test
+      type (soil_test), dimension(:), allocatable :: sol_test
+      integer :: nmbr_soil_test_layers = 0 !! none         |number of soil carbon tests 
 
       type soil_profile
         character(len=16) :: snam = ""     !! NA            soil series name  
@@ -80,6 +97,7 @@
         real :: wat_tbl = 0.               !! 
         real :: avpor = 0.                 !! none           average porosity for entire soil profile
         real :: avbd = 0.                  !! Mg/m^3         average bulk density for soil profile
+        real :: tmp_srf = 0.               !! celsius        surface temperature of the soil
       end type soil_profile
       type (soil_profile), dimension(:), allocatable :: soil
       type (soil_profile), dimension(:), allocatable :: soil_init

@@ -100,7 +100,6 @@
           endif
         enddo
       endif
-
-      
+ 
       return
       end subroutine aqu2d_init

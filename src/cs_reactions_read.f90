@@ -108,4 +108,4 @@
       close(107)
       
       return
-      end !cs_read_reactions
+      end subroutine cs_reactions_read

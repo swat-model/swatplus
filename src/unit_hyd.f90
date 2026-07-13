@@ -44,7 +44,6 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      !use hru_module, only : itb
       use basin_module
       use time_module
       
@@ -55,10 +54,8 @@
       real :: tb = 0.           !           |
       real :: tp = 0.           !           |
       integer :: i = 0          !none       |counter
-      real :: xi = 0.           !           |
       real :: q = 0.            !           |
       integer :: max            !           |
-      integer :: itb = 0        !           |
       integer :: istep = 0      !none       |time step that corresponds to time%step for routing
       integer :: iday = 0       !none       |current day in the unit hydrograph
       integer :: t_inc = 0      !none       |time increments within the time step to sum the unit hyd

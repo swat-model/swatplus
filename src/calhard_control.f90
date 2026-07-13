@@ -5,6 +5,8 @@
       use hydrograph_module
       
       implicit none
+      
+      external :: re_initialize, time_control
 
       !! re-initialize all objects
       call re_initialize

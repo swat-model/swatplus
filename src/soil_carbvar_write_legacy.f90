@@ -1,0 +1,97 @@
+      subroutine soil_carbvar_write_legacy(out_freq)
+      !!    will be removed in revision 63.
+      !!
+      !!    ~ ~ ~ PURPOSE ~ ~ ~
+      !!    this subroutine writes soil carbon output.
+      !!
+      !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
+      !!    name          |units         |definition
+      !!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+      !!    out_freq      |              |output frequency (d=daily, m=monthly, y=yearly, a=average annual)
+      !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
+
+        use basin_module
+        use carbon_module
+        use hydrograph_module
+        use organic_mineral_mass_module
+        use calibration_data_module
+        use soil_module
+
+        implicit none
+
+        character(len=2), intent(in) :: out_freq   ! Output frequency (d, m, y, a)
+        character (len=6) :: freq_label
+        integer :: j  ! hydrologic unit number
+        integer :: k  ! soil layer 
+        integer :: iob  ! soil layer 
+
+        ! print*, "In soil_carbvar_write.f90 ", out_freq
+        select case(out_freq)
+            case (" d")
+            freq_label = "day"
+            case ("dl")
+            freq_label = "day"
+            case (" m")
+            freq_label = "mon"
+            case ("ml")
+            freq_label = "mon"
+            case (" y")
+            freq_label = "year"
+            case ("yl")
+            freq_label = "year"
+            case (" a")
+            freq_label = "av_ann"
+        end select
+
+        
+        ! Carbon variable output file = hru_carbvar.(txt/csv)
+        do j = 1, sp_ob%hru
+            iob = sp_ob1%hru + j - 1
+            do k = 1, soil(j)%nly
+                write (8374,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                                soil1(j)%org_con_lr(k)%sut, soil(j)%ly(k)%tillagef, soil(j)%ly(k)%bmix, soil(j)%ly(k)%tillagef_biomix, soil(j)%ly(k)%tillagef_tillmix, &
+                                soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, &
+                                soil1(j)%org_con_lr(k)%no3, soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp, soil1(j)%emix(k) 
+                if (pco%csvout == "y") then
+                    write (8375,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                                soil1(j)%org_con_lr(k)%sut, soil(j)%ly(k)%tillagef, soil(j)%ly(k)%bmix, soil(j)%ly(k)%tillagef_biomix, soil(j)%ly(k)%tillagef_tillmix, &
+                                soil1(j)%org_con_lr(k)%till_eff, soil1(j)%org_con_lr(k)%cdg, soil1(j)%org_con_lr(k)%ox, soil1(j)%org_con_lr(k)%cs, &
+                                soil1(j)%org_con_lr(k)%no3, soil1(j)%org_con_lr(k)%nh4, soil1(j)%org_con_lr(k)%resp, soil(j)%phys(k)%tmp, soil1(j)%emix(k) 
+                end if
+            end do
+        end do
+
+        ! Carbon organinic allocation variable output file = hru_org_allo_vars.(txt/csv)
+        do j = 1, sp_ob%hru
+            iob = sp_ob1%hru + j - 1
+            do k = 1, soil(j)%nly
+                write (8376,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
+                if (pco%csvout == "y") then
+                write (8377,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_allo_lr(k)
+                end if
+            end do
+        end do
+
+        ! Carbon organinic ratio variable output file = hru_org_ratio_vars.(txt/csv)
+        do j = 1, sp_ob%hru
+            iob = sp_ob1%hru + j - 1
+            do k = 1, soil(j)%nly
+                write (8378,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
+                if (pco%csvout == "y") then
+                write (8379,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_ratio_lr(k)
+                end if
+            end do
+        end do
+
+        ! Potential organinic transformation values file = hru_org_tran_vars.(txt/csv)
+        do j = 1, sp_ob%hru
+            iob = sp_ob1%hru + j - 1
+            do k = 1, soil(j)%nly
+                write (8380,*) freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
+                if (pco%csvout == "y") then
+                write (8381,'(*(G0.7,:,","))') freq_label, k, int(soil(j)%phys(k)%d), time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, soil1(j)%org_tran_lr(k)
+                end if
+            end do
+        end do
+      return
+      end subroutine soil_carbvar_write_legacy

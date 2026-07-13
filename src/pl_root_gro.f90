@@ -13,10 +13,7 @@
       integer, intent (in) :: j     !none               |HRU number
       integer :: idp = 0            !                   |
       real :: rto = 0.              !none               |ratio of current years of growth:years to maturity of perennial
-      real :: rto1 = 0.             !none               |ratio of current years + 1 of growth:years to maturity of perennial
-      real :: rto2 = 0.             !none               |ratio of 1 year:years to maturity of perennial
       real :: phumax = 0.
-      real :: rdmax_yr = 0.
              
       idp = pcom(j)%plcur(ipl)%idplt
 
@@ -49,9 +46,8 @@
         phumax = amin1 (1., pcom(j)%plcur(ipl)%phuacc)
         pcom(j)%plg(ipl)%root_frac = pldb(idp)%rsr1 - (pldb(idp)%rsr1 - pldb(idp)%rsr2) * phumax
       end if
-      
-      !! root mass
-      !pl_mass(j)%root(ipl)%m = pcom(j)%plg(ipl)%root_frac * pl_mass(j)%tot(ipl)%m
 
+      call pl_rootfr(j)
+      
       return
       end subroutine pl_root_gro

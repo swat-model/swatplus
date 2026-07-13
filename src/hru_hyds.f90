@@ -18,6 +18,8 @@
       use climate_module
       
       implicit none
+      
+      external :: flow_hyd_ru_hru
 
       integer :: j = 0               !none          |same as ihru (hru number)
       real :: cnv_m3 = 0.            !              |
@@ -145,19 +147,15 @@
         obcs(icmd)%hd(5)%path(ipath) = 0.
       end do
       
-      !water temperature calculations
-      !percolate temperature
-      ob(icmd)%hd(2)%temp = w_temp%sur_lat
-      !surface runoff temperature
-      if (snomlt > 0.1) then
-        ob(icmd)%hd(3)%temp = w_temp%sno_mlt
-      else
-        ob(icmd)%hd(3)%temp = w_temp%sur_lat
-      end if
-      !lateral soil flow temperature
-      ob(icmd)%hd(4)%temp = w_temp%sur_lat
-      !tile flow temperature
-      ob(icmd)%hd(5)%temp = w_temp%sur_lat
+      !water temperature calculations (handled in ch_temp component mixing)
+      !ob(icmd)%hd(2)%temp = w_temp(0)%sur_lat
+      !if (snomlt > 0.1) then
+      !  ob(icmd)%hd(3)%temp = w_temp(0)%sno_mlt
+      !else
+      !  ob(icmd)%hd(3)%temp = w_temp(0)%sur_lat
+      !end if
+      !ob(icmd)%hd(4)%temp = w_temp(0)%sur_lat
+      !ob(icmd)%hd(5)%temp = w_temp(0)%sur_lat
       do isalt = 1, cs_db%num_salts !rtb salt
         obcs(icmd)%hd(5)%salt(isalt) = tilesalt(j,isalt) * cnv_kg !kg of each salt ion
       enddo
@@ -196,7 +194,7 @@
       if (time%step > 1) then
         if (bsn_cc%gampt == 1) then
           !! hhsurfq from sq_greenampt - mm
-          ob(icmd)%hyd_flo(day_cur,:) = ob(icmd)%hyd_flo(day_cur,:) + hhsurfq(j,:) * cnv_m3
+          ob(icmd)%hyd_flo(day_cur,:) = ob(icmd)%hyd_flo(day_cur,:) + hhsurfq(j,:) * cnv_m3 / time%dtm * 60.
           
           !! translate the hydrogrpah by time of concentration - no attenuation
           ob(icmd)%hyd_flo(day_next,:) = 0.

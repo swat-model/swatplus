@@ -123,7 +123,7 @@
       if (sed_remove1 > 100.) sed_remove1 = 100.
       if (sed_remove1 < 0.) sed_remove1 = 0.
 
-      sed_remove2 = 79.0 - 1.04 * vfs_sed2 + 0.213 * surq_remove1 
+      sed_remove2 = 79.0 - 1.04 * vfs_sed2 + 0.213 * surq_remove2 
       if (sed_remove2 > 100.) sed_remove2 = 100.
       if (sed_remove2 < 0.) sed_remove2 = 0.
 

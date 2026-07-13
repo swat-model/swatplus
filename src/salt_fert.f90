@@ -22,7 +22,6 @@
       integer, intent (in) :: fertop      !               | 
       character(len=16) :: fert_type = ""
       real :: xx = 0.                     !               |surface application fraction 
-      integer :: isalt = 0                !               |salt ion counter
       integer :: l = 0                    !none           |counter 
 
       

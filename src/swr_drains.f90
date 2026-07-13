@@ -47,6 +47,8 @@
       use reservoir_module
       
       implicit none
+      
+      external :: swr_depstor
 
       integer :: j1 = 0          !none          |counter
       integer :: j = 0           !none          |HRU number 

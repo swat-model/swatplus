@@ -15,6 +15,8 @@
       
       implicit none
       
+      external :: cs_rctn_aqu, cs_sorb_aqu, salt_chem_aqu
+      
       integer :: iaq = 0        !none       |counter
       integer :: iaqdb = 0      !           |
       integer :: icha = 0       !           |
@@ -254,8 +256,8 @@
       aqu_d(iaq)%minp = ob(icmd)%hin%flo * aqu_dat(iaq)%minp / 1000.
       ob(icmd)%hd(1)%solp = aqu_d(iaq)%minp
       
-      !! temperature of aquifer flow
-      ob(icmd)%hd(1)%temp = w_temp%gw
+      !! temperature of aquifer flow (handled in ch_temp component mixing)
+      !ob(icmd)%hd(1)%temp = w_temp(0)%gw
 
       !! compute fraction of flow to each channel in the aquifer
       !! if connected to aquifer - add flow
@@ -295,7 +297,7 @@
         
         !! compute pesticide decay in the aquifer
         aqupst_d(iaq)%pest(ipest)%react = 0.
-        if (cs_aqu(iaq)%pest(ipest) > 1.e-12) then
+        if (cs_aqu(iaq)%pest(ipest) > 0.) then
           aqupst_d(iaq)%pest(ipest)%react = cs_aqu(iaq)%pest(ipest) * (1. - pestcp(ipest_db)%decay_s)
           cs_aqu(iaq)%pest(ipest) =  cs_aqu(iaq)%pest(ipest) * pestcp(ipest_db)%decay_s
           !! add decay to daughter pesticides

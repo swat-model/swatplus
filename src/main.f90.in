@@ -8,6 +8,17 @@
 
       implicit none
       
+      external :: proc_bsn, proc_date_time, proc_db, proc_read, hyd_connect, exco_db_read, dr_db_read
+      external :: cli_lapse, object_read_output, om_water_init, pest_cha_res_read, path_cha_res_read
+      external :: salt_cha_read, cs_cha_read, lsu_read_elements, proc_hru, proc_cha, proc_aqu
+      external :: dtbl_lum_read, hru_lte_read, proc_cond, res_read_weir, dtbl_res_read, dtbl_scen_read
+      external :: cal_cond_read, manure_allocation_read, dtbl_flocon_read, om_treat_read, om_use_read
+      external :: water_treatment_read, water_use_read, water_tower_read, water_pipe_read, water_allocation_read
+      external :: hru_dtbl_actions_init, proc_res, wet_read_hyd, wet_read, wet_read_salt_cs
+      external :: wet_all_initial, wet_fp_init, soil_nutcarb_init, proc_cal, proc_open
+      external :: unit_hyd_ru_hru, dr_ru, hyd_connect_out, command, time_control
+      external :: calsoft_control, cal_parmchg_read, calhard_control, swift_output
+      
       integer :: date_time(8)           !              |
       character*10 b(3)                 !              |
       integer :: iob = 0
@@ -26,19 +37,13 @@
       
       open (888,file="erosion.txt",recl = 1500)
       
- !!!! for Luis only
- !     open (7777,file='res1_out.txt',recl=1500)
- !     write (7777,7778) 
-!7778  format (9x,'DAY',8x,'YEAR',10x,'RES',7x,'VOL m^3',4x,'INFLO m^3',5x,'OUTFLO m^3',5x,'PREC m^3',7x,'EVAP m^3',  &
-!        8x,'AREA ha')
- !!!! for Luis only
-      
       call proc_bsn   
       call proc_date_time
       call proc_db
       call proc_read
 
       call hyd_connect
+      call recalldb_read
       call exco_db_read
       call dr_db_read
       
@@ -47,13 +52,7 @@
       iob = 0
         do while (icmd /= 0)
             iob = iob + 1
-          cmd_next(iob) = icmd
-          write (7777,*) icmd, ob(icmd)%name, ob(icmd)%typ,               &  
-           ob(icmd)%props, ob(icmd)%props2, ob(icmd)%src_tot,           &
-           ob(icmd)%rcv_tot !, (ob(icmd)%obj_out,ob(icmd)%obtyp_out(i),   &
-           !ob(icmd)%obtypno_out(i), ob(icmd)%htyp_out(i), i = 1,        &
-           !ob(icmd)%src_tot)
-         
+          cmd_next(iob) = icmd 
          icmd = ob(icmd)%cmd_next
         end do 
           
@@ -91,7 +90,15 @@
       call dtbl_flocon_read
             
       ! read water treatment and water allocation files - before hru lum tables
-      call treat_read_om
+      call om_treat_read
+      call om_use_read
+      call om_osrc_read
+      call water_treatment_read
+      call water_use_read
+      !call water_osrc_read
+      call water_tower_read
+      call water_pipe_read
+      call water_canal_read
       call water_allocation_read
       
       call hru_dtbl_actions_init
@@ -104,14 +111,18 @@
       if (db_mx%wet_dat > 0) call wet_all_initial
       call wet_fp_init
       
+      !! proc_cal runs before soil_nutcarb_init so calibration of init_seq,
+      !! init_microb, init_slow and init_passive (and the other carbon.bsn
+      !! parameters) takes effect at pool initialisation. With the reverse
+      !! order the pools are already sized and init_* calibration has no impact.
+      call proc_cal
+
       !! initialize carbon and nutrient contents for each hru
       do ihru = 1, sp_ob%hru
         isol = hru(ihru)%dbs%soil
         call soil_nutcarb_init(isol)
       end do
-      
-      call proc_cal
-      
+
       call proc_open
       
         
@@ -124,6 +135,11 @@
       
       ! save initial time settings for soft calibration runs
       time_init = time
+      !if (bsn_cc%uhyd==1)then
+ 
+	  !open(100100,file="paddy_test.csv") !temporary output for paddy Jaehak 2022 
+      !write(100100,'(4a7,20a21)')"Year,","Mon,","Day,","HRU,","Precip,","Irrig,","Seep,","PET,","ET,","WeirH,","Wtrdep,","WeirQ,","SW,","Sedcon,","SedYld,","NO3Con,","NO3Yld,","LAI,","SALT" 
+      !end if
 
       !! simulate watershed processes
       if (time%step < 0) then

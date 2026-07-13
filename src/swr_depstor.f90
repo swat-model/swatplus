@@ -41,6 +41,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: theta
       integer :: j = 0          !none          |HRU number
       real:: df = 0.            !none          |oriented and random roughness decay factor - based
                                 !              |on cumulative EI and cumulative precip_eff

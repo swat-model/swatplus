@@ -12,8 +12,11 @@
       use constituent_mass_module !rtb salt
       use salt_module, only : salt_uptake_on
       use salt_data_module, only : salt_effect
+      use output_landscape_module
       
       implicit none 
+      
+      external :: pl_nup, pl_pup, pl_tstr, salt_uptake, cs_uptake
       
       integer :: j = 0          !none               |HRU number
       real :: ruedecl = 0.      !none               |decline in radiation use efficiency for the
@@ -139,10 +142,12 @@
           if (pcom(j)%plstr(ipl)%reg > 1.) pcom(j)%plstr(ipl)%reg = 1.
 
           pl_mass_up%m = bioday * pcom(j)%plstr(ipl)%reg
-          pl_mass_up%c = 0.42 * bioday * pcom(j)%plstr(ipl)%reg
+          pl_mass_up%c = 0.42 * pl_mass_up%m
+          hpw_d(j)%bm_grow = hpw_d(j)%bm_grow + pl_mass_up%m
+          hpw_d(j)%c_gro = hpw_d(j)%c_gro + pl_mass_up%c
                 
           !! increase in plant c
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 2 ) then
             hpc_d(j)%npp_c = hpc_d(j)%npp_c + pl_mass_up%c
           end if
 

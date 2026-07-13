@@ -8,7 +8,7 @@
       
       implicit none
       
-      integer :: j             !none          |hru number
+      integer, intent (in) :: j             !none          |hru number
       real :: const = 0.       !              |constant used for rate, days, etc
       integer :: iob = 0          !                |
       
@@ -20,7 +20,7 @@
             write (2548,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_d(j), wet(j), &
             wet_in_d(j), wet_out_d(j)
              if (pco%csvout == "y") then
-               write (2552,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+               write (2552,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                wet_wat_d(j), wet(j), wet_in_d(j), wet_out_d(j)
              end if
           end if 
@@ -46,7 +46,7 @@
             write (2549,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_m(j), wet(j), &
             wet_in_m(j), wet_out_m(j)
               if (pco%csvout == "y") then
-                write (2553,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                write (2553,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 wet_wat_m(j), wet(j), wet_in_m(j), wet_out_m(j)
               end if 
           end if
@@ -60,13 +60,13 @@
           wet_in_a(j) = wet_in_a(j) + wet_in_y(j)
           wet_out_a(j) = wet_out_a(j) + wet_out_y(j)
           wet_wat_a(j) = wet_wat_a(j) + wet_wat_y(j)
-          wet_in_y(j)%flo = wet_in_y(j)%flo / 12.
-          wet_out_y(j)%flo = wet_out_y(j)%flo / 12.
+          !wet_in_y(j)%flo = wet_in_y(j)%flo / 12.
+          !wet_out_y(j)%flo = wet_out_y(j)%flo / 12.
           if (pco%res%y == "y") then
             write (2550,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_y(j), wet(j), &
             wet_in_y(j), wet_out_y(j)
               if (pco%csvout == "y") then
-                write (2554,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
+                write (2554,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 wet_wat_y(j), wet(j), wet_in_y(j), wet_out_y(j)
               end if
           end if
@@ -77,13 +77,13 @@
 
 !!!!! average annual print
         if (time%end_sim == 1 .and. pco%res%a == "y") then
-          wet_in_a(j) = wet_in_y(j) / time%yrs_prt
-          wet_out_a(j) = wet_out_y(j) / time%yrs_prt
+          wet_in_a(j) = wet_in_a(j) / time%yrs_prt
+          wet_out_a(j) = wet_out_a(j) / time%yrs_prt
           wet_wat_a(j) = wet_wat_a(j) / time%yrs_prt
           write (2551,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_a(j), wet(j), &
           wet_in_a(j), wet_out_a(j)
           if (pco%csvout == "y") then
-            write (2555,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_a(j), &
+            write (2555,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, wet_wat_a(j), &
             wet(j), wet_in_a(j), wet_out_a(j)
           end if 
         end if

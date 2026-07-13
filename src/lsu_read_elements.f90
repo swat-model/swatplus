@@ -7,6 +7,8 @@
       use output_landscape_module
       
       implicit none
+      
+      external :: define_unit_elements
 
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
@@ -45,6 +47,7 @@
         allocate (ruwb_m(0:mlsu))
         allocate (ruwb_y(0:mlsu))
         allocate (ruwb_a(0:mlsu))
+        allocate (lsu_wb_d(0:mlsu))
         allocate (runb_d(0:mlsu))
         allocate (runb_m(0:mlsu))
         allocate (runb_y(0:mlsu))

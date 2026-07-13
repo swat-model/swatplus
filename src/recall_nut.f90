@@ -16,9 +16,7 @@
       integer :: ichan = 0    !            |id of source channel
       real :: sol_conc = 0.   !g/m3        |concentration of solute in diversion water
       real :: div_mass = 0.   !kg          |mass of constituent in diversion water
-      integer :: dum = 0
-      
-      
+    
       !channel from which water is diverted
       ichan = ob(icmd)%obtypno_out(1) 
       

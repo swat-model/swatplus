@@ -33,8 +33,11 @@
       use soil_module
       use plant_module
       use output_landscape_module
+      use utils
 
       implicit none
+      
+      external :: nuts
 
       integer :: j = 0       !none      |hru number
       integer :: l = 0       !none      |counter (soil layer)
@@ -64,7 +67,7 @@
       do l = 1, soil(j)%nly
         soil_depth = soil(j)%phys(l)%d
         if (root_depth < soil_depth) exit
-        upmx = uapd(ipl) * rto_solp * (1. - Exp(-bsn_prm%p_updis * soil_depth / root_depth)) / uptake%p_norm
+        upmx = uapd(ipl) * rto_solp * (1. - Exp_w(-bsn_prm%p_updis * soil_depth / root_depth)) / uptake%p_norm
         uapl = Min(upmx - pplnt(j), soil1(j)%mp(l)%lab)
         pplnt(j) = pplnt(j) + uapl
         soil1(j)%mp(l)%lab = soil1(j)%mp(l)%lab - uapl
@@ -78,9 +81,6 @@
       hnb_d(j)%puptake = hnb_d(j)%puptake + pplnt(j)
 
       !! compute phosphorus stress
-      !call nuts(pl_mass(j)%tot(ipl)%p, up2(ipl), pcom(j)%plstr(ipl)%strsp)
-      
-      !***jga
       call nuts(pl_mass(j)%ab_gr(ipl)%p, up2(ipl), pcom(j)%plstr(ipl)%strsp)
 
       return

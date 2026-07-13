@@ -12,102 +12,43 @@
       use climate_module
       use water_body_module
       use time_module
-      use water_allocation_module, only: wallo
       use ch_salt_module !rtb salt
       use ch_cs_module !rtb cs
       use gwflow_module, only: flood_freq !rtb gwflow
       use ch_pesticide_module               !!!  nbs added 7-20-23
       use channel_velocity_module
+      use water_allocation_module
+      use maximum_data_module
       
       implicit none     
+      
+      external :: actions, ch_rtmusk, ch_rtpath, ch_rtpest, ch_temp, ch_watqual4, conditions, gwflow_canal, &
+                  gwflow_channel_exch, gwflow_floodplain, gwflow_satexcess, gwflow_tile, rcurv_interp_flo, &
+                  sd_channel_sediment3, wallo_control, cli_lapse
     
-      !real :: rcharea                !m^2           |cross-sectional area of flow
-      real :: flo_rt = 0.             !m^3/s         |flow rate in reach for day
       integer :: isd_db = 0           !              |
-      integer :: iob = 0              !              |
-      integer :: idb = 0              !none          |channel data pointer
-      integer :: ihyd = 0             !              |
       integer :: ipest = 0            !              |
       integer :: isalt = 0            !              |salt ion counter (rtb salt)
-      integer :: ihru = 0             !              |
-      integer :: iru = 0              !              |
-      integer :: ise = 0              !              |
-      integer :: ielem = 0            !              |
-      integer :: id = 0
-      integer :: iter = 0
       real :: ebtm_m = 0.             !m             |erosion of bottom of channel
       real :: ebank_m = 0.            !m             |meander cut on one side
-      real :: erode_bank_cut = 0.     !cm            |widening caused by downcutting (both sides)
-      real :: ebtm_t = 0.             !tons          |bottom erosion
-      real :: ebank_t = 0.            !tons          |bank erosion
-      real :: sedout = 0.             !mg            |sediment out of waterway channel
-      real :: washld = 0.             !tons          |wash load  
-      real :: bedld = 0.              !tons          |bed load
-      real :: dep = 0.                !tons          |deposition
       real :: hc_sed = 0.             !tons          |headcut erosion
-      real :: chside = 0.             !none          |change in horizontal distance per unit
-                                      !              |change in vertical distance on channel side
-                                      !              |slopes; always set to 2 (slope=1/2)
       real :: a = 0.                  !m^2           |cross-sectional area of channel
-      real :: b = 0.                  !m             |bottom width of channel
-      real :: c = 0.                  !none          |inverse of channel side slope
-      real :: p = 0.                  !m             |wetting perimeter
-
-      real :: rh = 0.                 !m             |hydraulic radius
-      real :: qman = 0.               !m^3/s or m/s  |flow rate or flow velocity
       real :: frac = 0.               !0-1           |fraction of hydrograph 
-      real :: valint = 0.             !              | 
-      integer :: ivalint = 0          !              |
-      real :: tbase = 0.              !none          |flow duration (fraction of 24 hr)
-      real :: tb_pr = 0.              !              |
-      real :: tb = 0.                 !              |
-      real :: vol_ovb = 0.            !              |
-      real :: const = 0.              !              |
       integer :: ics = 0              !none          |counter
-      real :: ob_const = 0.           !              |
-      integer :: ii = 0               !none          |counter
-      real :: sum_vol = 0.            !              |
-      real :: xx = 0.                 !              | 
-      integer :: ic = 0               !              |
-      real :: vol_overmx = 0.         !              |
-      real :: flood_dep = 0.          !              | 
-      real :: dep_e = 0.              !              |
       real :: rto = 0.                !none          |cloud cover factor 
-      real :: sumtime = 0.            !              |
-      real :: vc = 0.                 !m/s           |flow velocity in reach
-      real :: pr_ratio = 0.           !              |
-      real :: shear_btm_cr = 0.       !              |
-      real :: shear_btm = 0.          !              |  
-      real :: hc = 0.                 !m/yr          |head cut advance
-      integer :: max                  !              |  
       integer :: iaq = 0
       integer :: iaq_ch = 0
-      real :: det = 0.                !hr            |time step
       real :: scoef = 0.              !none          |Storage coefficient
-      real :: flo_ls = 0.
-      real :: vel = 0.
-      real :: cohes = 0.
-      real :: vel_cr = 0.
-      real :: b_coef = 0.
-      real :: qcms = 0.
-      real :: veg = 0.
-      real :: rad_curv = 0.
-      real :: cla = 0.
-      real :: pk_rto = 0.
-      real :: vel_bend = 0.
-      real :: vel_rch = 0.
-      real :: arc_len = 0.
-      real :: hyd_radius = 0.
-      real :: prot_len = 0.
       real :: gw_salt_in = 0.         !kg            |salt loading to channel from aquifer
       real :: gw_cs_in = 0.           !kg            |constituent loading to channel from aquifer
       real :: seep_mass = 0.          !kg            |salt mass in seepage water
       real :: salt_conc(8) = 0.       !kg            |salt concentration in channel water
       real :: cs_conc(8) = 0.         !kg            |constituent concentration in channel water
-      real :: bf_flow = 0.            !m3/s          |bankfull flow rate * adjustment factor
       real :: conc_chng = 0.          !              |change in concentration (and mass) in channel sol and org N and P
       real :: inflo_rate = 0.
       real :: aqu_inflo = 0.          !m3            |aquifer inflow if using geomorphic baseflow
+      integer :: iw = 0               !              |counter for water allocation object
+      integer :: iwallo = 0           !              |variable to pass to wallo_control
       
       ich = isdch
       isd_db = sd_dat(ich)%hyd
@@ -120,8 +61,12 @@
       ht1 = ob(icmd)%hin
       
       !! zero outgoing flow and sediment - ht2
-      ht2 = hz 
-      
+      ht2 = hz
+
+      if (cs_db%num_tot > 0.) then
+        obcs(icmd)%hd(:) = hin_csz
+      end if
+    
       !! zero daily in/out morphology and sediment budget output
       ch_sed_bud(ich) = ch_sed_budz
       !ch_in_d = chaz
@@ -159,6 +104,10 @@
       ht1%temp = 5.0 + 0.75 * wst(iwst)%weat%tave
       wtemp = 5.0 + 0.75 * wst(iwst)%weat%tave
 
+      if (sd_ch(ich)%msk%nsteps == 1) then
+        ob(icmd)%tsin(1) = ht1%flo
+      end if
+            
       !! if connected to aquifer - add flow
       if (sd_ch(ich)%aqu_link > 0) then
         iaq = sd_ch(ich)%aqu_link
@@ -189,10 +138,10 @@
       
       !if gwflow is active, calculate aquifer interactions (ht1 is updated)
       if(bsn_cc%gwflow.eq.1) then
-        call gwflow_gwsw(ich) !channel <--> groundwater
-        call gwflow_canl(ich) !channel --> canal seepage
+        call gwflow_channel_exch(ich) !channel <--> groundwater
+        call gwflow_canal(ich) !channel --> canal seepage
         call gwflow_tile(ich) !groundwater --> channel
-        call gwflow_satx(ich) !groundwater --> channel
+        call gwflow_satexcess(ich) !groundwater --> channel
       end if
       
       !! set inflow hyds for printing
@@ -201,26 +150,33 @@
       ch_in_d(ich) = ht1                        !set inflow om hydrograph
       ch_in_d(ich)%flo = ht1%flo / 86400.       !flow for om output - m3/s
       
-      !set constituents (rtb salt) to incoming loads
+      !! set constituents (rtb salt) to incoming loads
       if (cs_db%num_tot > 0) then
         hcs1 = obcs(icmd)%hin(1)
       end if
+      
       !! zero outgoing flow and sediment - ht2
       ht2 = hz
   
-      ! compute flood plain deposition and channel erosion   
+      !! compute flood plain deposition and channel erosion   
       call sd_channel_sediment3
         
-      !call Muskingum and variable storage coefficient flood routing method
+      !! call Muskingum and variable storage coefficient flood routing method
       call ch_rtmusk
             
-      !! route constituents
-      call ch_rtpest
-      !! call mike winchell's new routine for pesticide routing
-      ! call ch_rtpest2
-      call ch_rtpath
-        
-      !salt and constituent concentrations (g/m3) for inflow water
+      !! route pesticides
+      if (cs_db%num_pests > 0) then
+        call ch_rtpest
+        !call ch_rtpest2 -  mike winchell's new routine for pesticide routing
+        obcs(icmd)%hd(1)%pest = hcs2%pest
+      end if
+      
+      !! route pathogens
+      if (cs_db%num_paths > 0) then
+        call ch_rtpath
+      end if
+      
+      !! salt and constituent concentrations (g/m3) for inflow water
       if(cs_db%num_salts > 0 .or. cs_db%num_cs > 0) then
         hcs2 = hcs1 !set outflow to inflow
         do isalt=1,cs_db%num_salts
@@ -290,18 +246,9 @@
           hcs2%cs(ics) = hcs2%cs(ics) - seep_mass !kg
           chcs_d(ich)%cs(ics)%seep = seep_mass !kg (channel constituent output)
         end do
-        !! route constituents
-        call ch_rtpest
-        !! call mike winchell's new routine for pesticide routing
-        !call ch_rtpest2
-        if (cs_db%num_pests > 0) then
-          obcs(icmd)%hd(1)%pest = hcs2%pest
-        end if
-      
+        
         !! total outgoing to output to SWIFT
         ob(icmd)%hout_tot = ob(icmd)%hout_tot + ht2
-        !! route pathogens
-        call ch_rtpath
         
         !compute stream temperature
         ! Call Subroutune for Ficklin Model, Linear Equation Model, Energy Balance Model
@@ -371,30 +318,26 @@
       hyd_sep_array(ich,4) = hdsep2%flo_swgw / 86400.
       hyd_sep_array(ich,5) = hdsep2%flo_satex / 86400.
       hyd_sep_array(ich,6) = hdsep2%flo_satexsw / 86400.
-      hyd_sep_array(ich,7) = 0. !hdsep2%flo_tile / 86400.
-      !rtb hydrograph separation
-      !end if
+      hyd_sep_array(ich,7) = hdsep2%flo_tile / 86400.
 
       ich = isdch
             
-      !! check decision table for flow control - water diversion
-      if (ob(icmd)%ruleset /= "null" .and. ob(icmd)%ruleset /= "0") then
-        id = ob(icmd)%flo_dtbl
-        d_tbl => dtbl_flo(id)
-        call conditions (ich, id)
-        call actions (ich, icmd, id)
+      !! allocate water for transfers that don't include a channel as a source
+      if (db_mx%wallo_db > 0) then
+        do iwallo = 1, db_mx%wallo_db
+          do while (wallo(iwallo)%trn(wallo(iwallo)%trn_cur)%ch_src == ich)
+            iw = iwallo
+            trn_m3 = ht2%flo
+            if (wallo(iwallo)%trn_cur <= wallo(iwallo)%trn_obs) call wallo_control (iw)
+          end do
+        end do
       end if
- 
-      !! check decision table for water allocation
-      if (sd_ch(isdch)%wallo > 0) then
-        call wallo_control (sd_ch(isdch)%wallo)
-      end if
-      
-      if (ob(icmd)%hyd_flo(1,1) > 1.e-6) then
-        if (ht2%flo / ob(icmd)%hyd_flo(1,1) > 1.5) then
-          a = 1.
-        end if
-      end if
+
+    ! if (ob(icmd)%hyd_flo(1,1) > 1.e-6) then
+    !    if (ht2%flo / ob(icmd)%hyd_flo(1,1) > 1.5) then
+    !      a = 1.
+    !    end if
+    !  end if
       
       !! set outflow hyd to ht2 after diverting water
       ob(icmd)%hd(1) = ht2
@@ -415,10 +358,8 @@
         end do
       end if
       
-      !! calculate stream temperature
-      ob(icmd)%hd(1)%temp = 5. + .75 * wst(iwst)%weat%tave
-      ht2%temp = 5. + .75 * wst(iwst)%weat%tave
-      ch_stor(isdch)%temp = 5. + .75 * wst(iwst)%weat%tave
+      !! calculate stream temperature (component mixing model)
+      call ch_temp
       
       !! set constituents for routing
       if (cs_db%num_pests > 0) then

@@ -5,7 +5,7 @@
       use hydrograph_module
       use ru_module
       use aquifer_module
-      use channel_module
+      ! use channel_module
       use hru_lte_module
       use sd_channel_module
       use basin_module
@@ -16,6 +16,8 @@
       use organic_mineral_mass_module
       use time_module
       implicit none
+      
+      external :: re_initialize, time_control
       integer :: isim = 0          !          |
       integer :: ireg = 0          !none      |counter
       integer :: ilum = 0          !none      |counter
@@ -23,11 +25,9 @@
       integer :: ihru_s = 0        !none      |counter
       integer :: iter_ind = 0      !          |end of loop
       integer :: ietco = 0         !none      |counter
-      real :: rmeas = 0.            !          |
-      real :: denom = 0.            !          |
-      real :: soft = 0.             !          |
-      real :: diff = 0.             !          |
-      real :: chg_val = 0.          !          |   
+      real :: soft = 0.            !          |
+      real :: diff = 0.            !          |
+      real :: chg_val = 0.         !          |   
       real :: pred = 0.
       ! calibrate esco and pet for water yield
         iter_ind = 1

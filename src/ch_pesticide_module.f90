@@ -123,20 +123,20 @@
         type (ch_pesticide_processes), intent (in) :: ch1
         real, intent (in) :: const
         type (ch_pesticide_processes) :: ch2
-          ch2%tot_in = ch1%tot_in
-          ch2%sol_out = ch1%sol_out
-          ch2%sor_out = ch1%sor_out
-          ch2%react = ch1%react
-          ch2%metab = ch1%metab
-          ch2%volat = ch1%volat
-          ch2%settle = ch1%settle
-          ch2%resus = ch1%resus
-          ch2%difus = ch1%difus
-          ch2%react_bot = ch1%react_bot
-          ch2%metab_bot = ch1%metab_bot
-          ch2%bury = ch1%bury
-          ch2%water = ch1%water
-          ch2%benthic = ch1%benthic
+          ch2%tot_in = const * ch1%tot_in
+          ch2%sol_out = const * ch1%sol_out
+          ch2%sor_out = const * ch1%sor_out
+          ch2%react = const * ch1%react
+          ch2%metab = const * ch1%metab
+          ch2%volat = const * ch1%volat
+          ch2%settle = const * ch1%settle
+          ch2%resus = const * ch1%resus
+          ch2%difus = const * ch1%difus
+          ch2%react_bot = const * ch1%react_bot
+          ch2%metab_bot = const * ch1%metab_bot
+          ch2%bury = const * ch1%bury
+          ch2%water = const * ch1%water
+          ch2%benthic = const * ch1%benthic
       end function chpest_ave
       
       end module ch_pesticide_module

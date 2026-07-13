@@ -10,6 +10,8 @@
       use basin_module
       
       implicit none      
+      
+      external :: rcurv_interp_dep, sd_rating_curve, qman
 
       real :: kh = 0.
       integer :: idb = 0                !             |
@@ -77,7 +79,7 @@
         if (sd_ch(i)%chs < 1.e-9) sd_ch(i)%chs = .000001
         sd_ch(i)%chl = sd_chd(idb)%chl
         sd_ch(i)%chn = sd_chd(idb)%chn
-        if (sd_ch(i)%chn < .05) sd_ch(i)%chn = .05   !***jga
+        if (sd_ch(i)%chn < .05) sd_ch(i)%chn = .05
         sd_ch(i)%chk = sd_chd(idb)%chk      
         sd_ch(i)%bank_exp = sd_chd(idb)%bank_exp
         sd_ch(i)%cov = sd_chd(idb)%cov

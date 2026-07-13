@@ -4,14 +4,15 @@
       use reservoir_data_module
       use landuse_data_module
       use hydrology_data_module
-      use hydrograph_module, only : sp_ob
       use topography_data_module
       use soil_data_module
       use input_file_module
-      use hru_module, only : hru_db, ihru, sol_plt_ini, sol_plt_ini_cs, snodb
+      use hru_module, only : hru_db, ihru, sol_plt_ini, snodb
       use constituent_mass_module
       
       implicit none
+      
+      external :: allocate_parms
       
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
@@ -91,36 +92,36 @@
               end do
               ! initial pesticides
               do ics = 1, db_mx%pest_ini
-                if (sol_plt_ini_cs(isp_ini)%pestc == pest_soil_ini(ics)%name) then
-                  sol_plt_ini_cs(isp_ini)%pest = ics
+                if (sol_plt_ini(isp_ini)%pestc == pest_soil_ini(ics)%name) then
+                  sol_plt_ini(isp_ini)%pest = ics
                   exit
                 end if
               end do
               ! initial pathogens
               do ics = 1, db_mx%path_ini
-                if (sol_plt_ini_cs(isp_ini)%pathc == path_soil_ini(ics)%name) then
-                  sol_plt_ini_cs(isp_ini)%path = ics
+                if (sol_plt_ini(isp_ini)%pathc == path_soil_ini(ics)%name) then
+                  sol_plt_ini(isp_ini)%path = ics
                   exit
                 end if
               end do
               ! initial heavy metals
               do ics = 1, db_mx%hmet_ini
-                if (sol_plt_ini_cs(isp_ini)%hmetc == hmet_water_ini(ics)%name) then
-                  sol_plt_ini_cs(isp_ini)%hmet = ics
+                if (sol_plt_ini(isp_ini)%hmetc == hmet_soil_ini(ics)%name) then
+                  sol_plt_ini(isp_ini)%hmet = ics
                   exit
                 end if
               end do
               ! initial salts
               do ics = 1, db_mx%salt_ini
-                if (sol_plt_ini_cs(isp_ini)%saltc == salt_soil_ini(ics)%name) then
-                  sol_plt_ini_cs(isp_ini)%salt = ics
+                if (sol_plt_ini(isp_ini)%saltc == salt_soil_ini(ics)%name) then
+                  sol_plt_ini(isp_ini)%salt = ics
                   exit
                 end if
               end do
               ! initial constituents
               do ics = 1, db_mx%cs_ini
-                if (sol_plt_ini_cs(isp_ini)%csc == cs_soil_ini(ics)%name) then
-                  sol_plt_ini_cs(isp_ini)%cs = ics
+                if (sol_plt_ini(isp_ini)%csc == cs_soil_ini(ics)%name) then
+                  sol_plt_ini(isp_ini)%cs = ics
                   exit
                 end if
               end do

@@ -64,7 +64,5 @@
       
       close (5054)
 
-      
       return
-      end subroutine cs_urban_read
-      
+      end subroutine cs_urban_read     

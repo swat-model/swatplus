@@ -57,6 +57,9 @@
       
       implicit none
 
+      
+      
+      
       real, external :: Theta  !units         |description        
       real :: path_tot = 0.    !10^4 cfu      |mass persistent bacteria
       real :: netwtr = 0.      !m^3 H2O       |net amount of water in reach during time step

@@ -135,9 +135,9 @@
             !! sum total channel length for
             do ich_s = 1, chcal(i)%num_tot
               ich = chcal(i)%num(ich_s)
-              if (chcal(i)%ord(iord)%meas%name == sd_ch(ich)%order) then
+              !if (chcal(i)%ord(iord)%meas%name == sd_ch(ich)%order) then
                 chcal(i)%ord(iord)%length = chcal(i)%ord(iord)%length + sd_ch(ich)%chl
-              end if
+              !end if
             end do
           end do
         end if   

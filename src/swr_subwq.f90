@@ -79,7 +79,7 @@
           
           !!add by zhang
           !!========================
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 2 ) then
             org_c = hsc_d(j)%sed_c * hru(j)%area_ha
           end if
           !!add by zhang
@@ -87,6 +87,7 @@
           
                   
           !! calculate carbonaceous biological oxygen demand (ppm or mg/L)
+          !! other equations - BOD5 = 2.9 * TOC; CBOD5 = 23.7 + 1.68 * TOC; BOD = 1.813(TOC)**0.4244
           cbodu(j) = 2.7 * org_c / (qdr(j) * hru(j)%km) / 10000.  !JAEHAK 2016
 
           !! calculate dissolved oxygen saturation concentration

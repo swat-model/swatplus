@@ -1,0 +1,4 @@
+carbon_lyr.bsn: derived from carb_coefs.cbn (per-layer carbon coefficients)
+           layer         hp_rate         hs_rate     microb_rate       meta_rate        str_rate microb_top_rate           hs_hp           a1co2           asco2           apco2           abco2
+               1         1.2e-05        2.92e-04          0.0164          0.0405          0.0107          0.0164            0.05            0.60            0.55            0.55            0.55
+               2         1.2e-05        1.81e-04            0.02          0.0507          0.0134            0.02            0.05            0.55            0.55            0.55             0.0

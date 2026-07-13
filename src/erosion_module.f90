@@ -14,11 +14,9 @@
         real :: p = 0.              !           |usle p factor
         real :: c = 0.              !           |usle c factor
         real :: rsd_m = 0.          !kg/ha      |surface residue mass
-        real :: rsd_pctcov = 0.     !%          |surface residue percent ground cover
-        real :: rsd_cfac = 0.       !           |residue c subfactor
-        real :: can_lai3 = 0.       !           |canopy cover - lai/3.
-        real :: canhgt = 0.         !m          |canopy height
-        real :: can_cfac = 0.       !           |canopy c subfactor
+        real :: grcov_frac = 0.     !frac       |ground cover fraction
+        real :: rsd_covfact = 0.    !           |residue cover factor
+        real :: bio_covfact = 0.    !           |growing biomass factor
       end type erosion_output_variables
 
       type erosion_output
@@ -41,11 +39,9 @@
         character (len=12)  :: p          =  "   p_factor"
         character (len=12)  :: c          =  "   c_factor"
         character (len=12)  :: rsd_m      =  "      rsd_m"
-        character (len=12)  :: rsd_pctcov =  " rsd_pctcov"
-        character (len=12)  :: rsd_cfac   =  "   rsd_cfac"
-        character (len=12)  :: can_lai3   =  "   can_lai3"
-        character (len=12)  :: canhgt     =  "   can_hgt"
-        character (len=12)  :: can_cfac   =  "   can_cfac"
+        character (len=12)  :: grcov_frac =  " grcov_frac"
+        character (len=12)  :: rsd_covfact   =  " rsd_covfact"
+        character (len=12)  :: bio_covfact   =  " bio_covfact"
       end type erosion_output_header      
       type (erosion_output_header) :: ero_hdr
       
@@ -62,11 +58,9 @@
         character (len=12)  :: p          =  "           "
         character (len=12)  :: c          =  "           "
         character (len=12)  :: rsd_m      =  "      kg/ha"
-        character (len=12)  :: rsd_pctcov =  "    percent"
-        character (len=12)  :: rsd_cfac   =  "           "
-        character (len=12)  :: can_lai3   =  "           "
-        character (len=12)  :: canhgt     =  "          m"
-        character (len=12)  :: can_cfac   =  "           "
+        character (len=12)  :: grcov_frac =  "       frac"
+        character (len=12)  :: rsd_covfact   =  "           "
+        character (len=12)  :: bio_covfact   =  "           "
       end type erosion_header_units      
       type (erosion_header_units) :: ero_hdr_units
    
@@ -100,11 +94,10 @@ contains
         ero_3%ls = ero_1%ls + ero_2%ls
         ero_3%p = ero_1%p + ero_2%p
         ero_3%rsd_m = ero_1%rsd_m + ero_2%rsd_m
-        ero_3%rsd_pctcov = ero_1%rsd_pctcov + ero_2%rsd_pctcov
-        ero_3%rsd_cfac = ero_1%rsd_cfac + ero_2%rsd_cfac
-        ero_3%can_lai3 = ero_1%can_lai3 + ero_2%can_lai3
-        ero_3%canhgt = ero_1%canhgt + ero_2%canhgt
-        ero_3%can_cfac = ero_1%can_cfac + ero_2%can_cfac
+        ero_3%grcov_frac = ero_1%grcov_frac + ero_2%grcov_frac
+        ero_3%rsd_covfact = ero_1%rsd_covfact + ero_2%rsd_covfact
+        ero_3%bio_covfact = ero_1%bio_covfact + ero_2%bio_covfact
+        ero_3%c = ero_1%c + ero_2%c
       end function ero_add
                           
       !! divide erosion outputs by number of events
@@ -122,11 +115,10 @@ contains
         ero_2%ls = ero_1%ls / const
         ero_2%p = ero_1%p / const
         ero_2%rsd_m = ero_1%rsd_m / const
-        ero_2%rsd_pctcov = ero_1%rsd_pctcov / const
-        ero_2%rsd_cfac = ero_1%rsd_cfac / const
-        ero_2%can_lai3 = ero_1%can_lai3 / const
-        ero_2%canhgt = ero_1%canhgt / const
-        ero_2%can_cfac = ero_1%can_cfac / const
+        ero_2%grcov_frac = ero_1%grcov_frac / const
+        ero_2%rsd_covfact = ero_1%rsd_covfact / const
+        ero_2%bio_covfact = ero_1%bio_covfact / const
+        ero_2%c = ero_1%c / const
       end function ero_divide
       
       end module erosion_module 

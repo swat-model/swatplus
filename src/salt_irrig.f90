@@ -1,4 +1,4 @@
-      subroutine salt_irrig(iwallo,idmd,ihru) !rtb salt
+      subroutine salt_irrig(iwallo,itrn,ihru) !rtb salt
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine adds salt mass from irrigation water into the soil profile, and removes salt mass
@@ -8,7 +8,7 @@
       use water_body_module
       use aquifer_module
       use reservoir_data_module
-      use hydrograph_module, only : irrig,res,sp_ob1,ob
+      use hydrograph_module, only : sp_ob1,ob
       use hru_module, only : hru
       use salt_module !rtb salt
       use salt_aquifer !rtb salt
@@ -20,7 +20,7 @@
       implicit none 
 
       integer, intent (inout) :: iwallo     !water allocation object number
-      integer, intent (inout) :: idmd       !water demand object number
+      integer, intent (inout) :: itrn       !water demand object number
       integer, intent (inout) :: ihru       !HRU that receives irrigation water
       character*10 :: irrig_type  
       integer :: isrc = 0                    !irrigation source counter
@@ -33,8 +33,6 @@
       integer :: obnum_chan = 0             !channel object number
       integer :: isalt = 0                  !salt ion counter
       integer :: wetland = 0                !wetland flag
-      real :: irrig_total = 0.              !irrigation removed from source (m3)
-      real :: irrig_fraction = 0.           !fraction of irrigation water
       real :: irrig_volume = 0.             !volume (m3) of irrigation water
       real :: mass_diff = 0.
       real :: ion_mass = 0.
@@ -46,17 +44,17 @@
       
       
       !determine number of irrigation sources
-      irrig_nsource = wallo(iwallo)%dmd(idmd)%dmd_src_obs
+      !irrig_nsource = wallo(iwallo)%trn(itrn)%trn_src_obs
       
       !loop through the irrigation sources
       do isrc=1,irrig_nsource
       
         !determine the object type and object number (of water source)
-        irrig_type = wallo(iwallo)%dmd(idmd)%src_ob(isrc)%ob_typ
-        irrig_ob = wallo(iwallo)%dmd(idmd)%src_ob(isrc)%ob_num
+        irrig_type = wallo(iwallo)%trn(itrn)%src(isrc)%typ
+        irrig_ob = wallo(iwallo)%trn(itrn)%src(isrc)%num
         
         !total water volume (m3) removed from source object
-        irrig_volume = wallod_out(iwallo)%dmd(idmd)%src(isrc)%withdr
+        irrig_volume = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
         
         !calculate salt mass added to soil profile via irrigation (and salt mass removed from source object)
         if(irrig_volume > 0) then
@@ -203,4 +201,4 @@
       enddo !go to next irrigation source
 
       return
-      end !salt_irrig
+      end subroutine salt_irrig

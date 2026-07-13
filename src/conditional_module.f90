@@ -26,7 +26,7 @@
       end type actions_var
        
       type decision_table
-        character (len=25) :: name = ""                                 ! name of the decision table
+        character (len=40) :: name = ""                                 ! name of the decision table
         integer :: conds = 0                                            ! number of conditions
         integer :: alts = 0                                             ! number of alternatives
         integer :: acts = 0                                             ! number of actions
@@ -34,6 +34,7 @@
         character(len=25), dimension(:,:), allocatable :: alt           ! condition alternatives
         type (actions_var), dimension(:), allocatable :: act            ! actions
         integer, dimension(:), allocatable :: lu_chg_mx                 ! max times lu change can occur
+        integer, dimension(:), allocatable :: snow_chg_mx               ! max times snow change can occur
         character(len=1), dimension(:,:), allocatable :: act_outcomes   ! action outcomes ("y" to perform action; "n" to not perform)
         character(len=1), dimension(:), allocatable :: act_hit          ! "y" if all condition alternatives (rules) are met; "n" if not
         integer, dimension(:), allocatable :: act_typ                   ! pointer to action type (ie plant, fert type, tillage implement, release type, etc)

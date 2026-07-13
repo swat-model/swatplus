@@ -28,14 +28,12 @@
       integer, intent (in) :: fertop      !              |fertilizer operation type
       real, intent (in) :: frt_kg         !kg/ha         |total mass of fertilizer applied
       real :: fr_ly = 0.                  !fraction      |fraction of fertilizer applied to layer
-      real :: m_kg                        !kg/ha         |mass of fertilizer applied to layer
-      real :: c_kg                        !kg/ha         |mass of carbon applied to layer
       real :: c_n_rto                     !              |carbon nitrogen ratio
       real :: meta_fr                     !              |fraction of metabolic applied to layer
       real :: pool_fr                     !              |fraction of structural or lignin applied to layer
-      logical :: manure_flag
+      logical :: organic_flag
 
-      manure_flag = .false.
+      organic_flag = .false.
       org_frt%m = 0.
       org_frt%c = 0.
       org_frt%n = 0.
@@ -45,29 +43,29 @@
 
       j = ihru
       
-      rtof = 0.5
+      rtof = man_coef%rtof
       !! calculate c:n ratio for manure applications for SWAT-C
-      if (bsn_cc%cswat == 2) then
+      if (bsn_cc%cswat == 2 ) then
         if (fertdb(ifrt)%forgn > 0. .or. fertdb(ifrt)%forgp > 0. ) then
-          manure_flag = .true.
+          organic_flag = .true.
         endif
+      endif
         
-        if (manure_flag) then
-          org_frt%m = frt_kg
-          org_frt%c = 0.42 * frt_kg
-          org_frt%n = fertdb(ifrt)%forgn * frt_kg
-          org_frt%p = fertdb(ifrt)%forgp * frt_kg
-          c_n_rto = .175 * org_frt%c / (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn + 1.e-5)
-          !! meta_fr is the fraction of fertilizer that is allocated to metabolic litter pool
-          meta_fr = .85 - .018 * c_n_rto
-        endif
+      if (organic_flag) then
+        org_frt%m = frt_kg
+        org_frt%c = fertdb(ifrt)%forgn * frt_kg * 10.0  ! assume a 10:1 carbon to nitrogen ratio.
+        org_frt%n = fertdb(ifrt)%forgn * frt_kg
+        org_frt%p = fertdb(ifrt)%forgp * frt_kg
+        c_n_rto = .175 * org_frt%c / (fertdb(ifrt)%fminn + fertdb(ifrt)%forgn + 1.e-5)
+        !! meta_fr is the fraction of fertilizer that is allocated to metabolic litter pool
+        meta_fr = .85 - .018 * c_n_rto
+      endif
 
-        if (meta_fr < 0.01) then
-          meta_fr = 0.01
-        else
-          if (meta_fr > .7) then
-            meta_fr = .7
-          end if
+      if (meta_fr < 0.01) then
+        meta_fr = 0.01
+      else
+        if (meta_fr > .7) then
+          meta_fr = .7
         end if
       end if
       
@@ -95,25 +93,18 @@
 
         !! for stable carbon - add n and p to active humus pool
         if (bsn_cc%cswat == 0) then
-          soil1(j)%rsd(l)%n = soil1(j)%rsd(l)%n + rtof * fr_ly * &
+          soil1(j)%pl(1)%rsd(l)%n = soil1(j)%pl(1)%rsd(l)%n + rtof * fr_ly *            &
                        frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%rsd(l)%p = soil1(j)%rsd(l)%p + rtof * fr_ly * frt_kg *           &
+          soil1(j)%pl(1)%rsd(l)%p = soil1(j)%pl(1)%rsd(l)%p + rtof * fr_ly * frt_kg *   &
                        fertdb(ifrt)%forgp
-          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *           &
+          soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *               &
                        frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%hact(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * fr_ly * frt_kg *  &
+          soil1(j)%hact(l)%p = soil1(j)%hsta(l)%p + (1. - rtof) * fr_ly * frt_kg *      &
                        fertdb(ifrt)%forgp
         end if
         
-        !! for C-FARM add to manure pool - assume C:N ratio = 10
-        if (bsn_cc%cswat == 1) then
-          soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg * fertdb(ifrt)%forgn * 10.
-          soil1(j)%man(l)%n = soil1(j)%man(l)%n + fr_ly * frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%man(l)%p = soil1(j)%man(l)%p + fr_ly * frt_kg * fertdb(ifrt)%forgp
-        end if
-
         !! for SWAT-C add to slow humus pool and fresh residue pools
-        if (bsn_cc%cswat == 2 .and. manure_flag) then
+        if ((bsn_cc%cswat == 2 ) .and. organic_flag) then
           
           !! add 1-rtof to slow humus pool
           pool_fr = (1. - rtof) * fr_ly
@@ -130,10 +121,10 @@
           soil1(j)%str(l) = soil1(j)%str(l) + pool_fr * org_frt
           
           !! add lignin manure pool
-          ! soil1(j)%str(l) = soil1(j)%str(l) + 0.8 * soil1(j)%str(l)
+          soil1(j)%lig(l) = soil1(j)%lig(l) + 0.175 * pool_fr * org_frt
           
           !! total residue pool is metabolic + structural
-          soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
+          ! soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)
           
         end if
         

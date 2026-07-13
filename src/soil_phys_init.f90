@@ -62,20 +62,14 @@
         if (sol(isol)%phys(j)%k <= 0.0) then 
           if (sol(isol)%s%hydgrp == "A") then
             sol(isol)%phys(j)%k = a
-        else
-          if (sol(isol)%s%hydgrp == "B") then
+          else if (sol(isol)%s%hydgrp == "B") then
             sol(isol)%phys(j)%k = b
-        else
-          if (sol(isol)%s%hydgrp == "C") then
+          else if (sol(isol)%s%hydgrp == "C") then
             sol(isol)%phys(j)%k = c
-        else
-          if (sol(isol)%s%hydgrp == "D") then
+          else if (sol(isol)%s%hydgrp == "D") then
             sol(isol)%phys(j)%k = d          !Claire 12/2/09
           else 
-           sol(isol)%phys(j)%k = nota
-          endif
-          endif
-          endif
+            sol(isol)%phys(j)%k = nota
           endif
         endif
 
@@ -96,15 +90,15 @@
       do j = 1, nly
         sol(isol)%phys(j)%wp = 0.4 * sol(isol)%phys(j)%clay * sol(isol)%phys(j)%bd / 100.
         if (sol(isol)%phys(j)%wp <= 0.) sol(isol)%phys(j)%wp = .005
-          sol(isol)%phys(j)%up = sol(isol)%phys(j)%wp + sol(isol)%phys(j)%awc
-          sol(isol)%phys(j)%por = 1. - sol(isol)%phys(j)%bd / 2.65
+        sol(isol)%phys(j)%up = sol(isol)%phys(j)%wp + sol(isol)%phys(j)%awc
+        sol(isol)%phys(j)%por = 1. - sol(isol)%phys(j)%bd / 2.65
         if (sol(isol)%phys(j)%up >= sol(isol)%phys(j)%por) then
-           sol(isol)%phys(j)%up = sol(isol)%phys(j)%por - .05
-           sol(isol)%phys(j)%wp = sol(isol)%phys(j)%up - sol(isol)%phys(j)%awc
-        if (sol(isol)%phys(j)%wp <= 0.) then
-          sol(isol)%phys(j)%up = sol(isol)%phys(j)%por * .75
-          sol(isol)%phys(j)%wp = sol(isol)%phys(j)%por * .25
-        end if
+          sol(isol)%phys(j)%up = sol(isol)%phys(j)%por - .05
+          sol(isol)%phys(j)%wp = sol(isol)%phys(j)%up - sol(isol)%phys(j)%awc
+          if (sol(isol)%phys(j)%wp <= 0.) then
+            sol(isol)%phys(j)%up = sol(isol)%phys(j)%por * .75
+            sol(isol)%phys(j)%wp = sol(isol)%phys(j)%por * .25
+          end if
         end if
         !! compute drainable porosity and variable water table factor - Daniel
         drpor = sol(isol)%phys(j)%por - sol(isol)%phys(j)%up

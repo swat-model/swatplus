@@ -6,7 +6,7 @@
       use reservoir_data_module
       use reservoir_module
       use water_body_module
-      use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      use hydrograph_module, only : ob, ht2, wet
       use hru_module, only : hru, wetqcs, wtspcs
       use constituent_mass_module
       use res_cs_module
@@ -14,6 +14,8 @@
       use cs_data_module
       
       implicit none      
+      
+      real, external :: theta
       
       integer, intent (in) :: icmd !command counter (incoming)
       integer, intent (in) :: ihru !HRU number (incoming)
@@ -33,7 +35,6 @@
       real    :: cs_rctn = 0.
       real    :: cs_prod = 0.
       real    :: seo4_convert = 0. !kg            |mass of seo4 converted to seo3
-      real    :: theta             !temperature factor for chemical reactions  
       real    :: mass_avail = 0.   !track available constituent mass in the wetland (kg)
       real    :: seep_mass = 0.    !constituent mass lost via seepage (and added to soil profile) (kg/ha)
       

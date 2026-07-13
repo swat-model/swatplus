@@ -55,7 +55,7 @@
                          (rescs_d(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                           rescs_d(j)%cs(1)%volm
         if (pco%csvout == "y") then
-          write (6041,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (6041,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (rescs_d(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                         (rescs_d(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                         (rescs_d(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -109,7 +109,7 @@
                            (rescs_m(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                             rescs_m(j)%cs(1)%volm
           if (pco%csvout == "y") then
-            write (6043,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (6043,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                           (rescs_m(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                           (rescs_m(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                           (rescs_m(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -179,7 +179,7 @@
                            (rescs_y(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                             rescs_y(j)%cs(1)%volm
           if (pco%csvout == "y") then
-            write (6045,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+            write (6045,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                           (rescs_y(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                           (rescs_y(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                           (rescs_y(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &
@@ -242,7 +242,7 @@
                          (rescs_a(j)%cs(ics)%conc,ics=1,cs_db%num_cs), &
                           rescs_a(j)%cs(1)%volm
         if (pco%csvout == "y") then
-          write (6047,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
+          write (6047,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, & 
                                         (rescs_a(j)%cs(ics)%inflow,ics=1,cs_db%num_cs), &
                                         (rescs_a(j)%cs(ics)%outflow,ics=1,cs_db%num_cs), &
                                         (rescs_a(j)%cs(ics)%seep,ics=1,cs_db%num_cs), &

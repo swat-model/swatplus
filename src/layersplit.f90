@@ -53,4 +53,4 @@
       deallocate (layer1)
       deallocate (phys1)
           return
-      end        
+      end subroutine layersplit       

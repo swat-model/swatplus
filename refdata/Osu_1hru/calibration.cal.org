@@ -1,0 +1,14 @@
+  hru-new.cal developed from soft data calibration
+    12
+ NAME           CHG_TYP                  VAL   CONDS  LYR1  LYR2   YEAR1  YEAR2   DAY1   DAY2  OBJ_TOT
+cn2             abschg              18.00000     0      0      0      0      0      0      0      0      0
+petco           pctchg              -10.0000     0      0      0      0      0      0      0      0      0
+latq_co         absval         		 	1.00     0      0      0      0      0      0      0      0      0  
+alpha           abschg                   0.3     0      0      0      0      0      0      0      0      0
+epco            abschg               	 0.5     0      0      0      0      0      0      0      0      0
+awc             pctchg         		   -5.00     0      0      0      0      0      0      0      0      0  
+epco            abschg               0.63136     0      0      0      0      0      0      0      0      0
+perco           abschg               0.70000     0      0      0      0      0      0      0      0      0
+cn3_swf         abschg              -0.29779     0      0      0      0      0      0      0      0      0
+canmx           absval         		 	5.00     0      0      0      0      0      0      0      0      0  
+lat_len         pctchg             -50.00000     0      0      0      0      0      0      0      0      0

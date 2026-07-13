@@ -16,6 +16,7 @@
       integer :: j = 0                  !none               |HRU number
       integer :: k = 0                  !none               |pesticide counter
       integer :: idp = 0                !                   |
+      integer :: npl                    !none           |counter
       integer, intent (in) :: jj        !none               |counter
       integer, intent (in) :: iplant    !                   |plant number xwalked from hlt_db()%plant and plants.plt
       integer, intent (in) :: iharvop   !                   |harvest operation type
@@ -42,6 +43,9 @@
       harv_stem = hi_tot * pl_mass(j)%stem(ipl)
       pl_yield = harv_seed + harv_leaf + harv_stem
             
+      !! check if above ground > minimum biomass to cut
+      if (pl_mass(j)%ab_gr(ipl)%m - pl_yield%m > harvop_db(iharvop)%bm_min) then
+          
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
       pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
       !! add plant carbon for printing
@@ -73,10 +77,16 @@
       pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - pl_yield
       pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - pl_yield
 
-      !! add clippings (biomass left behind) to slow humus pool of soil
+      !! add clippings (biomass left behind) to surface residue pool
       clip = 1. - harveff
       harv_left = clip * pl_yield
-      soil1(j)%rsd(1) = harv_left + soil1(j)%rsd(1)
+      pl_mass(j)%rsd(ipl) = harv_left + pl_mass(j)%rsd(ipl)
+      
+      !! update total residue pool
+      pl_mass(j)%rsd_tot = orgz
+      do npl = 1, pcom(j)%npl
+        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(npl)
+      end do
 
       !! calculation for dead roots allocations, resetting phenology, updating other pools
       !! reset leaf area index and fraction of growing season
@@ -91,5 +101,7 @@
         pcom(j)%plcur(ipl)%phuacc = 0.
       end if
 
+      end if   !ab_gr_bm > bm_min
+      
       return
       end subroutine mgt_harvbiomass

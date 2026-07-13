@@ -4,7 +4,6 @@
 !!    this subroutine calculates salt ion concentrations based on equilibrium chemical reactions
 !!    (precipitation-dissolution, complexation, cation exchange), for a specified HRU, for a specified layer
 
-      use hru_module, only : hru,ihru
       use basin_module
       use constituent_mass_module
       use salt_data_module
@@ -14,12 +13,11 @@
       use time_module
 
       implicit none
+      
+      external :: activity_coefficient, CaCO3, CaSO4, Ionic_strength, MgCO3, MgSO4, NaCl
 
       integer :: j = 0
       integer :: jj = 0
-      integer :: m = 0
-      integer :: n = 0
-      integer :: dum = 0
       integer :: iter_count = 0
       integer :: hru_num
       integer :: lay_num
@@ -31,8 +29,6 @@
       real :: ion6 = 0.
       real :: ion7 = 0.
       real :: ion8 = 0.
-      real :: sol_water = 0.
-      real :: sol_thick = 0.
       real :: waterC
       real :: sol_bd = 0.
       real :: Sol_CaCO3_p(1000) = 0.
@@ -42,7 +38,7 @@
       real :: Sol_NaCl_p(1000) = 0.
       real :: I_Prep_in = 0.
       real :: I_diff = 0.
-      real :: SkipedIEX = 0.
+
       double precision IonStr,IS_temp,&                 
           K_ADJ1,K_ADJ2,K_ADJ3,K_ADJ4,K_ADJ5,&                 
           error1ST,error2ND,error3RD,errorTotal
@@ -191,4 +187,4 @@
       soil_salt_conc(8) = BiCar_Conc(1)*(61.01*1000.0) 
 
       return
-      end !salt_chem_soil_single
+      end subroutine salt_chem_soil_single

@@ -3,26 +3,6 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine applies pesticide
 
-!!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
-!!    name         |units            |definition
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    ap_ef(:)     |none             |application efficiency (0-1)
-!!    drift(:)     |kg               |amount of pesticide drifting onto main 
-!!                                   |channel in subbasin
-!!    hru_km(:)    |km**2            |area of HRU in square kilometers
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-!!    ~ ~ ~ OUTGOING VARIABLES ~ ~ ~
-!!    name        |units         |definition
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    drift(:)    |kg            |amount of pesticide drifting onto main 
-!!                               |channel in subbasin
-!!    ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-!!    ~ ~ ~ SUBROUTINES/FUNCTIONS CALLED ~ ~ ~
-!!    SWAT: Erfc
-
-!!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
-
       use mgt_operations_module
       use basin_module
       use soil_module

@@ -41,6 +41,9 @@
       
       implicit none
 
+      
+      
+      
       integer, dimension (2) :: zshape = 0  !none          |array shape parameters
       integer :: n = 0                    !none          |counter                                       
       integer :: l = 0                    !none          |counter
@@ -55,9 +58,9 @@
                                           !              |correlation and cross-correlation coefficients
       real, dimension (3) :: xx = 0.      !none          |variable to hold calculation value 
       real, dimension (3) :: e = 0.       !none          |3 x 1 matrix of independent random components
-      real :: v2 = 0.                     !none          |random number between 0.0 and 1.0
-      real :: aunif                       !              |
-      real :: cli_dstn1                   !              |
+      real :: v2 = 0.                     !none          |random number between 0.0 and 1.0                      !              |
+      real, external :: aunif
+      real, external :: cli_dstn1         !              |
  
       zshape = (/3, 3/)
       a = Reshape((/.567, .253, -.006, .086, .504, -.039, -.002, -.050,     &

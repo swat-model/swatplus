@@ -26,7 +26,7 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      use hru_module, only : hru, ihru, sol_plt_ini_cs
+      use hru_module, only : hru, ihru, sol_plt_ini
       use soil_module
       use plant_module
       use pathogen_data_module
@@ -64,7 +64,7 @@
         end if
 
         isp_ini = hru(ihru)%dbs%soil_plant_init
-        ipath_db = sol_plt_ini_cs(isp_ini)%path
+        ipath_db = sol_plt_ini(isp_ini)%path
         if (mpath > 0) then
           do ipath = 1, mpath
             do ly = 1, soil(ihru)%nly

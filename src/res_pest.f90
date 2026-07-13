@@ -21,7 +21,6 @@
       real :: fp1 = 0.              !              |frac of soluble pesticide in benthic column
       real :: fp2 = 0.              !              |frac of sorbed pesticide in benthic column
       real :: depth = 0.            !              |average depth of reservoir
-      real :: bedvol = 0.           !m^3           |volume of river bed sediment
       real :: solpesto = 0.         !mg pst        |soluble pesticide transported out of reservoir
       real :: sorpesto = 0.         !mg pst        |sorbed pesticide transported out of reservoir
       real :: sedmass_watervol = 0. !kg/L or t/m3  |sediment mass divided by water volume in water and benthic
@@ -47,8 +46,7 @@
         jsed = res_dat(idb)%sed
         respst_d(jres)%pest(ipst)%tot_in = obcs(icmd)%hin(1)%pest(ipst)
         tpest1 = obcs(icmd)%hin(1)%pest(ipst) + res_water(jres)%pest(ipst)
-        bedvol = 1000. * res_wat_d(jres)%area_ha * pestdb(ipest_db)%ben_act_dep + .01
-        tpest2 = res_benthic(jres)%pest(ipst) * bedvol
+        tpest2 = res_benthic(jres)%pest(ipst)
 
         !! calculate average depth of reservoir
         depth = res(jres)%flo / (res_wat_d(jres)%area_ha * 10000.)
@@ -196,6 +194,10 @@
         if (tpest2 < 1.e-10) tpest2 = 0.0
         res_water(jres)%pest(ipst) = tpest1
         res_benthic(jres)%pest(ipst) = tpest2
+        
+        !! set pesticide stored in water and benthic at end of day for output
+        respst_d(jres)%pest(ipst)%water = tpest1
+        respst_d(jres)%pest(ipst)%benthic = tpest2
         
         !! set outgoing pesticide for routing
         hcs2%pest(ipst) = solpesto + sorpesto

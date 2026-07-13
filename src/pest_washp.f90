@@ -27,7 +27,7 @@
         ipest_db = cs_db%pest_num(k)
         !! adjust foliar pesticide for wash off
         do ipl = 1, pcom(j)%npl
-          if (cs_pl(j)%pl_on(ipl)%pest(k) >= 0.0001) then
+          if (cs_pl(j)%pl_on(ipl)%pest(k) >= 0.) then
             if (ipest_db > 0) then
               pest_soil = pestdb(ipest_db)%washoff * cs_pl(j)%pl_on(ipl)%pest(k)
               if (pest_soil > cs_pl(j)%pl_on(ipl)%pest(k)) pest_soil = cs_pl(j)%pl_on(ipl)%pest(k)

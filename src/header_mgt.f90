@@ -1,11 +1,12 @@
      subroutine header_mgt
     
      use basin_module
+     use output_path_module
      
      implicit none 
 !!   open mgt.out file 
       if (pco%mgtout == "y") then
-        open (2612,file="mgt_out.txt",recl=800)
+        call open_output_file(2612, "mgt_out.txt", 800)
         write (2612,*) bsn%name, prog
         write (2612,*) mgt_hdr
         write (2612,*) mgt_hdr_unt1

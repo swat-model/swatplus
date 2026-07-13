@@ -63,7 +63,7 @@
                          (ru_hru_csb_d(iru)%cs(ics)%rctn,ics=1,cs_db%num_cs), &
                          (ru_hru_csb_d(iru)%cs(ics)%sorb,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6071,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+          write (6071,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                                                            (rucsb_d(iru)%hd(1)%cs(ics),ics=1,cs_db%num_cs), & !total out
                                        (rucsb_d(iru)%hd(2)%cs(ics),ics=1,cs_db%num_cs), & !percolation
                                        (rucsb_d(iru)%hd(3)%cs(ics),ics=1,cs_db%num_cs), & !surface runoff
@@ -139,7 +139,7 @@
                            (ru_hru_csb_m(iru)%cs(ics)%rctn,ics=1,cs_db%num_cs), &
                            (ru_hru_csb_m(iru)%cs(ics)%sorb,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6073,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+            write (6073,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                          (rucsb_m(iru)%hd(1)%cs(ics),ics=1,cs_db%num_cs), & !total out
                                          (rucsb_m(iru)%hd(2)%cs(ics),ics=1,cs_db%num_cs), & !percolation
                                          (rucsb_m(iru)%hd(3)%cs(ics),ics=1,cs_db%num_cs), & !surface runoff
@@ -215,7 +215,7 @@
                            (ru_hru_csb_y(iru)%cs(ics)%rctn,ics=1,cs_db%num_cs), &
                            (ru_hru_csb_y(iru)%cs(ics)%sorb,ics=1,cs_db%num_cs)
           if (pco%csvout == "y") then
-            write (6075,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+            write (6075,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                          (rucsb_y(iru)%hd(1)%cs(ics),ics=1,cs_db%num_cs), & !total out
                                          (rucsb_y(iru)%hd(2)%cs(ics),ics=1,cs_db%num_cs), & !percolation
                                          (rucsb_y(iru)%hd(3)%cs(ics),ics=1,cs_db%num_cs), & !surface runoff
@@ -290,7 +290,7 @@
                         (ru_hru_csb_a(iru)%cs(ics)%rctn,ics=1,cs_db%num_cs), &
                         (ru_hru_csb_a(iru)%cs(ics)%sorb,ics=1,cs_db%num_cs)
         if (pco%csvout == "y") then
-          write (6077,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
+          write (6077,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iru, ob(iob)%gis_id, & 
                                         (rucsb_a(iru)%hd(1)%cs(ics),ics=1,cs_db%num_cs), & !total out
                                         (rucsb_a(iru)%hd(2)%cs(ics),ics=1,cs_db%num_cs), & !percolation
                                         (rucsb_a(iru)%hd(3)%cs(ics),ics=1,cs_db%num_cs), & !surface runoff

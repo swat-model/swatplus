@@ -11,9 +11,9 @@
          surqsolp, sedminpa, sedminps, fertn, fertp, fixn, grazn, grazp, ipl, qp_cms, qtile,      &
          snofall, snomlt, usle, canev, ep_day, es_day, etday, inflpcp, isep, iwgen, ls_overq,     &
          nd_30, pet_day, precip_eff, qday, latqrunon, gwsoilq, satexq, surf_bs, bss, bss_ex, brt, &
-         gwsoiln, gwsoilp, satexn, satexq_chan, surqsalt, latqsalt, tilesalt, percsalt, urbqsalt, & !rtb gwflow; rtb salt
-         wetqsalt, wtspsalt,gwupsalt, usle_cfac,                                                  &
-         surqcs, latqcs, tilecs, perccs, gwupcs, sedmcs, urbqcs, wetqcs, wtspcs                         !rtb cs
+         gwsoiln, gwsoilp, satexq_chan, surqsalt, latqsalt, tilesalt, percsalt, urbqsalt,         & !rtb gwflow; rtb salt
+         wetqsalt, wtspsalt, gwupsalt, surqcs, latqcs, tilecs, perccs, gwupcs, sedmcs, urbqcs,    &
+         wetqcs, wtspcs    !rtb cs
                                                                                                                                         !HAK 7/27/22
       use soil_module 
       use plant_module
@@ -36,9 +36,22 @@
       use salt_module !rtb salt
       use cs_module !rtb cs
       use gwflow_module !rtb gwflow
+	    use tillage_data_module
       !use basin_module, only : bsn_cc
       
       implicit none
+      
+      external :: actions, albedo, cbn_rsd_decomp, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
+                  cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
+                  nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc, nut_orgnc2, nut_pminrl, &
+                  nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
+                  pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_fert, &
+                  pl_graze, pl_grow, rls_routeaqu, rls_routesoil, rls_routesurf, rls_routetile, &
+                  rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
+                  smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
+                  swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
+                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
+                  mgt_newtillmix_cswat3, cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
@@ -72,6 +85,8 @@
       real  :: tile_fr_surf = 0.    !m3             |fraction of tile flow that is overland
       integer :: ifrt = 0
       integer :: idp = 0
+      integer :: hru_rcv
+      real :: rto
       real :: sw_volume_begin = 0.
       real :: soil_prof_labp = 0.
       real :: sum_conc = 0.              !rtb salt
@@ -87,6 +102,11 @@
       sw_volume_begin = 0.
       do j1=1,soil(j)%nly
         sw_volume_begin = sw_volume_begin + soil(j)%phys(j1)%st
+      enddo
+
+      ! zero out the mixing efficiency for the day
+      do ly = 1, soil(j)%nly
+        soil1(j)%emix(ly) = 0.
       enddo
      
       !h => hwb_d(j)
@@ -125,14 +145,16 @@
 
       if (bsn_cc%cswat == 2) then
         if (tillage_switch(ihru) .eq. 1) then
-          if (tillage_days(ihru) .ge. 30) then
+          if (tillage_days(ihru) .ge. till_eff_days) then
+            ! no more tillage effect from last tillage.
             tillage_switch(ihru) = 0
             tillage_days(ihru) = 0
+            do ly = 1,soil(j)%nly 
+              soil(j)%ly(ly)%tillagef_tillmix = 0.0
+            enddo
           else
             tillage_days(ihru) = tillage_days(ihru) + 1
           end if                
-          !tillage_depth(ihru) = dtil
-          !tillage_switch(ihru) = .TRUE. 
         end if
       end if
 
@@ -196,6 +218,7 @@
         !! increment days since last plant and harvest
         pcom(j)%days_plant = pcom(j)%days_plant + 1
         pcom(j)%days_harv = pcom(j)%days_harv + 1
+        pcom(j)%days_kill = pcom(j)%days_kill + 1
         pcom(j)%days_irr = pcom(j)%days_irr + 1
           
         !! update base zero total heat units
@@ -256,10 +279,10 @@
           call rls_routesoil (icmd)
         end if
           
-        !!add tile flow to tile (subirrigation and saturated buffer)
-        !if (ob(icmd)%hin_til%flo > 1.e-6 .and. tile_fr_surf > 1.e-6) then
-        !  call rls_routetile (icmd, tile_fr_surf)
-        !end if
+        !! add tile flow to tile (saturated buffer)
+        if (hru(j)%sb%sb_db%hru_rcv == j) then
+          call rls_routetile (icmd, tile_fr_surf)
+        end if
         
         !!add aquifer flow to bottom soil layer and redistribute upwards
         if (ob(icmd)%hin_aqu%flo > 0) then
@@ -353,12 +376,21 @@
        
         !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 0) then
+          !! compute surface residue decomposition for each plant in community
+          call rsd_decomp
+          !! compute soil residue (roots and tilled in) decomposition and nitrogen and phosphorus mineralization
           call nut_nminrl
+          !call nut_nitvol
         end if
 
-        !! compute residue decomposition and nitrogen and phosphorus mineralization
         if (bsn_cc%cswat == 2) then
-          call cbn_rsd_decomp
+          if (bmix_eff > 1.e-6 ) call mgt_biomix (ihru, bmix_eff)
+          !! compute surface residue decomposition for each plant in community
+          call cbn_surfrsd_decomp
+          !! compute soil residue (roots and tilled in) decomposition
+          call cbn_rsd_transfer      ! added by JC and FG, modified from nut_minrln.f90 and modified by fg to transfer soil residue to meta, str, lig
+          ! call cbn_rsd_decomp
+          !! compute mineralization and carbon pool transformations
           call cbn_zhang2
         end if
 
@@ -386,17 +418,6 @@
         !if (j == 173) then
         !  write (7778,*) time%day, j, sedyld(j)/hru(j)%area_ha, usle_cfac(j), surfq(j), qp_cms
         !end if
-
-        !! check irrigation demand decision table for water allocation (after adding irrigation)
-        if (hru(j)%irr_dmd_dtbl > 0) then
-          id = hru(j)%irr_dmd_dtbl
-          jj = j
-          d_tbl => dtbl_lum(id)
-          !! iauto points to pcom(j)%dtbl(iauto) for days between operation
-          iauto = hru(j)%irr_dmd_iauto
-          call conditions (jj, iauto)
-          call actions (jj, iob, iauto)
-        end if
 
         soil_prof_labp = 0.
         do ly = 1, soil(j)%nly
@@ -469,6 +490,11 @@
             soil(j)%sw_300 = soil(j)%sw_300 + soil(j)%phys(ly)%st
           end if
         end do
+
+        ! compute total soil water for each layer in mm/mm of water content
+        do ly = 1, soil(j)%nly
+          soil(j)%phys(ly)%tot_sw = (soil(j)%phys(ly)%st / soil(j)%phys(ly)%thick) + soil(j)%phys(ly)%wp 
+        end do
         
         !! compute actual ET for day in HRU
         etday = ep_day + es_day + canev
@@ -504,16 +530,10 @@
               call nut_orgn
             end if
         
-            !! C-Farm (Armen) c and organic n in runoff
-            if (bsn_cc%cswat == 1) then
-              call nut_orgnc
-            end if
-      
             !! SWAT-C Xuesong -- c and organic n in runoff
             if (bsn_cc%cswat == 2) then
               call nut_orgnc2
             end if
-
             call nut_psed
           end if
         end if
@@ -530,7 +550,7 @@
             sedppm=0.
           end if
           if (wet_dat_c(ires)%hyd.eq.'paddy') then !.and.time%yrs > pco%nyskip) then
-            if (wet_ob(j)%depth > 100.) then
+            if (wet_ob(j)%depth > -0.1) then
            write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
             pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
             wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon 
@@ -609,6 +629,24 @@
         
         !! calculate amount of surface runoff during day (qday) and store the remainder
         call sq_surfst
+
+        !! check if hru is a source for a saturated buffer
+        if (hru(j)%sb%sb_db%hru_src == j) then
+          !! use decision table
+          id = hru(j)%sb%dtbl
+          d_tbl => dtbl_flo(id)
+          call conditions (j, id)
+          call actions (j, iob, id)
+          
+          !! set amount of tile flow to send to buffer hru
+          hru_rcv = hru(j)%sb%sb_db%hru_rcv
+          !! convert to mm of the receiving hru and adjust for fraction of incoming hru
+          rto =  hru(hru_rcv)%area_ha / hru(j)%area_ha
+          hru(hru_rcv)%sb%inflo = rto * hru(j)%sb%sb_db%frac_src * hru(hru_rcv)%sb%inflo 
+          qtile = (1. - hru(j)%sb%sb_db%frac_src) * hru(hru_rcv)%sb%inflo 
+          hru(hru_rcv)%sb%no3 = hru(j)%sb%sb_db%frac_src * tileno3(j) 
+          tileno3(j) = (1. - hru(j)%sb%sb_db%frac_src) * tileno3(j)
+        end if
         !qday =  surfq(j)
 
         !! compute water yield for HRU
@@ -800,7 +838,10 @@
       ! output_plantweather
         hpw_d(j)%lai = pcom(j)%lai_sum
         hpw_d(j)%bioms = pl_mass(j)%tot_com%m
-        hpw_d(j)%residue = soil1(j)%rsd(1)%m
+        if (pl_mass(j)%tot_com%m < 0.) then
+          pl_mass(j)%tot_com%m = 0.
+        end if
+        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp
@@ -826,6 +867,10 @@
         hpw_d(j)%phubase0 = phubase(j)
 
       ! output_losses
+        !! don't sum during skip years
+        if (time%yrs > pco%nyskip) then
+          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j)
+        end if
         hls_d(j)%sedyld = sedyld(j) / hru(j)%area_ha
         hls_d(j)%sedorgn = sedorgn(j)
         hls_d(j)%sedorgp = sedorgp(j)

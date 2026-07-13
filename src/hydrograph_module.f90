@@ -58,7 +58,7 @@
         real :: flo_satex = 0.         !! m3           |volume of water from saturation excess (high water table; from gwflow module)
         real :: flo_satexsw = 0.       !! m3           |volume of water from saturation excess (saturated profile)
         real :: flo_tile = 0.          !! m3           |volume of water from tile flow
-      end type
+      end type hyd_sep
       
       type (hyd_output), dimension(:),allocatable :: hd
       type (hyd_output), dimension(:), allocatable :: rec_d
@@ -169,12 +169,79 @@
       type (hyd_output) :: bch_out_y
       type (hyd_output) :: bch_out_a
       type (hyd_output) :: chomz
-
+      
+      !! source and receiving objects
+      type wallo_source_object
+        type (hyd_output) :: hd
+      end type wallo_source_object
+        
+      !! source and receiving objects
+      type wallo_transfer_object
+        !! total for transfer object
+        type (hyd_output) :: h_tot
+        type (wallo_source_object), dimension (:), allocatable :: src
+      end type wallo_transfer_object
+      
+      !! source and receiving objects
+      type water_allocation_object
+        !! source and receiving objects
+        type (wallo_transfer_object), dimension (:), allocatable :: trn
+      end type water_allocation_object
+      type (water_allocation_object), dimension (:), allocatable :: wal_omd
+      type (water_allocation_object), dimension (:), allocatable :: wal_omm
+      type (water_allocation_object), dimension (:), allocatable :: wal_omy
+      type (water_allocation_object), dimension (:), allocatable :: wal_oma
+        
+      !! water withdrawn from an individual source
+      type (hyd_output) :: wdraw_om
+      !! total water withdrawn from all sources
+      type (hyd_output) :: wdraw_om_tot
+      !! outflow from an water allocation object - wtp or use
+      type (hyd_output) :: outflo_om
+      
+      !! water treatment plant storage and outflow
+      type (hyd_output), dimension (:), allocatable :: wtp_om_stor
+      type (hyd_output), dimension (:), allocatable :: wtp_om_out
+      !! water treatment plant treated concentrations - input
+      type (hyd_output), dimension (:), allocatable :: wtp_om_treat
+      
+      !! amount of organic-mineral removed by treatment plants
+      type (hyd_output), dimension (:), allocatable :: wal_tr_omd
+      type (hyd_output), dimension (:), allocatable :: wal_tr_omm
+      type (hyd_output), dimension (:), allocatable :: wal_tr_omy
+      type (hyd_output), dimension (:), allocatable :: wal_tr_oma
+      
+      !! amount of organic-mineral added by uses
+      type (hyd_output), dimension (:), allocatable :: wal_use_omd
+      type (hyd_output), dimension (:), allocatable :: wal_use_omm
+      type (hyd_output), dimension (:), allocatable :: wal_use_omy
+      type (hyd_output), dimension (:), allocatable :: wal_use_oma
+      
+      !! water use storage and outflow
+      type (hyd_output), dimension (:), allocatable :: wuse_om_stor
+      type (hyd_output), dimension (:), allocatable :: wuse_om_out
+      !! water use effluent concentrations - input
+      type (hyd_output), dimension (:), allocatable :: wuse_om_efflu
+      
+      !! outside source outflow
+      type (hyd_output), dimension (:), allocatable :: osrc_om
+      
+      !! outside receiving inflow
+      type (hyd_output), dimension (:), allocatable :: orcv_om
+      
+      !! canal storage and outflow
+      type (hyd_output), dimension (:), allocatable :: canal_om_stor
+      type (hyd_output), dimension (:), allocatable :: canal_om_out
+      
+      !! water tower storage and outflow
+      type (hyd_output), dimension (:), allocatable :: wtow_om_stor
+      type (hyd_output), dimension (:), allocatable :: wtow_om_out
+       
       type object_output
-        character (len=3) :: name = ""
-        character (len=3) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
+        character (len=10) :: name = ""
+        character (len=10) :: obtyp = ""  !! object type: hru,hlt,hs,rxc,dr,out,sdc
         integer :: obtypno = 0         !! object type number: 1=hru, 2=hru_lte, 3=channel
-        character (len=6) :: hydtyp = "" !! hydrograph type: tot,rhg,sur,lat,til
+        character (len=20) :: hydtyp = "" !! hydrograph type: tot,rhg,sur,lat,til
         integer :: objno = 0           !! object number
         integer :: hydno = 0           !! code computes from hydtyp
         character (len=26) :: filename = ""!! file with hydrograph output from the object
@@ -216,16 +283,7 @@
         real, dimension (27) :: p = 0.   !probabilities for all points on the fdc
       end type duration_curve_points
 
-      type water_temperature_data
-        character(len=16) :: name = ""
-        real :: sno_mlt = 1.        ! none          |coefficient influencing snowmelt temperature contributions
-        real :: gw = .97            ! none          |coefficient influencing groundwater temperature contributions
-        real :: sur_lat = 1.        ! none          |coefficient influencing surface and lateral flow temperature contributions
-        integer :: airlag_d = 6     ! days          |average air temperature lag
-        real :: hex_coef1 = .67     ! 1/hour        |heat transfer coefficient 1
-        real :: hex_coef2 = 1.16    ! 1/hour        |heat transfer coefficient 2
-      end type water_temperature_data
-      type (water_temperature_data) :: w_temp
+      !water_temperature_data type and w_temp array moved to channel_data_module
 
       integer :: fdc_npts = 27
       real, dimension (27) :: fdc_p = (/.1,.5,1.,2.,3.,5.,10.,15.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,95.,97.,98.,99./) !percent        |output percent on the fdc (input)
@@ -345,17 +403,6 @@
       end type object_connectivity
       type (object_connectivity), dimension(:), allocatable, save :: ob
       
-      !water rights elements (objects) within the water rights object
-      type water_rights_elements
-        integer :: num = 0
-        character (len=16) :: ob_typ = ""       !object type - hru, channel, reservoir, etc
-        integer :: ob_num = 0                   !object number
-        character (len=16) :: irr_typ = ""      !character from irr.ops - was irr demand, minimum flow, flow fraction, etc
-        integer :: irr_no = 0                   !irrigation number from irr.ops - walk irr_typ
-        real :: amount = 0.                     !0 for irr demand; ha-m for min_flo; frac for min_frac
-        integer :: rights = 0                   !0-100 scale
-      end type water_rights_elements
-
       !water allocation
       type irrigation_water_transfer
         real :: demand = 0.                     !irrigation demand          |m3
@@ -372,10 +419,6 @@
       
       !recall hydrograph inputs
       type recall_hydrograph_inputs
-        character (len=25) :: name = ""
-        integer :: num = 0                    !number of elements
-        integer :: typ = -1                   !recall type - 0=subdaily, 1=day, 2=mon, 3=year
-        character(len=25) :: filename = ""    !filename
         !hd and hyd_flo units are in cms and mg/L
         type (hyd_output), dimension (:,:), allocatable :: hd   !m3/s for flow  |input total hyd for daily, monthly, annual and exco
         real, dimension (:,:), allocatable :: hyd_flo           !m3/s           |input total flow hyd only for subdaily recall
@@ -487,9 +530,6 @@
       
       !delivery ratio - all fractions 
       type (hyd_output), dimension(:), allocatable :: dr          !delivery ratio for objects- chan, res, lu
-
-      !treatment - fraction of flow and ppm 
-      type (hyd_output), dimension(:), allocatable :: trt         !wastewater treatment plants
 
       !export coefficient - m3, t, kg
       type (hyd_output), dimension(:), allocatable :: exco        !export coefficient
@@ -1145,10 +1185,14 @@
         type (hru_swift_header_baseunit2) :: dr_unit
       end type hru_swift_header
       type (hru_swift_header) :: hru_swift_hdr
-      
-      
 
-      
+      type shade_factor_data
+        integer :: jday = 0            ! none          |day of the year
+        integer :: lsu  = 0               ! none          |landscape unit
+        real :: value = 0.                  ! none          |shade factor value
+      end type shade_factor_data
+      type (shade_factor_data), dimension (:), allocatable :: shf_db
+
       interface operator (+)
         module procedure hydout_add
       end interface
@@ -1203,6 +1247,30 @@
         hyd1%lag = hyd1%lag * hyd1%flo / 1000000.
         hyd1%grv = hyd1%grv * hyd1%flo / 1000000.
       end subroutine hyd_convert_conc_to_mass
+      
+      !! function to find minimum for wwtp plants
+      subroutine hyd_min (hyd1, hyd2)
+        type (hyd_output), intent (inout) :: hyd1
+        type (hyd_output), intent (in) :: hyd2 
+        
+        hyd1%flo = hyd1%flo
+        hyd1%sed = amin1 (hyd1%sed, hyd2%sed)
+        hyd1%orgn = amin1 (hyd1%orgn, hyd2%orgn)
+        hyd1%sedp = amin1 (hyd1%sedp, hyd2%sedp)
+        hyd1%no3 = amin1 (hyd1%no3, hyd2%no3)
+        hyd1%solp = amin1 (hyd1%solp, hyd2%solp)
+        hyd1%chla = amin1 (hyd1%chla, hyd2%chla)
+        hyd1%nh3 = amin1 (hyd1%nh3, hyd2%nh3)
+        hyd1%no2 = amin1 (hyd1%no2, hyd2%no2)
+        hyd1%cbod = amin1 (hyd1%cbod, hyd2%cbod)
+        hyd1%dox = amin1 (hyd1%dox, hyd2%dox)
+        hyd1%san = amin1 (hyd1%san, hyd2%san)
+        hyd1%sil = amin1 (hyd1%sil, hyd2%sil)
+        hyd1%cla = amin1 (hyd1%cla, hyd2%cla)
+        hyd1%sag = amin1 (hyd1%sag, hyd2%sag)
+        hyd1%lag = amin1 (hyd1%lag, hyd2%lag)
+        hyd1%grv = amin1 (hyd1%grv, hyd2%grv)
+      end subroutine hyd_min
       
       !! function to convert concentration to mass
       subroutine res_convert_mass (hyd1, pvol)
@@ -1279,7 +1347,7 @@
         hyd3%lag = hyd1%lag + hyd2%lag
         hyd3%grv = hyd1%grv + hyd2%grv
         if (hyd1%flo + hyd2%flo > 1.e-6) then
-          hyd3%temp = (hyd1%flo * hyd2%temp + hyd2%flo + hyd2%temp) / (hyd1%flo + hyd2%flo)
+          hyd3%temp = (hyd1%flo * hyd1%temp + hyd2%flo * hyd2%temp) / (hyd1%flo + hyd2%flo)
         else
           hyd3%temp = 0.
         end if

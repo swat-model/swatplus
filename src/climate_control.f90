@@ -39,26 +39,19 @@
       use maximum_data_module
       
       implicit none
+      
+      external :: cli_bounds_check, cli_clgen, cli_precip_control, cli_rhgen, cli_slrgen, cli_tgen, cli_weatgn, cli_wndgen, atri
            
       integer :: ii = 0           !none          |counter       
-      integer :: iyp = 0          !none          |year currently being simulated
-      integer :: idap = 0         !julain date   |day currently being simulated
-      real :: petmeas = 0.        !mm H2O        |potential ET value read in for day 
       real :: half_hr_mn = 0.     !mm H2O        |lowest value half hour precip fraction can have
       real :: half_hr_mx = 0.     !mm H2O        |highest value half hour precip fraction can have
       integer :: iwgn = 0         !              |
-      integer :: ipet = 0         !              |
       integer :: ig = 0           !              |
       integer :: yrs_to_start = 0 !              |
       integer :: cur_day = 0
       real :: ramm = 0.           !MJ/m2         |extraterrestrial radiation
       real :: xl = 0.             !MJ/kg         |latent heat of vaporization
       real :: atri                !none          |daily value generated for distribution
-      integer :: ifirstpet = -1   !none          |potential ET data search code
-                                  !              |0 first day of potential ET data located in
-                                  !              |file
-                                  !              |1 first day of potential ET data not located
-                                  !              |in file
       real :: xx = 0.
       character(len=1) :: out_bounds = 'n'
         
@@ -222,7 +215,13 @@
         iwgn = wst(iwst)%wco%wgn
         wgn_pms(iwgn)%precip_sum = wgn_pms(iwgn)%precip_sum + wst(iwst)%weat%precip - wgn_pms(iwgn)%precip_mce(ppet_mce)
         wgn_pms(iwgn)%pet_sum = wgn_pms(iwgn)%pet_sum + wst(iwst)%weat%pet - wgn_pms(iwgn)%pet_mce(ppet_mce)
-        wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / wgn_pms(iwgn)%pet_sum
+        !! update precip/pet ratio using 30 day moving sums
+        if (wgn_pms(iwgn)%pet_sum > 1.e-6) then
+          wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / wgn_pms(iwgn)%pet_sum
+        else
+          !! use a minimum PET sum to avoid divide by zero
+          wgn_pms(iwgn)%p_pet_rto = wgn_pms(iwgn)%precip_sum / 1.e-6
+        end if
         wgn_pms(iwgn)%precip_mce(ppet_mce) = wst(iwst)%weat%precip
         wgn_pms(iwgn)%pet_mce(ppet_mce) = wst(iwst)%weat%pet
         
@@ -231,7 +230,7 @@
         wst(iwst)%tlag(wst(iwst)%tlag_mne) = wst(iwst)%weat%tave
         !! lag day is the next variable in array
         wst(iwst)%tlag_mne = wst(iwst)%tlag_mne + 1
-        if (wst(iwst)%tlag_mne > w_temp%airlag_d) wst(iwst)%tlag_mne = 1
+        if (wst(iwst)%tlag_mne > 6) wst(iwst)%tlag_mne = 1  !6-day lag default (was w_temp%airlag_d)
         wst(iwst)%airlag_temp = wst(iwst)%tlag(wst(iwst)%tlag_mne)
       end do
             

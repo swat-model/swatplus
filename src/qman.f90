@@ -21,4 +21,4 @@
       qman = x1 * x2 ** .6666 * Sqrt(x4) / (x3 + .001)
 
       return
-      end
+      end function qman

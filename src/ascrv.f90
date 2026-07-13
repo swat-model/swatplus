@@ -9,7 +9,6 @@
 !!    close to one of the endpoints of the curve (100% of the maximum value for
 !!    x) This subroutine is called from readbsn.f and readcrop.f
 
-
       implicit none
       
       real :: xx = 0.             !none          |temp variable, used to hold calculated
@@ -34,4 +33,4 @@
       x5 = xx + (x3 * x6)
 
       return
-      end
+      end subroutine ascrv

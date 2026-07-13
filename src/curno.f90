@@ -35,6 +35,8 @@
       use soil_module
       
       implicit none
+      
+      external :: ascrv
    
       integer, intent (in) :: h            !none          |HRU number
       real, intent (in) :: cnn             !cnn           |none          |SCS runoff curve number for moisture condition II
@@ -47,7 +49,7 @@
       real :: smxold = 0.                  !              | 
       real :: sumul = 0.                   !mm H2O        |amount of water held in soil profile at saturation
       real :: sumfc = 0.                   !mm H2O        |amount of water held in the soil profile at field capacity
-      real :: max                        !              |
+      real :: max                          !              |
       real :: amin1                        !              |
       
       cn2(h) = cnn
@@ -70,7 +72,7 @@
       rtos = 1. - 2.54 / smx(h)
       sumul = soil(h)%sumul
       sumfc = soil(h)%sumfc + hru(h)%hyd%cn3_swf * (soil(h)%sumul - soil(h)%sumfc)
-      if (sumfc < 0.) then  !***jga
+      if (sumfc < 0.) then
         sumfc = 10.
       end if
       sumfc = max (.05, sumfc)

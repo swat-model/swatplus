@@ -4,12 +4,12 @@
 !!    this subroutine calls subroutines which read input data for the 
 !!    databases and the HRUs
 
-      use hru_module, only : hru, sol_plt_ini_cs
+      use hru_module, only : hru, sol_plt_ini
       use soil_module
       use organic_mineral_mass_module
       use constituent_mass_module
       use output_ls_pesticide_module
-      use hydrograph_module, only : sp_ob, icmd
+      use hydrograph_module, only : sp_ob
       use plant_module
       use pesticide_data_module
       use salt_module
@@ -22,7 +22,6 @@
       integer :: isalt = 0       !none          |counter
       integer :: isalt_db = 0    !              | 
       integer :: isp_ini = 0     !              |
-      real :: wt1 = 0.           !              |
       real :: hru_area_m2 = 0.
       real :: water_volume = 0.
         
@@ -41,7 +40,7 @@
         end if
 
         isp_ini = hru(ihru)%dbs%soil_plant_init
-        isalt_db = sol_plt_ini_cs(isp_ini)%salt
+        isalt_db = sol_plt_ini(isp_ini)%salt
         
         !prepare for g/m3 --> kg/ha conversion
         hru_area_m2 = hru(ihru)%area_ha * 10000.

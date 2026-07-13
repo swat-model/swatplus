@@ -1,9 +1,13 @@
       module organic_mineral_mass_module
     
-      use carbon_module, only: organic_flux
-
+      !use carbon_module, only: organic_flux, organic_controls, organic_allocations, organic_transformations
+      use carbon_module
       implicit none 
 
+      real :: meta_frac = 0.85  !none       |fraction of that is metabolic
+      real :: str_frac = 0.15   !none       |fraction of that is structural
+      real :: lig_frac = 0.12   !none       |fraction of that is lignin
+      
       type organic_mass
         real :: m = 0.              !kg/ha      |total object mass
         real :: c = 0.              !kg/ha      |carbon mass
@@ -12,9 +16,10 @@
       end type organic_mass
       type (organic_mass) :: orgz
 
-      type organic_mixing_mass
+      type organic_mixing_mass           !       |used for each layer in mgt_newtillmix
         type (organic_mass) :: tot       !       |total organic pool
-        type (organic_mass) :: rsd       !       |fresh residue-all plants in one pool - layer 1 = surface residue
+        type (organic_mass) :: surf_rsd  !   |fresh surface residue mixed into layers
+        type (organic_mass), dimension(12) :: rsd   !   |fresh soil residue (max 12 plants)
         !! humus pools for old mineralization model (static carbon)
         type (organic_mass) :: hact      !       |active humus for old mineralization model
         type (organic_mass) :: hsta      !       |stable humus for old mineralization model
@@ -24,6 +29,7 @@
         type (organic_mass) :: microb    !       |microbial biomass
         type (organic_mass) :: str       !       |structural litter pool
         type (organic_mass) :: lig       !       |lignin pool
+        type (organic_mass) :: nonlig    !       |non lignin pool
         type (organic_mass) :: meta      !       |metabolic litter pool
         type (organic_mass) :: man       !       |manure pool
         type (organic_mass) :: water     !       |water soluble
@@ -59,6 +65,10 @@
       type (mineral_phosphorus) :: mpz
       type (mineral_phosphorus) :: mix_mp    !       |mineral p pool used in tillage mixing
       
+      type plant_residue
+        type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh surface residue dimensioned by layer
+      end type plant_residue
+      
       type soil_profile_mass
         character (len=16) :: name = ""
         real :: tot_mn = 0.                                         !       |total mineral n pool (no3+nh4) in soil profile
@@ -75,10 +85,19 @@
         !! tot and rsd used for both carbon methods
         type (organic_mass), dimension(:), allocatable :: tot       !       |total organic pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: seq       !       |total sequestered organic pool dimensioned by layer, surface layer = 0.0
-        type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue-all plants in one pool by layer - layer 1 = surface residue
+        real :: seq_tot_300_c                                       !       |total sequestered equal to or above 300mm soil depth
+        real :: tot_300_c                                           !       |total carbon equal to or above 300mm soil depth
+        real, dimension(:), allocatable :: emix                      !       |the fraction of mixing that occurs from tillage or biomixing in each soil layer
+        type (plant_residue), dimension(:), allocatable :: pl       !       |fresh surface residue dimensioned by plant and by layer
+        type (organic_mass), dimension(:), allocatable :: rsd_tot   !       |total fresh surface residue dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: root_tot   !       |total live roots dimensioned by layer
         !! humus pools for old mineralization model (static carbon)
-        type (organic_flux)                            :: org_flx_tot ! |total organic flux for soil profile
-        type (organic_flux), dimension(:), allocatable :: org_flx_lr !      |organic flux by layer
+        type (organic_controls),    dimension(:), allocatable :: org_con_lr  !      |organic contral variables by layer
+        type (organic_allocations), dimension(:), allocatable :: org_allo_lr !      |organic allocation variables by layer
+        type (organic_ratio), dimension(:), allocatable :: org_ratio_lr      !      |organic nitrogen carbon ratios layer
+        type (organic_transformations), dimension(:), allocatable :: org_tran_lr !  |portential organic transformations layer
+        type (organic_flux)                            :: org_flx_tot !      |total organic flux for soil profile
+        type (organic_flux), dimension(:), allocatable :: org_flx_lr  !      |organic flux by layer
         type (organic_flux), dimension(:), allocatable :: org_flx_cum_lr !  |cumulative organic flux by layer
         type (organic_mass), dimension(:), allocatable :: hact      !       |active humus for old mineralization model dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: hsta      !       |stable humus for old mineralization model dimensioned by layer
@@ -90,6 +109,7 @@
         type (organic_mass), dimension(:), allocatable :: microb    !       |microbial biomass
         type (organic_mass), dimension(:), allocatable :: str       !       |structural litter pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: lig       !       |lignin pool dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: nonlig    !       |non lignin pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: meta      !       |metabolic litter pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: man       !       |manure pool dimensioned by layer
         type (organic_mass), dimension(:), allocatable :: water     !       |water soluble
@@ -99,6 +119,8 @@
       type (soil_profile_mass), dimension(:), allocatable, target :: soil1
       type (soil_profile_mass), dimension(:), allocatable :: soil1_init
       type (organic_mass) :: soil_prof_tot                          !       |total organic pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_root                         !       |total live roots for profile (summed by lower layers)
+      real                :: soil_prof_root_frac = 0.0              !       |total live root fraction for profile (summed by lower layers)
       type (organic_mass) :: soil_prof_rsd                          !       |total fresh organic residue pool for profile (summed by lower layers)
       type (organic_mass) :: soil_prof_srsd                         !       |total fresh organic residue pool for surface
       type (organic_mass) :: soil_prof_hact                         !       |total active humus pool for profile (summed by layer)
@@ -111,10 +133,11 @@
       type (organic_mass) :: soil_prof_seq_microb                   !       |sequestered microbial pool for profile summed up by layer excluding layer 1
       type (organic_mass) :: soil_prof_str                          !       |total structural pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_lig                          !       |total lignin pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_nonlig                       !       |total nonlignin pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_meta                         !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_sstr                         !       |total structural pool for surface (summed by lower layers)
       type (organic_mass) :: soil_prof_slig                         !       |total lignin pool for surface (summed by lower layers)
-      type (organic_mass) :: soil_prof_smeta                         !       |total metabolic pool for profile (summed by layer)
+      type (organic_mass) :: soil_prof_smeta                        !       |total metabolic pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_man                          !       |total manure pool for profile (summed by layer)
       type (organic_mass) :: soil_prof_water                        !       |total dissolved pool for profile (summed by layer)
       type (organic_mass) :: soil_org_z                             !       |used to zero organic objects
@@ -129,6 +152,8 @@
       real :: bsn_mn = 0.                                           !       |total mineral n pool (no3+nh4) in basin
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in basin
       type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
+      type (organic_mass) :: photo_decomp                           !       |temporary storage for photo_residue decomp
+      type (organic_mass) :: transfer                               !       |temporary storage for residue decomp
       type (organic_mass) :: pl_burn                                !       |residue and plant mass burned in fire
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter
       type (organic_mass) :: rsd_str                                !       |temporary storage for initial structural litter
@@ -143,6 +168,8 @@
        type (organic_mass), dimension(:), allocatable :: seed       !kg/ha      |seed (grain) mass for individual plant in community
        type (organic_mass), dimension(:), allocatable :: yield_tot  !kg/ha      |running total sum of yield at harvest -  ave annual print
        type (organic_mass), dimension(:), allocatable :: yield_yr   !kg/ha      |running yearly sum of yield at harvest - yearly print
+       type (organic_mass), dimension(:), allocatable :: rsd        !kg/ha      |fresh surface residue dimensioned by plant
+       type (organic_mass) :: rsd_tot                               !kg/ha      |total fresh surface residue
        type (organic_mass) :: tot_com                               !kg/ha      |total biomass for entire community
        type (organic_mass) :: ab_gr_com                             !kg/ha      |above ground mass for entire community
        type (organic_mass) :: leaf_com                              !kg/ha      |leaf mass for entire community

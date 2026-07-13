@@ -24,6 +24,10 @@
       
       implicit none
 
+      
+      
+      
+      external :: cli_lapse
       integer :: j = 0             !none          |HRU number
       real:: ul_excess = 0.        !              |
       real :: rto = 0.             !              |
@@ -77,8 +81,14 @@
             else
               !! move water and nutrient upward and add to wetland storage Jaehak 2022
               !! this is not actual upward movement of water and nutrient, but a process computationally 
-              !! rebalancing water and mass balance in the soil profile
-              wet(j)%flo = wet(j)%flo + ul_excess * 10. * hru(ihru)%area_ha   !m3=mm*10*ha)
+              !! rebalancing water and mass balance in the paddy water and soil profile
+              if (wet_ob(j)%weir_hgt < 0.001) then   !m
+                 ht2%flo = ht2%flo + ul_excess * 10. * hru(ihru)%area_ha   !m3=mm*10*ha)
+                 surfq(j) = surfq(j) + ul_excess
+              else
+                 wet(j)%flo = wet(j)%flo + ul_excess * 10. * hru(ihru)%area_ha   !m3=mm*10*ha)
+              endif
+              hru(j)%water_seep = max(0.,hru(j)%water_seep - ul_excess) 
               wet_ob(j)%depth = wet(j)%flo / hru(j)%area_ha / 10000. !m
               
               !! add ratio of nutrients to be reallocated to ponding water

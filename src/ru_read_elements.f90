@@ -6,6 +6,8 @@
       use dr_module
       
       implicit none
+      
+      external :: define_unit_elements
   
       character (len=3) :: iobtyp = ""  !none       |object type   
       character (len=80) :: titldum = ""!           |title of file

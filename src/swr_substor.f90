@@ -41,6 +41,10 @@
       
       implicit none      
       
+      
+      
+      
+      real, external :: qman
       integer :: j = 0       !none          |HRU number  
 
       j = ihru

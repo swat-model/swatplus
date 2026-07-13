@@ -58,7 +58,8 @@
       type (output_waterbal), dimension (:), allocatable :: hltwb_m
       type (output_waterbal), dimension (:), allocatable :: hltwb_y
       type (output_waterbal), dimension (:), allocatable :: hltwb_a
-      
+
+      type (output_waterbal), dimension (:), allocatable :: lsu_wb_d    !output for using components of lsus in ch_temp
       type (output_waterbal), dimension (:), allocatable :: ruwb_d
       type (output_waterbal), dimension (:), allocatable :: ruwb_m
       type (output_waterbal), dimension (:), allocatable :: ruwb_y
@@ -97,7 +98,7 @@
         real :: no3atmo = 0.            !kg N/ha        |nitrate added to the soil from atmospheric deposition
         real :: nh4atmo = 0.            !kg N/ha        |ammonia added to the soil from atmospheric deposition
         real :: nuptake = 0.            !kg N/ha        |plant nitrogen uptake
-        real :: puptake = 0.            !kg N/ha        |plant phosphorus uptake
+        real :: puptake = 0.            !kg P/ha        |plant phosphorus uptake
         real :: gwsoiln = 0.            !kg N/ha        |nitrate added to the soil from the aquifer (rtb gwflow)
         real :: gwsoilp = 0.            !kg P/ha        |Phos added to the soil from the aquifer (rtb gwflow)
       end type output_nutbal
@@ -138,7 +139,7 @@
         real :: act_sta_n = 0.          !kg N/ha        |nitrogen moving from active organic pool to stable pool
         real :: org_lab_p = 0.          !kg P/ha        |phosphorus moving from the organic pool to labile pool
         real :: rsd_hs_c = 0.           !kg C/ha        |amt of carbon moving from the fresh org (residue) to soil slow humus 
-        real :: rsd_nitorg_n = 0.       !kg P/ha        |phosphorus moving from the organic pool to labile pool
+        real :: rsd_nitorg_n = 0.       !kg N/ha        |nitrogen moving from the fresh organic pool (residue) to nitrate
         real :: rsd_laborg_p = 0.       !kg P/ha        |phosphorus moving from the fresh organic pool (residue) to the labile (80%)
                                                         !   and org (20%) pools
       end type output_nutcarb_cycling
@@ -148,43 +149,6 @@
       type (output_nutcarb_cycling), dimension (:), allocatable :: hcyl_a
       type (output_nutcarb_cycling) :: hycl_z
       
-      type output_nutcarb_gain_loss
-        real :: sedyld = 0.             !metric tons/ha |sediment yield leaving the landscape caused by water erosion
-        real :: usle = 0.               !metric tons/ha |sediment erosion predicted with the USLE equation
-        real :: sedorgc = 0.            !kg C/ha        |organic carbon in sediment
-        real :: sedorgn = 0.            !kg N/ha        |organic nitrogen transported in sediment
-        real :: sedorgp = 0.            !kg P/ha        |organic phosphorus transported in sediment
-        real :: surqno3 = 0.            !kg N/ha        |nitrate NO3-N transported in surface runoff
-        real :: latno3 = 0.             !kg N/ha        |nitrate NO3-N transported in lateral runoff
-        real :: surqsolp = 0.           !kg P/ha        |soluble phosphorus transported in surface runoff
-        real :: sedmin = 0.             !kg P/ha        |mineral phosphorus leaving the landscape transported in sediment
-        real :: tileno3 = 0.            !kg N/ha        |nitrate NO3 in tile flow
-        real :: no3atmo = 0.            !kg N/ha        |nitrate added to the soil from atmospheric deposition (rainfall+dry)
-        real :: nh4atmo = 0.            !kg N/ha        |ammonia added to the soil from atmospheric deposition (rainfall+dry)
-        real :: manurec = 0.            !kg C/ha        |amount of carbon applied to soil from manure
-        real :: manuren = 0.            !kg N/ha        |amount of nitrogen applied to soil from manure
-        real :: manurep = 0.            !kg P/ha        |amount of phosphrus applied to soil from manure
-        real :: fertc = 0.              !kg C/ha        |amount of carbon applied to soil
-        real :: fertn = 0.              !kg N/ha        |amount of nitrogen applied to soil
-        real :: fertp = 0.              !kg P/ha        |amount of phophorus applied to soil
-        real :: grazc_eat = 0.          !kg C/ha        |amount of carbon ate by animals in grazing
-        real :: grazn_eat = 0.          !kg N/ha        |amount of nitrogen ate by animals in grazing
-        real :: grazp_eat = 0.          !kg P/ha        |amount of phosphrus ate by animals in grazing
-        real :: grazc_man = 0.          !kg C/ha        |amount of carbon in manure during grazing
-        real :: grazn_man = 0.          !kg N/ha        |amount of nitrogen in manure during manually
-        real :: grazp_man = 0.          !kg P/ha        |amount of phosphorus in manure during manually
-        real :: fixn = 0.               !kg N/ha        |amount of nitrogen added to plant biomass via fixation
-        real :: denit = 0.              !kg N/ha        |amount of nitrogen lost from nitrate pool by denit in soil profile
-        real :: yieldc = 0.             !kg C/ha        |amount of carbon removed in yield
-        real :: yieldn = 0.             !kg N/ha        |amount of nitrogen removed in yield
-        real :: yieldp = 0.             !kg P/ha        |amount of phosphorus removed in yield
-      end type output_nutcarb_gain_loss
-      type (output_nutcarb_gain_loss), dimension (:), allocatable :: hgl_d
-      type (output_nutcarb_gain_loss), dimension (:), allocatable :: hgl_m
-      type (output_nutcarb_gain_loss), dimension (:), allocatable :: hgl_y
-      type (output_nutcarb_gain_loss), dimension (:), allocatable :: hgl_a
-      type (output_nutcarb_gain_loss) :: hgl_z
-
       type output_losses
         real :: sedyld = 0.         !metric tons/ha |sediment yield leaving the landscape caused by water erosion
         real :: sedorgn = 0.        !kg N/ha        |organic nitrogen transported in surface runoff
@@ -196,7 +160,7 @@
         real :: sedminp = 0.        !kg P/ha        |mineral phosphorus leaving the landscape transported in sediment
         real :: tileno3 = 0.        !kg N/ha        |nitrate NO3 in tile flow
         real :: lchlabp = 0.        !kg P/ha        |soluble P (labile) leaching past bottom soil layer
-        real :: tilelabp = 0.       !kg N/ha        |soluble P (labile) NO3 in tile flow
+        real :: tilelabp = 0.       !kg P/ha        |soluble P (labile) in tile flow
         real :: satexn = 0.         !kg N/ha        | amt of NO3-N in saturation excess surface runoff in HRU for the day
       end type output_losses
       
@@ -464,20 +428,21 @@
         character (len=8) :: isd        =  "   unit "
         character (len=8) :: id         =  " gis_id "
         character (len=16) :: name      =  " name      "
-        character (len=12) :: sedyld    =  "      sedyld"
-        character (len=12)  :: sedorgn  =  "     sedorgn"
-        character (len=12)  :: sedorgp  =  "     sedorgp"
-        character (len=12)  :: surqno3  =  "     surqno3"
-        character (len=12)  :: latno3   =  "     lat3no3"
-        character (len=12)  :: surqsolp =  "    surqsolp"
-        character (len=12)  :: usle     =  "        usle"
-        character (len=12)  :: sedminp  =  "     sedminp"
-        character (len=12)  :: tileno3  =  "     tileno3"
-        character (len=12)  :: lchlabp  =  "     lchlabp"
-        character (len=12)  :: tilelabp =  "    tilelabp"
-        character (len=12)  :: satexn   =  "      satexn"
+        character (len=17) :: sedyld    =  "           sedyld"
+        character (len=17)  :: sedorgn  =  "          sedorgn"
+        character (len=17)  :: sedorgp  =  "          sedorgp"
+        character (len=17)  :: surqno3  =  "          surqno3"
+        character (len=17)  :: latno3   =  "          lat3no3"
+        character (len=17)  :: surqsolp =  "         surqsolp"
+        character (len=17)  :: usle     =  "             usle"
+        character (len=17)  :: sedminp  =  "          sedminp"
+        character (len=17)  :: tileno3  =  "          tileno3"
+        character (len=17)  :: lchlabp  =  "          lchlabp"
+        character (len=17)  :: tilelabp =  "         tilelabp"
+        character (len=17)  :: satexn   =  "           satexn"
         character (len=16)  :: plt_cov  =  "    plant_cov    "
         character (len=30)  :: mgt_ops  =  "    mgt_ops      "
+        character (len=12)  :: percn    =  "       percn"
       end type output_losses_header      
       type (output_losses_header) :: ls_hdr
       
@@ -489,18 +454,21 @@
         character (len=8) :: isd        =  "        "
         character (len=8) :: id         =  "        "
         character (len=16) :: name      =   "                "
-        character (len=12)  :: sedyld    =  "         tha"
-        character (len=12)  :: sedorgn   =  "        kgha"
-        character (len=12)  :: sedorgp   =  "        kgha"
-        character (len=12)  :: surqno3   =  "        kgha"
-        character (len=12)  :: latno3    =  "        kgha"
-        character (len=12)  :: surqsolp  =  "        kgha"
-        character (len=12)  :: usle      =  "        tons"
-        character (len=12)  :: sedmin    =  "        kgha"
-        character (len=12)  :: tileno3   =  "        kgha"
-        character (len=12)  :: lchlabp   =  "        kgha"
-        character (len=12)  :: tilelabp  =  "        kgha"
-        character (len=12)  :: satexn    =  "        kgha"
+        character (len=17)  :: sedyld    =  "              tha"
+        character (len=17)  :: sedorgn   =  "             kgha"
+        character (len=17)  :: sedorgp   =  "             kgha"
+        character (len=17)  :: surqno3   =  "             kgha"
+        character (len=17)  :: latno3    =  "             kgha"
+        character (len=17)  :: surqsolp  =  "             kgha"
+        character (len=17)  :: usle      =  "             tons"
+        character (len=17)  :: sedmin    =  "             kgha"
+        character (len=17)  :: tileno3   =  "             kgha"
+        character (len=17)  :: lchlabp   =  "             kgha"
+        character (len=17)  :: tilelabp  =  "             kgha"
+        character (len=17)  :: satexn    =  "             kgha"
+        character (len=16)  :: plt_cov  =  "                 "
+        character (len=30)  :: mgt_ops  =  "                 "
+        character (len=12)  :: percn     =  "        kgha"
       end type output_losses_header_units      
       type (output_losses_header_units) :: ls_hdr_units
    
@@ -597,132 +565,75 @@
       end type output_carbon_header_units1         
       type (output_carbon_header_units1) :: carbon_hdr_units1
 
-!!! NEW SOIL CARBON OUTPUT   
+!!! merged HRU carbon gain/loss header (was hru_soilcarb, hru_rescarb, hru_plcarb)
+!!! 9 soil fields + 6 residue fields + 6 plant fields = 21 value columns
+!!! field order matches carbon_soil_gain_losses, carbon_residue_gain_losses, carbon_plant_gain_losses
 
-     type output_soilcarb_header     
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
-         character (len=11) :: day_mo        =    "        day"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=16) :: isd           =    "            unit"
-         character (len=21) :: id            =    "              gis_id "
-         character (len=16) :: name          =    "    name        "
-         character(len=15)  :: sed_c         =    "          sed_c"
-         character(len=15)  :: surq_c        =    "         surq_c"
-         character(len=15)  :: surq_doc      =    "       surq_doc"
-         character(len=15)  :: surq_dic      =    "       surq_dic"
-         character(len=15)  :: latq_c        =    "         latq_c"
-         character(len=15)  :: latq_doc      =    "       latq_doc"
-         character(len=15)  :: latq_dic      =    "       latq_dic"
-         character(len=15)  :: perc_c        =    "         perc_c"
-         character(len=15)  :: perc_doc      =    "       perc_doc"
-         character(len=15)  :: perc_dic      =    "       perc_dic"
-         character(len=15)  :: res_decay     =    "      res_decay"
-         character(len=15)  :: man_app_c     =    "      man_app_c"
-         character(len=15)  :: man_graze_c   =    "    man_graze_c"
-         character(len=15)  :: rsp_c         =    "          rsp_c"
-         character(len=15)  :: emit_c        =    "         emit_c"
-         end type output_soilcarb_header       
-      type (output_soilcarb_header) :: soilcarb_hdr
-      
-      type output_soilcarb_header_units      
-         character (len=11) :: day           =    "           "
-         character (len=11) :: mo            =    "           "
-         character (len=11) :: day_mo        =    "           "
-         character (len=11) :: yrc           =    "           "
-         character (len=16)  :: isd           =  "           "
-         character (len=21) :: id             =  "                "
-         character (len=16) :: name           =  "           "
-         character(len=15) :: sed_c         =    "        kg C/ha"
-         character(len=15) :: surq_c        =    "        kg C/ha"
-         character(len=15) :: surq_doc      =    "        kg C/ha"
-         character(len=15) :: surq_dic      =    "        kg C/ha"
-         character(len=15) :: latq_c        =    "        kg C/ha"
-         character(len=15) :: latq_doc      =    "        kg C/ha"
-         character(len=15) :: latq_dic      =    "        kg C/ha"
-         character(len=15) :: perc_c        =    "        kg C/ha"
-         character(len=15) :: perc_doc      =    "        kg C/ha"
-         character(len=15) :: perc_dic      =    "        kg C/ha"
-         character(len=15) :: npp_c         =    "        kg C/ha"
-         character(len=15) :: rsd_c         =    "        kg C/ha"
-         character(len=15) :: grain_c       =    "        kg C/ha"
-         character(len=15) :: rsp_c         =    "        kg C/ha"
-         character(len=15) :: emit_c        =    "        kg C/ha"
-      end type output_soilcarb_header_units         
-      type (output_soilcarb_header_units) :: soilcarb_hdr_units
+     type output_carb_gl_header
+         character (len=11) :: day             =  "       jday"
+         character (len=11) :: mo              =  "        mon"
+         character (len=11) :: day_mo          =  "        day"
+         character (len=11) :: yrc             =  "         yr"
+         character (len=16) :: isd             =  "            unit"
+         character (len=21) :: id              =  "              gis_id "
+         character (len=16) :: name            =  "    name        "
+         character (len=16) :: sed_c           =  "           sed_c"
+         character (len=16) :: surq_c          =  "          surq_c"
+         character (len=16) :: latq_c          =  "          latq_c"
+         character (len=16) :: perc_c          =  "          perc_c"
+         character (len=16) :: res_decay       =  "       res_decay"
+         character (len=16) :: man_app_c       =  "       man_app_c"
+         character (len=16) :: man_graze_c     =  "     man_graze_c"
+         character (len=16) :: rsp_c           =  "           rsp_c"
+         character (len=16) :: soil_emit_c     =  "     soil_emit_c"
+         character (len=16) :: plant_surf_c    =  "    plant_surf_c"
+         character (len=16) :: plant_root_c    =  "    plant_root_c"
+         character (len=16) :: rsd_surfdecay_c =  " rsd_surfdecay_c"
+         character (len=16) :: rsd_rootdecay_c =  " rsd_rootdecay_c"
+         character (len=16) :: harv_stov_c     =  "     harv_stov_c"
+         character (len=16) :: rsd_emit_c      =  "      rsd_emit_c"
+         character (len=16) :: npp_c           =  "           npp_c"
+         character (len=16) :: harv_abgr_c     =  "     harv_abgr_c"
+         character (len=16) :: harv_root_c     =  "     harv_root_c"
+         character (len=16) :: drop_c          =  "          drop_c"
+         character (len=16) :: grazeat_c       =  "       grazeat_c"
+         character (len=16) :: plant_emit_c    =  "    plant_emit_c"
+      end type output_carb_gl_header
+      type (output_carb_gl_header) :: carb_gl_hdr
 
-!!! NEW SOIL CARBON OUTPUT
-      
-!!! NEW RESIDUE CARBON OUTPUT   
+      type output_carb_gl_header_units
+         character (len=11) :: day             =  "           "
+         character (len=11) :: mo              =  "           "
+         character (len=11) :: day_mo          =  "           "
+         character (len=11) :: yrc             =  "           "
+         character (len=16) :: isd             =  "           "
+         character (len=21) :: id              =  "                "
+         character (len=16) :: name            =  "           "
+         character (len=16) :: sed_c           =  "         kg C/ha"
+         character (len=16) :: surq_c          =  "         kg C/ha"
+         character (len=16) :: latq_c          =  "         kg C/ha"
+         character (len=16) :: perc_c          =  "         kg C/ha"
+         character (len=16) :: res_decay       =  "         kg C/ha"
+         character (len=16) :: man_app_c       =  "         kg C/ha"
+         character (len=16) :: man_graze_c     =  "         kg C/ha"
+         character (len=16) :: rsp_c           =  "         kg C/ha"
+         character (len=16) :: soil_emit_c     =  "         kg C/ha"
+         character (len=16) :: plant_surf_c    =  "         kg C/ha"
+         character (len=16) :: plant_root_c    =  "         kg C/ha"
+         character (len=16) :: rsd_surfdecay_c =  "         kg C/ha"
+         character (len=16) :: rsd_rootdecay_c =  "         kg C/ha"
+         character (len=16) :: harv_stov_c     =  "         kg C/ha"
+         character (len=16) :: rsd_emit_c      =  "         kg C/ha"
+         character (len=16) :: npp_c           =  "         kg C/ha"
+         character (len=16) :: harv_abgr_c     =  "         kg C/ha"
+         character (len=16) :: harv_root_c     =  "         kg C/ha"
+         character (len=16) :: drop_c          =  "         kg C/ha"
+         character (len=16) :: grazeat_c       =  "         kg C/ha"
+         character (len=16) :: plant_emit_c    =  "         kg C/ha"
+      end type output_carb_gl_header_units
+      type (output_carb_gl_header_units) :: carb_gl_hdr_units
 
-     type output_rescarb_header     
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
-         character (len=11) :: day_mo        =    "        day"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=16) :: isd           =    "            unit"
-         character (len=21) :: id            =    "              gis_id "
-         character (len=16) :: name          =    "    name        "
-         character(len=15)  :: plant_c       =    "        plant_c"
-         character(len=15)  :: rsd_decay_c   =    "    rsd_decay_c"         
-         character(len=15)  :: harv_stov_c   =    "    harv_stov_c"
-         character(len=15)  :: emit_c        =    "         emit_c"
-         end type output_rescarb_header       
-      type (output_rescarb_header) :: rescarb_hdr
-      
-      type output_rescarb_header_units      
-         character (len=11) :: day          =    "           "
-         character (len=11) :: mo           =    "           "
-         character (len=11) :: day_mo       =    "           "
-         character (len=11) :: yrc          =    "           "
-         character (len=16)  :: isd         =  "           "
-         character (len=21) :: id           =  "                "
-         character (len=16) :: name         =  "           "
-         character(len=15) :: plant_c       =    "        kg C/ha"
-         character(len=15) :: rsd_decay_c   =    "        kg C/ha"         
-         character(len=15) :: harv_stov_c   =    "        kg C/ha"
-         character(len=15) :: emit_c        =    "        kg C/ha"
-      end type output_rescarb_header_units         
-      type (output_rescarb_header_units) :: rescarb_hdr_units
 
-!!! NEW RESIDUE CARBON OUTPUT   
-      
-!!! NEW PLANT CARBON OUTPUT   
-      
-     type output_plcarb_header     
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
-         character (len=11) :: day_mo        =    "        day"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=16) :: isd           =    "            unit"
-         character (len=21) :: id            =    "              gis_id "
-         character (len=16) :: name          =    "    name        "
-         character(len=15)  :: npp_c     =    "          npp_c"
-         character(len=15)  :: harv_c    =    "         harv_c"
-         character(len=15)  :: drop_c    =    "         drop_c"
-         character(len=15)  :: grazeat_c =    "      grazeat_c"
-         character(len=15)  :: emit_c    =    "         emit_c"
-         end type output_plcarb_header       
-      type (output_plcarb_header) :: plcarb_hdr
-      
-      type output_plcarb_header_units      
-         character (len=11) :: day          =    "           "
-         character (len=11) :: mo           =    "           "
-         character (len=11) :: day_mo       =    "           "
-         character (len=11) :: yrc          =    "           "
-         character (len=16)  :: isd         =  "           "
-         character (len=21) :: id           =  "                "
-         character (len=16) :: name         =  "           "
-         character(len=15) :: npp_c         =    "        kg C/ha"
-         character(len=15) :: harv_c        =    "        kg C/ha"
-         character(len=15) :: drop_c        =    "        kg C/ha"
-         character(len=15) :: grazeat_c     =    "        kg C/ha"
-         character(len=15) :: emit_c        =    "        kg C/ha"
-      end type output_plcarb_header_units         
-      type (output_plcarb_header_units) :: plcarb_hdr_units
-
-!!! NEW PLANT CARBON OUTPUT 
-      
 !!! NEW SOIL CARBON TRANSFORMATIONS OUTPUT
       
      type output_hscf_header     
@@ -776,388 +687,18 @@
 !!! NEW SOIL CARBON TRANSFORMATIONS OUTPUT
          
 !! NEW PLANT CARBON STAT OUTPUT
-      
-     type output_plc_header     
-         character (len=6) ::  freq          =    "freq  "
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: mo            =    "        mon"
-         character (len=11) :: day_mo        =    "        day"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=16) :: isd           =    "            unit"
-         character (len=21) :: id            =    "              gis_id "
-         character (len=16) :: name          =    "    name        "
-         character(len=15)  :: tot_c     =    "        total_c"
-         character(len=15)  :: ab_gr_c   =    "        ab_gr_c"
-         character(len=15)  :: leaf_c    =    "         leaf_c"
-         character(len=15)  :: stem_c    =    "         stem_c"
-         character(len=15)  :: seed_c    =    "         seed_c"
-         character(len=15)  :: root_c    =    "         root_c"
-         end type output_plc_header       
-      type (output_plc_header) :: plc_hdr
-      
-      type output_plc_header_units      
-         character (len=6) ::  freq         =    "      "
-         character (len=11) :: day          =    "           "
-         character (len=11) :: mo           =    "           "
-         character (len=11) :: day_mo       =    "           "
-         character (len=11) :: yrc          =    "           "
-         character (len=16)  :: isd         =  "           "
-         character (len=21) :: id           =  "                "
-         character (len=16) :: name         =  "           "
-         character(len=15)  :: tot_c     =    "          kg/ha"
-         character(len=15)  :: ab_gr_c   =    "          kg/ha"
-         character(len=15)  :: leaf_c    =    "          kg/ha"
-         character(len=15)  :: stem_c    =    "          kg/ha"
-         character(len=15)  :: seed_c    =    "          kg/ha"
-         character(len=15)  :: root_c    =    "          kg/ha"
-        end type output_plc_header_units         
-      type (output_plc_header_units) :: plc_hdr_units
+!! removed output_plc_header, output_soil_org_flux_header, output_n_p_pool_header,
+!! output_soil_snap_header (plus _units types) - all headers now built at runtime
+!! by cb_write_wide_header in carbon_module.
 
-!!! NEW PLANT CARBON STAT OUTPUT
       
-!! NEW RESIDUE CARBON STAT OUTPUT
-      
-     type output_rsdc_header     
-         character (len=6) ::  freq          =    "freq  "
-         character (len=12) :: soil_lyr      =    "    soil_lyr"
-         character (len=12) :: day           =    "        jday"
-         character (len=12) :: mo            =    "         mon"
-         character (len=12) :: day_mo        =    "         day"
-         character (len=12) :: yrc           =    "          yr"
-         character (len=12) :: isd           =    "        unit"
-         character (len=22) :: id            =    "                gis_id"
-         character (len=13) :: name          =    "    name     "
-         character(len=15)  :: tot_surf_c    =    "     res_surf_c"
-         character(len=15)  :: meta_surf_c   =    "    meta_surf_c"         
-         character(len=15)  :: str_surf_c    =    "     str_surf_c"  
-         character(len=15)  :: lig_surf_c    =    "     lig_surf_c"      
-         character(len=15)  :: tot_soil_c    =    "      res_tot_c"
-         character(len=15)  :: meta_soil_c   =    "     meta_tot_c"         
-         character(len=15)  :: str_soil_c    =    "      str_tot_c"  
-         character(len=15)  :: lig_soil_c    =    "     ligl_tot_c"
-         end type output_rsdc_header       
-      type (output_rsdc_header) :: rsdc_hdr
-      
-      type output_rsdc_header_units      
-         character (len=6) ::  freq         =  "      "
-         character (len=12) :: soil_lyr     =  "            "
-         character (len=12) :: day          =  "            "
-         character (len=12) :: mo           =  "            "
-         character (len=12) :: day_mo       =  "            "
-         character (len=12) :: yrc          =  "            "
-         character (len=12)  :: isd         =  "            "
-         character (len=22) :: id           =  "                      "
-         character (len=13) :: name         =  "             "
-         character(len=15)  :: tot_c        =  "          kg/ha"
-         character(len=15)  :: meta_c       =  "          kg/ha"
-         character(len=15)  :: str_c        =  "          kg/ha"
-         character(len=15)  :: lig_c        =  "          kg/ha"
-         character(len=15)  :: tot_soil_c   =  "          kg/ha"
-         character(len=15)  :: meta_soil_c  =  "          kg/ha"         
-         character(len=15)  :: str_soil_c   =  "          kg/ha"  
-         character(len=15)  :: lig_soil_c   =  "          kg/ha"
-        end type output_rsdc_header_units         
-      type (output_rsdc_header_units) :: rsdc_hdr_units
-
-!!! NEW RESIDUE CARBON STAT OUTPUT
-      
-!! NEW SOIL CARBON STAT OUTPUT
-      
-     type output_soilc_header     
-         character (len=6) ::  freq          =    "freq  "
-         character (len=12) :: soil_lyr      =    "    soil_lyr"
-         character (len=12) :: day           =    "        jday"
-         character (len=12) :: mo            =    "         mon"
-         character (len=12) :: day_mo        =    "         day"
-         character (len=12) :: yrc           =    "          yr"
-         character (len=12) :: isd           =    "        unit"
-         character (len=23) :: id            =    "                gis_id "
-         character (len=15) :: name          =    "name           "         
-         character(len=12)  :: seq_org       =    "   seq_org_c"
-         character(len=15)  :: humus_slow_c  =    "   humus_slow_c"
-         character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
-         character(len=15)  :: microb_c      =    "       microb_c"
-        !  character(len=15)  :: meta_c        =    "         meta_c"
-        !  character(len=15)  :: str_c         =    "          str_c"         
-        !  character(len=15)  :: lig_c         =    "          lig_c"  
-        !  character(len=15)  :: man_c         =    "          man_c"
-         end type output_soilc_header       
-      type (output_soilc_header) :: soilc_hdr
-      
-      type output_soilc_header_units      
-         character (len=6) ::  freq         = "      "
-         character (len=12) :: soil_lyr     = "            "
-         character (len=12) :: day          = "            "
-         character (len=12) :: mo           = "            "
-         character (len=12) :: day_mo       = "            "
-         character (len=12) :: yrc          = "            "
-         character (len=12) :: isd          = "            "
-         character (len=23) :: id           = "                       "
-         character (len=15) :: name         = "                "         
-         character (len=12) :: seq_org      = "       kg/ha"
-         character (len=15) :: humus_slow_c = "          kg/ha"         
-         character (len=15) :: humus_pass_c = "          kg/ha"  
-         character (len=15) :: microb_c     = "          kg/ha" 
-        !  character(len=15)  :: meta_c        =    "          kg/ha"
-        !  character(len=15)  :: str_c         =    "          kg/ha"
-        !  character(len=15)  :: lig_c         =    "          kg/ha"
-        !  character(len=15)  :: man_c         =    "          kg/ha"
-        end type output_soilc_header_units         
-      type (output_soilc_header_units) :: soilc_hdr_units
-
-     type output_soil_org_flux_header     
-         character (len=6) ::  freq          =    "freq  "
-         character (len=12) :: soil_lyr      =    "    soil_lyr"
-         character (len=12) :: day           =    "        jday"
-         character (len=12) :: mo            =    "         mon"
-         character (len=12) :: day_mo        =    "         day"
-         character (len=12) :: yrc           =    "          yr"
-         character (len=12) :: isd           =    "        unit"
-         character (len=23) :: id            =    "                gis_id "
-         character (len=15) :: name          =    "name           "         
-         character(len=15)  :: cfmets1   =    "        cfmets1"
-         character(len=15)  :: cfstrs1   =    "        cfstrs1"
-         character(len=15)  :: cfstrs2   =    "        cfstrs2"
-         character(len=15)  :: efmets1   =    "        efmets1"
-         character(len=15)  :: efstrs1   =    "        efstrs1"
-         character(len=15)  :: efstrs2   =    "        efstrs2"
-         character(len=15)  :: immmets1  =    "       immmets1"
-         character(len=15)  :: immstrs1  =    "       immstrs1" 
-         character(len=15)  :: immstrs2  =    "       immstrs2" 
-         character(len=15)  :: mnrmets1  =    "       mnrmets1" 
-         character(len=15)  :: mnrstrs1  =    "       mnrstrs1" 
-         character(len=15)  :: mnrstrs2  =    "       mnrstrs2"  
-         character(len=15)  :: co2fmet   =    "        co2fmet" 
-         character(len=15)  :: co2fstr   =    "        co2fstr" 
-         character(len=15)  :: cfs1s2    =    "         cfs1s2"  
-         character(len=15)  :: cfs1s3    =    "         cfs1s3"  
-         character(len=15)  :: cfs2s1    =    "         cfs2s1"  
-         character(len=15)  :: cfs2s3    =    "         cfs2s3"  
-         character(len=15)  :: cfs3s1    =    "         cfs3s1"  
-         character(len=15)  :: efs1s2    =    "         efs1s2"  
-         character(len=15)  :: efs1s3    =    "         efs1s3"  
-         character(len=15)  :: efs2s1    =    "         efs2s1"  
-         character(len=15)  :: efs2s3    =    "         efs2s3"  
-         character(len=15)  :: efs3s1    =    "         efs3s1"  
-         character(len=15)  :: imms1s2   =    "        imms1s2" 
-         character(len=15)  :: imms1s3   =    "        imms1s3" 
-         character(len=15)  :: imms2s1   =    "        imms2s1" 
-         character(len=15)  :: imms2s3   =    "        imms2s3" 
-         character(len=15)  :: imms3s1   =    "        imms3s1" 
-         character(len=15)  :: mnrs1s2   =    "        mnrs1s2" 
-         character(len=15)  :: mnrs1s3   =    "        mnrs1s3" 
-         character(len=15)  :: mnrs2s1   =    "        mnrs2s1" 
-         character(len=15)  :: mnrs2s3   =    "        mnrs2s3" 
-         character(len=15)  :: mnrs3s1   =    "        mnrs3s1" 
-         character(len=15)  :: co2fs1    =    "         co2fs1" 
-         character(len=15)  :: co2fs2    =    "         co2fs2"  
-         character(len=15)  :: co2fs3    =    "         co2fs3" 
-
-        !  character(len=15)  :: tot_org_c     =    "      tot_org_c"
-        !  character(len=15)  :: str_c         =    "          str_c"
-        !  character(len=15)  :: lig_c         =    "          lib_c"
-        !  character(len=15)  :: meta_c        =    "         meta_c"
-        !  character(len=15)  :: man_c         =    "          man_c"
-        !  character(len=15)  :: humus_low_c   =    "    humus_low_c"
-        !  character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
-        !  character(len=15)  :: microb_c      =    "       microb_c"
-         end type output_soil_org_flux_header
-      type (output_soil_org_flux_header) :: soil_org_flux_hdr
-
-     type output_soil_org_flux_header_units     
-         character (len=6)  :: freq         = "      "
-         character (len=12) :: soil_lyr     = "            "
-         character (len=12) :: day          = "            "
-         character (len=12) :: mo           = "            "
-         character (len=12) :: day_mo       = "            "
-         character (len=12) :: yrc          = "            "
-         character (len=12) :: isd          = "            "
-         character (len=23) :: id           = "                       "
-         character (len=15) :: name         = "                "         
-         character(len=15)  :: cfmets1   =    "        kg_C/ha"
-         character(len=15)  :: cfstrs1   =    "        kg_C/ha"
-         character(len=15)  :: cfstrs2   =    "        kg_C/ha"
-         character(len=15)  :: efmets1   =    "        kg_N/ha"
-         character(len=15)  :: efstrs1   =    "        kg_N/ha"
-         character(len=15)  :: efstrs2   =    "        kg_N/ha"
-         character(len=15)  :: immmets1  =    "        kg_N/ha"
-         character(len=15)  :: immstrs1  =    "        kg_N/ha" 
-         character(len=15)  :: immstrs2  =    "        kg_N/ha" 
-         character(len=15)  :: mnrmets1  =    "        kg_N/ha" 
-         character(len=15)  :: mnrstrs1  =    "        kg_N/ha" 
-         character(len=15)  :: mnrstrs2  =    "        kg_N/ha"  
-         character(len=15)  :: co2fmet   =    "        kg_C/ha" 
-         character(len=15)  :: co2fstr   =    "        kg_C/ha" 
-         character(len=15)  :: cfs1s2    =    "        kg_C/ha"  
-         character(len=15)  :: cfs1s3    =    "        kg_C/ha"  
-         character(len=15)  :: cfs2s1    =    "        kg_C/ha"  
-         character(len=15)  :: cfs2s3    =    "        kg_C/ha"  
-         character(len=15)  :: cfs3s1    =    "        kg_C/ha"  
-         character(len=15)  :: efs1s2    =    "        kg_N/ha"  
-         character(len=15)  :: efs1s3    =    "        kg_N/ha"  
-         character(len=15)  :: efs2s1    =    "        kg_N/ha"  
-         character(len=15)  :: efs2s3    =    "        kg_N/ha"  
-         character(len=15)  :: efs3s1    =    "        kg_N/ha"  
-         character(len=15)  :: imms1s2   =    "        kg_N/ha" 
-         character(len=15)  :: imms1s3   =    "        kg_N/ha" 
-         character(len=15)  :: imms2s1   =    "        kg_N/ha" 
-         character(len=15)  :: imms2s3   =    "        kg_N/ha" 
-         character(len=15)  :: imms3s1   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs1s2   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs1s3   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs2s1   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs2s3   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs3s1   =    "        kg_N/ha" 
-         character(len=15)  :: co2fs1    =    "        kg_C/ha" 
-         character(len=15)  :: co2fs2    =    "        kg_C/ha"  
-         character(len=15)  :: co2fs3    =    "        kg_C/ha" 
-         end type output_soil_org_flux_header_units
-      type (output_soil_org_flux_header_units) :: soil_org_flux_hdr_units
-      
-      ! output soil_carb_mb_stat header
-      type output_soil_carb_mb_hdr     
-         character (len=6) ::  freq          =    "freq  "
-         character (len=12) :: soil_lyr      =    "    soil_lyr"
-         character (len=12) :: day           =    "        jday"
-         character (len=12) :: mo            =    "         mon"
-         character (len=12) :: day_mo        =    "         day"
-         character (len=12) :: yrc           =    "          yr"
-         character (len=12) :: isd           =    "        unit"
-         character (len=23) :: id            =    "                gis_id "
-         character (len=15) :: name          =    "name           "         
-         character(len=15)  :: tot_org_c     =    "      tot_org_c"
-         character(len=15)  :: humus_slow_c  =    "   humus_slow_c"
-         character(len=15)  :: humus_pass_c  =    "   humus_pass_c"
-         character(len=15)  :: microb_c      =    "       microb_c"
-         character(len=15)  :: meta_c        =    "         meta_c"
-         character(len=15)  :: str_c         =    "          str_c"         
-         character(len=15)  :: lig_c         =    "          lig_c"  
-         character(len=15)  :: man_c         =    "          man_c"
-         character(len=15)  :: cfmets1   =    "    cfmets1_flx"
-         character(len=15)  :: cfstrs1   =    "    cfstrs1_flx"
-         character(len=15)  :: cfstrs2   =    "    cfstrs2_flx"
-         character(len=15)  :: efmets1   =    "    efmets1_flx"
-         character(len=15)  :: efstrs1   =    "    efstrs1_flx"
-         character(len=15)  :: efstrs2   =    "    efstrs2_flx"
-         character(len=15)  :: immmets1  =    "   immmets1_flx"
-         character(len=15)  :: immstrs1  =    "   immstrs1_flx" 
-         character(len=15)  :: immstrs2  =    "   immstrs2_flx" 
-         character(len=15)  :: mnrmets1  =    "   mnrmets1_flx" 
-         character(len=15)  :: mnrstrs1  =    "   mnrstrs1_flx" 
-         character(len=15)  :: mnrstrs2  =    "   mnrstrs2_flx"  
-         character(len=15)  :: co2fmet   =    "    co2fmet_flx" 
-         character(len=15)  :: co2fstr   =    "    co2fstr_flx" 
-         character(len=15)  :: cfs1s2    =    "     cfs1s2_flx"  
-         character(len=15)  :: cfs1s3    =    "     cfs1s3_flx"  
-         character(len=15)  :: cfs2s1    =    "     cfs2s1_flx"  
-         character(len=15)  :: cfs2s3    =    "     cfs2s3_flx"  
-         character(len=15)  :: cfs3s1    =    "     cfs3s1_flx"  
-         character(len=15)  :: efs1s2    =    "     efs1s2_flx"  
-         character(len=15)  :: efs1s3    =    "     efs1s3_flx"  
-         character(len=15)  :: efs2s1    =    "     efs2s1_flx"  
-         character(len=15)  :: efs2s3    =    "     efs2s3_flx"  
-         character(len=15)  :: efs3s1    =    "     efs3s1_flx"  
-         character(len=15)  :: imms1s2   =    "    imms1s2_flx" 
-         character(len=15)  :: imms1s3   =    "    imms1s3_flx" 
-         character(len=15)  :: imms2s1   =    "    imms2s1_flx" 
-         character(len=15)  :: imms2s3   =    "    imms2s3_flx" 
-         character(len=15)  :: imms3s1   =    "    imms3s1_flx" 
-         character(len=15)  :: mnrs1s2   =    "    mnrs1s2_flx" 
-         character(len=15)  :: mnrs1s3   =    "    mnrs1s3_flx" 
-         character(len=15)  :: mnrs2s1   =    "    mnrs2s1_flx" 
-         character(len=15)  :: mnrs2s3   =    "    mnrs2s3_flx" 
-         character(len=15)  :: mnrs3s1   =    "    mnrs3s1_flx" 
-         character(len=15)  :: co2fs1    =    "     co2fs1_flx" 
-         character(len=15)  :: co2fs2    =    "     co2fs2_flx"  
-         character(len=15)  :: co2fs3    =    "     co2fs3_flx" 
-         end type output_soil_carb_mb_hdr      
-      type (output_soil_carb_mb_hdr) :: soil_mb_hdr
-      
-      type output_soil_carb_mb_units
-         character (len=6)  :: freq         = "      "
-         character (len=12) :: soil_lyr     = "            "
-         character (len=12) :: day          = "            "
-         character (len=12) :: mo           = "            "
-         character (len=12) :: day_mo       = "            "
-         character (len=12) :: yrc          = "            "
-         character (len=12) :: isd          = "            "
-         character (len=23) :: id           = "                       "
-         character (len=15) :: name         = "                "         
-         character(len=15)  :: tot_org_c    =    "          kg/ha"
-         character(len=15)  :: humus_slow_c  =    "          kg/ha"         
-         character(len=15)  :: humus_pass_c  =    "          kg/ha"  
-         character(len=15)  :: microb_c      =    "          kg/ha" 
-         character(len=15)  :: meta_c        =    "          kg/ha"
-         character(len=15)  :: str_c         =    "          kg/ha"
-         character(len=15)  :: lig_c         =    "          kg/ha"
-         character(len=15)  :: man_c         =    "          kg/ha"
-         character(len=15)  :: cfmets1   =    "        kg_C/ha"
-         character(len=15)  :: cfstrs1   =    "        kg_C/ha"
-         character(len=15)  :: cfstrs2   =    "        kg_C/ha"
-         character(len=15)  :: efmets1   =    "        kg_N/ha"
-         character(len=15)  :: efstrs1   =    "        kg_N/ha"
-         character(len=15)  :: efstrs2   =    "        kg_N/ha"
-         character(len=15)  :: immmets1  =    "        kg_N/ha"
-         character(len=15)  :: immstrs1  =    "        kg_N/ha" 
-         character(len=15)  :: immstrs2  =    "        kg_N/ha" 
-         character(len=15)  :: mnrmets1  =    "        kg_N/ha" 
-         character(len=15)  :: mnrstrs1  =    "        kg_N/ha" 
-         character(len=15)  :: mnrstrs2  =    "        kg_N/ha"  
-         character(len=15)  :: co2fmet   =    "        kg_C/ha" 
-         character(len=15)  :: co2fstr   =    "        kg_C/ha" 
-         character(len=15)  :: cfs1s2    =    "        kg_C/ha"  
-         character(len=15)  :: cfs1s3    =    "        kg_C/ha"  
-         character(len=15)  :: cfs2s1    =    "        kg_C/ha"  
-         character(len=15)  :: cfs2s3    =    "        kg_C/ha"  
-         character(len=15)  :: cfs3s1    =    "        kg_C/ha"  
-         character(len=15)  :: efs1s2    =    "        kg_N/ha"  
-         character(len=15)  :: efs1s3    =    "        kg_N/ha"  
-         character(len=15)  :: efs2s1    =    "        kg_N/ha"  
-         character(len=15)  :: efs2s3    =    "        kg_N/ha"  
-         character(len=15)  :: efs3s1    =    "        kg_N/ha"  
-         character(len=15)  :: imms1s2   =    "        kg_N/ha" 
-         character(len=15)  :: imms1s3   =    "        kg_N/ha" 
-         character(len=15)  :: imms2s1   =    "        kg_N/ha" 
-         character(len=15)  :: imms2s3   =    "        kg_N/ha" 
-         character(len=15)  :: imms3s1   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs1s2   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs1s3   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs2s1   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs2s3   =    "        kg_N/ha" 
-         character(len=15)  :: mnrs3s1   =    "        kg_N/ha" 
-         character(len=15)  :: co2fs1    =    "        kg_C/ha" 
-         character(len=15)  :: co2fs2    =    "        kg_C/ha"  
-         character(len=15)  :: co2fs3    =    "        kg_C/ha" 
-        end type output_soil_carb_mb_units
-      type (output_soil_carb_mb_units) :: soil_mb_units
 
 
 !!! NEW SOIL CARBON STAT OUTPUT
       
 !!! NEW BASIN CARBON OUTPUT
       
-     type output_bsn_carb_header     
-         character (len=11) :: day           =    "       jday"
-         character (len=11) :: yrc           =    "         yr"
-         character (len=6)  :: blnk          =    "      "
-         character (len=15)  :: org_soilc    =    "      org_soilc"
-         character (len=15)  :: org_plc      =    "        org_plc"
-         character (len=15)  :: org_resc     =    "       org_resc"
-         end type output_bsn_carb_header       
-      type (output_bsn_carb_header) :: bsn_carb_hdr
-      
-      type output_bsn_carb_header_units      
-         character (len=11) :: day          =    "           "
-         character (len=11) :: yrc          =    "           "
-         character (len=6)  :: blnk         =    "      "
-         character(len=15)  :: org_soilc    =    "          kg/ha"
-         character(len=15)  :: org_plc      =    "          kg/ha"
-         character(len=15)  :: org_resc     =    "          kg/ha"
-        end type output_bsn_carb_header_units         
-      type (output_bsn_carb_header_units) :: bsn_carb_hdr_units
-
-!!! NEW BASIN CARBON OUTPUT
-
+!! output_bsn_carb_header / output_bsn_carb_header_units removed with basin_carbon_all.txt
 
       type output_losses_header1
         character (len=6) :: day        =  "  jday"
@@ -1350,26 +891,14 @@
       interface operator (+)
         module procedure hruout_nut_cycling_add
       end interface
-           
-      interface operator (+)
-        module procedure hruout_nut_gain_loss_add
-      end interface  
 
       interface operator (/)
         module procedure hruout_nut_cycling_div
       end interface
-           
-      interface operator (/)
-        module procedure hruout_nut_gain_loss_div
-      end interface  
-       
+
       interface operator (*)
         module procedure hruout_nut_cycling_mult
       end interface
-           
-      interface operator (*)
-        module procedure hruout_nut_gain_loss_mult
-      end interface  
 !**********************new
                 
       interface operator (*)
@@ -1504,41 +1033,6 @@
         hru3%rsd_laborg_p = hru1%rsd_laborg_p + hru2%rsd_laborg_p
       end function hruout_nut_cycling_add
       
-      function hruout_nut_gain_loss_add (hru1, hru2) result (hru3)
-        type (output_nutcarb_gain_loss), intent (in) :: hru1
-        type (output_nutcarb_gain_loss), intent (in) :: hru2
-        type (output_nutcarb_gain_loss) :: hru3
-        hru3%sedyld = hru1%sedyld + hru2%sedyld
-        hru3%usle = hru1%usle + hru2%usle
-        hru3%sedorgc = hru1%sedorgc + hru2%sedorgc
-        hru3%sedorgn = hru1%sedorgn + hru2%sedorgn
-        hru3%sedorgp = hru1%sedorgp + hru2%sedorgp
-        hru3%surqno3 = hru1%surqno3 + hru2%surqno3
-        hru3%latno3 = hru1%latno3 + hru2%latno3
-        hru3%surqsolp = hru1%surqsolp + hru2%surqsolp
-        hru3%sedmin = hru1%sedmin + hru2%sedmin
-        hru3%tileno3 = hru1%tileno3 + hru2%tileno3
-        hru3%no3atmo = hru1%no3atmo + hru2%no3atmo
-        hru3%nh4atmo = hru1%nh4atmo + hru2%nh4atmo
-        hru3%manurec = hru1%manurec + hru2%manurec
-        hru3%manuren = hru1%manuren + hru2%manuren
-        hru3%manurep = hru1%manurep + hru2%manurep
-        hru3%fertc = hru1%fertc + hru2%fertc
-        hru3%fertn = hru1%fertn + hru2%fertn
-        hru3%fertp = hru1%fertp + hru2%fertp
-        hru3%grazc_eat = hru1%grazc_eat + hru2%grazc_eat
-        hru3%grazn_eat = hru1%grazn_eat + hru2%grazn_eat
-        hru3%grazp_eat = hru1%grazp_eat + hru2%grazp_eat
-        hru3%grazc_man = hru1%grazc_man + hru2%grazc_man
-        hru3%grazn_man = hru1%grazn_man + hru2%grazn_man
-        hru3%grazp_man = hru1%grazp_man + hru2%grazp_man
-        hru3%fixn = hru1%fixn + hru2%fixn
-        hru3%denit = hru1%denit + hru2%denit
-        hru3%yieldc = hru1%yieldc + hru2%yieldc
-        hru3%yieldn = hru1%yieldn + hru2%yieldn
-        hru3%yieldp = hru1%yieldp + hru2%yieldp
-      end function hruout_nut_gain_loss_add
-    
       function hruout_nut_cycling_mult (hru1,const) result (hru2)
         type (output_nutcarb_cycling), intent (in) :: hru1
         real, intent (in) :: const
@@ -1553,41 +1047,6 @@
         hru2%rsd_laborg_p = hru1%rsd_laborg_p * const
       end function hruout_nut_cycling_mult
              
-      function hruout_nut_gain_loss_mult (hru1,const) result (hru2)
-        type (output_nutcarb_gain_loss), intent (in) :: hru1
-        real, intent (in) :: const
-        type (output_nutcarb_gain_loss) :: hru2               
-        hru2%sedyld = hru1%sedyld * const
-        hru2%usle = hru1%usle * const
-        hru2%sedorgc = hru1%sedorgc * const
-        hru2%sedorgn = hru1%sedorgn * const
-        hru2%sedorgp = hru1%sedorgp * const
-        hru2%surqno3 = hru1%surqno3 * const
-        hru2%latno3 = hru1%latno3 * const
-        hru2%surqsolp = hru1%surqsolp * const
-        hru2%sedmin = hru1%sedmin * const
-        hru2%tileno3 = hru1%tileno3 * const
-        hru2%no3atmo = hru1%no3atmo * const
-        hru2%nh4atmo = hru1%nh4atmo * const
-        hru2%manurec = hru1%manurec * const
-        hru2%manuren = hru1%manuren * const
-        hru2%manurep = hru1%manurep * const
-        hru2%fertc = hru1%fertc * const
-        hru2%fertn = hru1%fertn * const
-        hru2%fertp = hru1%fertp * const
-        hru2%grazc_eat = hru1%grazc_eat * const
-        hru2%grazn_eat = hru1%grazn_eat * const
-        hru2%grazp_eat = hru1%grazp_eat * const
-        hru2%grazc_man = hru1%grazc_man * const
-        hru2%grazn_man = hru1%grazn_man * const
-        hru2%grazp_man = hru1%grazp_man * const
-        hru2%fixn = hru1%fixn * const
-        hru2%denit = hru1%denit * const
-        hru2%yieldc = hru1%yieldc * const
-        hru2%yieldn = hru1%yieldn * const
-        hru2%yieldp = hru1%yieldp * const
-      end function hruout_nut_gain_loss_mult
-      
       function hruout_nut_cycling_div (hru1,const) result (hru2)
         type (output_nutcarb_cycling), intent (in) :: hru1
         real, intent (in) :: const
@@ -1602,41 +1061,6 @@
         hru2%rsd_laborg_p = hru1%rsd_laborg_p / const
       end function hruout_nut_cycling_div
              
-      function hruout_nut_gain_loss_div (hru1,const) result (hru2)
-        type (output_nutcarb_gain_loss), intent (in) :: hru1
-        real, intent (in) :: const
-        type (output_nutcarb_gain_loss) :: hru2               
-        hru2%sedyld = hru1%sedyld / const
-        hru2%usle = hru1%usle / const
-        hru2%sedorgc = hru1%sedorgc / const
-        hru2%sedorgn = hru1%sedorgn / const
-        hru2%sedorgp = hru1%sedorgp / const
-        hru2%surqno3 = hru1%surqno3 / const
-        hru2%latno3 = hru1%latno3 / const
-        hru2%surqsolp = hru1%surqsolp / const
-        hru2%sedmin = hru1%sedmin / const
-        hru2%tileno3 = hru1%tileno3 / const
-        hru2%no3atmo = hru1%no3atmo / const
-        hru2%nh4atmo = hru1%nh4atmo / const
-        hru2%manurec = hru1%manurec / const
-        hru2%manuren = hru1%manuren / const
-        hru2%manurep = hru1%manurep / const
-        hru2%fertc = hru1%fertc / const
-        hru2%fertn = hru1%fertn / const
-        hru2%fertp = hru1%fertp / const
-        hru2%grazc_eat = hru1%grazc_eat / const
-        hru2%grazn_eat = hru1%grazn_eat / const
-        hru2%grazp_eat = hru1%grazp_eat / const
-        hru2%grazc_man = hru1%grazc_man / const
-        hru2%grazn_man = hru1%grazn_man / const
-        hru2%grazp_man = hru1%grazp_man / const
-        hru2%fixn = hru1%fixn / const
-        hru2%denit = hru1%denit / const
-        hru2%yieldc = hru1%yieldc / const
-        hru2%yieldn = hru1%yieldn / const
-        hru2%yieldp = hru1%yieldp / const
-      end function hruout_nut_gain_loss_div
-      
       function hruout_plantweather_add (hru1, hru2) result (hru3)
         type (output_plantweather), intent (in) :: hru1
         type (output_plantweather), intent (in) :: hru2
@@ -1661,6 +1085,10 @@
         hru3%rhum = hru1%rhum + hru2%rhum
         hru3%solrad = hru1%solrad + hru2%solrad
         hru3%phubase0 = hru1%phubase0 + hru2%phubase0
+        hru3%lai_max = hru1%lai_max + hru2%lai_max
+        hru3%bm_max = hru1%bm_max + hru2%bm_max
+        hru3%bm_grow = hru1%bm_grow + hru2%bm_grow
+        hru3%c_gro = hru1%c_gro + hru2%c_gro
       end function hruout_plantweather_add
 
       function hruout_waterbal_div (hru1,const) result (hru2)
@@ -1839,8 +1267,16 @@
         hru2%act_nit_n = hru1%act_nit_n * const
         hru2%act_sta_n = hru1%act_sta_n * const
         hru2%org_lab_p = hru1%org_lab_p * const
-        hru2%rsd_nitorg_n = hru1%rsd_nitorg_n * const
-        hru2%rsd_laborg_p = hru1%rsd_laborg_p * const
+        if (hru1%rsd_nitorg_n < 1.e-10) then
+          hru2%rsd_nitorg_n = 0.0 ! FG - to prevent gfortran underflow error
+        else
+          hru2%rsd_nitorg_n = hru1%rsd_nitorg_n * const
+        endif
+        if (hru1%rsd_laborg_p < 1.e-10) then
+          hru2%rsd_laborg_p = 0.0 ! FG - to prevent gfortran underflow error
+        else
+          hru2%rsd_laborg_p = hru1%rsd_laborg_p * const
+        endif
         hru2%no3atmo = hru1%no3atmo * const
         hru2%nh4atmo = hru1%nh4atmo * const
         hru2%nuptake = hru1%nuptake * const
@@ -1910,6 +1346,10 @@
         hru2%wndspd = hru1%wndspd
         hru2%rhum = hru1%rhum
         hru2%phubase0 = hru1%phubase0
+        hru2%lai_max = hru1%lai_max
+        hru2%bm_max = hru1%bm_max
+        hru2%bm_grow = hru1%bm_grow
+        hru2%c_gro = hru1%c_gro
       end function hruout_plantweather_div
                   
       function hruout_plantweather_ave (hru1,const) result (hru2)
@@ -1937,6 +1377,10 @@
         hru2%rhum = hru1%rhum / const
         hru2%solrad = hru1%solrad / const
         hru2%phubase0 = hru1%phubase0 / const
+        hru2%lai_max = hru1%lai_max / const
+        hru2%bm_max = hru1%bm_max / const
+        hru2%bm_grow = hru1%bm_grow / const
+        hru2%c_gro = hru1%c_gro / const
       end function hruout_plantweather_ave
                           
       function hruout_plantweather_mult (hru1,const) result (hru2)
@@ -1964,6 +1408,10 @@
         hru2%wndspd = hru1%wndspd * const
         hru2%rhum = hru1%rhum * const
         hru2%phubase0 = hru1%phubase0 * const
+        hru2%lai_max = hru1%lai_max * const
+        hru2%bm_max = hru1%bm_max * const
+        hru2%bm_grow = hru1%bm_grow * const
+        hru2%c_gro = hru1%c_gro * const
       end function hruout_plantweather_mult
                           
                             

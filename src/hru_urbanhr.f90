@@ -55,6 +55,8 @@
       use time_module
       
       implicit none
+      
+      external :: hru_sweep
 
       real :: sus_sol = 0. !kg            |suspended solid loading in surface runoff
                            !              |from urban area

@@ -6,7 +6,7 @@
       use reservoir_data_module
       use reservoir_module
       use water_body_module
-      use hydrograph_module, only : res, resz, ob, ht2, wbody, wet
+      use hydrograph_module, only : ht2, wet
       use hru_module, only : hru, wetqsalt, wtspsalt
       use constituent_mass_module
       use res_salt_module
@@ -16,9 +16,7 @@
       
       integer, intent (in) :: icmd !command counter (incoming)
       integer, intent (in) :: ihru !HRU number (incoming)
-      integer :: iwst = 0          !none          |weather station number
       integer :: isalt = 0         !salt ion counter
-      integer :: dum = 0
       real    :: salt_mass_beg = 0.
       real    :: salt_conc_beg = 0.
       real    :: salt_mass_end = 0.

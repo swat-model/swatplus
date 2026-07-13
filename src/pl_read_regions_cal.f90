@@ -7,6 +7,8 @@
       use hru_module, only : hru
       
       implicit none 
+      
+      external :: define_unit_elements
 
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file

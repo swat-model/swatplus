@@ -19,7 +19,7 @@
 
 !! calculate albedo
       cej = -5.e-5
-      cover = pl_mass(j)%ab_gr_com%m + soil1(j)%rsd(1)%m
+      cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
       eaj = Exp(cej * (cover + .1))   !! equation 2.2.16 in SWAT manual
 
       if (hru(j)%sno_mm <= .5) then

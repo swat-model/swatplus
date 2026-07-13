@@ -6,6 +6,8 @@
       
       implicit none
       
+      external :: structure_set_parms
+      
       integer :: j = 0               !none       |counter
       integer :: ilum = 0            !none       |counter 
       

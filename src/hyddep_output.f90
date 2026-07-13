@@ -20,7 +20,7 @@
         if (pco%hyd%d == "y") then
             write (2700,*) time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ, ht1
           if (pco%csvout == "y") then
-            write (2704,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ, ht1
+            write (2704,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ, ht1
           end if 
         endif
       end if
@@ -33,7 +33,7 @@
             write (2701,*) time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,     &
               ob(icmd)%hdep_m
           if (pco%csvout == "y") then
-            write (2705,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,     &
+            write (2705,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,     &
               ob(icmd)%hdep_m
           end if
         end if
@@ -48,7 +48,7 @@
               ob(icmd)%hdep_y
  !                         ob(icmd)%hin_y
           if (pco%csvout == "y") then
-            write (2706,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,     &
+            write (2706,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name, ob(icmd)%typ,     &
              ob(icmd)%hdep_y
 !                          ob(icmd)%hin_y
           end if 
@@ -63,7 +63,7 @@
           write (2703,*) time%day, time%mo, time%day_mo, time%yrc,   ob(icmd)%name,      &
              ob(icmd)%typ, ob(icmd)%hdep_a
            if (pco%csvout == "y") then
-             write (2707,'(*(G0.3,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name,      &
+             write (2707,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ob(icmd)%name,      &
               ob(icmd)%typ, ob(icmd)%hdep_a
            end if 
         end if

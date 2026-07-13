@@ -67,14 +67,20 @@
           soildb(isol)%s%anion_excl, soildb(isol)%s%crk,                   &           
           soildb(isol)%s%texture
          if (eof < 0) exit
-       do j = 1, mlyr
-        read (107,*,iostat=eof) soildb(isol)%ly(j)%z, soildb(isol)%ly(j)%bd,             &
-            soildb(isol)%ly(j)%awc, soildb(isol)%ly(j)%k, soildb(isol)%ly(j)%cbn,        &           
-            soildb(isol)%ly(j)%clay, soildb(isol)%ly(j)%silt, soildb(isol)%ly(j)%sand,   &
-            soildb(isol)%ly(j)%rock, soildb(isol)%ly(j)%alb, soildb(isol)%ly(j)%usle_k,  &           
-            soildb(isol)%ly(j)%ec, soildb(isol)%ly(j)%cal, soildb(isol)%ly(j)%ph     
-        if (eof < 0) exit
-       end do
+          do j = 1, mlyr
+            read (107,*,iostat=eof) soildb(isol)%ly(j)%z, soildb(isol)%ly(j)%bd,             &
+                soildb(isol)%ly(j)%awc, soildb(isol)%ly(j)%k, soildb(isol)%ly(j)%cbn,        &           
+                soildb(isol)%ly(j)%clay, soildb(isol)%ly(j)%silt, soildb(isol)%ly(j)%sand,   &
+                soildb(isol)%ly(j)%rock, soildb(isol)%ly(j)%alb, soildb(isol)%ly(j)%usle_k,  &           
+                soildb(isol)%ly(j)%ec, soildb(isol)%ly(j)%cal, soildb(isol)%ly(j)%ph
+            if (eof < 0) exit
+          end do
+          !! if the first layer is less than 20 cm, adjust to 20 cm if only one layer or second layer is greater than 20 cm
+          if (soildb(isol)%ly(1)%z < 20.) then
+            if (soildb(isol)%s%nly == 1 .or. soildb(isol)%ly(2)%z > 20.) then
+                soildb(isol)%ly(1)%z = 20.
+            end if
+          end if
         end do
         exit
         enddo

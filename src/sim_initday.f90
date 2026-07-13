@@ -46,7 +46,6 @@
       real :: hrupstd = 0.      !varies           |HRU daily pesticide output array
       integer :: j = 0          !none             |HRU number 
       integer :: ly = 0         !none             |counter 
-      integer :: ires = 0       !none             |counter
 
       !!initialize variables at beginning of day
       cbodu = 0.
@@ -118,8 +117,6 @@
       hhsurfq = 0.
 !-----------------------------------------------------        
 
-        !! added for Srini in output.mgt nitrogen and phosphorus nutrients per JGA by gsm 9/8/2011
-                  
           sol_sumno3 = 0.
           sol_sumsolp = 0.
           do j = 1, sp_ob%hru
@@ -131,4 +128,4 @@
           enddo
 
       return
-      end
+      end subroutine sim_initday

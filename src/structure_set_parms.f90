@@ -12,6 +12,8 @@
       use soil_module
       
       implicit none
+      
+      external :: ttcoef_wway
     
       character (len=16), intent (in) :: str_name     !              |
       integer, intent (in) :: istr                    !              |

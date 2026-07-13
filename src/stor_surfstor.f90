@@ -83,6 +83,7 @@
          clayld, sagyld, lagyld, sedorgn, sedorgp, surqno3, surqsolp, sedminpa, sedminps, brt,  &
          surqsalt,urbqsalt,wetqsalt,                                                            & !rtb salt
          surqcs,sedmcs,urbqcs,wetqcs                                                              !rtb cs
+      use time_module
       
       implicit none
  
@@ -102,7 +103,10 @@
 
         do k=1,time%step
           !! Left-over (previous timestep) + inflow (current  timestep)
-          hhsurf_bs(2,j,k) = Max(0., sedprev + hhsedy(j,k))
+          ! hhsurf_bs(2,j,k) = Max(0., sedprev + hhsedy(j,k))
+          hhsurf_bs(2,j,k) = Max(1.e-9, sedprev + hhsedy(j,k))
+          if (hhsurf_bs(2,j,k) == 1.e-9) hhsurf_bs(2,j,k) = 0.0
+
     
           !! new estimation of sediment reaching the main channel
           hhsedy(j,k) = hhsurf_bs(2,j,k) * brt(j)! tons

@@ -157,7 +157,7 @@
               chcal(ireg)%ord(iord)%sim = chcal_z  !! zero all calibration parameters
               do ich_s = 1, chcal(ireg)%num_tot
                 ich = chcal(ireg)%num(ich_s)
-                if (chcal(ireg)%ord(iord)%meas%name == sd_ch(ich)%order .or. chcal(ireg)%ord(iord)%meas%name == "basin") then
+                if (chcal(ireg)%ord(iord)%meas%name == "basin") then
                   chcal(ireg)%ord(iord)%length = chcal(ireg)%ord(iord)%length + sd_ch(ich)%chl
                   chcal(ireg)%ord(iord)%sim%chw = chcal(ireg)%ord(iord)%sim%chw + chsd_y(ich)%deg_bank_m / sd_ch(ich)%chw * &
                     sd_ch(ich)%chl

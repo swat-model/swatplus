@@ -1,6 +1,7 @@
       subroutine hru_output_allo
 
       use output_landscape_module
+      use maximum_data_module
       use hydrograph_module
       use constituent_mass_module
       use output_ls_pesticide_module
@@ -31,11 +32,7 @@
       allocate (hnb_y(mhru))
       allocate (hnb_a(mhru))
       allocate (hls_d(mhru))
-!!!  new nut carb files
-      allocate (hgl_d(mhru))
-      allocate (hgl_m(mhru))
-      allocate (hgl_y(mhru))
-      allocate (hgl_a(mhru))
+!!  hgl_*/output_nutcarb_gain_loss removed; arrays were allocated but never populated
       allocate (hcyl_d(mhru))
       allocate (hcyl_m(mhru))
       allocate (hcyl_y(mhru))
@@ -57,6 +54,14 @@
       allocate (hscf_m(mhru))
       allocate (hscf_y(mhru))
       allocate (hscf_a(mhru))
+      !! LSU-level carbon accumulators (gl + trf + plt families).
+      !! Sized to db_mx%lsu_out (number of LSU output units) and zero-initialised via the type defaults.
+      if (db_mx%lsu_out > 0) then
+        allocate (lsc_d(db_mx%lsu_out)); allocate (lsc_m(db_mx%lsu_out)); allocate (lsc_y(db_mx%lsu_out)); allocate (lsc_a(db_mx%lsu_out))
+        allocate (lrc_d(db_mx%lsu_out)); allocate (lrc_m(db_mx%lsu_out)); allocate (lrc_y(db_mx%lsu_out)); allocate (lrc_a(db_mx%lsu_out))
+        allocate (lpc_d(db_mx%lsu_out)); allocate (lpc_m(db_mx%lsu_out)); allocate (lpc_y(db_mx%lsu_out)); allocate (lpc_a(db_mx%lsu_out))
+        allocate (lscf_d(db_mx%lsu_out)); allocate (lscf_m(db_mx%lsu_out)); allocate (lscf_y(db_mx%lsu_out)); allocate (lscf_a(db_mx%lsu_out))
+      end if
 !!!  new nut carb files
       allocate (hls_m(mhru))
       allocate (hls_y(mhru))
