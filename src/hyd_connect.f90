@@ -209,6 +209,7 @@
           nspu = ob(i)%ru_tot
           if (nspu > 0) then
             allocate (ob(i)%obj_subs(nspu))
+            ob(i)%obj_subs = 0
           end if
         end do
 
@@ -224,6 +225,18 @@
             ob(k)%obj_subs(kk) = iob            !routing unit the element is in
             dfn_sum(iob) = dfn_sum(iob) + 1     !sum of elements in the routing unit object
           end do
+        end do
+
+        ! Verify that every routing-unit membership was populated.
+        do i = 1, sp_ob%objs
+          if (ru_seq(i) /= ob(i)%ru_tot) then
+            write(*,*) 'ERROR: routing-unit membership mismatch'
+            write(*,*) 'object index       = ', i
+            write(*,*) 'object type        = ', trim(ob(i)%typ)
+            write(*,*) 'expected ru_tot    = ', ob(i)%ru_tot
+            write(*,*) 'memberships filled = ', ru_seq(i)
+            error stop 'hyd_connect: incomplete obj_subs initialization'
+          end if
         end do
       
       !! determine number of recieving units and set object numbers for outflow hyds

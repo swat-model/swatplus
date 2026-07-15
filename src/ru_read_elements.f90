@@ -110,9 +110,14 @@
 
       iob1 = sp_ob1%ru
       iob2 = sp_ob1%ru + sp_ob%ru - 1
+
+      ! Reset routing-unit membership counters for all objects.
+      do iob = 1, sp_ob%objs
+        ob(iob)%ru_tot = 0
+      end do
+
       do iru = 1, sp_ob%ru
         iob = sp_ob1%ru + iru - 1
-        ob(iob)%ru_tot = 0
         read (107,*,iostat=eof) numb, namedum, nspu
         if (eof < 0) exit
         
