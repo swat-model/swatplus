@@ -55,7 +55,7 @@
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
       use time_module
-      use hru_module, only : hhqday, ihru, albday,                                      &
+      use hru_module, only : hru, hhqday, ihru, albday,                                 &
         bioday, bsprev, canev, ep_day, ep_max, es_day, fertn, fertp, grazn, grazp,      &
         hhsedy, inflpcp, latqrunon, ls_overq, lyrtile, qp_cms,                          &
         pet_day, qday, qtile, sepday, snoev, snofall, snomlt,                           &
@@ -93,6 +93,7 @@
         ep_max = 0.
         es_day = 0.
         etday = 0.
+        hru(j)%water_evap = 0.
         fertn = 0.
         fertp = 0.
         fixn = 0.
