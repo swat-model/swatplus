@@ -66,6 +66,8 @@
       mix_mn = mnz
       mix_mp = mpz
       mix_org%tot = orgz
+      if (allocated(mix_org%rsd)) deallocate (mix_org%rsd)
+      allocate (mix_org%rsd(pcom(jj)%npl))
       mix_org%rsd = orgz
       mix_org%hact = orgz
       mix_org%hsta = orgz
@@ -226,11 +228,12 @@
           !end do
         end do
 
-        deallocate (sol_mass)    
-        deallocate (sol_msm)    
-        deallocate (sol_msn)    
-        deallocate (frac_dep)    
-    
+        deallocate (sol_mass)
+        deallocate (sol_msm)
+        deallocate (sol_msn)
+        deallocate (frac_dep)
+        deallocate (mix_org%rsd)
+
     end if
     return
     end subroutine mgt_newtillmix_cswat0
