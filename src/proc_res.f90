@@ -17,6 +17,7 @@
       
         ! read reservoir data
         call res_read
+        call res_read_seep_hru
         call res_initial
       end if
 
