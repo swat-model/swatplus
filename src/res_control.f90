@@ -131,7 +131,7 @@
             accepted_m3 = store_reservoir_seepage_in_hru( &
               ihru, offered_m3)
 
-            if (available_seep_m3 > 0. .and. seep_diag_count < 20) then
+            if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
               write(*,'(a,i0,a,i0,a,es16.8,a,es16.8)') &
                 "SEEP_HRU res=", jres, &
                 " hru=", ihru, &
@@ -150,7 +150,7 @@
         res_wat_d(jres)%seep = accepted_total_m3
         res(jres)%flo = max(0., res(jres)%flo - accepted_total_m3)
 
-        if (available_seep_m3 > 0. .and. seep_diag_count < 20) then
+        if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
           write(*,'(a,i0,a,es16.8,a,es16.8,a,es16.8,a,es16.8,a,es16.8)') &
             "SEEP_TOTAL res=", jres, &
             " potential_m3=", potential_seep_m3, &
