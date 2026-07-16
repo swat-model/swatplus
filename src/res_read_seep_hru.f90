@@ -13,6 +13,7 @@
       integer :: i
       integer, dimension(:), allocatable :: n_receiver
       integer, dimension(:), allocatable :: receiver_pos
+      integer, dimension(:), allocatable :: hru_reservoir
       real :: contact_length_m
       logical :: i_exist
       character(len=*), parameter :: seep_hru_file = "reservoir_hru_seep.txt"
@@ -24,8 +25,10 @@
 
       allocate(n_receiver(0:sp_ob%res))
       allocate(receiver_pos(0:sp_ob%res))
+      allocate(hru_reservoir(0:sp_ob%hru))
       n_receiver = 0
       receiver_pos = 0
+      hru_reservoir = 0
 
       !! First pass: count receiving HRUs for every reservoir.
       open(105, file=seep_hru_file, status="old", action="read")
@@ -65,6 +68,17 @@
           stop "Contact length must be positive in reservoir HRU seepage file"
         end if
 
+          if (hru_reservoir(ihru) /= 0) then
+            write(*,'(a,i0,a,i0,a,i0)') &
+              "Error: HRU ", ihru, &
+              " is assigned more than once. First reservoir=", &
+              hru_reservoir(ihru), &
+              ", repeated reservoir=", ires
+            close(105)
+            stop "Duplicate HRU assignment in reservoir HRU seepage file"
+          end if
+
+          hru_reservoir(ihru) = ires
         n_receiver(ires) = n_receiver(ires) + 1
       end do
 
@@ -113,6 +127,7 @@
 
       deallocate(n_receiver)
       deallocate(receiver_pos)
+      deallocate(hru_reservoir)
 
       return
       end subroutine res_read_seep_hru
