@@ -74,7 +74,6 @@
        character(len=25) :: sed_res =  "sediment.res"
        character(len=25) :: nut_res =  "nutrients.res"
        character(len=25) :: weir_res = "weir.res"
-       character(len=25) :: seep_hru = "reservoir_hru_seep.txt"
        character(len=25) :: wet =      "wetland.wet"
        character(len=25) :: hyd_wet =  "hydrology.wet"
       end type input_res

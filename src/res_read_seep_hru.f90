@@ -1,6 +1,5 @@
       subroutine res_read_seep_hru
 
-      use input_file_module, only : in_res
       use reservoir_module, only : res_ob
       use hydrograph_module, only : sp_ob
 
@@ -16,11 +15,12 @@
       integer, dimension(:), allocatable :: receiver_pos
       real :: contact_length_m
       logical :: i_exist
+      character(len=*), parameter :: seep_hru_file = "reservoir_hru_seep.txt"
 
-      inquire(file=in_res%seep_hru, exist=i_exist)
+      inquire(file=seep_hru_file, exist=i_exist)
 
       !! Missing mapping file means that reservoir seepage routing is inactive.
-      if (.not. i_exist .or. trim(in_res%seep_hru) == "null") return
+      if (.not. i_exist) return
 
       allocate(n_receiver(0:sp_ob%res))
       allocate(receiver_pos(0:sp_ob%res))
@@ -28,7 +28,7 @@
       receiver_pos = 0
 
       !! First pass: count receiving HRUs for every reservoir.
-      open(105, file=in_res%seep_hru, status="old", action="read")
+      open(105, file=seep_hru_file, status="old", action="read")
 
       read(105, *, iostat=eof) title
       if (eof /= 0) then
@@ -84,7 +84,7 @@
       end do
 
       !! Second pass: store HRU numbers and contact lengths.
-      open(105, file=in_res%seep_hru, status="old", action="read")
+      open(105, file=seep_hru_file, status="old", action="read")
 
       read(105, *, iostat=eof) title
       read(105, *, iostat=eof) header
@@ -102,6 +102,11 @@
 
         res_ob(ires)%seep_hru(i)%hru_id = ihru
         res_ob(ires)%seep_hru(i)%contact_length_m = contact_length_m
+
+        write(*,'(a,i0,a,i0,a,f10.3)') &
+          "Reservoir seepage mapping: res=", ires, &
+          " hru=", ihru, &
+          " contact_m=", contact_length_m
       end do
 
       close(105)
