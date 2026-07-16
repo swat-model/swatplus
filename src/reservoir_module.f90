@@ -8,8 +8,15 @@
       real :: reactb                  !mg pst        |amount of pesticide in sediment that is lost through reactions
       real :: bury                    !mg pst        |loss of pesticide from active sediment layer by burial
 
+      type reservoir_seep_receiver
+        integer :: hru_id = 0                         !none   |HRU receiving reservoir seepage
+        real :: contact_length_m = 0.                 !m      |contact length between reservoir and HRU
+      end type reservoir_seep_receiver
+
       type reservoir
         character(len=13) :: name = "default"
+        integer :: n_seep_hru = 0                     !none   |number of HRUs receiving reservoir seepage
+        type (reservoir_seep_receiver), dimension(:), allocatable :: seep_hru
         integer :: ob = 0                           !object number if reservoir object; hru number if hru object
         integer :: props = 0                        !points to res_dat
         real :: psa = 0.                    !ha     |res surface area when res is filled to princ spillway
