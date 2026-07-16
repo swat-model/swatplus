@@ -24,6 +24,7 @@
       real :: evol_m3
       integer :: ireceiver
       integer :: ihru
+      integer, save :: seep_diag_count = 0
       real :: potential_seep_m3
       real :: available_seep_m3
       real :: remaining_offer_m3
@@ -31,6 +32,7 @@
       real :: accepted_m3
       real :: accepted_total_m3
       real :: total_contact_length_m
+      real :: storage_before_seep_m3
 
       iob = res_ob(jres)%ob
       iwst = ob(iob)%wst
@@ -96,6 +98,7 @@
       !! receiving HRUs retain the standard SWAT+ seepage behavior.
       if (res_ob(jres)%n_seep_hru > 0) then
 
+        storage_before_seep_m3 = res(jres)%flo
         potential_seep_m3 = max(0., res_wat_d(jres)%seep)
         available_seep_m3 = min(potential_seep_m3, &
                                 max(0., res(jres)%flo))
@@ -128,6 +131,14 @@
             accepted_m3 = store_reservoir_seepage_in_hru( &
               ihru, offered_m3)
 
+            if (seep_diag_count < 20) then
+              write(*,'(a,i0,a,i0,a,f14.6,a,f14.6)') &
+                "SEEP_HRU res=", jres, &
+                " hru=", ihru, &
+                " offered_m3=", offered_m3, &
+                " accepted_m3=", accepted_m3
+            end if
+
             accepted_total_m3 = accepted_total_m3 + accepted_m3
             remaining_offer_m3 = max(0., &
               remaining_offer_m3 - offered_m3)
@@ -138,6 +149,17 @@
         !! Remove and report only the volume stored in HRU soils.
         res_wat_d(jres)%seep = accepted_total_m3
         res(jres)%flo = max(0., res(jres)%flo - accepted_total_m3)
+
+        if (seep_diag_count < 20) then
+          write(*,'(a,i0,a,f14.6,a,f14.6,a,f14.6,a,f14.6,a,f14.6)') &
+            "SEEP_TOTAL res=", jres, &
+            " potential_m3=", potential_seep_m3, &
+            " available_m3=", available_seep_m3, &
+            " accepted_m3=", accepted_total_m3, &
+            " storage_before_m3=", storage_before_seep_m3, &
+            " storage_after_m3=", res(jres)%flo
+          seep_diag_count = seep_diag_count + 1
+        end if
 
       else
 
