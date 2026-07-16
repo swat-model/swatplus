@@ -132,7 +132,7 @@
               ihru, offered_m3)
 
             if (available_seep_m3 > 0. .and. seep_diag_count < 20) then
-              write(*,'(a,i0,a,i0,a,f14.6,a,f14.6)') &
+              write(*,'(a,i0,a,i0,a,es16.8,a,es16.8)') &
                 "SEEP_HRU res=", jres, &
                 " hru=", ihru, &
                 " offered_m3=", offered_m3, &
@@ -151,7 +151,7 @@
         res(jres)%flo = max(0., res(jres)%flo - accepted_total_m3)
 
         if (available_seep_m3 > 0. .and. seep_diag_count < 20) then
-          write(*,'(a,i0,a,f14.6,a,f14.6,a,f14.6,a,f14.6,a,f14.6)') &
+          write(*,'(a,i0,a,es16.8,a,es16.8,a,es16.8,a,es16.8,a,es16.8)') &
             "SEEP_TOTAL res=", jres, &
             " potential_m3=", potential_seep_m3, &
             " available_m3=", available_seep_m3, &
