@@ -8,6 +8,7 @@
       use hydrograph_module
       use conditional_module
       use water_body_module
+      use reservoir_seepage_module, only : store_reservoir_seepage_in_hru
       
       implicit none
 
@@ -21,6 +22,15 @@
       integer :: iob                  !none          |counter
       real :: pvol_m3
       real :: evol_m3
+      integer :: ireceiver
+      integer :: ihru
+      real :: potential_seep_m3
+      real :: available_seep_m3
+      real :: remaining_offer_m3
+      real :: offered_m3
+      real :: accepted_m3
+      real :: accepted_total_m3
+      real :: total_contact_length_m
 
       iob = res_ob(jres)%ob
       iwst = ob(iob)%wst
@@ -82,11 +92,63 @@
         res(jres)%flo = 0.
       end if
       
-      !! subtract seepage from reservoir storage
-      res(jres)%flo = res(jres)%flo - res_wat_d(jres)%seep
-      if (res(jres)%flo < 0.) then
-        res_wat_d(jres)%seep = res_wat_d(jres)%seep + res(jres)%flo
-        res(jres)%flo = 0.
+      !! Route reservoir seepage to mapped HRU soils. Reservoirs without
+      !! receiving HRUs retain the standard SWAT+ seepage behavior.
+      if (res_ob(jres)%n_seep_hru > 0) then
+
+        potential_seep_m3 = max(0., res_wat_d(jres)%seep)
+        available_seep_m3 = min(potential_seep_m3, &
+                                max(0., res(jres)%flo))
+
+        total_contact_length_m = 0.
+        do ireceiver = 1, res_ob(jres)%n_seep_hru
+          total_contact_length_m = total_contact_length_m + &
+            res_ob(jres)%seep_hru(ireceiver)%contact_length_m
+        end do
+
+        accepted_total_m3 = 0.
+        remaining_offer_m3 = available_seep_m3
+
+        if (total_contact_length_m > 0.) then
+          do ireceiver = 1, res_ob(jres)%n_seep_hru
+
+            ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
+
+            if (ireceiver == res_ob(jres)%n_seep_hru) then
+              offered_m3 = remaining_offer_m3
+            else
+              offered_m3 = available_seep_m3 * &
+                res_ob(jres)%seep_hru(ireceiver)%contact_length_m / &
+                total_contact_length_m
+              offered_m3 = min(offered_m3, remaining_offer_m3)
+            end if
+
+            offered_m3 = max(0., offered_m3)
+
+            accepted_m3 = store_reservoir_seepage_in_hru( &
+              ihru, offered_m3)
+
+            accepted_total_m3 = accepted_total_m3 + accepted_m3
+            remaining_offer_m3 = max(0., &
+              remaining_offer_m3 - offered_m3)
+
+          end do
+        end if
+
+        !! Remove and report only the volume stored in HRU soils.
+        res_wat_d(jres)%seep = accepted_total_m3
+        res(jres)%flo = max(0., res(jres)%flo - accepted_total_m3)
+
+      else
+
+        !! Standard SWAT+ seepage loss for an unmapped reservoir.
+        res(jres)%flo = res(jres)%flo - res_wat_d(jres)%seep
+        if (res(jres)%flo < 0.) then
+          res_wat_d(jres)%seep = res_wat_d(jres)%seep + &
+                                 res(jres)%flo
+          res(jres)%flo = 0.
+        end if
+
       end if
 
         !! update surface area
