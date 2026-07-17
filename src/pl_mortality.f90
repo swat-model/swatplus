@@ -35,8 +35,8 @@
         rto1 = max (0., rto1)
         
         !! add above ground biomass that has died off to surface residue pools
-        pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + rto * pl_mass(j)%ab_gr(ipl)
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + rto * pl_mass(j)%ab_gr(ipl)
+        pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + rto * pl_mass(j)%ab_gr(ipl)
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + rto * pl_mass(j)%ab_gr(ipl)
         
         !! add dead roots to soil residue pools
         do ly = 1, soil(j)%nly

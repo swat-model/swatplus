@@ -58,9 +58,9 @@
       do ipl = 1, pcom(j)%npl
               
         !! burn this plant's surface residue; C -> residue emission, P returns to humus
-        pl_burn = fire_db(iburn)%fr_burn * pl_mass(j)%rsd(ipl)
-        pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - pl_burn
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - pl_burn      ! decrement total by burned (was: overwrite with one plant)
+        pl_burn = fire_db(iburn)%fr_burn * pl_mass(j)%abg_rsd(ipl)
+        pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - pl_burn
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - pl_burn      ! decrement total by burned (was: overwrite with one plant)
         hrc_d(j)%emit_c = hrc_d(j)%emit_c + pl_burn%c          ! burned residue C -> residue carbon emission
         burn_p = burn_p + pl_burn%p                            ! + surface residue P
       

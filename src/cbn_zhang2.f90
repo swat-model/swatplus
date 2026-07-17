@@ -462,7 +462,7 @@
             xbm = 1.
             ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (pl_mass(j)%rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%rsd_tot%c / 1000. + 1.e-5)
+            rsdn_pct = 0.1 * (pl_mass(j)%abg_rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%abg_rsd_tot%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
               org_ratio%ncbm = .1
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)

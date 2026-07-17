@@ -72,8 +72,8 @@
       end do   
 
       !! add above ground mass to residue pool
-      pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%ab_gr(ipl)
-      pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + pl_mass(j)%ab_gr(ipl)
 
       !! zero all plant components - assume tuber harvest kills plant
       pl_mass(j)%tot(ipl) = plt_mass_z
