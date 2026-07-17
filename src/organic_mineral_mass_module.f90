@@ -174,8 +174,8 @@
        type (organic_mass), dimension(:), allocatable :: seed       !kg/ha      |seed (grain) mass for individual plant in community
        type (organic_mass), dimension(:), allocatable :: yield_tot  !kg/ha      |running total sum of yield at harvest -  ave annual print
        type (organic_mass), dimension(:), allocatable :: yield_yr   !kg/ha      |running yearly sum of yield at harvest - yearly print
-       type (organic_mass), dimension(:), allocatable :: rsd        !kg/ha      |fresh surface residue dimensioned by plant
-       type (organic_mass) :: rsd_tot                               !kg/ha      |total fresh surface residue
+       type (organic_mass), dimension(:), allocatable :: abg_rsd    !kg/ha      |fresh surface (above-ground) residue dimensioned by plant
+       type (organic_mass) :: abg_rsd_tot                           !kg/ha      |total fresh surface (above-ground) residue, summed over plants
        type (organic_mass) :: tot_com                               !kg/ha      |total biomass for entire community
        type (organic_mass) :: ab_gr_com                             !kg/ha      |above ground mass for entire community
        type (organic_mass) :: leaf_com                              !kg/ha      |leaf mass for entire community

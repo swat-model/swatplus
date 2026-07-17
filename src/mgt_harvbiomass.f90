@@ -80,12 +80,12 @@
       !! add clippings (biomass left behind) to surface residue pool
       clip = 1. - harveff
       harv_left = clip * pl_yield
-      pl_mass(j)%rsd(ipl) = harv_left + pl_mass(j)%rsd(ipl)
+      pl_mass(j)%abg_rsd(ipl) = harv_left + pl_mass(j)%abg_rsd(ipl)
       
       !! update total residue pool
-      pl_mass(j)%rsd_tot = orgz
+      pl_mass(j)%abg_rsd_tot = orgz
       do npl = 1, pcom(j)%npl
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(npl)
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%abg_rsd(npl)
       end do
 
       !! calculation for dead roots allocations, resetting phenology, updating other pools

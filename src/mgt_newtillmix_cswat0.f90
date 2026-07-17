@@ -163,7 +163,7 @@
           
           !! mix each plant residue component separately (surface residue is above-ground -> abg)
           do ipl = 1, pcom(jj)%npl
-            mix_org%rsd(ipl)%abg = mix_org%rsd(ipl)%abg + frac_mixed * pl_mass(jj)%rsd(ipl)
+            mix_org%rsd(ipl)%abg = mix_org%rsd(ipl)%abg + frac_mixed * pl_mass(jj)%abg_rsd(ipl)
           end do
           
           mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
@@ -193,10 +193,10 @@
             soil1(jj)%pl(ipl)%rsd(l) = frac_non_mixed * soil1(jj)%pl(ipl)%rsd(l) +        &
                                                         frac_dep(l) * mix_org%rsd(ipl)
             !! mix surface residue into soil layers (above-ground -> abg)
-            mix_org%surf_rsd = emix * frac_dep(l) * pl_mass(jj)%rsd(ipl)
+            mix_org%surf_rsd = emix * frac_dep(l) * pl_mass(jj)%abg_rsd(ipl)
             soil1(jj)%pl(ipl)%rsd(l)%abg = soil1(jj)%pl(ipl)%rsd(l)%abg + mix_org%surf_rsd
-            pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
-            pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
+            pl_mass(jj)%abg_rsd(ipl) = pl_mass(jj)%abg_rsd(ipl) - mix_org%surf_rsd
+            pl_mass(jj)%abg_rsd_tot = pl_mass(jj)%abg_rsd_tot - mix_org%surf_rsd
           end do
           
           soil1(jj)%hact(l) = frac_non_mixed * soil1(jj)%hact(l) + frac_dep(l) * mix_org%hact

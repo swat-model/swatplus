@@ -73,9 +73,9 @@
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
           ! mineralization can occur only if temp above 0 deg
-          photo_decomp = photo_degrade_factor * pl_mass(j)%rsd(ipl) 
-          pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
-          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
+          photo_decomp = photo_degrade_factor * pl_mass(j)%abg_rsd(ipl) 
+          pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - photo_decomp
+          pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - photo_decomp
           if (soil(j)%phys(1)%tmp > 0.) then
             !! compute soil water factor
             sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
@@ -95,16 +95,16 @@
             !! compute residue decomp and mineralization of surface residue
             rmn1 = 0.
             rmp = 0.
-            if (pl_mass(j)%rsd(ipl)%n > 1.e-4) then
-              cnr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%n
+            if (pl_mass(j)%abg_rsd(ipl)%n > 1.e-4) then
+              cnr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%n
               if (cnr > 500.) cnr = 500.
               cnrf = Exp(-.693 * (cnr - 25.) / 25.)
             else
               cnrf = 1.
             end if
             
-            if (pl_mass(j)%rsd(ipl)%p > 1.e-4) then
-              cpr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%p
+            if (pl_mass(j)%abg_rsd(ipl)%p > 1.e-4) then
+              cpr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%p
               if (cpr > 5000.) cpr = 5000.
               cprf = Exp(-.693 * (cpr - 200.) / 200.)
             else
@@ -117,16 +117,16 @@
             decr = pldb(idp)%rsdco_pl * ca * csf
             decr = Max(bsn_prm%decr_min, decr)
             decr = Min(decr, 1.)
-            decomp = decr * pl_mass(j)%rsd(ipl)
-            pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
-            pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - decomp
+            decomp = decr * pl_mass(j)%abg_rsd(ipl)
+            pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - decomp
+            pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - decomp
             soil1(j)%pl(ipl)%rsd(1)%abg = soil1(j)%pl(ipl)%rsd(1)%abg + decomp
 
             ! ! The following if statements are to prevent runtime underflow errors with gfortran 
-            ! if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
-            ! if (pl_mass(j)%rsd(ipl)%c < 1.e-10) pl_mass(j)%rsd(ipl)%c = 0.0 
-            ! if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
-            ! if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
+            ! if (pl_mass(j)%abg_rsd(ipl)%m < 1.e-10) pl_mass(j)%abg_rsd(ipl)%m = 0.0 
+            ! if (pl_mass(j)%abg_rsd(ipl)%c < 1.e-10) pl_mass(j)%abg_rsd(ipl)%c = 0.0 
+            ! if (pl_mass(j)%abg_rsd(ipl)%n < 1.e-10) pl_mass(j)%abg_rsd(ipl)%n = 0.0 
+            ! if (pl_mass(j)%abg_rsd(ipl)%p < 1.e-10) pl_mass(j)%abg_rsd(ipl)%p = 0.0 
             !
             ! ! soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%m
             ! ! soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_1_part_fracs(idp)%str_frac_abg * decomp%m

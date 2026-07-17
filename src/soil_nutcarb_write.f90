@@ -321,12 +321,12 @@
             !write all organic carbon for the plant community file = "hru_plc_stat.txt"
             write (4560,*) freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                 &
-                pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
+                pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%abg_rsd_tot%c
             ! file = "hru_plc_stat.csv"
             if (pco%csvout == "y") then
                 write (4563,'(*(G0.7,:,","))') freq_label, time%day, time%day_mo, time%mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, &
                 pl_mass(j)%tot_com%c, pl_mass(j)%ab_gr_com%c, pl_mass(j)%leaf_com%c,                  &
-                pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%rsd_tot%c
+                pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%abg_rsd_tot%c
             end if
             
             !write the cswat == 1 files. 
@@ -400,7 +400,7 @@
             if (lsu_elem(iihru)%obtyp == "hru") then
               bsn_org_soil = bsn_org_soil + const * soil1(iihru)%tot_org
               bsn_org_pl = bsn_org_pl + const * pl_mass(iihru)%tot_com
-              bsn_org_rsd = bsn_org_rsd + const * soil_prof_rsd + pl_mass(iihru)%rsd_tot
+              bsn_org_rsd = bsn_org_rsd + const * soil_prof_rsd + pl_mass(iihru)%abg_rsd_tot
               bsn_mn = bsn_mn + const * soil1(iihru)%tot_mn
               bsn_mp = bsn_mp + const * soil1(iihru)%tot_mp
             end if

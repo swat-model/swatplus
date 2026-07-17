@@ -840,7 +840,7 @@
         if (pl_mass(j)%tot_com%m < 0.) then
           pl_mass(j)%tot_com%m = 0.
         end if
-        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
+        hpw_d(j)%residue = pl_mass(j)%abg_rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp
