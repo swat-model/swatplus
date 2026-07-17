@@ -76,7 +76,7 @@
       mix_mn = mnz
       mix_mp = mpz
       mix_org%tot = orgz
-      mix_org%rsd = orgz
+      mix_org%rsd = rsd_originz
       mix_org%hact = orgz
       mix_org%hsta = orgz
       mix_org%hs = orgz
@@ -252,8 +252,9 @@
                 ! sum up the amount mixed rsd in the soil from each plant in plant comunity
                 mix_org%rsd(ipl)= mix_org%rsd(ipl) + frac_dep(l) * avg_emix * soil1(jj)%pl(ipl)%rsd(l) 
                 ! now add the amount of surface residue that is mixed into each layer.
+                ! surface residue is above-ground -> abg component
                 mix_org%surf_rsd = frac_dep(l) * avg_emix * pl_mass(jj)%rsd(ipl)
-                mix_org%rsd(ipl)= mix_org%rsd(ipl) + mix_org%surf_rsd
+                mix_org%rsd(ipl)%abg = mix_org%rsd(ipl)%abg + mix_org%surf_rsd
               enddo
             end do
 

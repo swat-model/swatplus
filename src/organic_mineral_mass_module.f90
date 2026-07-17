@@ -12,10 +12,20 @@
       end type organic_mass
       type (organic_mass) :: orgz
 
+      !! soil residue split by origin: above-ground-incorporated vs below-ground (root/kill).
+      !! Lets cbn_rsd_transfer partition each with its own lignin fraction (lig_frac_abg vs
+      !! lig_frac_blg). The +, -, and (real *) operators below act component-wise on abg and
+      !! blg, so tillage/biomixing arithmetic carries origin through automatically.
+      type residue_origin
+        type (organic_mass) :: abg   !   |above-ground-derived (surface incorporation, tillage/biomix)
+        type (organic_mass) :: blg   !   |below-ground-derived (root death, kill, tuber harvest)
+      end type residue_origin
+      type (residue_origin) :: rsd_originz
+
       type organic_mixing_mass           !       |used for each layer in mgt_newtillmix
         type (organic_mass) :: tot       !       |total organic pool
         type (organic_mass) :: surf_rsd  !   |fresh surface residue mixed into layers
-        type (organic_mass), dimension(12) :: rsd   !   |fresh soil residue (max 12 plants)
+        type (residue_origin), dimension(12) :: rsd   !   |fresh soil residue (max 12 plants)
         !! humus pools for old mineralization model (static carbon)
         type (organic_mass) :: hact      !       |active humus for old mineralization model
         type (organic_mass) :: hsta      !       |stable humus for old mineralization model
@@ -62,7 +72,7 @@
       type (mineral_phosphorus) :: mix_mp    !       |mineral p pool used in tillage mixing
       
       type plant_residue
-        type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue dimensioned by layer
+        type (residue_origin), dimension(:), allocatable :: rsd     !       |fresh residue by layer, split abg/blg
       end type plant_residue
       
       type soil_profile_mass
@@ -149,7 +159,7 @@
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in basin
       type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
       type (organic_mass) :: photo_decomp                           !       |temporary storage for photo_residue decomp
-      type (organic_mass) :: transfer                               !       |temporary storage for residue decomp
+      type (residue_origin) :: transfer                             !       |soil residue (abg/blg) moved to CENTURY pools in cbn_rsd_transfer
       type (organic_mass) :: pl_burn                                !       |residue and plant mass burned in fire
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter
       type (organic_mass) :: rsd_str                                !       |temporary storage for initial structural litter
@@ -352,7 +362,20 @@
 
       interface operator (*)
         module procedure pmin_mult_const
-      end interface 
+      end interface
+
+      !! residue_origin arithmetic (component-wise on abg and blg)
+      interface operator (+)
+        module procedure ro_add
+      end interface
+
+      interface operator (-)
+        module procedure ro_subtract
+      end interface
+
+      interface operator (*)
+        module procedure ro_mult_const
+      end interface
 
     contains
 
@@ -405,6 +428,36 @@
         o_m3%n = o_m1%n + o_m2%n
         o_m3%p = o_m1%p + o_m2%p
       end function om_add1
+
+      !! residue_origin: add, subtract, scalar-multiply (component-wise on abg and blg),
+      !! and total (abg + blg) as an organic_mass for callers that only need the sum.
+      function ro_add (r1, r2) result (r3)
+        type (residue_origin), intent (in) :: r1, r2
+        type (residue_origin) :: r3
+        r3%abg = r1%abg + r2%abg
+        r3%blg = r1%blg + r2%blg
+      end function ro_add
+
+      function ro_subtract (r1, r2) result (r3)
+        type (residue_origin), intent (in) :: r1, r2
+        type (residue_origin) :: r3
+        r3%abg = r1%abg - r2%abg
+        r3%blg = r1%blg - r2%blg
+      end function ro_subtract
+
+      function ro_mult_const (const, r1) result (r2)
+        real, intent (in) :: const
+        type (residue_origin), intent (in) :: r1
+        type (residue_origin) :: r2
+        r2%abg = const * r1%abg
+        r2%blg = const * r1%blg
+      end function ro_mult_const
+
+      function sum_origin (ro) result (o_m)
+        type (residue_origin), intent (in) :: ro
+        type (organic_mass) :: o_m
+        o_m = ro%abg + ro%blg
+      end function sum_origin
             
       !! subtract organic mass
       function om_subtract (o_m1, o_m2) result (o_m3)

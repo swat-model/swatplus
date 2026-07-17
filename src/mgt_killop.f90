@@ -39,7 +39,7 @@
       
       !! add dead roots to soil residue pools
       do ly = 1, soil(j)%nly
-        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly)  &
+        soil1(j)%pl(ipl)%rsd(ly)%blg = soil1(j)%pl(ipl)%rsd(ly)%blg + pcom(j)%plg(ipl)%rtfr(ly)  &
                                                                   * pl_mass(j)%root(ipl)
       end do
       

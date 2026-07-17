@@ -152,7 +152,7 @@
             soil1(j)%rsd_tot(ly) = orgz
             soil1(j)%root_tot(ly) = orgz
             do ipl = 1, pcom(j)%npl
-              soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+              soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + sum_origin(soil1(j)%pl(ipl)%rsd(ly))
               soil1(j)%root_tot(ly)%m = soil1(j)%root_tot(ly)%m + pcom(j)%plg(ipl)%rtfr(ly) * pl_mass(j)%root(ipl)%m 
             end do
             root_frac_ly = 0.
