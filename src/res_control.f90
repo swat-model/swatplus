@@ -8,7 +8,7 @@
       use hydrograph_module
       use conditional_module
       use water_body_module
-      use reservoir_seepage_module, only : queue_reservoir_seepage_for_hru
+      use reservoir_seepage_module, only : store_reservoir_seepage_in_hru
       
       implicit none
 
@@ -128,8 +128,8 @@
 
             offered_m3 = max(0., offered_m3)
 
-            accepted_m3 = queue_reservoir_seepage_for_hru( &
-                ihru, offered_m3)
+            accepted_m3 = store_reservoir_seepage_in_hru( &
+              ihru, offered_m3)
 
             if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
               write(*,'(a,i0,a,i0,a,es16.8,a,es16.8)') &
@@ -146,8 +146,7 @@
           end do
         end if
 
-        !! Remove and report only the volume accepted for delayed
-          !! application to receiving HRU soils.
+        !! Remove and report only the volume stored in HRU soils.
         res_wat_d(jres)%seep = accepted_total_m3
         res(jres)%flo = max(0., res(jres)%flo - accepted_total_m3)
 
