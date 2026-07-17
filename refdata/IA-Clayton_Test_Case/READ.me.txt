@@ -1,9 +1,0 @@
-Test case location: Clayton County in northeastern Iowa 
-Dominant soil component:  Fayette silt loam, 9-14% slope; HSG C
-Begin simulation date:  2008-01-01
-End simulation date:  2025-12-31
-Management:  Conventional tillage two year corn-soybeans through 2015 followed by No Tillage two year corn-soybeans through 2025
-Tile drainage: No 
-
-
-

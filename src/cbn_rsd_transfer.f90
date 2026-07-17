@@ -89,7 +89,7 @@
             !! structural and could drive meta_frac negative). High-lignin residue
             !! now gets a larger structural fraction, so lignin is a sensible,
             !! quality-dependent fraction of it and meta_frac stays valid.
-            clg = cswat_1_part_fracs(idp)%lig_frac_blg               ! residue lignin fraction
+            clg = res_part_fracs(idp)%lig_frac_blg               ! residue lignin fraction
             rln = clg * transfer%m / (transfer%n + 1.e-5)           ! lignin mass / N mass
             lmf = 0.85 - 0.018 * rln
             lmf = max(0.01, min(0.7, lmf))

@@ -120,45 +120,46 @@
             decomp = decr * pl_mass(j)%rsd(ipl)
             pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
             pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - decomp
+            soil1(j)%pl(ipl)%rsd(1) = soil1(j)%pl(ipl)%rsd(1) + decomp
 
-            ! The following if statements are to prevent runtime underflow errors with gfortran 
-            if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
-            if (pl_mass(j)%rsd(ipl)%c < 1.e-10) pl_mass(j)%rsd(ipl)%c = 0.0 
-            if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
-            if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
-
-            ! soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%m
-            ! soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_1_part_fracs(idp)%str_frac_abg * decomp%m
-            ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%m
-            ! soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%c
-            ! soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_1_part_fracs(idp)%str_frac_abg * decomp%c
-            ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%c
-            
-            soil1(j)%meta(1) = soil1(j)%meta(1) + cswat_1_part_fracs(idp)%meta_frac_abg * decomp
-            soil1(j)%str(1) = soil1(j)%str(1) + cswat_1_part_fracs(idp)%str_frac_abg * decomp
-            soil1(j)%lig(1) = soil1(j)%lig(1) + cswat_1_part_fracs(idp)%lig_frac_abg * decomp
-            !! Give the nonlignin structural CARBON pool its residue share (see cbn_rsd_decomp.f90).
-            !! Without this, nonlig%c decays to zero and structural carbon becomes 100% lignin.
-            !! The whole-struct str add above still sets str%c, but cbn_zhang2 overwrites str%c as
-            !! nonlig%c + lig%c, so this carbon-only line is what actually carries the nonlignin C.
-            !! (Kept the whole-struct str add here because it also feeds str%m/%n/%p; N/P unchanged.)
-            soil1(j)%nonlig(1)%c = soil1(j)%nonlig(1)%c &
-                 + (cswat_1_part_fracs(idp)%str_frac_abg - cswat_1_part_fracs(idp)%lig_frac_abg) * decomp%c
-            
-            !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
-            !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
-            !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            ! rsd_meta%n = decomp%n - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
-            ! soil1(j)%meta(1)%n = soil1(j)%meta(1)%n + rsd_meta%n
-            ! rsd_str%n = decomp%n - rsd_meta%n
-            ! soil1(j)%str(1)%n = soil1(j)%str(1)%n + rsd_str%n
-            ! soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + lig_frac * rsd_str%n
-            
-            ! rsd_meta%p = decomp%p - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
-            ! soil1(j)%meta(1)%p = soil1(j)%meta(1)%p + rsd_meta%p
-            ! rsd_str%p = decomp%p - rsd_meta%p
-            ! soil1(j)%str(1)%p = soil1(j)%str(1)%p + rsd_str%p
-            ! soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + lig_frac * rsd_str%p
+            ! ! The following if statements are to prevent runtime underflow errors with gfortran 
+            ! if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
+            ! if (pl_mass(j)%rsd(ipl)%c < 1.e-10) pl_mass(j)%rsd(ipl)%c = 0.0 
+            ! if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
+            ! if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
+            !
+            ! ! soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%m
+            ! ! soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_1_part_fracs(idp)%str_frac_abg * decomp%m
+            ! ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%m
+            ! ! soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%c
+            ! ! soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_1_part_fracs(idp)%str_frac_abg * decomp%c
+            ! ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%c
+            !
+            ! soil1(j)%meta(1) = soil1(j)%meta(1) + cswat_1_part_fracs(idp)%meta_frac_abg * decomp
+            ! soil1(j)%str(1) = soil1(j)%str(1) + cswat_1_part_fracs(idp)%str_frac_abg * decomp
+            ! soil1(j)%lig(1) = soil1(j)%lig(1) + cswat_1_part_fracs(idp)%lig_frac_abg * decomp
+            ! !! Give the nonlignin structural CARBON pool its residue share (see cbn_rsd_decomp.f90).
+            ! !! Without this, nonlig%c decays to zero and structural carbon becomes 100% lignin.
+            ! !! The whole-struct str add above still sets str%c, but cbn_zhang2 overwrites str%c as
+            ! !! nonlig%c + lig%c, so this carbon-only line is what actually carries the nonlignin C.
+            ! !! (Kept the whole-struct str add here because it also feeds str%m/%n/%p; N/P unchanged.)
+            ! soil1(j)%nonlig(1)%c = soil1(j)%nonlig(1)%c &
+            !      + (cswat_1_part_fracs(idp)%str_frac_abg - cswat_1_part_fracs(idp)%lig_frac_abg) * decomp%c
+            !
+            ! !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
+            ! !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
+            ! !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
+            ! ! rsd_meta%n = decomp%n - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
+            ! ! soil1(j)%meta(1)%n = soil1(j)%meta(1)%n + rsd_meta%n
+            ! ! rsd_str%n = decomp%n - rsd_meta%n
+            ! ! soil1(j)%str(1)%n = soil1(j)%str(1)%n + rsd_str%n
+            ! ! soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + lig_frac * rsd_str%n
+            !
+            ! ! rsd_meta%p = decomp%p - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
+            ! ! soil1(j)%meta(1)%p = soil1(j)%meta(1)%p + rsd_meta%p
+            ! ! rsd_str%p = decomp%p - rsd_meta%p
+            ! ! soil1(j)%str(1)%p = soil1(j)%str(1)%p + rsd_str%p
+            ! ! soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + lig_frac * rsd_str%p
             
           end if    ! soil temp > 0
           
