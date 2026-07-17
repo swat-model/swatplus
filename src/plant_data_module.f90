@@ -11,7 +11,6 @@
         real :: lig_frac_abg = 0.12   !none       |input fraction of above ground (abg) biomass that is lignin    
         real :: lig_frac_blg = 0.12   !none       |input fraction of below ground (blg) biomass that is lignin    
       end type input_lignin_partition_fracs
-      type(input_lignin_partition_fracs)
 
       type residue_partition_fracs
         real :: meta_frac_abg = 0.85  !none       |fraction of above ground (abg) biomass that is metabolic 

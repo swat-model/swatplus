@@ -59,8 +59,8 @@
           if (eof < 0) exit
           pldb(ic)%mat_yrs = Max (1, pldb(ic)%mat_yrs)
           if (bsn_cc%cswat == 1) then
-            res_part_fracs(ic)%lig_frac_abg = pldb(ic)%input_lignin_frac%lig_frac_abg
-            res_part_fracs(ic)%lig_frac_blg = pldb(ic)%input_lignin_frac%lig_frac_blg
+            res_part_fracs(ic)%lig_frac_abg = pldb(ic)%input_lignin_fracs%lig_frac_abg
+            res_part_fracs(ic)%lig_frac_blg = pldb(ic)%input_lignin_fracs%lig_frac_blg
             res_part_fracs(ic)%str_frac_abg = res_part_fracs(ic)%lig_frac_abg / .80 
             res_part_fracs(ic)%str_frac_blg = res_part_fracs(ic)%lig_frac_blg / .80 
             res_part_fracs(ic)%meta_frac_abg = 1.0 - res_part_fracs(ic)%str_frac_abg  
