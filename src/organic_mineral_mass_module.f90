@@ -4,10 +4,6 @@
       use carbon_module
       implicit none 
 
-      real :: meta_frac = 0.85  !none       |fraction of that is metabolic
-      real :: str_frac = 0.15   !none       |fraction of that is structural
-      real :: lig_frac = 0.12   !none       |fraction of that is lignin
-      
       type organic_mass
         real :: m = 0.              !kg/ha      |total object mass
         real :: c = 0.              !kg/ha      |carbon mass
@@ -66,7 +62,7 @@
       type (mineral_phosphorus) :: mix_mp    !       |mineral p pool used in tillage mixing
       
       type plant_residue
-        type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh surface residue dimensioned by layer
+        type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh residue dimensioned by layer
       end type plant_residue
       
       type soil_profile_mass
