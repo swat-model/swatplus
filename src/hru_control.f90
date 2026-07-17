@@ -29,6 +29,8 @@
       use conditional_module
       use constituent_mass_module
       use water_body_module
+      use reservoir_seepage_module, only : &
+        apply_pending_reservoir_seepage_to_hru
       use gwflow_module !rtb gwflow
       
       implicit none
@@ -73,6 +75,10 @@
       real :: soil_prof_labp
       
       j = ihru
+
+      !! Apply reservoir seepage accepted on the previous day before
+      !! calculating the current HRU water balance.
+      call apply_pending_reservoir_seepage_to_hru(j)
       
       !rtb - calculate soil water at the beginning of the day
       sw_volume_begin = 0.
