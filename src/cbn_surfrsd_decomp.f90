@@ -120,7 +120,7 @@
             decomp = decr * pl_mass(j)%rsd(ipl)
             pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
             pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - decomp
-            soil1(j)%pl(ipl)%rsd(1) = soil1(j)%pl(ipl)%rsd(1) + decomp
+            soil1(j)%pl(ipl)%rsd(1)%abg = soil1(j)%pl(ipl)%rsd(1)%abg + decomp
 
             ! ! The following if statements are to prevent runtime underflow errors with gfortran 
             ! if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
