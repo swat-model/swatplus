@@ -106,6 +106,13 @@
         pending_reservoir_seepage_m3(ihru) = &
           pending_reservoir_seepage_m3(ihru) + accepted_m3
 
+        if (accepted_m3 > 0.) then
+          write(*,'(a,i0,2(a,es16.8))') &
+            "QUEUE_SEEP hru=", ihru, &
+            " accepted_m3=", accepted_m3, &
+            " pending_m3=", pending_reservoir_seepage_m3(ihru)
+        end if
+
         end function queue_reservoir_seepage_for_hru
 
 
@@ -128,6 +135,13 @@
         if (pending_m3 <= 0.) return
 
         stored_m3 = store_reservoir_seepage_in_hru(ihru, pending_m3)
+
+        write(*,'(a,i0,4(a,es16.8))') &
+          "APPLY_SEEP hru=", ihru, &
+          " pending_m3=", pending_m3, &
+          " stored_m3=", stored_m3, &
+          " soil_sw=", soil(ihru)%sw, &
+          " remaining_m3=", max(0., pending_m3 - stored_m3)
 
         pending_reservoir_seepage_m3(ihru) = &
           max(0., pending_m3 - stored_m3)
