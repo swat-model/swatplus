@@ -398,9 +398,16 @@
           if (lsu_elem(iihru)%bsn_frac > 1.e-12) then
             const = lsu_elem(iihru)%bsn_frac
             if (lsu_elem(iihru)%obtyp == "hru") then
+              !! recompute this hru's soil-profile residue (abg+blg soil residue summed
+              !! over layers); the module scalar soil_prof_rsd left from the hru loop above
+              !! holds only the last hru, so it must be rebuilt here for each iihru
+              soil_prof_rsd = soil_org_z
+              do ly = 1, soil(iihru)%nly
+                soil_prof_rsd = soil_prof_rsd + soil1(iihru)%rsd_tot(ly)
+              end do
               bsn_org_soil = bsn_org_soil + const * soil1(iihru)%tot_org
               bsn_org_pl = bsn_org_pl + const * pl_mass(iihru)%tot_com
-              bsn_org_rsd = bsn_org_rsd + const * soil_prof_rsd + pl_mass(iihru)%abg_rsd_tot
+              bsn_org_rsd = bsn_org_rsd + const * (soil_prof_rsd + pl_mass(iihru)%abg_rsd_tot)
               bsn_mn = bsn_mn + const * soil1(iihru)%tot_mn
               bsn_mp = bsn_mp + const * soil1(iihru)%tot_mp
             end if
