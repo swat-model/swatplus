@@ -182,16 +182,31 @@
             soil_prof_water = soil_prof_water + soil1(j)%water(ly)
           end do
 
-          ! Total org all layers
-          soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta &
-                            + soil_prof_str + soil_prof_water + soil_prof_man
+          select case (bsn_cc%cswat)
+          case (1)
+            ! CENTURY pools
+            ! Total org all layers
+            soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta &
+                              + soil_prof_str + soil_prof_water + soil_prof_man
 
-          ! Sequestered org for soil layers greater than 1
-          soil1(j)%seq_org = soil_prof_seq_hs + soil_prof_seq_hp + soil_prof_seq_microb
-          
-          ! Surface org, just layer 1 excluding residue
-          soil1(j)%surf_org = soil1(j)%meta(1) + soil1(j)%str(1) + soil1(j)%microb(1) &
-                              + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
+            ! Sequestered org for soil layers greater than 1
+            soil1(j)%seq_org = soil_prof_seq_hs + soil_prof_seq_hp + soil_prof_seq_microb
+
+            ! Surface org, just layer 1 excluding residue
+            soil1(j)%surf_org = soil1(j)%meta(1) + soil1(j)%str(1) + soil1(j)%microb(1) &
+                                + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
+          case (0)
+            ! cswat == 0 stores soil organic C in the active/stable humus pools (hact/hsta),
+            ! not the CENTURY pools; total soil C = hact + hsta + microb to match the per-layer
+            ! convention used below for tot(ly)%c, tot_300_c and seq(ly)%c
+            soil1(j)%tot_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
+
+            ! Sequestered org (cswat == 0 has no fresh-litter soil pool, so same pools as total)
+            soil1(j)%seq_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
+
+            ! Surface org, just layer 1 excluding residue
+            soil1(j)%surf_org = soil1(j)%hact(1) + soil1(j)%hsta(1) + soil1(j)%microb(1)
+          end select
           
           !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
           ! print header with soil layer depths
