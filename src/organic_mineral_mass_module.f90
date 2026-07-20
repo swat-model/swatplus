@@ -379,6 +379,20 @@
 
     contains
 
+      !! Flush-guarded scalar multiply used by the mass "* const" operators. Returns const*x,
+      !! but exactly 0 when |x| has decayed to a denormal (~1e-308): a mass/nutrient pool can
+      !! shrink to a denormal over many simulated years, and const*x would then underflow and
+      !! crash under -ffpe-trap=underflow. Such a value is physically zero. NOTE: this guards
+      !! only the mass MULTIPLY operators; divisions elsewhere are intentionally still trapped.
+      elemental real function fmul(const, x)
+        real, intent (in) :: const, x
+        if (abs(x) < 1.e-30) then
+          fmul = 0.
+        else
+          fmul = const * x
+        end if
+      end function fmul
+
       !! add mineral n
       function nmin_add (nmin_m1, nmin_m2) result (nmin_m3)
         type (mineral_nitrogen), intent (in) :: nmin_m1
@@ -393,8 +407,8 @@
         real, intent (in) :: const
         type (mineral_nitrogen), intent (in) :: nmin_m1
         type (mineral_nitrogen) :: nmin_m2
-        nmin_m2%no3 = const * nmin_m1%no3
-        nmin_m2%nh4 = const * nmin_m1%nh4
+        nmin_m2%no3 = fmul(const, nmin_m1%no3)
+        nmin_m2%nh4 = fmul(const, nmin_m1%nh4)
       end function nmin_mult_const
                           
       function pmin_add (pmin_m1, pmin_m2) result (pmin_m3)
@@ -412,10 +426,10 @@
         real, intent (in) :: const
         type (mineral_phosphorus), intent (in) :: pmin_m1
         type (mineral_phosphorus) :: pmin_m2
-        pmin_m2%wsol = const * pmin_m1%wsol
-        pmin_m2%lab = const * pmin_m1%lab
-        pmin_m2%act = const * pmin_m1%act
-        pmin_m2%sta = const * pmin_m1%sta
+        pmin_m2%wsol = fmul(const, pmin_m1%wsol)
+        pmin_m2%lab = fmul(const, pmin_m1%lab)
+        pmin_m2%act = fmul(const, pmin_m1%act)
+        pmin_m2%sta = fmul(const, pmin_m1%sta)
       end function pmin_mult_const
                           
       !! add organic mass
@@ -475,10 +489,10 @@
         real, intent (in) :: const
         type (organic_mass), intent (in) :: o_m1
         type (organic_mass) :: o_m2
-        o_m2%m = const * o_m1%m
-        o_m2%c = const * o_m1%c
-        o_m2%n = const * o_m1%n
-        o_m2%p = const * o_m1%p
+        o_m2%m = fmul(const, o_m1%m)
+        o_m2%c = fmul(const, o_m1%c)
+        o_m2%n = fmul(const, o_m1%n)
+        o_m2%p = fmul(const, o_m1%p)
       end function om_mult_const
                           
       !! divide organic mass by a constant
