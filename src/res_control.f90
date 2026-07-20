@@ -33,6 +33,12 @@
       real :: accepted_total_m3
       real :: total_contact_length_m
       real :: storage_before_seep_m3
+      real :: reservoir_loss_m3
+      real :: balance_error_m3
+      real, dimension(:), allocatable :: offered_by_receiver_m3
+      real, dimension(:), allocatable :: accepted_by_receiver_m3
+      integer, save :: seep_route_unit = -1
+      logical, save :: seep_route_initialized = .false.
 
       iob = res_ob(jres)%ob
       iwst = ob(iob)%wst
@@ -98,6 +104,27 @@
       !! receiving HRUs retain the standard SWAT+ seepage behavior.
       if (res_ob(jres)%n_seep_hru > 0) then
 
+        !! Open routing output once per simulation run.
+        if (.not. seep_route_initialized) then
+          open(newunit=seep_route_unit, &
+            file='reservoir_seepage_routing_day.txt', &
+            status='replace', action='write')
+
+          write(seep_route_unit,'(a)') &
+            'jday mon day yr res hru contact_m offered_m3 ' // &
+            'accepted_m3 potential_m3 available_m3 ' // &
+            'accepted_total_m3 storage_before_m3 storage_after_m3 ' // &
+            'reservoir_loss_m3 balance_error_m3'
+
+          seep_route_initialized = .true.
+        end if
+
+        allocate(offered_by_receiver_m3(res_ob(jres)%n_seep_hru))
+        allocate(accepted_by_receiver_m3(res_ob(jres)%n_seep_hru))
+
+        offered_by_receiver_m3 = 0.
+        accepted_by_receiver_m3 = 0.
+
         storage_before_seep_m3 = res(jres)%flo
         potential_seep_m3 = max(0., res_wat_d(jres)%seep)
         available_seep_m3 = min(potential_seep_m3, &
@@ -127,9 +154,11 @@
             end if
 
             offered_m3 = max(0., offered_m3)
+            offered_by_receiver_m3(ireceiver) = offered_m3
 
             accepted_m3 = store_reservoir_seepage_in_hru( &
               ihru, offered_m3)
+            accepted_by_receiver_m3(ireceiver) = accepted_m3
 
             if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
               write(*,'(a,i0,a,i0,a,es16.8,a,es16.8)') &
@@ -149,6 +178,36 @@
         !! Remove and report only the volume stored in HRU soils.
         res_wat_d(jres)%seep = accepted_total_m3
         res(jres)%flo = max(0., res(jres)%flo - accepted_total_m3)
+
+        !! Mass-balance check for reservoir-to-HRU seepage routing.
+        reservoir_loss_m3 = storage_before_seep_m3 - res(jres)%flo
+        balance_error_m3 = reservoir_loss_m3 - accepted_total_m3
+
+        do ireceiver = 1, res_ob(jres)%n_seep_hru
+
+          ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
+
+          write(seep_route_unit, &
+            '(6(i0,1x),10(es16.8,1x))') &
+            time%day, time%mo, time%day_mo, time%yrc, &
+            jres, ihru, &
+            res_ob(jres)%seep_hru(ireceiver)%contact_length_m, &
+            offered_by_receiver_m3(ireceiver), &
+            accepted_by_receiver_m3(ireceiver), &
+            potential_seep_m3, &
+            available_seep_m3, &
+            accepted_total_m3, &
+            storage_before_seep_m3, &
+            res(jres)%flo, &
+            reservoir_loss_m3, &
+            balance_error_m3
+
+        end do
+
+        flush(seep_route_unit)
+
+        deallocate(offered_by_receiver_m3)
+        deallocate(accepted_by_receiver_m3)
 
         if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
           write(*,'(a,i0,a,es16.8,a,es16.8,a,es16.8,a,es16.8,a,es16.8)') &
