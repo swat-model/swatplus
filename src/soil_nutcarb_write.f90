@@ -9,6 +9,8 @@
 !!    out_freq      |              |output frequency (d=daily, m=monthly, y=yearly, a=average annual)
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
+!! additional comment to test github branch specific pull requests.  Should be
+!! deleted after test.
 
       use soil_module
       use organic_mineral_mass_module
