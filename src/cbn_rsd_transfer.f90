@@ -69,42 +69,46 @@
         do ipl = 1, pcom(j)%npl
           !! mineralization can occur only if temp above 0 deg
           if (soil(j)%phys(k)%tmp > 0.) then
-            idp = pcom(j)%plcur(ipl)%idplt 
-            decr = 1.0 ! added by fg to move all soil rsd into soil meta, str, lig pools
-            transfer = decr * soil1(j)%pl(ipl)%rsd(k)
-            soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - transfer
-            soil1(j)%rsd_tot(k) = soil1(j)%rsd_tot(k) - transfer
+            idp = pcom(j)%plcur(ipl)%idplt
+            !! move ALL soil residue (decr = 1.0) into the CENTURY pools, then zero the
+            !! residue pool. Partition the above- and below-ground components separately so
+            !! each uses its own lignin fraction (lig_frac_abg vs lig_frac_blg).
+            transfer = soil1(j)%pl(ipl)%rsd(k)
+            soil1(j)%rsd_tot(k) = soil1(j)%rsd_tot(k) - sum_origin(transfer)
+            soil1(j)%pl(ipl)%rsd(k) = rsd_originz
 
-            ! The following if statements are to prevent runtime underflow errors with gfortran 
-            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
-
-            !! CENTURY metabolic/structural split (item B, option 3), ported from
-            !! SWAT-C (dormant_change.f90): the metabolic fraction is derived from
-            !! the residue lignin-to-N ratio, INDEPENDENTLY of the lignin fraction,
-            !! then all residue lignin is placed in the structural pool. This
-            !! replaces str_frac = lig_frac/0.80 (which forced lignin to 80% of
-            !! structural and could drive meta_frac negative). High-lignin residue
-            !! now gets a larger structural fraction, so lignin is a sensible,
-            !! quality-dependent fraction of it and meta_frac stays valid.
-            clg = cswat_1_part_fracs(idp)%lig_frac_blg               ! residue lignin fraction
-            rln = clg * transfer%m / (transfer%n + 1.e-5)           ! lignin mass / N mass
-            lmf = 0.85 - 0.018 * rln
-            lmf = max(0.01, min(0.7, lmf))
-            lsf = 1.0 - lmf
-            rlr = min(0.8, clg)                                      ! lignin fraction (capped)
-            rlr = min(rlr, lsf)                                      ! lignin <= structural (nonlig >= 0)
-            soil1(j)%meta(k) = soil1(j)%meta(k) + lmf * transfer
-            soil1(j)%str(k)  = soil1(j)%str(k)  + lsf * transfer     ! str%c reconstituted in cbn_zhang2; feeds str%m/%n/%p
-            soil1(j)%lig(k)  = soil1(j)%lig(k)  + rlr * transfer     ! all residue lignin -> structural lignin
-            soil1(j)%nonlig(k)%c = soil1(j)%nonlig(k)%c + (lsf - rlr) * transfer%c
+            call partition_rsd (transfer%abg, res_part_fracs(idp)%lig_frac_abg)
+            call partition_rsd (transfer%blg, res_part_fracs(idp)%lig_frac_blg)
 
           end if    ! soil temp > 0
-          
+
         end do      ! ipl = 1, pcom(j)%npl
       end do        ! k = 1, soil(j)%nly
 
       return
+
+      contains
+
+      !! CENTURY metabolic/structural split (item B, option 3), ported from SWAT-C
+      !! (dormant_change.f90): the metabolic fraction is derived from the residue
+      !! lignin-to-N ratio, INDEPENDENTLY of the lignin fraction, then all residue
+      !! lignin is placed in the structural pool. This replaces str_frac = lig_frac/0.80
+      !! (which forced lignin to 80% of structural and could drive meta_frac negative).
+      !! Applied once per origin (t) with that origin's lignin fraction (clg); j, k and
+      !! rln/lmf/lsf/rlr are host-associated.
+      subroutine partition_rsd (t, clg_o)
+        type (organic_mass), intent (in) :: t     ! one origin's residue (abg or blg)
+        real, intent (in) :: clg_o                ! that origin's lignin fraction
+        rln = clg_o * t%m / (t%n + 1.e-5)                       ! lignin mass / N mass
+        lmf = 0.85 - 0.018 * rln
+        lmf = max(0.01, min(0.7, lmf))
+        lsf = 1.0 - lmf
+        rlr = min(0.8, clg_o)                                   ! lignin fraction (capped)
+        rlr = min(rlr, lsf)                                     ! lignin <= structural (nonlig >= 0)
+        soil1(j)%meta(k) = soil1(j)%meta(k) + lmf * t
+        soil1(j)%str(k)  = soil1(j)%str(k)  + lsf * t           ! str%c reconstituted in cbn_zhang2; feeds str%m/%n/%p
+        soil1(j)%lig(k)  = soil1(j)%lig(k)  + rlr * t           ! all residue lignin -> structural lignin
+        soil1(j)%nonlig(k)%c = soil1(j)%nonlig(k)%c + (lsf - rlr) * t%c
+      end subroutine partition_rsd
+
       end subroutine cbn_rsd_transfer

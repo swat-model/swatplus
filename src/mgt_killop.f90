@@ -29,17 +29,17 @@
       call pl_rootfr(j)
       
       !! add above ground biomass to surface residue pools
-      pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + pl_mass(j)%ab_gr(ipl)
           
       !! update total surface residue pool
-      pl_mass(j)%rsd_tot = orgz
+      pl_mass(j)%abg_rsd_tot = orgz
       do npl = 1, pcom(j)%npl
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(npl)
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%abg_rsd(npl)
       end do
       
       !! add dead roots to soil residue pools
       do ly = 1, soil(j)%nly
-        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly)  &
+        soil1(j)%pl(ipl)%rsd(ly)%blg = soil1(j)%pl(ipl)%rsd(ly)%blg + pcom(j)%plg(ipl)%rtfr(ly)  &
                                                                   * pl_mass(j)%root(ipl)
       end do
       
