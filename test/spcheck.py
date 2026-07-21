@@ -196,7 +196,7 @@ def ctest_all(swat_model: str, test_data_dir: str, tmp_dir: str, aerr: float, re
 
     # 3. compare the selected output files
     # files = ['hru_ls_aa.txt','mgt_out.txt', 'hru_totc.txt', 'basin_totc.txt', 'basin_wb_aa.txt']
-    test_files: str = os.path.join(scenario_dir, '.testfiles.txt')
+    test_files: str = os.path.join(scenario_dir, '.testfiles.tst')
     errors: int = 0
     if os.path.isfile(test_files):
         with open(test_files) as f:
@@ -279,7 +279,7 @@ def cmp(args):
     if b is None:
         raise Exception(f'Invalid run number {args.b} for scenario {args.scenario}')
 
-    test_files: str = os.path.join(sce_src_path, '.testfiles.txt')
+    test_files: str = os.path.join(sce_src_path, '.testfiles.tst')
     if os.path.isfile(test_files):
         with open(test_files) as f:
             files = [line.strip() for line in f if line.strip() != '' and not line.strip().startswith('#')]

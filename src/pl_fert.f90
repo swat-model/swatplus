@@ -92,10 +92,14 @@
                        fertdb(ifrt)%forgp
 
         !! for stable carbon - add n and p to active humus pool
+        !! NOTE: cswat==0 branch only; the abg/blg split is not used here (no CENTURY lignin
+        !! partitioning on this path), so incorporated manure N/P is placed in abg purely for
+        !! type-correctness. Origin is immaterial to cswat==0 results. Revisit if manure ever
+        !! needs an origin under cswat==1.
         if (bsn_cc%cswat == 0) then
-          soil1(j)%pl(1)%rsd(l)%n = soil1(j)%pl(1)%rsd(l)%n + rtof * fr_ly *            &
+          soil1(j)%pl(1)%rsd(l)%abg%n = soil1(j)%pl(1)%rsd(l)%abg%n + rtof * fr_ly *            &
                        frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%pl(1)%rsd(l)%p = soil1(j)%pl(1)%rsd(l)%p + rtof * fr_ly * frt_kg *   &
+          soil1(j)%pl(1)%rsd(l)%abg%p = soil1(j)%pl(1)%rsd(l)%abg%p + rtof * fr_ly * frt_kg *   &
                        fertdb(ifrt)%forgp
           soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *               &
                        frt_kg * fertdb(ifrt)%forgn

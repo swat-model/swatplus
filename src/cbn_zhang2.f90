@@ -21,21 +21,27 @@
         !!==============================================
         !! local variables
        !rnmn
-       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85 * 0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
+       !NOTE: In SWAT+, layer 1 (k==1) is a real soil layer, NOT swat-c's surface-litter layer.
+       !      The "k==1 / deeper" allocation values below are what this routine actually assigns
+       !      in the k==1 branch (around line 448); they are mostly soil-layer values, so the
+       !      swat-c surface-litter constants (parton et al., 1993, 1994) that the comments here
+       !      used to quote do NOT apply to SWAT+ layer 1. Retained surface-tuned settings are
+       !      the faster decomposition rates (bmr, lmr, lsr) and xbm=1, nchp=0.1.
+       !abco2   : allocation from biomass to co2; k==1 = 0.55; deeper layers = 0.17 + 0.0068*sand
        !abl     : carbon allocation from biomass to leaching; abl = (1-exp(-f/(0.01* sw+ 0.1*(kdbm)*db)) (williams, 1995)
-       !abp     : allocation from biomass to passive humus; 0 (surface litter), 0.003 + 0.032*claf (all other layers) (parton et al., 1993, 1994)
-       !almco2  : allocation from metabolic litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
+       !abp     : allocation from biomass to passive humus; all layers = 0.003 + 0.00032*clay
+       !almco2  : allocation from metabolic litter to co2; all layers = 0.55 (applied via a1co2)
        !alslco2 : allocation from lignin of structural litter to co2; 0.3 (parton et al., 1993, 1994)
-       !alslnco2: allocation from non-lignin of structural litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
+       !alslnco2: allocation from non-lignin of structural litter to co2; all layers = 0.55 (applied via a1co2)
        !apco2   : allocation from passive humus to co2; 0.55 (parton et al., 1993, 1994)
        !asco2   : allocation from slow humus to co2; 0.55 (parton et al., 1993, 1994)
-       !asp     : allocation from slow humus to passive; 0 (surface litter), 0.003-0.009*claf (all other layers) (parton et al., 1993, 1994)
+       !asp     : allocation from slow humus to passive; all layers = max(0.001, 0.05 - 0.00009*clay)
        !bmc     : mass of c in soil microbial biomass and associated products (kg ha-1)
        !bmctp   : potential transformation of c in microbial biomass (kg ha-1 day-1)
        !bmn     : mass of n in soil microbial biomass and associated products (kg ha-1)
        !bmntp   : potential transformation of n in microbial biomass (kg ha-1 day-1)
        !bmr     : rate of transformation of microbial biomass and associated products under optimal
-       !            conditions (surface = 0.0164 day-1; all other layers = 0.02 day-1) (parton et al., 1993, 1994)       
+       !            conditions (layer 1/topsoil = 0.0164 day-1; all other layers = 0.02 day-1) (parton et al., 1993, 1994)
        !cf      : carbon fraction of organic materials 0.42; from data of pinck et al., 1950)
        !cdg     : soil temperature control on biological processes
        !cnr     : c/n ratio of standing dead
@@ -58,7 +64,7 @@
        !lmf     : fraction of the litter that is metabolic    
        !lmnf    : fraction of metabolic litter that is n (kg kg-1)  
        !lmr     : rate of transformation of metabolic litter under optimal conditions (surface =
-                !0.0405 day-1; all other layers = 0.0507 day-1) (parton et al., 1994)
+                !0.0405 day-1 (layer 1/topsoil); all other layers = 0.0507 day-1) (parton et al., 1994)
        !lmctp   : potential transformation of c in metabolic litter (kg ha-1 day-1)
        !lmntp   : potential transformation of n in metabolic litter (kg ha-1 day-1)
        !lsctp   : potential transformation of c in structural litter (kg ha-1 day-1)
@@ -74,7 +80,7 @@
        !lslncta : actual transformation of c in nonlignin structural litter (kg ha-1 day-1)  
        !lsntp   : actual transformation of n in structural litter (kg ha-1 day-1)
        !lsr     : rate of potential transformation of structural litter under optimal conditions
-                !(surface = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
+                !(layer 1/topsoil = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
        !ncbm    : n/c ratio of biomass
        !nchp    : n/c ratio passive humus
        !nchs    : n/c ratio of the slow humus
@@ -97,7 +103,7 @@
        !sut     : soil water control on biological processes 
        !x1      : tillage control on residue decomposition (not used)
        !xbmt    : control on transformation of microbial biomass by soil texture and structure.
-                !its values: surface litter layer = 1; all other layers = 1-0.75*(silf + claf) (parton et al., 1993, 1994)
+                !its values: layer 1/topsoil = 1; all other layers = 0.25 + 0.0075*sand [= 1-0.75*(silf+claf)] (parton et al., 1993, 1994)
        !xlslf   : control on potential transformation of structural litter by lignin fraction
                 !of structural litter [xlslf = exp(-3* lslf) (parton et al., 1993, 1994)]
        !prmt_51 !coef adjusts microbial activity function in top soil layer (0.1_1.)
@@ -462,7 +468,7 @@
             xbm = 1.
             ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (pl_mass(j)%rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%rsd_tot%c / 1000. + 1.e-5)
+            rsdn_pct = 0.1 * (pl_mass(j)%abg_rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%abg_rsd_tot%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
               org_ratio%ncbm = .1
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)

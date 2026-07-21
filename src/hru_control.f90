@@ -41,7 +41,7 @@
       
       implicit none
       
-      external :: actions, albedo, cbn_rsd_decomp, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
+      external :: actions, albedo, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
                   cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
                   nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc, nut_orgnc2, nut_pminrl, &
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
@@ -389,7 +389,6 @@
           call cbn_surfrsd_decomp
           !! compute soil residue (roots and tilled in) decomposition
           call cbn_rsd_transfer      ! added by JC and FG, modified from nut_minrln.f90 and modified by fg to transfer soil residue to meta, str, lig
-          ! call cbn_rsd_decomp
           !! compute mineralization and carbon pool transformations
           call cbn_zhang2
         end if
@@ -841,7 +840,7 @@
         if (pl_mass(j)%tot_com%m < 0.) then
           pl_mass(j)%tot_com%m = 0.
         end if
-        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
+        hpw_d(j)%residue = pl_mass(j)%abg_rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp

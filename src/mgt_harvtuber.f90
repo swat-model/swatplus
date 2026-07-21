@@ -51,7 +51,7 @@
       
       !! allocate remaining dead roots, N, P to soil layers
       do ly = 1, soil(j)%nly
-        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly) *  &
+        soil1(j)%pl(ipl)%rsd(ly)%blg = soil1(j)%pl(ipl)%rsd(ly)%blg + pcom(j)%plg(ipl)%rtfr(ly) *  &
                                                                       pl_mass(j)%root(ipl)
       end do
       
@@ -72,8 +72,8 @@
       end do   
 
       !! add above ground mass to residue pool
-      pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%ab_gr(ipl)
-      pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + pl_mass(j)%ab_gr(ipl)
 
       !! zero all plant components - assume tuber harvest kills plant
       pl_mass(j)%tot(ipl) = plt_mass_z
