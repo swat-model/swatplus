@@ -62,7 +62,9 @@ ASSUMPTIONS / SCOPE (read this before trusting a clean report)
     This matches every input-reading routine surveyed in this codebase (title line, header
     line, then one data row per line) but is not a Fortran guarantee in general -- a read
     whose variable list isn't satisfied by one line's tokens will spill onto the next line
-    at runtime, which this tool does not model.
+    at runtime, which this tool does not model. The missing-column check below inherits
+    this same blind spot: a row it flags as short could in principle be genuine multi-line
+    spillover rather than a defect, though nothing surveyed in this codebase does that.
   - A `do ... read ... end do` loop is treated as "the last read statement in the loop body
     repeats for every remaining data line in the file" (the common `read peek; backspace;
     read full row` idiom is handled by keeping only the read after a `backspace`).
@@ -98,6 +100,15 @@ OTHER CHECKS (source- and dataset-level, beyond per-field types)
     (which the implicit close would silently and correctly discard on its own). Excludes
     the case where the two opens are in mutually-exclusive if/else or select-case branches
     (only one ever executes, so there's nothing to close between them).
+  - Missing-column detection for fixed, non-repeating rows (schema.prefix_rows -- title/header
+    lines and single-shot data rows read outside any loop, e.g. parameters.bsn's one big
+    `bsn_prm` line): if such a row has fewer tokens than the read statement's field count, that's
+    flagged as a real issue ("row has only N token(s) but the schema expects M field(s)"),
+    reported against the first missing field. Deliberately NOT applied to repeat_row or
+    counted_block rows (loop bodies) -- those schemas are built by taking the FULLEST of
+    several read-statement candidates observed in the source (e.g. hyd_read_connect's
+    nout==0 vs nout>0 branches), so a shorter row there is often genuinely valid data from a
+    different code path, not a defect; flagging it would false-positive on ordinary rows.
   - Record-count validation for "header row declares N, then N body rows follow" repeating
     structures (management.sch's NUMB_OPS, soils.sol's per-soil layer count, ...): the
     header field's ACTUAL VALUE is read from the real data and checked against how many body
@@ -1271,13 +1282,20 @@ def expand_row_schema(row):
     return fixed, repeat_group
 
 
-def check_row(fields, dataset_path, filename, lineno, raw_line):
+def check_row(fields, dataset_path, filename, lineno, raw_line, strict=False):
     """fields: flat schema for this line. Returns (issues, notices) -- issues are real
        type mismatches; notices are informational-only observations that are valid
        Fortran and not a defect (currently: a REAL field whose token has no decimal
        point or exponent, e.g. '5' instead of '5.0' -- Fortran promotes it to 5.0
        without complaint, so this is neither an error nor a warning, just an FYI that
-       the value will be read in as floating point)."""
+       the value will be read in as floating point).
+
+       strict: if True, a row with fewer tokens than the schema's fixed-field count is
+       itself flagged as an issue (missing column(s)). Only safe for row shapes that are
+       a single, unambiguous physical read (schema.prefix_rows) -- repeat_row and
+       counted_block rows are derived by picking the FULLEST of several observed
+       candidate reads (e.g. hyd_read_connect's nout==0 vs nout>0 branches), so a
+       genuinely shorter row there is expected, valid data, not a defect."""
     issues = []
     notices = []
     if len(fields) == 1 and fields[0] == 'character':
@@ -1286,10 +1304,17 @@ def check_row(fields, dataset_path, filename, lineno, raw_line):
     tokens = tokenize_line(raw_line)
     for idx, expected in enumerate(fixed):
         if idx >= len(tokens):
+            if strict:
+                issues.append(dict(
+                    file=filename, line=lineno, field_index=idx + 1, expected=expected,
+                    token="(missing)",
+                    reason=(f"row has only {len(tokens)} token(s) but the schema expects "
+                            f"{len(fixed)} field(s) here -- missing column(s)?")))
             # A row with fewer tokens than the schema's maximum is usually a legitimate
             # optional-trailing-field omission (same graceful-EOF idiom as short files) --
             # this tool's validated strength is catching type mismatches in tokens that
-            # ARE present, not judging whether a row "should" have more columns.
+            # ARE present, not judging whether a row "should" have more columns. Exception:
+            # strict mode (see docstring above).
             break
         tok = tokens[idx]
         if not type_ok(expected, tok):
@@ -1332,7 +1357,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
     all_issues = []
     all_notices = []
 
-    def _check(fields, lineno, raw_line, name_offset=0):
+    def _check(fields, lineno, raw_line, name_offset=0, strict=False):
         # name_offset: for a counted_block's BODY rows, the shared header line's tokens
         # list the header row's own columns FIRST (e.g. management.sch's NAME, NUMB_OPS,
         # NUMB_AUTO) followed by the body row's columns (OP_TYP, MON, DAY, ...) -- but
@@ -1341,7 +1366,8 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
         # on the right header token (e.g. body field #1 = OP_TYP = header_tokens[3], not
         # header_tokens[0] = NAME). 0 for a plain prefix/repeat row or a header row
         # itself, where field_index already lines up with header_tokens directly.
-        issues, notices = check_row(fields, dataset_dir, schema.default_filename, lineno, raw_line)
+        issues, notices = check_row(fields, dataset_dir, schema.default_filename, lineno, raw_line,
+                                     strict=strict)
         all_issues.extend(issues)
         for note in notices:
             idx0 = name_offset + note['field_index'] - 1
@@ -1357,7 +1383,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             # trailing section is read (e.g. an empty/disabled-feature file, or an older
             # print.prt missing newer object rows) is normal, not a defect. Stop quietly.
             break
-        _check(row, idx + 1, lines[idx])
+        _check(row, idx + 1, lines[idx], strict=True)
         idx += 1
     else:
         if schema.repeat_row:
@@ -2082,7 +2108,8 @@ def main():
                          ("" if args.int_to_float else ", re-run with --int_to_float to list them") +
                          ")")
     print(f"\n[summary] checked {checked} file(s) against {args.dataset_dir}: "
-          f"{total_issues} type mismatch(es)/missing-file issue(s) found{notices_hint}.")
+          f"{total_issues} type mismatch(es)/missing-column(s)/missing-file issue(s) "
+          f"found{notices_hint}.")
     if total_issues:
         sys.exit(1)
 
