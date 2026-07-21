@@ -105,15 +105,32 @@ OTHER CHECKS (source- and dataset-level, beyond per-field types)
     (which the implicit close would silently and correctly discard on its own). Excludes
     the case where the two opens are in mutually-exclusive if/else or select-case branches
     (only one ever executes, so there's nothing to close between them).
-  - Missing-column detection for fixed, non-repeating rows (schema.prefix_rows -- title/header
-    lines and single-shot data rows read outside any loop, e.g. parameters.bsn's one big
-    `bsn_prm` line): if such a row has fewer tokens than the read statement's field count, that's
-    flagged as a real issue ("row has only N token(s) but the schema expects M field(s)"),
-    reported against the first missing field. Deliberately NOT applied to repeat_row or
-    counted_block rows (loop bodies) -- those schemas are built by taking the FULLEST of
-    several read-statement candidates observed in the source (e.g. hyd_read_connect's
-    nout==0 vs nout>0 branches), so a shorter row there is often genuinely valid data from a
-    different code path, not a defect; flagging it would false-positive on ordinary rows.
+  - Missing-column detection: if a row has fewer tokens than its schema's known hard-minimum
+    fixed-field count, that's flagged as a real issue ("row has only N token(s) but the
+    schema requires at least M field(s)"), reported against the first missing field. Applies
+    to schema.prefix_rows (title/header lines and single-shot data rows read outside any
+    loop, e.g. parameters.bsn's one big `bsn_prm` line -- always a single, unambiguous
+    physical read, so its full field count IS the minimum) and to repeat_row/counted_block's
+    header_row (per-object-per-line rows, e.g. hru.con's one row per HRU) -- but the minimum
+    used for repeat_row/header_row is the SHORTEST of every candidate read actually observed
+    merging into that schema, not necessarily the schema's full length: repeat_row is built
+    by taking the FULLEST of several read-statement candidates (e.g. hyd_read_connect's
+    nout==0 vs nout>0 branches, which share an identical leading field sequence and only
+    differ in a trailing implied-do group), so a row between that minimum and the full
+    length is a legitimate shorter branch, not a defect, and stays silent. That source-level
+    minimum is then cross-checked against what the file's OWN rows actually, consistently
+    provide (the dominant token count across every row/header in the file, capped at the
+    schema's field count) and capped down to whichever is smaller -- a static single-
+    candidate read is still only a NECESSARY guarantee, not a sufficient one: a derived
+    type's field count can drift ahead of what real files ever populate (a field added to
+    the type that the file-generating tool never started writing, its default just never
+    overwritten -- pesticide.pes's `pl_uptake` is consistently absent from every row in
+    every dataset surveyed), and without this cross-check every row of such a file would
+    get flagged as "missing a column", which is noise, not a defect. Only a row shorter
+    than what the rest of the file itself demonstrates is flagged. NOT applied to
+    counted_block's body_row -- that schema is picked as merely the LONGEST read found
+    anywhere in its loop span, with no prefix validation against shorter reads, so its true
+    minimum isn't reliably known even as a starting point.
   - Record-count validation for "header row declares N, then N body rows follow" repeating
     structures (management.sch's NUMB_OPS, soils.sol's per-soil layer count, ...): the
     header field's ACTUAL VALUE is read from the real data and checked against how many body
@@ -808,6 +825,13 @@ class SubSchema:
                                  # this file is a repeating "header row declares N, N body rows
                                  # follow" structure (management.sch, soils.sol, ...) instead of
                                  # a flat single-shape repeat_row
+    repeat_row_min_fixed: int = None  # smallest fixed-field count seen across every candidate
+                                 # read merged into repeat_row (see the all_prefixes merge in
+                                 # scan_subroutines) -- every branch reads at LEAST this many
+                                 # fields, so it's a safe hard minimum for missing-column
+                                 # detection even though repeat_row itself may be longer
+                                 # (the fullest candidate, with trailing fields some branches
+                                 # legitimately omit, e.g. hyd_read_connect's nout==0 case)
 
 
 def scan_count_registry(files, types, module_vars):
@@ -1141,6 +1165,7 @@ def scan_subroutines(files, types, module_vars, type_defaults, var_to_type, coun
                         else:
                             unresolved = f"line {l}: could not resolve loop-body read '{v[:60]}'"
                 repeat_row = None
+                repeat_row_min_fixed = None
                 counted_block = None
                 if loop_candidates:
                     # Counted-block check FIRST, on the shallowest-depth candidate(s) -- the
@@ -1203,13 +1228,16 @@ def scan_subroutines(files, types, module_vars, type_defaults, var_to_type, coun
                             loop_candidates.sort(key=lambda x: -x[1])
                             winner_fixed, winner_repeat = expand_row_schema(loop_candidates[0][2])
                             all_prefixes = True
+                            min_fixed_len = len(winner_fixed)
                             for _, _, cand, _ in loop_candidates[1:]:
                                 cand_fixed, cand_repeat = expand_row_schema(cand)
                                 if cand_fixed != winner_fixed[:len(cand_fixed)]:
                                     all_prefixes = False
                                     break
+                                min_fixed_len = min(min_fixed_len, len(cand_fixed))
                             if all_prefixes:
                                 repeat_row = loop_candidates[0][2]
+                                repeat_row_min_fixed = min_fixed_len
                             else:
                                 unresolved = (unresolved or "") + (
                                     " [ambiguous: multiple same-depth repeating reads whose field "
@@ -1226,6 +1254,7 @@ def scan_subroutines(files, types, module_vars, type_defaults, var_to_type, coun
                     unresolved_reason=unresolved,
                     guarded=file_expr in guarded_exprs,
                     counted_block=counted_block,
+                    repeat_row_min_fixed=repeat_row_min_fixed,
                 ))
             i = max(i, sub_start + 1)
         # advance past this subroutine's END SUBROUTINE line
@@ -1242,10 +1271,17 @@ REAL_RE = re.compile(r'^[+-]?(\d+\.\d*|\.\d+|\d+)([eEdD][+-]?\d+)?$')
 LOGICAL_RE = re.compile(r'^\.?(true|false|t|f)\.?$', re.IGNORECASE)
 
 TOKEN_RE = re.compile(r'''"[^"]*"|'[^']*'|[^\s,]+''')
+# Stray control bytes (NULs etc., seen at EOF in some shipped files -- a common artifact
+# of how some tools pad/truncate fixed-size output) aren't whitespace to \s, so a line
+# made up entirely of them tokenizes as one non-empty "word" instead of nothing, defeating
+# the blank-line filter that's supposed to treat degenerate trailing bytes as blank (see
+# check_dataset_file). \t and \r are left alone -- already \s, and legitimate as line
+# content (a trailing \r from CRLF line endings, in particular).
+CONTROL_BYTES_RE = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]')
 
 
 def tokenize_line(line):
-    return TOKEN_RE.findall(line)
+    return TOKEN_RE.findall(CONTROL_BYTES_RE.sub('', line))
 
 
 def type_ok(expected, token):
@@ -1274,6 +1310,26 @@ def why_not(expected, token):
     return f"doesn't parse as {expected.upper()}"
 
 
+def dominant_capped_length(lengths):
+    """Most common value in `lengths` (each a repeating row's token count, capped at the
+       schema's own fixed-field count). Used as an empirical, data-driven cross-check on
+       top of the schema's own declared minimum, since a derived type's field count can
+       drift from what real files actually, consistently provide -- a trailing field added
+       to the type that the file-generating tool never started populating, its default
+       just never overwritten, is not a genuine per-row defect (pesticide.pes's pl_uptake:
+       every row in every dataset surveyed is consistently one field short of pestdb's 16,
+       and flagging all of them as "missing a column" would just be noise on top of the
+       type mismatch this shortfall already causes one field earlier, description text
+       landing in a REAL field). Ties -- unavoidable with only a couple of rows -- go to
+       the LARGER length, so a lone short row among few samples still reads as the
+       anomaly rather than as equally "normal"."""
+    counts = {}
+    for l in lengths:
+        counts[l] = counts.get(l, 0) + 1
+    best_count = max(counts.values())
+    return max(l for l, c in counts.items() if c == best_count)
+
+
 def expand_row_schema(row):
     """Row schema items may include ('repeat', [types]); this just returns the
        fixed-length prefix part and the trailing repeat group (or None)."""
@@ -1287,7 +1343,7 @@ def expand_row_schema(row):
     return fixed, repeat_group
 
 
-def check_row(fields, dataset_path, filename, lineno, raw_line, strict=False):
+def check_row(fields, dataset_path, filename, lineno, raw_line, min_fields=None):
     """fields: flat schema for this line. Returns (issues, notices) -- issues are real
        type mismatches; notices are informational-only observations that are valid
        Fortran and not a defect (currently: a REAL field whose token has no decimal
@@ -1295,31 +1351,39 @@ def check_row(fields, dataset_path, filename, lineno, raw_line, strict=False):
        without complaint, so this is neither an error nor a warning, just an FYI that
        the value will be read in as floating point).
 
-       strict: if True, a row with fewer tokens than the schema's fixed-field count is
-       itself flagged as an issue (missing column(s)). Only safe for row shapes that are
-       a single, unambiguous physical read (schema.prefix_rows) -- repeat_row and
-       counted_block rows are derived by picking the FULLEST of several observed
-       candidate reads (e.g. hyd_read_connect's nout==0 vs nout>0 branches), so a
-       genuinely shorter row there is expected, valid data, not a defect."""
+       min_fields: if given, a row with fewer than this many tokens is flagged as a
+       missing-column issue. None (the default) disables the check entirely -- safest
+       for row shapes whose true minimum length isn't reliably known (counted_block's
+       body_row, picked as merely the LONGEST of several reads found in a loop span with
+       no prefix validation between them). For schema.prefix_rows, callers pass the row's
+       own full fixed-field count (a single, unambiguous physical read has no legitimate
+       reason to be shorter). For repeat_row, callers pass
+       schema.repeat_row_min_fixed -- the shortest fixed-field count seen across every
+       candidate read merged into that schema (e.g. hyd_read_connect's nout==0 vs
+       nout>0 branches, which both read the same leading fields and only differ in a
+       trailing implied-do group) -- so a row between that minimum and the full schema
+       length is a legitimate shorter branch and stays silent, same as before, while
+       anything short of the minimum can't be explained by any known code path."""
     issues = []
     notices = []
     if len(fields) == 1 and fields[0] == 'character':
         return issues, notices  # whole-line title/header read; always valid
     fixed, repeat_group = expand_row_schema(fields)
     tokens = tokenize_line(raw_line)
+    if min_fields is not None and len(tokens) < min_fields:
+        idx0 = len(tokens)
+        issues.append(dict(
+            file=filename, line=lineno, field_index=idx0 + 1,
+            expected=fixed[idx0] if idx0 < len(fixed) else fixed[-1], token="(missing)",
+            reason=(f"row has only {len(tokens)} token(s) but the schema requires at "
+                    f"least {min_fields} field(s) here -- missing column(s)?")))
     for idx, expected in enumerate(fixed):
         if idx >= len(tokens):
-            if strict:
-                issues.append(dict(
-                    file=filename, line=lineno, field_index=idx + 1, expected=expected,
-                    token="(missing)",
-                    reason=(f"row has only {len(tokens)} token(s) but the schema expects "
-                            f"{len(fixed)} field(s) here -- missing column(s)?")))
             # A row with fewer tokens than the schema's maximum is usually a legitimate
             # optional-trailing-field omission (same graceful-EOF idiom as short files) --
             # this tool's validated strength is catching type mismatches in tokens that
             # ARE present, not judging whether a row "should" have more columns. Exception:
-            # strict mode (see docstring above).
+            # min_fields (see docstring above), already handled above.
             break
         tok = tokens[idx]
         if not type_ok(expected, tok):
@@ -1362,7 +1426,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
     all_issues = []
     all_notices = []
 
-    def _check(fields, lineno, raw_line, name_offset=0, strict=False):
+    def _check(fields, lineno, raw_line, name_offset=0, min_fields=None):
         # name_offset: for a counted_block's BODY rows, the shared header line's tokens
         # list the header row's own columns FIRST (e.g. management.sch's NAME, NUMB_OPS,
         # NUMB_AUTO) followed by the body row's columns (OP_TYP, MON, DAY, ...) -- but
@@ -1372,7 +1436,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
         # header_tokens[0] = NAME). 0 for a plain prefix/repeat row or a header row
         # itself, where field_index already lines up with header_tokens directly.
         issues, notices = check_row(fields, dataset_dir, schema.default_filename, lineno, raw_line,
-                                     strict=strict)
+                                     min_fields=min_fields)
         all_issues.extend(issues)
         for note in notices:
             idx0 = name_offset + note['field_index'] - 1
@@ -1388,12 +1452,25 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             # trailing section is read (e.g. an empty/disabled-feature file, or an older
             # print.prt missing newer object rows) is normal, not a defect. Stop quietly.
             break
-        _check(row, idx + 1, lines[idx], strict=True)
+        # A prefix row is always a single, unambiguous physical read (no merging of
+        # multiple candidate reads happens for d==0 rows) -- its own full fixed-field
+        # count is a hard minimum.
+        _check(row, idx + 1, lines[idx], min_fields=len(expand_row_schema(row)[0]))
         idx += 1
     else:
         if schema.repeat_row:
+            # schema.repeat_row_min_fixed is a source-derived minimum, but the source
+            # can't see whether real files actually, consistently reach it -- cap it with
+            # what this file's own rows demonstrate (dominant_capped_length) so a
+            # field genuinely absent from every row (schema/file drift, not a per-row
+            # defect) doesn't get flagged on every single row.
+            repeat_fixed_len = len(expand_row_schema(schema.repeat_row)[0])
+            capped_lengths = [min(len(tokenize_line(l)), repeat_fixed_len) for l in lines[idx:]]
+            min_fields = schema.repeat_row_min_fixed
+            if capped_lengths and min_fields is not None:
+                min_fields = min(min_fields, dominant_capped_length(capped_lengths))
             while idx < len(lines):
-                _check(schema.repeat_row, idx + 1, lines[idx])
+                _check(schema.repeat_row, idx + 1, lines[idx], min_fields=min_fields)
                 idx += 1
         elif schema.counted_block:
             # Repeating "header row declares N, then N body rows follow" structure
@@ -1405,9 +1482,41 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             # code will actually try to read.
             cb = schema.counted_block
             header_row, field_idx, body_row = cb['header_row'], cb['header_field_index'], cb['body_row']
+            # Like a prefix row, a counted_block's header_row is only ever built from a
+            # single candidate read (find_count_field_position requires it to be the ONLY
+            # read at its depth) -- no merging, so its full fixed-field count is a
+            # candidate hard minimum, same reasoning as repeat_row above. But it's still
+            # only a STATIC guarantee, so cross-check it the same way against what this
+            # file's own header rows (there can be many -- one per block) actually,
+            # consistently provide: pre-scan every header position first (a header's
+            # position depends on the previous block's real body-row count, so this has to
+            # walk the same header/body structure as the real pass below, just without
+            # checking anything yet). body_row is NOT given min_fields: it's picked as
+            # merely the longest read observed anywhere in its loop span, with no prefix
+            # validation against shorter reads, so its true minimum isn't reliably known.
+            header_fixed_len = len(expand_row_schema(header_row)[0])
+            scan_idx = idx
+            header_lengths = []
+            while scan_idx < len(lines):
+                header_tokens_here = tokenize_line(lines[scan_idx])
+                header_lengths.append(min(len(header_tokens_here), header_fixed_len))
+                scan_count = None
+                if field_idx < len(header_tokens_here):
+                    tok = header_tokens_here[field_idx]
+                    if INT_RE.match(tok):
+                        scan_count = int(tok)
+                    elif REAL_RE.match(tok):
+                        scan_count = int(round(float(tok)))
+                scan_idx += 1
+                if scan_count is None:
+                    break
+                scan_idx += min(scan_count, len(lines) - scan_idx)
+            header_min_fields = header_fixed_len
+            if header_lengths:
+                header_min_fields = min(header_fixed_len, dominant_capped_length(header_lengths))
             while idx < len(lines):
                 header_line = lines[idx]
-                _check(header_row, idx + 1, header_line)
+                _check(header_row, idx + 1, header_line, min_fields=header_min_fields)
                 tokens = tokenize_line(header_line)
                 count = None
                 if field_idx < len(tokens):
@@ -1550,8 +1659,16 @@ def materialize_hyd_connect_schemas(schemas, src_files, type_defaults, var_to_ty
 
 def read_column_values(path, col_index, skip_header_lines=2):
     """Ints found at `col_index` (0-based) across every data row of `path`, after
-       skipping the title + header lines every one of these files starts with.
-       Returns None if the file doesn't exist."""
+       skipping the title + header lines every one of these files starts with. A row
+       that's too short to have a token at col_index, or whose token there doesn't parse
+       as an integer, contributes None rather than being silently dropped: the row still
+       EXISTS (a real record the model will try to read), so it must still count toward
+       the row count a caller compares against another file's row count. Silently
+       dropping such rows previously let a malformed row's id vanish from the count
+       entirely (e.g. a connect-file row whose `props` token got shifted off its column
+       by an unrelated missing field upstream no longer parsed as an integer, and the
+       count masked a genuine object-count mismatch instead of catching it). Returns None
+       (not a list) if the file doesn't exist."""
     if not os.path.isfile(path):
         return None
     with open(path, errors="replace") as f:
@@ -1562,6 +1679,8 @@ def read_column_values(path, col_index, skip_header_lines=2):
         tokens = tokenize_line(l)
         if col_index < len(tokens) and INT_RE.match(tokens[col_index]):
             vals.append(int(tokens[col_index]))
+        else:
+            vals.append(None)
     return vals
 
 
@@ -1606,8 +1725,10 @@ def check_object_counts(dataset_dir, src_files, type_defaults, var_to_type):
         if con_props is None or prop_ids is None:
             continue  # one or both files not present -- not this check's job (missing-file check covers that)
         prop_id_set = set(prop_ids)
-        missing_in_props = sorted(set(con_props) - prop_id_set)
-        orphaned_in_props = sorted(prop_id_set - set(con_props))
+        # key=str: con_props/prop_id_set can now contain None (an unreadable id -- see
+        # read_column_values) alongside int ids, and None isn't orderable against int.
+        missing_in_props = sorted(set(con_props) - prop_id_set, key=str)
+        orphaned_in_props = sorted(prop_id_set - set(con_props), key=str)
         if len(con_props) != len(prop_id_set) or missing_in_props or orphaned_in_props:
             findings.append((objtype, con_filename, prop_filename, len(con_props),
                               len(prop_id_set), missing_in_props, orphaned_in_props))
@@ -2110,7 +2231,7 @@ def main():
                 print(f"  {objtype}: {con_fn} references {n_con} object(s), "
                       f"{prop_fn} has {n_prop} record(s)")
                 if missing:
-                    shown = missing[:10]
+                    shown = ["(unreadable)" if m is None else m for m in missing[:10]]
                     more = f" (+{len(missing) - 10} more)" if len(missing) > 10 else ""
                     print(f"    {con_fn} references {prop_fn} id(s) not present there: "
                           f"{shown}{more}")
