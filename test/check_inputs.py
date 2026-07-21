@@ -141,6 +141,24 @@ OTHER CHECKS (source- and dataset-level, beyond per-field types)
     Reported once per file, against the first extra line, with the total extra count in
     the message (a duplicated data line -- pasted twice by accident -- is the common
     real-world cause).
+  - Extra-column detection: the mirror image of missing-column detection -- a row with
+    MORE tokens than the schema's fixed-field count is flagged, since anything past that
+    count is never read by the code (the read statement only ever consumes that many
+    fields) and is silently discarded at runtime, not an error but not intentional either.
+    Applies wherever missing-column detection applies (schema.prefix_rows,
+    repeat_row, counted_block's header_row), using the same source-derived-length-vs-
+    dominant-observed-length cross-check as missing-column detection, just mirrored: the
+    ceiling is raised to whatever length the file's own rows/headers dominantly,
+    consistently reach, so a field genuinely present in (but not yet declared for) every
+    row -- the flip side of pesticide.pes's drift -- doesn't get flagged on every row,
+    only a row with even more than that. Never applied when the row has a trailing repeat
+    group (an implied-do list): extra tokens there are legitimately consumed by the loop,
+    not "extra" at all. In practice this has caught real, if easy-to-miss, defects rather
+    than drift noise: fertilizer.frt/manure_om.frt description fields containing an
+    unquoted embedded space (e.g. "Northern Plains_Beef_Liquid" instead of
+    "Northern_Plains_Beef_Liquid") split into two tokens under list-directed I/O's normal
+    whitespace-delimited rules, silently truncating the description to just "Northern" at
+    runtime -- exactly the kind of silent data loss this check exists to surface.
   - Record-count validation for "header row declares N, then N body rows follow" repeating
     structures (management.sch's NUMB_OPS, soils.sol's per-soil layer count, ...): the
     header field's ACTUAL VALUE is read from the real data and checked against how many body
@@ -1353,7 +1371,7 @@ def expand_row_schema(row):
     return fixed, repeat_group
 
 
-def check_row(fields, dataset_path, filename, lineno, raw_line, min_fields=None):
+def check_row(fields, dataset_path, filename, lineno, raw_line, min_fields=None, max_fields=None):
     """fields: flat schema for this line. Returns (issues, notices) -- issues are real
        type mismatches; notices are informational-only observations that are valid
        Fortran and not a defect (currently: a REAL field whose token has no decimal
@@ -1373,7 +1391,16 @@ def check_row(fields, dataset_path, filename, lineno, raw_line, min_fields=None)
        nout>0 branches, which both read the same leading fields and only differ in a
        trailing implied-do group) -- so a row between that minimum and the full schema
        length is a legitimate shorter branch and stays silent, same as before, while
-       anything short of the minimum can't be explained by any known code path."""
+       anything short of the minimum can't be explained by any known code path.
+
+       max_fields: if given AND the row has no trailing repeat group, a row with MORE
+       tokens than this is flagged as an extra-column issue -- those tokens are never
+       read by the code (the read statement only consumes `fixed`'s field count, full
+       stop), so they're either a stray/duplicated column or leftover data from an
+       edit, either way silently discarded at runtime. Never applied when the schema
+       has a repeat group (extra trailing tokens there are legitimately consumed by
+       the implied-do loop, not "extra" at all) -- callers are responsible for passing
+       None in that case, same convention as min_fields."""
     issues = []
     notices = []
     if len(fields) == 1 and fields[0] == 'character':
@@ -1387,6 +1414,13 @@ def check_row(fields, dataset_path, filename, lineno, raw_line, min_fields=None)
             expected=fixed[idx0] if idx0 < len(fixed) else fixed[-1], token="(missing)",
             reason=(f"row has only {len(tokens)} token(s) but the schema requires at "
                     f"least {min_fields} field(s) here -- missing column(s)?")))
+    if max_fields is not None and repeat_group is None and len(tokens) > max_fields:
+        issues.append(dict(
+            file=filename, line=lineno, field_index=max_fields + 1,
+            expected="end of row", token=f"{len(tokens) - max_fields} extra token(s)",
+            reason=(f"row has {len(tokens)} token(s) but the schema only reads "
+                    f"{max_fields} field(s) here -- extra column(s) that won't be "
+                    f"read in?")))
     for idx, expected in enumerate(fixed):
         if idx >= len(tokens):
             # A row with fewer tokens than the schema's maximum is usually a legitimate
@@ -1436,7 +1470,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
     all_issues = []
     all_notices = []
 
-    def _check(fields, lineno, raw_line, name_offset=0, min_fields=None):
+    def _check(fields, lineno, raw_line, name_offset=0, min_fields=None, max_fields=None):
         # name_offset: for a counted_block's BODY rows, the shared header line's tokens
         # list the header row's own columns FIRST (e.g. management.sch's NAME, NUMB_OPS,
         # NUMB_AUTO) followed by the body row's columns (OP_TYP, MON, DAY, ...) -- but
@@ -1446,7 +1480,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
         # header_tokens[0] = NAME). 0 for a plain prefix/repeat row or a header row
         # itself, where field_index already lines up with header_tokens directly.
         issues, notices = check_row(fields, dataset_dir, schema.default_filename, lineno, raw_line,
-                                     min_fields=min_fields)
+                                     min_fields=min_fields, max_fields=max_fields)
         all_issues.extend(issues)
         for note in notices:
             idx0 = name_offset + note['field_index'] - 1
@@ -1464,8 +1498,10 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             break
         # A prefix row is always a single, unambiguous physical read (no merging of
         # multiple candidate reads happens for d==0 rows) -- its own full fixed-field
-        # count is a hard minimum.
-        _check(row, idx + 1, lines[idx], min_fields=len(expand_row_schema(row)[0]))
+        # count is a hard minimum, and (absent a repeat group) a hard maximum too.
+        row_fixed, row_repeat = expand_row_schema(row)
+        _check(row, idx + 1, lines[idx], min_fields=len(row_fixed),
+               max_fields=None if row_repeat else len(row_fixed))
         idx += 1
     else:
         if schema.repeat_row:
@@ -1473,14 +1509,27 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             # can't see whether real files actually, consistently reach it -- cap it with
             # what this file's own rows demonstrate (dominant_capped_length) so a
             # field genuinely absent from every row (schema/file drift, not a per-row
-            # defect) doesn't get flagged on every single row.
-            repeat_fixed_len = len(expand_row_schema(schema.repeat_row)[0])
-            capped_lengths = [min(len(tokenize_line(l)), repeat_fixed_len) for l in lines[idx:]]
+            # defect) doesn't get flagged on every single row. max_fields (extra-column
+            # detection) gets the SAME empirical treatment in the other direction --
+            # computed on raw, uncapped token counts, so a field genuinely present in
+            # (but not YET declared for) every row doesn't get flagged either -- but is
+            # skipped entirely when the row has a trailing repeat group: those extra
+            # tokens are legitimately consumed by the implied-do loop, not "extra" (e.g.
+            # hyd_read_connect's nout>0 outgoing-split list).
+            repeat_fixed, repeat_group = expand_row_schema(schema.repeat_row)
+            repeat_fixed_len = len(repeat_fixed)
+            raw_lengths = [len(tokenize_line(l)) for l in lines[idx:]]
             min_fields = schema.repeat_row_min_fixed
-            if capped_lengths and min_fields is not None:
-                min_fields = min(min_fields, dominant_capped_length(capped_lengths))
+            max_fields = None if repeat_group else repeat_fixed_len
+            if raw_lengths:
+                capped_lengths = [min(l, repeat_fixed_len) for l in raw_lengths]
+                if min_fields is not None:
+                    min_fields = min(min_fields, dominant_capped_length(capped_lengths))
+                if max_fields is not None:
+                    max_fields = max(max_fields, dominant_capped_length(raw_lengths))
             while idx < len(lines):
-                _check(schema.repeat_row, idx + 1, lines[idx], min_fields=min_fields)
+                _check(schema.repeat_row, idx + 1, lines[idx],
+                       min_fields=min_fields, max_fields=max_fields)
                 idx += 1
         elif schema.counted_block:
             # Repeating "header row declares N, then N body rows follow" structure
@@ -1495,21 +1544,25 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             # Like a prefix row, a counted_block's header_row is only ever built from a
             # single candidate read (find_count_field_position requires it to be the ONLY
             # read at its depth) -- no merging, so its full fixed-field count is a
-            # candidate hard minimum, same reasoning as repeat_row above. But it's still
-            # only a STATIC guarantee, so cross-check it the same way against what this
-            # file's own header rows (there can be many -- one per block) actually,
-            # consistently provide: pre-scan every header position first (a header's
-            # position depends on the previous block's real body-row count, so this has to
-            # walk the same header/body structure as the real pass below, just without
-            # checking anything yet). body_row is NOT given min_fields: it's picked as
-            # merely the longest read observed anywhere in its loop span, with no prefix
-            # validation against shorter reads, so its true minimum isn't reliably known.
-            header_fixed_len = len(expand_row_schema(header_row)[0])
+            # candidate hard minimum (and, absent a repeat group, a candidate hard
+            # maximum too), same reasoning as repeat_row above. But it's still only a
+            # STATIC guarantee, so cross-check it the same way against what this file's
+            # own header rows (there can be many -- one per block) actually, consistently
+            # provide: pre-scan every header position first (a header's position depends
+            # on the previous block's real body-row count, so this has to walk the same
+            # header/body structure as the real pass below, just without checking
+            # anything yet). body_row is NOT given min_fields or max_fields: it's picked
+            # as merely the longest read observed anywhere in its loop span, with no
+            # prefix validation against shorter reads, so neither bound is reliably known.
+            header_fixed, header_repeat = expand_row_schema(header_row)
+            header_fixed_len = len(header_fixed)
             scan_idx = idx
-            header_lengths = []
+            header_capped_lengths = []
+            header_raw_lengths = []
             while scan_idx < len(lines):
                 header_tokens_here = tokenize_line(lines[scan_idx])
-                header_lengths.append(min(len(header_tokens_here), header_fixed_len))
+                header_capped_lengths.append(min(len(header_tokens_here), header_fixed_len))
+                header_raw_lengths.append(len(header_tokens_here))
                 scan_count = None
                 if field_idx < len(header_tokens_here):
                     tok = header_tokens_here[field_idx]
@@ -1522,11 +1575,15 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
                     break
                 scan_idx += min(scan_count, len(lines) - scan_idx)
             header_min_fields = header_fixed_len
-            if header_lengths:
-                header_min_fields = min(header_fixed_len, dominant_capped_length(header_lengths))
+            header_max_fields = None if header_repeat else header_fixed_len
+            if header_capped_lengths:
+                header_min_fields = min(header_fixed_len, dominant_capped_length(header_capped_lengths))
+                if header_max_fields is not None:
+                    header_max_fields = max(header_max_fields, dominant_capped_length(header_raw_lengths))
             while idx < len(lines):
                 header_line = lines[idx]
-                _check(header_row, idx + 1, header_line, min_fields=header_min_fields)
+                _check(header_row, idx + 1, header_line,
+                       min_fields=header_min_fields, max_fields=header_max_fields)
                 tokens = tokenize_line(header_line)
                 count = None
                 if field_idx < len(tokens):
