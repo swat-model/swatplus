@@ -63,7 +63,7 @@
       er = 0.
       
       !! total carbon in surface residue and soil humus
-      c_ly1 = soil1(j)%hp(1)%n + soil1(j)%hs(1)%n + pl_mass(j)%rsd_tot%n
+      c_ly1 = soil1(j)%hp(1)%n + soil1(j)%hs(1)%n + pl_mass(j)%abg_rsd_tot%n
       !! wt = sol_bd(1,j) * sol_z(1,j) * 10. (tons/ha) -> wt1 = wt/1000
       wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
@@ -84,7 +84,7 @@
         soil1(j)%hs(1)%n = soil1(j)%hs(1)%n * n_left_rto
         soil1(j)%hp(1)%n = soil1(j)%hp(1)%n * n_left_rto
         do ipl = 1, pcom(j)%npl
-          pl_mass(j)%rsd(1)%n =   pl_mass(j)%rsd(1)%n * n_left_rto
+          pl_mass(j)%abg_rsd(1)%n =   pl_mass(j)%abg_rsd(1)%n * n_left_rto
         end do
         soil1(j)%meta(1)%n = soil1(j)%meta(1)%n * n_left_rto
         soil1(j)%str(1)%n = soil1(j)%str(1)%n * n_left_rto
@@ -99,6 +99,11 @@
       c_vert = 0.
       c_microb = 0.
       c_sed = 0.
+      c_microb_sed = 0.   !! must be reset each call: it is written only when erosion occurs
+                          !! (if ero_fr > 0 below) but is read unconditionally to reduce soil
+                          !! microbial C and report sediment C. Without this reset it relied on
+                          !! the declaration initializer's implicit SAVE and carried a stale
+                          !! value across HRUs/days on no-erosion HRUs.
       soil1(j)%tot(1)%c = soil1(j)%hp(1)%c + soil1(j)%hs(1)%c + soil1(j)%meta(1)%c + soil1(j)%str(1)%c !Total organic carbon in layer 1
       ero_fr = MIN((sedyld(j)/hru(j)%area_ha) / (sol_mass / 1000.),.9) !fraction of soil erosion of total soil mass
       c_sed = ero_fr * soil1(j)%tot(1)%c
@@ -106,7 +111,7 @@
       soil1(j)%hs(1)%c = soil1(j)%hs(1)%c * (1.- ero_fr)
       soil1(j)%hp(1)%c = soil1(j)%hp(1)%c * (1.- ero_fr)
       do ipl = 1, pcom(j)%npl
-        pl_mass(j)%rsd(ipl)%c = pl_mass(j)%rsd(ipl)%c * (1.- ero_fr)
+        pl_mass(j)%abg_rsd(ipl)%c = pl_mass(j)%abg_rsd(ipl)%c * (1.- ero_fr)
       end do
           
         

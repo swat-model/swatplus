@@ -45,27 +45,27 @@
       !! zero stover harvest
       hrc_d(j)%harv_stov_c = 0.
       
-      ! pl_mass(j)%rsd_tot = orgz
+      ! pl_mass(j)%abg_rsd_tot = orgz
       !! harvest plant surface residue
       rsd_removed = orgz
       do ipl = 1, pcom(j)%npl
-      !   pl_mass(j)%rsd(ipl) = (1. - eff) * pl_mass(j)%rsd(ipl) 
-      !   pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(ipl)
+      !   pl_mass(j)%abg_rsd(ipl) = (1. - eff) * pl_mass(j)%abg_rsd(ipl) 
+      !   pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%abg_rsd(ipl)
       !!  compute carbon in harvested residue
-      !   hrc_d(j)%harv_stov_c = (pl_mass(j)%rsd_tot%c / eff) - pl_mass(j)%rsd_tot%c
+      !   hrc_d(j)%harv_stov_c = (pl_mass(j)%abg_rsd_tot%c / eff) - pl_mass(j)%abg_rsd_tot%c
 
-        rsd_removed = net_eff * pl_mass(j)%rsd(ipl)
+        rsd_removed = net_eff * pl_mass(j)%abg_rsd(ipl)
 
         ! Check to see if more residue was removed than allowed
-        if ((pl_mass(j)%rsd(ipl)%m - rsd_removed%m) < bm_min) then
-            reduction_frac = (pl_mass(j)%rsd(ipl)%m - bm_min) / pl_mass(j)%rsd(ipl)%m
-            rsd_removed = reduction_frac * pl_mass(j)%rsd(ipl)
+        if ((pl_mass(j)%abg_rsd(ipl)%m - rsd_removed%m) < bm_min) then
+            reduction_frac = (pl_mass(j)%abg_rsd(ipl)%m - bm_min) / pl_mass(j)%abg_rsd(ipl)%m
+            rsd_removed = reduction_frac * pl_mass(j)%abg_rsd(ipl)
         endif
 
-        pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - rsd_removed 
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - rsd_removed
-        if (pl_mass(j)%rsd_tot%m < 1.e-6) then
-          pl_mass(j)%rsd_tot = orgz
+        pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - rsd_removed 
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - rsd_removed
+        if (pl_mass(j)%abg_rsd_tot%m < 1.e-6) then
+          pl_mass(j)%abg_rsd_tot = orgz
         endif
 
         hrc_d(j)%harv_stov_c = rsd_removed%c

@@ -32,7 +32,7 @@ ne_sw_lq         0.987   0.150943   0.135849   0.014906   0.064906   0.005792   
 ne_sw_sl          0.94   0.306613   0.050902   0.024449   0.034870   0.009499       0.99  Northeast_Swine_Slurry
 ne_sw_ss         0.875   0.146586   0.031285   0.017912   0.026064   0.006948       0.99  Northeast_Swine_Semi-solid
 ne_sw_sd         0.613   0.263566   0.004935   0.007713   0.022997   0.002997       0.99  Northeast_Swine_Solid
-np_bf_lq         0.999   0.780576   0.096043   0.036211   0.117986   0.016187       0.99  Northern Plains_Beef_Liquid
+np_bf_lq         0.999   0.780576   0.096043   0.036211   0.117986   0.016187       0.99  Northern_Plains_Beef_Liquid
 np_bf_sl         0.919   0.206795   0.053028   0.009350   0.023486   0.004210       0.99  Northern_Plains_Beef_Slurry
 np_bf_ss          0.88   0.372917   0.044167   0.010250   0.022250   0.004583       0.99  Northern_Plains_Beef_Semi-solid
 np_bf_sd         0.397   0.176617   0.001824   0.004461   0.012355   0.002007       0.99  Northern_Plains_Beef_Solid

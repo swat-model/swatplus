@@ -57,8 +57,8 @@
           pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
           pl_mass(j)%seed(ipl) = plt_mass_z
           
-          pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + abgr_drop
-          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + abgr_drop
+          pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + abgr_drop
+          pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + abgr_drop
           
           pcom(j)%plcur(ipl)%idorm = "y"
           pcom(j)%plcur(ipl)%phuacc = 0.
