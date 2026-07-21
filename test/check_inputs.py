@@ -32,8 +32,29 @@ TYPE COMPATIBILITY RULES (list-directed input)
   - REAL      : token must be a valid real literal. Integer-looking tokens ARE accepted
                 (Fortran promotes "5" to 5.0 for a real variable without complaint) as are
                 decimal/exponential forms (1.5, .5, 5., 1.5E3, 1.5D3). Alphabetic
-                characters other than a single E/D exponent marker are rejected.
+                characters other than a single E/D exponent marker are rejected. An
+                integer-looking token in a REAL field is valid, not a mismatch, and never
+                counted as an issue or toward the exit code -- but pass --int_to_float to
+                get a per-file summary of which columns show this pattern (see OUTPUT AND
+                EXIT CODE below); off by default, since printing every occurrence proved
+                far too noisy on a real dataset.
   - LOGICAL   : T/F/.TRUE./.FALSE. and abbreviations, optionally preceded by a sign.
+
+WHY --int_to_float IS WORTH RUNNING DESPITE BEING "JUST AN FYI"
+-------------------------------------------------------------------
+INTEGER <-> REAL compatibility is NOT symmetric, and that asymmetry is exactly what
+makes an integer-looking value in a REAL field worth a second look even though it isn't
+a defect by itself: gfortran silently promotes an integer-looking token ("5") into a
+REAL variable (5.0) with no complaint, but the reverse -- a decimal-looking token ("5.0")
+into an INTEGER variable -- is REJECTED outright (the day_lag_max bug's exact shape,
+see THE BUG CLASS THIS CATCHES above). Someone who has only ever seen the REAL-accepts-
+integer direction work fine can reasonably (and wrongly) conclude the relationship goes
+both ways -- that it "doesn't matter" whether a column holds whole numbers or decimals --
+and then be caught out the one time it's actually an INTEGER field on the receiving end.
+--int_to_float doesn't flag anything wrong with the columns it lists; it exists so a
+column that's ALWAYS been fed whole numbers (and so has never revealed whether the
+underlying field is REAL or INTEGER from the data alone) can be checked against the
+source's actual declared type before that assumption gets tested somewhere it matters.
 
 ASSUMPTIONS / SCOPE (read this before trusting a clean report)
 -----------------------------------------------------------------
@@ -66,10 +87,17 @@ so you always know which version of the model the expected types came from.
 OTHER CHECKS (source- and dataset-level, beyond per-field types)
 ------------------------------------------------------------------
   - Unit-number reuse without a `close()`: reopening a Fortran unit that's still connected
-    to an earlier file relies on implicit close-then-reopen semantics rather than an
-    explicit close -- flagged as a source finding (runs even without a dataset_dir), except
-    where the two opens are in mutually-exclusive if/else or select-case branches (only one
-    ever executes, so there's nothing to close between them).
+    to an earlier file relies on the standard's implicit-close-before-reopen rule (an
+    `OPEN` on an already-connected unit is executed as if a `CLOSE` with no `STATUS=` ran
+    first -- this is well-defined, standard-conforming Fortran, not compiler-specific or
+    undefined) rather than an explicit close. Flagged anyway as a source finding (runs
+    even without a dataset_dir) because relying on it is a readability/maintainability
+    smell, not a correctness bug: it hides "this reopens a DIFFERENT file" as an implicit
+    side effect of a second `open()` line instead of stating it, which is easy to misread
+    and easy to get wrong if a future edit ever needs to reopen the SAME file mid-routine
+    (which the implicit close would silently and correctly discard on its own). Excludes
+    the case where the two opens are in mutually-exclusive if/else or select-case branches
+    (only one ever executes, so there's nothing to close between them).
   - Record-count validation for "header row declares N, then N body rows follow" repeating
     structures (management.sch's NUMB_OPS, soils.sol's per-soil layer count, ...): the
     header field's ACTUAL VALUE is read from the real data and checked against how many body
@@ -114,10 +142,48 @@ OTHER CHECKS (source- and dataset-level, beyond per-field types)
 
 USAGE
 -----
-    test/check_inputs.py --index                 # build/print the source-derived schema index
-    test/check_inputs.py <dataset_dir>            # check every recognized file in a dataset
+Every path this script touches -- `src/*.f90`, `input_file_module.f90`, `file.cio`, the
+dataset directory itself -- is resolved relative to `--repo` (default: `.`, the current
+directory), NOT relative to where this script file lives. There is no requirement to run
+it from `test/`, or from the repo root either, as long as `--repo` points at the repo:
+
+    cd swatplus_fg_fork && test/check_inputs.py <dataset_dir>       # --repo defaults to
+                                                                     # "." = the repo root
+    test/check_inputs.py --repo /path/to/swatplus_fg_fork <dataset_dir>   # run from anywhere
     test/check_inputs.py <dataset_dir> --file parameters.bsn   # check just one file
     test/check_inputs.py <dataset_dir> -v         # also show skipped/unresolved routines
+    test/check_inputs.py <dataset_dir> --int_to_float   # also list REAL columns whose data
+                                                          # has no decimal point/exponent
+                                                          # (informational only, see OUTPUT
+                                                          # AND EXIT CODE below)
+
+`dataset_dir` is an OPTIONAL positional argument -- there is no separate "--index" flag
+for this. Leaving it off entirely switches the whole run to "index mode": the script
+still re-derives the full schema from `--repo`'s `src/`, prints the `[index] N source
+files, N derived types, ...` summary line and the git-revision stamp, and still runs
+every check that doesn't need a real dataset on disk (currently: unit-number reuse
+without a `close()`) -- it just skips every check that needs actual input-file data to
+compare against:
+
+    test/check_inputs.py                       # index mode against --repo="." (the repo root)
+    test/check_inputs.py --repo /path/to/swatplus_fg_fork    # index mode against another checkout
+
+OUTPUT AND EXIT CODE
+---------------------
+Every finding, the `[index]`/`[src]` summary lines, and the final `[summary]` line all go
+to stdout -- `test/check_inputs.py <dataset_dir> > report.txt` captures the whole report.
+The only stderr output is two fatal setup errors (no source files found under `--repo`;
+`--file` given a name with no resolved schema), each paired with exit code 2. Exit code
+is 0 if nothing was found, 1 if any finding was reported (type mismatch, missing/
+unexpected file, unclosed unit reuse, record-count mismatch, object-count mismatch, or
+name-reference mismatch), 2 on a setup error before any checking could happen.
+`--int_to_float` (currently: a REAL field's token has no decimal point/exponent -- valid,
+not a mismatch) prints an `[int_to_float]` summary section to stdout, one line per input
+file listing each affected column and how many times it showed the pattern -- neither an
+issue nor a warning, never counted toward `[summary]`'s issue total, never affects the
+exit code. Without the flag, a hint still appears in `[summary]` if any such column
+exists ("N REAL-looks-like-integer notice(s) ... re-run with --int_to_float to list
+them") so a clean run's exit code is never the only signal something is there to see.
 """
 
 import argparse
@@ -972,12 +1038,14 @@ def scan_subroutines(files, types, module_vars, type_defaults, var_to_type, coun
                 i += 1
 
             # Check: reusing a unit number for a second open without closing it first.
-            # Reopening a connected unit relies on Fortran's implicit-close-then-reopen
-            # semantics rather than an explicit close -- worth flagging even where it's
-            # standard-conforming, since behavior/robustness here is exactly the kind of thing
-            # that varies across compilers. Skip pairs that are in mutually-exclusive if/else
-            # or select-case branches (e.g. "if (x) open(u,A) else open(u,B)") -- only one of
-            # those ever executes, so there's nothing to close between them.
+            # Reopening a connected unit relies on Fortran's implicit-close-before-reopen
+            # rule (well-defined, standard-conforming since FORTRAN 77 -- NOT undefined or
+            # compiler-dependent) rather than an explicit close -- still worth flagging as
+            # a readability/maintainability smell: it hides "this reopens a DIFFERENT file"
+            # as a side effect of a second open() rather than stating it. Skip pairs that
+            # are in mutually-exclusive if/else or select-case branches (e.g. "if (x)
+            # open(u,A) else open(u,B)") -- only one of those ever executes, so there's
+            # nothing to close between them.
             for idx in range(len(opens) - 1):
                 l1, u1, f1, sig1 = opens[idx]
                 for l2b, u2, f2, sig2 in opens[idx + 1:]:
@@ -1176,6 +1244,12 @@ def type_ok(expected, token):
     return True
 
 
+REAL_LOOKS_LIKE_INT_MSG = (
+    "looks like an integer (no decimal point/exponent) but the field is REAL in the "
+    "source -- valid, Fortran will read it in as a floating point value; not an error"
+)
+
+
 def why_not(expected, token):
     if expected == 'integer' and REAL_RE.match(token) and not INT_RE.match(token):
         return "has a decimal point/exponent but the field is INTEGER"
@@ -1198,10 +1272,16 @@ def expand_row_schema(row):
 
 
 def check_row(fields, dataset_path, filename, lineno, raw_line):
-    """fields: flat schema for this line. Returns list of mismatch dicts."""
+    """fields: flat schema for this line. Returns (issues, notices) -- issues are real
+       type mismatches; notices are informational-only observations that are valid
+       Fortran and not a defect (currently: a REAL field whose token has no decimal
+       point or exponent, e.g. '5' instead of '5.0' -- Fortran promotes it to 5.0
+       without complaint, so this is neither an error nor a warning, just an FYI that
+       the value will be read in as floating point)."""
     issues = []
+    notices = []
     if len(fields) == 1 and fields[0] == 'character':
-        return issues  # whole-line title/header read; always valid
+        return issues, notices  # whole-line title/header read; always valid
     fixed, repeat_group = expand_row_schema(fields)
     tokens = tokenize_line(raw_line)
     for idx, expected in enumerate(fixed):
@@ -1215,6 +1295,9 @@ def check_row(fields, dataset_path, filename, lineno, raw_line):
         if not type_ok(expected, tok):
             issues.append(dict(file=filename, line=lineno, field_index=idx + 1,
                                 expected=expected, token=tok, reason=why_not(expected, tok)))
+        elif expected == 'real' and INT_RE.match(tok):
+            notices.append(dict(file=filename, line=lineno, field_index=idx + 1,
+                                 expected=expected, token=tok, reason=REAL_LOOKS_LIKE_INT_MSG))
     if repeat_group:
         rest = tokens[len(fixed):]
         for j, tok in enumerate(rest):
@@ -1222,21 +1305,50 @@ def check_row(fields, dataset_path, filename, lineno, raw_line):
             if not type_ok(expected, tok):
                 issues.append(dict(file=filename, line=lineno, field_index=len(fixed) + j + 1,
                                     expected=expected, token=tok, reason=why_not(expected, tok)))
-    return issues
+            elif expected == 'real' and INT_RE.match(tok):
+                notices.append(dict(file=filename, line=lineno, field_index=len(fixed) + j + 1,
+                                     expected=expected, token=tok, reason=REAL_LOOKS_LIKE_INT_MSG))
+    return issues, notices
 
 
 def check_dataset_file(schema, dataset_dir, verbose=False):
     path = os.path.join(dataset_dir, schema.default_filename)
     if not os.path.isfile(path):
-        return None, f"file not present in dataset: {schema.default_filename}"
+        return None, None, f"file not present in dataset: {schema.default_filename}"
     with open(path, errors="replace") as f:
         raw_lines = [l.rstrip("\n") for l in f]
     # A line that tokenizes to nothing is blank for our purposes -- this also catches
     # degenerate trailing bytes (stray NULs etc. seen at EOF in some shipped files) that
     # str.strip() alone doesn't treat as blank.
     lines = [l for l in raw_lines if tokenize_line(l)]
+    # Every one of these files follows title-line-then-header-line-then-data by strong,
+    # consistent convention throughout this codebase (verified across dozens of files
+    # this session) -- so the real file's own SECOND line is its column-label header,
+    # regardless of how the schema itself models title/header as prefix rows. Used only
+    # to give --int_to_float's summary a human-readable column name instead of a bare
+    # field index; never relied on for anything that affects issues/exit code.
+    header_tokens = tokenize_line(lines[1]) if len(lines) > 1 else []
 
     all_issues = []
+    all_notices = []
+
+    def _check(fields, lineno, raw_line, name_offset=0):
+        # name_offset: for a counted_block's BODY rows, the shared header line's tokens
+        # list the header row's own columns FIRST (e.g. management.sch's NAME, NUMB_OPS,
+        # NUMB_AUTO) followed by the body row's columns (OP_TYP, MON, DAY, ...) -- but
+        # each body-row check_row() call numbers its OWN field_index starting back at 1,
+        # so body-row lookups need to skip past the header row's own field count to land
+        # on the right header token (e.g. body field #1 = OP_TYP = header_tokens[3], not
+        # header_tokens[0] = NAME). 0 for a plain prefix/repeat row or a header row
+        # itself, where field_index already lines up with header_tokens directly.
+        issues, notices = check_row(fields, dataset_dir, schema.default_filename, lineno, raw_line)
+        all_issues.extend(issues)
+        for note in notices:
+            idx0 = name_offset + note['field_index'] - 1
+            note['field_name'] = (header_tokens[idx0] if 0 <= idx0 < len(header_tokens)
+                                   else f"field #{note['field_index']}")
+        all_notices.extend(notices)
+
     idx = 0
     for row in schema.prefix_rows:
         if idx >= len(lines):
@@ -1245,13 +1357,12 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             # trailing section is read (e.g. an empty/disabled-feature file, or an older
             # print.prt missing newer object rows) is normal, not a defect. Stop quietly.
             break
-        all_issues.extend(check_row(row, dataset_dir, schema.default_filename, idx + 1, lines[idx]))
+        _check(row, idx + 1, lines[idx])
         idx += 1
     else:
         if schema.repeat_row:
             while idx < len(lines):
-                all_issues.extend(check_row(schema.repeat_row, dataset_dir, schema.default_filename,
-                                             idx + 1, lines[idx]))
+                _check(schema.repeat_row, idx + 1, lines[idx])
                 idx += 1
         elif schema.counted_block:
             # Repeating "header row declares N, then N body rows follow" structure
@@ -1265,8 +1376,7 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
             header_row, field_idx, body_row = cb['header_row'], cb['header_field_index'], cb['body_row']
             while idx < len(lines):
                 header_line = lines[idx]
-                all_issues.extend(check_row(header_row, dataset_dir, schema.default_filename,
-                                             idx + 1, header_line))
+                _check(header_row, idx + 1, header_line)
                 tokens = tokenize_line(header_line)
                 count = None
                 if field_idx < len(tokens):
@@ -1290,10 +1400,9 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
                                 f"but only {available} remain in the file")))
                     count = available
                 for _ in range(count):
-                    all_issues.extend(check_row(body_row, dataset_dir, schema.default_filename,
-                                                 idx + 1, lines[idx]))
+                    _check(body_row, idx + 1, lines[idx], name_offset=len(header_row))
                     idx += 1
-    return all_issues, None
+    return all_issues, all_notices, None
 
 
 # ============================================================================
@@ -1723,6 +1832,11 @@ def main():
     ap.add_argument("--file", default=None, help="only check this one input filename")
     ap.add_argument("-v", "--verbose", action="store_true",
                      help="also list subroutines/files the tool could not resolve or skipped")
+    ap.add_argument("--int_to_float", action="store_true",
+                     help="report REAL-typed columns whose data has no decimal point/exponent "
+                          "(e.g. '0' instead of '0.0') -- valid Fortran, not a mismatch, off by "
+                          "default; prints one summary line per affected column per file, not "
+                          "one line per occurrence")
     args = ap.parse_args()
 
     src_files = sorted(glob.glob(os.path.join(args.repo, SRC_GLOB)))
@@ -1759,7 +1873,18 @@ def main():
           f"{len(schemas)} file-read routines found, {len(resolved)} fully resolved.")
     if unclosed_reuse:
         print(f"\n[source] {len(unclosed_reuse)} unit number reused for a second open() "
-              f"with no close() in between (undefined/compiler-dependent behavior):")
+              f"with no close() in between:")
+        print(f"    Executing an OPEN on a unit that's still connected to a file is "
+              f"well-defined, standard-conforming Fortran (has been since FORTRAN 77): "
+              f"the effect is as if a CLOSE with no STATUS= (i.e. default disposition, "
+              f"KEEP for a named file -- nothing is deleted) ran first, then the new file "
+              f"is connected. This is NOT undefined or compiler-dependent behavior, and "
+              f"every conforming compiler does the same thing.")
+        print(f"    Flagged anyway because it's a readability/maintainability smell, not "
+              f"a correctness bug: relying on the implicit close hides \"this reopens a "
+              f"DIFFERENT file\" as a side effect of a second open() line instead of "
+              f"stating it with an explicit close(), which is easy to misread and easy to "
+              f"get wrong if a future edit ever needs to reopen the SAME file mid-routine.")
         for (srcfile, subname, unit, l1, l2b, f1, f2) in unclosed_reuse:
             print(f"  {srcfile} ({subname}): unit {unit} opened for {f1} at line {l1}, "
                   f"reopened for {f2} at line {l2b} with no close() between them")
@@ -1784,9 +1909,15 @@ def main():
             sys.exit(2)
 
     total_issues = len(unclosed_reuse)
+    total_notices = 0
+    # {filename: {field_name: occurrence_count}} -- only populated/printed when
+    # --int_to_float is given; a summary of which COLUMNS ever show the pattern, not one
+    # line per row that shows it (that reading was tried first and was much too noisy on
+    # a real dataset -- e.g. plants.plt alone produced 2279 individual line-hits).
+    int_to_float_summary = {}
     checked = 0
     for filename, schema in sorted(by_filename.items()):
-        issues, skip_reason = check_dataset_file(schema, args.dataset_dir, verbose=args.verbose)
+        issues, notices, skip_reason = check_dataset_file(schema, args.dataset_dir, verbose=args.verbose)
         if skip_reason:
             if args.verbose:
                 print(f"  [skip] {filename}: {skip_reason}")
@@ -1802,6 +1933,27 @@ def main():
             mode = (", + repeating rows" if schema.repeat_row else
                     ", + counted header/body blocks" if schema.counted_block else "")
             print(f"  [ok] {filename}: {len(schema.prefix_rows)} prefix row(s){mode}")
+        # notices are NOT issues -- not an error, not a warning, don't count toward
+        # total_issues or the exit code. A REAL field whose token has no decimal
+        # point/exponent is completely valid Fortran (promoted to floating point on
+        # read); this is purely informational, and only reported at all under
+        # --int_to_float.
+        if notices:
+            total_notices += len(notices)
+            if args.int_to_float:
+                per_field = int_to_float_summary.setdefault(filename, {})
+                for note in notices:
+                    per_field[note['field_name']] = per_field.get(note['field_name'], 0) + 1
+
+    if args.int_to_float and int_to_float_summary:
+        print(f"\n[int_to_float] REAL-typed column(s) whose data has no decimal "
+              f"point/exponent anywhere it was found -- valid Fortran, NOT a mismatch, "
+              f"informational only:")
+        for filename in sorted(int_to_float_summary):
+            per_field = int_to_float_summary[filename]
+            cols = ", ".join(f"{name} ({count}x)" for name, count in
+                              sorted(per_field.items(), key=lambda kv: -kv[1]))
+            print(f"  {filename}: {cols}")
 
     # ------------------------------------------------------------------
     # Missing / unexpected input files.
@@ -1923,8 +2075,14 @@ def main():
                       f"{target_fn} ({label}): {shown}{more}")
             total_issues += len(name_ref_findings)
 
+    notices_hint = ""
+    if total_notices:
+        notices_hint = (f", {total_notices} REAL-looks-like-integer notice(s) (not "
+                         f"counted as issues" +
+                         ("" if args.int_to_float else ", re-run with --int_to_float to list them") +
+                         ")")
     print(f"\n[summary] checked {checked} file(s) against {args.dataset_dir}: "
-          f"{total_issues} type mismatch(es)/missing-file issue(s) found.")
+          f"{total_issues} type mismatch(es)/missing-file issue(s) found{notices_hint}.")
     if total_issues:
         sys.exit(1)
 
