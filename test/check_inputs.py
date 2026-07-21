@@ -131,6 +131,16 @@ OTHER CHECKS (source- and dataset-level, beyond per-field types)
     counted_block's body_row -- that schema is picked as merely the LONGEST read found
     anywhere in its loop span, with no prefix validation against shorter reads, so its true
     minimum isn't reliably known even as a starting point.
+  - Extra-data-line detection: for a file whose schema is prefix_rows only (no repeat_row,
+    no counted_block -- e.g. parameters.bsn: title, header, one data line, and the read
+    routine unconditionally stops there, never mind what else is in the file), any
+    non-blank line still left after every prefix row has been consumed is flagged --
+    unlike the missing-column check above, this isn't drift-prone: every prefix-only file
+    across 5 real datasets surveyed matches its schema's line count exactly, so there's no
+    "some files legitimately have more" case to guard against the way pesticide.pes did.
+    Reported once per file, against the first extra line, with the total extra count in
+    the message (a duplicated data line -- pasted twice by accident -- is the common
+    real-world cause).
   - Record-count validation for "header row declares N, then N body rows follow" repeating
     structures (management.sch's NUMB_OPS, soils.sol's per-soil layer count, ...): the
     header field's ACTUAL VALUE is read from the real data and checked against how many body
@@ -1542,6 +1552,22 @@ def check_dataset_file(schema, dataset_dir, verbose=False):
                 for _ in range(count):
                     _check(body_row, idx + 1, lines[idx], name_offset=len(header_row))
                     idx += 1
+        elif idx < len(lines):
+            # No repeat_row, no counted_block -- this file's read routine consumes
+            # exactly len(schema.prefix_rows) lines (title/header/one-shot data row(s),
+            # e.g. parameters.bsn) and stops for good, unconditionally, so there's no
+            # legitimate reason for more non-blank data to follow. Every prefix-only file
+            # surveyed across 5 real datasets matches its schema's line count exactly, so
+            # this isn't drift-prone the way missing-column detection was (see
+            # dominant_capped_length) -- flag every extra line straight away.
+            extra = len(lines) - idx
+            all_issues.append(dict(
+                file=schema.default_filename, line=idx + 1, field_index=1,
+                expected="end of file", token=f"{extra} extra line(s)",
+                reason=(f"this file's read routine consumes exactly {idx} line(s) "
+                        f"(title/header/data) and stops -- {extra} more non-blank "
+                        f"line(s) follow starting here, never read; a duplicated or "
+                        f"stray extra data line?")))
     return all_issues, all_notices, None
 
 
