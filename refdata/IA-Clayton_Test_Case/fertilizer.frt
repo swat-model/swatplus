@@ -96,38 +96,38 @@ ne_sw_lq    0.13585    0.01491    0.06491    0.00579    0.99000   FtM_Manures   
 ne_sw_sd    0.00494    0.00771    0.02300    0.00300    0.99000   FtM_Manures   Northeast_Swine_Solid
 ne_sw_sl    0.05090    0.02445    0.03487    0.00950    0.99000   FtM_Manures   Northeast_Swine_Slurry
 ne_sw_ss    0.03129    0.01791    0.02606    0.00695    0.99000   FtM_Manures   Northeast_Swine_Semi-solid
-np_bf_lq    0.09604    0.03621    0.11799    0.01619    0.99000   FtM_Manures   Northern Plains_Beef_Liquid
-np_bf_sd    0.00182    0.00446    0.01235    0.00201    0.99000   FtM_Manures   Northern Plains_Beef_Solid
-np_bf_sl    0.05303    0.00935    0.02349    0.00421    0.99000   FtM_Manures   Northern Plains_Beef_Slurry
-np_bf_ss    0.04417    0.01025    0.02225    0.00458    0.99000   FtM_Manures   Northern Plains_Beef_Semi-solid
-np_da_lq    0.03882    0.00559    0.02902    0.00341    0.99000   FtM_Manures   Northern Plains_Dairy_Liquid
-np_da_sd    0.00166    0.00165    0.01199    0.00101    0.99000   FtM_Manures   Northern Plains_Dairy_Solid
-np_da_sl    0.02259    0.00410    0.02281    0.00250    0.99000   FtM_Manures   Northern Plains_Dairy_Slurry
-np_da_ss    0.00660    0.00216    0.01649    0.00132    0.99000   FtM_Manures   Northern Plains_Dairy_Semi-solid
-np_po_lq    0.13256    0.01572    0.06512    0.01140    0.99000   FtM_Manures   Northern Plains_Poultry_Liquid
-np_po_sd    0.00476    0.00996    0.02690    0.00725    0.99000   FtM_Manures   Northern Plains_Poultry_Solid
-np_po_sl    0.07927    0.01441    0.02439    0.01044    0.99000   FtM_Manures   Northern Plains_Poultry_Slurry
-np_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Northern Plains_Poultry_Semi-solid
-np_sw_lq    0.10526    0.01677    0.03594    0.00652    0.99000   FtM_Manures   Northern Plains_Swine_Liquid
-np_sw_sd    0.00334    0.01352    0.01155    0.00524    0.99000   FtM_Manures   Northern Plains_Swine_Solid
-np_sw_sl    0.07097    0.01846    0.02978    0.00717    0.99000   FtM_Manures   Northern Plains_Swine_Slurry
-np_sw_ss    0.05315    0.01324    0.02036    0.00514    0.99000   FtM_Manures   Northern Plains_Swine_Semi-solid
-nw_bf_lq    0.17986    0.10240    0.34412    0.04604    0.99000   FtM_Manures   Pacific Northwest_Beef_Liquid
-nw_bf_sd    0.00099    0.00350    0.01533    0.00157    0.99000   FtM_Manures   Pacific Northwest_Beef_Solid
-nw_bf_sl    0.03517    0.01058    0.02836    0.00476    0.99000   FtM_Manures   Pacific Northwest_Beef_Slurry
-nw_bf_ss    0.00531    0.00742    0.02804    0.00334    0.99000   FtM_Manures   Pacific Northwest_Beef_Semi-solid
-nw_da_lq    0.05088    0.00521    0.03361    0.00320    0.99000   FtM_Manures   Pacific Northwest_Dairy_Liquid
-nw_da_sd    0.00201    0.00406    0.01788    0.00248    0.99000   FtM_Manures   Pacific Northwest_Dairy_Solid
-nw_da_sl    0.01130    0.00404    0.02639    0.00247    0.99000   FtM_Manures   Pacific Northwest_Dairy_Slurry
-nw_da_ss    0.00396    0.00371    0.01945    0.00227    0.99000   FtM_Manures   Pacific Northwest_Dairy_Semi-solid
-nw_po_lq    0.39808    0.10132    0.38729    0.07338    0.99000   FtM_Manures   Pacific Northwest_Poultry_Liquid
-nw_po_sd    0.00796    0.00893    0.03138    0.00649    0.99000   FtM_Manures   Pacific Northwest_Poultry_Solid
-nw_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Pacific Northwest_Poultry_Slurry
-nw_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Pacific Northwest_Poultry_Semi-solid
-nw_sw_lq    0.01354    0.00175    0.00810    0.00068    0.99000   FtM_Manures   Pacific Northwest_Swine_Liquid
-nw_sw_sd    0.00323    0.00845    0.01665    0.00328    0.99000   FtM_Manures   Pacific Northwest_Swine_Solid
-nw_sw_sl    0.06693    0.01642    0.03875    0.00638    0.99000   FtM_Manures   Pacific Northwest_Swine_Slurry
-nw_sw_ss    0.01364    0.01324    0.05911    0.00516    0.99000   FtM_Manures   Pacific Northwest_Swine_Semi-solid
+np_bf_lq    0.09604    0.03621    0.11799    0.01619    0.99000   FtM_Manures   Northern_Plains_Beef_Liquid
+np_bf_sd    0.00182    0.00446    0.01235    0.00201    0.99000   FtM_Manures   Northern_Plains_Beef_Solid
+np_bf_sl    0.05303    0.00935    0.02349    0.00421    0.99000   FtM_Manures   Northern_Plains_Beef_Slurry
+np_bf_ss    0.04417    0.01025    0.02225    0.00458    0.99000   FtM_Manures   Northern_Plains_Beef_Semi-solid
+np_da_lq    0.03882    0.00559    0.02902    0.00341    0.99000   FtM_Manures   Northern_Plains_Dairy_Liquid
+np_da_sd    0.00166    0.00165    0.01199    0.00101    0.99000   FtM_Manures   Northern_Plains_Dairy_Solid
+np_da_sl    0.02259    0.00410    0.02281    0.00250    0.99000   FtM_Manures   Northern_Plains_Dairy_Slurry
+np_da_ss    0.00660    0.00216    0.01649    0.00132    0.99000   FtM_Manures   Northern_Plains_Dairy_Semi-solid
+np_po_lq    0.13256    0.01572    0.06512    0.01140    0.99000   FtM_Manures   Northern_Plains_Poultry_Liquid
+np_po_sd    0.00476    0.00996    0.02690    0.00725    0.99000   FtM_Manures   Northern_Plains_Poultry_Solid
+np_po_sl    0.07927    0.01441    0.02439    0.01044    0.99000   FtM_Manures   Northern_Plains_Poultry_Slurry
+np_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Northern_Plains_Poultry_Semi-solid
+np_sw_lq    0.10526    0.01677    0.03594    0.00652    0.99000   FtM_Manures   Northern_Plains_Swine_Liquid
+np_sw_sd    0.00334    0.01352    0.01155    0.00524    0.99000   FtM_Manures   Northern_Plains_Swine_Solid
+np_sw_sl    0.07097    0.01846    0.02978    0.00717    0.99000   FtM_Manures   Northern_Plains_Swine_Slurry
+np_sw_ss    0.05315    0.01324    0.02036    0.00514    0.99000   FtM_Manures   Northern_Plains_Swine_Semi-solid
+nw_bf_lq    0.17986    0.10240    0.34412    0.04604    0.99000   FtM_Manures   Pacific_Northwest_Beef_Liquid
+nw_bf_sd    0.00099    0.00350    0.01533    0.00157    0.99000   FtM_Manures   Pacific_Northwest_Beef_Solid
+nw_bf_sl    0.03517    0.01058    0.02836    0.00476    0.99000   FtM_Manures   Pacific_Northwest_Beef_Slurry
+nw_bf_ss    0.00531    0.00742    0.02804    0.00334    0.99000   FtM_Manures   Pacific_Northwest_Beef_Semi-solid
+nw_da_lq    0.05088    0.00521    0.03361    0.00320    0.99000   FtM_Manures   Pacific_Northwest_Dairy_Liquid
+nw_da_sd    0.00201    0.00406    0.01788    0.00248    0.99000   FtM_Manures   Pacific_Northwest_Dairy_Solid
+nw_da_sl    0.01130    0.00404    0.02639    0.00247    0.99000   FtM_Manures   Pacific_Northwest_Dairy_Slurry
+nw_da_ss    0.00396    0.00371    0.01945    0.00227    0.99000   FtM_Manures   Pacific_Northwest_Dairy_Semi-solid
+nw_po_lq    0.39808    0.10132    0.38729    0.07338    0.99000   FtM_Manures   Pacific_Northwest_Poultry_Liquid
+nw_po_sd    0.00796    0.00893    0.03138    0.00649    0.99000   FtM_Manures   Pacific_Northwest_Poultry_Solid
+nw_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Pacific_Northwest_Poultry_Slurry
+nw_po_ss    0.00935    0.01360    0.02891    0.00985    0.99000   FtM_Manures   Pacific_Northwest_Poultry_Semi-solid
+nw_sw_lq    0.01354    0.00175    0.00810    0.00068    0.99000   FtM_Manures   Pacific_Northwest_Swine_Liquid
+nw_sw_sd    0.00323    0.00845    0.01665    0.00328    0.99000   FtM_Manures   Pacific_Northwest_Swine_Solid
+nw_sw_sl    0.06693    0.01642    0.03875    0.00638    0.99000   FtM_Manures   Pacific_Northwest_Swine_Slurry
+nw_sw_ss    0.01364    0.01324    0.05911    0.00516    0.99000   FtM_Manures   Pacific_Northwest_Swine_Semi-solid
 se_bf_lq    0.00261    0.00128    0.00241    0.00057    0.99000   FtM_Manures   Southeast_Beef_Liquid
 se_bf_sd    0.00082    0.00387    0.01830    0.00174    0.99000   FtM_Manures   Southeast_Beef_Solid
 se_bf_sl    0.00562    0.00541    0.00520    0.00244    0.99000   FtM_Manures   Southeast_Beef_Slurry
@@ -144,22 +144,22 @@ se_sw_lq    0.04586    0.00619    0.02818    0.00240    0.99000   FtM_Manures   
 se_sw_sd    0.00094    0.00498    0.00849    0.00194    0.99000   FtM_Manures   Southeast_Swine_Solid
 se_sw_sl    0.02031    0.01305    0.01278    0.00508    0.99000   FtM_Manures   Southeast_Swine_Slurry
 se_sw_ss    0.00240    0.03267    0.01833    0.01271    0.99000   FtM_Manures   Southeast_Swine_Semi-solid
-sp_bf_lq    0.17146    2.00240    6.31894    0.90168    0.99000   FtM_Manures   Southern Plains_Beef_Liquid
-sp_bf_sd    0.00163    0.00404    0.01253    0.00181    0.99000   FtM_Manures   Southern Plains_Beef_Solid
-sp_bf_sl    0.06063    0.01011    0.02896    0.00454    0.99000   FtM_Manures   Southern Plains_Beef_Slurry
-sp_bf_ss    0.00135    0.00277    0.01366    0.00124    0.99000   FtM_Manures   Southern Plains_Beef_Semi-solid
-sp_da_lq    0.41966    0.54436    3.14149    0.33333    0.99000   FtM_Manures   Southern Plains_Dairy_Liquid
-sp_da_sd    0.00147    0.00242    0.01077    0.00148    0.99000   FtM_Manures   Southern Plains_Dairy_Solid
-sp_da_sl    0.07297    0.01177    0.03069    0.00722    0.99000   FtM_Manures   Southern Plains_Dairy_Slurry
-sp_da_ss    0.00190    0.00150    0.01392    0.00092    0.99000   FtM_Manures   Southern Plains_Dairy_Semi-solid
-sp_po_lq    2.87770    6.23501   24.94005    4.52038    0.99000   FtM_Manures   Southern Plains_Poultry_Liquid
-sp_po_sd    0.00855    0.01110    0.03055    0.00808    0.99000   FtM_Manures   Southern Plains_Poultry_Solid
-sp_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Southern Plains_Poultry_Slurry
-sp_po_ss    0.01706    0.01725    0.06059    0.01249    0.99000   FtM_Manures   Southern Plains_Poultry_Semi-solid
-sp_sw_lq    0.55635    0.07818    0.33094    0.03046    0.99000   FtM_Manures   Southern Plains_Swine_Liquid
-sp_sw_sd    0.00465    0.02546    0.02441    0.00989    0.99000   FtM_Manures   Southern Plains_Swine_Solid
-sp_sw_sl    0.01206    0.01566    0.01925    0.00609    0.99000   FtM_Manures   Southern Plains_Swine_Slurry
-sp_sw_ss    0.00199    0.08015    0.01046    0.03115    0.99000   FtM_Manures   Southern Plains_Swine_Semi-solid
+sp_bf_lq    0.17146    2.00240    6.31894    0.90168    0.99000   FtM_Manures   Southern_Plains_Beef_Liquid
+sp_bf_sd    0.00163    0.00404    0.01253    0.00181    0.99000   FtM_Manures   Southern_Plains_Beef_Solid
+sp_bf_sl    0.06063    0.01011    0.02896    0.00454    0.99000   FtM_Manures   Southern_Plains_Beef_Slurry
+sp_bf_ss    0.00135    0.00277    0.01366    0.00124    0.99000   FtM_Manures   Southern_Plains_Beef_Semi-solid
+sp_da_lq    0.41966    0.54436    3.14149    0.33333    0.99000   FtM_Manures   Southern_Plains_Dairy_Liquid
+sp_da_sd    0.00147    0.00242    0.01077    0.00148    0.99000   FtM_Manures   Southern_Plains_Dairy_Solid
+sp_da_sl    0.07297    0.01177    0.03069    0.00722    0.99000   FtM_Manures   Southern_Plains_Dairy_Slurry
+sp_da_ss    0.00190    0.00150    0.01392    0.00092    0.99000   FtM_Manures   Southern_Plains_Dairy_Semi-solid
+sp_po_lq    2.87770    6.23501   24.94005    4.52038    0.99000   FtM_Manures   Southern_Plains_Poultry_Liquid
+sp_po_sd    0.00855    0.01110    0.03055    0.00808    0.99000   FtM_Manures   Southern_Plains_Poultry_Solid
+sp_po_sl    0.04549    0.01453    0.03609    0.01053    0.99000   FtM_Manures   Southern_Plains_Poultry_Slurry
+sp_po_ss    0.01706    0.01725    0.06059    0.01249    0.99000   FtM_Manures   Southern_Plains_Poultry_Semi-solid
+sp_sw_lq    0.55635    0.07818    0.33094    0.03046    0.99000   FtM_Manures   Southern_Plains_Swine_Liquid
+sp_sw_sd    0.00465    0.02546    0.02441    0.00989    0.99000   FtM_Manures   Southern_Plains_Swine_Solid
+sp_sw_sl    0.01206    0.01566    0.01925    0.00609    0.99000   FtM_Manures   Southern_Plains_Swine_Slurry
+sp_sw_ss    0.00199    0.08015    0.01046    0.03115    0.99000   FtM_Manures   Southern_Plains_Swine_Semi-solid
 sw_bf_lq    0.17626    0.15108    0.38369    0.06763    0.99000   FtM_Manures   Southwest_Beef_Liquid
 sw_bf_sd    0.00165    0.00361    0.01661    0.00163    0.99000   FtM_Manures   Southwest_Beef_Solid
 sw_bf_sl    0.03517    0.01058    0.02836    0.00476    0.99000   FtM_Manures   Southwest_Beef_Slurry
