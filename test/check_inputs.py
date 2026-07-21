@@ -73,7 +73,12 @@ ASSUMPTIONS / SCOPE (read this before trusting a clean report)
     the group's field count.
   - Only the file named as the argument to the `open` statement guarding the read (resolved
     via that variable's default in `input_file_module.f90`) is checked; if a dataset
-    overrides a filename to something nonstandard, point --file at it directly.
+    overrides a filename to something nonstandard, point --file at it directly. One
+    exception: `hyd_read_connect.f90` (every `.con` connect file -- hru.con, channel.con,
+    chandeg.con, aqu.con, res.con, rec.con, exco.con, dr.con, outlet.con, gwflow.con, ...)
+    opens a dummy argument, not a resolvable expression, so its schema is instead cloned
+    once per real filename discovered from its call sites in hyd_connect.f90 (same
+    call-site scan the HRU/channel object-count check already used).
   - This is a static analyzer over a real but idiosyncratic codebase, not a general Fortran
     front end. It is deliberately conservative: subroutines/derived types it can't fully
     resolve are skipped and reported under --verbose rather than guessed at.
@@ -203,7 +208,7 @@ import itertools
 import os
 import re
 import sys
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass, field as dc_field, replace as dc_replace
 
 SRC_GLOB = "src/*.f90"
 
@@ -1517,6 +1522,32 @@ def discover_object_types(files, type_defaults, var_to_type):
     return out
 
 
+def materialize_hyd_connect_schemas(schemas, src_files, type_defaults, var_to_type):
+    """hyd_read_connect.f90 is one shared subroutine that every spatial-object-type's
+       connect file (hru.con, channel.con, chandeg.con, aqu.con, res.con, rec.con,
+       exco.con, dr.con, outlet.con, gwflow.con, ...) is read through -- but the file it
+       opens is a dummy argument (`con_file`), not a derived-type field resolvable to a
+       default filename from inside the subroutine itself, so the normal per-subroutine
+       schema derivation gives up on it entirely (`unknown default filename for
+       'con_file'`) and every one of these files goes completely unchecked, silently.
+       The real filename only exists at each call site in hyd_connect.f90 (e.g.
+       `call hyd_read_connect(in_con%hru_con, "hru", ...)`) -- already parsed by
+       discover_object_types() for the object-count check -- so reuse that mapping here to
+       clone hyd_read_connect's already-correctly-derived row schema (prefix_rows /
+       repeat_row / counted_block are identical for every object type, since they all run
+       through the exact same read statements) once per real target file."""
+    base = next((s for s in schemas if s.subname == 'hyd_read_connect'
+                 and (s.prefix_rows or s.repeat_row or s.counted_block)), None)
+    if base is None:
+        return []
+    obj_types = discover_object_types(src_files, type_defaults, var_to_type)
+    return [
+        dc_replace(base, file_expr=f'hyd_read_connect(..., "{label}", ...)',
+                   default_filename=filename, unresolved_reason=None)
+        for label, filename in obj_types.items()
+    ]
+
+
 def read_column_values(path, col_index, skip_header_lines=2):
     """Ints found at `col_index` (0-based) across every data row of `path`, after
        skipping the title + header lines every one of these files starts with.
@@ -1889,6 +1920,8 @@ def main():
     count_registry = scan_count_registry(src_files, types, module_vars)
     schemas, unclosed_reuse = scan_subroutines(
         src_files, types, module_vars, type_defaults, var_to_type, count_registry)
+    schemas = schemas + materialize_hyd_connect_schemas(
+        schemas, src_files, type_defaults, var_to_type)
 
     resolved = [s for s in schemas if s.default_filename and not s.unresolved_reason
                 and (s.prefix_rows or s.repeat_row or s.counted_block)]
