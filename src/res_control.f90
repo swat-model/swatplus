@@ -35,6 +35,11 @@
       real :: storage_before_seep_m3
       real :: reservoir_loss_m3
       real :: balance_error_m3
+      real :: current_area_ha
+      real :: current_water_depth_m
+      real :: principal_water_depth_m
+      real :: water_surface_depth_mm
+      real :: reservoir_bottom_depth_mm
       real, dimension(:), allocatable :: offered_by_receiver_m3
       real, dimension(:), allocatable :: accepted_by_receiver_m3
       integer, save :: seep_route_unit = -1
@@ -114,7 +119,8 @@
             'jday mon day yr res hru contact_m offered_m3 ' // &
             'accepted_m3 potential_m3 available_m3 ' // &
             'accepted_total_m3 storage_before_m3 storage_after_m3 ' // &
-            'reservoir_loss_m3 balance_error_m3'
+              'reservoir_loss_m3 balance_error_m3 ' // &
+              'water_surface_depth_mm reservoir_bottom_depth_mm'
 
           seep_route_initialized = .true.
         end if
@@ -129,6 +135,43 @@
         potential_seep_m3 = max(0., res_wat_d(jres)%seep)
         available_seep_m3 = min(potential_seep_m3, &
                                 max(0., res(jres)%flo))
+
+          !! Derive the effective reservoir water depth and
+          !! wetted interval relative to the adjacent HRU surface.
+          !! At principal-spillway storage, the water surface is
+          !! assumed to be 300 mm below the HRU soil surface.
+
+          principal_water_depth_m = 0.
+
+          if (res_ob(jres)%pvol > 0. .and. &
+              res_ob(jres)%psa > 1.e-12) then
+            principal_water_depth_m = res_ob(jres)%pvol / &
+              (res_ob(jres)%psa * 10000.)
+          end if
+
+          reservoir_bottom_depth_mm = 300. + &
+            1000. * max(0., principal_water_depth_m)
+
+          current_area_ha = 0.
+
+          if (storage_before_seep_m3 > 0. .and. &
+              res_ob(jres)%br1 > 0.) then
+            current_area_ha = res_ob(jres)%br1 * &
+              storage_before_seep_m3 ** res_ob(jres)%br2
+          end if
+
+          current_water_depth_m = 0.
+
+          if (current_area_ha > 1.e-12) then
+            current_water_depth_m = storage_before_seep_m3 / &
+              (current_area_ha * 10000.)
+          end if
+
+          water_surface_depth_mm = reservoir_bottom_depth_mm - &
+            1000. * max(0., current_water_depth_m)
+
+          water_surface_depth_mm = max(0., &
+            min(reservoir_bottom_depth_mm, water_surface_depth_mm))
 
         total_contact_length_m = 0.
         do ireceiver = 1, res_ob(jres)%n_seep_hru
@@ -157,7 +200,8 @@
             offered_by_receiver_m3(ireceiver) = offered_m3
 
             accepted_m3 = store_reservoir_seepage_in_hru( &
-              ihru, offered_m3)
+                ihru, offered_m3, water_surface_depth_mm, &
+                reservoir_bottom_depth_mm)
             accepted_by_receiver_m3(ireceiver) = accepted_m3
 
             if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
@@ -188,7 +232,7 @@
           ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
 
           write(seep_route_unit, &
-            '(6(i0,1x),10(es16.8,1x))') &
+            '(6(i0,1x),12(es16.8,1x))') &
             time%day, time%mo, time%day_mo, time%yrc, &
             jres, ihru, &
             res_ob(jres)%seep_hru(ireceiver)%contact_length_m, &
@@ -200,7 +244,9 @@
             storage_before_seep_m3, &
             res(jres)%flo, &
             reservoir_loss_m3, &
-            balance_error_m3
+              balance_error_m3, &
+              water_surface_depth_mm, &
+              reservoir_bottom_depth_mm
 
         end do
 
