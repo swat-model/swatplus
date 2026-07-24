@@ -5,7 +5,104 @@
 
       implicit none
 
+      !! Soil-moisture-dependent Horton test parameters.
+      !!
+      !! gamma = ratio of dry-soil infiltration capacity to the
+      !!         equilibrium capacity.
+      !! kprime = shape parameter controlling the moisture response.
+      real, parameter :: horton_gamma = 3.0
+      real, parameter :: horton_kprime = 4.0
+
       contains
+
+      real function contacted_soil_saturation(ihru, &
+        water_surface_depth_mm, reservoir_bottom_depth_mm) &
+        result(effective_saturation)
+
+      integer, intent(in) :: ihru
+      real, intent(in) :: water_surface_depth_mm
+      real, intent(in) :: reservoir_bottom_depth_mm
+
+      integer :: ly
+      real :: layer_top_mm
+      real :: layer_bottom_mm
+      real :: contacted_thickness_mm
+      real :: contacted_fraction
+      real :: contacted_storage_mm
+      real :: contacted_upper_limit_mm
+
+      effective_saturation = 1.
+
+      if (.not. allocated(soil)) return
+      if (.not. allocated(hru)) return
+      if (ihru < 1 .or. ihru > size(soil)) return
+      if (ihru > size(hru)) return
+      if (.not. allocated(soil(ihru)%phys)) return
+
+      if (reservoir_bottom_depth_mm <= water_surface_depth_mm) return
+
+      contacted_storage_mm = 0.
+      contacted_upper_limit_mm = 0.
+
+      do ly = 1, soil(ihru)%nly
+
+        if (soil(ihru)%phys(ly)%thick <= 0.) cycle
+
+        layer_bottom_mm = soil(ihru)%phys(ly)%d
+        layer_top_mm = layer_bottom_mm - soil(ihru)%phys(ly)%thick
+
+        contacted_thickness_mm = max(0., &
+          min(layer_bottom_mm, reservoir_bottom_depth_mm) - &
+          max(layer_top_mm, water_surface_depth_mm))
+
+        if (contacted_thickness_mm <= 0.) cycle
+
+        contacted_fraction = contacted_thickness_mm / &
+                             soil(ihru)%phys(ly)%thick
+
+        contacted_fraction = max(0., min(1., contacted_fraction))
+
+        contacted_storage_mm = contacted_storage_mm + &
+          max(0., soil(ihru)%phys(ly)%st) * contacted_fraction
+
+        contacted_upper_limit_mm = contacted_upper_limit_mm + &
+          max(0., soil(ihru)%phys(ly)%ul) * contacted_fraction
+
+      end do
+
+      if (contacted_upper_limit_mm > 1.e-12) then
+        effective_saturation = contacted_storage_mm / &
+                               contacted_upper_limit_mm
+      end if
+
+      effective_saturation = max(0., min(1., effective_saturation))
+
+      end function contacted_soil_saturation
+
+
+      real function soil_moisture_seepage_factor(effective_saturation) &
+        result(seepage_factor)
+
+      real, intent(in) :: effective_saturation
+
+      real :: se
+      real :: denominator
+
+      se = max(0., min(1., effective_saturation))
+      denominator = 1. - exp(-horton_kprime)
+
+      if (abs(denominator) <= 1.e-12) then
+        seepage_factor = 1.
+      else
+        seepage_factor = 1. + (horton_gamma - 1.) * &
+          (exp(-horton_kprime * se) - exp(-horton_kprime)) / &
+          denominator
+      end if
+
+      seepage_factor = max(1., seepage_factor)
+
+      end function soil_moisture_seepage_factor
+
 
       real function store_reservoir_seepage_in_hru(ihru, offered_m3, &
         water_surface_depth_mm, reservoir_bottom_depth_mm) &

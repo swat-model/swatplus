@@ -8,7 +8,10 @@
       use hydrograph_module
       use conditional_module
       use water_body_module
-      use reservoir_seepage_module, only : store_reservoir_seepage_in_hru
+      use reservoir_seepage_module, only : &
+        store_reservoir_seepage_in_hru, &
+        contacted_soil_saturation, &
+        soil_moisture_seepage_factor
       
       implicit none
 
@@ -27,6 +30,9 @@
       integer, save :: seep_diag_count = 0
       real :: potential_seep_m3
       real :: available_seep_m3
+      real :: base_potential_seep_m3
+      real :: raw_potential_total_m3
+      real :: offer_scale
       real :: remaining_offer_m3
       real :: offered_m3
       real :: accepted_m3
@@ -42,6 +48,9 @@
       real :: reservoir_bottom_depth_mm
       real, dimension(:), allocatable :: offered_by_receiver_m3
       real, dimension(:), allocatable :: accepted_by_receiver_m3
+      real, dimension(:), allocatable :: raw_offer_by_receiver_m3
+      real, dimension(:), allocatable :: saturation_by_receiver
+      real, dimension(:), allocatable :: seep_factor_by_receiver
       integer, save :: seep_route_unit = -1
       logical, save :: seep_route_initialized = .false.
 
@@ -120,21 +129,32 @@
             'accepted_m3 potential_m3 available_m3 ' // &
             'accepted_total_m3 storage_before_m3 storage_after_m3 ' // &
               'reservoir_loss_m3 balance_error_m3 ' // &
-              'water_surface_depth_mm reservoir_bottom_depth_mm'
+              'water_surface_depth_mm reservoir_bottom_depth_mm ' // &
+              'effective_saturation seepage_factor'
 
           seep_route_initialized = .true.
         end if
 
         allocate(offered_by_receiver_m3(res_ob(jres)%n_seep_hru))
         allocate(accepted_by_receiver_m3(res_ob(jres)%n_seep_hru))
+        allocate(raw_offer_by_receiver_m3(res_ob(jres)%n_seep_hru))
+        allocate(saturation_by_receiver(res_ob(jres)%n_seep_hru))
+        allocate(seep_factor_by_receiver(res_ob(jres)%n_seep_hru))
 
         offered_by_receiver_m3 = 0.
         accepted_by_receiver_m3 = 0.
+        raw_offer_by_receiver_m3 = 0.
+        saturation_by_receiver = 1.
+        seep_factor_by_receiver = 1.
 
-        storage_before_seep_m3 = res(jres)%flo
-        potential_seep_m3 = max(0., res_wat_d(jres)%seep)
-        available_seep_m3 = min(potential_seep_m3, &
-                                max(0., res(jres)%flo))
+          storage_before_seep_m3 = res(jres)%flo
+
+          !! Original constant-Ks seepage potential, used here as
+          !! the equilibrium reference before moisture adjustment.
+          base_potential_seep_m3 = max(0., res_wat_d(jres)%seep)
+
+          potential_seep_m3 = 0.
+          available_seep_m3 = 0.
 
           !! Derive the effective reservoir water depth and
           !! wetted interval relative to the adjacent HRU surface.
@@ -179,45 +199,97 @@
             res_ob(jres)%seep_hru(ireceiver)%contact_length_m
         end do
 
-        accepted_total_m3 = 0.
-        remaining_offer_m3 = available_seep_m3
+          accepted_total_m3 = 0.
+          raw_potential_total_m3 = 0.
+          offer_scale = 0.
 
-        if (total_contact_length_m > 0.) then
-          do ireceiver = 1, res_ob(jres)%n_seep_hru
+          if (total_contact_length_m > 0.) then
 
-            ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
+            !! First pass: calculate the moisture-dependent
+            !! seepage potential for each receiving HRU.
+            do ireceiver = 1, res_ob(jres)%n_seep_hru
 
-            if (ireceiver == res_ob(jres)%n_seep_hru) then
-              offered_m3 = remaining_offer_m3
-            else
-              offered_m3 = available_seep_m3 * &
+              ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
+
+              saturation_by_receiver(ireceiver) = &
+                contacted_soil_saturation(ihru, &
+                  water_surface_depth_mm, &
+                  reservoir_bottom_depth_mm)
+
+              seep_factor_by_receiver(ireceiver) = &
+                soil_moisture_seepage_factor( &
+                  saturation_by_receiver(ireceiver))
+
+              raw_offer_by_receiver_m3(ireceiver) = &
+                base_potential_seep_m3 * &
                 res_ob(jres)%seep_hru(ireceiver)%contact_length_m / &
-                total_contact_length_m
-              offered_m3 = min(offered_m3, remaining_offer_m3)
+                total_contact_length_m * &
+                seep_factor_by_receiver(ireceiver)
+
+              raw_offer_by_receiver_m3(ireceiver) = max(0., &
+                raw_offer_by_receiver_m3(ireceiver))
+
+              raw_potential_total_m3 = raw_potential_total_m3 + &
+                raw_offer_by_receiver_m3(ireceiver)
+
+            end do
+
+            potential_seep_m3 = raw_potential_total_m3
+
+            available_seep_m3 = min(potential_seep_m3, &
+                                    max(0., res(jres)%flo))
+
+            if (potential_seep_m3 > 1.e-12) then
+              offer_scale = available_seep_m3 / potential_seep_m3
             end if
 
-            offered_m3 = max(0., offered_m3)
-            offered_by_receiver_m3(ireceiver) = offered_m3
+            remaining_offer_m3 = available_seep_m3
 
-            accepted_m3 = store_reservoir_seepage_in_hru( &
-                ihru, offered_m3, water_surface_depth_mm, &
-                reservoir_bottom_depth_mm)
-            accepted_by_receiver_m3(ireceiver) = accepted_m3
+            !! Second pass: scale the offers to available reservoir
+            !! storage and add accepted water to the contacted layers.
+            do ireceiver = 1, res_ob(jres)%n_seep_hru
 
-            if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
-              write(*,'(a,i0,a,i0,a,es16.8,a,es16.8)') &
-                "SEEP_HRU res=", jres, &
-                " hru=", ihru, &
-                " offered_m3=", offered_m3, &
-                " accepted_m3=", accepted_m3
-            end if
+              ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
 
-            accepted_total_m3 = accepted_total_m3 + accepted_m3
-            remaining_offer_m3 = max(0., &
-              remaining_offer_m3 - offered_m3)
+              if (ireceiver == res_ob(jres)%n_seep_hru) then
+                offered_m3 = remaining_offer_m3
+              else
+                offered_m3 = raw_offer_by_receiver_m3(ireceiver) * &
+                             offer_scale
+                offered_m3 = min(offered_m3, remaining_offer_m3)
+              end if
 
-          end do
-        end if
+              offered_m3 = max(0., offered_m3)
+              offered_by_receiver_m3(ireceiver) = offered_m3
+
+              accepted_m3 = store_reservoir_seepage_in_hru( &
+                  ihru, offered_m3, water_surface_depth_mm, &
+                  reservoir_bottom_depth_mm)
+
+              accepted_by_receiver_m3(ireceiver) = accepted_m3
+
+              if (available_seep_m3 > 1.0 .and. &
+                  seep_diag_count < 20) then
+
+                write(*, &
+                  '(a,i0,a,i0,a,es16.8,a,es16.8,a,f8.4,a,f8.4)') &
+                  "SEEP_HRU res=", jres, &
+                  " hru=", ihru, &
+                  " offered_m3=", offered_m3, &
+                  " accepted_m3=", accepted_m3, &
+                  " saturation=", saturation_by_receiver(ireceiver), &
+                  " factor=", seep_factor_by_receiver(ireceiver)
+
+              end if
+
+              accepted_total_m3 = accepted_total_m3 + accepted_m3
+
+              remaining_offer_m3 = max(0., &
+                remaining_offer_m3 - offered_m3)
+
+            end do
+
+          end if
 
         !! Remove and report only the volume stored in HRU soils.
         res_wat_d(jres)%seep = accepted_total_m3
@@ -232,7 +304,7 @@
           ihru = res_ob(jres)%seep_hru(ireceiver)%hru_id
 
           write(seep_route_unit, &
-            '(6(i0,1x),12(es16.8,1x))') &
+            '(6(i0,1x),14(es16.8,1x))') &
             time%day, time%mo, time%day_mo, time%yrc, &
             jres, ihru, &
             res_ob(jres)%seep_hru(ireceiver)%contact_length_m, &
@@ -246,7 +318,9 @@
             reservoir_loss_m3, &
               balance_error_m3, &
               water_surface_depth_mm, &
-              reservoir_bottom_depth_mm
+              reservoir_bottom_depth_mm, &
+              saturation_by_receiver(ireceiver), &
+              seep_factor_by_receiver(ireceiver)
 
         end do
 
@@ -254,6 +328,9 @@
 
         deallocate(offered_by_receiver_m3)
         deallocate(accepted_by_receiver_m3)
+        deallocate(raw_offer_by_receiver_m3)
+        deallocate(saturation_by_receiver)
+        deallocate(seep_factor_by_receiver)
 
         if (available_seep_m3 > 1.0 .and. seep_diag_count < 20) then
           write(*,'(a,i0,a,es16.8,a,es16.8,a,es16.8,a,es16.8,a,es16.8)') &
