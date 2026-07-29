@@ -26,7 +26,9 @@
       real :: conc_p = 0.        !              |
       real :: conc_soln = 0.     !              |
       real :: conc_solp = 0.     !              |
-      
+      real :: flo_tot = 0.       !              |wbody%flo + ht2%flo, guarded against ~0
+      real :: rto = 0.           !              |ht2%flo / flo_tot, outflow fraction
+
 
       !! if reservoir volume less than 1 m^3, set all nutrient levels to
       !! zero and perform no nutrient calculations
@@ -96,14 +98,25 @@
       wbody%nh3 = max (wbody%nh3, 0.0)
       wbody%no2 = max (wbody%no2, 0.0)
 
-      !! calculate amount of nutrients leaving reservoir
-      ht2%no3 = wbody%no3 * ht2%flo / (wbody%flo + ht2%flo)
-      ht2%orgn = wbody%orgn * ht2%flo / (wbody%flo + ht2%flo)
-      ht2%sedp = wbody%sedp * ht2%flo / (wbody%flo + ht2%flo)
-      ht2%solp = wbody%solp * ht2%flo / (wbody%flo + ht2%flo)
-      ht2%chla = wbody%chla * ht2%flo / (wbody%flo + ht2%flo)
-      ht2%nh3 = wbody%nh3 * ht2%flo / (wbody%flo + ht2%flo)
-      ht2%no2 = wbody%no2 * ht2%flo / (wbody%flo + ht2%flo)
+      !! calculate amount of nutrients leaving reservoir. Compute the outflow FRACTION
+      !! once (bounded ~[0,1]) rather than multiplying wbody%X by raw ht2%flo then dividing:
+      !! guarding each operand at 1.e-30 isn't enough when BOTH clear it but their product
+      !! still underflows (e.g. 1e-29*1e-29). Gate ht2%flo at the 1.e-6 "meaningfully
+      !! nonzero flow" threshold so rto can't land in the denormal range.
+      flo_tot = wbody%flo + ht2%flo
+      if (flo_tot > 1.e-6 .and. abs(ht2%flo) >= 1.e-6) then
+        rto = ht2%flo / flo_tot
+        ht2%no3 = 0.;  if (abs(wbody%no3)  >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%no3  = wbody%no3  * rto
+        ht2%orgn = 0.; if (abs(wbody%orgn) >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%orgn = wbody%orgn * rto
+        ht2%sedp = 0.; if (abs(wbody%sedp) >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%sedp = wbody%sedp * rto
+        ht2%solp = 0.; if (abs(wbody%solp) >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%solp = wbody%solp * rto
+        ht2%chla = 0.; if (abs(wbody%chla) >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%chla = wbody%chla * rto
+        ht2%nh3 = 0.;  if (abs(wbody%nh3)  >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%nh3  = wbody%nh3  * rto
+        ht2%no2 = 0.;  if (abs(wbody%no2)  >= 1.e-30 .and. abs(rto) >= 1.e-30) ht2%no2  = wbody%no2  * rto
+      else
+        ht2%no3 = 0.; ht2%orgn = 0.; ht2%sedp = 0.; ht2%solp = 0.
+        ht2%chla = 0.; ht2%nh3 = 0.; ht2%no2 = 0.
+      end if
       
       !! remove nutrients leaving reservoir
       wbody%no3 = max(0.,wbody%no3 - ht2%no3) !No less than zero, Jaehak 2024

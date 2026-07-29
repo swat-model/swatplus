@@ -144,6 +144,10 @@
           alpha_up = Exp(-res_ob(jres)%lag_up)
           alpha_down = Exp(-res_ob(jres)%lag_down)
           !! lag outflow when flows are receding
+          !! flush denormal outflow AND carried prev_flo to 0 before the lag multiplies
+          !! (both x*alpha terms underflow the FPE trap when a value has decayed to ~1e-40)
+          if (abs(ht2%flo) < 1.e-15) ht2%flo = 0.
+          if (abs(res_ob(jres)%prev_flo) < 1.e-15) res_ob(jres)%prev_flo = 0.
           if (res_ob(jres)%prev_flo < ht2%flo) then
             ht2%flo = ht2%flo * alpha_up + res_ob(jres)%prev_flo * (1. - alpha_up)
           else
