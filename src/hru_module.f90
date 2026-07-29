@@ -478,6 +478,7 @@
       !! burn
       integer, dimension (:), allocatable :: grz_days
       integer, dimension (:), allocatable :: igrz
+      integer, dimension (:), allocatable :: grz_dbid   !! per-HRU grazeop_db index for continuous grazing
       integer, dimension (:), allocatable :: ndeat
 
       real, dimension (:), allocatable :: gwsoilq        !rtb gwflow

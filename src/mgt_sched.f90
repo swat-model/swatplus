@@ -5,7 +5,7 @@
       use tillage_data_module
       use basin_module
       use hydrograph_module
-      use hru_module, only : hru, ihru, cn2, phubase, ndeat, igrz, grz_days,    &
+      use hru_module, only : hru, ihru, cn2, phubase, ndeat, igrz, grz_days, grz_dbid,    &
         yr_skip, sol_sumno3, sol_sumsolp, fertnh3, fertno3, fertorgn,  &
         fertorgp, fertsolp, ipl, sweepeff, yr_skip
       use soil_module
@@ -434,7 +434,7 @@
             igrz(j) = 1
             ipl = Max(1, mgt%op2)
             grz_days(j) = Int(mgt%op3)
-            graze = grazeop_db(mgt%op1)
+            grz_dbid(j) = mgt%op1     !! remember this HRU's grazeop_db index for the daily graze loop
 
             if (pco%mgtout == "y") then
               write (2612, *) j, time%yrc, time%mo, time%day_mo, mgt%op_char, "    GRAZE ",     &

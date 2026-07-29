@@ -88,6 +88,7 @@
       allocate (doxq(mhru), source = 0.)
       allocate (filterw(mhru), source = 0.)
       allocate (igrz(mhru), source = 0)
+      allocate (grz_dbid(mhru), source = 0)
       allocate (yr_skip(mhru), source = 0)
       allocate (isweep(mhru), source = 0)
       allocate (phusw(mhru), source = 0.)

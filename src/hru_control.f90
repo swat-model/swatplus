@@ -6,7 +6,7 @@
 
       use hru_module, only : hru, ihru, tillage_switch,                                           &
          tillage_days, ndeat, qdr, phubase, sedyld, surfq, grz_days,                              &
-         yr_skip, latq, sepbtm, igrz, iseptic, i_sep, filterw, sed_con, soln_con, solp_con,       & 
+         yr_skip, latq, sepbtm, igrz, grz_dbid, iseptic, i_sep, filterw, sed_con, soln_con, solp_con,       &
          orgn_con, orgp_con, cnday, percn, tileno3, sedorgn, sedorgp, surqno3, latno3,            &
          surqsolp, sedminpa, sedminps, fertn, fertp, fixn, grazn, grazp, ipl, qp_cms, qtile,      &
          snofall, snomlt, usle, canev, ep_day, es_day, etday, inflpcp, isep, iwgen, ls_overq,     &
@@ -366,6 +366,7 @@
         if (igrz(j) == 1) then
           ndeat(j) = ndeat(j) + 1
           !! if total above ground biomass is available - graze
+          graze = grazeop_db(grz_dbid(j))   !! load THIS hru's grazing params each grazing day
           call pl_graze
           !! check to set if grazing period is over
           if (ndeat(j) == grz_days(j)) then
