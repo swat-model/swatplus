@@ -126,7 +126,8 @@
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
         fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
         exp_co = 0.0001 * fp_m2 / florate_ob
-        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
+        !! exp_w guards against underflow when florate_ob is tiny enough that exp_co blows up
+        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp_w(-exp_co))
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
 

@@ -137,7 +137,9 @@
         conc_no3 = 0.
       endif
       !! kg = (kg/ha / mm) * mm * ha
-      ob(icmd)%hd(1)%no3 = (conc_no3 * aqu_d(iaq)%flo) * ob(icmd)%area_ha
+      !! Part 12: conc_no3 can be a tiny (but normal) ratio whose product with flo underflows
+      ob(icmd)%hd(1)%no3 = 0.
+      if (abs(conc_no3) >= 1.e-15) ob(icmd)%hd(1)%no3 = (conc_no3 * aqu_d(iaq)%flo) * ob(icmd)%area_ha
       ob(icmd)%hd(1)%no3 = amin1(ob(icmd)%hd(1)%no3, (aqu_d(iaq)%no3_st * ob(icmd)%area_ha))
       aqu_d(iaq)%no3_lat = ob(icmd)%hd(1)%no3 / ob(icmd)%area_ha
       aqu_d(iaq)%no3_st = aqu_d(iaq)%no3_st - aqu_d(iaq)%no3_lat
@@ -151,7 +153,8 @@
       
       !! compute nitrate seepage out of aquifer
       !! kg/ha = (kg/ha / mm) * mm
-      aqu_d(iaq)%no3_seep = conc_no3 * aqu_d(iaq)%seep
+      aqu_d(iaq)%no3_seep = 0.
+      if (abs(conc_no3) >= 1.e-15) aqu_d(iaq)%no3_seep = conc_no3 * aqu_d(iaq)%seep
       aqu_d(iaq)%no3_seep = amin1(aqu_d(iaq)%no3_seep, aqu_d(iaq)%no3_st)
       aqu_d(iaq)%no3_st = aqu_d(iaq)%no3_st - aqu_d(iaq)%no3_seep
       ob(icmd)%hd(2)%no3 = aqu_d(iaq)%no3_seep * ob(icmd)%area_ha

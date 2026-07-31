@@ -249,8 +249,8 @@
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year - (tmp start year is model year)
 
       if (jday <= surf_lag .and. yrs_to_start > 1) then
-          t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-surf_lag+1:365,yrs_to_start-1)))/surf_lag
-          t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-surf_lag+1:365,yrs_to_start-1)))/surf_lag
+          t_air_max_av = (sum(tmp(ig)%ts(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts(int(jday+365-surf_lag+1):365,yrs_to_start-1)))/surf_lag
+          t_air_min_av = (sum(tmp(ig)%ts2(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts2(int(jday+365-surf_lag+1):365,yrs_to_start-1)))/surf_lag
       else
           t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-surf_lag+1)):int(jday),yrs_to_start))/surf_lag
           t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-surf_lag+1)):int(jday),yrs_to_start))/surf_lag
@@ -267,8 +267,8 @@
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year - tmp start year is model year
       
       if (jday <= lat_lag .and. yrs_to_start > 1) then
-          t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-lat_lag+1:365,yrs_to_start-1)))/lat_lag
-          t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-lat_lag+1:365,yrs_to_start-1)))/lat_lag
+          t_air_max_av = (sum(tmp(ig)%ts(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts(int(jday+365-lat_lag+1):365,yrs_to_start-1)))/lat_lag
+          t_air_min_av = (sum(tmp(ig)%ts2(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts2(int(jday+365-lat_lag+1):365,yrs_to_start-1)))/lat_lag
       else
           t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-lat_lag+1)):int(jday),yrs_to_start))/lat_lag
           t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-lat_lag+1)):int(jday),yrs_to_start))/lat_lag
@@ -285,8 +285,8 @@
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year -tmp start year is model year
       
       if (jday <= gw_lag .and. yrs_to_start > 1) then
-          t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-gw_lag+1:365,yrs_to_start-1)))/gw_lag
-          t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-gw_lag+1:365,yrs_to_start-1)))/gw_lag
+          t_air_max_av = (sum(tmp(ig)%ts(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts(int(jday+365-gw_lag+1):365,yrs_to_start-1)))/gw_lag
+          t_air_min_av = (sum(tmp(ig)%ts2(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts2(int(jday+365-gw_lag+1):365,yrs_to_start-1)))/gw_lag
       else
           t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-gw_lag+1)):int(jday),yrs_to_start))/gw_lag
           t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-gw_lag+1)):int(jday),yrs_to_start))/gw_lag
@@ -303,8 +303,8 @@
       yrs_to_start = time%yrs - tmp(ig)%yrs_start   !model year - tmp start year is model year
       
       if (jday <= sno_lag .and. yrs_to_start > 1) then
-          t_air_max_av = (sum(tmp(ig)%ts(1:jday,yrs_to_start))+sum(tmp(ig)%ts(jday+365-sno_lag+1:365,yrs_to_start-1)))/sno_lag
-          t_air_min_av = (sum(tmp(ig)%ts2(1:jday,yrs_to_start))+sum(tmp(ig)%ts2(jday+365-sno_lag+1:365,yrs_to_start-1)))/sno_lag
+          t_air_max_av = (sum(tmp(ig)%ts(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts(int(jday+365-sno_lag+1):365,yrs_to_start-1)))/sno_lag
+          t_air_min_av = (sum(tmp(ig)%ts2(1:int(jday),yrs_to_start))+sum(tmp(ig)%ts2(int(jday+365-sno_lag+1):365,yrs_to_start-1)))/sno_lag
       else
           t_air_max_av = sum(tmp(ig)%ts(max(1,int(jday-sno_lag+1)):int(jday),yrs_to_start))/sno_lag
           t_air_min_av = sum(tmp(ig)%ts2(max(1,int(jday-sno_lag+1)):int(jday),yrs_to_start))/sno_lag
