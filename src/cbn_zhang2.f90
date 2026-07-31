@@ -114,6 +114,12 @@
        integer :: kk = 0         !                     | soil layer index if k > 1 else kk = 2
        real :: min_n_ppm = 0     !                     |
        real :: min_n = 0         !                     |
+       !! no initializers on the three below: an initializer implies SAVE, which is a
+       !! shared-state hazard under threading (see tmp/threading_playbook.md Part 20).
+       !! all three are assigned before first read in the immobilization block.
+       real :: imm_dmd           !kg N/ha              |immobilization demand for the layer-day
+       real :: imm_nh4           !kg N/ha              |immobilization actually drawn from nh4
+       real :: imm_no3           !kg N/ha              |immobilization actually drawn from no3
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
@@ -722,11 +728,27 @@
               rnmn = sum - trnn
               
         !     update
+              !! rnmn > 0 -> net mineralization: organic n is released to the mineral
+              !!             pool as ammonium (ammonification). no3 is not touched.
+              !! rnmn < 0 -> net immobilization: microbes assimilate ammonium
+              !!             preferentially, drawing no3 only after nh4 is exhausted
+              !!             (century/daycent convention), clipped at what is available.
+              !! NOTE on ordering: hru_control calls cbn_zhang2 BEFORE nut_nitvol, so
+              !! immobilization gets first claim on nh4 each day and nitrification only
+              !! sees what is left. That is a deliberate ordering choice, not a law.
+              !! The clips below should be unreachable - reduc (above) already limits
+              !! demand to wmin = no3 + nh4 + sum - but trnn is recomputed after reduc
+              !! is applied, so the bound is approximate. Kept as a safety net.
               if (rnmn > 0.) then
-                min_n = Max(0., soil1(j)%mn(k)%no3 - rnmn)
-                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + min_n
-                soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 - min_n
-                ! print*, "2. in cbn_zhang2", k, soil1(j)%mn(k)%no3, min_n
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn
+              else
+                imm_dmd = -rnmn
+                imm_nh4 = Min(imm_dmd, soil1(j)%mn(k)%nh4)
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 - imm_nh4
+                imm_no3 = Min(imm_dmd - imm_nh4, soil1(j)%mn(k)%no3)
+                soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 - imm_no3
+                !! rnmn reduced to the immobilization actually satisfied
+                rnmn = -(imm_nh4 + imm_no3)
               end if
               
 	          ! calculate p flows
