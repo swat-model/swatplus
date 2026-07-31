@@ -37,6 +37,24 @@
         return
       end if
 
+      !! snap negligible nutrient masses to zero before any arithmetic below.
+      !! the settling block multiplies each of these pools by a factor < 1 every day
+      !! and NOTHING in the hru -> reservoir path replenishes no2 (and nh3/no2 only
+      !! rarely), so they decay geometrically with no floor. Left alone they inevitably
+      !! reach the denormal range (< 1.18e-38 for real4), and the next multiply or the
+      !! conc_* divides below then trip -ffpe-trap=underflow, which this project builds
+      !! with in EVERY configuration (see CMakeLists fdialect). Observed: a reservoir
+      !! holding 75599 m^3, no3 = 3052 kg and orgn = 1347 kg died on no2 = 1.208e-38.
+      !! 1.e-30 kg is physically indistinguishable from zero and matches the threshold
+      !! already used in the outflow block further down.
+      if (wbody%orgn < 1.e-30) wbody%orgn = 0.
+      if (wbody%sedp < 1.e-30) wbody%sedp = 0.
+      if (wbody%solp < 1.e-30) wbody%solp = 0.
+      if (wbody%no3  < 1.e-30) wbody%no3  = 0.
+      if (wbody%nh3  < 1.e-30) wbody%nh3  = 0.
+      if (wbody%no2  < 1.e-30) wbody%no2  = 0.
+      if (wbody%chla < 1.e-30) wbody%chla = 0.
+
       !! if reservoir volume greater than 1 m^3, perform nutrient calculations
       if (time%mo >= wbody_prm%nut%ires1 .and. time%mo <= wbody_prm%nut%ires2) then
         nsetlr = wbody_prm%nut%nsetlr1
