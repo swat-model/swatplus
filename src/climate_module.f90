@@ -79,17 +79,21 @@
       type weather_daily
         real :: precip = 0.
         real :: precip_next = 0.                            !! mm           |precip generated for next day
-        real :: tmax = 0.
-        real :: tmin = 0.
-        real :: tave = 0.
-        real :: solrad = 0.
-        real :: solradmx = 0.
-        real :: rhum = 0.
-        real :: dewpt = 0.
-        real :: windsp = 0.
-        real :: pet = 0.0
-        !real :: pet
-        real :: wndir = 0.
+        real :: tmax = 0.                                   !! deg C        |maximum daily air temperature
+        real :: tmin = 0.                                   !! deg C        |minimum daily air temperature
+        real :: tave = 0.                                   !! deg C        |average daily air temperature
+        real :: solrad = 0.                                 !!
+        real :: solradmx = 0.                               !!
+        real :: rhum = 0.                                   !! fraction     |average daily relative humidity
+        real :: rhmax = 0.                                  !! fraction     |maximum daily relative humidity
+        real :: rhmin = 0.                                  !! fraction     |minimum daily relative humidity
+        real :: dewpt = 0.                                  !! deg C        |average daily dew point temperature
+        real :: vapr = 0.                                   !! kPa          |average daily vapor pressure
+        real :: windsp = 0.                                 !! m/s          |average daily wind speed 
+        real :: wndir = 0.                                  !!
+        real :: pet = 0.0                                   !! mm           |maximum (potential) evapotranspiration
+        real :: eto = 0.0                                   !! mm             |short crop (12-cm grass) reference evapotranspiration
+        real :: etr = 0.0                                   !! mm             |tall crop (50-cm alfalfa) reference evapotranspiration
         real :: phubase0 = 0.                               !! deg C        |cumulative base 0 heat units
         real :: ppet = 0.                                   !! mm/mm        |climatic moisture index - cumulative p/pet
         real :: daylength = 0.                              !! hr           |day length
@@ -179,6 +183,9 @@
         
         real, dimension (:,:), allocatable :: ts
         real, dimension (:,:), allocatable :: ts2
+        real, dimension (:,:), allocatable :: ts3
+        real, dimension (:,:), allocatable :: ts4
+        real, dimension (:,:), allocatable :: ts5
         real, dimension (:,:,:), allocatable :: tss
       end type climate_measured_data
       type (climate_measured_data), dimension(:), allocatable :: pcp
