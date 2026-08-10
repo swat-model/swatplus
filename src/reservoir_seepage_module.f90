@@ -10,10 +10,66 @@
       !! gamma = ratio of dry-soil infiltration capacity to the
       !!         equilibrium capacity.
       !! kprime = shape parameter controlling the moisture response.
-      real, parameter :: horton_gamma = 3.0
-      real, parameter :: horton_kprime = 4.0
+      real :: horton_gamma = 3.0
+      real :: horton_kprime = 4.0
+      logical :: horton_parameters_loaded = .false.
 
       contains
+
+      subroutine read_horton_parameters()
+
+      integer :: ios
+      integer :: unit_par
+      character(len=256) :: line
+      character(len=32) :: parameter_name
+      real :: parameter_value
+
+      if (horton_parameters_loaded) return
+
+      unit_par = 987
+
+      open(unit=unit_par, file='seepage_moisture.par', status='old', &
+           action='read', iostat=ios)
+
+      if (ios /= 0) then
+        write(*,*) 'WARNING: seepage_moisture.par not found.'
+        write(*,*) 'Using default values:'
+        write(*,*) 'gamma  = ', horton_gamma
+        write(*,*) 'kprime = ', horton_kprime
+        horton_parameters_loaded = .true.
+        return
+      end if
+
+      do
+        read(unit_par, '(A)', iostat=ios) line
+        if (ios /= 0) exit
+
+        line = adjustl(line)
+
+        if (len_trim(line) == 0) cycle
+        if (line(1:1) == '#') cycle
+
+        read(line, *, iostat=ios) parameter_name, parameter_value
+        if (ios /= 0) cycle
+
+        select case (trim(parameter_name))
+        case ('gamma')
+          horton_gamma = parameter_value
+        case ('kprime')
+          horton_kprime = parameter_value
+        end select
+      end do
+
+      close(unit_par)
+
+      horton_parameters_loaded = .true.
+
+      write(*,*) 'Soil-moisture seepage parameters:'
+      write(*,*) 'gamma  = ', horton_gamma
+      write(*,*) 'kprime = ', horton_kprime
+
+      end subroutine read_horton_parameters
+
 
       real function contacted_soil_saturation(ihru, &
         water_surface_depth_mm, reservoir_bottom_depth_mm) &
@@ -87,6 +143,8 @@
 
       real :: se
       real :: denominator
+
+      call read_horton_parameters()
 
       se = max(0., min(1., effective_saturation))
       denominator = 1. - exp(-horton_kprime)
