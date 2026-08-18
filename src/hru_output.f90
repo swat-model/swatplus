@@ -14,7 +14,6 @@
       
       implicit none
       
-      external :: soil_nutcarb_write
       
       integer, intent (in) :: ihru             !            |
       integer :: idp = 0                       !            |
@@ -300,11 +299,9 @@
              hpw_a(j) = hpwz
          end if
          
-          if (time%end_sim == 1) then
-            if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
-              call soil_nutcarb_write(" e")    
-            endif
-          endif
+          !! the endsim soil_nutcarb_write(" e") call was moved to command.f90, after the hru
+          !! loop: soil_nutcarb_write loops all hrus internally, so calling it from here (which
+          !! runs once per hru) emitted sp_ob%hru copies of every endsim row.
 
          !! write average annual crop yields
          if (time%end_sim == 1) then

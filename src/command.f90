@@ -532,6 +532,14 @@
           if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write(" y") 
           if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write("yl") 
 
+          ! endsim soil property snapshot (moved here from hru_output.f90 -- whole-basin,
+          ! must run once after every hru is processed, not once per hru)
+          if (time%end_sim == 1) then
+            if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
+              call soil_nutcarb_write(" e")
+            endif
+          endif
+
           ! Call soil_carbvar_write for specified output for hru_cb_vars in print.prt
           if (bsn_cc%cswat == 1) then
             if (pco%cb_vars_hru%d == "y") call soil_carbvar_write(" d")
