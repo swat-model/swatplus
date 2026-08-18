@@ -517,6 +517,12 @@
             end do
           end if
                          
+
+        end do      ! hru loop
+
+        !! whole-basin emitter writers: ONCE per output event, AFTER every hru is processed.
+        !! soil_nutcarb_write / soil_carbvar_write loop all hrus internally; calling them
+        !! inside the hru loop emitted sp_ob%hru copies of every row.
           !! dispatch soil_nutcarb_write whenever any of the 6 nutcarb-controlled families is on for this timestep.
           !! Per-family gating happens inside each cb_*_emit subroutine in soil_nutcarb_write.
           if (pco%cb_lyr_hru%d == "y" .or. pco%cb_cpool_hru%d == "y" .or. pco%cb_npool_hru%d == "y" .or. &
@@ -539,7 +545,16 @@
             if (time%end_sim == 1 .and. (pco%cb_drv_hru%a == "y" .or. pco%cb_dyn_hru%a == "y")) call soil_carbvar_write(" a")
           endif
 
-        end do      ! hru loop
+
+        !! endsim soil snapshots (moved here from hru_output.f90 -- both writers are
+        !! whole-basin and must run once after every hru is processed)
+        if (time%end_sim == 1) then
+          if (pco%cb_snap_hru%a == "y") call soil_nutcarb_write(" e")
+          if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. &
+              pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
+            call soil_nutcarb_write_historical(" e")
+          endif
+        endif
 
         !! legacy CSU carbon outputs, gated by the hru_cb row in print.prt
         !! soil_nutcarb_write_historical iterates all HRUs internally, so it must be
