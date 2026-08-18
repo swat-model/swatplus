@@ -36,6 +36,7 @@
       use soil_module
       use plant_module
       use plant_data_module
+      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
       use output_landscape_module, only : hnb_d
       
       implicit none 
@@ -57,10 +58,7 @@
       integer :: idp = 0    !none          |plant number in plant data module
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
-      real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
-                            !              |of organic nitrogen in the active pool. 
       j = ihru
-      nactfr = .02
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.
@@ -97,16 +95,16 @@
             rmp = 0.
             if (pl_mass(j)%abg_rsd(ipl)%n > 1.e-4) then
               cnr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%n
-              if (cnr > 500.) cnr = 500.
-              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+              if (cnr > cnr_cap) cnr = cnr_cap
+              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)
             else
               cnrf = 1.
             end if
             
             if (pl_mass(j)%abg_rsd(ipl)%p > 1.e-4) then
               cpr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%p
-              if (cpr > 5000.) cpr = 5000.
-              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+              if (cpr > cpr_cap) cpr = cpr_cap
+              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)
             else
               cprf = 1.
             end if

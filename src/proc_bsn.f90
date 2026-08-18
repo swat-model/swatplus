@@ -6,7 +6,8 @@
       implicit none
       
       external :: basin_print_codes_read, basin_prm_default, basin_read_cc, basin_read_objs, &
-                  basin_read_prm, carbon_coef_read, co2_read, readcio_read, time_read
+                  basin_read_prm, carbon_bsn_read, carbon_layers_read, &
+                  co2_read, readcio_read, time_read
       
       call readcio_read
 
@@ -31,8 +32,9 @@
       call basin_prm_default
       call basin_print_codes_read
       call co2_read
-      call carbon_coef_read
-   
+      call carbon_bsn_read
+      call carbon_layers_read
+
       return
       
       end subroutine proc_bsn
