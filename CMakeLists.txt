@@ -52,13 +52,8 @@ if (UNIX)
         set(FFC             "ifx")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        # -fcheck=all / -ffpe-trap / -fsignaling-nans are DEBUG diagnostics — they belong in
-        # fdebug, not fdialect (which is applied to every config, including Release). With them in
-        # Release the binary aborts (EXC_BAD_INSTRUCTION/SIGILL) when optimized system math
-        # routines such as expf() internally raise benign FP flags. Keep only the dialect and the
-        # semantic/numeric flags (-finit-local-zero, -frounding-math, …) on by default.
-        set(fdialect        "-cpp -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math")
-        set(fdebug          "-Wall -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fsignaling-nans")
+        set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdebug          "-Wall")
         set(frelease        "-O")
         set(FFC             "gnu")
 
