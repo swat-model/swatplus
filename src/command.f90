@@ -517,6 +517,13 @@
             end do
           end if
                          
+        
+        end do      ! hru loop  
+
+        !! whole-basin carbon writers: called ONCE per output event, AFTER every hru has
+        !! been processed for the timestep. soil_nutcarb_write / soil_carbvar_write loop
+        !! over all hrus internally, so calling them inside the hru loop above emitted
+        !! sp_ob%hru identical copies of every row.
           ! Call soil_nutcarb_write for specified output for hru_cb in print.prt
           if (pco%cb_hru%d == "y") call soil_nutcarb_write(" d")
           if (pco%cb_hru%d == "l") call soil_nutcarb_write("dl")
@@ -534,8 +541,6 @@
             if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write(" y")
             if (pco%cb_vars_hru%y == "l" .and. time%end_yr == 1) call soil_carbvar_write("yl")
           endif
-        
-        end do      ! hru loop  
         
         do iaq = 1, sp_ob%aqu
           call aquifer_output (iaq)
