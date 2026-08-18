@@ -44,7 +44,20 @@
       integer             :: mathers_int = 0   ! 0/1 flag for org_frac%mathers_method
       integer             :: cbn_diag_int = 0  ! 0/1 flag for cbn_diagnostics (P1: last column)
 
-      if (bsn_cc%cswat /= 2) return
+      !! (C2) discrete per-mode branching, not a negated test: project convention is that a
+      !! future cswat mode must fail loudly rather than be silently absorbed by `/= 2`.
+      select case (bsn_cc%cswat)
+      case (0)
+        return                     !! static soil carbon -- carbon.bsn is not used
+      case (1)
+        return                     !! C-FARM (reserved, not implemented) -- carbon.bsn is not used
+      case (2)
+        continue                   !! CENTURY -- read carbon.bsn below
+      case default
+        write (*,*)    "ERROR: unrecognised codes.bsn carbon mode ", bsn_cc%cswat
+        write (9001,*) "ERROR: unrecognised codes.bsn carbon mode ", bsn_cc%cswat
+        error stop
+      end select
 
       !! carbon.bsn (scalars)
 

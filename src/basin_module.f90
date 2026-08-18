@@ -208,8 +208,9 @@
         type(print_interval) :: nb_hru          !!  nutrient balance HRU output
         type(print_interval) :: ls_hru          !!  losses HRU output
         type(print_interval) :: pw_hru          !!  plant weather HRU output
-        type(print_interval) :: cb_hru          !!  legacy carbon flag (kept for backward compat with print.prt readers; no longer referenced by writers)
-        type(print_interval) :: cb_vars_hru     !!  legacy carbon variable flag (same)
+        type(print_interval) :: cb_hru          !!  gates the historical CSU carbon output: soil_nutcarb_write_historical
+                                                !!  (command.f90) and the openers in carbon_legacy_module. STILL LIVE.
+        type(print_interval) :: cb_vars_hru     !!  same, for soil_carbvar_write_historical
         !! per-family carbon output flags (10 rows)
         type(print_interval) :: cb_gl_hru       !!  hru_carb_gl_*    HRU C gain/loss
         type(print_interval) :: cb_trf_hru      !!  hru_scf_*        HRU C transformations
