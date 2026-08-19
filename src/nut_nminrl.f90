@@ -29,7 +29,7 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
-      !! (C12) residue C:N / C:P decomposition constants, shared with cbn_surfrsd_decomp.
+      !! residue C:N / C:P decomposition constants, shared with cbn_surfrsd_decomp.
       !! NOTE: this is the cswat == 0 path, where carbon_bsn_read returns early and
       !! carbon.bsn is never opened -- so these keep their carbon_module defaults
       !! (500. / 25. / 5000. / 200.), exactly the literals they replace. Numerics-neutral.

@@ -43,8 +43,8 @@
         integer :: cfac = 0      !! not used     
         integer :: cswat = 0     !! carbon code: 0 = off (static soil carbon, old mineralization
                                  !! routines), 1 = dynamic CENTURY/SWAT-C model.
-                                 !! The interim numbering that reserved 1 for C-FARM and used 2 for
-                                 !! CENTURY was retired by team decision; carbon = 2 is now an error.
+                                 !! An earlier numbering reserved 1 for C-FARM and used 2 for
+                                 !! CENTURY; carbon = 2 is retired and is now an error.
                                  !!  = 0 Static soil carbon (old mineralization routines)
                                  !!  = 1 CENTURY / SWAT-C dynamic soil carbon
         integer :: lapse = 0     !! precip and temperature lapse rate control

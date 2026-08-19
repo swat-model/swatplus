@@ -44,7 +44,7 @@
       integer             :: mathers_int = 0   ! 0/1 flag for org_frac%mathers_method
       integer             :: cbn_diag_int = 0  ! 0/1 flag for cbn_diagnostics (P1: last column)
 
-      !! (C2) discrete per-mode branching, not a negated test: project convention is that a
+      !! discrete per-mode branching, not a negated test: project convention is that a
       !! future cswat mode must fail loudly rather than be silently absorbed by a negated test.
       !! Modes are 0 = static and 1 = CENTURY. The former mode 2 (CENTURY under the interim
       !! numbering) is rejected with a migration message rather than silently accepted.

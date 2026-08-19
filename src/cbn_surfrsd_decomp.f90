@@ -120,20 +120,14 @@
             pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - decomp
             soil1(j)%pl(ipl)%rsd(1)%abg = soil1(j)%pl(ipl)%rsd(1)%abg + decomp
 
-            !! (C4) flush the surface residue pool to zero once it drifts below 1.e-10.
+            !! flush the surface residue pool to zero once it drifts below 1.e-10.
             !! abg_rsd is decremented by `decomp` every day, so without this it decays
             !! asymptotically into denormal territory and gfortran raises underflow.
-            !! Re-enabled 2026-08-18 (Frank); commented out in 81e2c34 during the
-            !! rsd -> abg_rsd rename to keep that commit numerics-neutral.
             if (pl_mass(j)%abg_rsd(ipl)%m < 1.e-10) pl_mass(j)%abg_rsd(ipl)%m = 0.0
             if (pl_mass(j)%abg_rsd(ipl)%c < 1.e-10) pl_mass(j)%abg_rsd(ipl)%c = 0.0
             if (pl_mass(j)%abg_rsd(ipl)%n < 1.e-10) pl_mass(j)%abg_rsd(ipl)%n = 0.0
             if (pl_mass(j)%abg_rsd(ipl)%p < 1.e-10) pl_mass(j)%abg_rsd(ipl)%p = 0.0
-            !
-            !! (C5) dead commented code referencing fg's rejected `cswat_1_part_fracs`
-            !! (R1 kept staging's `res_part_fracs`) removed 2026-08-18. The commented
-            !! denormal guard above is C4 and is deliberately retained pending that decision.
-            
+
           end if    ! soil temp > 0
           
         end do      ! ipl = 1, pcom(j)%npl

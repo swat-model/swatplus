@@ -19,7 +19,7 @@
       integer :: ly = 0
       integer :: isolt = 0              !counter    |soil plant initialization file pointer
       integer :: isol_pl = 0            !counter    |soil nutrient initialization pointer (nutrients.sol)
-      real :: humus_share = 1.0   !! (C7) 1 - frac_litter; humus share of total soil C
+      real :: humus_share = 1.0   !! 1 - frac_litter; humus share of total soil C
       real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
       real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
       real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
@@ -155,7 +155,7 @@
             org_frac%frac_litter = 1.0
           endif
 
-          !! (C7) humus_share = the part of total soil C that is NOT initialised as litter.
+          !! humus_share = the part of total soil C that is NOT initialised as litter.
           !! meta + str are added below as frac_litter * tot, so the humus pools must take the
           !! complement or the pools sum to (1 + frac_litter) * tot and carbon is created at init.
           !! NOTE: in the Mathers branch hp is an ABSOLUTE regression prediction and is NOT scaled;
@@ -195,7 +195,7 @@
             if (frac_hum_passive > .96) then
               frac_hum_passive = .96
               mathers_stable_carbon_pct = frac_hum_passive * soil(ihru)%phys(ly)%cbn !recalculate because of reduction in hp_cbn_frac 
-              !! (C7) subtract frac_litter so microb + hp + hs + (meta+str) == tot.
+              !! subtract frac_litter so microb + hp + hs + (meta+str) == tot.
               !! hp is the Mathers regression prediction and must NOT be scaled, so the litter
               !! share comes out of the slow pool, which is the residual pool here.
               frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb - org_frac%frac_litter
@@ -205,7 +205,7 @@
 
             mathers_stable_carbon_frac = mathers_stable_carbon_pct/100.0
 
-            !! (C7) Mathers path uses unscaled microb (the litter share is absorbed by hs above)
+            !! Mathers path uses unscaled microb (the litter share is absorbed by hs above)
             soil1(ihru)%microb(ly)%m = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
             soil1(ihru)%microb(ly)%c = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
             soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.

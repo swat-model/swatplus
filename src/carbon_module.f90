@@ -10,10 +10,10 @@
       logical :: cbn_diagnostics = .false.
 
       !! basin-wide residue decomposition tunables (read from carbon.bsn)
-      !! RESERVED, CURRENTLY UNREAD (merge decision (c), 2026-08-18). Its only consumer is the
-      !! cswat==0 path (nut_nminrl), where carbon_bsn_read returns early and carbon.bsn is never
-      !! opened -- so it has no carbon.bsn column and is not exposed to calibration. staging's
-      !! local nactfr = .02 in nut_nminrl.f90 is the operative value. See post-merge item C12.
+      !! RESERVED, CURRENTLY UNREAD. Its only consumer is the cswat==0 path (nut_nminrl),
+      !! where carbon_bsn_read returns early and carbon.bsn is never opened -- so it has no
+      !! carbon.bsn column and is not exposed to calibration. The local nactfr = .02 in
+      !! nut_nminrl.f90 is the operative value.
       real :: n_act_frac = 0.02    !! frac    |fraction of organic N in the active humus pool (nut_nminrl active->stable flow)
       real :: cnr_cap    = 500.    !! none    |upper cap on residue C:N ratio before computing decomp factor
       real :: cnr_ref    = 25.     !! none    |reference C:N ratio where decomp factor equals 1
