@@ -16,7 +16,7 @@
       !!   org_allo(:), so future expansion past dimension(2) needs no
       !!   change to this reader.
       !!
-      !! both files are required when bsn_cc%cswat == 2; the routine aborts via
+      !! both files are required when bsn_cc%cswat == 1; the routine aborts via
       !! error stop if either file is missing, or if its data line(s) are missing
       !! or malformed. the leading title and column-header lines are optional and
       !! may be blank. no-op when carbon is off.
@@ -45,18 +45,28 @@
       integer             :: cbn_diag_int = 0  ! 0/1 flag for cbn_diagnostics (P1: last column)
 
       !! (C2) discrete per-mode branching, not a negated test: project convention is that a
-      !! future cswat mode must fail loudly rather than be silently absorbed by `/= 2`.
+      !! future cswat mode must fail loudly rather than be silently absorbed by a negated test.
+      !! Modes are 0 = static and 1 = CENTURY. The former mode 2 (CENTURY under the interim
+      !! numbering) is rejected with a migration message rather than silently accepted.
       select case (bsn_cc%cswat)
       case (0)
         return                     !! static soil carbon -- carbon.bsn is not used
       case (1)
-        return                     !! C-FARM (reserved, not implemented) -- carbon.bsn is not used
-      case (2)
         continue                   !! CENTURY -- read carbon.bsn below
+      case (2)
+        !! flush before error stop -- buffered output is otherwise discarded and the user
+        !! sees only a bare ERROR STOP plus a backtrace.
+        write (*,*)    "ERROR: codes.bsn carbon = 2 is the retired CENTURY code. Use carbon = 1."
+        write (9001,*) "ERROR: codes.bsn carbon = 2 is the retired CENTURY code. Use carbon = 1."
+        flush (6)
+        flush (9001)
+        error stop "codes.bsn carbon = 2 is retired -- use carbon = 1 for CENTURY"
       case default
         write (*,*)    "ERROR: unrecognised codes.bsn carbon mode ", bsn_cc%cswat
         write (9001,*) "ERROR: unrecognised codes.bsn carbon mode ", bsn_cc%cswat
-        error stop
+        flush (6)
+        flush (9001)
+        error stop "unrecognised codes.bsn carbon mode"
       end select
 
       !! carbon.bsn (scalars)

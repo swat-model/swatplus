@@ -45,7 +45,7 @@
       
       rtof = man_coef%rtof
       !! calculate c:n ratio for manure applications for SWAT-C
-      if (bsn_cc%cswat == 2 ) then
+      if (bsn_cc%cswat == 1 ) then
         if (fertdb(ifrt)%forgn > 0. .or. fertdb(ifrt)%forgp > 0. ) then
           organic_flag = .true.
         endif
@@ -95,7 +95,7 @@
         !! NOTE: cswat==0 branch only; the abg/blg split is not used here (no CENTURY lignin
         !! partitioning on this path), so incorporated manure N/P is placed in abg purely for
         !! type-correctness. Origin is immaterial to cswat==0 results. Revisit if manure ever
-        !! needs an origin under cswat==1.
+        !! needs an origin under the CENTURY path (cswat==1).
         if (bsn_cc%cswat == 0) then
           soil1(j)%pl(1)%rsd(l)%abg%n = soil1(j)%pl(1)%rsd(l)%abg%n + rtof * fr_ly *            &
                        frt_kg * fertdb(ifrt)%forgn
@@ -108,7 +108,7 @@
         end if
         
         !! for SWAT-C add to slow humus pool and fresh residue pools
-        if ((bsn_cc%cswat == 2 ) .and. organic_flag) then
+        if ((bsn_cc%cswat == 1 ) .and. organic_flag) then
           
           !! add 1-rtof to slow humus pool
           pool_fr = (1. - rtof) * fr_ly

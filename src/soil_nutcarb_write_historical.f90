@@ -184,7 +184,7 @@
           end do
 
           select case (bsn_cc%cswat)
-          case (2)
+          case (1)
             ! CENTURY pools
             ! Total org all layers
             soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta &
@@ -226,7 +226,7 @@
             if (bsn_cc%cswat == 0) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
             endif
-            if(bsn_cc%cswat == 2 ) then
+            if(bsn_cc%cswat == 1 ) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + soil1(j)%tot(ly)%c * frac_above_300 
             endif
           end do
@@ -271,7 +271,7 @@
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
               soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             endif
-            if(bsn_cc%cswat == 2 ) then
+            if(bsn_cc%cswat == 1 ) then
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300 
             endif
           end do
@@ -345,8 +345,8 @@
                 pl_mass(j)%stem_com%c, pl_mass(j)%seed_com%c, pl_mass(j)%root_com%c, pl_mass(j)%abg_rsd_tot%c
             end if
             
-            !write the cswat == 2 files. 
-            if (bsn_cc%cswat == 2 ) then
+            !write the cswat == 1 files. 
+            if (bsn_cc%cswat == 1 ) then
           
               !write organic flux pools for the soil profile file = "hru_cflux_stat.txt" make this non-cumulative
               if (layer_output) then
