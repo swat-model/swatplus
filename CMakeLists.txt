@@ -66,6 +66,13 @@ if (UNIX)
                      "${os_id}" STREQUAL "fedora" ))
                 link_libraries("-static")
             endif()
+        else()
+            # macOS cannot statically link libSystem (Apple ships no static libc), so a fully
+            # static binary like the Linux build isn't possible. Instead, statically link the
+            # gfortran/quadmath/gcc runtimes so the executable no longer depends on Homebrew's
+            # gcc dylibs (libgfortran.5.dylib, libquadmath.0.dylib); only /usr/lib/libSystem
+            # remains dynamic. This makes it portable across Macs without `brew install gcc`.
+            link_libraries("-static-libgfortran" "-static-libquadmath" "-static-libgcc")
         endif()
     endif()
 
