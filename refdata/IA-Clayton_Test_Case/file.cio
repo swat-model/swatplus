@@ -1,6 +1,6 @@
 file.cio: IA-Ames_20250122 (Tue Jun 02 13:31:33 MDT 2026)
 simulation        time.sim          print.prt         null              object.cnt         null              
-basin             codes.bsn         parameters.bsn    
+basin             codes.bsn         parameters.bsn    carbon.bsn
 climate           weather-sta.cli   weather-wgn.cli   null              w_pcp.cli          w_tmp.cli          w_slr.cli          null               null                null              
 connect           hru.con           null              null              null               null               null               null               null                null  null       null  null  null       
 channel           null              null              null              null               null               null               null               null              

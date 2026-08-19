@@ -299,9 +299,9 @@
              hpw_a(j) = hpwz
          end if
          
-          !! the endsim soil_nutcarb_write(" e") call was moved to command.f90, after the hru
-          !! loop: soil_nutcarb_write loops all hrus internally, so calling it from here (which
-          !! runs once per hru) emitted sp_ob%hru copies of every endsim row.
+          !! the two endsim carbon snapshot calls were moved to command.f90, after the hru
+          !! loop. Both writers iterate all hrus internally, so they belong after every hru
+          !! has been processed -- not behind a j == 1 guard inside a per-hru routine.
 
          !! write average annual crop yields
          if (time%end_sim == 1) then
