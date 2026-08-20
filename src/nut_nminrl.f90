@@ -29,6 +29,11 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
+      !! residue C:N / C:P decomposition constants, shared with cbn_surfrsd_decomp.
+      !! NOTE: this is the cswat == 0 path, where carbon_bsn_read returns early and
+      !! carbon.bsn is never opened -- so these keep their carbon_module defaults
+      !! (500. / 25. / 5000. / 200.), exactly the literals they replace. Numerics-neutral.
+      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
@@ -147,16 +152,16 @@
             rsd_om = sum_origin(soil1(j)%pl(ipl)%rsd(k))
             if (rsd_om%n > 1.e-4) then
               cnr = rsd_om%c / rsd_om%n
-              if (cnr > 500.) cnr = 500.
-              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+              if (cnr > cnr_cap) cnr = cnr_cap
+              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)
             else
               cnrf = 1.
             end if
 
             if (rsd_om%p > 1.e-4) then
               cpr = rsd_om%c / rsd_om%p
-              if (cpr > 5000.) cpr = 5000.
-              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+              if (cpr > cpr_cap) cpr = cpr_cap
+              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)
             else
               cprf = 1.
             end if

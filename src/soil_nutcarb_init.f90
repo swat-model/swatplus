@@ -19,6 +19,7 @@
       integer :: ly = 0
       integer :: isolt = 0              !counter    |soil plant initialization file pointer
       integer :: isol_pl = 0            !counter    |soil nutrient initialization pointer (nutrients.sol)
+      real :: humus_share = 1.0   !! 1 - frac_litter; humus share of total soil C
       real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
       real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
       real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
@@ -154,22 +155,29 @@
             org_frac%frac_litter = 1.0
           endif
 
+          !! humus_share = the part of total soil C that is NOT initialised as litter.
+          !! meta + str are added below as frac_litter * tot, so the humus pools must take the
+          !! complement or the pools sum to (1 + frac_litter) * tot and carbon is created at init.
+          !! NOTE: in the Mathers branch hp is an ABSOLUTE regression prediction and is NOT scaled;
+          !! there the litter share is taken out of the slow-pool complement instead (see below).
+          humus_share = 1.0 - org_frac%frac_litter
+
           !!initialize microbial pool
-          soil1(ihru)%microb(ly)%m = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%microb(ly)%c = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%microb(ly)%m = humus_share * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%microb(ly)%c = humus_share * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
           soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.            !assume 8:1 C:N ratio
           soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
             
           if (org_frac% mathers_method .eqv. .false.) then
             !!initialize passive humus pool
-            soil1(ihru)%hp(ly)%m = org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
-            soil1(ihru)%hp(ly)%c = org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%hp(ly)%m = humus_share * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%hp(ly)%c = humus_share * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
             soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
             soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
               
             !!initialize slow humus pool
-            soil1(ihru)%hs(ly)%m = org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
-            soil1(ihru)%hs(ly)%c = org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%hs(ly)%m = humus_share * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%hs(ly)%c = humus_share * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
             soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
             soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
           endif
@@ -187,12 +195,21 @@
             if (frac_hum_passive > .96) then
               frac_hum_passive = .96
               mathers_stable_carbon_pct = frac_hum_passive * soil(ihru)%phys(ly)%cbn !recalculate because of reduction in hp_cbn_frac 
-              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb
+              !! subtract frac_litter so microb + hp + hs + (meta+str) == tot.
+              !! hp is the Mathers regression prediction and must NOT be scaled, so the litter
+              !! share comes out of the slow pool, which is the residual pool here.
+              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb - org_frac%frac_litter
             else
-              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb
+              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb - org_frac%frac_litter
             endif
 
             mathers_stable_carbon_frac = mathers_stable_carbon_pct/100.0
+
+            !! Mathers path uses unscaled microb (the litter share is absorbed by hs above)
+            soil1(ihru)%microb(ly)%m = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%microb(ly)%c = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.
+            soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.
 
             soil1(ihru)%hp(ly)%c = mathers_stable_carbon_frac * tot_mass
             soil1(ihru)%hp(ly)%m = soil1(ihru)%hp(ly)%c / 0.58

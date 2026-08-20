@@ -7,12 +7,12 @@
       real    :: bmix_eff = 0.      !!              |none          |biological mixing efficieny
       real    :: bmix_depth = 0.    !!              |mm            |maximum potential biological mixing depth
       real    :: dtill      = 0.    !!              |mm            |actual biological or tillage mixing  mixing depth
-      real    :: zz_bmix_coef_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for biomixing
-      real    :: zz_bmix_coef_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for biomixing 
-      real    :: zz_bmix_coef_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for biomixing
-      real    :: zz_emix_coef_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for tillage mixing
-      real    :: zz_emix_coef_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for tillage mixing 
-      real    :: zz_emix_coef_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for tillage mixing
+      real    :: bmix_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for biomixing
+      real    :: bmix_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for biomixing 
+      real    :: bmix_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for biomixing
+      real    :: tillmix_a = 3.0    !!              |none          !Base intercept in zz equation in mgt_tillfactor.f90 for tillage mixing
+      real    :: tillmix_b = 5.0   !!              |none          !slope of in zz equation in mgt_tillfactor.f90 for tillage mixing 
+      real    :: tillmix_c = -5.5   !!              |none          !exponent multiplier in zz equation in mgt_tillfactor.f90 for tillage mixing
       real    :: bio_consf      = .15
       real    :: till_consf     = .10
 

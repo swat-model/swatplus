@@ -111,14 +111,18 @@
       if (db_mx%wet_dat > 0) call wet_all_initial
       call wet_fp_init
       
+      !! proc_cal runs before soil_nutcarb_init so calibration of init_seq,
+      !! init_microb, init_slow and init_passive (and the other carbon.bsn
+      !! parameters) takes effect at pool initialisation. With the reverse
+      !! order the pools are already sized and init_* calibration has no impact.
+      call proc_cal
+
       !! initialize carbon and nutrient contents for each hru
       do ihru = 1, sp_ob%hru
         isol = hru(ihru)%dbs%soil
         call soil_nutcarb_init(isol)
       end do
-      
-      call proc_cal
-      
+
       call proc_open
       
         
