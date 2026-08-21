@@ -338,6 +338,18 @@
           
           !! initialize plant mass if plant growing
           if (pcom(j)%plcur(ipl)%gro == "y") then
+            !! initialize phuacc_p (fraction of lifetime heat units accumulated) for perennials
+            !! that start the simulation already growing - otherwise it defaults to 0 and root
+            !! depth (which is driven by phuacc_p, not curyr_mat) floors at the 25.4mm minimum
+            !! regardless of the plant's declared maturity. Mirrors mgt_transplant.f90.
+            if (pldb(idp)%typ == "perennial") then
+              if (pcom(j)%plcur(ipl)%phumat_p > 0.) then
+                pcom(j)%plcur(ipl)%phuacc_p = pcomdb(icom)%pl(ipl)%fr_yrmat +  &
+                    (pcom(j)%plcur(ipl)%phumat * pcomdb(icom)%pl(ipl)%phuacc) / pcom(j)%plcur(ipl)%phumat_p
+              else
+                pcom(j)%plcur(ipl)%phuacc_p = pcomdb(icom)%pl(ipl)%fr_yrmat
+              end if
+            end if
             call pl_root_gro(j)
             call pl_seed_gro(j)
             call pl_partition(j, 1)
