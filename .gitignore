@@ -48,7 +48,10 @@ _ReSharper*/
 .nvim.lua
 .DS_Store
 Data/.DS_Store
-build/
+# Any build tree, at any depth: build/, build-rel/, build-ubuntu-ifx-omp/, ...
+# Trailing slash keeps this to directories, so tracked files whose names start
+# with "build" (.github/workflows/build.yml, doc/Building.md) are unaffected.
+build*/
 nbproject/
 .metadata/
 .project
