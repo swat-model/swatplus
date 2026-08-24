@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read(//tmp/**)",
+      "Read(//home/fgeter/code/swat-c/src/**)",
+      "Skill(artifact-design)"
+    ]
+  }
+}
