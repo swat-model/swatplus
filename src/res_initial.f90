@@ -40,7 +40,7 @@
         res_ob(ires)%S_ini                = MAX(res_ob(ires)%evol, res_ob(ires)%pvol)
         res_ob(ires)%N_memory             = 5                                                   !For now it will be fixed to 5
         allocate(res_ob(ires)%I_mon_past(12*res_ob(ires)%N_memory))
-        res_ob(ires)%I_mon_past           = 0.0                                                 !At the beggining of the simulation this is a 1D array of N*12 zeros
+        res_ob(ires)%I_mon_past           = 0.0                                                 !At the beginning of the simulation this is a 1D array of N*12 zeros
         allocate(res_ob(ires)%daily_inflow_array(1))
         res_ob(ires)%daily_inflow_array   = 0.0                                                 !Same as above, 1d array with zeros
         res_ob(ires)%c_ratio              = 0.51

@@ -70,7 +70,7 @@
         ! empirical solution for x when y is known and y=x/(x+exp(m1-m2*x)) 
         if (yy > 0.01) then
           xx1 = yy ** exp_w(-0.13 + 1.06 * yy)
-          ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmatic error that is ignored by intel but not by gfortran
+          ! xx2 = exp_w(0.64 + 0.64 * yy ** 100.)   ! This causes an arithmetic error that is ignored by intel but not by gfortran
           xx2 = exp_w(0.64 + 0.64 * yy ** 10.)
           if (xx2 > 10.) xx2 = 10.
           xx = xx1 * xx2
@@ -88,7 +88,7 @@
           else
             soil(jj)%ly(l)%tillagef_tillmix = zz * (csdr / (csdr + exp(m1 - m2*csdr)))
             ! Reduce till_mix by the fraction mixed in the soil layer and 
-            ! this occures with the tillage depth is inbetween soil layer depths
+            ! this occurs with the tillage depth is in between soil layer depths
             if (soil(jj)%ly(l)%tillagef_tillmix > 0.) then 
               soil(jj)%ly(l)%tillagef_tillmix = soil(jj)%ly(l)%tillagef_tillmix * frac_mixed
             endif

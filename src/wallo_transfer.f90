@@ -23,8 +23,8 @@
         iconv = pou(ipou)%pod(ipod)%conv_num
         select case (pou(ipou)%pod(ipod)%conv_typ)
         case ("pipe")
-          !! organic hydrograph being transfered from the source to the receiving object
-          poud_om(ipou)%pod(ipod) = (1. - pipe(iconv)%loss_fr) * poud_om(ipou)%pod(ipod) 
+          !! organic hydrograph being transferred from the source to the receiving object
+          poud_om(ipou)%pod(ipod) = (1. - pipe(iconv)%loss_fr) * poud_om(ipou)%pod(ipod)
           !! add to aquifers
         case ("pump")
           !! include pump losses here

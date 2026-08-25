@@ -124,7 +124,8 @@
       sedprev = 0.
       ubnrunoff = 0.
       irmmdt = 0.
-        hhsedy = 0.
+        hhsedy(j,:) = 0.    !! only this HRU's row; bare "hhsedy = 0." zeroed the whole
+                            !! (mhru x step) array on every HRU every day -> O(N_hru^2)/day
         ubntss = 0.
         wet_seep_day(j)%no3 = 0
         wet_seep_day(j)%nh3 = 0

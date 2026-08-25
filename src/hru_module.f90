@@ -98,7 +98,7 @@
       type saturated_buffer_parameters
         character(len=40) :: name = "null"
         integer :: hru_src = 0                   !!     |source of tile inflow
-        real :: frac_src = 0.                    !!     |fration of source hru contributing to tile flow
+        real :: frac_src = 0.                    !!     |fraction of source hru contributing to tile flow
         character(len=40) :: flocon_dtbl = " "   !!     |decision table to control flow into buffer hru
         integer :: hru_rcv = 0                   !!     |receiving (buffer) hru
         integer :: lyr = 0                       !!     |soil layer for incoming tile flow (0 = surface)

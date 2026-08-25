@@ -19,7 +19,7 @@
       type organic_mixing_mass           !       |used for each layer in mgt_newtillmix
         type (organic_mass) :: tot       !       |total organic pool
         type (organic_mass) :: surf_rsd  !   |fresh surface residue mixed into layers
-        type (organic_mass), dimension(:), allocatable :: rsd   !   |fresh soil residue (max 12 plants)
+        type (organic_mass), dimension(:), allocatable :: rsd   !   |fresh soil residue (dimensioned by number of plants in community)
         !! humus pools for old mineralization model (static carbon)
         type (organic_mass) :: hact      !       |active humus for old mineralization model
         type (organic_mass) :: hsta      !       |stable humus for old mineralization model
@@ -75,7 +75,7 @@
         real :: tot_mp = 0.                                         !       |mineral p pool (wsol+lab+act+sta) in soil profile
         real :: salt = 0.                                           !       |total salt amount (kg/ha) in soil profile
         type (organic_mass) :: tot_org                              !       |total organics in soil profile
-        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile wich does not include the surface layer
+        type (organic_mass) :: seq_org                              !       |sequestered organics in soil profile which does not include the surface layer
         type (organic_mass) :: surf_org                             !       |soil surface layer soil soil profile
         real, dimension(:), allocatable :: sw                       !mm     |soil water dimensioned by layer
         real, dimension(:), allocatable :: cbn                      !%      |percent carbon

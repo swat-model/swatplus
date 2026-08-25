@@ -158,14 +158,14 @@
         integer :: db_num = 0                   !data file pointer
         integer :: wallo_pod = 0                !POD (point of diversion) number for water allocation - 0 if not POD
         real :: stor_mx                   !m3   !maximum storage in plant
-        real :: lag_days                  !days !treatement time - lag outflow
+        real :: lag_days                  !days !treatment time - lag outflow
         real :: loss_fr                         !water loss during treament
         integer :: num_treats = 0               !number of treatment levels for the water treatment plant
         type (concentration_levels), dimension(:), allocatable :: conc
         character (len=80) :: descrip = ""      !treatment plant description
       end type water_treatment_use_data        
       type (water_treatment_use_data), dimension(:), allocatable :: wtp
-      type (water_treatment_use_data), dimension(:), allocatable :: wuse       
+      type (water_treatment_use_data), dimension(:), allocatable :: wuse
       type (water_treatment_use_data), dimension(:), allocatable :: osrc
       
       !! outside basin receivng object data
@@ -179,7 +179,7 @@
       type water_transfer_data
         character (len=25) :: name = ""         !name of the water tower or pipe
         integer :: wallo_pod = 0                !POD (point of diversion) number for water allocation - 0 if not POD
-        character (len=25) :: init = ""         !name of the intitial concentrations
+        character (len=25) :: init = ""         !name of the initial concentrations
         real :: stor_mx                   !m3   !maximum storage in plant
         real :: ddown_days                !days !days to drawdown the storage to zero
         real :: loss_fr                         !water loss during treament
@@ -193,7 +193,7 @@
       type water_canal_data
         character (len=25) :: name = ""         !name of the canal
         character (len=25) :: w_sta = ""        !name of nearby weather station
-        character (len=25) :: init = ""         !name of the intitial concentrations in canal
+        character (len=25) :: init = ""         !name of the initial concentrations in canal
         character (len=25) :: dtbl = ""         !name of decision table to determine canal outflow
         integer :: wallo_pod = 0                !POD (point of diversion) number for water allocation - 0 if not POD
         real :: ddown_days                !days !days to drawdown the storage to zero
