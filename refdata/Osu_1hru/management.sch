@@ -1,6 +1,6 @@
 management.sch: written by SWAT+ editor v2.2.0 on 2023-03-22 04:25 for SWAT+ rev.60.5.4
 name                       numb_ops  numb_auto            op_typ       mon       day        hu_sch          op_data1          op_data2      op_data3  
-rice140_rot    					  0           7
+rice140_rot    					  1           7
 	 plow
 	 weir60r
 	 weir0
@@ -8,6 +8,7 @@ rice140_rot    					  0           7
 	 puddle
 	 pl_hv_rice 
 	 fert_paddy
+manu      5          1      0     beef_salt   broadcast  12.9927
 rice140_rye    					  0           8
 	 plow
 	 weir60rr
@@ -19,5 +20,5 @@ rice140_rye    					  0           8
 	 fert_pad_r
 agrl_rot                          0          2  
     pl_hv_agro      
-	fert_stress    
-	
+	fert_stress   	
+
