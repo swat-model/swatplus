@@ -133,7 +133,7 @@
               end select
               ht2%flo = ht2%flo + (wbody%flo - b_lo) / d_tbl%act(iac)%const / nstep
               ht2%flo = max(0.,ht2%flo)
-              !wbody%flo = max(0.,wbody%flo - ht2%flo)    ! & jga-jj 6-3-2025 ! 07.04.2026 removed: this is alrready done in res_control.f90 so double subtraction if set here
+              !wbody%flo = max(0.,wbody%flo - ht2%flo)    ! & jga-jj 6-3-2025 ! 07.04.2026 removed: this is already done in res_control.f90 so double subtraction if set here
               !vol = wbody%flo
               
             case ("dyrt")
@@ -221,7 +221,7 @@
                 end do
               endif
               res_h = vol / wsa1 !m
-              !wbody%flo = vol !m3  ! removed: this is alrready done in res_control.f90 so double subtraction if set here
+              !wbody%flo = vol !m3  ! removed: this is already done in res_control.f90 so double subtraction if set here
               !iweir = d_tbl%act_typ(iac)
               !ht2%flo = ht2%flo + res_weir(iweir)%c * res_weir(iweir)%w * hgt_above ** res_weir(iweir)%k / nstep   !m3/s
               !ht2%flo = ht2%flo + max(0.,ht2%flo)
