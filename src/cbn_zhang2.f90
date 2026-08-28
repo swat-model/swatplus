@@ -754,6 +754,11 @@
 	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
+              !! total structural-litter co2, kept whole because it is reported as a c flux
+              !! (soil_nutcarb_write). the two nut_np_flow calls below must each receive
+              !! only THEIR share - lignin to s2, non-lignin to s1 - or the n carried by
+              !! the respired c is counted twice. swat-c keeps these as separate array
+              !! elements, CO2FSTR(k,LIG,j) and CO2FSTR(k,NONLIG,j).
               org_flux%co2fstr = .3 * lslcta
               org_flux%co2fstr = org_flux%co2fstr + org_allo(cf_lyr)%a1co2 * lslncta
               
@@ -805,7 +810,7 @@
                       call nut_np_flow (                                     &
                              soil1(j)%str(k)%c, soil1(j)%str(k)%n,       &  !input
                              1/org_ratio%ncbm, org_flux%cfstrs1,         &  !input
-                             org_flux%co2fstr,                           &  !input
+                             org_allo(cf_lyr)%a1co2 * lslncta,           &  !input  non-lignin co2 share only
                              org_flux%efstrs1, org_flux%immstrs1,        &  !output
                              org_flux%mnrstrs1)                          !output              
               
@@ -817,7 +822,7 @@
                       call nut_np_flow (&
                              soil1(j)%str(k)%c, soil1(j)%str(k)%n,       & !input
                              1/org_ratio%nchs, org_flux%cfstrs2,         & !input
-                             org_flux%co2fstr,                           & !input
+                             .3 * lslcta,                                & !input  lignin co2 share only
                              org_flux%efstrs2, org_flux%immstrs2,        & !output
                              org_flux%mnrstrs2)                          !output              
                       
@@ -839,7 +844,7 @@
 
                       call nut_np_flow (&
                             soil1(j)%microb(k)%c, soil1(j)%microb(k)%n,      & !input
-                            1/org_ratio%nchs, org_flux%cfs1s3,               & !input
+                            1/org_ratio%nchp, org_flux%cfs1s3,               & !input
                             -99.0,                                           & !input  
                             org_flux%efs1s3, org_flux%imms1s3,               & !output
                             org_flux%mnrs1s3)                                !output  
