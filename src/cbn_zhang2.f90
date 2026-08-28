@@ -839,7 +839,7 @@
 
                       call nut_np_flow (&
                             soil1(j)%microb(k)%c, soil1(j)%microb(k)%n,      & !input
-                            1/org_ratio%nchs, org_flux%cfs1s3,               & !input
+                            1/org_ratio%nchp, org_flux%cfs1s3,               & !input
                             -99.0,                                           & !input  
                             org_flux%efs1s3, org_flux%imms1s3,               & !output
                             org_flux%mnrs1s3)                                !output  
