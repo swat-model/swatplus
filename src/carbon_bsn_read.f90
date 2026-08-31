@@ -73,8 +73,8 @@
 
       inquire (file=in_basin%carbon_bsn, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 2)"
-        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 2)"
+        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 1)"
         error stop
       end if
 
