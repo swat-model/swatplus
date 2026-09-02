@@ -122,7 +122,12 @@
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, flo_rate)
       rchdep = rcurv%dep
-      if (ht1%flo > 0. .and. rchdep > 0.) then
+      !! low-flow floor (1.e-6 m3/day): at negligible flow the concentration = 1000*mass/flo
+      !! below blows up and the in-stream nutrient dynamics become ill-conditioned -- a sub-ULP
+      !! change in flo (from compiler FP reassociation) flips the <1.e-6 solp/sedp threshold and
+      !! produces large, non-physical swings in channel soluble P. Route sub-floor (physically
+      !! zero) flow through the no-flow branch instead. Behavior-neutral for real flows.
+      if (ht1%flo > 1.e-6 .and. rchdep > 0.) then
         disoxin = ht3%dox - rk4_s / (ht1%flo * 1000.)   !m3*1000 l/m3 = liters
         disoxin = max (0., disoxin)
         dispin = ht3%solp + rs2_s / (ht1%flo * 1000.)

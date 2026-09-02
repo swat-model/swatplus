@@ -1,0 +1,46 @@
+{
+  // ── Fortran file associations ────────────────────────────────────────
+  // Explicitly map Fortran extensions to the language IDs registered by
+  // the Modern Fortran extension (fortran-lang.linter-gfortran).
+  // This file is loaded by VS Code before any extension activates, so
+  // syntax highlighting applies immediately on file open in Codespaces.
+  //
+  // FortranFreeForm  — modern free-form Fortran (f90, f95, f03, f08)
+  // FortranFixedForm — legacy fixed-column format (f, for)
+  "files.associations": {
+    "*.f90": "FortranFreeForm",
+    "*.f95": "FortranFreeForm",
+    "*.f03": "FortranFreeForm",
+    "*.f08": "FortranFreeForm",
+    "*.F90": "FortranFreeForm",
+    "*.F95": "FortranFreeForm",
+    "*.for": "FortranFixedForm",
+    "*.f":   "FortranFixedForm",
+    "*.F":   "FortranFixedForm"
+  },
+
+  // ── fortls (Fortran Language Server) ────────────────────────────────
+  // Path to the fortls binary installed via pip in the Dockerfile.
+  // Provides hover docs, go-to-definition, and find references.
+  "fortran.fortls.path": "/usr/local/bin/fortls",
+
+  // ── Linter ──────────────────────────────────────────────────────────
+  // Use gfortran for linting (error squiggles while editing).
+  // ifx is used for actual compilation via CMake.
+  "fortran.linter.compiler": "gfortran",
+  "fortran.linter.compilerPath": "/usr/bin/gfortran",
+
+  // ── Editor settings for Fortran buffers ─────────────────────────────
+  "[FortranFreeForm]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    // Don't accept completion on Enter — in Fortran, Enter should just
+    // go to the next line, not silently expand a completion item
+    "editor.acceptSuggestionOnEnter": "off"
+  },
+  "[FortranFixedForm]": {
+    "editor.tabSize": 6,
+    "editor.insertSpaces": true,
+    "editor.acceptSuggestionOnEnter": "off"
+  }
+}

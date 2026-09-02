@@ -469,8 +469,10 @@
                          chg_typ, chg_val, absmin, absmax)
 
 !!     carbon model basin-wide tunables (read from carbon.bsn).
-      case ("init_seq")
-        org_frac%frac_seq = chg_par(org_frac%frac_seq, chg_typ, chg_val, absmin, absmax)
+      !! calibration range INVERTS vs fg: this is now the litter fraction (0.01-centred),
+      !! not the sequestered fraction (0.95-centred). Label matches carbon.bsn column 1.
+      case ("init_litter")
+        org_frac%frac_litter = chg_par(org_frac%frac_litter, chg_typ, chg_val, absmin, absmax)
       case ("init_microb")
         org_frac%frac_hum_microb = chg_par(org_frac%frac_hum_microb, chg_typ, chg_val, absmin, absmax)
       case ("init_slow")
@@ -489,8 +491,6 @@
         till_consf = chg_par(till_consf, chg_typ, chg_val, absmin, absmax)
       case ("sfc_rsd_photodeg")
         photo_degrade_factor = chg_par(photo_degrade_factor, chg_typ, chg_val, absmin, absmax)
-      case ("n_act_frac")
-        n_act_frac = chg_par(n_act_frac, chg_typ, chg_val, absmin, absmax)
       case ("cnr_cap")
         cnr_cap = chg_par(cnr_cap, chg_typ, chg_val, absmin, absmax)
       case ("cnr_ref")

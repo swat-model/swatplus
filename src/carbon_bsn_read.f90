@@ -4,7 +4,7 @@
       !!
       !! carbon.bsn: title line, column header line, single data row with
       !!   28 values (22 original scalars, 5 residue-decomp tunables
-      !!   n_act_frac, cnr_cap, cnr_ref, cpr_cap, cpr_ref, and the
+      !!   cnr_cap, cnr_ref, cpr_cap, cpr_ref, and the
       !!   mathers_method 0/1 flag for humus-slow pool initialization).
       !! legacy cbn_diag column (retired output flag) removed entirely.
       !! Example files no longer carry it.
@@ -16,7 +16,7 @@
       !!   org_allo(:), so future expansion past dimension(2) needs no
       !!   change to this reader.
       !!
-      !! both files are required when bsn_cc%cswat == 2; the routine aborts via
+      !! both files are required when bsn_cc%cswat == 1; the routine aborts via
       !! error stop if either file is missing, or if its data line(s) are missing
       !! or malformed. the leading title and column-header lines are optional and
       !! may be blank. no-op when carbon is off.
@@ -42,15 +42,39 @@
       real                :: r_meta_rate, r_str_rate, r_microb_top_rate, r_hs_hp
       real                :: r_a1co2, r_asco2, r_apco2, r_abco2
       integer             :: mathers_int = 0   ! 0/1 flag for org_frac%mathers_method
+      integer             :: cbn_diag_int = 0  ! 0/1 flag for cbn_diagnostics (P1: last column)
 
-      if (bsn_cc%cswat /= 2) return
+      !! discrete per-mode branching, not a negated test: project convention is that a
+      !! future cswat mode must fail loudly rather than be silently absorbed by a negated test.
+      !! Modes are 0 = static and 1 = CENTURY. The former mode 2 (CENTURY under the interim
+      !! numbering) is rejected with a migration message rather than silently accepted.
+      select case (bsn_cc%cswat)
+      case (0)
+        return                     !! static soil carbon -- carbon.bsn is not used
+      case (1)
+        continue                   !! CENTURY -- read carbon.bsn below
+      case (2)
+        !! flush before error stop -- buffered output is otherwise discarded and the user
+        !! sees only a bare ERROR STOP plus a backtrace.
+        write (*,*)    "ERROR: codes.bsn carbon = 2 is the retired CENTURY code. Use carbon = 1."
+        write (9001,*) "ERROR: codes.bsn carbon = 2 is the retired CENTURY code. Use carbon = 1."
+        flush (6)
+        flush (9001)
+        error stop "codes.bsn carbon = 2 is retired -- use carbon = 1 for CENTURY"
+      case default
+        write (*,*)    "ERROR: unrecognised codes.bsn carbon mode ", bsn_cc%cswat
+        write (9001,*) "ERROR: unrecognised codes.bsn carbon mode ", bsn_cc%cswat
+        flush (6)
+        flush (9001)
+        error stop "unrecognised codes.bsn carbon mode"
+      end select
 
       !! carbon.bsn (scalars)
 
       inquire (file=in_basin%carbon_bsn, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 2)"
-        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 2)"
+        write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (9001,*) "ERROR: ", trim(in_basin%carbon_bsn), " is required when carbon is enabled (codes.bsn carbon = 1)"
         error stop
       end if
 
@@ -67,7 +91,7 @@
       read (107, '(a)', iostat=eof) header
 
       read (107, *, iostat=eof)                                   &
-        org_frac%frac_seq,         org_frac%frac_hum_microb,      &
+        org_frac%frac_litter,      org_frac%frac_hum_microb,      &
         org_frac%frac_hum_slow,    org_frac%frac_hum_passive,     &
         cb_wtr_coef%prmt_21,       cb_wtr_coef%prmt_44,           &
         till_eff_days,             man_coef%rtof,                 &
@@ -77,8 +101,8 @@
         bmix_a, bmix_b, bmix_c,                                   &
         tillmix_a, tillmix_b, tillmix_c,                          &
         photo_degrade_factor,                                     &
-        n_act_frac, cnr_cap, cnr_ref, cpr_cap, cpr_ref,           &
-        mathers_int
+        cnr_cap, cnr_ref, cpr_cap, cpr_ref,                       &
+        mathers_int, cbn_diag_int
 
       if (eof /= 0) then
         write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " data/values line is missing or could not be parsed (expected 28 values)"
@@ -89,6 +113,9 @@
 
       !! mathers_method: 1 = use the Mathers humus-slow init in soil_nutcarb_init, 0 = original method
       org_frac%mathers_method = (mathers_int == 1)
+      !! P1: cbn_diagnostics now comes from carbon.bsn's last column, NOT from print.prt's
+      !! hru_cb letter. The derivation in carbon_legacy_open was deleted so this value wins.
+      cbn_diagnostics = (cbn_diag_int == 1)
 
       close (107)
 
@@ -106,8 +133,8 @@
 
       inquire (file=carbon_lyr, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 2)"
-        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 2)"
+        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
         error stop
       end if
 

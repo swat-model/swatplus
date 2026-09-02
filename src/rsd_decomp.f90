@@ -37,7 +37,11 @@
       use plant_module
       use plant_data_module
       use output_landscape_module, only : hnb_d
-      use carbon_module, only : hrc_d
+      !! residue C:N / C:P decomposition constants, shared with cbn_surfrsd_decomp.
+      !! NOTE: this is the cswat == 0 path, where carbon_bsn_read returns early and
+      !! carbon.bsn is never opened -- so these keep their carbon_module defaults
+      !! (500. / 25. / 5000. / 200.), exactly the literals they replace. Numerics-neutral.
+      use carbon_module, only : hrc_d, cnr_cap, cnr_ref, cpr_cap, cpr_ref
       
       implicit none 
 
@@ -68,18 +72,18 @@
         !! mineralization can occur only if temp above 0 deg
         if (soil(j)%phys(1)%tmp > 0.) then
           
-          if (pl_mass(j)%rsd(ipl)%n > 1.e-4) then
-            cnr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%n
-            if (cnr > 500.) cnr = 500.
-            cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+          if (pl_mass(j)%abg_rsd(ipl)%n > 1.e-4) then
+            cnr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%n
+            if (cnr > cnr_cap) cnr = cnr_cap
+            cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)
           else
             cnrf = 1.
           end if
             
-          if (pl_mass(j)%rsd(ipl)%p > 1.e-4) then
-            cpr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%p
-            if (cpr > 5000.) cpr = 5000.
-            cprf = Exp(-.693 * (cpr - 200.) / 200.)
+          if (pl_mass(j)%abg_rsd(ipl)%p > 1.e-4) then
+            cpr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%p
+            if (cpr > cpr_cap) cpr = cpr_cap
+            cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)
           else
             cprf = 1.
           end if
@@ -108,8 +112,8 @@
           decr = Min(decr, 1.)
           
           !! apply decay to total carbon pool for both C models
-          decomp = decr * pl_mass(j)%rsd(ipl)
-          pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
+          decomp = decr * pl_mass(j)%abg_rsd(ipl)
+          pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - decomp
           soil1(j)%mn(1)%no3 = soil1(j)%mn(1)%no3 + .8 * decomp%n
           soil1(j)%hact(1)%n = soil1(j)%hact(1)%n + .2 * decomp%n
           soil1(j)%mp(1)%lab = soil1(j)%mp(1)%lab + .8 * decomp%p
@@ -123,9 +127,9 @@
       end do       ! ipl = 1, pcom(j)%npl
       
       !! update total surface residue
-      pl_mass(j)%rsd_tot = plt_mass_z
+      pl_mass(j)%abg_rsd_tot = plt_mass_z
       do ipl = 1, pcom(j)%npl
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(ipl)
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%abg_rsd(ipl)
       end do
       
       return

@@ -210,8 +210,12 @@
           end do
           !plant not in community of ipl = 0
           if (ipl == 0) then
-            d_tbl%act_hit(ialt) = "n"
-          else 
+            do ialt = 1, d_tbl%alts
+              if (d_tbl%alt(ic,ialt) == "=") then   !alternative requires the plant - it can't be growing
+                d_tbl%act_hit(ialt) = "n"
+              end if
+            end do
+          else
             !if plant is in the community - check to see if it is growing
             do ialt = 1, d_tbl%alts
               if (d_tbl%alt(ic,ialt) == "=") then    !determine if growing (y) or not (n)

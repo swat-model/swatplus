@@ -4,10 +4,6 @@
       use carbon_module
       implicit none 
 
-      real :: meta_frac = 0.85  !none       |fraction of that is metabolic
-      real :: str_frac = 0.15   !none       |fraction of that is structural
-      real :: lig_frac = 0.12   !none       |fraction of that is lignin
-      
       type organic_mass
         real :: m = 0.              !kg/ha      |total object mass
         real :: c = 0.              !kg/ha      |carbon mass
@@ -16,10 +12,20 @@
       end type organic_mass
       type (organic_mass) :: orgz
 
+      !! soil residue split by origin: above-ground-incorporated vs below-ground (root/kill).
+      !! Lets cbn_rsd_transfer partition each with its own lignin fraction (lig_frac_abg vs
+      !! lig_frac_blg). The +, -, and (real *) operators below act component-wise on abg and
+      !! blg, so tillage/biomixing arithmetic carries origin through automatically.
+      type residue_origin
+        type (organic_mass) :: abg   !   |above-ground-derived (surface incorporation, tillage/biomix)
+        type (organic_mass) :: blg   !   |below-ground-derived (root death, kill, tuber harvest)
+      end type residue_origin
+      type (residue_origin) :: rsd_originz
+
       type organic_mixing_mass           !       |used for each layer in mgt_newtillmix
         type (organic_mass) :: tot       !       |total organic pool
         type (organic_mass) :: surf_rsd  !   |fresh surface residue mixed into layers
-        type (organic_mass), dimension(12) :: rsd   !   |fresh soil residue (max 12 plants)
+        type (residue_origin), dimension(12) :: rsd   !   |fresh soil residue (max 12 plants)
         !! humus pools for old mineralization model (static carbon)
         type (organic_mass) :: hact      !       |active humus for old mineralization model
         type (organic_mass) :: hsta      !       |stable humus for old mineralization model
@@ -66,7 +72,7 @@
       type (mineral_phosphorus) :: mix_mp    !       |mineral p pool used in tillage mixing
       
       type plant_residue
-        type (organic_mass), dimension(:), allocatable :: rsd       !       |fresh surface residue dimensioned by layer
+        type (residue_origin), dimension(:), allocatable :: rsd     !       |fresh residue by layer, split abg/blg
       end type plant_residue
       
       type soil_profile_mass
@@ -153,7 +159,7 @@
       real :: bsn_mp = 0.                                           !       |mineral p pool (wsol+lab+act+sta) in basin
       type (organic_mass) :: decomp                                 !       |temporary storage for residue decomp
       type (organic_mass) :: photo_decomp                           !       |temporary storage for photo_residue decomp
-      type (organic_mass) :: transfer                               !       |temporary storage for residue decomp
+      type (residue_origin) :: transfer                             !       |soil residue (abg/blg) moved to CENTURY pools in cbn_rsd_transfer
       type (organic_mass) :: pl_burn                                !       |residue and plant mass burned in fire
       type (organic_mass) :: rsd_meta                               !       |temporary storage for initial metabolic litter
       type (organic_mass) :: rsd_str                                !       |temporary storage for initial structural litter
@@ -168,8 +174,8 @@
        type (organic_mass), dimension(:), allocatable :: seed       !kg/ha      |seed (grain) mass for individual plant in community
        type (organic_mass), dimension(:), allocatable :: yield_tot  !kg/ha      |running total sum of yield at harvest -  ave annual print
        type (organic_mass), dimension(:), allocatable :: yield_yr   !kg/ha      |running yearly sum of yield at harvest - yearly print
-       type (organic_mass), dimension(:), allocatable :: rsd        !kg/ha      |fresh surface residue dimensioned by plant
-       type (organic_mass) :: rsd_tot                               !kg/ha      |total fresh surface residue
+       type (organic_mass), dimension(:), allocatable :: abg_rsd    !kg/ha      |fresh surface (above-ground) residue dimensioned by plant
+       type (organic_mass) :: abg_rsd_tot                           !kg/ha      |total fresh surface (above-ground) residue, summed over plants
        type (organic_mass) :: tot_com                               !kg/ha      |total biomass for entire community
        type (organic_mass) :: ab_gr_com                             !kg/ha      |above ground mass for entire community
        type (organic_mass) :: leaf_com                              !kg/ha      |leaf mass for entire community
@@ -356,9 +362,36 @@
 
       interface operator (*)
         module procedure pmin_mult_const
-      end interface 
+      end interface
+
+      !! residue_origin arithmetic (component-wise on abg and blg)
+      interface operator (+)
+        module procedure ro_add
+      end interface
+
+      interface operator (-)
+        module procedure ro_subtract
+      end interface
+
+      interface operator (*)
+        module procedure ro_mult_const
+      end interface
 
     contains
+
+      !! Flush-guarded scalar multiply used by the mass "* const" operators. Returns const*x,
+      !! but exactly 0 when |x| has decayed to a denormal (~1e-308): a mass/nutrient pool can
+      !! shrink to a denormal over many simulated years, and const*x would then underflow and
+      !! crash under -ffpe-trap=underflow. Such a value is physically zero. NOTE: this guards
+      !! only the mass MULTIPLY operators; divisions elsewhere are intentionally still trapped.
+      elemental real function fmul(const, x)
+        real, intent (in) :: const, x
+        if (abs(x) < 1.e-30) then
+          fmul = 0.
+        else
+          fmul = const * x
+        end if
+      end function fmul
 
       !! add mineral n
       function nmin_add (nmin_m1, nmin_m2) result (nmin_m3)
@@ -374,8 +407,8 @@
         real, intent (in) :: const
         type (mineral_nitrogen), intent (in) :: nmin_m1
         type (mineral_nitrogen) :: nmin_m2
-        nmin_m2%no3 = const * nmin_m1%no3
-        nmin_m2%nh4 = const * nmin_m1%nh4
+        nmin_m2%no3 = fmul(const, nmin_m1%no3)
+        nmin_m2%nh4 = fmul(const, nmin_m1%nh4)
       end function nmin_mult_const
                           
       function pmin_add (pmin_m1, pmin_m2) result (pmin_m3)
@@ -393,10 +426,10 @@
         real, intent (in) :: const
         type (mineral_phosphorus), intent (in) :: pmin_m1
         type (mineral_phosphorus) :: pmin_m2
-        pmin_m2%wsol = const * pmin_m1%wsol
-        pmin_m2%lab = const * pmin_m1%lab
-        pmin_m2%act = const * pmin_m1%act
-        pmin_m2%sta = const * pmin_m1%sta
+        pmin_m2%wsol = fmul(const, pmin_m1%wsol)
+        pmin_m2%lab = fmul(const, pmin_m1%lab)
+        pmin_m2%act = fmul(const, pmin_m1%act)
+        pmin_m2%sta = fmul(const, pmin_m1%sta)
       end function pmin_mult_const
                           
       !! add organic mass
@@ -409,6 +442,36 @@
         o_m3%n = o_m1%n + o_m2%n
         o_m3%p = o_m1%p + o_m2%p
       end function om_add1
+
+      !! residue_origin: add, subtract, scalar-multiply (component-wise on abg and blg),
+      !! and total (abg + blg) as an organic_mass for callers that only need the sum.
+      function ro_add (r1, r2) result (r3)
+        type (residue_origin), intent (in) :: r1, r2
+        type (residue_origin) :: r3
+        r3%abg = r1%abg + r2%abg
+        r3%blg = r1%blg + r2%blg
+      end function ro_add
+
+      function ro_subtract (r1, r2) result (r3)
+        type (residue_origin), intent (in) :: r1, r2
+        type (residue_origin) :: r3
+        r3%abg = r1%abg - r2%abg
+        r3%blg = r1%blg - r2%blg
+      end function ro_subtract
+
+      function ro_mult_const (const, r1) result (r2)
+        real, intent (in) :: const
+        type (residue_origin), intent (in) :: r1
+        type (residue_origin) :: r2
+        r2%abg = const * r1%abg
+        r2%blg = const * r1%blg
+      end function ro_mult_const
+
+      function sum_origin (ro) result (o_m)
+        type (residue_origin), intent (in) :: ro
+        type (organic_mass) :: o_m
+        o_m = ro%abg + ro%blg
+      end function sum_origin
             
       !! subtract organic mass
       function om_subtract (o_m1, o_m2) result (o_m3)
@@ -426,10 +489,10 @@
         real, intent (in) :: const
         type (organic_mass), intent (in) :: o_m1
         type (organic_mass) :: o_m2
-        o_m2%m = const * o_m1%m
-        o_m2%c = const * o_m1%c
-        o_m2%n = const * o_m1%n
-        o_m2%p = const * o_m1%p
+        o_m2%m = fmul(const, o_m1%m)
+        o_m2%c = fmul(const, o_m1%c)
+        o_m2%n = fmul(const, o_m1%n)
+        o_m2%p = fmul(const, o_m1%p)
       end function om_mult_const
                           
       !! divide organic mass by a constant

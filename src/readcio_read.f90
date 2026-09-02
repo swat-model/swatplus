@@ -10,6 +10,7 @@
        character (len=256) :: out_path_value = ""
        character (len=512) :: line_buffer
        integer :: eof = 0
+       integer :: eof_basin = 0
        integer :: idx = 0
        logical :: i_exist              !none       |check to determine if file exists
        integer :: i = 0
@@ -24,8 +25,20 @@
       do i = 1, 31
          read (107,*,iostat=eof) name, in_sim  
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_basin
+         !! BASIN line, read tolerantly. in_basin gained a third member (carbon_bsn) but
+         !! readcio_read reads the whole derived type positionally, so a pre-existing file.cio
+         !! with only "codes.bsn parameters.bsn" made the list-directed read spill onto the
+         !! next (CLIMATE) line, shifting every later section -- weather never loaded and the
+         !! run died with a bogus bounds error in cli_tmeas. Fall back to the 2-entry form and
+         !! leave carbon_bsn at its default.
+         read (107,'(a)',iostat=eof) line_buffer
          if (eof < 0) exit
+         read (line_buffer,*,iostat=eof_basin) name, in_basin%codes_bas, in_basin%parms_bas,  &
+                                               in_basin%carbon_bsn
+         if (eof_basin /= 0) then
+           read (line_buffer,*,iostat=eof_basin) name, in_basin%codes_bas, in_basin%parms_bas
+           if (eof_basin /= 0) exit
+         end if
          read (107,*,iostat=eof) name, in_cli
          if (eof < 0) exit
          read (107,*,iostat=eof) name, in_con

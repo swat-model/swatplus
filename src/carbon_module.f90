@@ -2,15 +2,19 @@
       
       implicit none
 
-      !! per-family output gating for the standard carbon files lives in print.prt (hru_cb_* rows).
-      !! cbn_diagnostics only drives the legacy CSU output path (hru_cb / hru_cb_vars rows). it is
-      !! set in carbon_legacy_open from the cb_hru flag at startup, so no input file is needed for
-      !! it. the .false. here is only the pre-run default; it is assigned its real value before any
-      !! writer runs, so it does not disable legacy diagnostics. will be removed in revision 63.
-      logical :: cbn_diagnostics = .false.   !! turns on the legacy plc/cflux/cpool and soil-prop files
+      !! cbn_diagnostics is read from the LAST column of carbon.bsn. It gates the legacy/historical
+      !! CSU diagnostic output (the plc / cflux / cpool and soil-property files). If the column is
+      !! absent from carbon.bsn the .false. default is the operative value and those files are NOT
+      !! written -- it is not merely a pre-run placeholder. Retained deliberately: upstream plans to
+      !! remove this flag in revision 63, we are keeping it.
+      logical :: cbn_diagnostics = .false.
 
       !! basin-wide residue decomposition tunables (read from carbon.bsn)
-      real :: n_act_frac = 0.02    !! frac    |fraction of organic N in the active humus pool (used in nut_nminrl active to stable flow)
+      !! RESERVED, CURRENTLY UNREAD. Its only consumer is the cswat==0 path (nut_nminrl),
+      !! where carbon_bsn_read returns early and carbon.bsn is never opened -- so it has no
+      !! carbon.bsn column and is not exposed to calibration. The local nactfr = .02 in
+      !! nut_nminrl.f90 is the operative value.
+      real :: n_act_frac = 0.02    !! frac    |fraction of organic N in the active humus pool (nut_nminrl active->stable flow)
       real :: cnr_cap    = 500.    !! none    |upper cap on residue C:N ratio before computing decomp factor
       real :: cnr_ref    = 25.     !! none    |reference C:N ratio where decomp factor equals 1
       real :: cpr_cap    = 5000.   !! none    |upper cap on residue C:P ratio before computing decomp factor
@@ -125,8 +129,7 @@
           real :: lsf = 0.      !frac               |fraction of the litter that is structural
           real :: lslf = 0.     !kg kg-1            |fraction of structural litter that is lignin 
           real :: lsnf = 0.     !kg kg-1            |fraction of structural litter that is N      
-          real :: frac_seq = .95             !      |fraction of total carbon the is sequestered carbon when initializing sequestered pools
-          real :: frac_not_seq = .05         !      |fraction of total carbon the is NOT sequestered carbon when initializing non-sequestered pools
+          real :: frac_litter = .05          !      |fraction of total carbon that will be added as litter
           real :: frac_hum_microb = 0.02     !      !fraction of carbon that is microbrial pool when initializing microbrial pools
           real :: frac_hum_slow = 0.54       !      !fraction of carbon that is humas slow pool  when initializing humus slow pools
           real :: frac_hum_passive = 0.44    !      |fraction of carbon that is humas passive pool when initializing humas passive pools

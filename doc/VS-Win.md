@@ -22,7 +22,7 @@ For the SWAT+ build system,  the `CMake` tool is being used, which is integrated
 
 1. In your Windows Start Menu, search for `intel...` and select **"Intel oneAPI command prompt for Intel 64 for Visual Studio 2022"**  which will open a terminal window an load needed Intel compiler information. You may pin that menu item.
    
-   <img title="" src="startmenue.png" alt="startMenue" width="352" data-align="left">
+   <img title="" src="images/startmenue.png" alt="startMenue" width="352" data-align="left">
 
 2. You will see the terminal opening and then the output below, followed by a command prompt. Intel Fortran is now initialized.
    
@@ -55,15 +55,15 @@ You can use Visual Studio directly to clone the SWAT+ repository from GitHub and
 
 1. Select `Clone a Repository` on the Visual Studio 2022 start screen. 
    
-   <img title="" src="StartVS.png" alt="Rer" width="278">
+   <img title="" src="images/StartVS.png" alt="Rer" width="278">
 
 2. Select the GitHub icon on the lower left side to browse your repositories. Log into GitHub with your credentials, a list of your available repositories will be shown, select your fork of the `swatplus` repository and press `Open`. Adjust the local path if needed. 
    
-   <img title="" src="CloneRepo.png" alt="Rer" width="278">
+   <img title="" src="images/CloneRepo.png" alt="Rer" width="278">
 
 3. Visual Studio will now clone the repository from GitHub and will load it as a project into the solution explorer as a `CMake` project. It will try to configure the build system to compile the SWAT+ source code with either `gfortran`, `ifort`, or `ifx`. Depending on the presence of each compiler the build configuration will succeed.  Note that the 2025 Intel Fortran compiler will only provide `ifx`, hence the use of `ifort` will fail.
    
-   <img title="" src="LoadedProject.png" alt="Rer" width="278" data-align="left">
+   <img title="" src="images/LoadedProject.png" alt="Rer" width="278" data-align="left">
 
 ## Configuring, Compiling, Running, and Debugging SWAT+
 
@@ -71,23 +71,23 @@ You can use Visual Studio directly to clone the SWAT+ repository from GitHub and
 
 The Repository `CMake` configuration contains settings for various compiler on different operating systems. In Visual Studio, the available compiler and their respective Debug/Release configuration can be selected through the Visual Studio toolbar User interface.
 
-<img title="" src="ConfigCompiler.png" alt="Rer" width="523" data-align="center">
+<img title="" src="images/ConfigCompiler.png" alt="Rer" width="523" data-align="center">
 
 Using the drop-down, compiler configurations can be switched. On selection change the system will recreate the build system and the compiler configuration as shown in the output window. Major `CMake` settings are printed out and can be used to verify the proper compiler setup. 
 
-<img title="" src="Reconfigure.png" alt="Rer" width="645" data-align="center">
+<img title="" src="images/Reconfigure.png" alt="Rer" width="645" data-align="center">
 
 The build configuration can always be recreated by <kbd>Right</kbd> + <kbd>Click</kbd> on the `CMakeLists.txt` file in the solution explorer and select `Delete Cache and Reconfigure`.
 
 **Compiling.**  SWAT+ can be compiled by selecting the menu item `Build | Build All` or `Build | Rebuild All`. It will compile all Fortran files and link the executable. The name of the executable contains the compiler name, architecture, and version. The version is obtained automatically from the latest tag in GitHub. 
 
-<img title="" src="BuildAll.png" alt="Rer" width="517" data-align="center">
+<img title="" src="images/BuildAll.png" alt="Rer" width="517" data-align="center">
 
 Since SWAT+ it is compiled and linked with the Intel compiler and linker, the SWAT+ executable (for Windows) is dynamically linked. Additional run-time libraries (DLLs) are needed for execution on another machine that does not have Visual Studio installed. ([Intel® C++ and Fortran Compilers Redistributable Libraries by Version](https://www.intel.com/content/www/us/en/developer/articles/tool/compilers-redistributable-libraries-by-version.html)) 
 
 **Running/Debugging.**  The created SWAT+ executable can be tested now. The Visual Studio project needs to be configured with the folder containing a SWAT+ inputs to run. <kbd>Right</kbd> + <kbd>Click</kbd> on the file `CMakeLists.txt` in the solution explorer and select the menu item `Add Debug Configuration`. You may need to close the Co-Pilot chat window to see the solution explorer view.
 
-<img title="" src="AddDebug.png" alt="Rer" width="331" data-align="center">
+<img title="" src="images/AddDebug.png" alt="Rer" width="331" data-align="center">
 
 In the next dialog select the `Default` entry in the list of multiple debug configuration options and press the `Select` button. A default Visual Studio launch configuration file `launch.vs.json` gets created if not present in your SWAT+ project setting and will open up for editing. 
 
@@ -128,7 +128,7 @@ As an example, let's assume there is a valid SWAT+ input data set in the folder 
 
 By also changing the configuration name (to `Ames_testing`) you have more descriptive debug target in your toolbar. You can also add additional launch configurations by clicking `Add Debug Configuration` again and add a different `currentPath` for another testing data set.
 
-<img title="" src="Launch.png" alt="Rer" width="694" data-align="center">
+<img title="" src="images/Launch.png" alt="Rer" width="694" data-align="center">
 
 You can now run or debug the new executable using the `Ames_testing` data set. Make sure that the executable to run in the execution drop-down is set to `Ames_testing`. 
 
@@ -136,7 +136,7 @@ Select the `Debug | Start Debugging` or `Debug | Start Without Debugging` menu i
 
 Start running and debugging, set breakpoints, conditional watches, etc. that help troubleshooting.
 
-<img title="" src="Run.png" alt="Rer" width="534" data-align="center">
+<img title="" src="images/Run.png" alt="Rer" width="534" data-align="center">
 
 ## Resources
 
