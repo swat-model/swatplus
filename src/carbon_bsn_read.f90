@@ -133,8 +133,8 @@
 
       inquire (file=carbon_lyr, exist=i_exist)
       if (.not. i_exist) then
-        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 2)"
-        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 2)"
+        write (*,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
+        write (9001,*) "ERROR: ", trim(carbon_lyr), " is required when carbon is enabled (codes.bsn carbon = 1)"
         error stop
       end if
 
