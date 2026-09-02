@@ -170,7 +170,7 @@
                       call mgt_harvgrain (j, ipl, iharvop)
                     case ("residue")
                       harveff = mgt%op3
-                      call mgt_harvresidue (j, harveff, iharvop)
+                      call mgt_harvresidue (j, ipl, harveff, iharvop)
                     case ("tree")
                       call mgt_harvbiomass (j, ipl, iharvop)
                     case ("tuber")
@@ -228,7 +228,7 @@
                   select case (harvop_db(iharvop)%typ)
                     case ("residue")
                       harveff = mgt%op3
-                      call mgt_harvresidue (j, harveff, iharvop)
+                      call mgt_harvresidue (j, ipl, harveff, iharvop)
                   end select
                   if (pco%mgtout == "y") then
                     write (2612, *) j, time%yrc, time%mo, time%day_mo,  pldb(idp)%plantnm, "    HARVEST ",  &
@@ -282,7 +282,7 @@
                         call mgt_harvgrain (j, ipl, iharvop)
                       case ("residue")
                         harveff = mgt%op3
-                        call mgt_harvresidue (j, harveff, iharvop)
+                        call mgt_harvresidue (j, ipl, harveff, iharvop)
                       case ("tree")
                       case ("tuber")
                         call mgt_harvtuber (j, ipl, iharvop)
@@ -335,7 +335,7 @@
                 select case (harvop_db(iharvop)%typ)
                   case ("residue")
                     harveff = mgt%op3
-                    call mgt_harvresidue (j, harveff, iharvop)
+                    call mgt_harvresidue (j, ipl, harveff, iharvop)
                 end select
               endif
             end do

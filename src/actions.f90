@@ -472,7 +472,7 @@
                   call mgt_harvgrain (j, ipl, iharvop)
                 case ("residue")
                   harveff = d_tbl%act(iac)%const
-                  call mgt_harvresidue (j, harveff, iharvop)
+                  call mgt_harvresidue (j, ipl, harveff, iharvop)
                 case ("tree")
                   call mgt_harvbiomass (j, ipl, iharvop)
                 case ("tuber")
@@ -588,7 +588,7 @@
                   call mgt_harvgrain (j, ipl, iharvop)
                 case ("residue")
                   harveff = d_tbl%act(iac)%const
-                  call mgt_harvresidue (j, harveff, iharvop)
+                  call mgt_harvresidue (j, ipl, harveff, iharvop)
                 case ("tree")
                 case ("tuber")
                   call mgt_harvtuber (j, ipl, iharvop)
