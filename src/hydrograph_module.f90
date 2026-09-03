@@ -170,38 +170,53 @@
       type (hyd_output) :: bch_out_a
       type (hyd_output) :: chomz
       
-      !! source and receiving objects
-      type wallo_source_object
-        type (hyd_output) :: hd
-      end type wallo_source_object
-        
-      !! source and receiving objects
-      type wallo_transfer_object
-        !! total for transfer object
-        type (hyd_output) :: h_tot
-        type (wallo_source_object), dimension (:), allocatable :: src
-      end type wallo_transfer_object
+      !water allocation
+      type irrigation_water_transfer
+        real :: demand = 0.                     !irrigation demand          |m3
+        real :: applied = 0.                    !irrigation applied         |mm
+        real :: runoff = 0.                     !irrigation surface runoff  |mm
+        real :: eff = 1.                        !irrigation efficiency as a fraction of irrigation. Jaehak 2022
+        real :: frac_surq = 0.                  !fraction of irrigation lost in runoff flow. Jaehak 2022
+        real :: no3 = 0.                        !nitrate concentration in irrigation water  |kg   Jaehak 2023
+        real :: salt = 0.                       !salt concentration in irrigation water  |ppm       
+        !hyd_output units are in mm and mg/L
+        type (hyd_output) :: water              !irrigation water
+      end type irrigation_water_transfer
+      type (irrigation_water_transfer),dimension(:),allocatable:: irrig         !dimension by hru
       
-      !! source and receiving objects
-      type water_allocation_object
-        !! source and receiving objects
-        type (wallo_transfer_object), dimension (:), allocatable :: trn
-      end type water_allocation_object
-      type (water_allocation_object), dimension (:), allocatable :: wal_omd
-      type (water_allocation_object), dimension (:), allocatable :: wal_omm
-      type (water_allocation_object), dimension (:), allocatable :: wal_omy
-      type (water_allocation_object), dimension (:), allocatable :: wal_oma
-        
-      !! water withdrawn from an individual source
-      type (hyd_output) :: wdraw_om
-      !! total water withdrawn from all sources
-      type (hyd_output) :: wdraw_om_tot
-      !! outflow from an water allocation object - wtp or use
+      !! water allocation hydrographs
+      !! POU inflow from PODs and outflow to PORs for transferring and outputting
+      type pou_daily_hydrographs
+        type (hyd_output) :: pods                              !! total inflow hydrograph from all PODs
+        type (hyd_output) :: pors                              !! total outflow hydrograph to all PORs
+        type (hyd_output), dimension (:), allocatable :: pod   !! inflow hyd from each POD
+        type (hyd_output), dimension (:), allocatable :: por   !! outflow hyd to each POR
+      end type pou_daily_hydrographs
+      type (pou_daily_hydrographs), dimension (:), allocatable :: poud_om  !! daily hydrographs
+      type (pou_daily_hydrographs), dimension (:), allocatable :: poum_om  !! monthly hydrographs
+      type (pou_daily_hydrographs), dimension (:), allocatable :: pouy_om  !! yearly hydrographs
+      type (pou_daily_hydrographs), dimension (:), allocatable :: poua_om  !! ave annual hydrographs
+      
+      !! POD delivery to POUs - for outputting
+      type pod_daily_hydrographs
+        type (hyd_output) :: pous                              !! total delivery hydrograph from all PODs
+        type (hyd_output), dimension (:), allocatable :: pou   !! delivery hyd from each POD
+      end type pod_daily_hydrographs
+      type (pod_daily_hydrographs), dimension (:), allocatable :: podd_om  !! daily hydrographs
+      type (pod_daily_hydrographs), dimension (:), allocatable :: podm_om  !! monthly hydrographs
+      type (pod_daily_hydrographs), dimension (:), allocatable :: pody_om  !! yearly hydrographs
+      type (pod_daily_hydrographs), dimension (:), allocatable :: poda_om  !! ave annual hydrographs
+      
+      !! outflo_om used as temp storage when using or treating water
       type (hyd_output) :: outflo_om
+      
+      !! om_irrig transfer of organics and minerals in irrigation water
+      type (hyd_output) :: om_irrig
       
       !! water treatment plant storage and outflow
       type (hyd_output), dimension (:), allocatable :: wtp_om_stor
       type (hyd_output), dimension (:), allocatable :: wtp_om_out
+      
       !! water treatment plant treated concentrations - input
       type (hyd_output), dimension (:), allocatable :: wtp_om_treat
       
@@ -236,6 +251,7 @@
       !! water tower storage and outflow
       type (hyd_output), dimension (:), allocatable :: wtow_om_stor
       type (hyd_output), dimension (:), allocatable :: wtow_om_out
+      !! ****CHECK ALL THESE****
        
       type object_output
         character (len=10) :: name = ""
@@ -403,22 +419,13 @@
       end type object_connectivity
       type (object_connectivity), dimension(:), allocatable, save :: ob
       
-      !water allocation
-      type irrigation_water_transfer
-        real :: demand = 0.                     !irrigation demand          |m3
-        real :: applied = 0.                    !irrigation applied         |mm
-        real :: runoff = 0.                     !irrigation surface runoff  |mm
-        real :: eff = 1.                        !irrigation efficiency as a fraction of irrigation. Jaehak 2022
-        real :: frac_surq = 0.                  !fraction of irrigation lost in runoff flow. Jaehak 2022
-        real :: no3 = 0.                        !nitrate concentration in irrigation water  |kg   Jaehak 2023
-        real :: salt = 0.                       !salt concentration in irrigation water  |ppm       
-        !hyd_output units are in mm and mg/L
-        type (hyd_output) :: water              !irrigation water
-      end type irrigation_water_transfer
-      type (irrigation_water_transfer),dimension(:),allocatable:: irrig         !dimension by hru
-      
       !recall hydrograph inputs
       type recall_hydrograph_inputs
+        character(len=25) :: name = ""
+        character(len=13) :: units = ""        !! mass, conc
+        character(len=13) :: tstep = ""        !! day, mo, yr
+        integer :: typ = 0                     !! 0=subdaily, 1=daily, 2= monthly, 3=yearly
+        character(len=25) :: filename = ""
         !hd and hyd_flo units are in cms and mg/L
         type (hyd_output), dimension (:,:), allocatable :: hd   !m3/s for flow  |input total hyd for daily, monthly, annual and exco
         real, dimension (:,:), allocatable :: hyd_flo           !m3/s           |input total flow hyd only for subdaily recall
@@ -431,7 +438,6 @@
         integer :: objs = 0      !number of objects or 1st object command
         integer :: hru = 0       !1-number of hru"s or 1st hru command
         integer :: hru_lte = 0   !2-number of hru_lte"s or 1st hru_lte command
-        
         integer :: ru = 0        !3-number of ru"s or 1st ru command
         integer :: gwflow = 0    !4-number of gwflow"s or 1st gwflow command !rtb gwflow
         integer :: aqu = 0       !5-number of aquifer"s or 1st aquifer command
@@ -1187,9 +1193,9 @@
       type (hru_swift_header) :: hru_swift_hdr
 
       type shade_factor_data
-        integer :: jday = 0            ! none          |day of the year
-        integer :: lsu  = 0               ! none          |landscape unit
-        real :: value = 0.                  ! none          |shade factor value
+        integer :: jday = 0               ! none          |day of the year
+        integer :: cha  = 0               ! none          |channel number
+        real :: value = 0.                ! none          |shade factor value
       end type shade_factor_data
       type (shade_factor_data), dimension (:), allocatable :: shf_db
 
@@ -1253,7 +1259,7 @@
         type (hyd_output), intent (inout) :: hyd1
         type (hyd_output), intent (in) :: hyd2 
         
-        hyd1%flo = hyd1%flo
+        hyd1%flo = amin1 (hyd1%flo, hyd2%flo)
         hyd1%sed = amin1 (hyd1%sed, hyd2%sed)
         hyd1%orgn = amin1 (hyd1%orgn, hyd2%orgn)
         hyd1%sedp = amin1 (hyd1%sedp, hyd2%sedp)

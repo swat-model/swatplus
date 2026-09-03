@@ -70,6 +70,8 @@
     real :: solP_remove = 0.  !%               |Average soluble P removal from surface 
                               !                |runoff for for entire vfs   
     real :: remove21 = 0.     !                |
+    real :: filt_surq = 0.
+    real :: filt_sed = 0.
    
     j = ihru
 
@@ -230,7 +232,15 @@
 
       !! Calculate pesticide removal 
       !! based on the sediment and runoff removal only
+      !! BUG FIX: return filtered pesticide mass to soil surface layer
+      !! Previously, filtered mass was removed from hpestb_d but never returned
+      !! to cs_soil — creating a mass leak (pest_lch already removed it from cs_soil)
       do k = 1, cs_db%num_pests
+        filt_surq = hpestb_d(j)%pest(k)%surq * (surq_remove / 100.)
+        filt_sed  = hpestb_d(j)%pest(k)%sed  * (sed_remove / 100.)
+        hpestb_d(j)%pest(k)%surq = hpestb_d(j)%pest(k)%surq - filt_surq
+        hpestb_d(j)%pest(k)%sed  = hpestb_d(j)%pest(k)%sed  - filt_sed
+        cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + filt_surq + filt_sed
         hpestb_d(j)%pest(k)%surq = hpestb_d(j)%pest(k)%surq * (1. - surq_remove / 100.)
         hpestb_d(j)%pest(k)%sed = hpestb_d(j)%pest(k)%sed * (1. - sed_remove / 100.)
       end do

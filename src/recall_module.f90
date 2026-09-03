@@ -2,26 +2,21 @@
     
       implicit none
     
-      type constituent_file_data
-        character(len=25) :: name = ""
-        character(len=13) :: units = ""          !mass, conc
-        character(len=13) :: tstep = ""          !day, mo, yr
-      end type constituent_file_data
-      
       type recall_databases
         character(len=13) :: name = ""
-        type (constituent_file_data) :: org_min
-        type (constituent_file_data) :: pest
-        type (constituent_file_data) :: path
-        type (constituent_file_data) :: hmet
-        type (constituent_file_data) :: salt
-        type (constituent_file_data) :: constit
+        character(len=25) :: org_min
+        character(len=25) :: pest
+        character(len=25) :: path
+        character(len=25) :: hmet
+        character(len=25) :: salt
+        character(len=25) :: constit
         integer :: iorg_min
         integer :: ipest
         integer :: ipath
         integer :: ihmet
         integer :: isalt
         integer :: iconstit
+        character(len=50) :: descrip
       end type recall_databases
       
       !! use this type for all recall objects including exco and dr

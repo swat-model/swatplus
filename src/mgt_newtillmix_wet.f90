@@ -134,6 +134,13 @@
           smix(18) = smix(18) + soil(jj)%phys(l)%silt * frac_dep(l)
           smix(19) = smix(19) + soil(jj)%phys(l)%sand * frac_dep(l)
 
+          !! BUG FIX: accumulate pesticides for tillage mixing
+          !! Previously smix(20+k) was never populated, so Phase 2 redistribution
+          !! zeroed out the mixed fraction — destroying pesticide mass every tillage event
+          do k = 1, npmx
+            smix(20+k) = smix(20+k) + cs_soil(jj)%ly(l)%pest(k) * frac_mixed
+          end do
+
             !!by zhang
             !!============== 
           if (bsn_cc%cswat == 2) then         

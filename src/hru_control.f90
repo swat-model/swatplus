@@ -137,7 +137,6 @@
       hpc_d(j) = hpcz
       hscf_d(j) = hscfz
       hru(j)%water_seep = 0.
-      irrig(j)%demand = 0.
       hnb_d(j)%nuptake = 0.
       hnb_d(j)%puptake = 0.
       hwb_d(j)%wet_out = 0.
@@ -174,6 +173,11 @@
         !!ht2== outflow from inflow: added to hru generated flows
         ht1 = hz
         ht2 = hz
+
+        !! if channel is a POD, allocate water for users and adjust flow in channel accordingly
+        if (hru(j)%wallo_pod > 0) then
+          call wallo_control (hru(j)%wallo_pod)
+        end if
 
         !! check auto operations
         if (sched(isched)%num_autos > 0) then
@@ -517,8 +521,6 @@
         !! compute pesticide movement in soil
         call pest_lch
       
-        !! sum total pesticide in soil
-        call pest_soil_tot
         
         if (surfq(j) > 0. .and. qp_cms > 1.e-6) then
           if (precip_eff > 0.) then
@@ -618,6 +620,9 @@
        if (hru(j)%lumv%bmp_flag == 1) then
           call smp_bmpfixed
         end if
+
+        !! sum total pesticide in soil (moved here from before pest_pesty)
+        call pest_soil_tot
 
         !! ht2%flo is outflow from wetland or total saturation excess if no wetland
         if(ht2%flo > 0.) then
@@ -756,8 +761,6 @@
         hwb_d(j)%pet = pet_day
         hwb_d(j)%qtile = qtile
         hwb_d(j)%irr = irrig(j)%applied
-        irrig(j)%applied = 0.
-        irrig(j)%runoff = 0.
         hwb_d(j)%surq_runon = ls_overq
         hwb_d(j)%latq_runon = latqrunon 
         hwb_d(j)%overbank = hru(j)%wet_obank_in

@@ -1,7 +1,7 @@
       subroutine mgt_harvtuber (jj, iplant, iharvop)
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine performs the harvest grain only operation 
+!!    this subroutine performs the tuber harvest operation
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name        |units          |definition
@@ -19,7 +19,9 @@
       use carbon_module
       use organic_mineral_mass_module
       use soil_module
+      use pesticide_data_module, only : pestdb
       use constituent_mass_module
+      use output_ls_pesticide_module
       
       implicit none
       
@@ -58,18 +60,39 @@
       !! apply pest stress to harvest index - mass lost due to pests - don't add to residue
       pl_yield = (1. - pcom(j)%plcur(ipl)%pest_stress) * pl_yield
       
-      !! adjust foliar and internal pesticide for grain removal
+      !! adjust foliar and internal pesticide for tuber removal
       do k = 1, cs_db%num_pests
-        !! calculate amount of pesticide removed with yield
-        yld_rto = pl_yield%m / pl_mass(j)%tot(ipl)%m
+        if (pl_mass(j)%tot(ipl)%m > 1.e-6) then
+          yld_rto = pl_yield%m / pl_mass(j)%tot(ipl)%m
+          yld_rto = Min(yld_rto, 1.)
+        else
+          yld_rto = 0.
+        end if
         yldpst = yld_rto * (cs_pl(j)%pl_in(ipl)%pest(k) + cs_pl(j)%pl_on(ipl)%pest(k))
-        cs_pl(j)%pl_in(ipl)%pest(k) = cs_pl(j)%pl_in(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_in(ipl)%pest(k)
+        hpestb_d(j)%pest(k)%harv_export = hpestb_d(j)%pest(k)%harv_export + yldpst
+        !! BUG FIX: original code kept yld_rto fraction instead of (1-yld_rto)
+        cs_pl(j)%pl_in(ipl)%pest(k) = (1. - yld_rto) * cs_pl(j)%pl_in(ipl)%pest(k)
         cs_pl(j)%pl_in(ipl)%pest(k) = Max (0., cs_pl(j)%pl_in(ipl)%pest(k))
-        cs_pl(j)%pl_on(ipl)%pest(k) = cs_pl(j)%pl_on(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_on(ipl)%pest(k)
+        cs_pl(j)%pl_on(ipl)%pest(k) = (1. - yld_rto) * cs_pl(j)%pl_on(ipl)%pest(k)
         cs_pl(j)%pl_on(ipl)%pest(k) = Max (0., cs_pl(j)%pl_on(ipl)%pest(k))
       end do   
+
+      !! tuber harvest is terminal for the current plant (plant mass is zeroed below)
+      !! route remaining pesticide before zeroing pools:
+      !! - pl_on always returns to soil surface
+      !! - pl_in returns to soil only for non-sink pesticides (tracked as kill_ret)
+      !! - for sink option, pl_in is terminally removed and tracked as harvest export
+      do k = 1, cs_db%num_pests
+        cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + cs_pl(j)%pl_on(ipl)%pest(k)
+        cs_pl(j)%pl_on(ipl)%pest(k) = 0.
+        if (pestdb(cs_db%pest_num(k))%harvest_sink < 0.5) then
+          hpestb_d(j)%pest(k)%kill_ret = hpestb_d(j)%pest(k)%kill_ret + cs_pl(j)%pl_in(ipl)%pest(k)
+          cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + cs_pl(j)%pl_in(ipl)%pest(k)
+        else
+          hpestb_d(j)%pest(k)%harv_export = hpestb_d(j)%pest(k)%harv_export + cs_pl(j)%pl_in(ipl)%pest(k)
+        end if
+        cs_pl(j)%pl_in(ipl)%pest(k) = 0.
+      end do
 
       !! add above ground mass to residue pool
       pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%ab_gr(ipl)

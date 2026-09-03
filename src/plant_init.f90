@@ -353,7 +353,6 @@
             call pl_root_gro(j)
             call pl_seed_gro(j)
             call pl_partition(j, 1)
-            call pl_root_gro(j)
             call pl_rootfr(j)
           end if
 

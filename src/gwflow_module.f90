@@ -316,6 +316,7 @@
       integer :: gw_canal_ncells = 0                     !     |
       integer :: num_canalK_zones = 0                    !     |
       real, dimension (:), allocatable :: canalK_zones   !     |
+      
       !canal-channel connection
       type canal_chan_info
         integer :: ncanal = 0                            !     |number of canals connected to the channel
@@ -328,6 +329,7 @@
         integer, allocatable :: daye(:)                  !     |ending day of active canal
       endtype canal_chan_info
       type (canal_chan_info), dimension(:), allocatable :: gw_chan_canl_info
+      
       !canal-cell connection
       type cell_canal_info
         integer :: ncon = 0                              !     |number of cells connected to the canal
@@ -337,6 +339,7 @@
         real, allocatable :: hydc(:)                     !m    |hydraulic conductivity of canal bed in the cell
       endtype cell_canal_info
       type (cell_canal_info), dimension(:), allocatable :: gw_canl_info 
+      
       !canal-cell connection for canals that receive water outside of the model domain
       type cell_canal_out_info
         integer :: cell_id = 0

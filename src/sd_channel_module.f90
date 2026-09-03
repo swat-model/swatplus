@@ -98,6 +98,7 @@
 
       type channel_morphology_output
         integer :: num              !           |number of channels in each order
+        real :: fp_km2 = 0.         !km2        |flood plain area of channel
         real :: w_yr = 0.           !ratio      |bank cutting - widths per year 
         real :: d_yr = 0.           !ratio      |bed down cutting - depths per year
         real :: fp_mm = 0.          !mm/yr      |flood plain deposition - uniform across the flood plain
@@ -105,7 +106,7 @@
         real :: ebtm_m = 0.         !m          |bed down cutting
         real :: ebank_t = 0.        !tons       |bank cutting  
         real :: ebtm_t = 0.         !tons       |bed down cutting
-        real :: fp_t = 0.           !mm/yr      |flood plain deposition
+        real :: fp_t = 0.           !tons       |flood plain deposition
       end type channel_morphology_output
       type (channel_morphology_output), dimension (:), allocatable :: ch_morph
       type (channel_morphology_output), dimension (12) :: ch_morph_ord
@@ -166,7 +167,7 @@
         character(len=25) :: name = "default"
         integer :: props = 0
         integer :: obj_no = 0
-        integer :: wallo = 0                !water allocation object number
+        integer :: wallo_pod = 0            !POD (point of diversion) number for water allocation - 0 if not POD
         integer :: aqu_link = 0             !aquifer the channel is linked to
         integer :: aqu_link_ch = 0          !sequential channel number in the aquifer
         character(len=25) :: region = ""
@@ -214,6 +215,7 @@
         real :: out1_vol = 0.   !m3         |outflow during previous time step for Muskingum
         real :: stor_dis_01bf = 0.      !hr         |storage time constant at 0.1*bankfull
         real :: stor_dis_bf = 0.        !hr         |storage time constant at bankfull
+        real :: fp_km2 = 0.             !km2        |flood plain area of channel
         type (muskingum_parameters) :: msk
         type (floodplain_parameters) :: fp
         real, dimension (:), allocatable :: kd      !           |aquatic mixing velocity (diffusion/dispersion)-using mol_wt
@@ -451,6 +453,106 @@
       end type sdch_bud_units
       type (sdch_bud_units) :: sdch_bud_hdr_units   
 !!    SD_CHAN_BUD_HEADERS      
+      
+!!CHANBUD HEADERS      
+      type ch_bud      
+          character(len=11) :: ich     = "        ich"
+          character(len=16) :: name    =  " name          "
+          character(len=12) :: area    =  "        area"
+          character(len=16) :: chl     =  "            chl"          
+          character(len=15) :: chw     =  "           chw"
+          character(len=15) :: chd     =  "           chd"
+          character(len=16) :: num     =  "            num"
+          character(len=16) :: fp_area =  "  fp_area      "
+          character(len=16) :: w_yr    =  "   w_yr        "
+          character(len=16) :: d_yr    =  "   d_yr        "
+          character(len=16) :: fp      =  "  fp           "
+          character(len=16) :: ebank_m =  "ebank_m        "
+          character(len=16) :: ebtm_m  =  "ebtm_m       "
+          character(len=16) :: ebank_t =  "ebank_t      "
+          character(len=16) :: ebtm_t  =  "ebtm_t       "
+          character(len=16) :: fp_t    =  "fp_t           "
+      end type ch_bud
+      type (ch_bud) :: ch_bud_hdr
+      
+      type ch_bud_units
+          character (len=6) :: ich     =  "      "         
+          character(len=16) :: name    =  "                "
+          character(len=16) :: area    =  "              ha"
+          character(len=16) :: chl     =  "              km"      
+          character(len=16) :: chw     =  "              m " 
+          character(len=16) :: chd     =  "             m  "  
+          character(len=16) :: num     =  "                "
+          character(len=16) :: fp_area =  "  km2           "
+          character(len=16) :: w_yr    =  "  ratio         "
+          character(len=16) :: d_yr    =  "  ratio         "
+          character(len=16) :: fp      =  "mm/yr           "
+          character(len=16) :: ebank_m =  "m               "
+          character(len=16) :: ebtm_m  =  "m               "
+          character(len=16) :: ebank_t =  "tons            "
+          character(len=16) :: ebtm_t  =  "tons           "
+          character(len=16) :: fp_t    =  "tons           "        
+      end type ch_bud_units
+      type (ch_bud_units) :: ch_bud_hdr_units   
+!!    CHANBUD HEADERS
+      
+!!    CHANBUD ORDER HEADERS      
+      type ch_bud_order       
+          character(len=12) :: iord     = "        iord" 
+          character(len=16) :: num      =  "        num     "          
+          character(len=16) :: fp_km2   =  "  fp_km2        "
+          character(len=12) :: w_yr     =  "   w_yr     "          
+          character(len=16) :: d_yr     =  "   d_yr         "
+          character(len=16) :: fp_mm    =  "  fp_mm         "
+          character(len=16) :: ebank_m  =  "ebank_m         "
+          character(len=16) :: ebtm_m   =  "ebtm_m          "
+          character(len=14) :: ebank_t  =  "ebank_t      "
+          character(len=14) :: ebtm_t   =  "ebtm_t       "
+          character(len=14) :: fp_t     =  "fp_t         "
+      end type ch_bud_order
+      type (ch_bud_order) :: ch_bud_order_hdr
+      
+      type ch_bud_order_units
+          character(len=12) :: iord     = "            " 
+          character(len=16) :: num      =  "                "          
+          character(len=16) :: fp_km2   =  "  km2           "
+          character(len=12) :: w_yr     =  "  ratio         "          
+          character(len=16) :: d_yr     =  "  ratio         "
+          character(len=16) :: fp_mm    =  "  mm/yr         "
+          character(len=16) :: ebank_m  =  "     m          "
+          character(len=16) :: ebtm_m   =  "     m          "
+          character(len=14) :: ebank_t  =  "  tons          "
+          character(len=12) :: ebtm_t   =  "  tons        "
+          character(len=14) :: fp_t     =  "  tons         "
+      end type ch_bud_order_units
+      type (ch_bud_order_units) :: ch_bud_order_hdr_units   
+!!    CHANBUD ORDER HEADERS 
+      
+!!    CH SEDIMENT BUDGET HEADERS      
+      type ch_sed_budget      
+          character(len=16) :: upland_t     =  "  upland_t      "
+          character(len=16) :: ch_ebank_t   =  " ch_ebank_t     "          
+          character(len=16) :: up_ch_rto    =  " up_ch_rto      "
+          character(len=12) :: ch_w_yr      =  " ch_w_yr    "          
+          character(len=16) :: fp_dep_t     =  " fp_dep_t       "
+          character(len=16) :: fp_dep_mm    =  "  fp_dep_mm     "
+          character(len=16) :: res_dep_t    =  "res_dep_t       "
+          character(len=16) :: res_trap_eff =  "res_trap_eff    "
+      end type ch_sed_budget
+      type (ch_sed_budget) :: ch_sed_bud_hdr
+      
+      type ch_sed_budget_units     
+          character(len=16) :: upland_t     =  "     tons       "
+          character(len=16) :: ch_ebank_t   =  "     tons       "          
+          character(len=16) :: up_ch_rto    =  "  ratio         "
+          character(len=12) :: ch_w_yr      =  "  ratio         "          
+          character(len=16) :: fp_dep_t     =  "     tons       "
+          character(len=16) :: fp_dep_mm    =  "       mm       "
+          character(len=16) :: res_dep_t    =  "     tons       "
+          character(len=16) :: res_trap_eff =  "     frac       "
+      end type ch_sed_budget_units
+      type (ch_sed_budget_units) :: ch_sed_bud_hdr_units   
+!!    CH SEDIMENT BUDGET HEADERS      
       
       type sdch_header_sub
           character (len=6) :: day        =  "  jday"

@@ -82,8 +82,8 @@
         real :: surlag = 4.0        !! days          |surface runoff lag time (days)
         real :: adj_pkr = 1.0       !! none          |peak rate adjustment factor in the subbasin
         real :: prf = 484.          !! peak rate factor for peak rate equation
-        real :: spcon = 0.0         !! not used
-        real :: spexp = 0.0         !! not used
+        real :: pestgwfact = 0.     !! pesticide groundwater mixing factor
+        real :: temp_decay = 0.     !! pesticide temperature decay factor (0-1) - fraction increase in decay rate per degree C increase in temp
         real :: cmn = 0.003         !! rate factor for mineralization on active org N - 0.0003 -> 0.003
         real :: n_updis = 20.0      !! nitrogen uptake dist parm
         real :: p_updis = 20.0      !! phosphorus uptake dist parm
@@ -276,11 +276,11 @@
         real :: upland_t = 0.          !! total upland sediment yield - all land uses - tons
         real :: ch_ebank_t = 0.        !! total bank erosion - all stream orders - tons
         real :: up_ch_rto = 0.         !! upland/channel ratio
-        real :: ch_w_yr = 0.           !! basin average widths per year
+        real :: ch_w_yr = 0.           !! basin average widths per year ratio
         real :: fp_dep_t = 0.          !! total flood plain deposition - stream orders - tons
         real :: fp_dep_mm = 0.         !! basin flood plain deposition - mm/year
         real :: res_dep_t = 0.         !! total reservoir deposition - all reservoirs - tons
-        real :: res_trap_eff = 0.      !! average reservoir trap efficiency - all reservoirs
+        real :: res_trap_eff = 0.      !! average reservoir trap efficiency - all reservoirs fraction
       end type basin_sediment_budget
       type (basin_sediment_budget) :: bsn_sedbud
       

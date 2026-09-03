@@ -109,20 +109,24 @@
         pl_mass(j)%rsd(ipl)%c = pl_mass(j)%rsd(ipl)%c * (1.- ero_fr)
       end do
           
-        
+      !! microbial carbon loss with runoff and sediment - first soil layer
       if (soil1(j)%microb(1)%c > .01) then
-        koc = cb_wtr_coef%prmt_21 !KOC FOR CARBON LOSS IN WATER AND SEDIMENT(500._1500.) KD = KOC * C
-        soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c + soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
+        !KOC FOR CARBON LOSS IN WATER AND SEDIMENT(500._1500.) KD = KOC * C
+        koc = cb_wtr_coef%prmt_21 
+        soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c +  &
+                                                 soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
         c_microb_fac = .0001 * koc * soil1(j)%tot(1)%c
         flo_loss_co = soil(j)%phys(1)%ul + c_microb_fac
         flo_tot = surfq(j) + soil(j)%ly(1)%prk + soil(j)%ly(1)%flat
         c_microb_loss = 0.
         if (flo_tot > 1.E-10) then
-          c_microb_loss = soil1(j)%microb(1)%c * (1. - EXP(-flo_tot / flo_loss_co)) !loss of biomass C
+          !loss of biomass C
+          c_microb_loss = soil1(j)%microb(1)%c * (1. - EXP(-flo_tot / flo_loss_co)) 
           !! cb_wtr_coef%prmt_44 is the ratio of soluble C conc - runoff/perc (0.1-1.)
-          vert_conc = c_microb_loss / (soil(j)%ly(1)%prk + cb_wtr_coef%prmt_44 * (surfq(j) + soil(j)%ly(1)%flat))
+          vert_conc = c_microb_loss / (soil(j)%ly(1)%prk + cb_wtr_coef%prmt_44 * (surfq(j) +  &
+                                                                        soil(j)%ly(1)%flat))
           horiz_conc = cb_wtr_coef%prmt_44 * vert_conc
-          c_horiz = vert_conc * soil(j)%ly(1)%prk 
+          c_vert = vert_conc * soil(j)%ly(1)%prk 
           soil1(j)%microb(1)%c = soil1(j)%microb(1)%c - c_microb_loss
           c_surlat = vert_conc * (surfq(j) + soil(j)%ly(1)%flat)
           !! microbial carbon loss with sediment
@@ -134,24 +138,28 @@
       end if
 
       soil1(j)%microb(1)%c = soil1(j)%microb(1)%c - c_microb_sed 
-      soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c + soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
+      soil1(j)%tot(1)%c = soil1(j)%str(1)%c + soil1(j)%meta(1)%c + soil1(j)%hp(1)%c +        &
+                                                soil1(j)%hs(1)%c + soil1(j)%microb(1)%c 
       hsc_d(j)%surq_c = c_surlat * (surfq(j) / (surfq(j) + soil(j)%ly(1)%flat + 1.e-6))
        
-      soil(j)%ly(1)%latc = c_surlat * (soil(j)%ly(1)%flat / (surfq(j) + soil(j)%ly(1)%flat + 1.e-6))
+      soil(j)%ly(1)%latc = c_surlat * (soil(j)%ly(1)%flat / (surfq(j) + soil(j)%ly(1)%flat + &
+                                                                                      1.e-6))
       soil(j)%ly(1)%percc = c_vert 
       hsc_d(j)%sed_c = c_sed + c_microb_sed
       
+      !! percolation and lateral flow of microbial carbon in lower soil layers
       do ly = 2, soil(j)%nly
         c_microb_perc = soil1(j)%microb(ly)%c + c_vert
         c_vert = 0.
         if (c_microb_perc >=.01) then
           flo_tot = soil(j)%ly(ly)%prk + soil(j)%ly(ly)%flat
           if (flo_tot > 0.) then
-            c_vert = c_microb_perc * (1. - EXP(-flo_tot / (soil(j)%phys(ly)%por * soil(j)%phys(ly)%thick  &
-                                                           - soil(j)%phys(ly)%wpmm + .0001 * koc * soil1(j)%water(1)%c)))
+            c_vert = c_microb_perc * (1. - EXP(-flo_tot / (soil(j)%phys(ly)%por *         &
+                                       soil(j)%phys(ly)%thick - soil(j)%phys(ly)%wpmm)))
           end if
         end if
-        soil(j)%ly(ly)%latc = c_vert * (soil(j)%ly(ly)%flat/(soil(j)%ly(ly)%prk + soil(j)%ly(ly)%flat+1.e-6))
+        soil(j)%ly(ly)%latc = c_vert * (soil(j)%ly(ly)%flat/(soil(j)%ly(ly)%prk +         &
+                                                             soil(j)%ly(ly)%flat+1.e-6))
         soil(j)%ly(ly)%percc = c_vert - soil(j)%ly(ly)%latc
         soil1(j)%microb(ly)%c = c_microb_perc - c_vert
 
@@ -161,7 +169,8 @@
         end if
         latc_clyr = latc_clyr + soil(j)%ly(ly)%latc
 
-        soil1(j)%tot(ly)%c = soil1(j)%str(ly)%c + soil1(j)%meta(ly)%c + soil1(j)%hp(ly)%c + soil1(j)%hs(ly)%c + soil1(j)%microb(ly)%c 
+        soil1(j)%tot(ly)%c = soil1(j)%str(ly)%c + soil1(j)%meta(ly)%c + soil1(j)%hp(ly)%c +   &
+                                                    soil1(j)%hs(ly)%c + soil1(j)%microb(ly)%c 
         soil1(j)%seq(ly)%c = soil1(j)%hp(ly)%c + soil1(j)%hs(ly)%c + soil1(j)%microb(ly)%c
       end do
      

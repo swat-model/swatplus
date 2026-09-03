@@ -34,6 +34,7 @@
       real :: ran_num = 0.                    !          |
       real :: aunif                           !          |
       integer :: ires = 0                     !          |
+      integer :: iwtow = 0                    !          |
       integer :: ipl = 0                      !          |
       integer :: iipl = 0                     !          |
       integer :: id = 0                       !          |
@@ -138,7 +139,7 @@
             end if
           end do
             
-            call cond_real (ic, pcom(ob_num)%plcur(ipl)%phuacc, d_tbl%cond(ic)%lim_const, idtbl)
+          call cond_real (ic, pcom(ob_num)%plcur(ipl)%phuacc, d_tbl%cond(ic)%lim_const, idtbl)
             
         !potential heat units - base zero
         case ("phu_base0")
@@ -206,21 +207,20 @@
           do iipl = 1, pcom(ob_num)%npl
             if (d_tbl%cond(ic)%lim_var == pcom(ob_num)%pl(iipl)) then
               ipl = iipl
+              exit
             end if
           end do
-          !plant not in community of ipl = 0
-          if (ipl == 0) then
-            d_tbl%act_hit(ialt) = "n"
-          else 
-            !if plant is in the community - check to see if it is growing
-            do ialt = 1, d_tbl%alts
-              if (d_tbl%alt(ic,ialt) == "=") then    !determine if growing (y) or not (n)
-                if (pcom(ob_num)%plcur(ipl)%gro == "n") then
-                  d_tbl%act_hit(ialt) = "n"
-                end if
+          ! set action to 'n' if plant is not in community or not growing
+          do ialt = 1, d_tbl%alts
+            if (d_tbl%alt(ic,ialt) == '=') then
+              if (ipl == 0) then
+                d_tbl%act_hit(ialt) = 'n'
+              else if (pcom(ob_num)%plcur(ipl)%gro == 'n') then
+                d_tbl%act_hit(ialt) = 'n'
               end if
-            end do
-          end if
+            end if
+          end do
+          
                          
         !days since last plant
         case ("days_plant")
@@ -629,14 +629,14 @@
           if (ob_num == 0) ob_num = ob_cur
           
           call cond_real (ic, irrig(ob_num)%demand, d_tbl%cond(ic)%lim_const, idtbl)
-                                        
+                                 
         !irrigation demand
-        case ("irr_demand_wro")
+        case ("irr_pou_dmd")
           ob_num = d_tbl%cond(ic)%ob_num
           if (ob_num == 0) ob_num = ob_cur
           
-          call cond_real (ic, wallo(ob_num)%tot%demand, d_tbl%cond(ic)%lim_const, idtbl)
-            
+          call cond_real (ic, pou(ob_num)%demand, d_tbl%cond(ic)%lim_const, idtbl)
+                      
         !aquifer depth below surface
         case ("aqu_dep")
           ob_num = d_tbl%cond(ic)%ob_num
@@ -729,6 +729,17 @@
             end if
           end do
              
+        !reservoir volume
+        case ("wtow_vol")
+          !determine target variable
+          iwtow = d_tbl%cond(ic)%ob_num
+          if (iwtow == 0) iwtow = ob_cur
+          
+          targ = d_tbl%cond(ic)%lim_const * wtow(iwtow)%stor_mx
+          
+          !check alternatives
+          call cond_real (ic, wtow_om_stor(iwtow)%flo, targ, idtbl)
+               
         !reservoir volume
         case ("vol")
           !determine target variable

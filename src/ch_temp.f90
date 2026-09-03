@@ -63,17 +63,17 @@
       real :: wid_flow
       real :: dep_flow
       
-      real :: q_lsu_sno
+      real :: q_ru_sno
       real :: q_gw
-      real :: q_lsu_surf
-      real :: q_lsu_lat
-      real :: q_lsu_wyld
+      real :: q_ru_surf
+      real :: q_ru_lat
+      real :: q_ru_wyld
       
       real :: tw_final
       real :: tw_local
       real :: tw_init
       real :: tw_up 
-      integer :: ilsu           !none       |counter
+      integer :: iru           !none       |routing unit counter
       real :: sw_init           
       real :: sno_init          
       integer :: ielem          
@@ -81,6 +81,7 @@
       integer, dimension(:), allocatable :: ruid_array
       integer :: ru_index
       integer :: ru_count
+      integer :: ise             !none       |routing unit element number
       real :: const  
       real :: jday
       integer :: i
@@ -186,39 +187,31 @@
       ! maybe there is a way to get the variables in a better way
 
       !initialize 0 outputs
-      do ilsu = 1, db_mx%lsu_out
-          lsu_wb_d(ilsu) = hwbz
-          q_lsu_sno = 0
-          q_lsu_surf = 0
-          q_lsu_lat = 0
-          q_lsu_wyld = 0
-      end do
+      q_ru_sno = 0
+      q_ru_surf = 0
+      q_ru_lat = 0
+      q_ru_wyld = 0
 
       ! summing HRU output for the landscape unit
       do ru_index = 1, ru_count
-          ilsu = ruid_array(ru_index) 
-          do ielem = 1, lsu_out(ilsu)%num_tot
-            ihru = lsu_out(ilsu)%num(ielem)
-            if (lsu_elem(ihru)%ru_frac > 1.e-9) then
-              const = lsu_elem(ihru)%ru_frac
-              if (lsu_elem(ihru)%obtyp == "hru") then
-                lsu_wb_d(ilsu) = ruwb_d(ilsu) + hwb_d(ihru) * const
-              end if
-              ! summing HRU_LTE output
-              if (lsu_elem(ihru)%obtyp == "hlt") then
-                lsu_wb_d(ilsu) = ruwb_d(ilsu) + hltwb_d(ihru) * const
-              end if
-            end if
-          end do 
-          ! define components for basic mixing
-          q_lsu_sno = q_lsu_sno + lsu_wb_d(ilsu)%snomlt
-          q_lsu_surf = q_lsu_surf + lsu_wb_d(ilsu)%surq_gen
-          q_lsu_lat = q_lsu_lat + lsu_wb_d(ilsu)%latq
-          q_lsu_wyld = q_lsu_wyld + lsu_wb_d(ilsu)%wateryld
+        iru = ruid_array(ru_index) 
+        do ielem = 1, ru_def(iru)%num_tot
+          !! only use for hru elements
+          if (ru_elem(ielem)%obtyp == "hru") then
+            ise = ru_def(iru)%num(ielem)
+            ihru = ru_elem(ise)%obtypno
+            const = ru_elem(ise)%frac
+            ! define components for basic mixing
+            q_ru_sno = q_ru_sno + hwb_d(ihru)%snomlt * const
+            q_ru_surf = q_ru_surf + hwb_d(ihru)%surq_gen
+            q_ru_lat = q_ru_lat + hwb_d(ihru)%latq
+            q_ru_wyld = q_ru_wyld + hwb_d(ihru)%wateryld
+          end if
+        end do
       end do    
               
-      if (q_lsu_wyld == 0) then     ! to avoid crash if division by 0 in tw_local
-          q_lsu_wyld = 1e-6
+      if (q_ru_wyld == 0) then     ! to avoid crash if division by 0 in tw_local
+          q_ru_wyld = 1e-6
       end if
         
       ! add gw flow 
@@ -314,17 +307,17 @@
       !-------------------------end calculate lagged temperatures--------------------------------------
 
     ! calculate the components contributions
-      sno_contr = sno_coef * (surf_lag_coef * t_sno) * q_lsu_sno
+      sno_contr = sno_coef * (surf_lag_coef * t_sno) * q_ru_sno
       gw_contr = gw_coef * (gw_lag_coef * t_gw) * q_gw
-      lat_contr = sur_lat_coef  * (lat_lag_coef * t_lat) * q_lsu_lat
-      surf_contr = sur_lat_coef * (surf_lag_coef * t_surf) * q_lsu_surf 
+      lat_contr = sur_lat_coef  * (lat_lag_coef * t_lat) * q_ru_lat
+      surf_contr = sur_lat_coef * (surf_lag_coef * t_surf) * q_ru_surf 
 
     !  mixing of components
       if(bsn_cc%gwflow == 1) then !groundwater contribution handled in gwflow subroutines
-			  tw_local = (sno_contr + lat_contr + surf_contr) / q_lsu_wyld	 
-			else
-			  tw_local = (sno_contr + gw_contr + lat_contr + surf_contr) / q_lsu_wyld
-			endif
+          tw_local = (sno_contr + lat_contr + surf_contr) / q_ru_wyld	 
+      else
+          tw_local = (sno_contr + gw_contr + lat_contr + surf_contr) / q_ru_wyld
+      endif
              
       if (abs(tw_local - tw_local_prev) > 5) then           ! difference of tmp between two days cannot be larger than 5 degrees - plausibility check for high peaks presumably resulting from routing errors
           tw_local = 5.0 + 0.75 * w%tave
@@ -336,7 +329,7 @@
       tw_up = ht1%temp
       if (ht1%flo/86400 > 1e-6) then            !error if channel flow is 0
           ! initial stream temperature if there is flow
-          tw_init = (tw_up * (ht1%flo/86400) + (tw_local * q_lsu_wyld)) / ((ht1%flo/86400)+q_lsu_wyld)
+          tw_init = (tw_up * (ht1%flo/86400) + (tw_local * q_ru_wyld)) / ((ht1%flo/86400)+q_ru_wyld)
       else
           ! if no flow from upstream, tw_init comes only from mixing in step 1
           tw_init = tw_local
@@ -361,7 +354,7 @@
               if (jday == 366) then !for leap year set SF to 0.5
                   ssff = 0.5
               else
-                  if (shf_db(i)%jday == jday .and. shf_db(i)%lsu == ilsu) then
+                  if (shf_db(i)%jday == jday .and. shf_db(i)%cha == ich) then
                       ssff = shf_db(i)%value
                       exit   
                   end if
@@ -440,11 +433,11 @@
       wtemp = 5.0 + 0.75 * wst(iwst)%weat%tave     ! this writes the last column in channel_sd_day
       
       !output for variable analysis      
-      hyd_sep_array(ich,1) = q_lsu_surf
-      hyd_sep_array(ich,2) = q_lsu_lat
+      hyd_sep_array(ich,1) = q_ru_surf
+      hyd_sep_array(ich,2) = q_ru_lat
       hyd_sep_array(ich,3) = q_gw
-      hyd_sep_array(ich,4) = q_lsu_wyld
-      hyd_sep_array(ich,5) = q_lsu_sno
+      hyd_sep_array(ich,4) = q_ru_wyld
+      hyd_sep_array(ich,5) = q_ru_sno
       hyd_sep_array(ich,6) = tw_final 
       hyd_sep_array(ich,7) = tw_init
     

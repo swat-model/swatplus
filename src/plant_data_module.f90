@@ -155,9 +155,9 @@
         character(len=40) :: name = "frsd"
         real :: lai = 0.                    !m**2/m**2      |leaf area index
         real :: bioms = 0.                  !kg/ha          |land cover/crop biomass
-        real :: phuacc = 0.                 !frac           |frac of plant heat unit acc.
+        real :: phuacc = 0.                 !frac           |frac of annual plant heat unit acc.
         real :: fr_yrmat = 0.05             !years          |fraction of current year of growth to years to maturity 
-        real :: pop = 0.                    !plants/m^2     |plant population 
+        real :: pop = 0.                    !plants/m^2     |plant population - not currently used
       end type plant_transplant_db
       type (plant_transplant_db), dimension(:), allocatable :: transpl
     

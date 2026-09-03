@@ -92,6 +92,9 @@
       ! irrigation water constituent mass - dimensioned by hru
       type (constituent_mass), dimension (:), allocatable :: cs_irr
       
+      !! tillage mixing fractions for constituents
+      type (constituent_mass) :: csmix
+        
       ! soil constituent mass - dimensioned by hru
       type soil_constituent_mass
         type (constituent_mass), dimension (:), allocatable :: ly
@@ -117,13 +120,15 @@
       type (constituent_mass), dimension (:), allocatable :: ch_water_init
       type (constituent_mass), dimension (:), allocatable :: ch_benthic_init
       
-      ! water treatment plant storage
+      ! water treatment plant storage and outflow
       type (constituent_mass), dimension (:), allocatable :: wtp_cs_stor
+      type (constituent_mass), dimension (:), allocatable :: wtp_cs_out
       ! water treatment plant treated concentrations
       type (constituent_mass), dimension (:), allocatable :: wtp_cs_treat
       
-      ! water use storage
+      ! water use storage and outflow
       type (constituent_mass), dimension (:), allocatable :: wuse_cs_stor
+      type (constituent_mass), dimension (:), allocatable :: wuse_cs_out
       ! water use effluent concentrations
       type (constituent_mass), dimension (:), allocatable :: wuse_cs_efflu
       
@@ -133,8 +138,9 @@
       ! canal storage
       type (constituent_mass), dimension (:), allocatable :: canal_cs_stor
       
-      ! water tower storage
+      ! water tower storage and outflow
       type (constituent_mass), dimension (:), allocatable :: wtow_cs_stor
+      type (constituent_mass), dimension (:), allocatable :: wtow_cs_out
       
       !! water withdrawn from an individual source
       type (constituent_mass) :: wdraw_cs
@@ -143,6 +149,28 @@
       !! constituent outflow from an water allocation object - wtp or use
       type (constituent_mass) :: outflo_cs
       
+      !! source and receiving objects
+      type wallo_source_object
+        type (constituent_mass) :: hcs
+      end type wallo_source_object
+        
+      !! source and receiving objects
+      type wallo_transfer_object
+        !! total for transfer object
+        type (constituent_mass) :: hcs_tot
+        type (wallo_source_object), dimension (:), allocatable :: src
+      end type wallo_transfer_object
+      
+      !! source and receiving objects
+      type water_allocation_object
+        !! source and receiving objects
+        type (wallo_transfer_object), dimension (:), allocatable :: trn
+      end type water_allocation_object
+      type (water_allocation_object), dimension (:), allocatable :: wal_csd
+      type (water_allocation_object), dimension (:), allocatable :: wal_csm
+      type (water_allocation_object), dimension (:), allocatable :: wal_csy
+      type (water_allocation_object), dimension (:), allocatable :: wal_csa
+        
       ! storing salt and constituent mass in reservoirs
       type (constituent_mass), dimension (:), allocatable :: res_water
       type (constituent_mass), dimension (:), allocatable :: res_benthic
@@ -158,6 +186,7 @@
       ! hydrographs for all constituents - dimension to number of each constituent
       type all_constituent_hydrograph
         type (constituent_mass), dimension (:), allocatable :: hd
+        type (constituent_mass) :: trans
         type (constituent_mass), dimension (:), allocatable :: hin
         type (constituent_mass), dimension (:), allocatable :: hin_sur
         type (constituent_mass), dimension (:), allocatable :: hin_lat

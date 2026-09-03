@@ -1,228 +1,124 @@
-subroutine wallo_withdraw (iwallo, itrn, isrc)
+      subroutine wallo_withdraw (ipod, ipou)
       
       use water_allocation_module
       use hydrograph_module
+      use constituent_mass_module
       use aquifer_module
       use reservoir_module
       use time_module
       use recall_module
-      use basin_module, only : bsn_cc
       
       implicit none 
 
-      integer, intent (in):: iwallo         !water allocation object number
-      integer, intent (in) :: itrn          !water demand object number
-      integer, intent (in) :: isrc          !source object number
-      integer :: j = 0              !none       |hru number
-      integer :: iom = 0            !           |recall id
+      integer, intent (in):: ipod         !point of diversion number
+      integer, intent (in) :: ipou        !place of use number
+      integer :: pod_num                  !point of diversion number for each place of use number (ipou)
+      integer :: pou_num                  !place of use number for each point of diversion number (ipou)
+      integer :: j = 0              !none       |source (delivery) object number
       real :: res_min = 0.          !m3         |min reservoir volume for withdrawal
-      real :: res_vol = 0.          !m3         |reservoir volume after withdrawal
       real :: can_min = 0.          !m3         |min canal volume for withdrawal
-      real :: can_vol = 0.          !m3         |canal volume after withdrawal
-      real :: cha_min = 0.          !m3         |minimum allowable flow in channel after withdrawal
-      real :: cha_div = 0.          !m3         |maximum amount of flow that can be diverted
-      real :: rto = 0.              !none       |ratio of channel withdrawal to determine hydrograph removed
-      real :: avail = 0.            !m3         |water available to withdraw from an aquifer
-      external :: gwflow_pump_allo
-      real :: extracted = 0.        !m3         |water extracted from the aquifer object (gwflow - rtb)
-      real :: trn_unmet = 0.        !m3         |demand that is unmet (gwflow - rtb)
-      real :: withdraw = 0.         !m3
-      real :: unmet = 0.            !m3
+      real :: cha_min = 0.          !m3         |minimum allowable flow in channel for withdrawal
+      real :: wtow_min = 0.         !m3         |minimum allowable storage in water tower for withdrawal
+      real :: rto = 0.              !none       |ratio of water withdrawn to available water in the POD
         
-      !! zero withdrawal hyd for the demand source
-      wdraw_om = hz
-
-      !! check if water is available from each source - set withdrawal and unmet
-      select case (wallo(iwallo)%trn(itrn)%src(isrc)%typ)
-          
-      !! outside the basin source
+      !! POD (source) object number from POD object
+      j = pod(ipod)%typ_num
+      
+      !! POD number from delivery object, pou number from loop in wallo_control
+      pod_num = pod(ipod)%pou(ipou)%pod_num
+      pou_num = pod(ipod)%pou(ipou)%num
+      
+      !! check minimum storage/flow limits and withdraw water from each POD
+      select case (pod(ipod)%typ)
+      
+      !! outside the basin source - daily, monthly, or yearly flow from recall object
       case ("osrc")
-        j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        iom = wallo(iwallo)%trn(itrn)%osrc(isrc)%daymoyr
-        
-        !! compute flow from source object using recall object
-        select case (recall_db(iom)%org_min%tstep)
-          case ("day")    !daily
-            wdraw_om = recall(iom)%hd(time%day,time%yrs)
-          case ("mo")    !monthly
-            wdraw_om = recall(iom)%hd(time%mo,time%yrs)
-          case ("yr")    !yearly
-            wdraw_om = recall(iom)%hd(1,time%yrs)
-        end select
-        
-        !! if the transfer demand > outside source use all the outside source
-        if (trn_m3 >= wdraw_om%flo) then
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wdraw_om%flo
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = trn_m3 - wdraw_om%flo
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = wdraw_om
-        else
-          !! only take what is needed - the transfer demand
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = trn_m3
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = 0.
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = (trn_m3 / wdraw_om%flo) * wdraw_om
-        end if
-            
-      case ("osrc_a")
-        j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        iom = wallo(iwallo)%trn(itrn)%osrc(isrc)%aa
-        
-        !! for other transfer types (ave_day, dtbls), only take the transfer amount - for out of basin reservoirs/storages
-        !! if the transfer demand > outside source use all the outside source
-        if (trn_m3 >= exco(iom)%flo) then
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = exco(iom)%flo
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = trn_m3 - exco(iom)%flo
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = exco(iom)
-        else
-          !! only take what is needed - the transfer demand
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = trn_m3
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = 0.
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = (trn_m3 / exco(iom)%flo) * exco(iom)
-        end if
-            
-      !! water treatment plant source
-      case ("wtp")
-        j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wtp_om_out(j)%flo
-        wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = 0.
-        wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = wtp_om_out(j)
-        
-      !! water use source (effluent)
-      case ("use")
-        j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wuse_om_out(j)%flo
-        wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = 0.
-        wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = wuse_om_out(j)
+        poud_om(pou_num)%pod(ipod) = pou(pou_num)%pod(pod_num)%frac * osrc_om(j)
+        osrc_om(j) = (1. - pou(pou_num)%pod(pod_num)%frac) * osrc_om(j)
         
       !! water tower storage
-      case ("stor")
-        j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        
-        !! check if there is enough storage and compute outflow
-        if (wtow_om_stor(j)%flo > trn_m3 .and. wtow_om_stor(j)%flo > 0.01) then
-          wtow_om_out(j)%flo = trn_m3
-          rto = Min(1., wtow_om_out(j)%flo / wtow_om_stor(j)%flo)
-          wtow_om_out(j) = rto * wtow_om_stor(j)
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = rto * wtow_om_stor(j)
+      case ("wtow")
+        wtow_min = pou(pou_num)%pod(pod_num)%const_min * wtow_om_stor(j)%flo
+        !! check if withdrawal takes storage below the minimum
+        if (wtow_om_stor(j)%flo > wtow_min) then
+          rto = pou(pou_num)%pod(pod_num)%duty / wtow_om_stor(j)%flo
+          rto = Min(1., rto)
+          rto = Max(0., rto)
+          poud_om(pou_num)%pod(pod_num) = rto * wtow_om_stor(j)
           wtow_om_stor(j) = (1. - rto) * wtow_om_stor(j)
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = 0.
-        else
-          wtow_om_out(j) = wtow_om_stor(j)
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = wtow_om_out(j)
-          wtow_om_stor(j) = hz
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = trn_m3 - wtow_om_out(j)%flo
         end if
-        wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wtow_om_out(j)%flo
-        
+         
       !! divert flowing water from channel source
       case ("cha")
-        j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-        cha_min = wallo(iwallo)%trn(itrn)%src(isrc)%wdraw_lim * 86400.  !m3 = m3/s * 86400s/d
-        !! amount that can be diverted without falling below low flow limit
-        cha_div = ht2%flo - cha_min
+        cha_min = pou(pou_num)%pod(pod_num)%const_min  !m3 = m3/s * 86400s/d
         !! don't divert when flow is below the minimum - cha_min
         if (ht2%flo > cha_min) then
-          !! only divert what is available - flow above the minimum - cha_div
-          if (trn_m3 >= cha_div) then
-            rto = cha_div / ht2%flo
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + cha_div
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet +           &
-                                                                                                (trn_m3 - cha_div)
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,       &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
-          else
-            rto = trn_m3 / ht2%flo
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + trn_m3
-          end if
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = rto * ht2
-            ht2 = (1. - rto) * ht2
-        else
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_m3
-          wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
+          rto = pou(pou_num)%pod(pod_num)%duty / ht2%flo
+          rto = Min(1., rto)
+          rto = Max(0., rto)
+          poud_om(pou_num)%pod(pod_num) = rto * ht2
+          ht2%flo = (1. - rto) * ht2%flo
+        end if
+          
+      !! canal source
+      case ("can")
+        can_min = pou(pou_num)%pod(pod_num)%const_min * canal_om_stor(j)%flo
+        !! check if withdrawal takes storage below the minimum
+        if (canal_om_stor(j)%flo >= can_min) then
+          rto = pou(pou_num)%pod(pod_num)%duty / canal_om_stor(j)%flo
+          rto = Min(1., rto)
+          rto = Max(0., rto)
+          poud_om(pou_num)%pod(pod_num) = rto * canal_om_stor(j)
+          canal_om_stor(j) = (1. - rto) * canal_om_stor(j)
+        end if
+         
+      !! reservoir source
+      case ("res")
+        res_min = pou(pou_num)%pod(pod_num)%const_min * res_ob(j)%pvol
+        !! check if withdrawal takes storage below the minimum
+        if (res(j)%flo > res_min) then
+          rto = pou(pou_num)%pod(pod_num)%duty / res(j)%flo
+          rto = Min(1., rto)
+          rto = Max(0., rto)
+          poud_om(pou_num)%pod(pod_num) = rto * res(j)
+          res(j) = (1. - rto) * res(j)
+        end if
+         
+      !! aquifer source
+      case ("aqu") 
+        if (aqu_d(j)%dep_wt < pou(pou_num)%pod(pod_num)%const_min) then
+          poud_om(pou_num)%pod(pod_num) = hz
+          !! only have flow, no3, and minp(solp) for aquifer
+          rto =  (pou(pou_num)%pod(pod_num)%duty / (10. * aqu_prm(j)%area_ha)) / aqu_d(j)%stor     !mm = m3/(10.*ha)
+          rto = Min(1., rto)
+          rto = Max(0., rto)
+          aqu_d(j)%stor = (1. - rto) * aqu_d(j)%stor
+          aqu_d(j)%no3_st = (1. - rto) * aqu_d(j)%no3_st
+          aqu_d(j)%minp = (1. - rto) * aqu_d(j)%minp
+          poud_om(pou_num)%pod(pod_num)%flo = rto * aqu_d(j)%stor * 10. * aqu_prm(j)%area_ha
+          poud_om(pou_num)%pod(pod_num)%no3 = rto * aqu_d(j)%no3_st * aqu_prm(j)%area_ha
+          poud_om(pou_num)%pod(pod_num)%solp = rto * aqu_d(j)%minp * aqu_prm(j)%area_ha
         end if
         
-        !! canal source
-        case ("can") 
-          j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-          can_min = wallo(iwallo)%trn(itrn)%src(isrc)%wdraw_lim * canal_om_stor(j)%flo
-          can_vol = canal_om_stor(j)%flo - trn_m3
-          !! check if withdrawal takes storage below the minimum
-          if (can_vol >= can_min) then
-            rto = trn_m3 / canal_om_stor(j)%flo
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = rto * canal_om_stor(j)
-            canal_om_stor(j) = (1. - rto) * canal_om_stor(j)
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + trn_m3
-          else
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_m3
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
-          end if
-         
-        !! reservoir source
-        case ("res") 
-          j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-          res_min = wallo(iwallo)%trn(itrn)%src(isrc)%wdraw_lim * res_ob(j)%pvol
-          res_vol = res(j)%flo - trn_m3
-          !! check if withdrawal takes storage below the minimum
-          if (res_vol > res_min) then
-            rto = trn_m3 / res(j)%flo
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = rto * res(j)
-            res(j) = (1. - rto) * res(j)
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + trn_m3
-            
-          else
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_m3
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
-          end if
-         
-        !! aquifer source
-        case ("aqu") 
-          if(bsn_cc%gwflow == 0) then !proceed with original code
-          j = wallo(iwallo)%trn(itrn)%src(isrc)%num
-          avail = 10. * aqu_prm(j)%area_ha *aqu_d(j)%stor  !m3 = 10.*ha*m
-          if (trn_m3 < avail) then
-            !! only have flow, no3, and minp(solp) for aquifer
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd%flo = trn_m3
-            aqu_d(j)%stor = aqu_d(j)%stor - (trn_m3 / (10. * aqu_prm(j)%area_ha))  !mm = m3/(10.*ha)
-            rto =  (trn_m3 / (10. * aqu_prm(j)%area_ha)) / aqu_d(j)%stor  !mm
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd%no3 = rto * aqu_d(j)%no3_st
-            aqu_d(j)%no3_st = (1. - rto) * aqu_d(j)%no3_st
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd%solp = rto * aqu_d(j)%minp
-            aqu_d(j)%minp = (1. - rto) * aqu_d(j)%minp
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + trn_m3
-          else
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_m3
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
-          end if
-          elseif(bsn_cc%gwflow == 1) then !gwflow is active; determine pumping amounts from grid cells
-            extracted = 0.
-            trn_unmet = 0.
-            call gwflow_pump_allo(wallo(iwallo)%trn(itrn)%num,trn_m3,extracted,trn_unmet)
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + extracted
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + trn_unmet
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
-          endif
+      !! gwflow source
+      case ("gwf") 
         
-            !store values
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + withdraw
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet + unmet
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet = Min (wallod_out(iwallo)%trn(itrn)%src(isrc)%unmet,      &
-                                                                wallod_out(iwallo)%trn(itrn)%src(isrc)%demand)
+      end select
+      
+      !! reset annual maximum withdrawals if decision table isn't used
+      pou(pou_num)%pod(pod_num)%wdraw_cur = pou(pou_num)%pod(pod_num)%wdraw_cur +            &
+                                                       poud_om(pou_num)%pod(pod_num)%flo
             
-          !! unlimited source
-          case ("unl")
-            wal_omd(iwallo)%trn(itrn)%src(isrc)%hd%flo = trn_m3
-            wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr + trn_m3
-          end select
-          
-          !! add source withdrawal hyd to get total withdrawal hyd for the demand object
-          wal_omd(iwallo)%trn(itrn)%h_tot = wal_omd(iwallo)%trn(itrn)%h_tot + wal_omd(iwallo)%trn(itrn)%src(isrc)%hd
-          
-          !! subtract withdrawal from unmet
-          wallo(iwallo)%trn(itrn)%unmet_m3 = wallo(iwallo)%trn(itrn)%unmet_m3 - wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
-          
-      return
+      !! POD is finished - sum total withdrawal for the POU
+      poud_om(pou_num)%pods = poud_om(pou_num)%pods + poud_om(pou_num)%pod(pod_num)
+      pou(pou_num)%pod(pod_num)%fin = "y"
+      
+      !! add to total flow delivered and om withdrawal for the POU
+      poud_met(pou_num)%pod(pod_num)%deliv = pou(pou_num)%pod(pod_num)%deliv + poud_om(pou_num)%pod(pod_num)%flo
+      poud_met(pou_num)%duty_tot%deliv = poud_met(pou_num)%duty_tot%deliv + poud_om(pou_num)%pod(pod_num)%flo
+      poud_om(pou_num)%pors = poud_om(pou_num)%pors + poud_om(pou_num)%pod(pod_num)
+      
+      !! add constituents withdrawn to total withdrawal for the POU
+      
+    return
     end subroutine wallo_withdraw

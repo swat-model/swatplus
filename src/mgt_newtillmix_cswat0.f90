@@ -42,6 +42,7 @@
       integer, intent (in) :: idtill   !none           |tillage type
       real, intent (in) :: bmix        !               | 
       integer :: l = 0                 !none           |counter
+      integer :: k = 0                 !none           |pesticide counter
       integer :: kk = 0                !               |
       integer :: npmx = 0              !               |
       integer :: ipl = 0               !               |
@@ -61,14 +62,9 @@
       real :: mix_bd
       logical :: bio_mix_event
 
-      npmx = cs_db%num_pests
-
       mix_mn = mnz
       mix_mp = mpz
       mix_org%tot = orgz
-      if (allocated(mix_org%rsd)) deallocate (mix_org%rsd)
-      allocate (mix_org%rsd(pcom(jj)%npl))
-      mix_org%rsd = orgz
       mix_org%hact = orgz
       mix_org%hsta = orgz
       mix_org%hs = orgz
@@ -97,7 +93,9 @@
       allocate (sol_mass(soil(jj)%nly), source = 0.)    
       allocate (sol_msm(soil(jj)%nly), source = 0.)    
       allocate (sol_msn(soil(jj)%nly), source = 0.)    
-      allocate (frac_dep(soil(jj)%nly),source = 0.)    
+      allocate (frac_dep(soil(jj)%nly),source = 0.) 
+      allocate (mix_org%rsd(pcom(jj)%npl))  
+      mix_org%rsd(:) = orgz   
 
       if (bmix > 1.e-6) then
         emix = bmix 
@@ -167,6 +165,13 @@
           do ipl = 1, pcom(jj)%npl
             mix_org%rsd(ipl) = mix_org%rsd(ipl) + frac_mixed * pl_mass(jj)%rsd(ipl)
           end do
+
+          !! mix pesticides
+          csmix%pest(:) = 0.
+          npmx = cs_db%num_pests
+          do k = 1, npmx
+            csmix%pest(k) = csmix%pest(k) + cs_soil(jj)%ly(l)%pest(k) * frac_mixed
+          end do
           
           mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
           mix_org%hsta = mix_org%hsta + frac_mixed * soil1(jj)%hsta(l)
@@ -218,14 +223,16 @@
                                                                                           + frac_dep(l) * mix_silt)
           soil(jj)%phys(l)%sand = 100. / sol_mass(l) * (frac_non_mixed * soil(jj)%phys(l)%sand * sol_mass(l) / 100. &
                                                                                           + frac_dep(l) * mix_sand)
+
           if (.not. bio_mix_event) soil(jj)%phys(l)%rock = 100. / sol_mass(l) * (frac_non_mixed * soil(jj)%phys(l)%rock * sol_mass(l) / 100. &
                                                                                           + frac_dep(l) * mix_rock)
           soil(jj)%phys(l)%st = frac_non_mixed * soil(jj)%phys(l)%st + frac_dep(l) * mix_sw
           !soil(jj)%phys(l)%bd = frac_non_mixed * soil(jj)%phys(l)%bd + frac_dep(l) * mix_bd
 
-          !do k = 1, npmx
-          !  cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + smix(20+k) * frac_dep(l)
-          !end do
+          !! reconstitute pesticides
+          do k = 1, npmx
+            cs_soil(jj)%ly(l)%pest(k) = cs_soil(jj)%ly(l)%pest(k) * frac_non_mixed + csmix%pest(k) * frac_dep(l)
+          end do
         end do
 
         deallocate (sol_mass)

@@ -76,9 +76,6 @@
       mix_mn = mnz
       mix_mp = mpz
       mix_org%tot = orgz
-      if (allocated(mix_org%rsd)) deallocate (mix_org%rsd)
-      allocate (mix_org%rsd(pcom(jj)%npl))
-      mix_org%rsd = orgz
       mix_org%hact = orgz
       mix_org%hsta = orgz
       mix_org%hs = orgz
@@ -106,10 +103,12 @@
       mix_sand = 0.
       lyr_exit = 0
 
-      allocate (sol_mass(soil(jj)%nly), source = 0.)    
-      allocate (sol_msm(soil(jj)%nly), source = 0.)    
-      allocate (sol_msn(soil(jj)%nly), source = 0.)    
-      allocate (frac_dep(soil(jj)%nly),source = 0.)    
+      allocate (sol_mass(soil(jj)%nly), source = 0.)
+      allocate (sol_msm(soil(jj)%nly), source = 0.)
+      allocate (sol_msn(soil(jj)%nly), source = 0.)
+      allocate (frac_dep(soil(jj)%nly),source = 0.)
+      allocate (mix_org%rsd(pcom(jj)%npl))  
+      mix_org%rsd(:) = orgz
 
       if (bmix_eff > 1.e-6) then
         kk = soil(jj)%nly

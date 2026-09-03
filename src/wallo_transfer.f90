@@ -1,5 +1,9 @@
-      subroutine wallo_transfer (iwallo, itrn)
+      subroutine wallo_transfer (ipou)
       
+!!    ~ ~ ~ PURPOSE ~ ~ ~
+!!    this subroutine transfers water from point of diversion to place of use
+!!    by pipe or pump
+
       use water_allocation_module
       use hydrograph_module
       use constituent_mass_module
@@ -10,20 +14,18 @@
       
       implicit none 
 
-      integer, intent (in):: iwallo         !water allocation object number
-      integer, intent (in) :: itrn          !water demand object number
-      integer :: isrc = 0                   !source object number
-      integer :: iconv = 0                  !conveyance object number (pipe or pump number)
+      integer, intent (in):: ipou       !place of use (POU) number
+      integer :: ipod = 0               !point of diversion (POD) number
+      integer :: iconv = 0              !conveyance object number (pipe or pump number)
 
-      
       !! transfer water to receiving object from each source
-      do isrc = 1, wallo(iwallo)%trn(itrn)%src_num
-        iconv = wallo(iwallo)%trn(itrn)%src(isrc)%conv_num
-        select case (wallo(iwallo)%trn(itrn)%src(isrc)%conv_typ)
+      do ipod = 1, pou(ipou)%pod(ipod)%num
+        iconv = pou(ipou)%pod(ipod)%conv_num
+        select case (pou(ipou)%pod(ipod)%conv_typ)
         case ("pipe")
           !! organic hydrograph being transferred from the source to the receiving object
-          wal_omd(iwallo)%trn(itrn)%src(isrc)%hd = (1. - pipe(iconv)%loss_fr) *            &
-                                                 wal_omd(iwallo)%trn(itrn)%src(isrc)%hd
+          poud_om(ipou)%pod(ipod) = (1. - pipe(iconv)%loss_fr) * poud_om(ipou)%pod(ipod)
+          !! add to aquifers
         case ("pump")
           !! include pump losses here
         end select

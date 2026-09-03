@@ -43,6 +43,7 @@
       call proc_read
 
       call hyd_connect
+      call recall_read
       call recalldb_read
       call exco_db_read
       call dr_db_read
@@ -89,18 +90,6 @@
       
       call dtbl_flocon_read
             
-      ! read water treatment and water allocation files - before hru lum tables
-      call om_treat_read
-      call om_use_read
-      call om_osrc_read
-      call water_treatment_read
-      call water_use_read
-      !call water_osrc_read
-      call water_tower_read
-      call water_pipe_read
-      call water_canal_read
-      call water_allocation_read
-      
       call hru_dtbl_actions_init
       
       ! read reservoir and wetland data
@@ -110,6 +99,20 @@
       call wet_read_salt_cs
       if (db_mx%wet_dat > 0) call wet_all_initial
       call wet_fp_init
+      
+      ! read water treatment and water allocation files - before hru lum tables
+      call wallo_wtps_wuses
+      call om_treat_read
+      call om_use_read
+      call om_osrc_read
+      call water_treatment_read
+      call water_use_read
+      call water_osrc_read
+      call water_tower_read
+      call water_pipe_read
+      call water_canal_read
+      call water_hru_irr_read
+      call water_allocation_read
       
       !! proc_cal runs before soil_nutcarb_init so calibration of init_seq,
       !! init_microb, init_slow and init_passive (and the other carbon.bsn

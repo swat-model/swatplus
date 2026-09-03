@@ -261,12 +261,12 @@
       open (107,file="SWIFT/recall.swf",recl = 1500)
       write (107,*)           "         ID            NAME              REC_TYP         FILENAME"
       do irec = 1, db_mx%recalldb_max
-        write (107,*) irec, recall_db(irec)%org_min%name, recall_db(irec)%org_min%units, recall_db(irec)%org_min%tstep
+        write (107,*) irec, recall(irec)%filename, recall(irec)%typ
         
         !! write to each recall file
-        open (108,file="SWIFT/" // trim(adjustl(recall_db(irec)%name)),recl = 1500)
-        write (108,*) " AVE ANNUAL RECALL FILE  ", recall_db(irec)%name
-        write (108,*) "     1    1    1     1    type    ", recall_db(irec)%name, rec_a(irec)%flo,     &
+        open (108,file="SWIFT/" // trim(adjustl(recall(irec)%filename)),recl = 1500)
+        write (108,*) " AVE ANNUAL RECALL FILE  ", recall(irec)%filename
+        write (108,*) "     1    1    1     1    type    ", recall(irec)%filename, rec_a(irec)%flo,     &
                 rec_a(irec)%sed, rec_a(irec)%orgn, rec_a(irec)%sedp, rec_a(irec)%no3, rec_a(irec)%solp, &
                 rec_a(irec)%nh3, rec_a(irec)%no2
         close (108)
