@@ -258,9 +258,7 @@
         call stmp_solt
         
         !!compute canopy interception
-        if (bsn_cc%gampt == 1) then
-          call sq_canopyint
-        end if
+        call sq_canopyint
 
         !! compute snow melt
         call sq_snom

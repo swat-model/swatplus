@@ -273,7 +273,6 @@
       
       !! basin sediment budget
       type basin_sediment_budget
-        real :: upland_t = 0.          !! total upland sediment yield - all land uses - tons
         real :: upland_t = 0.          !! tons       |total upland sediment yield - all land uses
         real :: ebank_t = 0.           !! tons       |total bank erosion - all stream orders
         real :: ebtm_t = 0.            !! tons       |total bed down cutting - all stream orders

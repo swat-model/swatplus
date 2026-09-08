@@ -30,6 +30,11 @@
 
       !! allocate water (wallo_control) for all non-natural objects
       
+<<<<<<< Updated upstream
+      !! Outside Source Objects - POD Objects - typically measured flow or SWAT+ output
+      do iosrc = 1, db_mx%out_src
+        lev = 1
+=======
       !! zero out the daily POD and POR organic-mineral for each POU
       do ipou = 1, db_mx%wallo_pou
         !! zero daily POD and POR organic-mineral
@@ -52,11 +57,16 @@
         lev = 1
         osrc(iosrc)%wdraw = 0. !reset daily withdrawal for outside source
         
+>>>>>>> Stashed changes
         !! use use constant, decision table, or recall object for to set the om conc for outside source water
         select case (osrc(iosrc)%conc(lev)%org_min_typ)
         case ("const")
           iom = osrc(iosrc)%conc(lev)%om_num
+<<<<<<< Updated upstream
+          outflo_om = wuse_om_efflu(iom)
+=======
           outflo_om = osrc_om(iom)
+>>>>>>> Stashed changes
                 
         case ("dtbl")
           !! decision table - outside source concentrations vary with flow conditions, seasons, etc
@@ -65,7 +75,11 @@
           call conditions (j, id)
           call actions (j, iob, id)
           !! actions return the organic mineral number for outside source concentrations
+<<<<<<< Updated upstream
+          outflo_om = wuse_om_efflu(iom)
+=======
           outflo_om = osrc_om(iom)
+>>>>>>> Stashed changes
               
         case ("recall")
           !! use recall object for outside source concentrations
@@ -115,6 +129,8 @@
         end if
       end do
           
+<<<<<<< Updated upstream
+=======
       !! allocate and deliver water at start of day for unlimited source PODs
       do ipod = 1, db_mx%wallo_pod
         if (pod(ipod)%typ == "unl") then
@@ -122,6 +138,7 @@
         end if
       end do
           
+>>>>>>> Stashed changes
       !! zero water allocation objects and set reset POU finishes to no
       
       !! set water allocation duty (right) and fractions from each POD and to each POR

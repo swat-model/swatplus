@@ -187,7 +187,7 @@
           
           !! mix each plant residue component separately
           do ipl = 1, pcom(jj)%npl
-            ! sum up the amount mixed rsd in the soil from each plant in plant community
+            ! sum up the amount mixed rsd in the soil from each plant in plant comunity
             mix_org%rsd(ipl)= mix_org%rsd(ipl) + frac_dep(l) * emix * soil1(jj)%pl(ipl)%rsd(l) 
             ! now add the amount of surface residue that is mixed into each layer.
             mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%rsd(ipl)
@@ -246,10 +246,11 @@
         call mgt_tillfactor(jj,bio_mix_event,emix,dtil)
 
       endif
-      deallocate (sol_mass)
-      deallocate (sol_msm)
-      deallocate (sol_msn)
-      deallocate (frac_dep)
-      deallocate (mix_org%rsd)
+      deallocate (sol_mass)    
+      deallocate (sol_msm)    
+      deallocate (sol_msn)    
+      deallocate (frac_dep)    
+      deallocate (mix_org%rsd) 
+      
       return
       end subroutine mgt_newtillmix_cswat1

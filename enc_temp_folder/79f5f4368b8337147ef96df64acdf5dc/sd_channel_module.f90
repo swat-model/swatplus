@@ -98,6 +98,17 @@
 
       type channel_morphology_output
         integer :: num              !           |number of channels in each order
+<<<<<<< Updated upstream
+        real :: fp_km2 = 0.         !km2        |flood plain area of channel
+        real :: w_yr = 0.           !ratio      |bank cutting - widths per year 
+        real :: d_yr = 0.           !ratio      |bed down cutting - depths per year
+        real :: fp_mm = 0.          !mm/yr      |flood plain deposition - uniform across the flood plain
+        real :: ebank_m = 0.        !tons       |bank cutting
+        real :: ebtm_m = 0.         !m          |bed down cutting
+        real :: ebank_t = 0.        !tons       |bank cutting  
+        real :: ebtm_t = 0.         !tons       |bed down cutting
+        real :: fp_t = 0.           !tons       |flood plain deposition
+=======
         real :: wid = 0.            !m          |averge channel width
         real :: dep = 0.            !m          |average channel depth
         real :: fp_km2 = 0.         !km2        |flood plain area of channel
@@ -107,6 +118,7 @@
         real :: ebtm_m = 0.         !m          |bed down cutting - ave of all channels
         real :: fp_t = 0.           !tons       |flood plain deposition
         real :: fp_mm = 0.          !mm         |flood plain deposition - uniform across the flood plain
+>>>>>>> Stashed changes
       end type channel_morphology_output
       type (channel_morphology_output), dimension (:), allocatable :: ch_morph, ch_morphm, ch_morphy, ch_morpha
       type (channel_morphology_output), dimension (12) :: ch_morph_ord, ch_morph_ordm, ch_morph_ordy, ch_morph_orda

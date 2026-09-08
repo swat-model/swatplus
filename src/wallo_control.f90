@@ -20,6 +20,7 @@
         ipou = pod(ipod)%pou(ipous)%num
         ipods = pod(ipod)%pou(ipous)%pod_num
         if (pou(ipou)%pod(ipods)%wdraw_cur < pou(ipou)%pod(ipods)%wdraw_max * 86400.) then
+          wallo_comp = "n"
           call wallo_withdraw (ipod, ipous)
         end if
       end do
@@ -30,23 +31,37 @@
         do ipodu = 1, pou(ipou)%pods
           if (pou(ipou)%pod(ipodu)%fin == "n") then
             pou(ipou)%fin = "n"
-            !! check if compensation is needed for unmet duty
             exit
           end if
         end do
       end do
+
+      !! check if compensation is needed for unmet duty
+      do ipou = 1, db_mx%wallo_pou
+        if (pou(ipou)%fin == "y") then
+          !! if total delivery is less than total duty, then check each POD for compensation
+          if (poud_met(ipou)%duty_tot%deliv < poud_met(ipou)%duty_tot%duty) then
+            do ipodu = 1, pou(ipou)%pods
+              if (pou(ipou)%pod(ipodu)%comp == "y") then
+                if (pou(ipou)%pod(ipodu)%wdraw_cur < pou(ipou)%pod(ipodu)%wdraw_max * 86400.) then
+                    wallo_comp = "y"
+                  call wallo_withdraw (ipodu, ipou)
+                end if
+              end if
+            end do
+          end if
+        end if
+      end do
       
       !! deliver to POUs and PORs
       do ipou = 1, db_mx%wallo_pou
-      if (pou(ipou)%fin == "y") then
-        !do ipou = 1, db_mx%wallo_pou
+        if (pou(ipou)%fin == "y") then
           !! deliver water to POU
           call wallo_pou_deliv (ipou)
             
           !! return to receiving objects and update water and constituent mass
           call wallo_return (ipou)
-        !end do
-      end if
+        end if
       end do
       
       return

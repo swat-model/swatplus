@@ -167,11 +167,12 @@
           end do
 
           !! mix pesticides
-          csmix%pest(:) = 0.
-          npmx = cs_db%num_pests
-          do k = 1, npmx
-            csmix%pest(k) = csmix%pest(k) + cs_soil(jj)%ly(l)%pest(k) * frac_mixed
-          end do
+          if (cs_db%num_pests > 0) then
+            csmix%pest(:) = 0.
+            do k = 1, cs_db%num_pests
+              csmix%pest(k) = csmix%pest(k) + cs_soil(jj)%ly(l)%pest(k) * frac_mixed
+            end do
+          end if
           
           mix_org%hact = mix_org%hact + frac_mixed * soil1(jj)%hact(l)
           mix_org%hsta = mix_org%hsta + frac_mixed * soil1(jj)%hsta(l)
@@ -235,12 +236,12 @@
           end do
         end do
 
-        deallocate (sol_mass)
-        deallocate (sol_msm)
-        deallocate (sol_msn)
-        deallocate (frac_dep)
-        deallocate (mix_org%rsd)
-
+        deallocate (sol_mass)    
+        deallocate (sol_msm)    
+        deallocate (sol_msn)    
+        deallocate (frac_dep)      
+        deallocate (mix_org%rsd)  
+    
     end if
     return
     end subroutine mgt_newtillmix_cswat0

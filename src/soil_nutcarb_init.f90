@@ -2,7 +2,7 @@
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine initializes soil chemical properties
-!!    and initial soil layer bmix efficiency
+!!    and intial soil layer bmix efficiency
 
       use hru_module, only : hru, ihru, sol_plt_ini
       use soil_module

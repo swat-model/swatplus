@@ -311,7 +311,7 @@
                 !! Update release rate
                 er = res_ob(jres)%S_ini/(alpha*smax)
 
-                !! Determine release target (Condition depends on whether the irrigation demand surpassess environmental flow requirements)
+                !! Determine release target (Condition depends on wether the irrigation demand surpassess environmental flow requirements)
                 if (res_ob(jres)%d_mean >= beta*res_ob(jres)%I_mean) then
                     target_rel = 0.10*res_ob(jres)%I_mean + 0.9*(d_mon/res_ob(jres)%d_mean)
 

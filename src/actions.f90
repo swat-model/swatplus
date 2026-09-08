@@ -132,7 +132,7 @@
               hru(j)%irr_hmax = d_tbl%act(iac)%const !mm target ponding depth
               hru(j)%irr_hmin = d_tbl%act(iac)%const2 !mm threshold ponding depth for irrigation
               
-              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !mm irrigation by wro already happened for today Jaehak 2023
+              wet_ob(j)%depth = wet_ob(j)%depth + irrig(j)%applied / 1000. !mm irrigation by wro already happend for today Jaehak 2023
 
               if (wet_ob(j)%depth*1000.<hru(j)%irr_hmin) then
                 irrig(j)%demand = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
@@ -148,7 +148,6 @@
                 if (d_tbl%act(iac)%file_pointer == "unlim") then
                   irrig(j)%applied = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * (1. - irrop_db(irrop)%surq)
                   irrig(j)%runoff = irrop_db(irrop)%amt_mm * irrop_db(irrop)%eff * irrop_db(irrop)%surq
-				  pcom(j)%days_irr = 1                                      ! reset days since last irrigation
                 end if  
               
                 !set organics and constituents from irr.ops ! irrig(j)%water =  cs_irr(j) = 

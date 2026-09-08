@@ -246,6 +246,11 @@
           irrig(:)%applied = 0.
           irrig(:)%eff = 0.
           irrig(:)%demand = 0.
+          
+          !! zero sediment budget outputs for the day
+          bsn_sedbud = bsn_sedbudz
+          ch_morph(:) = ch_morphz
+          ch_morph_ord(:) = ch_morphz
               
           !! allocation at start of day - withdrawal from outside source, water tower and canals
           if (db_mx%wallo_pou > 0) call wallo_start_day
@@ -385,95 +390,6 @@
         !! update simulation year
         time%yrc = time%yrc + 1
       end do            !!     end annual loop
-      
-      !! write channel morphology - downcutting and widening
-      bsn_sedbud%upland_t = bls_a%sedyld * bsn%area_ls_ha
-      
-      do ich = 1, sp_ob%chandeg
-        iord = sd_ch(ich)%order
-        !! sum tons by stream order - w_yr, d_yr and fp_mm are still in tons
-        ch_morph_ord(iord)%num = ch_morph_ord(iord)%num + 1
-        
-        !! compute w_yr, d_yr and fp dep in mm
-        ch_morph(ich)%ebank_m = ch_morph(ich)%ebank_m / time%yrs_prt
-        ch_morph(ich)%w_yr = ch_morph(ich)%ebank_m / sd_ch(ich)%chw
-        ch_morph(ich)%ebtm_m = ch_morph(ich)%ebtm_m / time%yrs_prt
-        ch_morph(ich)%d_yr = ch_morph(ich)%ebtm_m / sd_ch(ich)%chd
-        !! mm = t / (5.*bd*w*l) -> assume fp width = 5*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
-        ch_morph(ich)%fp_km2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl / 1000.
-        ch_morph(ich)%fp_t = ch_morph(ich)%fp_t / time%yrs_prt
-        ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (5. * sd_ch(ich)%chw * sd_ch(ich)%chl)
-        
-        !! basin flood plain deposition and bank erosion
-        bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t + ch_morph(ich)%fp_t
-        bsn_sedbud%ch_ebank_t = bsn_sedbud%ch_ebank_t + ch_morph(ich)%ebank_t
-        ch_morph_ord(iord)%fp_t = ch_morph_ord(iord)%fp_t + ch_morph(ich)%fp_t
-        
-        !! sum to compute average per year
-        ch_morph_ord(iord)%ebank_m = ch_morph_ord(iord)%ebank_m + ch_morph(ich)%ebank_m
-        ch_morph_ord(iord)%ebank_t = ch_morph_ord(iord)%ebank_t + ch_morph(ich)%ebank_t
-        ch_morph_ord(iord)%ebtm_m = ch_morph_ord(iord)%ebtm_m + ch_morph(ich)%ebtm_m
-        ch_morph_ord(iord)%ebtm_t = ch_morph_ord(iord)%ebtm_t + ch_morph(ich)%ebtm_t
-        ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr + ch_morph(ich)%w_yr
-        ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr + ch_morph(ich)%d_yr
-        ch_morph_ord(iord)%fp_t = ch_morph_ord(iord)%fp_t + ch_morph(ich)%fp_t
-        ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm + ch_morph(ich)%fp_mm
-        ch_morph_ord(iord)%fp_km2 = ch_morph_ord(iord)%fp_km2 + ch_morph(ich)%fp_km2
-        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr + ch_morph(ich)%w_yr
-        
-        iob = sp_ob1%chandeg + ich - 1
-        !! ch_budget.txt
-        write (3150,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chl,  &
-                sd_ch(ich)%chw, sd_ch(ich)%chd, ch_morph(ich)
-        !write (8000,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chw,  &
-        !        ch_morph(ich)%w_yr, sd_ch(ich)%chd, ch_morph(ich)%d_yr,      &
-        !                                              ch_morph(ich)%fp_mm
-      end do
-      
-      !! average and write by stream order
-      !! use max(num,1) as divisor: orders with no channels have zero numerators,
-      !! so 0/1 = 0. avoids vectorized 0.0/0.0 that traps under ifx -fpe0
-      if (sp_ob%chandeg > 0) then
-        do iord = 1, 12
-          rnum = real(max(ch_morph_ord(iord)%num, 1))
-        ch_morph_ord(iord)%ebank_m = ch_morph_ord(iord)%ebank_m / rnum
-        ch_morph_ord(iord)%ebank_t = ch_morph_ord(iord)%ebank_t / rnum
-        ch_morph_ord(iord)%ebtm_m = ch_morph_ord(iord)%ebtm_m / rnum
-        ch_morph_ord(iord)%ebtm_t = ch_morph_ord(iord)%ebtm_t / rnum
-        ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / rnum
-        ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / rnum
-        ch_morph_ord(iord)%fp_t = ch_morph_ord(iord)%fp_t / rnum
-        ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / rnum
-        ch_morph_ord(iord)%fp_km2 = ch_morph_ord(iord)%fp_km2 / rnum
-        end do
-      end if
-      
-      !! write ch_order_sed.txt
-      if (sp_ob%chandeg > 0) then
-        do iord = 1, 12
-          write (3151,*) iord, ch_morph_ord(iord)
-        end do
-      end if
-      
-      !! upland/channel sediment ratio
-      if (bsn_sedbud%ch_ebank_t > 0.) then
-        bsn_sedbud%up_ch_rto = bsn_sedbud%upland_t / bsn_sedbud%ch_ebank_t
-        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr / sp_ob%chandeg
-      end if
-      
-      !! write reservoir trap efficiencies
-      do ires= 1, sp_ob%res
-        if (res_in_a(ires)%sed > 1.e-6) then
-          res_trap(ires)%sed =  res_out_a(ires)%sed /  res_in_a(ires)%sed
-          bsn_sedbud%res_dep_t = bsn_sedbud%res_dep_t + res_in_a(ires)%sed - res_out_a(ires)%sed
-          bsn_sedbud%res_trap_eff = bsn_sedbud%res_trap_eff + res_trap(ires)%sed
-          iob = sp_ob1%res + ires - 1
-          write (7778,*) ires, ob(iob)%name, ob(iob)%area_ha, res_trap(ires)
-        end if
-      end do
-          
-      !! write basin sediment budget
-      write (3152,*) bsn_sedbud
       
       !! ave annual calibration output and reset time for next simulation
       call calsoft_ave_output

@@ -8,9 +8,10 @@
       real :: dmd_m3 = 0.                   !m3     |demand
       real, dimension(6) :: trn_fr = 0.     !frac   |transfer fraction for each source object (up to 6)
       character (len=25) :: wallo_name = ""         !name of water allocation object
+      character (len=1) :: wallo_comp = ""          !compensate if unmet (y/n)
       
       !! point of diversion objects (POD) for each place of use (POU)
-      type pou_points_of_delivery
+      type pou_points_of_diversion
         character (len=25) :: name = ""         !name of POD
         integer :: num = 0                      !POD number
         character (len=10) :: typ = ""          !type of POD - channel, reservoir, aquifer, canal, etc
@@ -30,7 +31,7 @@
         real :: deliv = 0.                      !fraction of daily right from the POD (m3/s)
         character (len=1) :: comp = ""          !compensate if unmet (y/n)
         character (len=1) :: fin = ""           !water taken from all POD in the POU (y/n)
-      end type pou_points_of_delivery
+      end type pou_points_of_diversion
         
       type pou_points_of_return
         character (len=25) :: name = ""         !name of POR
@@ -80,32 +81,32 @@
         integer :: dtbl_por_fr_num = 0          !decision table name to set fractions to each POR - if null use constant fraction
         character (len=1) :: fin = ""           !water taken from all POD in the POU (y/n)
         type (pou_irrigation) :: irr             !irrigation hru and dtbl if POU type is irr
-        type (pou_points_of_delivery), dimension(:), allocatable :: pod     !POD data for the POU
+        type (pou_points_of_diversion), dimension(:), allocatable :: pod     !POD data for the POU
         type (pou_points_of_return), dimension(:), allocatable :: por       !POR data for the POU
       end type place_of_use
       type (place_of_use), dimension(:), allocatable :: pou     !POU data for the water allocation
         
       !! place of use objects (POU) for each point of diversion (POD)
-      type pod_points_of_use
+      type pod_place_of_use
         integer :: num = 0                      !POU number
         character (len=25) :: name = ""         !name of POU
         integer :: pod_num = 0                  !POD number in POU
         character (len=10) :: typ = ""          !type of POD
         integer :: typ_num = 0                  !POD type number
         character (len=25) :: right = ""        !water right
-      end type pod_points_of_use
+      end type pod_place_of_use
         
       !! point of diversion objects (POD)
-      type point_of_delivery
+      type point_of_diversion
         integer :: num = 0                      !POD number
         character (len=25) :: name = ""         !name of POD
         character (len=10) :: typ = ""          !type of POD
         integer :: typ_num = 0                  !POD type number
         integer :: pous = 0                     !number of places of use (POUs) for the POD
         character (len=1) :: fin = ""           !water taken from all POD in the POU (y/n)
-        type (pod_points_of_use), dimension(:), allocatable :: pou      !POU of the POD
-      end type point_of_delivery
-      type (point_of_delivery), dimension(:), allocatable :: pod     !POD data for the water allocation
+        type (pod_place_of_use), dimension(:), allocatable :: pou      !POU of the POD
+      end type point_of_diversion
+      type (point_of_diversion), dimension(:), allocatable :: pod     !POD data for the water allocation
       
       !! duty and delivery the POU and for each POD for outputting
       type duty_delivered
@@ -123,12 +124,6 @@
       type (pou_duty_delivered), dimension(:), allocatable :: pouy_met     !yearly duty and delivery
       type (pou_duty_delivered), dimension(:), allocatable :: poua_met     !average annual duty and delivery
       
-      !! ?????NOT SURE????? counters for outside basin source objects
-      type outside_basin_objects
-        integer :: daymoyr = 0              !recall file number - recall_db - daily, monthly or yearly
-        integer :: aa = 0                   !exco number in exco_db - ave annual constant
-      end type outside_basin_objects
-        
       !! water treatment concentration adjustment for each treatment level
       type concentration_levels
         character (len=6) :: org_min_typ = ""       !const, dtbl, recall
@@ -158,14 +153,16 @@
         integer :: db_num = 0                   !data file pointer
         integer :: wallo_pod = 0                !POD (point of diversion) number for water allocation - 0 if not POD
         real :: stor_mx                   !m3   !maximum storage in plant
-        real :: lag_days                  !days !treatment time - lag outflow
+        real :: lag_days                  !days !treatement time - lag outflow
         real :: loss_fr                         !water loss during treament
         integer :: num_treats = 0               !number of treatment levels for the water treatment plant
+        real ::  wdraw = 0.               !m3   |amount of water withdrawn from outside basin source object
+                                                !can't be more than the daily available water - osrc_om(j)%flo
         type (concentration_levels), dimension(:), allocatable :: conc
         character (len=80) :: descrip = ""      !treatment plant description
       end type water_treatment_use_data        
       type (water_treatment_use_data), dimension(:), allocatable :: wtp
-      type (water_treatment_use_data), dimension(:), allocatable :: wuse
+      type (water_treatment_use_data), dimension(:), allocatable :: wuse       
       type (water_treatment_use_data), dimension(:), allocatable :: osrc
       
       !! outside basin receivng object data
@@ -179,7 +176,7 @@
       type water_transfer_data
         character (len=25) :: name = ""         !name of the water tower or pipe
         integer :: wallo_pod = 0                !POD (point of diversion) number for water allocation - 0 if not POD
-        character (len=25) :: init = ""         !name of the initial concentrations
+        character (len=25) :: init = ""         !name of the intitial concentrations
         real :: stor_mx                   !m3   !maximum storage in plant
         real :: ddown_days                !days !days to drawdown the storage to zero
         real :: loss_fr                         !water loss during treament
@@ -193,7 +190,7 @@
       type water_canal_data
         character (len=25) :: name = ""         !name of the canal
         character (len=25) :: w_sta = ""        !name of nearby weather station
-        character (len=25) :: init = ""         !name of the initial concentrations in canal
+        character (len=25) :: init = ""         !name of the intitial concentrations in canal
         character (len=25) :: dtbl = ""         !name of decision table to determine canal outflow
         integer :: wallo_pod = 0                !POD (point of diversion) number for water allocation - 0 if not POD
         real :: ddown_days                !days !days to drawdown the storage to zero
