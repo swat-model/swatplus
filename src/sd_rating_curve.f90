@@ -51,8 +51,8 @@
         ch_rcurv(i)%elev(i_dep)%vol_fp = 0.
         
         ch_rcurv(i)%elev(i_dep)%flo_rate = Qman(a, rh, sd_ch(i)%chn, sd_ch(i)%chs)
-        vel = Qman(1., rh, sd_ch(i)%chn, sd_ch(i)%chs)
-        ch_rcurv(i)%elev(i_dep)%ttime = sd_ch(i)%chl / (3.6 * vel)
+        ch_rcurv(i)%elev(i_dep)%vel = Qman(1., rh, sd_ch(i)%chn, sd_ch(i)%chs)
+        ch_rcurv(i)%elev(i_dep)%ttime = sd_ch(i)%chl / (3.6 * ch_rcurv(i)%elev(i_dep)%vel)
         
         !! save bankfull depth and area for flood plain calculations
         if (i_dep == 2) then
@@ -83,9 +83,10 @@
         ch_rcurv(i)%elev(ifp_dep)%vol_fp = ch_rcurv(i)%elev(ifp_dep)%top_wid * dep * sd_ch(i)%chl * 1000.
         ch_rcurv(i)%elev(ifp_dep)%vol = vol_bf + ch_rcurv(i)%elev(ifp_dep)%vol_fp
         ch_rcurv(i)%elev(ifp_dep)%flo_rate = Qman(a, rh, sd_ch(i)%fpn, sd_ch(i)%chs)
-        vel = Qman(1., rh, sd_ch(i)%fpn, sd_ch(i)%chs)
-        ch_rcurv(i)%elev(ifp_dep)%ttime = sd_ch(i)%chl / (3.6 * vel)
+        ch_rcurv(i)%elev(ifp_dep)%vel = Qman(1., rh, sd_ch(i)%fpn, sd_ch(i)%chs)
+        ch_rcurv(i)%elev(ifp_dep)%ttime = sd_ch(i)%chl / (3.6 * ch_rcurv(i)%elev(ifp_dep)%vel)
       end do
 
       return
       end subroutine sd_rating_curve
+

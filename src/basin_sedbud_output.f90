@@ -11,11 +11,11 @@
         bsn_sedbudm = bsn_sedbudm + bsn_sedbud
         
         !! daily print
-        if (pco%water_allo%d == "y") then
-          write (3118,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
+        if (pco%sd_chan%d == "y") then
+          write (3152,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
 
           if (pco%csvout == "y") then
-          write (3122,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbud
+          write (3156,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbud
           end if
         end if
        
@@ -27,11 +27,11 @@
           !! sum amount of yearly used water
           bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
 
-          if (pco%water_allo%m == "y") then
-          write (3119,*) time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          if (pco%sd_chan%m == "y") then
+          write (3153,*) time%mo, time%day_mo, time%yrc, bsn_sedbudm
  
           if (pco%csvout == "y") then
-          write (3123,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          write (3157,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudm
           end if
           end if
 
@@ -45,11 +45,11 @@
         !! sum amount of yearly used water
         bsn_sedbudy =  bsn_sedbudy + bsn_sedbudm
           
-        if (pco%water_allo%y == "y") then
-          write (3120,*) time%mo, time%day_mo, time%yrc, bsn_sedbudy
+        if (pco%sd_chan%y == "y") then
+          write (3154,*) time%mo, time%day_mo, time%yrc, bsn_sedbudy
   
               if (pco%csvout == "y") then
-          write (3124,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudy
+          write (3158,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudy
           end if
         end if
 
@@ -63,11 +63,11 @@
         !! sum amount of average annual used water
         bsn_sedbuda = bsn_sedbuda / time%yrs_prt
 
-        if (pco%water_allo%a == "y") then
-        write (3121,*) time%mo, time%day_mo, time%yrc, bsn_sedbuda
+        if (pco%sd_chan%a == "y") then
+        write (3155,*) time%mo, time%day_mo, time%yrc, bsn_sedbuda
 
         if (pco%csvout == "y") then
-        write (3125,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbuda
+        write (3159,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbuda
         end if
        end if
       end if
@@ -76,3 +76,4 @@
       
 100   format (4i6,i8,5x,a,5x,i8,5x,i8,5x,a,5x,i8,20(7x,a,5x,i8,3f15.1))
       end subroutine basin_sedbud_output
+

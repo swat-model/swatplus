@@ -86,15 +86,20 @@
 
       !! peak daily flow rate - m3/s using the Fuller and Peck (1974) equation for peak to mean flow ratio
       pk_rto = sd_ch(ich)%pk_rto * (1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3))
+      pk_rto = 1.
       peakrate = pk_rto * ht1%flo / 86400.     !m3/s
 
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, peakrate)
       
-      !! use peakrate as flow rate
+      !! use peakrate as flow rate  ch_rcurv(ich)
       h_rad = rcurv%xsec_area / rcurv%wet_perim
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
       vel = peakrate / rcurv%xsec_area
+      vel = sd_ch(ich)%chl / (3.6 * rcurv%ttime)
+      vel = rcurv%vel
+      !vel = Qman(1., h_rad, sd_ch(i)%chn, sd_ch(i)%chs)
+      
       rttime = sd_ch(ich)%chl / (3.6 * vel)
       sd_ch_vel(ich)%vel = vel       !store for ch_temp
       sd_ch_vel(ich)%rttime = rttime !store for ch_temp
@@ -256,7 +261,7 @@
         vel_cr = 0.293 * (sd_ch(ich)%d50) ** 0.5
         if (vel > vel_cr) then
           !! bed erosion m/yr
-          ebtm_m = 0.0001 * (vel_rch / vel_cr) ** sd_ch(ich)%bed_exp
+          ebtm_m = 0.0001 * (vel / vel_cr) ** sd_ch(ich)%bed_exp
         end if
         !! calc mass of sediment eroded -> t = m * width (m) * length (km) * 1000 m/km * bd (t/m3)
         ebtm_t = 1000. * ebtm_m * sd_ch(ich)%chw * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
@@ -305,3 +310,4 @@
 
       return
       end subroutine sd_channel_sediment3
+
