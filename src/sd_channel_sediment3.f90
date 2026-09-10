@@ -281,7 +281,10 @@
       !! mm = t / (5.*bd*w*l) -> assume fp width = 5*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
       ch_morph(ich)%fp_km2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl / 1000.
       ch_morph(ich)%fp_t = fp_dep%sed
-      ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (5. * sd_ch(ich)%chw * sd_ch(ich)%chl)
+      ch_morph(ich)%fp_mm = 0.
+      if (sd_ch(ich)%chw > 1.e-6 .and. sd_ch(ich)%chl > 1.e-6) then
+        ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (5. * sd_ch(ich)%chw * sd_ch(ich)%chl)
+      end if
 
       !! daily bank erosion in t and m - calculate w/yr later
       ch_morph(ich)%ebank_m = ebank_m

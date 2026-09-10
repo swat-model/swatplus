@@ -4,75 +4,70 @@
       use basin_module
       
       implicit none
-      
-      integer :: iuse
 
-        !! sum monthly variables
-        bsn_sedbudm = bsn_sedbudm + bsn_sedbud
-        
-        !! daily print
-        if (pco%water_allo%d == "y") then
-          write (3118,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
+      !! retain Jeff's six-field basin sediment budget:
+      !! upland, channel bank, channel bed, flood plain, reservoir, and wetland sediment
+      !! command calls this routine each day after the daily sediment loads are calculated
+      !! no geometry fields exist on this type, so unlike the two channel-level output
+      !! routines, day/mon/yr totals here have no known limitation - a monthly or yearly
+      !! sum of tons is exactly what it should be
 
+      !! daily print - today's value, before it is folded into the monthly total
+      if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
+        if (pco%sed_bud%d == "y") then
+          write (3169,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
           if (pco%csvout == "y") then
-          write (3122,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbud
+            write (3173,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
           end if
         end if
-       
-        !! zero daily
-        bsn_sedbud = bsn_sedbudz
-
-        !! monthly print
-        if (time%end_mo == 1) then
-          !! sum amount of yearly used water
-          bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
-
-          if (pco%water_allo%m == "y") then
-          write (3119,*) time%mo, time%day_mo, time%yrc, bsn_sedbudm
- 
-          if (pco%csvout == "y") then
-          write (3123,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudm
-          end if
-          end if
-
-          !! zero monthly
-          bsn_sedbudm = bsn_sedbudz
-
-        end if
-
-      !! yearly print
-      if (time%end_yr == 1) then
-        !! sum amount of yearly used water
-        bsn_sedbudy =  bsn_sedbudy + bsn_sedbudm
-          
-        if (pco%water_allo%y == "y") then
-          write (3120,*) time%mo, time%day_mo, time%yrc, bsn_sedbudy
-  
-              if (pco%csvout == "y") then
-          write (3124,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudy
-          end if
-        end if
-
-        !! zero yearly
-        bsn_sedbudy = bsn_sedbudz
-
       end if
 
-      !! average annual print
-      if (time%end_sim == 1) then
-        !! sum amount of average annual used water
-        bsn_sedbuda = bsn_sedbuda / time%yrs_prt
+      !! fold today into the monthly total. bsn_sedbudm/y/a are three separate
+      !! variables on purpose - the original bug reused one variable for both the
+      !! yearly total and the AA average, which zeroed the AA total right before
+      !! it was divided, so the AA report always printed zero
+      bsn_sedbudm = bsn_sedbudm + bsn_sedbud
+      bsn_sedbud = bsn_sedbudz
 
-        if (pco%water_allo%a == "y") then
-        write (3121,*) time%mo, time%day_mo, time%yrc, bsn_sedbuda
-
-        if (pco%csvout == "y") then
-        write (3125,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbuda
+      if (time%end_mo == 1) then
+        !! monthly print
+        if (pco%sed_bud%m == "y") then
+          write (3170,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          if (pco%csvout == "y") then
+            write (3174,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          end if
         end if
-       end if
+        bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
+        bsn_sedbudm = bsn_sedbudz
+      end if
+
+      if (time%end_yr == 1) then
+        if (time%end_mo == 0) then
+          bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
+          bsn_sedbudm = bsn_sedbudz
+        end if
+        !! yearly print
+        if (pco%sed_bud%y == "y") then
+          write (3171,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudy
+          if (pco%csvout == "y") then
+            write (3175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudy
+          end if
+        end if
+        bsn_sedbuda = bsn_sedbuda + bsn_sedbudy
+        bsn_sedbudy = bsn_sedbudz
+      end if
+
+      !! on the last simulation day, convert the simulation total to an annual average
+      !! unit 3152 is bsn_sedbud.txt and is separate from the water allocation units
+      if (time%end_sim == 1 .and. time%yrs_prt > 0.) then
+        bsn_sedbuda = bsn_sedbuda / time%yrs_prt
+        if (pco%sed_bud%a == "y") then
+          write (3152,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbuda
+          if (pco%csvout == "y") then
+            write (3176,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbuda
+          end if
+        end if
       end if
 
       return
-      
-100   format (4i6,i8,5x,a,5x,i8,5x,i8,5x,a,5x,i8,20(7x,a,5x,i8,3f15.1))
       end subroutine basin_sedbud_output

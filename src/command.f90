@@ -440,12 +440,13 @@
       !! print all output files
       if (time%yrs > pco%nyskip) then
       
-        !! print basin sediment budget output
-        call basin_sedbud_output
-        
-        !! print basin channel morphology output
-        call ch_sedbud_output
-        call chord_sedbud_output
+        !! accumulate daily sediment budgets and write AA records on the last day
+        !! keep these routines together because the order report uses finalized channel values
+        if (sp_ob%chandeg > 0) then
+          call basin_sedbud_output
+          call ch_sedbud_output
+          call chord_sedbud_output
+        end if
         
         !! print water allocation output
         do ipou =1, db_mx%wallo_pou

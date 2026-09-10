@@ -174,6 +174,8 @@
           if (eof < 0) exit
           read (107,*,iostat=eof) name, pco%cs_wet%d, pco%cs_wet%m, pco%cs_wet%y, pco%cs_wet%a
           if (eof < 0) exit
+          read (107,*,iostat=eof) name, pco%sed_bud%d, pco%sed_bud%m, pco%sed_bud%y, pco%sed_bud%a
+          if (eof < 0) exit
         else
           do while (eof >= 0)
             read (107,*,iostat=eof) name
@@ -241,8 +243,16 @@
                      result = print_prt_error(name)
                   else
                      backspace (107)
-                     read (107,*,iostat=eof) name, pco%sd_chan_bsn%d, pco%sd_chan_bsn%m, pco%sd_chan_bsn%y, pco%sd_chan_bsn%a  
+                     read (107,*,iostat=eof) name, pco%sd_chan_bsn%d, pco%sd_chan_bsn%m, pco%sd_chan_bsn%y, pco%sd_chan_bsn%a
                      pco%sd_chan_bsn%already_read_in = .true.
+                  endif
+               case("basin_sed_bud")
+                  if (pco%sed_bud%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%sed_bud%d, pco%sed_bud%m, pco%sed_bud%y, pco%sed_bud%a
+                     pco%sed_bud%already_read_in = .true.
                   endif
                case("basin_psc")
                   if (pco%recall_bsn%already_read_in) then

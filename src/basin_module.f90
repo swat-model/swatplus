@@ -198,6 +198,7 @@
         type(print_interval) :: sd_chan_reg     !! 
         type(print_interval) :: recall_reg      !!
         type(print_interval) :: water_allo      !!
+        type(print_interval) :: sed_bud         !!  basin/channel/order sediment budget output
        ! LSU
         type(print_interval) :: wb_lsu          !!  water balance LSU output
         type(print_interval) :: nb_lsu          !!  nutrient balance LSU output
