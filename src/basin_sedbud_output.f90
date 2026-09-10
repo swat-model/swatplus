@@ -5,12 +5,7 @@
       
       implicit none
 
-      !! retain Jeff's six-field basin sediment budget:
-      !! upland, channel bank, channel bed, flood plain, reservoir, and wetland sediment
-      !! command calls this routine each day after the daily sediment loads are calculated
-      !! no geometry fields exist on this type, so unlike the two channel-level output
-      !! routines, day/mon/yr totals here have no known limitation - a monthly or yearly
-      !! sum of tons is exactly what it should be
+      
 
       !! daily print - today's value, before it is folded into the monthly total
       if (pco%day_print == "y" .and. pco%int_day_cur == pco%int_day) then
@@ -58,7 +53,6 @@
       end if
 
       !! on the last simulation day, convert the simulation total to an annual average
-      !! unit 3152 is bsn_sedbud.txt and is separate from the water allocation units
       if (time%end_sim == 1 .and. time%yrs_prt > 0.) then
         bsn_sedbuda = bsn_sedbuda / time%yrs_prt
         if (pco%sed_bud%a == "y") then
