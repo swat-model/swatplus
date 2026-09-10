@@ -60,6 +60,7 @@ CMakeCache.txt
 Resources/R*
 src/main.f90
 ford.md
+enc_temp_folder/
 /.vs/SWAT_PLUS_DEV
 /.vs/github/config
 /.vs/github/FileContentIndex
