@@ -19,7 +19,7 @@
             write (3161,*) time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_ord(iord)
 
           if (pco%csvout == "y") then
-          write (3165,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iord, ch_morph_ord(iord)
+          write (3165,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_ord(iord)
           end if
         end if
        

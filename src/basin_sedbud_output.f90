@@ -15,7 +15,7 @@
           write (3152,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
 
           if (pco%csvout == "y") then
-          write (3156,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbud
+          write (3156,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
           end if
         end if
        

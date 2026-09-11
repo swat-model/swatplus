@@ -21,7 +21,7 @@
           write (3171,*) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
 
           if (pco%csvout == "y") then
-          write (3175,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
+          write (3175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
           end if
         end if
        

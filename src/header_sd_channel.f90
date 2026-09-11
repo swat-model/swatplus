@@ -365,11 +365,11 @@
    end if 
    
      if (pco%csvout == "y") then 
-       call open_output_file(3175, "ch_sedbud_d.txt.csv", 1500)
+       call open_output_file(3175, "ch_sedbud_d.csv", 1500)
        write (3175,*) bsn%name, prog
        write (3175,'(*(G0.6,:","))') ch_sedbud_hdr 
        write (3175,'(*(G0.6,:","))') ch_sedbud_hdr_units 
-       write (9000,*) "SEDBUD              ch_sedbud_d.txt.csv"
+       write (9000,*) "SEDBUD              ch_sedbud_d.csv"
      end if
      
    if (pco%sd_chan%m == "y") then
@@ -381,11 +381,11 @@
    end if 
    
      if (pco%csvout == "y") then 
-       call open_output_file(3176, "ch_sedbud_m.txt.csv", 1500)
+       call open_output_file(3176, "ch_sedbud_m.csv", 1500)
        write (3176,*) bsn%name, prog
        write (3176,'(*(G0.6,:","))') ch_sedbud_hdr 
        write (3176,'(*(G0.6,:","))') ch_sedbud_hdr_units 
-       write (9000,*) "SEDBUD              ch_sedbud_m.txt.csv"
+       write (9000,*) "SEDBUD              ch_sedbud_m.csv"
      end if
      
    if (pco%sd_chan%y== "y") then
@@ -397,11 +397,11 @@
    end if 
    
      if (pco%csvout == "y") then 
-       call open_output_file(3177, "ch_sedbud_y.txt.csv", 1500)
+       call open_output_file(3177, "ch_sedbud_y.csv", 1500)
        write (3177,*) bsn%name, prog
        write (3177,'(*(G0.6,:","))') ch_sedbud_hdr 
        write (3177,'(*(G0.6,:","))') ch_sedbud_hdr_units 
-       write (9000,*) "SEDBUD              ch_sedbud_y.txt.csv"
+       write (9000,*) "SEDBUD              ch_sedbud_y.csv"
      end if
      
   if (pco%sd_chan%a== "y") then
@@ -413,11 +413,11 @@
    end if 
    
      if (pco%csvout == "y") then 
-       call open_output_file(3178, "ch_sedbud_a.txt.csv", 1500)
+       call open_output_file(3178, "ch_sedbud_a.csv", 1500)
        write (3178,*) bsn%name, prog
        write (3178,'(*(G0.6,:","))') ch_sedbud_hdr 
        write (3178,'(*(G0.6,:","))') ch_sedbud_hdr_units 
-       write (9000,*) "SEDBUD              ch_sedbud_a.txt.csv"
+       write (9000,*) "SEDBUD              ch_sedbud_a.csv"
      end if
     end if
 !! SWAT DEG CHANNEL SEDIMENT BUDGET
