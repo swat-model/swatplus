@@ -96,8 +96,7 @@
                                          !                             population lai curve
         real :: frlai2 = 0.              !frac              |frac of max leaf area index corresponding to the 2nd 
                                          !                     point on the leaf area development curve
-        real :: frsw_gro = .5            !frac              |30 day sum of P-PET to initiate growth of tropical 
-                                         !                     plants during monsoon season - pcom()%plcur()%iseason
+        real :: rt_depco = .2            !                  |growth coefficient - rate roots reach maximum depth
         real :: aeration = 0.2           !                  |aeration stress factor
         real :: rsd_pctcov = 0.          !                  |residue factor for percent cover equation
         real :: rsd_covfac = 0.          !                  |residue factor for surface cover (C factor) equation
@@ -162,3 +161,4 @@
       type (plant_transplant_db), dimension(:), allocatable :: transpl
     
       end module plant_data_module 
+

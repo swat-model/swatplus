@@ -22,7 +22,8 @@
              pldb(idp)%typ == "warm_annual_tuber" .or. pldb(idp)%typ == "cold_annual_tuber") then
         pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc * 1000. * pldb(idp)%rdmx
       else
-        pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc_p * 1000. * pldb(idp)%rdmx
+        pcom(j)%plg(ipl)%root_dep = pldb(idp)%rdmx * (1. - exp(- pldb(idp)%rt_depco *                &
+                                                               float(pcom(j)%plcur(ipl)%curyr_mat)))
       end if
       if (pcom(j)%plg(ipl)%root_dep > soil(j)%zmx) pcom(j)%plg(ipl)%root_dep = soil(j)%zmx
       if (pcom(j)%plg(ipl)%root_dep < 25.4) pcom(j)%plg(ipl)%root_dep = 25.4
@@ -51,3 +52,4 @@
       
       return
       end subroutine pl_root_gro
+
