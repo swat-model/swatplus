@@ -49,18 +49,22 @@
       !! yearly print
       if (time%end_yr == 1) then
         !! sum amount of yearly used water
-        ch_morpha(ichan) =  ch_morpha(ichan) + ch_morphm(ichan)
+        ch_morphy(ichan) =  ch_morphy(ichan) + ch_morphm(ichan)
           
         if (pco%sd_chan%y == "y") then
-          write (3173,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morpha(ichan)
+          write (3173,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
   
               if (pco%csvout == "y") then
-          write (3177,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morpha(ichan)
+          write (3177,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
           end if
         end if
 
+        !! accumulate the year's total into the average-annual accumulator
+        !! (fix: yearly write used ch_morpha and zeroed it each year, so AA divided from 0)
+        ch_morpha(ichan) = ch_morpha(ichan) + ch_morphy(ichan)
+
         !! zero yearly
-        ch_morpha(ichan) = ch_morphz
+        ch_morphy(ichan) = ch_morphz
 
       end if
 

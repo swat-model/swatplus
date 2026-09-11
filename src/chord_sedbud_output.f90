@@ -57,6 +57,10 @@
           end if
         end if
 
+        !! accumulate the year's total into the average-annual accumulator
+        !! (fix: ch_morph_orda was divided by yrs_prt at end of sim but never summed -> AA printed 0)
+        ch_morph_orda(iord) = ch_morph_orda(iord) + ch_morph_ordy(iord)
+
         !! zero yearly
         ch_morph_ordy(iord) = ch_morphz
 

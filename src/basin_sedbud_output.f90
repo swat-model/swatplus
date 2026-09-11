@@ -53,6 +53,10 @@
           end if
         end if
 
+        !! accumulate the year's total into the average-annual accumulator
+        !! (fix: bsn_sedbuda was divided by yrs_prt at end of sim but never summed -> AA printed 0)
+        bsn_sedbuda = bsn_sedbuda + bsn_sedbudy
+
         !! zero yearly
         bsn_sedbudy = bsn_sedbudz
 
