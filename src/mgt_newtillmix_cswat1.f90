@@ -67,7 +67,7 @@
       mix_mn = mnz
       mix_mp = mpz
       mix_org%tot = orgz
-      mix_org%rsd = orgz
+      mix_org%rsd = rsd_originz
       mix_org%hact = orgz
       mix_org%hsta = orgz
       mix_org%hs = orgz
@@ -75,6 +75,7 @@
       mix_org%microb = orgz
       mix_org%str = orgz
       mix_org%lig = orgz
+      mix_org%nonlig = orgz
       mix_org%meta = orgz
       mix_org%man = orgz
       mix_org%water = orgz
@@ -177,6 +178,7 @@
           mix_org%microb = mix_org%microb + frac_mixed * soil1(jj)%microb(l)
           mix_org%str = mix_org%str + frac_mixed * soil1(jj)%str(l)
           mix_org%lig = mix_org%lig + frac_mixed * soil1(jj)%lig(l)
+          mix_org%nonlig = mix_org%nonlig + frac_mixed * soil1(jj)%nonlig(l)
           mix_org%meta = mix_org%meta + frac_mixed * soil1(jj)%meta(l)
           mix_org%man = mix_org%man + frac_mixed * soil1(jj)%man(l)
           mix_org%water = mix_org%water + frac_mixed * soil1(jj)%water(l)
@@ -186,8 +188,9 @@
             ! sum up the amount mixed rsd in the soil from each plant in plant comunity
             mix_org%rsd(ipl)= mix_org%rsd(ipl) + frac_dep(l) * emix * soil1(jj)%pl(ipl)%rsd(l) 
             ! now add the amount of surface residue that is mixed into each layer.
-            mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%rsd(ipl)
-            mix_org%rsd(ipl)= mix_org%rsd(ipl) + mix_org%surf_rsd
+            ! surface residue is above-ground -> abg component
+            mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%abg_rsd(ipl)
+            mix_org%rsd(ipl)%abg = mix_org%rsd(ipl)%abg + mix_org%surf_rsd
           enddo
         end do
 
@@ -206,9 +209,9 @@
             soil1(jj)%pl(ipl)%rsd(l) = frac_non_mixed * soil1(jj)%pl(ipl)%rsd(l) +        &
                                                         frac_dep(l) * mix_org%rsd(ipl)
             ! subtract the amount of surface residue added to the soil from the surface residue.
-            mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%rsd(ipl)
-            pl_mass(jj)%rsd(ipl) = pl_mass(jj)%rsd(ipl) - mix_org%surf_rsd
-            pl_mass(jj)%rsd_tot = pl_mass(jj)%rsd_tot - mix_org%surf_rsd
+            mix_org%surf_rsd = frac_dep(l) * emix * pl_mass(jj)%abg_rsd(ipl)
+            pl_mass(jj)%abg_rsd(ipl) = pl_mass(jj)%abg_rsd(ipl) - mix_org%surf_rsd
+            pl_mass(jj)%abg_rsd_tot = pl_mass(jj)%abg_rsd_tot - mix_org%surf_rsd
           enddo
 
           soil1(jj)%hact(l) = frac_non_mixed * soil1(jj)%hact(l) + frac_dep(l) * mix_org%hact
@@ -218,6 +221,7 @@
           soil1(jj)%microb(l) = frac_non_mixed * soil1(jj)%microb(l) + frac_dep(l) * mix_org%microb
           soil1(jj)%str(l) = frac_non_mixed * soil1(jj)%str(l) + frac_dep(l) * mix_org%str
           soil1(jj)%lig(l) = frac_non_mixed * soil1(jj)%lig(l) + frac_dep(l) * mix_org%lig
+          soil1(jj)%nonlig(l) = frac_non_mixed * soil1(jj)%nonlig(l) + frac_dep(l) * mix_org%nonlig
           soil1(jj)%meta(l) = frac_non_mixed * soil1(jj)%meta(l) + frac_dep(l) * mix_org%meta
           soil1(jj)%man(l) = frac_non_mixed * soil1(jj)%man(l) + frac_dep(l) * mix_org%man
           soil1(jj)%water(l) = frac_non_mixed * soil1(jj)%water(l) + frac_dep(l) * mix_org%water

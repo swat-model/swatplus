@@ -12,6 +12,10 @@ cmake_host_system_information(RESULT os_id QUERY DISTRIB_ID)
 cmake_host_system_information(RESULT os_version QUERY DISTRIB_RELEASE)
 cmake_host_system_information(RESULT os_like QUERY DISTRIB_ID_LIKE)
 cmake_host_system_information(RESULT pretty_name QUERY DISTRIB_PRETTY_NAME)
+cmake_host_system_information(RESULT n QUERY NUMBER_OF_LOGICAL_CORES)
+
+# Inject a global compiler launcher prefix that forces the environment variable down to the build phase
+set(CMAKE_CROSSCOMPILING_EMULATOR "env" "CMAKE_BUILD_PARALLEL_LEVEL=${n}" CACHE INTERNAL "" FORCE)
 
 project(swatplus VERSION 0.2 LANGUAGES Fortran)
 
@@ -48,21 +52,16 @@ if (UNIX)
         set(FFC             "ifx")
         link_libraries("-static")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        # -fcheck=all / -ffpe-trap / -fsignaling-nans are DEBUG diagnostics — they belong in
-        # fdebug, not fdialect (which is applied to every config, including Release). With them in
-        # Release the binary aborts (EXC_BAD_INSTRUCTION/SIGILL) when optimized system math
-        # routines such as expf() internally raise benign FP flags. Keep only the dialect and the
-        # semantic/numeric flags (-finit-local-zero, -frounding-math, …) on by default.
-        set(fdialect        "-cpp -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math")
-        set(fdebug          "-Wall -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fsignaling-nans")
+        set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
+        set(fdebug          "-Wall")
         set(frelease        "-O")
         set(FFC             "gnu")
-
+        
         if(NOT APPLE)
             # Check if the OS is not Arch Linux or is not based on Arch Linux and is not Fedpra based
             # For non-Arch and non-FedoraLinux based systems using gfortran (GNU), set the link_library static flag to build a static executable.")
             # For Arch Linux based and Fedora based systems using gfortran, omit the link_library static flagt to build a dynamic executable.")
-            if (NOT ("${os_id}" STREQUAL "Arch" OR
+            if (NOT ("${os_id}" STREQUAL "Arch" OR 
                      "${os_like}" MATCHES ".*arch.*" OR
                      "${os_id}" STREQUAL "fedora" ))
                 link_libraries("-static")
@@ -172,6 +171,7 @@ install(TARGETS ${SWATPLUS_EXE} DESTINATION RUNTIME DESTINATION ${PROJECT_SOURCE
 find_package(Python3 QUIET)
 
 set(spcheck "${PROJECT_SOURCE_DIR}/test/spcheck.py")
+
 set(exe_path "${PROJECT_BINARY_DIR}/${SWATPLUS_EXE}")
 set(test_dir "${PROJECT_BINARY_DIR}/data")
 set(ref_dir  "${PROJECT_SOURCE_DIR}/data")
@@ -195,6 +195,7 @@ message( "-- Detected OS Like:     ${os_like}")
 message( "-- Detected Pretty Name: ${pretty_name}")
 message( "-- Build Type            ${CMAKE_BUILD_TYPE}")
 message( "-- Compiler              ${CMAKE_Fortran_COMPILER} (${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION})")
+message( "-- Number of cores       ${n}")
 message( "-- FFLAGS                ${CMAKE_Fortran_FLAGS}")
 message( "--  RELEASE              ${CMAKE_Fortran_FLAGS_RELEASE}")
 message( "--  DEBUG                ${CMAKE_Fortran_FLAGS_DEBUG}")

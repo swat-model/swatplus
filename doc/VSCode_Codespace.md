@@ -14,9 +14,9 @@ On starting a Codespaces VSCode instance:
 
 - Necessary VSCode extensions will be loaded to enable debugging Fortran code.  
 
-- A working input data set will be loaded into `/workdata/Ames_sub1` folder.  This data can be replaced by uploading your own input data set.  
+- A working input data set will be loaded into `/workdata/IA-Clayton_Test_Case` folder.
 
-- An empty` /workdata/myfolder` will be created.
+- An empty` /workdata/my_data` folder will be created. It is in this folder you can upload your own input data.
 
 ## Cost of GitHub Codespaces Instances
 
@@ -36,51 +36,51 @@ Log into GitHub and navigate to your swatplus repository in GitHub.
 
 In the upper left corner click on the hamburger (or stacked pizza) icon and then click on   Codespaces.
 
-![](codespaces.png)
+![](images/codespaces.png)
 
 In the upper right click on New Codespace:
 
-![](new_codespace.png)
+![](images/new_codespace.png)
 
 In the drop downs, select the repository and branch then number of CPUs then click on `Create codespace`.  For smaller projects, 2 CPUs is plenty of compute power.  Once your done, it should look something like:
 
-![](create_new_codespace.png)
+![](images/create_new_codespace.png)
 
 It will take a couple of minutes for the virtual instance to be set up because virtual machines have to be started, software and extensions loaded.  You should see an installation progress bar in the lower right.
 
-![](vscode_install_progress_bar.png)
+![](images/vscode_install_progress_bar.png)
 
 Once that progress bar goes away, you should see a drop down menu in the top center to select the kind of Fortran compiler that you want to use.  Click on the one you want to use.
 
-![](compiler_select.png)
+![](images/compiler_select.png)
 
 Now you are ready to begin compiling your code.  On the left hand side, click on the triangle with the wrench to bring up the CMAKE window.
 
-![](configure_build.png)
+![](images/configure_build.png)
 
 First make sure under `Project Status | Configure` in the CMAKE window that the correct Fortran compiler is displayed.  If not, hover over it and select the pencil icon then select a compiler of your choice.  
 
 Right click on CMakeLists.txt in the CMAKE window and select `Clean and Reconfigure`
 
-![](clean_and_reconfigure.png)
+![](images/clean_and_reconfigure.png)
 
 You should always do the above step when you switch from one compiler to another.  In addition, you may need to do the above step if you add or subtract modules or subroutines from your swatplus code.  
 
 Now you're ready to build the code.  Right click on CMakeLists.txt in the CMAKE window and select Build All Projects.
 
-![](build_all_files.png)
+![](images/build_all_files.png)
 
 In the output window at the bottom of the VSCode window, you should see the code compiling.   If the compile is successful, it should end with something like:
 
 `[build] Build finished with exit code 0`
 
-Once the compile is complete, the code can be executed by clicking on the icon that looks like triangle pointing to the right with a bug on top of it then selecting the Ames_sub1 in the dropdown menu then click on the green triangle next to the selected input data set.  
+Once the compile is complete, the code can be executed by clicking on the icon that looks like triangle pointing to the right with a bug on top of it then selecting the IA-Clayton_Test_Case in the dropdown menu then click on the green triangle next to the selected input data set.  
 
-![](select_input_folder.png)
+![](images/select_input_folder.png)
 
 After a fresh build, you may need to select which executable you want to run.  If so, a pop window will appear at the top center of VSCode. Any of the selections should work if you chose a a debug build.  If you chose a release build, you will not be able to debug with that executable.
 
-![](select_executable.png)
+![](images/select_executable.png)
 
 To see the progress of you model run, click on the Terminal tab in bottom window of VSCode.
 
@@ -88,24 +88,24 @@ VSCode in GitHub Codespaces has full debug capabilities.  Regular and conditiona
 
 ## How to Run VSCode With Your Own Dataset
 
-You can upload your own input data.   When the virtual VSCode instance was created, two folders were created in the `/workdata` folder,  one called `Ames_sub1` and another folder called `my_data`.    The contents of the `/workdata/Ames_sub1`  folder was copied from the folder `/refdata/Ames_sub1` when the VSCode virtual instance was created and this is the input data set that was run earlier in debug mode.   The `/workdata/my_data` folder is empty.
+You can upload your own input data.   When the virtual VSCode instance was created, two folders were created in the `/workdata` folder,  one called `IA-Clayton_Test_Case` and another folder called `my_data`.    The contents of the `/workdata/IA-Clayton_Test_Case`  folder was copied from the folder `/refdata/IA-Clayton_Test_Case` when the VSCode virtual instance was created and this is the input data set that was run earlier in debug mode.   The `/workdata/my_data` folder is empty.
 
 If you want run swatplus your with own data set, right click on the empty  /workdata/my_data folder in the  VSCode solution explorer and select upload then your local file browser will appear.  You may have to allow cookies to allow permission in GitHub to open your local file explorer.  Once the local file explorer is open, navigate to your local data set and select all the files that you want to upload then select open or upload.  How the local file explorer looks depends on the local operating system that you are using.
 
-![](upload_data.png)
+![](images/upload_data.png)
 
 After your input data has been uploaded into the `/workspace/my_data` folder.  Repeat the process of clicking on the debug icon but this time select `my_data` in the in the dropdown menu then the green triangle.
 
-![](select_input_folder2.png)
+![](images/select_input_folder2.png)
 
-If you want to have multiple input data sets, you can create additional folders as needed in the /workdata folder and then modify the /.vscode/launch.json file.   The default lauch.json file  has two json blocks in the "configurations" section to look for input data sets in /workdata/Ames_sub1 and in /workdata/my_data.  To add another data set, copy one of the current json blocks in "configurations" (i.e. either Ames_sub1 or my_data) to create a new section and then change the "name" variable to the name you want and the "cwd" to point to the input folder of your data."   For example, if you had input data in a folder called /workdata/walnut_creak, the .vscode/launch.json file would be modified to add a json block under at the end in the "configurations" section.  Be sure to add a comma between each section:
+If you want to have multiple input data sets, you can create additional folders as needed in the /workdata folder and then modify the /.vscode/launch.json file.   The default lauch.json file  has two json blocks in the "configurations" section to look for input data sets in /workdata/IA-Clayton_Test_Case and in /workdata/my_data.  To add another data set, copy one of the current json blocks in "configurations" (i.e. either IA-Clayton_Test_Case or my_data) to create a new section and then change the "name" variable to the name you want and the "cwd" to point to the input folder of your data."   For example, if you had input data in a folder called /workdata/walnut_creak, the .vscode/launch.json file would be modified to add a json block under at the end in the "configurations" section.  Be sure to add a comma between each section:
 
 ```JSON
 {
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Ames_sub1",
+            "name": "IA-Clayton_Test_Case",
             "type": "cppdbg",
             "request": "launch",
             // Resolved by CMake Tools:
@@ -113,7 +113,7 @@ If you want to have multiple input data sets, you can create additional folders 
             "args": [],
             "stopAtEntry": false,
             // Change the following to where swatplus input data exists
-            "cwd": "${workspaceFolder}/workdata/Ames_sub1",
+            "cwd": "${workspaceFolder}/workdata/IA-Clayton_Test_Case",
             "environment": [
                 {
                     // add the directory where our target was built to the PATHs
@@ -201,10 +201,10 @@ In order to reduce GitHub charges to your GitHub account, you may want to stop y
 
 To stop the virtual instance from running click on Codespace in the lower left corner of VSCode and then select Stop Current Codespace.  This will take a minute or two to complete.
 
-![](stop_code_space.png)
+![](images/stop_code_space.png)
 
 ## How to Delete Codespace Instance
 
 In order to delete the VSCode Codespace instance, first stop the Codespace instance as shown above then return the browser tab where you first created the virtual instance and refresh the browser or navigate to your GitHub repository and click on the hambuger icon in the upper left and click on Codespaces.  You should see the the name of your Codespace instance listed at the bottom.   To delete the Codespace instance, click the ellipses to the far right of your Codespace name then click on Delete. 
 
-![](delete_codespace.png)
+![](images/delete_codespace.png)

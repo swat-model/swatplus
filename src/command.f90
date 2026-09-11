@@ -43,7 +43,7 @@
                   basin_channel_output, basin_ls_pest_output, basin_output, basin_recall_output, &
                   basin_res_pest_output, basin_reservoir_output, basin_sdchannel_output, cs_balance, &
                   lsu_output, lsu_carbon_output, salt_balance, hyddep_output, recall_salt, recall_cs, soil_nutcarb_write, &
-                  soil_carbvar_write, soil_nutcarb_write_legacy, soil_carbvar_write_legacy
+                  soil_carbvar_write, soil_nutcarb_write_historical, soil_carbvar_write_historical
 
       real, dimension(time%step) :: hyd_flo     !flow hydrograph
       integer :: in = 0               !              | 
@@ -517,6 +517,12 @@
             end do
           end if
                          
+
+        end do      ! hru loop
+
+        !! whole-basin emitter writers: ONCE per output event, AFTER every hru is processed.
+        !! soil_nutcarb_write / soil_carbvar_write loop all hrus internally; calling them
+        !! inside the hru loop emitted sp_ob%hru copies of every row.
           !! dispatch soil_nutcarb_write whenever any of the 6 nutcarb-controlled families is on for this timestep.
           !! Per-family gating happens inside each cb_*_emit subroutine in soil_nutcarb_write.
           if (pco%cb_lyr_hru%d == "y" .or. pco%cb_cpool_hru%d == "y" .or. pco%cb_npool_hru%d == "y" .or. &
@@ -532,36 +538,44 @@
               pco%cb_plt_hru%a == "y" .or. pco%cb_flux_hru%a == "y" .or. pco%cb_snap_hru%a == "y")) &
             call soil_nutcarb_write(" a")
 
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 1) then
             if (pco%cb_drv_hru%d == "y" .or. pco%cb_dyn_hru%d == "y") call soil_carbvar_write(" d")
             if (time%end_mo == 1 .and. (pco%cb_drv_hru%m == "y" .or. pco%cb_dyn_hru%m == "y")) call soil_carbvar_write(" m")
             if (time%end_yr == 1 .and. (pco%cb_drv_hru%y == "y" .or. pco%cb_dyn_hru%y == "y")) call soil_carbvar_write(" y")
             if (time%end_sim == 1 .and. (pco%cb_drv_hru%a == "y" .or. pco%cb_dyn_hru%a == "y")) call soil_carbvar_write(" a")
           endif
 
-        end do      ! hru loop
+
+        !! endsim soil snapshots (moved here from hru_output.f90 -- both writers are
+        !! whole-basin and must run once after every hru is processed)
+        if (time%end_sim == 1) then
+          if (pco%cb_snap_hru%a == "y") call soil_nutcarb_write(" e")
+          if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. &
+              pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
+            call soil_nutcarb_write_historical(" e")
+          endif
+        endif
 
         !! legacy CSU carbon outputs, gated by the hru_cb row in print.prt
-        !! will be removed in revision 63.
-        !! soil_nutcarb_write_legacy iterates all HRUs internally, so it must be
+        !! soil_nutcarb_write_historical iterates all HRUs internally, so it must be
         !! called once per output event here, not once per hru inside the loop above
         !! (that duplicated every row sp_ob%hru times).
-        if (pco%cb_hru%d == "y") call soil_nutcarb_write_legacy(" d")
-        if (pco%cb_hru%d == "l") call soil_nutcarb_write_legacy("dl")
-        if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write_legacy(" m")
-        if (pco%cb_hru%m == "l" .and. time%end_mo == 1) call soil_nutcarb_write_legacy("ml")
-        if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write_legacy(" y")
-        if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write_legacy("yl")
+        if (pco%cb_hru%d == "y") call soil_nutcarb_write_historical(" d")
+        if (pco%cb_hru%d == "l") call soil_nutcarb_write_historical("dl")
+        if (pco%cb_hru%m == "y" .and. time%end_mo == 1) call soil_nutcarb_write_historical(" m")
+        if (pco%cb_hru%m == "l" .and. time%end_mo == 1) call soil_nutcarb_write_historical("ml")
+        if (pco%cb_hru%y == "y" .and. time%end_yr == 1) call soil_nutcarb_write_historical(" y")
+        if (pco%cb_hru%y == "l" .and. time%end_yr == 1) call soil_nutcarb_write_historical("yl")
 
         !! legacy CSU carbon variable outputs, gated by the hru_cb_vars row in print.prt
         !! same iterates-all-hrus-internally reasoning as above.
-        if (bsn_cc%cswat == 2) then
-          if (pco%cb_vars_hru%d == "y") call soil_carbvar_write_legacy(" d")
-          if (pco%cb_vars_hru%d == "l") call soil_carbvar_write_legacy("dl")
-          if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write_legacy(" m")
-          if (pco%cb_vars_hru%m == "l" .and. time%end_mo == 1) call soil_carbvar_write_legacy("ml")
-          if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write_legacy(" y")
-          if (pco%cb_vars_hru%y == "l" .and. time%end_yr == 1) call soil_carbvar_write_legacy("yl")
+        if (bsn_cc%cswat == 1) then
+          if (pco%cb_vars_hru%d == "y") call soil_carbvar_write_historical(" d")
+          if (pco%cb_vars_hru%d == "l") call soil_carbvar_write_historical("dl")
+          if (pco%cb_vars_hru%m == "y" .and. time%end_mo == 1) call soil_carbvar_write_historical(" m")
+          if (pco%cb_vars_hru%m == "l" .and. time%end_mo == 1) call soil_carbvar_write_historical("ml")
+          if (pco%cb_vars_hru%y == "y" .and. time%end_yr == 1) call soil_carbvar_write_historical(" y")
+          if (pco%cb_vars_hru%y == "l" .and. time%end_yr == 1) call soil_carbvar_write_historical("yl")
         endif
 
         do iaq = 1, sp_ob%aqu

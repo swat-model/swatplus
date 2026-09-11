@@ -122,7 +122,7 @@
             soil1(j)%rsd_tot(ly) = orgz
             soil1(j)%root_tot(ly) = orgz
             do ipl = 1, pcom(j)%npl
-              soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+              soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + sum_origin(soil1(j)%pl(ipl)%rsd(ly))
               soil1(j)%root_tot(ly)%m = soil1(j)%root_tot(ly)%m + pcom(j)%plg(ipl)%rtfr(ly) * pl_mass(j)%root(ipl)%m 
             end do
             root_frac_ly = 0.
@@ -152,16 +152,31 @@
             soil_prof_water = soil_prof_water + soil1(j)%water(ly)
           end do
 
-          ! Total org all layers
-          soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta &
-                            + soil_prof_str + soil_prof_water + soil_prof_man
+          select case (bsn_cc%cswat)
+          case (1)
+            ! CENTURY pools
+            ! Total org all layers
+            soil1(j)%tot_org = soil_prof_hs + soil_prof_hp + soil_prof_microb + soil_prof_meta &
+                              + soil_prof_str + soil_prof_water + soil_prof_man
 
-          ! Sequestered org for soil layers greater than 1
-          soil1(j)%seq_org = soil_prof_seq_hs + soil_prof_seq_hp + soil_prof_seq_microb
-          
-          ! Surface org, just layer 1 excluding residue
-          soil1(j)%surf_org = soil1(j)%meta(1) + soil1(j)%str(1) + soil1(j)%microb(1) &
-                              + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
+            ! Sequestered org for soil layers greater than 1
+            soil1(j)%seq_org = soil_prof_seq_hs + soil_prof_seq_hp + soil_prof_seq_microb
+
+            ! Surface org, just layer 1 excluding residue
+            soil1(j)%surf_org = soil1(j)%meta(1) + soil1(j)%str(1) + soil1(j)%microb(1) &
+                                + soil1(j)%hs(1) + soil1(j)%man(1) + soil1(j)%water(1)
+          case (0)
+            ! cswat == 0 stores soil organic C in the active/stable humus pools (hact/hsta),
+            ! not the CENTURY pools; total soil C = hact + hsta + microb to match the per-layer
+            ! convention used below for tot(ly)%c, tot_300_c and seq(ly)%c
+            soil1(j)%tot_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
+
+            ! Sequestered org (cswat == 0 has no fresh-litter soil pool, so same pools as total)
+            soil1(j)%seq_org = soil_prof_hact + soil_prof_hsta + soil_prof_microb
+
+            ! Surface org, just layer 1 excluding residue
+            soil1(j)%surf_org = soil1(j)%hact(1) + soil1(j)%hsta(1) + soil1(j)%microb(1)
+          end select
           
           !write total carbon by soil layer, file = "hru_cbn_lyr.txt"
           ! print header with soil layer depths
@@ -180,11 +195,11 @@
             if (bsn_cc%cswat == 0) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
             endif
-            if(bsn_cc%cswat == 2 ) then
+            if(bsn_cc%cswat == 1 ) then
               soil1(j)%tot_300_c = soil1(j)%tot_300_c + soil1(j)%tot(ly)%c * frac_above_300 
             endif
           end do
-          !! compute cswat==0 totals if needed (cswat==2 already has soil1%tot and soil1%seq populated)
+          !! compute cswat==0 totals if needed (cswat==1 already has soil1%tot and soil1%seq populated)
           if (bsn_cc%cswat == 0 ) then
             do ly = 1, soil(j)%nly
               soil1(j)%tot(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
@@ -207,7 +222,7 @@
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + (soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c) * frac_above_300
               soil1(j)%seq(ly)%c = soil1(j)%hact(ly)%c + soil1(j)%hsta(ly)%c + soil1(j)%microb(ly)%c
             endif
-            if(bsn_cc%cswat == 2 ) then
+            if(bsn_cc%cswat == 1 ) then
               soil1(j)%seq_tot_300_c = soil1(j)%seq_tot_300_c + soil1(j)%seq(ly)%c * frac_above_300
             endif
           end do
@@ -221,7 +236,7 @@
           !! per-family gating happens inside each emit subroutine (no more cbn_diagnostics wrap).
           call cb_plc_stat_emit(out_freq, j, iob)
           call cb_soil_snap_period(out_freq, j, iob)
-          if (bsn_cc%cswat == 2) then
+          if (bsn_cc%cswat == 1) then
             call cb_cflux_stat_emit(out_freq, j, iob)
             call cb_cpool_stat_emit(out_freq, j, iob)
           endif
@@ -234,9 +249,16 @@
           if (lsu_elem(iihru)%bsn_frac > 1.e-12) then
             const = lsu_elem(iihru)%bsn_frac
             if (lsu_elem(iihru)%obtyp == "hru") then
+              !! recompute this hru's soil-profile residue (abg+blg soil residue summed
+              !! over layers); the module scalar soil_prof_rsd left from the hru loop above
+              !! holds only the last hru, so it must be rebuilt here for each iihru
+              soil_prof_rsd = soil_org_z
+              do ly = 1, soil(iihru)%nly
+                soil_prof_rsd = soil_prof_rsd + soil1(iihru)%rsd_tot(ly)
+              end do
               bsn_org_soil = bsn_org_soil + const * soil1(iihru)%tot_org
               bsn_org_pl = bsn_org_pl + const * pl_mass(iihru)%tot_com
-              bsn_org_rsd = bsn_org_rsd + const * soil_prof_rsd + pl_mass(iihru)%rsd_tot
+              bsn_org_rsd = bsn_org_rsd + const * (soil_prof_rsd + pl_mass(iihru)%abg_rsd_tot)
               bsn_mn = bsn_mn + const * soil1(iihru)%tot_mn
               bsn_mp = bsn_mp + const * soil1(iihru)%tot_mp
             end if
@@ -455,7 +477,7 @@
         write (u_txt, '(5i12,2x,i12,2x,a16,7(1x,g16.7))') &
           time%day, time%mo, time%day_mo, time%yrc, hru_j, ob(hru_iob)%gis_id, ob(hru_iob)%name, &
           pl_mass(hru_j)%tot_com%c, pl_mass(hru_j)%ab_gr_com%c, pl_mass(hru_j)%leaf_com%c, &
-          pl_mass(hru_j)%stem_com%c, pl_mass(hru_j)%seed_com%c, pl_mass(hru_j)%root_com%c, pl_mass(hru_j)%rsd_tot%c
+          pl_mass(hru_j)%stem_com%c, pl_mass(hru_j)%seed_com%c, pl_mass(hru_j)%root_com%c, pl_mass(hru_j)%abg_rsd_tot%c
 
         if (pco%csvout == "y") then
           write (u_csv, '(5(i0,a),i0,a,a,7(a,g0.7))') &
@@ -463,7 +485,7 @@
             ob(hru_iob)%gis_id, ",", trim(ob(hru_iob)%name), &
             ",", pl_mass(hru_j)%tot_com%c, ",", pl_mass(hru_j)%ab_gr_com%c, ",", pl_mass(hru_j)%leaf_com%c, &
             ",", pl_mass(hru_j)%stem_com%c, ",", pl_mass(hru_j)%seed_com%c, ",", pl_mass(hru_j)%root_com%c, &
-            ",", pl_mass(hru_j)%rsd_tot%c
+            ",", pl_mass(hru_j)%abg_rsd_tot%c
         end if
       end subroutine cb_plc_stat_emit
 

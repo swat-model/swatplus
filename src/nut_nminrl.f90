@@ -29,6 +29,11 @@
 
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
+      !! residue C:N / C:P decomposition constants, shared with cbn_surfrsd_decomp.
+      !! NOTE: this is the cswat == 0 path, where carbon_bsn_read returns early and
+      !! carbon.bsn is never opened -- so these keep their carbon_module defaults
+      !! (500. / 25. / 5000. / 200.), exactly the literals they replace. Numerics-neutral.
+      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
@@ -63,12 +68,17 @@
       real :: cprf = 0.     !              |carbon phosphorus ratio factor
       real :: ca = 0.       !              |
       real :: decr = 0.     !              |
+      type (organic_mass) :: rsd_om   !     |total (abg+blg) residue for this plant/layer
       !real :: rdc = 0.      !              |
       real :: wdn = 0.      !kg N/ha       |amount of nitrogen lost from nitrate pool in
                             !              |layer due to denitrification
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
+      real :: nactfr = 0.   !none          |nitrogen active pool fraction. The fraction
+                            !              |of organic nitrogen in the active pool. 
+
       j = ihru
+      nactfr = .02
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.
@@ -103,8 +113,8 @@
           if (xx > 1.e6) xx = 1.e6
           csf = Sqrt(xx)
 
-          !! compute flow from active to stable pools - maintain fraction of active (n_act_frac)
-          rwn = .1e-4 * ((soil1(j)%hact(k)%n * (1. / n_act_frac - 1.) - soil1(j)%hsta(k)%n))
+          !! compute flow from active to stable pools- maintain fraction of active (nactfr)
+          rwn = .1e-4 * ((soil1(j)%hact(k)%n * (1. / nactfr - 1.) - soil1(j)%hsta(k)%n))
           if (rwn > 0.) then
             rwn = Min(rwn, soil1(j)%hact(k)%n)
           else
@@ -138,35 +148,42 @@
           do ipl = 1, pcom(j)%npl
             rmn1 = 0.
             rmp = 0.
-            if (soil1(j)%pl(ipl)%rsd(k)%n > 1.e-4) then
-              cnr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%n
-              if (cnr > 500.) cnr = 500.
-              cnrf = Exp(-.693 * (cnr - 25.) / 25.)
+            !! cswat==0 does not use the abg/blg split; work on the total (abg+blg)
+            rsd_om = sum_origin(soil1(j)%pl(ipl)%rsd(k))
+            if (rsd_om%n > 1.e-4) then
+              cnr = rsd_om%c / rsd_om%n
+              if (cnr > cnr_cap) cnr = cnr_cap
+              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)
             else
               cnrf = 1.
             end if
-            
-            if (soil1(j)%pl(ipl)%rsd(k)%p > 1.e-4) then
-              cpr = soil1(j)%pl(ipl)%rsd(k)%c / soil1(j)%pl(ipl)%rsd(k)%p
-              if (cpr > 5000.) cpr = 5000.
-              cprf = Exp(-.693 * (cpr - 200.) / 200.)
+
+            if (rsd_om%p > 1.e-4) then
+              cpr = rsd_om%c / rsd_om%p
+              if (cpr > cpr_cap) cpr = cpr_cap
+              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)
             else
               cprf = 1.
             end if
             ca = Min(cnrf, cprf, 1.)
-            
+
             idp = pcom(j)%plcur(ipl)%idplt
             decr = pldb(idp)%rsdco_pl * ca * csf
             decr = Max(bsn_prm%decr_min, decr)
             decr = Min(decr, 1.)
-            decomp = decr * soil1(j)%pl(ipl)%rsd(k)
-            soil1(j)%pl(ipl)%rsd(k) = soil1(j)%pl(ipl)%rsd(k) - decomp
+            decomp = decr * rsd_om
+            !! drain both origins proportionally: (1-decr)*rsd == rsd - decr*rsd
+            soil1(j)%pl(ipl)%rsd(k) = (1.0 - decr) * soil1(j)%pl(ipl)%rsd(k)
 
-            ! The following if statements are to prevent runtime underflow errors with gfortran 
-            if (soil1(j)%pl(ipl)%rsd(k)%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%m = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%c = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%n = 0.0 
-            if (soil1(j)%pl(ipl)%rsd(k)%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%p = 0.0 
+            ! The following if statements are to prevent runtime underflow errors with gfortran
+            if (soil1(j)%pl(ipl)%rsd(k)%abg%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%abg%m = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%abg%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%abg%c = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%abg%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%abg%n = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%abg%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%abg%p = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%blg%m < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%blg%m = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%blg%c < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%blg%c = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%blg%n < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%blg%n = 0.0
+            if (soil1(j)%pl(ipl)%rsd(k)%blg%p < 1.e-10) soil1(j)%pl(ipl)%rsd(k)%blg%p = 0.0
           !end do
           
           soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 + .8 * decomp%n

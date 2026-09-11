@@ -83,8 +83,15 @@
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
       
-          f = pcom(j)%plcur(ipl)%phuacc / (pcom(j)%plcur(ipl)%phuacc +                  &
-              Exp(plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc))
+          !! clamp the exponent as the perennial phuacc_p branch below already does.
+          !! left unclamped this Exp() underflows once leaf2 * phuacc outruns leaf1,
+          !! which traps under the shipped -ffpe-trap=...,underflow. where the clamp
+          !! binds, Exp(-16) = 1.1e-7 is negligible against phuacc, so f is unchanged.
+          exponent = plcp(idp)%leaf1 - plcp(idp)%leaf2 * pcom(j)%plcur(ipl)%phuacc
+
+          if (exponent < -16.0) exponent = -16.0
+
+          f = pcom(j)%plcur(ipl)%phuacc / (pcom(j)%plcur(ipl)%phuacc + Exp(exponent))
           pcom(j)%plg(ipl)%laimxfr = amin1 (f, pcom(j)%plg(ipl)%laimxfr)    !dormancy and grazing lower phuacc
           ff = f - pcom(j)%plg(ipl)%laimxfr
           pcom(j)%plg(ipl)%laimxfr = f

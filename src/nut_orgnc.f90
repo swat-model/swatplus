@@ -31,7 +31,7 @@
       j = ihru
 
       !! HRU calculations
-      xx = soil1(j)%hact(1)%n + soil1(j)%hsta(1)%n + pl_mass(j)%rsd_tot%n + soil1(j)%man(1)%n
+      xx = soil1(j)%hact(1)%n + soil1(j)%hsta(1)%n + pl_mass(j)%abg_rsd_tot%n + soil1(j)%man(1)%n
       wt1 = soil(j)%phys(1)%bd * soil(j)%phys(1)%d / 100.
 
       if (hru(j)%hyd%erorgn > .001) then
@@ -50,7 +50,7 @@
         soil1(j)%hact(1)%n = soil1(j)%hact(1)%n * xx1
         soil1(j)%hsta(1)%n = soil1(j)%hsta(1)%n * xx1
         do ipl = 1, pcom(j)%npl
-          pl_mass(j)%rsd(ipl)%n =   pl_mass(j)%rsd(ipl)%n * xx1
+          pl_mass(j)%abg_rsd(ipl)%n =   pl_mass(j)%abg_rsd(ipl)%n * xx1
         end do
         soil1(j)%man(1)%n = soil1(j)%man(1)%n * xx1
       end if

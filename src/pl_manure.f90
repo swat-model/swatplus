@@ -1,4 +1,4 @@
-      subroutine pl_manure (ifrt, frt_kg, fertop)
+      subroutine pl_manure (ifrt, frt_kg, surf_frac)
       
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine applies N and P specified by date and
@@ -27,7 +27,8 @@
       integer :: j = 0                    !none          |counter
       integer :: l = 0                    !none          |counter 
       integer, intent (in) :: ifrt        !              |fertilizer type from fert data base
-      integer, intent (in) :: fertop      !              | 
+      real, intent (in) :: surf_frac      !frac          |fraction of manure applied to the surface layer
+                                          !              |(from chem_app.ops surf_frac for "manu"; 1.0 for "graz")
       real, intent (in) :: frt_kg         !kg/ha         |amount of fertilizer applied
       real :: fr_ly = 0.                  !              |fraction of fertilizer applied to layer
       
@@ -70,9 +71,9 @@
       do l = 1, 2
         fr_ly = 0.
         if (l == 1) then
-          fr_ly = chemapp_db(fertop)%surf_frac
+          fr_ly = surf_frac
         else
-          fr_ly = 1. - chemapp_db(fertop)%surf_frac                     
+          fr_ly = 1. - surf_frac
         endif
         
         fr_mass = fr_ly * frt_kg ! mass of applied manure in kg/ha to the soil layer
@@ -94,7 +95,7 @@
                         manure_om(ifrt)%forgp
         end if
         
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 1) then
           ! soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_ly * frt_kg *          &
           !       manure_om(ifrt)%forgn * 10.
           soil1(j)%man(l)%c = soil1(j)%man(l)%c + fr_mass * manure_om(ifrt)%fcbn
@@ -105,7 +106,7 @@
 
         !!By Zhang for C/N cycling 
         !!===========================
-        if (bsn_cc%cswat == 2) then
+        if (bsn_cc%cswat == 1) then
           soil1(j)%tot(l)%p = soil1(j)%tot(l)%p + rtof * fr_mass * manure_om(ifrt)%forgp
           soil1(j)%hs(l)%p = soil1(j)%hs(l)%p + (1. - rtof) * fr_mass * manure_om(ifrt)%forgp
           
@@ -145,8 +146,10 @@
           
           !assuming lignin C fraction of organic carbon to be 0.175; updating lignin amount in structural litter pool
           soil1(j)%lig(l)%c = soil1(j)%lig(l)%c + str_c * .175
-          !non-lignin part of the structural litter C is also updated;
-          soil1(j)%lig(l)%n = soil1(j)%lig(l)%n + str_c * (1.-.175) 
+          !non-lignin part of the structural litter C is also updated (was mistakenly
+          !added to lig%n); str%c = nonlig%c + lig%c reconstitutes in cbn_zhang2, so
+          !without this ~82.5% of the manure structural carbon is lost.
+          soil1(j)%nonlig(l)%c = soil1(j)%nonlig(l)%c + str_c * (1.-.175)
           
           
           ! str_m = fr_ly - meta_m  ! I think this is wrong.  

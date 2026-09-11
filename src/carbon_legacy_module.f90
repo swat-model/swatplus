@@ -1,6 +1,5 @@
       module carbon_legacy_module
 
-!!    will be removed in revision 63.
 !!
 !!    legacy carbon output support for the CSU workflows.
 !!
@@ -8,8 +7,8 @@
 !!    print.prt flags (hru_cb_*). the CSU team still relies on the older,
 !!    non-standard files, so this module keeps that path alive without touching
 !!    the new one. it holds the old fixed-column header types and the open
-!!    routine for those files. the writers live in soil_nutcarb_write_legacy and
-!!    soil_carbvar_write_legacy. everything here is gated by the hru_cb and
+!!    routine for those files. the writers live in soil_nutcarb_write_historical and
+!!    soil_carbvar_write_historical. everything here is gated by the hru_cb and
 !!    hru_cb_vars rows in print.prt, which swat+ editor does not emit, so a normal
 !!    run produces none of these files. file units are the old ones shifted by
 !!    +3800 into the free 8300-8399 band to avoid clashing with the new families.
@@ -464,14 +463,11 @@
 
       implicit none
 
-      external :: soil_nutcarb_write_legacy
+      external :: soil_nutcarb_write_historical
 
-      !! cbn_diagnostics drives the extra legacy plc/cflux/cpool and soil-prop
-      !! files. it used to be read from carb_coefs.cbn (now removed). it now maps
-      !! to the hru_cb flag letter: "l" (layer) turns diagnostics on; "y" gives the
-      !! light files only (hru_cbn_lyr, hru_seq_lyr, hru_n_p_pool_stat).
-      cbn_diagnostics = (pco%cb_hru%d == "l" .or. pco%cb_hru%m == "l" .or. &
-                         pco%cb_hru%y == "l" .or. pco%cb_hru%a == "l")
+      !! P1: cbn_diagnostics is read from carbon.bsn's last column by carbon_bsn_read
+      !! (called from proc_bsn, well before this routine). The old derivation from
+      !! print.prt's hru_cb letter was deleted so the input file wins.
 
         !! write carbon in soil by layer
         if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n"  .or. pco%cb_hru%y /= "n") then
@@ -532,9 +528,9 @@
             end if
 
 
-            if (bsn_cc%cswat == 2 ) then
+            if (bsn_cc%cswat == 1 ) then
               ! Write out begining adjusted soil properties if any value of cb_hru is not "n"
-              call soil_nutcarb_write_legacy(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
+              call soil_nutcarb_write_historical(" b")    ! Outputs beginning soil values to hru_begsim_soil_prop.txt/csv
 
               if (pco%cb_hru%d /= "n" .or. pco%cb_hru%m /= "n" .or. pco%cb_hru%y /= "n" .or. pco%cb_hru%a /= "n") then
                 !! write carbon in soil, plant, and residue
@@ -583,7 +579,7 @@
         endif
 
         !! write carbon variables headers to hru_carbvars
-        if (bsn_cc%cswat == 2 ) then
+        if (bsn_cc%cswat == 1 ) then
           if (pco%cb_vars_hru%d /= "n" .or. pco%cb_vars_hru%m /= "n"  .or. pco%cb_vars_hru%y /= "n" ) then
             call open_output_file(8374, "hru_carbvars.txt", 1500)
             write (8374,*)  bsn%name, prog

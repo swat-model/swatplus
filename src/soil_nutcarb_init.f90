@@ -19,6 +19,7 @@
       integer :: ly = 0
       integer :: isolt = 0              !counter    |soil plant initialization file pointer
       integer :: isol_pl = 0            !counter    |soil nutrient initialization pointer (nutrients.sol)
+      real :: humus_share = 1.0   !! 1 - frac_litter; humus share of total soil C
       real :: wt1 = 0.                  !kg/ha      |weight of the soil layer
       real :: dep_frac = 0.             !0-1        |fraction of surface concentration at depth
       real :: frac_hum_active = 0.      !0-1        |fraction of humus in active pool - old SWAT
@@ -26,8 +27,11 @@
       real :: solp = 0.
       real :: ssp = 0.
       real :: psp = 0.  
-      real :: mathers_frac              !frac       !The fraction of carbon that is slow humas pool
       real :: tot_mass                  !kg/ha      |total mass of the soil layer
+      real :: mathers_stable_carbon_pct !pct        !The percent of carbon that is slow humas pool for the soil layer
+      real :: mathers_stable_carbon_frac !frac      !The fraction of carbon that is slow humas pool for the soil layer
+      real :: frac_hum_passive          !frac       !fraction of soil carbon that is passive pool carbon for the soil layer
+      real :: frac_hum_slow             !frac       !fraction of soil carbon that is slow pool carbon for the soil layer
 
       !! suppress unused variable warning
       if (isol < 0) continue
@@ -39,7 +43,7 @@
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
       do ly = 1, nly
-        if (ly == 1) then
+       if (ly == 1) then
           soil1(ihru)%cbn(ly) = max(0.001, soil(ihru)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
         else
           soil1(ihru)%cbn(ly) = soil(ihru)%phys(ly)%cbn    
@@ -142,60 +146,93 @@
           soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         end if
         
-        if (bsn_cc%cswat == 2 ) then
-          !! initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
-          !! frac_not_seq is the residue/litter share derived from the user-supplied init_seq (carbon.bsn)
-          org_frac%frac_not_seq = 1.0 - org_frac%frac_seq
+        if (bsn_cc%cswat == 1 ) then
+          !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
+          if (org_frac%frac_litter < 1.e-6) then
+            org_frac%frac_litter = 0.0
+          endif
+          if (org_frac%frac_litter > 1.0) then
+            org_frac%frac_litter = 1.0
+          endif
 
-          !!initialize passive humus pool
-          soil1(ihru)%hp(ly)%m = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%hp(ly)%c = org_frac%frac_seq * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
-          soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
-          soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
-              
-          !!initialize slow humus pool original method.  This is the default method
+          !! humus_share = the part of total soil C that is NOT initialised as litter.
+          !! meta + str are added below as frac_litter * tot, so the humus pools must take the
+          !! complement or the pools sum to (1 + frac_litter) * tot and carbon is created at init.
+          !! NOTE: in the Mathers branch hp is an ABSOLUTE regression prediction and is NOT scaled;
+          !! there the litter share is taken out of the slow-pool complement instead (see below).
+          humus_share = 1.0 - org_frac%frac_litter
+
+          !!initialize microbial pool
+          soil1(ihru)%microb(ly)%m = humus_share * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
+          soil1(ihru)%microb(ly)%c = humus_share * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
+          soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.            !assume 8:1 C:N ratio
+          soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
+            
           if (org_frac% mathers_method .eqv. .false.) then
-            soil1(ihru)%hs(ly)%m = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
-            soil1(ihru)%hs(ly)%c = org_frac%frac_seq * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
+            !!initialize passive humus pool
+            soil1(ihru)%hp(ly)%m = humus_share * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%hp(ly)%c = humus_share * org_frac%frac_hum_passive * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
+            soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
+              
+            !!initialize slow humus pool
+            soil1(ihru)%hs(ly)%m = humus_share * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%hs(ly)%c = humus_share * org_frac%frac_hum_slow * soil1(ihru)%tot(ly)%c
             soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
             soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
           endif
               
-          ! initialize slow humus pool by Mathers approach ref: "Updating carbon pool initialization with DSSAT-CENTURY"
           if (org_frac%mathers_method .eqv. .true.) then
-            if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 0.35 ) then
-              mathers_frac = (.41 + 0.0053 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0 
-              soil1(ihru)%hs(ly)%c = org_frac%frac_seq * mathers_frac * soil1(ihru)%tot(ly)%c
-              soil1(ihru)%hs(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
-              soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
-              soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
+            !! initialize humus passive pool by Mathers approach ref: "Updating carbon pool initialization with DSSAT-CENTURY"
+            if ((soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) >= 35.0) then
+              mathers_stable_carbon_pct = .41 + 0.0053 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt) 
             else
-              mathers_frac = (.069 + 0.015 * 100.0 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)) / 100.0
-              soil1(ihru)%hs(ly)%c = org_frac%frac_seq * mathers_frac * soil1(ihru)%tot(ly)%c  
-              soil1(ihru)%hs(ly)%m = soil1(ihru)%hs(ly)%c / 0.58
-              soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
-              soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
+              mathers_stable_carbon_pct = .069 + 0.015 * (soil(ihru)%phys(ly)%clay + soil(ihru)%phys(ly)%silt)
             endif
+
+            frac_hum_passive = mathers_stable_carbon_pct / soil(ihru)%phys(ly)%cbn  
+
+            if (frac_hum_passive > .96) then
+              frac_hum_passive = .96
+              mathers_stable_carbon_pct = frac_hum_passive * soil(ihru)%phys(ly)%cbn !recalculate because of reduction in hp_cbn_frac 
+              !! subtract frac_litter so microb + hp + hs + (meta+str) == tot.
+              !! hp is the Mathers regression prediction and must NOT be scaled, so the litter
+              !! share comes out of the slow pool, which is the residual pool here.
+              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb - org_frac%frac_litter
+            else
+              frac_hum_slow = 1.0 - frac_hum_passive - org_frac%frac_hum_microb - org_frac%frac_litter
+            endif
+
+            mathers_stable_carbon_frac = mathers_stable_carbon_pct/100.0
+
+            !! Mathers path uses unscaled microb (the litter share is absorbed by hs above)
+            soil1(ihru)%microb(ly)%m = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%microb(ly)%c = org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.
+            soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.
+
+            soil1(ihru)%hp(ly)%c = mathers_stable_carbon_frac * tot_mass
+            soil1(ihru)%hp(ly)%m = soil1(ihru)%hp(ly)%c / 0.58
+            soil1(ihru)%hp(ly)%n = soil1(ihru)%hp(ly)%c / 10.                   !assume 10:1 C:N ratio
+            soil1(ihru)%hp(ly)%p = soil1(ihru)%hp(ly)%c / 80.                   !assume 80:1 C:P ratio
+
+            !! Recalculate humus_slow_fraction based on the fact that the
+            soil1(ihru)%hs(ly)%m = frac_hum_slow * soil1(ihru)%tot(ly)%m
+            soil1(ihru)%hs(ly)%c = frac_hum_slow * soil1(ihru)%tot(ly)%c
+            soil1(ihru)%hs(ly)%n = soil1(ihru)%hs(ly)%c / 10.                   !assume 10:1 C:N ratio
+            soil1(ihru)%hs(ly)%p = soil1(ihru)%hs(ly)%c / 80.                   !assume 80:1 C:P ratio
+
           endif
 
-
-          !!initialize microbial pool
-          soil1(ihru)%microb(ly)%m = org_frac%frac_seq * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%microb(ly)%c = org_frac%frac_seq * org_frac%frac_hum_microb * soil1(ihru)%tot(ly)%c
-          soil1(ihru)%microb(ly)%n = soil1(ihru)%microb(ly)%c / 8.            !assume 8:1 C:N ratio
-          soil1(ihru)%microb(ly)%p = soil1(ihru)%microb(ly)%c / 80.           !assume 80:1 C:P ratio
-            
           !! metabolic residue
-          ! soil1(ihru)%meta(ly) = plt_mass_z
-          soil1(ihru)%meta(ly)%m = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%meta(ly)%c = org_frac%frac_not_seq * 0.85 * soil1(ihru)%tot(ly)%c              
+          soil1(ihru)%meta(ly)%c = org_frac%frac_litter * 0.85 * soil1(ihru)%tot(ly)%c              
+          soil1(ihru)%meta(ly)%m = soil1(ihru)%meta(ly)%c /.58
           soil1(ihru)%meta(ly)%n = soil1(ihru)%meta(ly)%c / 10.               
           soil1(ihru)%meta(ly)%p = soil1(ihru)%meta(ly)%c / 100.   
             
           ! structural residue
-          ! soil1(ihru)%str(ly) = plt_mass_z
-          soil1(ihru)%str(ly)%m = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%m
-          soil1(ihru)%str(ly)%c = org_frac%frac_not_seq * 0.15 * soil1(ihru)%tot(ly)%c               
+          soil1(ihru)%str(ly)%c = org_frac%frac_litter * 0.15 * soil1(ihru)%tot(ly)%c               
+          soil1(ihru)%str(ly)%m = soil1(ihru)%str(ly)%c / .58 
           soil1(ihru)%str(ly)%n = soil1(ihru)%str(ly)%c / 150.                !assume 150:1 C:N ratio (EPIC)
           soil1(ihru)%str(ly)%p = soil1(ihru)%str(ly)%c / 1500.
           
