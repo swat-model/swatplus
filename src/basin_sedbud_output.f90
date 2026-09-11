@@ -4,8 +4,6 @@
       use basin_module
       
       implicit none
-      
-      integer :: iuse
 
         !! sum monthly variables
         bsn_sedbudm = bsn_sedbudm + bsn_sedbud
@@ -24,7 +22,7 @@
 
         !! monthly print
         if (time%end_mo == 1) then
-          !! sum amount of yearly used water
+          !! add into the yearly total
           bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
 
           if (pco%sd_chan%m == "y") then
@@ -42,7 +40,7 @@
 
       !! yearly print
       if (time%end_yr == 1) then
-        !! sum amount of yearly used water
+        !! add into the yearly total
         bsn_sedbudy =  bsn_sedbudy + bsn_sedbudm
           
         if (pco%sd_chan%y == "y") then
@@ -64,7 +62,7 @@
 
       !! average annual print
       if (time%end_sim == 1) then
-        !! sum amount of average annual used water
+        !! convert the accumulated total to an average annual value
         bsn_sedbuda = bsn_sedbuda / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then
@@ -78,6 +76,5 @@
 
       return
       
-100   format (4i6,i8,5x,a,5x,i8,5x,i8,5x,a,5x,i8,20(7x,a,5x,i8,3f15.1))
       end subroutine basin_sedbud_output
 
