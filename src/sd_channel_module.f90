@@ -97,6 +97,9 @@
       type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
 
       type channel_morphology_output
+        character (len=6) :: mo         =  "      "
+        character (len=6) :: day_mo     =  "      "
+        character (len=6) :: yrc        =  "      "
         integer :: num              !           |number of channels in each order
         real :: wid = 0.            !m          |averge channel width
         real :: dep = 0.            !m          |average channel depth
@@ -236,6 +239,7 @@
         real :: vol_fp = 0.             !m^3        |volume of water in flood plain
         real :: vol_ch = 0.             !m^3        |volume of water in and above channel
         real :: wet_perim = 0.          !m          |wetted perimeter
+        real :: vel = 0.                !m/s        |velocity
         real :: ttime = 0.              !hr         |travel time
       end type channel_rating_curve_parameters
       type (channel_rating_curve_parameters) :: rcurv   !rating curve at each time step
@@ -498,59 +502,111 @@
 !!    CHANBUD HEADERS
       
 !!    CHANBUD ORDER HEADERS      
-      type ch_bud_order       
-          character(len=12) :: iord     = "        iord" 
-          character(len=16) :: num      =  "        num     "          
-          character(len=16) :: fp_km2   =  "  fp_km2        "
-          character(len=12) :: w_yr     =  "   w_yr     "          
-          character(len=16) :: d_yr     =  "   d_yr         "
-          character(len=16) :: fp_mm    =  "  fp_mm         "
-          character(len=16) :: ebank_m  =  "ebank_m         "
-          character(len=16) :: ebtm_m   =  "ebtm_m          "
-          character(len=14) :: ebank_t  =  "ebank_t      "
-          character(len=14) :: ebtm_t   =  "ebtm_t       "
-          character(len=14) :: fp_t     =  "fp_t         "
+      type ch_bud_order 
+          character(len=12) :: mo         =  "        mon "
+          character(len=12) :: day_mo     =  "        day "
+          character(len=12) :: yrc        =  "         yr "
+          character(len=12) :: iord       =  "        iord"
+          character(len=16) :: space      =  "                "
+          character(len=12) :: num        =  "         num"          
+          character(len=16) :: wid        =  "        wid     " 
+          character(len=16) :: dep        =  "        dep     " 
+          character(len=16) :: fp_km2     =  "    fp_km2      "
+          character(len=12) :: ebank_t    =  "   ebank_t      "          
+          character(len=16) :: ebtm_t     =  "      ebtm_t    "
+          character(len=16) :: ebank_m    =  "     ebank_m    "
+          character(len=16) :: ebtm_m     =  "      ebtm_m    "
+          character(len=16) :: fp_t       =  "      fp_t      "
+          character(len=16) :: fp_mm      =  "   fp_mm        "
       end type ch_bud_order
       type (ch_bud_order) :: ch_bud_order_hdr
       
       type ch_bud_order_units
-          character(len=12) :: iord     = "            " 
-          character(len=16) :: num      =  "                "          
-          character(len=16) :: fp_km2   =  "  km2           "
-          character(len=12) :: w_yr     =  "  ratio         "          
-          character(len=16) :: d_yr     =  "  ratio         "
-          character(len=16) :: fp_mm    =  "  mm/yr         "
-          character(len=16) :: ebank_m  =  "     m          "
-          character(len=16) :: ebtm_m   =  "     m          "
-          character(len=14) :: ebank_t  =  "  tons          "
-          character(len=12) :: ebtm_t   =  "  tons        "
-          character(len=14) :: fp_t     =  "  tons         "
+          character(len=12) :: mo         =  "            "
+          character(len=12) :: day_mo     =  "            "
+          character(len=12) :: yrc        =  "            "
+          character(len=12) :: iord       =  "            "
+          character(len=16) :: space      =  "                "
+          character(len=12) :: num        =  "            "          
+          character(len=16) :: wid        =  "          m     " 
+          character(len=16) :: dep        =  "          m     " 
+          character(len=16) :: fp_km2     =  "     km2        "
+          character(len=12) :: ebank_t    =  "     tons       "          
+          character(len=16) :: ebtm_t     =  "       tons     "
+          character(len=16) :: ebank_m    =  "          m     "
+          character(len=16) :: ebtm_m     =  "          m     "
+          character(len=16) :: fp_t       =  "      tons      "
+          character(len=16) :: fp_mm      =  "      mm        "
       end type ch_bud_order_units
       type (ch_bud_order_units) :: ch_bud_order_hdr_units   
 !!    CHANBUD ORDER HEADERS 
       
+!!    CHAN SEDBUD HEADERS      
+      type ch_sedbud 
+          character(len=12) :: mo         =  "        mon "
+          character(len=12) :: day_mo     =  "        day "
+          character(len=12) :: yrc        =  "         yr "
+          character(len=12) :: ichan      =  "       ichan"
+          character(len=20) :: ob         =  "                  ob"
+          character(len=20) :: obnam      =  "                name"        
+          character(len=14) :: space      =  "              "
+          character(len=16) :: wid        =  "        wid     " 
+          character(len=16) :: dep        =  "        dep     " 
+          character(len=16) :: fp_km2     =  "    fp_km2      "
+          character(len=12) :: ebank_t    =  "   ebank_t      "          
+          character(len=16) :: ebtm_t     =  "      ebtm_t    "
+          character(len=16) :: ebank_m    =  "     ebank_m    "
+          character(len=16) :: ebtm_m     =  "      ebtm_m    "
+          character(len=16) :: fp_t       =  "      fp_t      "
+          character(len=16) :: fp_mm      =  "   fp_mm        "
+      end type ch_sedbud
+      type (ch_sedbud) :: ch_sedbud_hdr
+      
+      type ch_sedbud_units
+          character(len=12) :: mo         =  "            "
+          character(len=12) :: day_mo     =  "            "
+          character(len=12) :: yrc        =  "            "
+          character(len=12) :: ichan      =  "            "
+          character(len=20) :: ob         =  "                    "
+          character(len=20) :: obnam      =  "                    "        
+          character(len=14) :: space      =  "              "          
+          character(len=16) :: wid        =  "          m     " 
+          character(len=16) :: dep        =  "          m     " 
+          character(len=16) :: fp_km2     =  "     km2        "
+          character(len=12) :: ebank_t    =  "     tons       "          
+          character(len=16) :: ebtm_t     =  "       tons     "
+          character(len=16) :: ebank_m    =  "          m     "
+          character(len=16) :: ebtm_m     =  "          m     "
+          character(len=16) :: fp_t       =  "      tons      "
+          character(len=16) :: fp_mm      =  "      mm        "
+      end type ch_sedbud_units
+      type (ch_sedbud_units) :: ch_sedbud_hdr_units   
+!!    CHAN SEDBUD HEADERS 
+     
 !!    CH SEDIMENT BUDGET HEADERS      
       type ch_sed_budget      
-          character(len=16) :: upland_t     =  "  upland_t      "
-          character(len=16) :: ch_ebank_t   =  " ch_ebank_t     "          
-          character(len=16) :: up_ch_rto    =  " up_ch_rto      "
-          character(len=12) :: ch_w_yr      =  " ch_w_yr    "          
-          character(len=16) :: fp_dep_t     =  " fp_dep_t       "
-          character(len=16) :: fp_dep_mm    =  "  fp_dep_mm     "
-          character(len=16) :: res_dep_t    =  "res_dep_t       "
-          character(len=16) :: res_trap_eff =  "res_trap_eff    "
+          character(len=12) :: mo         =  "        mon "
+          character(len=12) :: day_mo     =  "        day "
+          character(len=12) :: yrc        =  "         yr "          
+          character(len=16) :: upland_t     =  "    upland_t    "
+          character(len=16) :: ebank_t      =  "     ebank_t    "          
+          character(len=16) :: ebtm_t       =  "    ebtm_t      "
+          character(len=12) :: fp_t         =  "     fp_t       "          
+          character(len=16) :: res_dep_t    =  "   res_dep_t    "
+          character(len=16) :: wet_dep_t    =  "   wet_dep_t    "
       end type ch_sed_budget
       type (ch_sed_budget) :: ch_sed_bud_hdr
       
-      type ch_sed_budget_units     
-          character(len=16) :: upland_t     =  "     tons       "
-          character(len=16) :: ch_ebank_t   =  "     tons       "          
-          character(len=16) :: up_ch_rto    =  "  ratio         "
-          character(len=12) :: ch_w_yr      =  "  ratio         "          
-          character(len=16) :: fp_dep_t     =  "     tons       "
-          character(len=16) :: fp_dep_mm    =  "       mm       "
-          character(len=16) :: res_dep_t    =  "     tons       "
-          character(len=16) :: res_trap_eff =  "     frac       "
+      type ch_sed_budget_units
+          character(len=12) :: mo        =  "            "
+          character(len=12) :: day_mo    =  "            "
+          character(len=12) :: yrc       =  "            " 
+          character(len=16) :: upland_t  =  "     tons       "
+          character(len=16) :: ebank_t   =  "     tons       "          
+          character(len=16) :: ebtm_t    =  "     tons       "
+          character(len=12) :: fp_t      =  "     tons       "          
+          character(len=16) :: res_dep_t =  "     tons       "
+          character(len=16) :: wet_dep_t =  "     tons       "
       end type ch_sed_budget_units
       type (ch_sed_budget_units) :: ch_sed_bud_hdr_units   
 !!    CH SEDIMENT BUDGET HEADERS      
@@ -893,6 +949,7 @@
         rc2%vol_ch = rc1%vol_ch * const
         rc2%vol_fp = rc1%vol_fp * const
         rc2%wet_perim = rc1%wet_perim * const
+        rc2%vel = rc1%vel * const
         rc2%ttime = rc1%ttime * const
       end function chrc_mult
       
@@ -910,7 +967,9 @@
         rci%vol_ch = rc1%vol_ch + const * (rc2%vol_ch - rc1%vol_ch)
         rci%vol_fp = rc1%vol_fp + const * (rc2%vol_fp - rc1%vol_fp)
         rci%wet_perim = rc1%wet_perim + const * (rc2%wet_perim - rc1%wet_perim)
+        rci%vel = rc1%vel + const * (rc2%vel - rc1%vel)
         rci%ttime = rc1%ttime + const * (rc2%ttime - rc1%ttime)
      end subroutine chrc_interp
     
       end module sd_channel_module
+

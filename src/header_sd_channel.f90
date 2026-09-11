@@ -286,25 +286,211 @@
    end if        
 !! SWAT DEG CHANNEL BUDGET ORDER
    
-!! SWAT DEG CHANNEL BUDGET MORPH            
+!! SWAT DEG CHANNEL SEDIMENT BUDGET ORDER            
    if (sp_ob%chandeg > 0) then
-     call open_output_file(3151, "chanbud_order.txt", 1500)
-     write (3151,*) bsn%name, prog
-     write (3151,*) ch_bud_order_hdr 
-     write (3151,*) ch_bud_order_hdr_units
-     write (9000,*) "CHANBUD_ORDER         chanbud_order.txt"
-   end if        
-!! SWAT DEG CHANNEL BUDGET MORPH
+    if (pco%sd_chan%d == "y") then
+     call open_output_file(3161, "chanbud_order_d.txt", 1500)
+     write (3161,*) bsn%name, prog
+     write (3161,*) ch_bud_order_hdr 
+     write (3161,*) ch_bud_order_hdr_units
+     write (9000,*) "CHANBUD_ORDER         chanbud_order_d.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3165, "chanbud_order_d.csv", 1500)
+       write (3165,*) bsn%name, prog
+       write (3165,'(*(G0.6,:","))') ch_bud_order_hdr 
+       write (3165,'(*(G0.6,:","))') ch_bud_order_hdr_units 
+       write (9000,*) "CHANBUD ORDER              chanbud_order_d.csv"
+     end if
+     
+   if (pco%sd_chan%m == "y") then
+     call open_output_file(3162, "chanbud_order_m.txt", 1500)
+     write (3162,*) bsn%name, prog
+     write (3162,*) ch_bud_order_hdr 
+     write (3162,*) ch_bud_order_hdr_units
+     write (9000,*) "CHANBUD_ORDER         chanbud_order_m.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3166, "chanbud_order_m.csv", 1500)
+       write (3166,*) bsn%name, prog
+       write (3166,'(*(G0.6,:","))') ch_bud_order_hdr 
+       write (3166,'(*(G0.6,:","))') ch_bud_order_hdr_units 
+       write (9000,*) "CHANBUD ORDER              chanbud_order_m.csv"
+     end if
+     
+   if (pco%sd_chan%y== "y") then
+     call open_output_file(3163, "chanbud_order_y.txt", 1500)
+     write (3163,*) bsn%name, prog
+     write (3163,*) ch_bud_order_hdr 
+     write (3163,*) ch_bud_order_hdr_units
+     write (9000,*) "CHANBUD_ORDER         chanbud_order_y.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3167, "chanbud_order_y.csv", 1500)
+       write (3167,*) bsn%name, prog
+       write (3167,'(*(G0.6,:","))') ch_bud_order_hdr 
+       write (3167,'(*(G0.6,:","))') ch_bud_order_hdr_units 
+       write (9000,*) "CHANBUD ORDER              chanbud_order_y.csv"
+     end if
+     
+  if (pco%sd_chan%a== "y") then
+     call open_output_file(3164, "chanbud_order_a.txt", 1500)
+     write (3164,*) bsn%name, prog
+     write (3164,*) ch_bud_order_hdr 
+     write (3164,*) ch_bud_order_hdr_units
+     write (9000,*) "CHANBUD_ORDER         chanbud_order_a.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3168, "chanbud_order_a.csv", 1500)
+       write (3168,*) bsn%name, prog
+       write (3168,'(*(G0.6,:","))') ch_bud_order_hdr 
+       write (3168,'(*(G0.6,:","))') ch_bud_order_hdr_units 
+       write (9000,*) "CHANBUD ORDER              chanbud_order_a.csv"
+     end if
+    end if
+!! SWAT DEG CHANNEL SEDIMENT BUDGET ORDER
+   
+!! SWAT DEG CHANNEL SEDIMENT BUDGET            
+   if (sp_ob%chandeg > 0) then
+    if (pco%sd_chan%d == "y") then
+     call open_output_file(3171, "ch_sedbud_d.txt", 1500)
+     write (3171,*) bsn%name, prog
+     write (3171,*) ch_sedbud_hdr 
+     write (3171,*) ch_sedbud_hdr_units
+     write (9000,*) "SEDBUD         ch_sedbud_d.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3175, "ch_sedbud_d.csv", 1500)
+       write (3175,*) bsn%name, prog
+       write (3175,'(*(G0.6,:","))') ch_sedbud_hdr 
+       write (3175,'(*(G0.6,:","))') ch_sedbud_hdr_units 
+       write (9000,*) "SEDBUD              ch_sedbud_d.csv"
+     end if
+     
+   if (pco%sd_chan%m == "y") then
+     call open_output_file(3172, "ch_sedbud_m.txt", 1500)
+     write (3172,*) bsn%name, prog
+     write (3172,*) ch_sedbud_hdr 
+     write (3172,*) ch_sedbud_hdr_units
+     write (9000,*) "SEDBUD         ch_sedbud_m.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3176, "ch_sedbud_m.csv", 1500)
+       write (3176,*) bsn%name, prog
+       write (3176,'(*(G0.6,:","))') ch_sedbud_hdr 
+       write (3176,'(*(G0.6,:","))') ch_sedbud_hdr_units 
+       write (9000,*) "SEDBUD              ch_sedbud_m.csv"
+     end if
+     
+   if (pco%sd_chan%y== "y") then
+     call open_output_file(3173, "ch_sedbud_y.txt", 1500)
+     write (3173,*) bsn%name, prog
+     write (3173,*) ch_sedbud_hdr 
+     write (3173,*) ch_sedbud_hdr_units
+     write (9000,*) "SEDBUD         ch_sedbud_y.txt.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3177, "ch_sedbud_y.csv", 1500)
+       write (3177,*) bsn%name, prog
+       write (3177,'(*(G0.6,:","))') ch_sedbud_hdr 
+       write (3177,'(*(G0.6,:","))') ch_sedbud_hdr_units 
+       write (9000,*) "SEDBUD              ch_sedbud_y.csv"
+     end if
+     
+  if (pco%sd_chan%a== "y") then
+     call open_output_file(3174, "ch_sedbud_a.txt", 1500)
+     write (3174,*) bsn%name, prog
+     write (3174,*) ch_sedbud_hdr 
+     write (3174,*) ch_sedbud_hdr_units
+     write (9000,*) "SEDBUD         ch_sedbud_a.txt"
+   end if 
+   
+     if (pco%csvout == "y") then 
+       call open_output_file(3178, "ch_sedbud_a.csv", 1500)
+       write (3178,*) bsn%name, prog
+       write (3178,'(*(G0.6,:","))') ch_sedbud_hdr 
+       write (3178,'(*(G0.6,:","))') ch_sedbud_hdr_units 
+       write (9000,*) "SEDBUD              ch_sedbud_a.csv"
+     end if
+    end if
+!! SWAT DEG CHANNEL SEDIMENT BUDGET
    
 !! SWAT DEG CHANNEL SEDIMENT BUDGET           
    if (sp_ob%chandeg > 0) then
-     call open_output_file(3152, "bsn_sedbud.txt", 1500)
-     write (3152,*) bsn%name, prog
-     write (3152,*) ch_sed_bud_hdr 
-     write (3152,*) ch_sed_bud_hdr_units
-     write (9000,*) "BASIN SEDBUD          bsn_sedbud.txt"
-   end if       
+     if (pco%sd_chan%d == "y") then
+       call open_output_file(3152, "sedbud_day.txt", 1500)
+       write (3152,*) bsn%name, prog
+       write (3152,*) ch_sed_bud_hdr 
+       write (3152,*) ch_sed_bud_hdr_units
+       write (9000,*) "SEDBUD              sedbud_day.txt"
+     end if
+ 
+     if (pco%csvout == "y") then 
+       call open_output_file(3156, "sedbud_day.csv", 1500)
+       write (3156,*) bsn%name, prog
+       write (3156,'(*(G0.6,:","))') ch_sed_bud_hdr 
+       write (3156,'(*(G0.6,:","))') ch_sed_bud_hdr_units 
+       write (9000,*) "SEDBUD              sedbud_day.csv"
+     end if
+           
+     if (pco%sd_chan%m == "y") then
+       call open_output_file(3153, "sedbud_mon.txt", 1500)
+       write (3153,*) bsn%name, prog
+       write (3153,*) ch_sed_bud_hdr 
+       write (3153,*) ch_sed_bud_hdr_units
+       write (9000,*) "SEDBUD              sedbud_mon.txt"
+     end if
+     
+     if (pco%csvout == "y") then 
+       call open_output_file(3157, "sedbud_mon.csv", 1500)
+       write (3157,*) bsn%name, prog
+       write (3157,'(*(G0.6,:","))') ch_sed_bud_hdr 
+       write (3157,'(*(G0.6,:","))') ch_sed_bud_hdr_units 
+       write (9000,*) "SEDBUD              sedbud_mon.csv"
+     end if
+     
+     if (pco%sd_chan%y == "y") then
+       call open_output_file(3154, "sedbud_yr.txt", 1500)
+       write (3154,*) bsn%name, prog
+       write (3154,*) ch_sed_bud_hdr 
+       write (3154,*) ch_sed_bud_hdr_units
+       write (9000,*) "SEDBUD              sedbud_yr.txt"
+     end if  
+     
+     if (pco%csvout == "y") then 
+       call open_output_file(3158, "sedbud_yr.csv", 1500)
+       write (3158,*) bsn%name, prog
+       write (3158,'(*(G0.6,:","))') ch_sed_bud_hdr 
+       write (3158,'(*(G0.6,:","))') ch_sed_bud_hdr_units 
+       write (9000,*) "SEDBUD              sedbud_yr.csv"
+     end if
+     
+     if (pco%sd_chan%a == "y") then
+       call open_output_file(3155, "sedbud_aa.txt", 1500)
+       write (3155,*) bsn%name, prog
+       write (3155,*) ch_sed_bud_hdr 
+       write (3155,*) ch_sed_bud_hdr_units
+       write (9000,*) "SEDBUD              sedbud_aa.txt"
+     end if
+     
+     if (pco%csvout == "y") then 
+       call open_output_file(3159, "sedbud_aa.csv", 1500)
+       write (3159,*) bsn%name, prog
+       write (3159,'(*(G0.6,:","))') ch_sed_bud_hdr 
+       write (3159,'(*(G0.6,:","))') ch_sed_bud_hdr_units 
+       write (9000,*) "SEDBUD              sedbud_aa.csv"
+     end if
+  end if
+     
 !! SWAT DEG CHANNEL SEDIMENT BUDGET
   
       return
       end subroutine header_sd_channel
+
