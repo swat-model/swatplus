@@ -48,7 +48,6 @@
       real :: vel_rch = 0.
       real :: arc_len = 0.
       real :: prot_len = 0.
-      real :: h_rad = 0.
       real :: fp_m2 = 0.
       real :: exp_co = 0.
       real :: florate_ob = 0.
@@ -86,19 +85,14 @@
 
       !! peak daily flow rate - m3/s using the Fuller and Peck (1974) equation for peak to mean flow ratio
       pk_rto = sd_ch(ich)%pk_rto * (1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3))
-      pk_rto = 1.
       peakrate = pk_rto * ht1%flo / 86400.     !m3/s
 
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, peakrate)
       
-      !! use peakrate as flow rate  ch_rcurv(ich)
-      h_rad = rcurv%xsec_area / rcurv%wet_perim
-      vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
-      vel = peakrate / rcurv%xsec_area
-      vel = sd_ch(ich)%chl / (3.6 * rcurv%ttime)
+      !! channel velocity from the interpolated rating curve
+      !! (rating-curve vel avoids the unrealistically high velocities at low flow from continuity Q/A)
       vel = rcurv%vel
-      !vel = Qman(1., h_rad, sd_ch(i)%chn, sd_ch(i)%chs)
       
       rttime = sd_ch(ich)%chl / (3.6 * vel)
       sd_ch_vel(ich)%vel = vel       !store for ch_temp
