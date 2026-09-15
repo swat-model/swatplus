@@ -110,7 +110,8 @@
          case (6)
            write (iunit+i,*) hyd_hdr_time, sol_hdr
          case (9)
-           write (iunit+i, '(1X4A,16(4XA),2A,14(4XA))') hyd_hdr_time, plt_hdr, plt_hdr
+           write (iunit+i,'(a11,a12,a12,a13,1x,a12,a6,2x,a17,12a15)') hyd_hdr_time, plt_hdr
+           write (iunit+i,'(a11,a12,a12,a13,1x,a12,a6,2x,a17,12a15)') plt_hdr_units
          case (10)
            write (iunit+i,*) hyd_hdr_time, fp_hdr
          end select
