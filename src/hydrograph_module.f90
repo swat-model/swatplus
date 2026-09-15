@@ -723,22 +723,45 @@
       end type sol_header
       type (sol_header) :: sol_hdr
       
-      type plant_header        
-        character (len=17) :: name =  "     name        "       !!none         |plant name 
-        character (len=15) :: growing =  "growing"              !!none         |plant growing             
-        character (len=15) :: dormant =  "dormant"              !!none         |plant dormant
-        character (len=15) :: lai =  "lai"                      !!none         |leaf area index 
-        character (len=15) :: can_hgt =  "can_hgt"              !!m            |canopy height 
-        character (len=15) :: root_dep =  "root_dep"            !!m            |root depth 
-        character (len=15) :: phuacc =  "phuacc"                !!0-1          |accumulated heat units
-        character (len=15) :: tot_m =  "tot_m"                  !!kg/ha        |total biomass 
-        character (len=15) :: ab_gr_m =  "ab_gr_m"              !!kg/ha        |above ground biomass
-        character (len=15) :: leaf_m =  "leaf_m"                !!kg/ha        |leaf biomass
-        character (len=15) :: root_m =  "root_m"                !!kg/ha        |root biomass
-        character (len=15) :: stem_m = "stem_m"                 !!kg/ha        |stem biomass
-        character (len=15) :: seed_m = "seed_m"                 !!kg/ha        |seed biomass
+      type plant_header
+        character (len=17) :: name =  "plant            "       !!none         |plant name
+        character (len=15) :: growing =  "        growing"      !!none         |plant growing
+        character (len=15) :: dormant =  "        dormant"      !!none         |plant dormant
+        character (len=15) :: lai =  "            lai"          !!none         |leaf area index
+        character (len=15) :: can_hgt =  "        can_hgt"      !!m            |canopy height
+        character (len=15) :: root_dep =  "       root_dep"     !!mm           |root depth
+        character (len=15) :: phuacc =  "         phuacc"       !!0-1          |accumulated heat units
+        character (len=15) :: tot_m =  "          tot_m"        !!kg/ha        |total biomass
+        character (len=15) :: ab_gr_m =  "        ab_gr_m"      !!kg/ha        |above ground biomass
+        character (len=15) :: leaf_m =  "         leaf_m"       !!kg/ha        |leaf biomass
+        character (len=15) :: root_m =  "         root_m"       !!kg/ha        |root biomass
+        character (len=15) :: stem_m = "         stem_m"        !!kg/ha        |stem biomass
+        character (len=15) :: seed_m = "         seed_m"        !!kg/ha        |seed biomass
       end type plant_header
       type (plant_header) :: plt_hdr
+
+      type plant_header_units
+        character (len=11) :: jday    = "           "
+        character (len=12) :: mo      = "            "
+        character (len=12) :: day_mo  = "            "
+        character (len=13) :: yrc     = "             "
+        character (len=12) :: name    = "            "
+        character (len=6)  :: otype   = "      "
+        character (len=17) :: plant   = "                 "
+        character (len=15) :: growing = "               "
+        character (len=15) :: dormant = "               "
+        character (len=15) :: lai     = "           none"
+        character (len=15) :: can_hgt = "              m"
+        character (len=15) :: root_dep= "             mm"
+        character (len=15) :: phuacc  = "            0-1"
+        character (len=15) :: tot_m   = "          kg/ha"
+        character (len=15) :: ab_gr_m = "          kg/ha"
+        character (len=15) :: leaf_m  = "          kg/ha"
+        character (len=15) :: root_m  = "          kg/ha"
+        character (len=15) :: stem_m  = "          kg/ha"
+        character (len=15) :: seed_m  = "          kg/ha"
+      end type plant_header_units
+      type (plant_header_units) :: plt_hdr_units
       
       type flood_plain_header        
         character (len=15) :: inflo =           "        inflo"     !!m3        | inflow 

@@ -21,7 +21,7 @@
       
       character(100) :: lineFmt = ""!used to format plant status write statement
       
-      lineFmt ='1((4X, 1A),(16X, 1A),(18X, 1A), 10(4X,F)),1(17XA, 2(12X,A), 4X, 10(4X,F)))'
+      lineFmt = '(i11,i12,i12,i13,1x,a12,a6,2x,a17,a15,a15,10f15.7)'
 
       j = ihru
       
@@ -131,26 +131,28 @@
               soil_prof_hp = orgz
               soil_prof_rsd = orgz
               
-            case (9)    ! plant status
+            case (9)    ! plant status  (one row per plant)
               if (iob == 0) then
                 do j = 1, sp_ob%hru
-                 write (iunit+itot,'(1(4I), 1((7X, 1A), (1X, 1A))'//lineFmt) time%day, time%mo,         &
-                    time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,                                       &
-                    (pcom(j)%pl(ipl), pcom(j)%plcur(ipl)%gro, pcom(j)%plcur(ipl)%idorm,                 &
-                    pcom(j)%plg(ipl)%lai, pcom(j)%plg(ipl)%cht, pcom(j)%plg(ipl)%root_dep,              &
-                    pcom(j)%plcur(ipl)%phuacc, pl_mass(j)%tot(ipl)%m, pl_mass(j)%ab_gr(ipl)%m,          &
-                    pl_mass(j)%leaf(ipl)%m, pl_mass(j)%root(ipl)%m, pl_mass(j)%stem(ipl)%m,             &
-                    pl_mass(j)%seed(ipl)%m, ipl = 1, pcom(j)%npl)
+                  do ipl = 1, pcom(j)%npl
+                    write (iunit+itot,lineFmt) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ, &
+                       pcom(j)%pl(ipl), pcom(j)%plcur(ipl)%gro, pcom(j)%plcur(ipl)%idorm,                    &
+                       pcom(j)%plg(ipl)%lai, pcom(j)%plg(ipl)%cht, pcom(j)%plg(ipl)%root_dep,                &
+                       pcom(j)%plcur(ipl)%phuacc, pl_mass(j)%tot(ipl)%m, pl_mass(j)%ab_gr(ipl)%m,            &
+                       pl_mass(j)%leaf(ipl)%m, pl_mass(j)%root(ipl)%m, pl_mass(j)%stem(ipl)%m,               &
+                       pl_mass(j)%seed(ipl)%m
+                  end do
                 end do
               else
                  j = iob
-                 write (iunit+itot,'(1(4I), 1((7X, 1A), (1X, 1A))'//lineFmt) time%day, time%mo,         &
-                    time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,  &
-                    (pcom(j)%pl(ipl), pcom(j)%plcur(ipl)%gro, pcom(j)%plcur(ipl)%idorm,                  &
-                    pcom(j)%plg(ipl)%lai, pcom(j)%plg(ipl)%cht, pcom(j)%plg(ipl)%root_dep,              &
-                    pcom(j)%plcur(ipl)%phuacc, pl_mass(j)%tot(ipl)%m, pl_mass(j)%ab_gr(ipl)%m,          &
-                    pl_mass(j)%leaf(ipl)%m, pl_mass(j)%root(ipl)%m, pl_mass(j)%stem(ipl)%m,             &
-                    pl_mass(j)%seed(ipl)%m, ipl = 1, pcom(j)%npl)
+                 do ipl = 1, pcom(j)%npl
+                   write (iunit+itot,lineFmt) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ, &
+                      pcom(j)%pl(ipl), pcom(j)%plcur(ipl)%gro, pcom(j)%plcur(ipl)%idorm,                     &
+                      pcom(j)%plg(ipl)%lai, pcom(j)%plg(ipl)%cht, pcom(j)%plg(ipl)%root_dep,                 &
+                      pcom(j)%plcur(ipl)%phuacc, pl_mass(j)%tot(ipl)%m, pl_mass(j)%ab_gr(ipl)%m,             &
+                      pl_mass(j)%leaf(ipl)%m, pl_mass(j)%root(ipl)%m, pl_mass(j)%stem(ipl)%m,                &
+                      pl_mass(j)%seed(ipl)%m
+                 end do
               end if
             
             case (10)    ! channel and flood plain water balance
