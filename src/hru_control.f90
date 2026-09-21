@@ -50,8 +50,8 @@
                   rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
-                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
-                  mgt_newtillmix_cswat3, cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
+                  sq_crackvol, mgt_operatn, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
+                  cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
@@ -137,6 +137,7 @@
       hpc_d(j) = hpcz
       hscf_d(j) = hscfz
       hru(j)%water_seep = 0.
+      hru(j)%water_evap = 0.
       hnb_d(j)%nuptake = 0.
       hnb_d(j)%puptake = 0.
       hwb_d(j)%wet_out = 0.
@@ -267,6 +268,8 @@
                   
         !!route overland flow across hru - add tile flow if not subirrigation or saturated buffer
         tile_fr_surf = 1.   !assume all tile goes overland until get saturated buffer dtbl
+
+        ires =  hru(j)%dbs%surf_stor !update impoundment status Jaehak 2026
         if (ob(icmd)%hin_sur%flo > 1.e-6) then
           !!route incoming surface runoff
           if (ires > 0) then
@@ -556,8 +559,8 @@
           if (wet_dat_c(ires)%hyd.eq.'paddy') then !.and.time%yrs > pco%nyskip) then
             if (wet_ob(j)%depth > -0.1) then
            write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
-            pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
-            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon 
+            pet_day,es_day,ep_day,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
+            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon,soil(j)%sw/soil(j)%sumfc*100 
             end if
           end if
         end if
@@ -744,10 +747,10 @@
           gwflow_perc(j) = sepbtm(j)
         end if
         !! add evap from impounded water (wetland) to et and esoil
-        hwb_d(j)%et = etday + hru(j)%water_evap
+        hwb_d(j)%et = etday     !es_day already includes ponded water evaporation
         hwb_d(j)%ecanopy = canev
         hwb_d(j)%eplant = ep_day
-        hwb_d(j)%esoil = es_day + hru(j)%water_evap 
+        hwb_d(j)%esoil = es_day
         hwb_d(j)%wet_evap = hru(j)%water_evap 
         hwb_d(j)%wet_out = wet_outflow
         hwb_d(j)%wet_stor = wet(j)%flo / (10. * hru(j)%area_ha)
