@@ -98,7 +98,7 @@ After your input data has been uploaded into the `/workspace/my_data` folder.  R
 
 ![](select_input_folder2.png)
 
-If you want to have multiple input data sets, you can create additional folders as needed in the /workdata folder and then modify the /.vscode/launch.json file.   The default lauch.json file  has two json blocks in the "configurations" section to look for input data sets in /workdata/Ames_sub1 and in /workdata/my_data.  To add another data set, copy one of the current json blocks in "configurations" (i.e. either Ames_sub1 or my_data) to create a new section and then change the "name" variable to the name you want and the "cwd" to point to the input folder of your data."   For example, if you had input data in a folder called /workdata/walnut_creak, the .vscode/launch.json file would be modified to add a json block under at the end in the "configurations" section.  Be sure to add a comma between each section:
+If you want to have multiple input data sets, you can create additional folders as needed in the /workdata folder and then modify the /.vscode/launch.json file.   The default launch.json file  has two json blocks in the "configurations" section to look for input data sets in /workdata/Ames_sub1 and in /workdata/my_data.  To add another data set, copy one of the current json blocks in "configurations" (i.e. either Ames_sub1 or my_data) to create a new section and then change the "name" variable to the name you want and the "cwd" to point to the input folder of your data."   For example, if you had input data in a folder called /workdata/walnut_creak, the .vscode/launch.json file would be modified to add a json block under at the end in the "configurations" section.  Be sure to add a comma between each section:
 
 ```JSON
 {

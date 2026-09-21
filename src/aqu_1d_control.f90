@@ -4,6 +4,8 @@
       use time_module
       use hydrograph_module
       use climate_module, only : wst
+      use basin_module, only : bsn_prm
+      use pest_tempdecay_module, only: decay_temp_adjust
       use maximum_data_module
       use constituent_mass_module
       use pesticide_data_module
@@ -12,6 +14,7 @@
       use salt_aquifer
       use cs_aquifer
       use ch_pesticide_module
+      use water_allocation_module
       
       implicit none
       
@@ -27,7 +30,7 @@
       integer :: ipest = 0      !none       |counter
       integer :: ipest_db = 0   !none       |pesticide number from pesticide data base
       integer :: ipseq = 0      !none       |sequential basin pesticide number
-      integer :: ipdb = 0       !none       |sequential pesticide number of daughter pesticide
+      integer :: ipdb = 0       !none       |seqential pesticide number of daughter pesticide
       integer :: imeta = 0      !none       |pesticide metabolite counter
       real :: mol_wt_rto = 0.   !ratio      |molecular weight ratio of duaghter to parent pesticide
       real :: stor_init = 0.    !           |
@@ -51,6 +54,9 @@
       real :: cs_recharge = 0.                 !rtb cs
       real :: cs_discharge = 0.                !rtb cs
       real :: cs_seep = 0.                     !rtb cs
+      real :: metab_decay = 0.                 !metabolite decay increment
+      real :: temp_aqu = 0.                    !deg C groundwater temperature proxy for decay
+      real :: decay_t = 0.                     !temperature-adjusted daily survival factor
       integer :: m = 0!rtb salt
       integer :: ics = 0 !rtb cs
       
@@ -91,11 +97,16 @@
       !! add recharge to aquifer storage
       aqu_d(iaq)%stor = aqu_d(iaq)%stor + aqu_d(iaq)%rchrg
       
+      !! if channel is a POD, allocate water for users and adjust flow in channel accordingly
+      if (aqu_prm(iaq)%wallo_pod > 0) then
+        call wallo_control (aqu_prm(iaq)%wallo_pod)
+      end if
+
       !! compute groundwater depth from surface
       aqu_d(iaq)%dep_wt = aqu_dat(iaq)%dep_bot - (aqu_d(iaq)%stor / (1000. * aqu_dat(iaq)%spyld))
       aqu_d(iaq)%dep_wt = max (0., aqu_d(iaq)%dep_wt)
 
-      !! compute flow and subtract from storage
+      !! compute flow and substract from storage
       if (aqu_d(iaq)%dep_wt <= aqu_dat(iaq)%flo_min) then
         aqu_d(iaq)%flo = aqu_d(iaq)%flo * aqu_prm(iaq)%alpha_e + aqu_d(iaq)%rchrg * (1. - aqu_prm(iaq)%alpha_e)
         aqu_d(iaq)%flo = Max (0., aqu_d(iaq)%flo)
@@ -155,6 +166,10 @@
       aqu_d(iaq)%no3_seep = amin1(aqu_d(iaq)%no3_seep, aqu_d(iaq)%no3_st)
       aqu_d(iaq)%no3_st = aqu_d(iaq)%no3_st - aqu_d(iaq)%no3_seep
       ob(icmd)%hd(2)%no3 = aqu_d(iaq)%no3_seep * ob(icmd)%area_ha
+      
+      !! compute mineral p flow (constant concentration) from aquifer - m^3 * ppm * 1000 kg/m^3 = 1/1000
+      aqu_d(iaq)%minp = ob(icmd)%hin%flo * aqu_dat(iaq)%minp / 1000.
+      ob(icmd)%hd(1)%solp = aqu_d(iaq)%minp
       
       !rtb salt
       !compute salt recharge into the aquifer
@@ -256,8 +271,8 @@
       aqu_d(iaq)%minp = ob(icmd)%hin%flo * aqu_dat(iaq)%minp / 1000.
       ob(icmd)%hd(1)%solp = aqu_d(iaq)%minp
       
-      !! temperature of aquifer flow (handled in ch_temp component mixing)
-      !ob(icmd)%hd(1)%temp = w_temp(0)%gw
+      !! temperature of aquifer flow
+      !ob(icmd)%hd(1)%temp = w_temp%gw
 
       !! compute fraction of flow to each channel in the aquifer
       !! if connected to aquifer - add flow
@@ -297,45 +312,56 @@
         
         !! compute pesticide decay in the aquifer
         aqupst_d(iaq)%pest(ipest)%react = 0.
-        if (cs_aqu(iaq)%pest(ipest) > 0.) then
-          aqupst_d(iaq)%pest(ipest)%react = cs_aqu(iaq)%pest(ipest) * (1. - pestcp(ipest_db)%decay_s)
-          cs_aqu(iaq)%pest(ipest) =  cs_aqu(iaq)%pest(ipest) * pestcp(ipest_db)%decay_s
+        aqupst_d(iaq)%pest(ipest)%metab = 0.    ! zero metab for each pesticide
+        if (cs_aqu(iaq)%pest(ipest) > 1.e-12) then
+          if (bsn_prm%temp_decay == 1) then
+            decay_t = decay_temp_adjust(pestdb(ipest_db)%aq_hlife, temp_aqu)
+          else
+            decay_t = pestcp(ipest_db)%decay_a
+          end if
+          aqupst_d(iaq)%pest(ipest)%react = cs_aqu(iaq)%pest(ipest) * (1. - decay_t)
+          cs_aqu(iaq)%pest(ipest) =  cs_aqu(iaq)%pest(ipest) * decay_t
           !! add decay to daughter pesticides
           do imeta = 1, pestcp(ipest_db)%num_metab
             ipseq = pestcp(ipest_db)%daughter(imeta)%num
             ipdb = cs_db%pest_num(ipseq)
             mol_wt_rto = pestdb(ipdb)%mol_wt / pestdb(ipest_db)%mol_wt
-            aqupst_d(iaq)%pest(ipseq)%metab = aqupst_d(iaq)%pest(ipseq)%metab + aqupst_d(iaq)%pest(ipest)%react *     &
-                                           pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto
-            cs_aqu(iaq)%pest(ipseq) = cs_aqu(iaq)%pest(ipseq) + aqupst_d(iaq)%pest(ipseq)%metab
+            metab_decay = aqupst_d(iaq)%pest(ipest)%react * pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto  ! compute increment
+            aqupst_d(iaq)%pest(ipseq)%metab = aqupst_d(iaq)%pest(ipseq)%metab + metab_decay  ! accumulate for output
+            cs_aqu(iaq)%pest(ipseq) = cs_aqu(iaq)%pest(ipseq) + metab_decay  !! add increment only
           end do
         end if
             
-        !! compute pesticide in aquifer flow
-        kd = pestdb(ipest_db)%koc * aqu_dat(iaq)%cbn / 100.
-        !! assume specific yield = upper limit (effective vs total porosity) 
-        !! and bulk density of 2.0 (ave of rock and soil - 2.65 and 1.35)
-        !! mm = (mm/mm + (m^3/ton)*(ton/m^3)) * m * 1000.
-        zdb1 = (aqu_dat(iaq)%spyld + kd * 2.0) * aqu_dat(iaq)%flo_dist * 1000.
+        !! compute pesticide concentrations considering groundwater mixing factor
+        !! behavior where concentration is based on a scaled aquifer mixing volume
+        flow_mm = aqu_d(iaq)%stor * bsn_prm%pestgwfact + aqu_d(iaq)%flo + aqu_d(iaq)%revap + aqu_d(iaq)%seep
+        if (flow_mm > 0.) then
+          conc = cs_aqu(iaq)%pest(ipest) / flow_mm
+        else
+          conc = 0.
+        end if
+        if (conc < 1.e-9) conc = 0.
 
-        !! compute volume of flow through the layer - mm
-        flow_mm = aqu_d(iaq)%flo + aqu_d(iaq)%seep
-        obcs(icmd)%hd(1)%pest(ipest) = 0.
-        obcs(icmd)%hd(2)%pest(ipest) = 0.
+        !! route only return flow and seepage pesticide mass; revap pesticide is not routed
+        obcs(icmd)%hd(1)%pest(ipest) = conc * aqu_d(iaq)%flo
+        obcs(icmd)%hd(2)%pest(ipest) = conc * aqu_d(iaq)%seep
+        obcs(icmd)%hd(1)%pest(ipest) = amax1(0., obcs(icmd)%hd(1)%pest(ipest))
+        obcs(icmd)%hd(2)%pest(ipest) = amax1(0., obcs(icmd)%hd(2)%pest(ipest))
 
-        !! compute concentration in the flow
-        if (cs_aqu(iaq)%pest(ipest) >= 1.e-12 .and. flow_mm > 0.) then
-          pest_kg =  cs_aqu(iaq)%pest(ipest) * (1. - Exp(-flow_mm / (zdb1 + 1.e-6)))
-          conc = pest_kg / flow_mm
-          conc = Min (pestdb(ipest_db)%solub / 100., conc)      ! check solubility
-          pest_kg = conc * flow_mm
-          if (pest_kg >  cs_aqu(iaq)%pest(ipest)) pest_kg = cs_aqu(iaq)%pest(ipest)
-          
-          !! return flow (1) and deep seepage (2)  kg = kg/mm * mm
-          obcs(icmd)%hd(1)%pest(ipest) = pest_kg * aqu_d(iaq)%flo / flow_mm
-          obcs(icmd)%hd(2)%pest(ipest) = pest_kg * aqu_d(iaq)%seep / flow_mm
-          cs_aqu(iaq)%pest(ipest) =  cs_aqu(iaq)%pest(ipest) - pest_kg
-        endif
+        !! remove exported pesticide from aquifer storage (cap at available mass)
+        pest_kg = obcs(icmd)%hd(1)%pest(ipest) + obcs(icmd)%hd(2)%pest(ipest)
+        if (pest_kg > cs_aqu(iaq)%pest(ipest)) then
+          if (pest_kg > 0.) then
+            obcs(icmd)%hd(1)%pest(ipest) = obcs(icmd)%hd(1)%pest(ipest) * cs_aqu(iaq)%pest(ipest) / pest_kg
+            obcs(icmd)%hd(2)%pest(ipest) = obcs(icmd)%hd(2)%pest(ipest) * cs_aqu(iaq)%pest(ipest) / pest_kg
+          else
+            obcs(icmd)%hd(1)%pest(ipest) = 0.
+            obcs(icmd)%hd(2)%pest(ipest) = 0.
+          end if
+          pest_kg = cs_aqu(iaq)%pest(ipest)
+        end if
+        cs_aqu(iaq)%pest(ipest) = cs_aqu(iaq)%pest(ipest) - pest_kg
+        cs_aqu(iaq)%pest(ipest) = amax1(0., cs_aqu(iaq)%pest(ipest))
       
         !! set pesticide output variables - kg
         aqupst_d(iaq)%pest(ipest)%tot_in = obcs(icmd)%hin(1)%pest(ipest)

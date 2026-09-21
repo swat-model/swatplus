@@ -48,7 +48,7 @@
          if (eof < 0) exit
          read (107,*,iostat=eof) name, in_herd
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_watrts
+         read (107,*,iostat=eof) name, in_wallo
          if (eof < 0) exit
          read (107,*,iostat=eof) name, in_link
          if (eof < 0) exit

@@ -23,18 +23,14 @@
       !! read water allocation inputs
 
       inquire (file='water_tower.wal', exist=i_exist)
-      if (.not. i_exist .or. 'water_tower.wal' == "null") then
-        if (.not. allocated(wtow)) then
-          allocate (wtow(0:0))
-        end if
-      else
+      if (i_exist) then
       do 
         open (107,file='water_tower.wal')
         read (107,*,iostat=eof) titldum
         if (eof < 0) exit
         read (107,*,iostat=eof) imax
         read (107,*,iostat=eof) header
-        !db_mx%water_treat = imax
+        db_mx%stor = imax
         if (eof < 0) exit
         
         allocate (wtow(imax))
@@ -43,8 +39,6 @@
         allocate (wtow_cs_stor(imax))
 
         do iwtow = 1, imax
-          read (107,*,iostat=eof) header
-          if (eof < 0) exit 
           read (107,*,iostat=eof) i, wtow(iwtow)%name, wtow(iwtow)%stor_mx,          &
                                         wtow(iwtow)%ddown_days, wtow(iwtow)%loss_fr
           if (eof < 0) exit

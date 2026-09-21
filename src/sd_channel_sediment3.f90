@@ -59,9 +59,11 @@
       real :: v_vc = 0.
       real :: m_exhaust = 0.
       real :: dur_scale = 0.
+      integer :: iord = 0
 
       ich = isdch
       iob = sp_ob1%chandeg + jrch - 1
+      iord = sd_ch(ich)%order
 
       ebtm_m = 0.
       ebank_m = 0.
@@ -74,15 +76,21 @@
       ch_trans = hz
       ch_wat_d(ich)%precip = 0.
 
+      sd_ch(ich)%bankfull_flo = 1.5
+      sd_ch(ich)%fp_inun_days = 1.0
+      sd_ch(ich)%d50 = 1.0
+      sd_ch(ich)%bed_exp = 1.0
+      
       !! calculate channel sed and nutrient processes if inflow > 0
       if (ht1%flo > 1.e-6) then
 
-      !! calculate peak daily flow
+      !! peak daily flow rate - m3/s using the Fuller and Peck (1974) equation for peak to mean flow ratio
       pk_rto = sd_ch(ich)%pk_rto * (1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3))
       peakrate = pk_rto * ht1%flo / 86400.     !m3/s
 
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, peakrate)
+      
       !! use peakrate as flow rate
       h_rad = rcurv%xsec_area / rcurv%wet_perim
       vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
@@ -100,33 +108,24 @@
       ob(icmd)%tsin(:) = (1. + rto) * ob(icmd)%tsin(:)
       ht1%flo = ht1%flo + precip
 
-      !! compute flood plain deposition
-      ave_rate = ht1%flo / 86400.     !m3/s
-
+      !! compute overbank flow and flood plain deposition
+      flovol_ob = 0.
       bf_flow = sd_ch(ich)%bankfull_flo * ch_rcurv(ich)%elev(2)%flo_rate
-      florate_ob = ave_rate - bf_flow
-      if (florate_ob > 0.) then
-        flo_time = 2. * ht1%flo / ave_rate
+      if (peakrate > bf_flow) then
         !floodplain exchange with aquifer (gwflow)
         if(bsn_cc%gwflow.eq.1) then
           flood_freq(ich) = 1
           call gwflow_floodplain(ich)
         endif
-        !! assume a triangular distribution
-        if (flo_time < 86400.) then
-          !! flow is over within the day
-          flovol_ob = ht1%flo * (((ave_rate - bf_flow) / ave_rate) ** 2)
-        else
-          !! flow continues over the day - florate is the rate under the triangle
-          florate = 2. * ht1%flo - ave_rate
-          flovol_ob = ht1%flo * (((ave_rate - bf_flow) / (ave_rate - florate)) ** 2)
-        end if
-        flovol_ob = Min (0.8 * ht1%flo, flovol_ob)
-        !trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
+          
+        !! overbank volume is assumed = flood plain volume at peak rate (from the rating curve)
+        flovol_ob = rcurv%vol_fp
+        trap_eff = 0.05 * log(sd_ch(ich)%fp_inun_days) + 0.1
         !! trap efficiency from Dynamic SedNet Component Model Reference Guide: Update 2017
-        fp_m2 = 3. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
-        exp_co = 0.0001 * fp_m2 / florate_ob
-        trap_eff = sd_ch(ich)%fp_inun_days * (florate_ob / ave_rate) * (1. - exp(-exp_co))
+        fp_m2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
+        exp_co = 0.0001 * fp_m2 / rcurv%flo_rate
+        ave_rate = ht1%flo / 86400.
+        trap_eff = sd_ch(ich)%fp_inun_days * (rcurv%flo_rate / ave_rate) * (1. - exp(-exp_co))
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
 
@@ -138,7 +137,7 @@
         fp_dep%solp = 0.        !trap_eff * ht1%solp
 
         ht1 = ht1 - fp_dep
-
+        
         !! if flood plain link - fill wetlands to emergency
         do ihru = 1, sd_ch(ich)%fp%hru_tot
           iihru = sd_ch(ich)%fp%hru(ihru)
@@ -166,9 +165,6 @@
         end do
 
       end if     ! florate_ob > 0.
-
-      !! add sediment deposition to calculate mm of deposition over the flood plain later
-      ch_morph(ich)%fp_mm = ch_morph(ich)%fp_mm + fp_dep%sed
 
       !! calc bank erosion
       cohesion = (-87.1 + (42.82 * sd_ch(ich)%ch_clay) - (0.261 * sd_ch(ich)%ch_clay ** 2.) &
@@ -210,8 +206,6 @@
       !    bd_fac, sd_ch(ich)%vcr_coef, vel_cr, sd_ch(ich)%bank_exp, ebank_m, "  0.24 ")
       !end if
 
-      ch_morph(ich)%w_yr = ch_morph(ich)%w_yr + ebank_m
-
       !! mass of sediment eroded -> t = 1000 * bankcut (mm) * depth (m) * lengthcut (m) * bd (t/m3)
       !! arc length = 0.33 * meander wavelength * sinuosity 
       !arc_len = 0.66 *  (12. * sd_ch(ich)%chw) * sd_ch(ich)%sinu
@@ -220,6 +214,7 @@
       !ebank_t = ebank_m * sd_ch(ich)%chd * sd_ch(ich)%arc_len_fr * prot_len * sd_ch(ich)%ch_bd
       ebank_t = 1000. * ebank_m * sd_ch(ich)%chd * arc_len * sd_ch(ich)%ch_bd
       bank_ero%sed = ebank_t
+      
       !! calculate associated nutrients
       bank_ero%orgn = bank_ero%sed * sd_ch(ich)%n_conc / 1000.
       bank_ero%sedp = (1. - sd_ch(ich)%p_bio) * bank_ero%sed * sd_ch(ich)%p_conc / 1000.
@@ -266,8 +261,6 @@
         !! calc mass of sediment eroded -> t = m * width (m) * length (km) * 1000 m/km * bd (t/m3)
         ebtm_t = 1000. * ebtm_m * sd_ch(ich)%chw * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
       end if
-      ch_morph(ich)%d_yr = ch_morph(ich)%d_yr + ebtm_m
-
       bed_ero%sed = sd_ch(ich)%wash_bed_fr * ebtm_t
       !! calculate associated nutrients
       bed_ero%orgn = bed_ero%sed * sd_ch(ich)%n_conc
@@ -278,7 +271,36 @@
       rto = bed_ero%flo / ht1%flo
       !ob(icmd)%tsin(:) = (1. - rto) * ob(icmd)%tsin(:)
       !ht1 = ht1 + bed_ero
+      
+      !! set outputs for sediment budget
+      !! width and depth at end of the day - m
+      ch_morph(ich)%wid = sd_ch(ich)%chw
+      ch_morph(ich)%dep = sd_ch(ich)%chd
+      
+      !! sediment flood plain deposition - tons and mm
+      !! mm = t / (5.*bd*w*l) -> assume fp width = 5*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
+      ch_morph(ich)%fp_km2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl / 1000.
+      ch_morph(ich)%fp_t = fp_dep%sed
+      ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (5. * sd_ch(ich)%chw * sd_ch(ich)%chl)
 
+      !! daily bank erosion in t and m - calculate w/yr later
+      ch_morph(ich)%ebank_m = ebank_m
+      ch_morph(ich)%ebank_t = ebank_t
+      
+      !! daily bed erosion in t and m - calculate w/yr later
+      ch_morph(ich)%ebtm_m = ebtm_m
+      ch_morph(ich)%ebtm_t = ebtm_t
+      
+      !! add to ordered sediment budget
+      ch_morph_ord(iord) = ch_morph_ord(iord) + ch_morph(ich)
+
+      !! basin sediment budget outputs - don't sum during skip years
+      if (time%yrs > pco%nyskip) then
+        bsn_sedbud%ebank_t = bsn_sedbud%ebank_t + ch_morph(ich)%ebank_t
+        bsn_sedbud%ebtm_t = bsn_sedbud%ebtm_t + ch_morph(ich)%ebtm_t
+        bsn_sedbud%fp_t = bsn_sedbud%fp_t + ch_morph(ich)%fp_t
+      end if
+        
       end if        ! inflow>0
 
       return

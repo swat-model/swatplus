@@ -275,6 +275,36 @@
           end if
         end if
 !! SWAT DEG CHANBUD OUTPUT
-       
+        
+!! SWAT DEG CHANNEL BUDGET ORDER            
+   if (sp_ob%chandeg > 0) then
+     call open_output_file(3150, "chanbud.txt", 1500)
+     write (3150,*) bsn%name, prog
+     write (3150,*) ch_bud_hdr 
+     write (3150,*) ch_bud_hdr_units
+     write (9000,*) "SWAT_DEG_CHANBUD        chanbud.txt"
+   end if        
+!! SWAT DEG CHANNEL BUDGET ORDER
+   
+!! SWAT DEG CHANNEL BUDGET MORPH            
+   if (sp_ob%chandeg > 0) then
+     call open_output_file(3151, "chanbud_order.txt", 1500)
+     write (3151,*) bsn%name, prog
+     write (3151,*) ch_bud_order_hdr 
+     write (3151,*) ch_bud_order_hdr_units
+     write (9000,*) "CHANBUD_ORDER         chanbud_order.txt"
+   end if        
+!! SWAT DEG CHANNEL BUDGET MORPH
+   
+!! SWAT DEG CHANNEL SEDIMENT BUDGET           
+   if (sp_ob%chandeg > 0) then
+     call open_output_file(3152, "bsn_sedbud.txt", 1500)
+     write (3152,*) bsn%name, prog
+     write (3152,*) ch_sed_bud_hdr 
+     write (3152,*) ch_sed_bud_hdr_units
+     write (9000,*) "BASIN SEDBUD          bsn_sedbud.txt"
+   end if       
+!! SWAT DEG CHANNEL SEDIMENT BUDGET
+  
       return
       end subroutine header_sd_channel
