@@ -6,7 +6,7 @@
       use reservoir_data_module
       use output_landscape_module
       use gwflow_module, only : in_wet_cell,wet_thick,gw_wet_flag,out_gw !rtb
-      
+      use soil_module
       implicit none
       
       character (len=80) :: titldum = ""!           |title of file
@@ -20,6 +20,7 @@
       integer :: idig = 0             !none       |position of first digit in wetland name
       character(len=20) :: wet_name = "" !none    |wetland name read from gwflow.wetland
       real :: thick_val = 0.          !m          |wetland bed thickness read from gwflow.wetland
+      integer :: j = 0             !none       |counter
 
       eof = 0
       imax = 0
@@ -59,6 +60,7 @@
         if (wet_hyddb(ires)%psa <= 0.0) wet_hyddb(ires)%psa = 0.08 * wet_hyd(ires)%pdep
         if (wet_hyddb(ires)%esa <= 0.0) wet_hyddb(ires)%esa = 1.5 * wet_hyd(ires)%psa
         if (wet_hyddb(ires)%evrsv <= 0.) wet_hyddb(ires)%evrsv = 0.6
+        if (wet_hyddb(ires)%k <= 0.) wet_hyddb(ires)%k = soil(ires)%phys(1)%k
         
         
 
