@@ -18,10 +18,12 @@
         
         !! daily print
         if (pco%sd_chan%d == "y") then
-          write (3171,*) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
+          write (3171,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
 
           if (pco%csvout == "y") then
-          write (3175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
+          write (3175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
           end if
         end if
        
@@ -34,10 +36,12 @@
           ch_morphy(ichan) = ch_morphy(ichan) + ch_morphm(ichan)
 
           if (pco%sd_chan%m == "y") then
-          write (3172,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
+          write (3172,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
  
           if (pco%csvout == "y") then
-          write (3176,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
+          write (3176,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
           end if
           end if
 
@@ -52,10 +56,12 @@
         ch_morphy(ichan) =  ch_morphy(ichan) + ch_morphm(ichan)
           
         if (pco%sd_chan%y == "y") then
-          write (3173,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
+          write (3173,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
   
               if (pco%csvout == "y") then
-          write (3177,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
+          write (3177,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
           end if
         end if
 
@@ -74,10 +80,12 @@
         ch_morpha(ichan) = ch_morpha(ichan) / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then
-        write (3174,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ch_morpha(ichan)
+        write (3174,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+          ob(iob)%gis_id, ob(iob)%name, ch_morpha(ichan)
 
         if (pco%csvout == "y") then
-        write (3178,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ch_morpha(ichan)
+        write (3178,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+          ob(iob)%gis_id, ob(iob)%name, ch_morpha(ichan)
         end if
        end if
       end if

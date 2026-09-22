@@ -272,6 +272,8 @@
       !ht1 = ht1 + bed_ero
       
       !! set outputs for sediment budget
+      ch_morph(ich)%num = 1
+
       !! width and depth at end of the day - m
       ch_morph(ich)%wid = sd_ch(ich)%chw
       ch_morph(ich)%dep = sd_ch(ich)%chd

@@ -32,10 +32,10 @@
           ch_morph_ordy(iord) = ch_morph_ordy(iord) + ch_morph_ordm(iord)   
 
           if (pco%sd_chan%m == "y") then
-          write (3162,*) time%mo, time%day_mo, time%yrc, iord, ch_morph_ordm(iord)
+          write (3162,*) time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_ordm(iord)
  
           if (pco%csvout == "y") then
-          write (3166,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iord, ch_morph_ordm(iord)
+          write (3166,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_ordm(iord)
           end if
           end if
 
@@ -50,10 +50,10 @@
         ch_morph_ordy(iord) =  ch_morph_ordy(iord) + ch_morph_ordm(iord)
           
         if (pco%sd_chan%y == "y") then
-          write (3163,*) time%mo, time%day_mo, time%yrc, iord, ch_morph_ordy(iord)   
+          write (3163,*) time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_ordy(iord)
   
               if (pco%csvout == "y") then
-          write (3167,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iord, ch_morph_ordy(iord)
+          write (3167,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_ordy(iord)
           end if
         end if
 
@@ -72,10 +72,10 @@
         ch_morph_orda(iord) = ch_morph_orda(iord) / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then
-        write (3164,*) time%mo, time%day_mo, time%yrc, iord, ch_morph_orda(iord) 
+        write (3164,*) time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_orda(iord)
 
         if (pco%csvout == "y") then
-        write (3168,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, iord, ch_morph_orda(iord)
+        write (3168,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, iord, ch_morph_orda(iord)
         end if
        end if
       end if

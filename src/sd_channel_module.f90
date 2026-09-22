@@ -97,10 +97,7 @@
       type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
 
       type channel_morphology_output
-        character (len=6) :: mo         =  "      "
-        character (len=6) :: day_mo     =  "      "
-        character (len=6) :: yrc        =  "      "
-        integer :: num              !           |number of channels in each order
+        integer :: num = 0          !           |number of channels in each order
         real :: wid = 0.            !m          |averge channel width
         real :: dep = 0.            !m          |average channel depth
         real :: fp_km2 = 0.         !km2        |flood plain area of channel
@@ -503,11 +500,11 @@
       
 !!    CHANBUD ORDER HEADERS      
       type ch_bud_order 
+          character(len=12) :: day        =  "       jday "
           character(len=12) :: mo         =  "        mon "
           character(len=12) :: day_mo     =  "        day "
           character(len=12) :: yrc        =  "         yr "
           character(len=12) :: iord       =  "        iord"
-          character(len=16) :: space      =  "                "
           character(len=12) :: num        =  "         num"          
           character(len=16) :: wid        =  "        wid     " 
           character(len=16) :: dep        =  "        dep     " 
@@ -522,11 +519,11 @@
       type (ch_bud_order) :: ch_bud_order_hdr
       
       type ch_bud_order_units
+          character(len=12) :: day        =  "            "
           character(len=12) :: mo         =  "            "
           character(len=12) :: day_mo     =  "            "
           character(len=12) :: yrc        =  "            "
           character(len=12) :: iord       =  "            "
-          character(len=16) :: space      =  "                "
           character(len=12) :: num        =  "            "          
           character(len=16) :: wid        =  "          m     " 
           character(len=16) :: dep        =  "          m     " 
@@ -543,13 +540,14 @@
       
 !!    CHAN SEDBUD HEADERS      
       type ch_sedbud 
+          character(len=12) :: day        =  "       jday "
           character(len=12) :: mo         =  "        mon "
           character(len=12) :: day_mo     =  "        day "
           character(len=12) :: yrc        =  "         yr "
           character(len=12) :: ichan      =  "       ichan"
           character(len=20) :: ob         =  "                  ob"
           character(len=20) :: obnam      =  "                name"        
-          character(len=14) :: space      =  "              "
+          character(len=14) :: num        =  "           num"
           character(len=16) :: wid        =  "        wid     " 
           character(len=16) :: dep        =  "        dep     " 
           character(len=16) :: fp_km2     =  "    fp_km2      "
@@ -563,13 +561,14 @@
       type (ch_sedbud) :: ch_sedbud_hdr
       
       type ch_sedbud_units
+          character(len=12) :: day        =  "            "
           character(len=12) :: mo         =  "            "
           character(len=12) :: day_mo     =  "            "
           character(len=12) :: yrc        =  "            "
           character(len=12) :: ichan      =  "            "
           character(len=20) :: ob         =  "                    "
           character(len=20) :: obnam      =  "                    "        
-          character(len=14) :: space      =  "              "          
+          character(len=14) :: num        =  "              "
           character(len=16) :: wid        =  "          m     " 
           character(len=16) :: dep        =  "          m     " 
           character(len=16) :: fp_km2     =  "     km2        "
@@ -585,6 +584,7 @@
      
 !!    CH SEDIMENT BUDGET HEADERS      
       type ch_sed_budget      
+          character(len=12) :: day        =  "       jday "
           character(len=12) :: mo         =  "        mon "
           character(len=12) :: day_mo     =  "        day "
           character(len=12) :: yrc        =  "         yr "          
@@ -598,6 +598,7 @@
       type (ch_sed_budget) :: ch_sed_bud_hdr
       
       type ch_sed_budget_units
+          character(len=12) :: day       =  "            "
           character(len=12) :: mo        =  "            "
           character(len=12) :: day_mo    =  "            "
           character(len=12) :: yrc       =  "            " 
@@ -708,6 +709,7 @@
       type (channel_morphology_output),  intent (in) :: cho1
       type (channel_morphology_output),  intent (in) :: cho2
       type (channel_morphology_output) :: cho3
+       cho3%num = cho1%num + cho2%num
        cho3%wid = cho1%wid + cho2%wid
        cho3%dep = cho1%dep + cho2%dep
        cho3%fp_km2 = cho1%fp_km2 + cho2%fp_km2
@@ -723,6 +725,7 @@
         type (channel_morphology_output), intent (in) :: cho1
         real, intent (in) :: const
         type (channel_morphology_output) :: cho2
+        cho2%num = cho1%num
         cho2%wid = cho1%wid / const
         cho2%dep = cho1%dep / const
         cho2%fp_km2 = cho1%fp_km2 / const

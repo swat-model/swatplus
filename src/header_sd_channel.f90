@@ -276,16 +276,6 @@
         end if
 !! SWAT DEG CHANBUD OUTPUT
         
-!! SWAT DEG CHANNEL BUDGET ORDER            
-   if (sp_ob%chandeg > 0) then
-     call open_output_file(3150, "chanbud.txt", 1500)
-     write (3150,*) bsn%name, prog
-     write (3150,*) ch_bud_hdr 
-     write (3150,*) ch_bud_hdr_units
-     write (9000,*) "SWAT_DEG_CHANBUD        chanbud.txt"
-   end if        
-!! SWAT DEG CHANNEL BUDGET ORDER
-   
 !! SWAT DEG CHANNEL SEDIMENT BUDGET ORDER            
    if (sp_ob%chandeg > 0) then
     if (pco%sd_chan%d == "y") then
@@ -296,7 +286,7 @@
      write (9000,*) "CHANBUD_ORDER         chanbud_order_d.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%d == "y" .and. pco%csvout == "y") then
        call open_output_file(3165, "chanbud_order_d.csv", 1500)
        write (3165,*) bsn%name, prog
        write (3165,'(*(G0.6,:","))') ch_bud_order_hdr 
@@ -312,7 +302,7 @@
      write (9000,*) "CHANBUD_ORDER         chanbud_order_m.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%m == "y" .and. pco%csvout == "y") then
        call open_output_file(3166, "chanbud_order_m.csv", 1500)
        write (3166,*) bsn%name, prog
        write (3166,'(*(G0.6,:","))') ch_bud_order_hdr 
@@ -328,7 +318,7 @@
      write (9000,*) "CHANBUD_ORDER         chanbud_order_y.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%y == "y" .and. pco%csvout == "y") then
        call open_output_file(3167, "chanbud_order_y.csv", 1500)
        write (3167,*) bsn%name, prog
        write (3167,'(*(G0.6,:","))') ch_bud_order_hdr 
@@ -344,7 +334,7 @@
      write (9000,*) "CHANBUD_ORDER         chanbud_order_a.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%a == "y" .and. pco%csvout == "y") then
        call open_output_file(3168, "chanbud_order_a.csv", 1500)
        write (3168,*) bsn%name, prog
        write (3168,'(*(G0.6,:","))') ch_bud_order_hdr 
@@ -364,7 +354,7 @@
      write (9000,*) "SEDBUD         ch_sedbud_d.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%d == "y" .and. pco%csvout == "y") then
        call open_output_file(3175, "ch_sedbud_d.csv", 1500)
        write (3175,*) bsn%name, prog
        write (3175,'(*(G0.6,:","))') ch_sedbud_hdr 
@@ -380,7 +370,7 @@
      write (9000,*) "SEDBUD         ch_sedbud_m.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%m == "y" .and. pco%csvout == "y") then
        call open_output_file(3176, "ch_sedbud_m.csv", 1500)
        write (3176,*) bsn%name, prog
        write (3176,'(*(G0.6,:","))') ch_sedbud_hdr 
@@ -393,10 +383,10 @@
      write (3173,*) bsn%name, prog
      write (3173,*) ch_sedbud_hdr 
      write (3173,*) ch_sedbud_hdr_units
-     write (9000,*) "SEDBUD         ch_sedbud_y.txt.txt"
+     write (9000,*) "SEDBUD         ch_sedbud_y.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%y == "y" .and. pco%csvout == "y") then
        call open_output_file(3177, "ch_sedbud_y.csv", 1500)
        write (3177,*) bsn%name, prog
        write (3177,'(*(G0.6,:","))') ch_sedbud_hdr 
@@ -412,7 +402,7 @@
      write (9000,*) "SEDBUD         ch_sedbud_a.txt"
    end if 
    
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%a == "y" .and. pco%csvout == "y") then
        call open_output_file(3178, "ch_sedbud_a.csv", 1500)
        write (3178,*) bsn%name, prog
        write (3178,'(*(G0.6,:","))') ch_sedbud_hdr 
@@ -432,7 +422,7 @@
        write (9000,*) "SEDBUD              sedbud_day.txt"
      end if
  
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%d == "y" .and. pco%csvout == "y") then
        call open_output_file(3156, "sedbud_day.csv", 1500)
        write (3156,*) bsn%name, prog
        write (3156,'(*(G0.6,:","))') ch_sed_bud_hdr 
@@ -448,7 +438,7 @@
        write (9000,*) "SEDBUD              sedbud_mon.txt"
      end if
      
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%m == "y" .and. pco%csvout == "y") then
        call open_output_file(3157, "sedbud_mon.csv", 1500)
        write (3157,*) bsn%name, prog
        write (3157,'(*(G0.6,:","))') ch_sed_bud_hdr 
@@ -464,7 +454,7 @@
        write (9000,*) "SEDBUD              sedbud_yr.txt"
      end if  
      
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%y == "y" .and. pco%csvout == "y") then
        call open_output_file(3158, "sedbud_yr.csv", 1500)
        write (3158,*) bsn%name, prog
        write (3158,'(*(G0.6,:","))') ch_sed_bud_hdr 
@@ -480,7 +470,7 @@
        write (9000,*) "SEDBUD              sedbud_aa.txt"
      end if
      
-     if (pco%csvout == "y") then 
+     if (pco%sd_chan%a == "y" .and. pco%csvout == "y") then
        call open_output_file(3159, "sedbud_aa.csv", 1500)
        write (3159,*) bsn%name, prog
        write (3159,'(*(G0.6,:","))') ch_sed_bud_hdr 

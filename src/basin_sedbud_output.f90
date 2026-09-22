@@ -26,10 +26,10 @@
           bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
 
           if (pco%sd_chan%m == "y") then
-          write (3153,*) time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          write (3153,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudm
  
           if (pco%csvout == "y") then
-          write (3157,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          write (3157,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudm
           end if
           end if
 
@@ -44,10 +44,10 @@
         bsn_sedbudy =  bsn_sedbudy + bsn_sedbudm
           
         if (pco%sd_chan%y == "y") then
-          write (3154,*) time%mo, time%day_mo, time%yrc, bsn_sedbudy
+          write (3154,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudy
   
               if (pco%csvout == "y") then
-          write (3158,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudy
+          write (3158,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudy
           end if
         end if
 
@@ -66,10 +66,10 @@
         bsn_sedbuda = bsn_sedbuda / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then
-        write (3155,*) time%mo, time%day_mo, time%yrc, bsn_sedbuda
+        write (3155,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbuda
 
         if (pco%csvout == "y") then
-        write (3159,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbuda
+        write (3159,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbuda
         end if
        end if
       end if
