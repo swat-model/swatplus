@@ -48,7 +48,6 @@
       real :: vel_rch = 0.
       real :: arc_len = 0.
       real :: prot_len = 0.
-      real :: h_rad = 0.
       real :: fp_m2 = 0.
       real :: exp_co = 0.
       real :: florate_ob = 0.
@@ -91,10 +90,10 @@
       !! interpolate rating curve using peak rate
       call rcurv_interp_flo (ich, peakrate)
       
-      !! use peakrate as flow rate
-      h_rad = rcurv%xsec_area / rcurv%wet_perim
-      vel = h_rad ** .6666 * Sqrt(sd_ch(ich)%chs) / (sd_ch(ich)%chn + .001)
-      vel = peakrate / rcurv%xsec_area
+      !! channel velocity from the interpolated rating curve
+      !! (rating-curve vel avoids the unrealistically high velocities at low flow from continuity Q/A)
+      vel = rcurv%vel
+      
       rttime = sd_ch(ich)%chl / (3.6 * vel)
       sd_ch_vel(ich)%vel = vel       !store for ch_temp
       sd_ch_vel(ich)%rttime = rttime !store for ch_temp
@@ -256,7 +255,7 @@
         vel_cr = 0.293 * (sd_ch(ich)%d50) ** 0.5
         if (vel > vel_cr) then
           !! bed erosion m/yr
-          ebtm_m = 0.0001 * (vel_rch / vel_cr) ** sd_ch(ich)%bed_exp
+          ebtm_m = 0.0001 * (vel / vel_cr) ** sd_ch(ich)%bed_exp
         end if
         !! calc mass of sediment eroded -> t = m * width (m) * length (km) * 1000 m/km * bd (t/m3)
         ebtm_t = 1000. * ebtm_m * sd_ch(ich)%chw * sd_ch(ich)%chl * sd_ch(ich)%ch_bd
@@ -273,6 +272,8 @@
       !ht1 = ht1 + bed_ero
       
       !! set outputs for sediment budget
+      ch_morph(ich)%num = 1
+
       !! width and depth at end of the day - m
       ch_morph(ich)%wid = sd_ch(ich)%chw
       ch_morph(ich)%dep = sd_ch(ich)%chd
@@ -305,3 +306,4 @@
 
       return
       end subroutine sd_channel_sediment3
+
