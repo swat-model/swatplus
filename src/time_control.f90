@@ -138,13 +138,10 @@
           time%day_end_yr =  amin0 (time%day_end_yr, ndays(13))  ! if user inputs 366 on non-leap year
         end if
         
-        !! sum years of printing for average annual writes
+        !! sum years of printing for average annual writes - a partial year counts as its fraction of the year
         if (time%yrs > pco%nyskip) then
-          time%yrs_prt = time%yrs_prt + float(time%day_end_yr - time%day_start + 1)
+          time%yrs_prt = time%yrs_prt + float(time%day_end_yr - time%day_start + 1) / float(ndays(13))
           time%days_prt = time%days_prt + float(time%day_end_yr - time%day_start + 1)
-        else
-          !! tell user they are skipping more years than simulating
-          time%yrs_prt = time%nbyr
         end if
             
         !! set initial soil water for hru, basin and lsu - for checking water balance
@@ -187,7 +184,8 @@
             time%end_yr = 1
             if (time%yrs == time%nbyr) then
               time%end_sim = 1
-              time%yrs_prt = time%yrs_prt / (365. + (time%num_leap / time%nbyr))
+              !! no years printed when skipping more years than simulating - avoid dividing by zero
+              if (time%yrs_prt <= 0.) time%yrs_prt = 1.
             end if
             if (pco%aa_numint > 0) then
               if (time%yrc == pco%aa_yrs(time%prt_int_cur)) then
