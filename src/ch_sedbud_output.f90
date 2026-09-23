@@ -77,6 +77,7 @@
       !! average annual print
       if (time%end_sim == 1) then
         !! convert the accumulated total to an average annual value
+        !! / divides the summed amounts only - wid, dep and fp_km2 are averaged by chsedbud_ave
         ch_morpha(ichan) = ch_morpha(ichan) / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then

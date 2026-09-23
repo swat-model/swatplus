@@ -12,6 +12,8 @@
 
       !! loop through and print each use object
       do iord = 1, 12
+        !! channels in the order on the print day - if a decision table changes a channel's order during a period,
+        !! ebank_m, ebtm_m and fp_mm for that period are divided by the new count
         nch = count(sd_ch(1:sp_ob%chandeg)%order == iord)
         
         !! sum monthly variables
@@ -72,6 +74,7 @@
       !! average annual print
       if (time%end_sim == 1) then
         !! convert the accumulated total to an average annual value
+        !! / divides the summed amounts only - wid, dep and fp_km2 are averaged by chsedbud_ave
         ch_morph_orda(iord) = ch_morph_orda(iord) / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then

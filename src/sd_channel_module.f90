@@ -97,7 +97,7 @@
       type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
 
       type channel_morphology_output
-        integer :: num = 0          !           |number of channels in each order (channel days until printed)
+        integer :: num = 0          !           |number of channels in each order (channel days with flow until printed)
         real :: wid = 0.            !m          |average channel width
         real :: dep = 0.            !m          |average channel depth
         real :: fp_km2 = 0.         !km2        |flood plain area of channel
@@ -739,15 +739,17 @@
       end function chsedbud_div
 
       !! converts summed morphology output to printed values
-      !! num is summed over channel days, so wid, dep and fp_km2 divided by num are the average of one channel;
-      !! ebank_m, ebtm_m and fp_mm are averaged over the nch channels and num is printed as nch
+      !! num is summed over channel days with flow (ch_morph is only set when a channel has inflow), so wid, dep and
+      !! fp_km2 divided by num are the average of one channel on the days it flowed;
+      !! ebank_m, ebtm_m and fp_mm are averaged over the nch channels, and num is printed as nch (0 if nothing flowed)
       function chsedbud_ave (cho1, nch) result (cho2)
         type (channel_morphology_output), intent (in) :: cho1
         integer, intent (in) :: nch
         type (channel_morphology_output) :: cho2
         cho2 = cho1
-        cho2%num = nch
+        cho2%num = 0
         if (cho1%num > 0) then
+          cho2%num = nch
           cho2%wid = cho1%wid / cho1%num
           cho2%dep = cho1%dep / cho1%num
           cho2%fp_km2 = cho1%fp_km2 / cho1%num
