@@ -97,8 +97,8 @@
       type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
 
       type channel_morphology_output
-        integer :: num = 0          !           |number of channels in each order
-        real :: wid = 0.            !m          |averge channel width
+        integer :: num = 0          !           |number of channels in each order (channel days until printed)
+        real :: wid = 0.            !m          |average channel width
         real :: dep = 0.            !m          |average channel depth
         real :: fp_km2 = 0.         !km2        |flood plain area of channel
         real :: ebank_t = 0.        !tons       |bank cutting  
@@ -721,14 +721,15 @@
        cho3%fp_mm = cho1%fp_mm + cho2%fp_mm
       end function chsedbud_add
       
+      !! divides the summed amounts only - wid, dep and fp_km2 stay summed until chsedbud_ave
       function chsedbud_div (cho1,const) result (cho2)
         type (channel_morphology_output), intent (in) :: cho1
         real, intent (in) :: const
         type (channel_morphology_output) :: cho2
         cho2%num = cho1%num
-        cho2%wid = cho1%wid / const
-        cho2%dep = cho1%dep / const
-        cho2%fp_km2 = cho1%fp_km2 / const
+        cho2%wid = cho1%wid
+        cho2%dep = cho1%dep
+        cho2%fp_km2 = cho1%fp_km2
         cho2%ebank_t = cho1%ebank_t / const
         cho2%ebtm_t = cho1%ebtm_t / const
         cho2%ebank_m = cho1%ebank_m / const
@@ -736,6 +737,27 @@
         cho2%fp_t = cho1%fp_t / const
         cho2%fp_mm = cho1%fp_mm / const
       end function chsedbud_div
+
+      !! converts summed morphology output to printed values
+      !! num is summed over channel days, so wid, dep and fp_km2 divided by num are the average of one channel;
+      !! ebank_m, ebtm_m and fp_mm are averaged over the nch channels and num is printed as nch
+      function chsedbud_ave (cho1, nch) result (cho2)
+        type (channel_morphology_output), intent (in) :: cho1
+        integer, intent (in) :: nch
+        type (channel_morphology_output) :: cho2
+        cho2 = cho1
+        cho2%num = nch
+        if (cho1%num > 0) then
+          cho2%wid = cho1%wid / cho1%num
+          cho2%dep = cho1%dep / cho1%num
+          cho2%fp_km2 = cho1%fp_km2 / cho1%num
+        end if
+        if (nch > 0) then
+          cho2%ebank_m = cho1%ebank_m / nch
+          cho2%ebtm_m = cho1%ebtm_m / nch
+          cho2%fp_mm = cho1%fp_mm / nch
+        end if
+      end function chsedbud_ave
         
       function chsednut_add(cho1,cho2) result (cho3)
       type (channel_sediment_budget_output),  intent (in) :: cho1
