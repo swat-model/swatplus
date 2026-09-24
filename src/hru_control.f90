@@ -875,7 +875,7 @@
       ! output_losses
         !! don't sum during skip years
         if (time%yrs > pco%nyskip) then
-          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j) * hru(j)%area_ha
+          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j)
         end if
         
         hls_d(j)%sedyld = sedyld(j) / hru(j)%area_ha
