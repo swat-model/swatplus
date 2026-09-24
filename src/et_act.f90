@@ -90,10 +90,9 @@
 
 
 !! evaporate canopy storage first
-!! canopy storage is calculated by the model only if the Green & Ampt
-!! method is used to calculate surface runoff. The curve number methods
-!! take canopy effects into account in the equations. For either of the
-!! CN methods, canstor will always equal zero.
+!! canopy interception (sq_canopyint) is computed for every surface runoff
+!! method, curve number and Green & Ampt, so canstor can be nonzero with
+!! either
       canev = 0.
       pet = pet - canstor(j)
       if (pet < 0.) then
