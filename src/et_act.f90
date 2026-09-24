@@ -90,10 +90,9 @@
 
 
 !! evaporate canopy storage first
-!! canopy storage is calculated by the model only if the Green & Ampt
-!! method is used to calculate surface runoff. The curve number methods
-!! take canopy effects into account in the equations. For either of the
-!! CN methods, canstor will always equal zero.
+!! canopy interception (sq_canopyint) is computed for every surface runoff
+!! method, curve number and Green & Ampt, so canstor can be nonzero with
+!! either
       canev = 0.
       pet = pet - canstor(j)
       if (pet < 0.) then
@@ -179,14 +178,14 @@
           endif
         endif
 
-        !! compute evaporation from ponded water
+        !! compute evaporation from the standing water in wetlands/paddies Jaehak 2026
         wet_wat_d(j)%evap = 0.
         if (wet(j)%flo > 0.) then
           wetvol_mm = wet(j)%flo / (10. *  hru(j)%area_ha)    !mm=m3/(10.*ha)
           !! take all soil evap from wetland storage before taking from soil
           if (wetvol_mm >= esleft) then
             wetvol_mm = wetvol_mm - esleft
-            wet_wat_d(j)%evap = esleft * (10. *  hru(j)%area_ha)
+            wet_wat_d(j)%evap = esleft * (10. *  hru(j)%area_ha) !m3
             esleft = 0.
           else
             esleft = esleft - wetvol_mm
@@ -195,75 +194,77 @@
           endif
           wet(j)%flo = 10. * wetvol_mm * hru(j)%area_ha
           hru(j)%water_evap = wet_wat_d(j)%evap / (10. * hru(j)%area_ha)  !mm=m3/(10*ha)
-        endif
 
-!! take soil evap from each soil layer
-      evzp = 0.
-      eosl = esleft
-      do ly = 1, soil(j)%nly
-
-        !! depth exceeds max depth for soil evap (esd)
-        dep = 0.
-        if (ly == 1) then
-          dep = soil(j)%phys(1)%d
-        else
-          dep = soil(j)%phys(ly-1)%d
         endif
         
-        if (dep < esd) then
-          !! calculate evaporation from soil layer
-          evz = eosl * soil(j)%phys(ly)%d / (soil(j)%phys(ly)%d +        &
-             Exp(2.374 - .00713 * soil(j)%phys(ly)%d))
-          sev = evz - evzp * (1. - hru(j)%hyd%esco)
-          evzp = evz
-          if (soil(j)%phys(ly)%st < soil(j)%phys(ly)%fc) then
-            xx =  2.5 * (soil(j)%phys(ly)%st - soil(j)%phys(ly)%fc) /    &
-             soil(j)%phys(ly)%fc
-            sev = sev * exp(xx)
-          end if
-          sev = Min(sev, soil(j)%phys(ly)%st * etco)
+        !! take soil evap from each soil layer (no standing water)
+        if (wet(j)%flo < 1e-6) then
 
-          if (sev < 0.) sev = 0.
-          if (sev > esleft) sev = esleft
+          evzp = 0.
+          eosl = esleft
+          do ly = 1, soil(j)%nly
 
-          !! adjust soil storage, potential evap
-          if (soil(j)%phys(ly)%st > sev) then
-            esleft = esleft - sev
-            soil(j)%phys(ly)%st = Max(1.e-6, soil(j)%phys(ly)%st - sev)
-          else
-            esleft = esleft - soil(j)%phys(ly)%st
-            sev = soil(j)%phys(ly)%st
-            soil(j)%phys(ly)%st = 0.
-          endif
-        endif
+            !! depth exceeds max depth for soil evap (esd)
+            dep = 0.
+            if (ly == 1) then
+              dep = soil(j)%phys(1)%d
+            else
+              dep = soil(j)%phys(ly-1)%d
+            endif
 
-        !! compute no3 flux from layer 2 to 1 by soil evaporation
-        if (ly == 2) then
-          if (soil(j)%phys(2)%st > 1.e-3) then
-            sev_st = sev / (soil(j)%phys(2)%st)
-          else
-            sev_st = 0.
-          end if
-          sev_st = amin1 (1., sev_st)
-          no3up = effnup * sev_st * soil1(j)%mn(2)%no3
-          no3up = Min(no3up, soil1(j)%mn(2)%no3)
-          soil1(j)%mn(2)%no3 = max(0.0001,soil1(j)%mn(2)%no3 - no3up)
-          soil1(j)%mn(1)%no3 = max(0.0001,soil1(j)%mn(1)%no3 + no3up)
-        endif
+            if (dep < esd) then
+              !! calculate evaporation from soil layer
+              evz = eosl * soil(j)%phys(ly)%d / (soil(j)%phys(ly)%d +        &
+                 Exp(2.374 - .00713 * soil(j)%phys(ly)%d))
+              sev = evz - evzp * (1. - hru(j)%hyd%esco)
+              evzp = evz
+              if (soil(j)%phys(ly)%st < soil(j)%phys(ly)%fc) then
+                xx =  2.5 * (soil(j)%phys(ly)%st - soil(j)%phys(ly)%fc) /    &
+                 soil(j)%phys(ly)%fc
+                sev = sev * exp(xx)
+              end if
+              sev = Min(sev, soil(j)%phys(ly)%st * etco)
 
-      end do    !layer loop
+              if (sev < 0.) sev = 0.
+              if (sev > esleft) sev = esleft
+
+              !! adjust soil storage, potential evap
+              if (soil(j)%phys(ly)%st > sev) then
+                esleft = max(0.,esleft - sev)
+                soil(j)%phys(ly)%st = Max(1.e-6, soil(j)%phys(ly)%st - sev)
+              else
+                esleft = max(0.,esleft - soil(j)%phys(ly)%st)
+                sev = soil(j)%phys(ly)%st
+                soil(j)%phys(ly)%st = 0.
+              endif
+            endif
+
+            !! compute no3 flux from layer 2 to 1 by soil evaporation
+            if (ly == 2) then
+              if (soil(j)%phys(2)%st > 1.e-3) then
+                sev_st = sev / (soil(j)%phys(2)%st)
+              else
+                sev_st = 0.
+              end if
+              sev_st = amin1 (1., sev_st)
+              no3up = effnup * sev_st * soil1(j)%mn(2)%no3
+              no3up = Min(no3up, soil1(j)%mn(2)%no3)
+              soil1(j)%mn(2)%no3 = max(0.0001,soil1(j)%mn(2)%no3 - no3up)
+              soil1(j)%mn(1)%no3 = max(0.0001,soil1(j)%mn(1)%no3 + no3up)
+            endif
+
+          end do    !layer loop
+        end if
+
+        !! calculate actual amount of evaporation from soil
+        es_day = max(0.,es_max - esleft)
+      endif
 
       !! update total soil water content
       soil(j)%sw = 0.
       do ly = 1, soil(j)%nly
         soil(j)%sw = soil(j)%sw + soil(j)%phys(ly)%st
       end do
-
-      !! calculate actual amount of evaporation from soil
-      es_day = es_max - esleft
-      if (es_day < 0.) es_day = 0.
-
-      end if
 
       return
       end subroutine et_act

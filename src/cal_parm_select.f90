@@ -441,7 +441,7 @@
                          chg_typ, chg_val, absmin, absmax)
                     
       case ("nperco_lchtile")
-        bsn_prm%msk_x = chg_par(bsn_prm%nperco_lchtile,                          &
+        bsn_prm%nperco_lchtile = chg_par(bsn_prm%nperco_lchtile,                 &
                          chg_typ, chg_val, absmin, absmax)                         
 
       case ("cdn")

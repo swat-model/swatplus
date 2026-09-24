@@ -440,12 +440,14 @@
       !! print all output files
       if (time%yrs > pco%nyskip) then
       
-        !! print basin sediment budget output
-        call basin_sedbud_output
+        !! print sediment budget output (only when channels exist)
+        if (sp_ob%chandeg > 0) then
+          call basin_sedbud_output
         
-        !! print basin channel morphology output
-        call ch_sedbud_output
-        call chord_sedbud_output
+          !! print basin channel morphology output
+          call ch_sedbud_output
+          call chord_sedbud_output
+        end if
         
         !! print water allocation output
         do ipou =1, db_mx%wallo_pou
