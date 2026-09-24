@@ -259,9 +259,7 @@
         call stmp_solt
         
         !!compute canopy interception
-        if (bsn_cc%gampt == 1) then
-          call sq_canopyint
-        end if
+        call sq_canopyint
 
         !! compute snow melt
         call sq_snom
@@ -877,7 +875,7 @@
       ! output_losses
         !! don't sum during skip years
         if (time%yrs > pco%nyskip) then
-          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j) * hru(j)%area_ha
+          bsn_sedbud%upland_t = bsn_sedbud%upland_t + sedyld(j)
         end if
         
         hls_d(j)%sedyld = sedyld(j) / hru(j)%area_ha
