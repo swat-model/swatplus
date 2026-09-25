@@ -276,7 +276,35 @@
         
 
       end do  !element loop
-      
+
+      !! BUG FIX: add incoming constituent masses from other RUs/objects.
+      !! command.f90 accumulates incoming sur/lat/til into obcs(icmd)%hin_sur/lat/til,
+      !! but the element loop above only processes this RU's own HRU elements.
+      !! Without this, constituent mass routed from one RU to another is lost.
+      if (cs_db%num_tot > 0) then
+        do ipest = 1, cs_db%num_pests
+          obcs(icmd)%hd(3)%pest(ipest) = obcs(icmd)%hd(3)%pest(ipest) + obcs(icmd)%hin_sur(1)%pest(ipest)
+          obcs(icmd)%hd(4)%pest(ipest) = obcs(icmd)%hd(4)%pest(ipest) + obcs(icmd)%hin_lat(1)%pest(ipest)
+          obcs(icmd)%hd(5)%pest(ipest) = obcs(icmd)%hd(5)%pest(ipest) + obcs(icmd)%hin_til(1)%pest(ipest)
+          obcs(icmd)%hd(1)%pest(ipest) = obcs(icmd)%hd(3)%pest(ipest) + obcs(icmd)%hd(4)%pest(ipest) + &
+                                         obcs(icmd)%hd(5)%pest(ipest)
+        end do
+        do isalt = 1, cs_db%num_salts
+          obcs(icmd)%hd(3)%salt(isalt) = obcs(icmd)%hd(3)%salt(isalt) + obcs(icmd)%hin_sur(1)%salt(isalt)
+          obcs(icmd)%hd(4)%salt(isalt) = obcs(icmd)%hd(4)%salt(isalt) + obcs(icmd)%hin_lat(1)%salt(isalt)
+          obcs(icmd)%hd(5)%salt(isalt) = obcs(icmd)%hd(5)%salt(isalt) + obcs(icmd)%hin_til(1)%salt(isalt)
+          obcs(icmd)%hd(1)%salt(isalt) = obcs(icmd)%hd(3)%salt(isalt) + obcs(icmd)%hd(4)%salt(isalt) + &
+                                         obcs(icmd)%hd(5)%salt(isalt)
+        end do
+        do ics = 1, cs_db%num_cs
+          obcs(icmd)%hd(3)%cs(ics) = obcs(icmd)%hd(3)%cs(ics) + obcs(icmd)%hin_sur(1)%cs(ics)
+          obcs(icmd)%hd(4)%cs(ics) = obcs(icmd)%hd(4)%cs(ics) + obcs(icmd)%hin_lat(1)%cs(ics)
+          obcs(icmd)%hd(5)%cs(ics) = obcs(icmd)%hd(5)%cs(ics) + obcs(icmd)%hin_til(1)%cs(ics)
+          obcs(icmd)%hd(1)%cs(ics) = obcs(icmd)%hd(3)%cs(ics) + obcs(icmd)%hd(4)%cs(ics) + &
+                                     obcs(icmd)%hd(5)%cs(ics)
+        end do
+      end if
+
       !! set subdaily ru hydrographs using daily runoff and ru unit hydrograph
       if (time%step > 1 .and. bsn_cc%gampt == 0) then
         call flow_hyd_ru_hru (ob(icmd)%day_cur, ob(icmd)%hd(3)%flo, ob(icmd)%hd(4)%flo,     &

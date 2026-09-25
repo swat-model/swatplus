@@ -38,7 +38,7 @@
                                    !!              |              |perco = exp(-(0.00339/perco_lim)**(1/1.0052)).
                                    !!              |              |Realized percolation is damped further still, because
                                    !!              |              |throttling seepage lets (st - fc) build in the last
-                                   !!              |              |layer and partly compensate. On IA-Clayton_Test_Case a
+                                   !!              |              |layer and partly compensate. On refdata/Clayton a
                                    !!              |              |204x span in perco_lim (.0049 to 1.0) moved annual perc
                                    !!              |              |only 2.1x (14.6 to 30.8 mm/yr), and above perco_lim
                                    !!              |              |0.05 a 20x span moved it 4%. Back-pressure shows up in

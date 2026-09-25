@@ -47,14 +47,14 @@
       !irrig_nsource = wallo(iwallo)%trn(itrn)%trn_src_obs
       
       !loop through the irrigation sources
-      do isrc=1,irrig_nsource
+      do isrc = 1,irrig_nsource
       
         !determine the object type and object number (of water source)
-        irrig_type = wallo(iwallo)%trn(itrn)%src(isrc)%typ
-        irrig_ob = wallo(iwallo)%trn(itrn)%src(isrc)%num
+        !irrig_type = wallo(iwallo)%trn(itrn)%src(isrc)%typ
+        !irrig_ob = wallo(iwallo)%trn(itrn)%src(isrc)%num
         
         !total water volume (m3) removed from source object
-        irrig_volume = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
+        !irrig_volume = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
         
         !calculate salt mass added to soil profile via irrigation (and salt mass removed from source object)
         if(irrig_volume > 0) then
@@ -87,7 +87,7 @@
           enddo
         
         !aquifer  
-        elseif(irrig_type.eq.'aqu' .and. bsn_cc%gwflow.eq.0) then !aquifer (if gwflow active: handled in gwflow_ppag)
+        else if(irrig_type.eq.'aqu' .and. bsn_cc%gwflow.eq.0) then !aquifer (if gwflow active: handled in gwflow_ppag)
           obnum = sp_ob1%aqu + irrig_ob - 1 
           iaq = irrig_ob
           !remove constituent mass from aquifer; add to soil profile; include in daily constituent mass balance
@@ -122,7 +122,7 @@
           enddo
           
         !stream channel  
-        elseif(irrig_type.eq.'cha') then 
+        else if(irrig_type.eq.'cha') then 
           obnum = sp_ob1%chandeg + irrig_ob - 1 !channel object
           ichan = ob(obnum)%num
           !remove constituent mass from channel; add to soil profile; include in daily constituent mass balance

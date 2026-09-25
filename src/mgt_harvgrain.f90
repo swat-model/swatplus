@@ -19,6 +19,7 @@
       use carbon_module
       use organic_mineral_mass_module
       use constituent_mass_module
+      use output_ls_pesticide_module
       
       implicit none
  
@@ -60,14 +61,21 @@
       
       !! adjust foliar and internal pesticide for grain removal
       do k = 1, cs_db%num_pests
-        !! calculate amount of pesticide removed with yield
-        yld_rto = pl_yield%m / pl_mass(j)%tot(ipl)%m
+        if (pl_mass(j)%tot(ipl)%m > 1.e-6) then
+          !! yld_rto = fraction of total plant mass removed as yield
+          yld_rto = pl_yield%m / pl_mass(j)%tot(ipl)%m
+          yld_rto = Min(yld_rto, 1.)
+        else
+          yld_rto = 0.
+        end if
+        !! track pesticide removed with yield (diagnostic only)
         yldpst = yld_rto * (cs_pl(j)%pl_in(ipl)%pest(k) + cs_pl(j)%pl_on(ipl)%pest(k))
-        cs_pl(j)%pl_in(ipl)%pest(k) = cs_pl(j)%pl_in(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_in(ipl)%pest(k)
+        hpestb_d(j)%pest(k)%harv_export = hpestb_d(j)%pest(k)%harv_export + yldpst
+        !! BUG FIX: original code kept yld_rto fraction instead of (1-yld_rto)
+        !! Correct: remove the yield fraction, keep the residual fraction
+        cs_pl(j)%pl_in(ipl)%pest(k) = (1. - yld_rto) * cs_pl(j)%pl_in(ipl)%pest(k)
         cs_pl(j)%pl_in(ipl)%pest(k) = Max (0., cs_pl(j)%pl_in(ipl)%pest(k))
-        cs_pl(j)%pl_on(ipl)%pest(k) = cs_pl(j)%pl_on(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_on(ipl)%pest(k)
+        cs_pl(j)%pl_on(ipl)%pest(k) = (1. - yld_rto) * cs_pl(j)%pl_on(ipl)%pest(k)
         cs_pl(j)%pl_on(ipl)%pest(k) = Max (0., cs_pl(j)%pl_on(ipl)%pest(k))
       end do   
 

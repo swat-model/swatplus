@@ -16,12 +16,12 @@
       eof = 0
       imax = 0
 
-      inquire (file="transplant.plt", exist=i_exist)
-      if (.not. i_exist .or. "transplant.plt" == " null") then
+      inquire (file="transplant.ops", exist=i_exist)
+      if (.not. i_exist .or. "transplant.ops" == " null") then
         allocate (transpl(0:0))
       else
       do
-        open (104,file="transplant.plt")
+        open (104,file="transplant.ops")
         read (104,*,iostat=eof) titldum
         if (eof < 0) exit
         read (104,*,iostat=eof) header

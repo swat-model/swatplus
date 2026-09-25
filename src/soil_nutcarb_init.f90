@@ -42,12 +42,9 @@
       isol_pl = hru(ihru)%dbs%soil_plant_init
       isolt = sol_plt_ini(isol_pl)%nut          ! isolt = 0 = default in type
       
+      !! assume 0.001% carbon if zero
       do ly = 1, nly
-       if (ly == 1) then
-          soil1(ihru)%cbn(ly) = max(0.001, soil(ihru)%phys(ly)%cbn)    !! assume 0.001% carbon if zero
-        else
-          soil1(ihru)%cbn(ly) = soil(ihru)%phys(ly)%cbn    
-        endif
+          soil1(ihru)%cbn(ly) = max(0.001, soil(ihru)%phys(ly)%cbn)
       enddo
 
       !! calculate initial nutrient contents of layers, profile and
@@ -146,7 +143,7 @@
           soil1(ihru)%hsta(ly)%p = soil1(ihru)%hsta(ly)%c / solt_db(isolt)%hum_c_p
         end if
         
-        if (bsn_cc%cswat == 1 ) then
+        if (bsn_cc%cswat == 2 ) then
           !!initialize CENTURY organic pools - set soil humus fractions for CENTURY from DSSAT
           if (org_frac%frac_litter < 1.e-6) then
             org_frac%frac_litter = 0.0

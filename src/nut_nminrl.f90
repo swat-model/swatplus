@@ -33,7 +33,7 @@
       !! NOTE: this is the cswat == 0 path, where carbon_bsn_read returns early and
       !! carbon.bsn is never opened -- so these keep their carbon_module defaults
       !! (500. / 25. / 5000. / 200.), exactly the literals they replace. Numerics-neutral.
-      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
+      use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref, n_act_frac
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
@@ -78,7 +78,7 @@
                             !              |of organic nitrogen in the active pool. 
 
       j = ihru
-      nactfr = .02
+      nactfr = n_act_frac
       !zero transformations for summing layers
       hnb_d(j)%act_nit_n = 0.
       hnb_d(j)%org_lab_p = 0.

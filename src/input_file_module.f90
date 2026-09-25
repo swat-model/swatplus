@@ -140,13 +140,12 @@
       end type input_herd
       type (input_herd) :: in_herd
       
-!! water-rights
-      type input_water_rights
-        character(len=25) :: transfer_wro = "water_allocation.wro"  !! transferring water using water rights objects (using decision tables)
-        character(len=25) :: element = "element.wro"
-        character(len=25) :: water_rights = "water_rights.wro"      !! 2 sources and compensation (used for NAM)
-      end type input_water_rights
-      type (input_water_rights) :: in_watrts
+!! water allocation
+      type input_water_allocation
+        character(len=25) :: pou = "place_of_use.wro"     !! water allocation places of use (POU) input file
+        character(len=25) :: pod = "point_of_diver.wro"   !! water allocation points of diversion (POD) input file
+      end type input_water_allocation
+      type (input_water_allocation) :: in_wallo
       
 !! link
       type input_link

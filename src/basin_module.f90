@@ -41,12 +41,12 @@
                                  !!   2 = turn off nutrient plant stress only
         integer :: cn = 0        !! not used
         integer :: cfac = 0      !! not used     
-        integer :: cswat = 0     !! carbon code: 0 = off (static soil carbon, old mineralization
-                                 !! routines), 1 = dynamic CENTURY/SWAT-C model.
-                                 !! An earlier numbering reserved 1 for C-FARM and used 2 for
-                                 !! CENTURY; carbon = 2 is retired and is now an error.
+        integer :: cswat = 0     !! carbon code: 0 = off (static), 1 = C-FARM (reserved,
+                                 !! not implemented), 2 = dynamic CENTURY/SWAT-C model.
+                                 !! numbering aligned with legacy SWAT as directed by Srinivasan.
                                  !!  = 0 Static soil carbon (old mineralization routines)
-                                 !!  = 1 CENTURY / SWAT-C dynamic soil carbon
+                                 !!  = 1 C-FARM one carbon pool model
+                                 !!  = 2 Century model
         integer :: lapse = 0     !! precip and temperature lapse rate control
                                  !!   0 = do not adjust for elevation
                                  !!   1 = adjust for elevation
@@ -68,10 +68,10 @@
         integer :: qual2e = 0    !! 0 = instream nutrient routing using QUAL2E 
                                  !! 1 = instream nutrient routing using QUAL2E - with simplified nutrient transformations
         integer :: gwflow = 0    !!   0 = gwflow module not active; 1 = gwflow module active
-        integer :: idc_till = 3  !! 1 = Use dssat tillage method to use if cswat = 1 
-                                 !! 2 = Use epic tillage method to use if cswat = 1
-                                 !! 3 = Use Kemanian tillage method to use if cswat = 1
-                                 !! 4 = Use dndc tillage method to use if cswat = 1
+        integer :: idc_till = 3  !! 1 = Use dssat tillage method to use if cswat = 2 
+                                 !! 2 = Use epic tillage method to use if cswat = 2
+                                 !! 3 = Use Kemanian tillage method to use if cswat = 2
+                                 !! 4 = Use dndc tillage method to use if cswat = 2
 
       end type basin_control_codes
       type (basin_control_codes) :: bsn_cc
@@ -82,8 +82,8 @@
         real :: surlag = 4.0        !! days          |surface runoff lag time (days)
         real :: adj_pkr = 1.0       !! none          |peak rate adjustment factor in the subbasin
         real :: prf = 484.          !! peak rate factor for peak rate equation
-        real :: spcon = 0.0         !! not used
-        real :: spexp = 0.0         !! not used
+        real :: pestgwfact = 0.     !! pesticide groundwater mixing factor
+        real :: temp_decay = 0.     !! pesticide temperature decay factor (0-1) - fraction increase in decay rate per degree C increase in temp
         real :: cmn = 0.003         !! rate factor for mineralization on active org N - 0.0003 -> 0.003
         real :: n_updis = 20.0      !! nitrogen uptake dist parm
         real :: p_updis = 20.0      !! phosphorus uptake dist parm
@@ -274,16 +274,14 @@
       
       !! basin sediment budget
       type basin_sediment_budget
-        real :: upland_t = 0.          !! total upland sediment yield - all land uses - tons
-        real :: ch_ebank_t = 0.        !! total bank erosion - all stream orders - tons
-        real :: up_ch_rto = 0.         !! upland/channel ratio
-        real :: ch_w_yr = 0.           !! basin average widths per year
-        real :: fp_dep_t = 0.          !! total flood plain deposition - stream orders - tons
-        real :: fp_dep_mm = 0.         !! basin flood plain deposition - mm/year
-        real :: res_dep_t = 0.         !! total reservoir deposition - all reservoirs - tons
-        real :: res_trap_eff = 0.      !! average reservoir trap efficiency - all reservoirs
+        real :: upland_t = 0.          !! tons       |total upland sediment yield - all land uses
+        real :: ebank_t = 0.           !! tons       |total bank erosion - all stream orders
+        real :: ebtm_t = 0.            !! tons       |total bed down cutting - all stream orders
+        real :: fp_t = 0.              !! tons       |total flood plain deposition - all stream orders
+        real :: res_dep_t = 0.         !! tons       |total reservoir deposition - all reservoirs
+        real :: wet_dep_t = 0.         !! tons       |total wetland deposition - all wetlands
       end type basin_sediment_budget
-      type (basin_sediment_budget) :: bsn_sedbud
+      type (basin_sediment_budget) :: bsn_sedbud, bsn_sedbudm, bsn_sedbudy, bsn_sedbuda, bsn_sedbudz
       
       type mgt_header         
           character (len=12) :: hru =       "        hru"
@@ -438,6 +436,14 @@
       end type basin_yld_header
       type (basin_yld_header) :: bsn_yld_hdr
 
+      interface operator (+)
+        module procedure bsn_sedbud_add
+      end interface
+      
+      interface operator (/)
+        module procedure bsn_sedbud_div
+      end interface
+      
       contains
 
       function print_prt_error(name) result (r)
@@ -449,4 +455,30 @@
          error stop
       end function
       
+      !! routines for basin module
+
+      function bsn_sedbud_add(bsn1,bsn2) result (bsn3)
+      type (basin_sediment_budget),  intent (in) :: bsn1
+      type (basin_sediment_budget),  intent (in) :: bsn2
+      type (basin_sediment_budget) :: bsn3
+       bsn3%upland_t = bsn1%upland_t + bsn2%upland_t
+       bsn3%ebank_t = bsn1%ebank_t + bsn2%ebank_t
+       bsn3%ebtm_t = bsn1%ebtm_t + bsn2%ebtm_t
+       bsn3%fp_t = bsn1%fp_t + bsn2%fp_t
+       bsn3%res_dep_t = bsn1%res_dep_t + bsn2%res_dep_t
+       bsn3%wet_dep_t = bsn1%wet_dep_t + bsn2%wet_dep_t
+      end function bsn_sedbud_add
+      
+      function bsn_sedbud_div (bsn1,const) result (bsn2)
+        type (basin_sediment_budget), intent (in) :: bsn1
+        real, intent (in) :: const
+        type (basin_sediment_budget) :: bsn2
+        bsn2%upland_t = bsn1%upland_t / const
+        bsn2%ebank_t = bsn1%ebank_t / const
+        bsn2%ebtm_t = bsn1%ebtm_t / const
+        bsn2%fp_t = bsn1%fp_t / const
+        bsn2%res_dep_t = bsn1%res_dep_t / const
+        bsn2%wet_dep_t = bsn1%wet_dep_t / const
+      end function bsn_sedbud_div
+        
       end module basin_module

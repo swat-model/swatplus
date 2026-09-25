@@ -25,7 +25,7 @@
       !! rows for one soil must be CONTIGUOUS and in ASCENDING depth order --
       !! soils_test_adjust walks the array that way to find each layer's top depth.
       !!
-      !! the file is read only when codes.bsn carbon = 1, and only when it exists.
+      !! the file is read only when codes.bsn carbon = 2, and only when it exists.
       !! it is discovered via inquire and has no entry in file.cio, the same as
       !! carbon_lyr.bsn and carbon_layers.prt. when it is absent sol_test is left
       !! unallocated and soils_init skips soils_test_adjust entirely.
@@ -55,16 +55,13 @@
 
       nmbr_soil_test_layers = 0
 
-      !! discrete per-mode branching, not a negated test: project convention is that a
-      !! future cswat mode must fail loudly rather than be silently absorbed by a negated
-      !! test. carbon_bsn_read (proc_bsn) has already rejected any mode other than 0 or 1.
       select case (bsn_cc%cswat)
       case (0)
         return                     !! static soil carbon -- soil_test.sol is not used
-      case (1)
+      case (2)
         continue                   !! CENTURY -- read soil_test.sol below
       case default
-        return                     !! unreachable; carbon_bsn_read error stops first
+        return
       end select
 
       !! the file is optional -- an absent soil_test.sol simply means no soil tests

@@ -10,6 +10,8 @@
       use mgt_operations_module
       use constituent_mass_module
       use carbon_module
+      use pesticide_data_module, only : pestdb
+      use output_ls_pesticide_module
       
       implicit none
      
@@ -23,8 +25,8 @@
       integer :: ipl = 0                !none               |counter
       real :: clippst = 0.              !kg pst/ha          |pesticide in clippings
       real :: yldpst = 0.               !kg pst/ha          |pesticide removed in yield
-      real :: hi_tot = 0.               !kg/ha)/(kg/ha)     |total harvest index = hi_ovr * harveff
-      real :: hi_ovr = 0.               !kg/ha)/(kg/ha)     |harvest index target specified at harvest
+      real :: hi_tot = 0.               !(kg/ha)/(kg/ha)     |total harvest index = hi_ovr * harveff
+      real :: hi_ovr = 0.               !(kg/ha)/(kg/ha)     |harvest index target specified at harvest
       real :: harveff = 0.              !0-1                |harvest efficiency
       real :: clip = 0.                 !0-1                |1.-harveff
       real :: yld_rto = 0.              !0-1            |yield to total biomass ratio
@@ -54,20 +56,49 @@
       
       !! adjust foliar and internal pesticide for plant removal
       do k = 1, cs_db%num_pests
-        !! calculate amount of pesticide removed with yield and clippings
-        yld_rto = (hi_tot * pl_mass(j)%ab_gr(ipl)%m) / pl_mass(j)%tot(ipl)%m
+        if (pl_mass(j)%tot(ipl)%m > 1.e-6) then
+          yld_rto = (hi_tot * pl_mass(j)%ab_gr(ipl)%m) / pl_mass(j)%tot(ipl)%m
+          yld_rto = Min(yld_rto, 1.)
+        else
+          yld_rto = 0.
+        end if
         yldpst = yld_rto * (cs_pl(j)%pl_in(ipl)%pest(k) + cs_pl(j)%pl_on(ipl)%pest(k))
-        cs_pl(j)%pl_in(ipl)%pest(k) = cs_pl(j)%pl_in(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_in(ipl)%pest(k)
+        hpestb_d(j)%pest(k)%harv_export = hpestb_d(j)%pest(k)%harv_export + yldpst
+        !! BUG FIX: original code kept yld_rto fraction instead of (1-yld_rto)
+        cs_pl(j)%pl_in(ipl)%pest(k) = (1. - yld_rto) * cs_pl(j)%pl_in(ipl)%pest(k)
         cs_pl(j)%pl_in(ipl)%pest(k) = Max (0., cs_pl(j)%pl_in(ipl)%pest(k))
-        cs_pl(j)%pl_on(ipl)%pest(k) = cs_pl(j)%pl_on(ipl)%pest(k) - (1. - yld_rto) *    &
-                                                           cs_pl(j)%pl_on(ipl)%pest(k)
+        cs_pl(j)%pl_on(ipl)%pest(k) = (1. - yld_rto) * cs_pl(j)%pl_on(ipl)%pest(k)
         cs_pl(j)%pl_on(ipl)%pest(k) = Max (0., cs_pl(j)%pl_on(ipl)%pest(k))
 
-        clippst = (1. - harveff) * (cs_pl(j)%pl_in(ipl)%pest(k) + cs_pl(j)%pl_on(ipl)%pest(k))
+        !! pl_on clippings always return to soil regardless of sink flag
+        !! (foliar pesticide — not part of the internal uptake pathway)
+        clippst = (1. - harveff) * cs_pl(j)%pl_on(ipl)%pest(k)
         if (clippst < 0.) clippst = 0.
         !! add pesticide in clippings to soil surface
         cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + clippst
+        !! pl_in clippings: return to soil for non-sink only
+        !! for sink: pl_in clippings are permanently immobilized in removed biomass
+        !! and do not return to soil (intentional — this fraction exits the active cycle)
+        if (pestdb(cs_db%pest_num(k))%harvest_sink < 0.5) then
+          clippst = (1. - harveff) * cs_pl(j)%pl_in(ipl)%pest(k)
+          if (clippst < 0.) clippst = 0.
+          !! track internal pesticide returned to soil from harvest clipping
+          hpestb_d(j)%pest(k)%kill_ret = hpestb_d(j)%pest(k)%kill_ret + clippst
+          cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + clippst
+        else
+          !! sink: internal clipping mass is terminally removed from field,
+          !! track it as harvest export (no return to soil)
+          !! this is a guard that should not need to be triggered as pl_in is not
+          !! populated when sink is 1
+          clippst = (1. - harveff) * cs_pl(j)%pl_in(ipl)%pest(k)
+          if (clippst < 0.) clippst = 0.
+          hpestb_d(j)%pest(k)%harv_export = hpestb_d(j)%pest(k)%harv_export + clippst
+        end if
+        !! BUG FIX: remove clipping fraction from plant storage
+        !! Previously, clippst was added to cs_soil but never removed from cs_pl,
+        !! duplicating mass. After clipping, only harveff fraction remains on plant.
+        cs_pl(j)%pl_in(ipl)%pest(k) = harveff * cs_pl(j)%pl_in(ipl)%pest(k)
+        cs_pl(j)%pl_on(ipl)%pest(k) = harveff * cs_pl(j)%pl_on(ipl)%pest(k)
       end do   
       
       !! update remaining plant organic pools

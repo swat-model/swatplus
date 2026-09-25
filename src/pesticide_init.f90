@@ -29,8 +29,11 @@
         real :: pl_frac = 0.       !0-1           |fraction of pesticide applied to each plant
         
       !! allocate hru pesticides
+      npmx = cs_db%num_pests
+      if (npmx == 0) return
+      
+      allocate (csmix%pest(npmx))
       do ihru = 1, sp_ob%hru
-        npmx = cs_db%num_pests
         if (npmx > 0) then
           nly = soil(ihru)%nly
           npl = pcom(ihru)%npl
@@ -40,15 +43,11 @@
           allocate (cs_pl(ihru)%pl_up(npl))
           do ly = 1, nly
             allocate (cs_soil(ihru)%ly(ly)%pest(npmx), source = 0.)
-            cs_soil(ihru)%ly(ly)%pest = 0.
           end do
           do ipl = 1, npl
             allocate (cs_pl(ihru)%pl_in(ipl)%pest(npmx), source = 0.)
-            cs_pl(ihru)%pl_in(ipl)%pest = 0.
             allocate (cs_pl(ihru)%pl_on(ipl)%pest(npmx), source = 0.)
-            cs_pl(ihru)%pl_on(ipl)%pest = 0.
             allocate (cs_pl(ihru)%pl_up(ipl)%pest(npmx), source = 0.)
-            cs_pl(ihru)%pl_up(ipl)%pest = 0.
           end do
           allocate (cs_irr(ihru)%pest(npmx))
           cs_irr(ihru)%pest = 0.

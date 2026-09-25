@@ -382,7 +382,7 @@
         !! _tot file gated specifically by cb_snap_hru%a (begsim + endsim rows).
         if (pco%cb_snap_hru%a == "y") then
           call open_cb_wide_pair(4601, 4605, "hru_soil_snap_tot.txt", "hru_soil_snap_tot.csv", soil_snap_vars)
-          if (bsn_cc%cswat == 1) call soil_nutcarb_write(" b")  !! emit begsim row to hru_soil_snap_tot
+          if (bsn_cc%cswat == 2) call soil_nutcarb_write(" b")  !! emit begsim row to hru_soil_snap_tot
         end if
 
         !! hru_plc_stat: HRU-level plant carbon state (no layers).
@@ -391,8 +391,8 @@
         if (pco%cb_plt_hru%y == "y") call open_cb_flat_pair(4576, 4580, "hru_plc_stat_yr.txt",  "hru_plc_stat_yr.csv",  ["total_c    ","ab_gr_c    ","leaf_c     ","stem_c     ","seed_c     ","root_c     ","surf_rsd_c "])
         if (pco%cb_plt_hru%a == "y") call open_cb_flat_pair(4577, 4581, "hru_plc_stat_aa.txt",  "hru_plc_stat_aa.csv",  ["total_c    ","ab_gr_c    ","leaf_c     ","stem_c     ","seed_c     ","root_c     ","surf_rsd_c "])
 
-        !! The remaining 4 families require the carbon model (cswat==1).
-        if (bsn_cc%cswat == 1) then
+        !! The remaining 4 families require the carbon model (cswat==2).
+        if (bsn_cc%cswat == 2) then
           !! hru_cflux_stat: per-layer C and N fluxes (37 vars)
           if (pco%cb_flux_hru%d == "y") call open_cb_wide_pair(4558, 4562, "hru_cflux_stat_day.txt", "hru_cflux_stat_day.csv", cflux_vars)
           if (pco%cb_flux_hru%m == "y") call open_cb_wide_pair(4559, 4563, "hru_cflux_stat_mon.txt", "hru_cflux_stat_mon.csv", cflux_vars)

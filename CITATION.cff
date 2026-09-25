@@ -10,7 +10,6 @@ type: software
 authors:
   - given-names: Jeffrey G.
     family-names: Arnold
-    email: jeff.arnold@usda.gov
     affiliation: >-
       Grassland Soil and Water Research Laboratory, USDA
       Agricultural Research Service (ARS)
@@ -100,16 +99,16 @@ authors:
     affiliation: >-
       Department of Civil and Environmental Engineering,
       Colorado State University, Fort Collins, USA
-  - given-names: Kieu N.
-    family-names: Le
-    email: kle@fieldtomarket.org
+  - given-names: Celray J.
+    family-names: Chawanda
+    email: celray.chawanda@tamu.edu
     affiliation: >-
-      Field to Market: The Alliance for Sustainable
-      Agriculture
-    orcid: 'https://orcid.org/0000-0002-1662-4796'
+      Blackland Research & Extension Center, Texas A&M
+      Agrilife Research, Temple, USA
+    orcid: 'https://orcid.org/0000-0002-8880-9431'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.14983534
+    value: 10.5281/zenodo.22919722
     description: Current release
 repository-code: 'https://github.com/swat-model/swatplus'
 url: 'https://swatplus.gitbook.io/docs'

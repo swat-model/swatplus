@@ -90,4 +90,5 @@ refdata/clean_files.sh
 
 [Tt]mp/
 /workdata
+enc_temp_folder/
 /analysis/

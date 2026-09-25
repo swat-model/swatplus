@@ -50,11 +50,11 @@
       do isrc=1,irrig_nsource
       
         !determine the object type and object number (of water source)
-        irrig_type = wallo(iwallo)%trn(itrn)%src(isrc)%typ
-        irrig_ob = wallo(iwallo)%trn(itrn)%src(isrc)%num
+        !irrig_type = wallo(iwallo)%trn(itrn)%src(isrc)%typ
+        !irrig_ob = wallo(iwallo)%trn(itrn)%src(isrc)%num
         
         !total water volume (m3) removed from source object
-        irrig_volume = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
+        !irrig_volume = wallod_out(iwallo)%trn(itrn)%src(isrc)%withdr
         
         !calculate salt mass added to soil profile via irrigation (and salt mass removed from source object)
         if(irrig_volume > 0) then
