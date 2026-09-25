@@ -76,7 +76,6 @@
       mix_mn = mnz
       mix_mp = mpz
       mix_org%tot = orgz
-      mix_org%rsd = rsd_originz
       mix_org%hact = orgz
       mix_org%hsta = orgz
       mix_org%hs = orgz
@@ -105,10 +104,12 @@
       mix_sand = 0.
       lyr_exit = 0
 
-      allocate (sol_mass(soil(jj)%nly), source = 0.)    
-      allocate (sol_msm(soil(jj)%nly), source = 0.)    
-      allocate (sol_msn(soil(jj)%nly), source = 0.)    
-      allocate (frac_dep(soil(jj)%nly),source = 0.)    
+      allocate (sol_mass(soil(jj)%nly), source = 0.)
+      allocate (sol_msm(soil(jj)%nly), source = 0.)
+      allocate (sol_msn(soil(jj)%nly), source = 0.)
+      allocate (frac_dep(soil(jj)%nly),source = 0.)
+      allocate (mix_org%rsd(pcom(jj)%npl))  
+      mix_org%rsd(:) = rsd_originz
 
       if (bmix_eff > 1.e-6) then
         kk = soil(jj)%nly
@@ -307,9 +308,10 @@
           endif
         endif
       endif
-      deallocate (sol_mass)    
-      deallocate (sol_msm)    
-      deallocate (sol_msn)    
-      deallocate (frac_dep)    
+      deallocate (sol_mass)
+      deallocate (sol_msm)
+      deallocate (sol_msn)
+      deallocate (frac_dep)     
+      deallocate (mix_org%rsd)
       return
       end subroutine mgt_biomix

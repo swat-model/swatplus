@@ -172,7 +172,7 @@
         aqu_d(iaq)%stor = 1000. * (aqu_dat(iaq)%dep_bot - aqu_d(iaqdb)%dep_wt) * aqu_dat(iaq)%spyld
         !! convert ppm -> kg    (m3=10*mm*ha)     kg=m3*ppm/1000
         aqu_d(iaq)%no3_st = (10. * aqu_d(iaq)%flo * aqu_prm(iaq)%area_ha) * aqu_dat(iaq)%no3 / 1000.
-        aqu_d(iaq)%minp = 0.
+        aqu_d(iaq)%minp = (10. * aqu_d(iaq)%flo * aqu_prm(iaq)%area_ha) * aqu_dat(iaq)%minp / 1000.
         aqu_d(iaq)%cbn = aqu_dat(iaq)%cbn
         aqu_d(iaq)%rchrg = 0.
         aqu_d(iaq)%seep = 0.

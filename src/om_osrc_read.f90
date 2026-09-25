@@ -14,7 +14,7 @@
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
-
+      integer :: i = 0                !none       |counter
       integer :: iom_osrc = 0
       
       eof = 0
@@ -33,7 +33,7 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) imax
         read (107,*,iostat=eof) header
-        db_mx%om_treat = imax
+        db_mx%om_src = imax
         if (eof < 0) exit
         
         allocate (osrc_om(imax))

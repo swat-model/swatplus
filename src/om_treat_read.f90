@@ -14,6 +14,7 @@
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
+      integer :: i = 0                !none       |counter
       integer :: iom_tr = 0
       
       eof = 0

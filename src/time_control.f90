@@ -53,7 +53,6 @@
       use output_ls_pesticide_module
       use water_body_module
       use water_allocation_module
-      !use reservoir_data_module
       
       implicit none
       
@@ -82,6 +81,8 @@
       integer :: day_mo = 0          !              |
       integer :: imallo = 0
       integer :: ires = 0
+      integer :: ipou = 0
+      integer :: ipod = 0
       real :: rnum = 0.              !none          |channel count per stream order (>= 1 to avoid 0/0)
 
       time%yrc = time%yrc_start
@@ -217,13 +218,6 @@
           !! initialize variables at beginning of day for hru's
           if (sp_ob%hru > 0) call sim_initday
 
-          !! initialize variables at beginning of day for water allocation
-          !! zero demand, withdrawal, and unmet for entire allocation object
-          wallo(:)%tot = walloz
-          !! zero water treatment and use outflow in case they receive water multiple times
-          if (allocated(wtp_om_out)) wtp_om_out(:) = hz
-          if (allocated(wuse_om_out)) wuse_om_out(:) = hz
-
           if (time%yrs > pco%nyskip) ndmo(time%mo) = ndmo(time%mo) + 1
 
           call climate_control      !! read in/generate weather
@@ -247,6 +241,20 @@
             end do
           end if
           
+          !! zero irrigation data here in case water allocation is used
+          irrig(:)%runoff = 0.
+          irrig(:)%applied = 0.
+          irrig(:)%eff = 0.
+          irrig(:)%demand = 0.
+          
+          !! zero sediment budget outputs for the day
+          bsn_sedbud = bsn_sedbudz
+          ch_morph(:) = ch_morphz
+          ch_morph_ord(:) = ch_morphz
+              
+          !! allocation at start of day - withdrawal from outside source, water tower and canals
+          if (db_mx%wallo_pou > 0) call wallo_start_day
+
           call command              !! command loop 
           
           ! reset base0 heat units and yr_skip at end of year for southern hemisphere
@@ -370,81 +378,19 @@
           end if
         end do      
 
+        !! reset annual maximum withdrawals if decision table isn't used
+        do ipou = 1, db_mx%wallo_pou
+          do ipod = 1, pou(ipou)%pods
+            if (pou(ipou)%pod(ipod)%dtbl_wdraw == "null") then
+              pou(ipou)%pod(ipod)%wdraw_cur = 0.
+            end if
+          end do
+        end do
+          
         !! update simulation year
         time%yrc = time%yrc + 1
       end do            !!     end annual loop
       
-      !! write channel morphology - downcutting and widening
-      bsn_sedbud%upland_t = bls_a%sedyld * bsn%area_ls_ha
-      
-      do ich = 1, sp_ob%chandeg
-        iord = sd_ch(ich)%order
-        !! sum tons by stream order - w_yr, d_yr and fp_mm are still in tons
-        ch_morph_ord(iord)%num = ch_morph_ord(iord)%num + 1
-        
-        !! compute w_yr, d_yr and fp dep in mm
-        ch_morph(ich)%w_yr = ch_morph(ich)%ebank_m / sd_ch(ich)%chw / time%yrs_prt
-        ch_morph(ich)%d_yr = ch_morph(ich)%ebtm_m / sd_ch(ich)%chd / time%yrs_prt
-        !! mm = t / (3.*bd*w*l) -> assume fp width = 3*chw; len(m)=1000.*km; bd=1.0 t/m3; mm=1000.*m
-        ch_morph(ich)%fp_mm = ch_morph(ich)%fp_t / (3. * sd_ch(ich)%chw *           &
-                                                sd_ch(ich)%chl) / time%yrs_prt
-        
-        !! basin flood plain deposition and bank erosion
-        bsn_sedbud%fp_dep_t = bsn_sedbud%fp_dep_t + ch_morph(ich)%fp_t
-        bsn_sedbud%ch_ebank_t = bsn_sedbud%ch_ebank_t + ch_morph(ich)%ebank_t
-        ch_morph_ord(iord)%fp_t = ch_morph_ord(iord)%fp_t + ch_morph(ich)%fp_t
-        
-        !! sum to compute average per year
-        ch_morph_ord(iord)%ebank_t = ch_morph_ord(iord)%ebank_t + ch_morph(ich)%ebank_t
-        ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr + ch_morph(ich)%w_yr
-        ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr + ch_morph(ich)%d_yr
-        ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm + ch_morph(ich)%fp_mm
-        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr + ch_morph(ich)%w_yr
-        
-        iob = sp_ob1%chandeg + ich - 1
-        !! ch_budget.txt
-        write (8000,*) ich, ob(iob)%name, ob(iob)%area_ha, sd_ch(ich)%chw,  &
-                ch_morph(ich)%w_yr, sd_ch(ich)%chd, ch_morph(ich)%d_yr,      &
-                                                      ch_morph(ich)%fp_mm
-      end do
-      
-      !! average and write by stream order
-      !! use max(num,1) as divisor: orders with no channels have zero numerators,
-      !! so 0/1 = 0. avoids vectorized 0.0/0.0 that traps under ifx -fpe0
-      if (sp_ob%chandeg > 0) then
-        do iord = 1, 12
-          rnum = real(max(ch_morph_ord(iord)%num, 1))
-          ch_morph_ord(iord)%w_yr = ch_morph_ord(iord)%w_yr / rnum
-          ch_morph_ord(iord)%d_yr = ch_morph_ord(iord)%d_yr / rnum
-          ch_morph_ord(iord)%fp_mm = ch_morph_ord(iord)%fp_mm / rnum
-        end do
-      end if
-      
-      !! write ch_order_sed.txt
-      if (sp_ob%chandeg > 0) then
-        do iord = 1, 12
-          write (8001,*) iord, ch_morph_ord(iord)%num, ch_morph_ord(iord)%ebank_t,     &
-            ch_morph_ord(iord)%w_yr, ch_morph_ord(iord)%fp_t, ch_morph_ord(iord)%fp_mm
-        end do
-      end if
-      
-      !! upland/channel sediment ratio
-      if (bsn_sedbud%ch_ebank_t > 0.) then
-        bsn_sedbud%up_ch_rto = bsn_sedbud%upland_t / bsn_sedbud%ch_ebank_t
-        bsn_sedbud%ch_w_yr = bsn_sedbud%ch_w_yr / sp_ob%chandeg
-      end if
-      
-      do ires= 1, sp_ob%res
-        !! write reservoir trap efficiencies
-        if (res_in_a(ires)%sed > 1.e-6) then
-          res_trap(ires)%sed =  res_out_a(ires)%sed /  res_in_a(ires)%sed
-          bsn_sedbud%res_dep_t = bsn_sedbud%res_dep_t + res_in_a(ires)%sed - res_out_a(ires)%sed
-          bsn_sedbud%res_trap_eff = bsn_sedbud%res_trap_eff + res_trap(ires)%sed
-          !iob = sp_ob1%res + ires - 1
-          !write (7778,*) ires, ob(iob)%name, ob(iob)%area_ha, res_trap(ires)
-        end if
-      end do
-          
       !! ave annual calibration output and reset time for next simulation
       call calsoft_ave_output
       yrs_print = time%yrs_prt

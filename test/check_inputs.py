@@ -2087,7 +2087,7 @@ def main():
         epilog=__doc__,
     )
     ap.add_argument("dataset_dir", nargs="?", default=None,
-                     help="dataset directory to check (e.g. workdata/IA-Clayton_Test_Case). "
+                     help="dataset directory to check (e.g. workdata/Clayton). "
                           "Omit to just build and summarize the source-derived schema index.")
     ap.add_argument("--repo", default=".", help="path to the swatplus repo root (default: .)")
     ap.add_argument("--file", default=None, help="only check this one input filename")

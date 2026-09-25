@@ -25,6 +25,7 @@
       type (aquifer_database), dimension(:), allocatable :: aqu_dat
       
       type aquifer_data_parameters
+        integer :: wallo_pod = 0            !POD (point of diversion) number for water allocation - 0 if not POD
         real :: area_ha = 0.     !ha         |surface area of aquifer
         real :: alpha_e = 0.     !days       |Exp(-alpha)
         real :: nloss = 0.       !frac       |nloss based on half life
@@ -34,14 +35,14 @@
       type (aquifer_data_parameters), dimension(:), allocatable :: aqu_prm 
 
       type aquifer_dynamic
-        real :: flo = 0.        !mm         |lateral flow from aquifer      
+        real :: flo = 0.        !mm         |lateral flow from aquifer
         real :: dep_wt = 0.     !m          |average depth from average surface elevation to water table
         real :: stor = 0.       !mm         |average water storage in aquifer in timestep
         real :: rchrg = 0.      !mm         |recharge entering aquifer from other objects
         real :: seep = 0.       !mm         |seepage from bottom of aquifer
         real :: revap = 0.      !mm         |plant water uptake and evaporation
         real :: no3_st = 0.     !kg/ha N    |current total NO3-N mass in aquifer 
-        real :: minp = 0.       !kg/ha P    |mineral phosphorus transported in return (lateral) flow 
+        real :: minp = 0.       !kg/ha P    |mineral phosphorus mass in aquifer  
         real :: cbn = 0.        !percent    |organic carbon in aquifer - currently static
         real :: orgn = 0.       !kg/ha P    |organic nitrogen in aquifer - currently static
         real :: no3_rchg = 0.   !kg/ha N    |nitrate NO3-N flowing into aquifer from another object  
