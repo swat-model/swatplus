@@ -14,6 +14,7 @@
       integer :: idp = 0            !                   |
       real :: rto = 0.              !none               |ratio of current years of growth:years to maturity of perennial
       real :: phumax = 0.
+      real :: plt_zmx = 0.          !mm                 |this plant's maximum rooting depth
              
       idp = pcom(j)%plcur(ipl)%idplt
 
@@ -24,7 +25,13 @@
       else
         pcom(j)%plg(ipl)%root_dep = 2.5 * pcom(j)%plcur(ipl)%phuacc_p * 1000. * pldb(idp)%rdmx
       end if
-      if (pcom(j)%plg(ipl)%root_dep > soil(j)%zmx) pcom(j)%plg(ipl)%root_dep = soil(j)%zmx
+      !! the expression above reaches rdmx at phuacc = 0.4 and overshoots it
+      !! 2.5-fold by maturity, so it must be capped by BOTH this plant's own
+      !! maximum rooting depth and the soil profile depth. Capping on soil%zmx
+      !! alone relied on mgt_plantop having lowered soil%zmx to the plant's
+      !! rdmx, which made the limit cumulative across a rotation.
+      plt_zmx = 1000. * pldb(idp)%rdmx
+      pcom(j)%plg(ipl)%root_dep = amin1 (pcom(j)%plg(ipl)%root_dep, plt_zmx, soil(j)%zmx)
       if (pcom(j)%plg(ipl)%root_dep < 25.4) pcom(j)%plg(ipl)%root_dep = 25.4
 
       !! calculate total root mass

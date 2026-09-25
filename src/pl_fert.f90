@@ -92,10 +92,14 @@
                        fertdb(ifrt)%forgp
 
         !! for stable carbon - add n and p to active humus pool
+        !! NOTE: cswat==0 branch only; the abg/blg split is not used here (no CENTURY lignin
+        !! partitioning on this path), so incorporated manure N/P is placed in abg purely for
+        !! type-correctness. Origin is immaterial to cswat==0 results. Revisit if manure ever
+        !! needs an origin under the CENTURY path (cswat==2).
         if (bsn_cc%cswat == 0) then
-          soil1(j)%pl(1)%rsd(l)%n = soil1(j)%pl(1)%rsd(l)%n + rtof * fr_ly *            &
+          soil1(j)%pl(1)%rsd(l)%abg%n = soil1(j)%pl(1)%rsd(l)%abg%n + rtof * fr_ly *            &
                        frt_kg * fertdb(ifrt)%forgn
-          soil1(j)%pl(1)%rsd(l)%p = soil1(j)%pl(1)%rsd(l)%p + rtof * fr_ly * frt_kg *   &
+          soil1(j)%pl(1)%rsd(l)%abg%p = soil1(j)%pl(1)%rsd(l)%abg%p + rtof * fr_ly * frt_kg *   &
                        fertdb(ifrt)%forgp
           soil1(j)%hact(l)%n = soil1(j)%hact(l)%n + (1. - rtof) * fr_ly *               &
                        frt_kg * fertdb(ifrt)%forgn
@@ -122,6 +126,9 @@
           
           !! add lignin manure pool
           soil1(j)%lig(l) = soil1(j)%lig(l) + 0.175 * pool_fr * org_frt
+          !! add nonlignin structural C (str%c = nonlig%c + lig%c is reconstituted
+          !! in cbn_zhang2; without this ~82.5% of the fertilizer structural C is lost)
+          soil1(j)%nonlig(l)%c = soil1(j)%nonlig(l)%c + (1. - 0.175) * pool_fr * org_frt%c
           
           !! total residue pool is metabolic + structural
           ! soil1(j)%rsd(l) = soil1(j)%meta(l) + soil1(j)%str(l)

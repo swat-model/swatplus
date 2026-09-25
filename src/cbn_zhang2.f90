@@ -21,21 +21,27 @@
         !!==============================================
         !! local variables
        !rnmn
-       !abco2   : allocation from biomass to co2; 0.6 (surface litter), 0.85 * 0.68*(claf + silf) (all other layers) (parton et al., 1993, 1994)
+       !NOTE: In SWAT+, layer 1 (k==1) is a real soil layer, NOT swat-c's surface-litter layer.
+       !      The "k==1 / deeper" allocation values below are what this routine actually assigns
+       !      in the k==1 branch (around line 448); they are mostly soil-layer values, so the
+       !      swat-c surface-litter constants (parton et al., 1993, 1994) that the comments here
+       !      used to quote do NOT apply to SWAT+ layer 1. Retained surface-tuned settings are
+       !      the faster decomposition rates (bmr, lmr, lsr) and xbm=1, nchp=0.1.
+       !abco2   : allocation from biomass to co2; k==1 = 0.55; deeper layers = 0.17 + 0.0068*sand
        !abl     : carbon allocation from biomass to leaching; abl = (1-exp(-f/(0.01* sw+ 0.1*(kdbm)*db)) (williams, 1995)
-       !abp     : allocation from biomass to passive humus; 0 (surface litter), 0.003 + 0.032*claf (all other layers) (parton et al., 1993, 1994)
-       !almco2  : allocation from metabolic litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
+       !abp     : allocation from biomass to passive humus; all layers = 0.003 + 0.00032*clay
+       !almco2  : allocation from metabolic litter to co2; all layers = 0.55 (applied via a1co2)
        !alslco2 : allocation from lignin of structural litter to co2; 0.3 (parton et al., 1993, 1994)
-       !alslnco2: allocation from non-lignin of structural litter to co2; 0.6 (surface litter), 0.55 (all other layers) (parton et al., 1993, 1994)
+       !alslnco2: allocation from non-lignin of structural litter to co2; all layers = 0.55 (applied via a1co2)
        !apco2   : allocation from passive humus to co2; 0.55 (parton et al., 1993, 1994)
        !asco2   : allocation from slow humus to co2; 0.55 (parton et al., 1993, 1994)
-       !asp     : allocation from slow humus to passive; 0 (surface litter), 0.003-0.009*claf (all other layers) (parton et al., 1993, 1994)
+       !asp     : allocation from slow humus to passive; all layers = max(0.001, 0.05 - 0.00009*clay)
        !bmc     : mass of c in soil microbial biomass and associated products (kg ha-1)
        !bmctp   : potential transformation of c in microbial biomass (kg ha-1 day-1)
        !bmn     : mass of n in soil microbial biomass and associated products (kg ha-1)
        !bmntp   : potential transformation of n in microbial biomass (kg ha-1 day-1)
        !bmr     : rate of transformation of microbial biomass and associated products under optimal
-       !            conditions (surface = 0.0164 day-1; all other layers = 0.02 day-1) (parton et al., 1993, 1994)       
+       !            conditions (layer 1/topsoil = 0.0164 day-1; all other layers = 0.02 day-1) (parton et al., 1993, 1994)
        !cf      : carbon fraction of organic materials 0.42; from data of pinck et al., 1950)
        !cdg     : soil temperature control on biological processes
        !cnr     : c/n ratio of standing dead
@@ -58,7 +64,7 @@
        !lmf     : fraction of the litter that is metabolic    
        !lmnf    : fraction of metabolic litter that is n (kg kg-1)  
        !lmr     : rate of transformation of metabolic litter under optimal conditions (surface =
-                !0.0405 day-1; all other layers = 0.0507 day-1) (parton et al., 1994)
+                !0.0405 day-1 (layer 1/topsoil); all other layers = 0.0507 day-1) (parton et al., 1994)
        !lmctp   : potential transformation of c in metabolic litter (kg ha-1 day-1)
        !lmntp   : potential transformation of n in metabolic litter (kg ha-1 day-1)
        !lsctp   : potential transformation of c in structural litter (kg ha-1 day-1)
@@ -74,7 +80,7 @@
        !lslncta : actual transformation of c in nonlignin structural litter (kg ha-1 day-1)  
        !lsntp   : actual transformation of n in structural litter (kg ha-1 day-1)
        !lsr     : rate of potential transformation of structural litter under optimal conditions
-                !(surface = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
+                !(layer 1/topsoil = 0.0107 day-1; all other layers= 0.0132 day-1) (parton et al., 1994)
        !ncbm    : n/c ratio of biomass
        !nchp    : n/c ratio passive humus
        !nchs    : n/c ratio of the slow humus
@@ -97,17 +103,23 @@
        !sut     : soil water control on biological processes 
        !x1      : tillage control on residue decomposition (not used)
        !xbmt    : control on transformation of microbial biomass by soil texture and structure.
-                !its values: surface litter layer = 1; all other layers = 1-0.75*(silf + claf) (parton et al., 1993, 1994)
+                !its values: layer 1/topsoil = 1; all other layers = 0.25 + 0.0075*sand [= 1-0.75*(silf+claf)] (parton et al., 1993, 1994)
        !xlslf   : control on potential transformation of structural litter by lignin fraction
                 !of structural litter [xlslf = exp(-3* lslf) (parton et al., 1993, 1994)]
        !prmt_51 !coef adjusts microbial activity function in top soil layer (0.1_1.)
        
        integer :: j = 0          !                     |number of hru
        integer :: k = 0          !none                 |counte
-       integer :: kk = 0         !                     |
-       real :: lmnta = 0      !                     |      
-       real :: min_n_ppm = 0  !                     |
-       real :: min_n = 0      !                     |
+       real :: lmnta = 0         !                     |      
+       integer :: kk = 0         !                     | soil layer index if k > 1 else kk = 2
+       real :: min_n_ppm = 0     !                     |
+       real :: min_n = 0         !                     |
+       !! no initializers on the three below: an initializer implies SAVE, which is a
+       !! shared-state hazard under threading (see tmp/threading_playbook.md Part 20).
+       !! all three are assigned before first read in the immobilization block.
+       real :: imm_dmd           !kg N/ha              |immobilization demand for the layer-day
+       real :: imm_nh4           !kg N/ha              |immobilization actually drawn from nh4
+       real :: imm_no3           !kg N/ha              |immobilization actually drawn from no3
        integer :: cf_lyr         !                     |which layer of coefs to use in carbon_coef.cbn
        real :: soil_lyr_thickness !mm
        real :: sol_mass = 0.     !                     |
@@ -191,6 +203,9 @@
        real :: w1  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
        real :: w2  = 0.          !                     | intermediate variable in watf == 2 calculations for water factor (sut)
        real :: svoid = 0.        !                     | the amount voids in soil layer after accounting for water content.
+       real :: mid_depth = 0.    !mm                   | depth to the middle of the soil layer
+
+
        !! initialize local variables
        deltawn = 0.
        deltabmc = 0.   
@@ -325,7 +340,7 @@
 
           if (org_con%watf == 1) then
             if (wc - soil(j)%phys(k)%wpmm < 0.) then
-              org_con%sut = .1 * (soil(j)%phys(kk)%st /soil(j)%phys(k)%wpmm) ** 2
+              org_con%sut = .1 * (soil(j)%phys(k)%st /soil(j)%phys(k)%wpmm) ** 2
             else
               org_con%sut = .1 + .9 * sqrt(soil(j)%phys(k)%st / soil(j)%phys(k)%fc)
             end if             
@@ -406,9 +421,9 @@
             org_con%cdg = 0.9 * (stemp/(stemp + exp(9.93 - 0.312 * stemp))) + 0.1
           endif
 
-          !!compute oxygen (ox)
-          org_con%ox = 1. - 0.8 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2) / (((soil(j)%phys(kk)%d + &
-             soil(j)%phys(kk-1)%d) / 2) + exp(18.40961 - 0.023683632 * ((soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d) / 2))) 
+          mid_depth = (soil(j)%phys(kk)%d + soil(j)%phys(kk-1)%d)  / 2.0
+          
+          org_con%ox = 1. - 0.8 * mid_depth / (mid_depth + exp(18.40961 - 0.023683632 * mid_depth))
           
           !! compute combined factor
           org_con%cs = min(15., sqrt(org_con%cdg * org_con%sut) * 0.9* org_con%ox * org_con%till_eff) 
@@ -433,13 +448,19 @@
           !lignin content in structural litter (fraction)          
           rlr = min(0.8, soil1(j)%lig(k)%m / (soil1(j)%str(k)%m + 1.e-5))  
 
-          !! set nitrogen carbon ratios for upper layer
+          !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
+          
+          !carbdb%hp_rate=prmt(48) !century passive humus transformation rate d^-1(0.0000082_0.000015) original value = 0.000012 
+
+          ! set nitrogen carbon ratios for upper layer
           if (k == 1) then
+            !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
+            !carbdb%hp_rate=prmt(48) !century passive humus transformation rate d^-1(0.0000082_0.000015) original value = 0.000012 
             org_ratio%nchp = .1
             xbm = 1.
             ! org_con%cs = org_con%cs * carbdb(cf_lyr)%microb_top_rate
             ! compute n/c ratios - relative nitrogen content in residue
-            rsdn_pct = 0.1 * (pl_mass(j)%rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%rsd_tot%c / 1000. + 1.e-5)
+            rsdn_pct = 0.1 * (pl_mass(j)%abg_rsd_tot%n + soil1(j)%meta(1)%n) / (pl_mass(j)%abg_rsd_tot%c / 1000. + 1.e-5)
             if (rsdn_pct > 2.) then
               org_ratio%ncbm = .1
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
@@ -454,9 +475,11 @@
               org_ratio%nchs = org_ratio%ncbm / (5. * org_ratio%ncbm + 1.)
               org_allo(cf_lyr)%abp = .003 + .00032 * soil(j)%phys(k)%clay
             end if    
-          else    !! if (k == 1)
-            !! set nitrogen carbon ratios for lower layers
+          else    !  if (k == 1)  
+            ! set nitrogen carbon ratios for lower layers
             org_allo(cf_lyr)%abco2 = 0.17 + 0.0068 * soil(j)%phys(k)%sand
+            !carbdb%hs_rate=prmt(47) !century slow humus transformation rate d^-1(0.00041_0.00068) original value = 0.000548,
+            !carbdb%hp_rate=prmt(48) !century passive humus transformation rate d^-1(0.0000082_0.000015) original value = 0.000012 
             xbm = .25 + .0075 * soil(j)%phys(k)%sand
              min_n_ppm = 1000. * sol_min_n / (sol_mass / 1000)
             if (min_n_ppm > 7.15) then
@@ -471,6 +494,7 @@
             org_allo(cf_lyr)%abp = .003 + .00032 * soil(j)%phys(k)%clay
           end if    !  if (k == 1)        
 
+          !coef in century eq allocating slow to passive humus(0.001_0.05) original value = 0.003,
               org_allo(cf_lyr)%asp = max(.001, carbdb(cf_lyr)%hs_hp - .00009 * soil(j)%phys(k)%clay)
               
         !     potential transformations structural litter
@@ -501,8 +525,6 @@
               org_tran%hsntp = soil1(j)%hs(k)%n * org_con%x1
               
         !     potential transformations passive humus
-              ! Note for surface layer (k==1), hp(k)%c and hp(k)%n are zero because
-              ! there is no passive pool for the surface layer.
               org_con%x1 = org_con%cs * carbdb(cf_lyr)%hp_rate
               org_tran%hpctp = soil1(j)%hp(k)%c * org_con%x1
               org_tran%hpntp = soil1(j)%hp(k)%n * org_con%x1
@@ -683,11 +705,27 @@
               rnmn = sum - trnn
               
         !     update
+              !! rnmn > 0 -> net mineralization: organic n is released to the mineral
+              !!             pool as ammonium (ammonification). no3 is not touched.
+              !! rnmn < 0 -> net immobilization: microbes assimilate ammonium
+              !!             preferentially, drawing no3 only after nh4 is exhausted
+              !!             (century/daycent convention), clipped at what is available.
+              !! NOTE on ordering: hru_control calls cbn_zhang2 BEFORE nut_nitvol, so
+              !! immobilization gets first claim on nh4 each day and nitrification only
+              !! sees what is left. That is a deliberate ordering choice, not a law.
+              !! The clips below should be unreachable - reduc (above) already limits
+              !! demand to wmin = no3 + nh4 + sum - but trnn is recomputed after reduc
+              !! is applied, so the bound is approximate. Kept as a safety net.
               if (rnmn > 0.) then
-                min_n = Max(0., soil1(j)%mn(k)%no3 - rnmn)
-                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + min_n
-                soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 - min_n
-                ! print*, "2. in cbn_zhang2", k, soil1(j)%mn(k)%no3, min_n
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 + rnmn
+              else
+                imm_dmd = -rnmn
+                imm_nh4 = Min(imm_dmd, soil1(j)%mn(k)%nh4)
+                soil1(j)%mn(k)%nh4 = soil1(j)%mn(k)%nh4 - imm_nh4
+                imm_no3 = Min(imm_dmd - imm_nh4, soil1(j)%mn(k)%no3)
+                soil1(j)%mn(k)%no3 = soil1(j)%mn(k)%no3 - imm_no3
+                !! rnmn reduced to the immobilization actually satisfied
+                rnmn = -(imm_nh4 + imm_no3)
               end if
               
 	          ! calculate p flows
@@ -716,6 +754,11 @@
 	            lscta = min(soil1(j)%str(k)%c, lscta)              
               lslcta = min(soil1(j)%lig(k)%c, lslcta)
               
+              !! total structural-litter co2, kept whole because it is reported as a c flux
+              !! (soil_nutcarb_write). the two nut_np_flow calls below must each receive
+              !! only THEIR share - lignin to s2, non-lignin to s1 - or the n carried by
+              !! the respired c is counted twice. swat-c keeps these as separate array
+              !! elements, CO2FSTR(k,LIG,j) and CO2FSTR(k,NONLIG,j).
               org_flux%co2fstr = .3 * lslcta
               org_flux%co2fstr = org_flux%co2fstr + org_allo(cf_lyr)%a1co2 * lslncta
               
@@ -767,7 +810,7 @@
                       call nut_np_flow (                                     &
                              soil1(j)%str(k)%c, soil1(j)%str(k)%n,       &  !input
                              1/org_ratio%ncbm, org_flux%cfstrs1,         &  !input
-                             org_flux%co2fstr,                           &  !input
+                             org_allo(cf_lyr)%a1co2 * lslncta,           &  !input  non-lignin co2 share only
                              org_flux%efstrs1, org_flux%immstrs1,        &  !output
                              org_flux%mnrstrs1)                          !output              
               
@@ -779,7 +822,7 @@
                       call nut_np_flow (&
                              soil1(j)%str(k)%c, soil1(j)%str(k)%n,       & !input
                              1/org_ratio%nchs, org_flux%cfstrs2,         & !input
-                             org_flux%co2fstr,                           & !input
+                             .3 * lslcta,                                & !input  lignin co2 share only
                              org_flux%efstrs2, org_flux%immstrs2,        & !output
                              org_flux%mnrstrs2)                          !output              
                       
@@ -801,7 +844,7 @@
 
                       call nut_np_flow (&
                             soil1(j)%microb(k)%c, soil1(j)%microb(k)%n,      & !input
-                            1/org_ratio%nchs, org_flux%cfs1s3,               & !input
+                            1/org_ratio%nchp, org_flux%cfs1s3,               & !input
                             -99.0,                                           & !input  
                             org_flux%efs1s3, org_flux%imms1s3,               & !output
                             org_flux%mnrs1s3)                                !output  
@@ -877,15 +920,16 @@
               
               !!update c and n of different som pools
               !!=========================================
-              !! nonlig was being derived from the just-decremented
-              !! lig pool (e.g. `nonlig%c = lig%c - lslncta`), corrupting the non-lignin pool daily
-              !! and propagating to str via the line that sums them. Corrected to use the nonlig pool itself.
-              soil1(j)%lig(k)%c    = max(1.e-10, soil1(j)%lig(k)%c    - lslcta)
-              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%nonlig(k)%c - lslncta)
-              soil1(j)%str(k)%c    = soil1(j)%nonlig(k)%c +  soil1(j)%lig(k)%c
-
-              soil1(j)%lig(k)%m    = max(1.e-10, soil1(j)%lig(k)%m    - lslcta  / .42)
-              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%nonlig(k)%m - lslncta / .42)
+              !soil1(j)%str(k)%c = max(1.e-10, soil1(j)%str(k)%c - lscta)   ! instead of this, should be the sum lignon and non lignin c
+              soil1(j)%lig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslcta)
+              ! soil1(j)%lig(k)%n = max(1.e-10, soil1(j)%lig(k)%n - lslncta)
+              ! soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%lig(k)%c - lslncta)
+              soil1(j)%nonlig(k)%c = max(1.e-10, soil1(j)%nonlig(k)%c - lslncta) ! CC error correction.
+              soil1(j)%str(k)%c = soil1(j)%nonlig(k)%c +  soil1(j)%lig(k)%c
+                            
+              soil1(j)%lig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslcta / .42)
+              ! soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%lig(k)%m - lslncta / .42)
+              soil1(j)%nonlig(k)%m = max(1.e-10, soil1(j)%nonlig(k)%m - lslncta / .42) ! CC error correcton
           
               soil1(j)%str(k)%m = max(1.e-10, soil1(j)%str(k)%m - lscta / .42)
               
@@ -966,10 +1010,8 @@
               soil1(j)%org_tran_lr(k) = org_tran  
               
               ! Save the the org_flux for each layer and a total per day
-              soil1(j)%org_flx_lr(k) = org_flux
-              soil1(j)%org_flx_tot = soil1(j)%org_flx_tot + soil1(j)%org_flx_lr(k)
-              !! cumulative flux accumulator for hru_cflux_stat_aa file
-              soil1(j)%org_flx_cum_lr(k) = soil1(j)%org_flx_cum_lr(k) + org_flux
+              soil1(j)%org_flx_lr(k) = org_flux     
+              soil1(j)%org_flx_tot = soil1(j)%org_flx_tot + soil1(j)%org_flx_lr(k) 
               
               !!update other variables used in swat
               !!==================================

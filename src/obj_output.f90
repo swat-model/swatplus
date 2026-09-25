@@ -61,7 +61,7 @@
                   do nly = 1, soil(iob)%nly
                     soil1(ihru)%rsd_tot(nly) = orgz
                     do ipl = 1, pcom(ihru)%npl
-                      soil1(ihru)%rsd_tot(nly) = soil1(ihru)%rsd_tot(nly) + soil1(ihru)%pl(ipl)%rsd(nly)
+                      soil1(ihru)%rsd_tot(nly) = soil1(ihru)%rsd_tot(nly) + sum_origin(soil1(ihru)%pl(ipl)%rsd(nly))
                     end do
                     write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,      &    
                      soil1(j)%mn(nly), soil1(j)%hact(nly)%n, soil1(j)%hsta(nly)%n, soil1(j)%hs(nly)%n,         &
@@ -73,7 +73,7 @@
                 do nly = 1, soil(iob)%nly
                   soil1(j)%rsd_tot(nly) = orgz
                   do ipl = 1, pcom(j)%npl
-                    soil1(j)%rsd_tot(nly) = soil1(j)%rsd_tot(nly) + soil1(j)%pl(ipl)%rsd(nly)
+                    soil1(j)%rsd_tot(nly) = soil1(j)%rsd_tot(nly) + sum_origin(soil1(j)%pl(ipl)%rsd(nly))
                   end do
                   write (iunit+itot,*) time%day, time%mo, time%day_mo, time%yrc, ob(j)%name, ob(j)%typ,     &    
                    soil1(j)%mn(nly), soil1(j)%hact(nly)%n, soil1(j)%hsta(nly)%n, soil1(j)%hs(nly)%n,        &
@@ -94,7 +94,7 @@
                     soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
                     soil1(j)%rsd_tot(ly) = orgz
                     do ipl = 1, pcom(ihru)%npl
-                      soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+                      soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + sum_origin(soil1(j)%pl(ipl)%rsd(ly))
                     end do
                     soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd_tot(ly)
                   end do
@@ -113,7 +113,7 @@
                   soil_prof_hp = soil_prof_hp + soil1(j)%hp(ly)
                   soil1(j)%rsd_tot(ly) = orgz
                   do ipl = 1, pcom(j)%npl
-                    soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + soil1(j)%pl(ipl)%rsd(ly)
+                    soil1(j)%rsd_tot(ly) = soil1(j)%rsd_tot(ly) + sum_origin(soil1(j)%pl(ipl)%rsd(ly))
                   end do
                   soil_prof_rsd = soil_prof_rsd + soil1(j)%rsd_tot(ly)
                 end do

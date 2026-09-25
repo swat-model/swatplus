@@ -470,7 +470,7 @@
 
 !!     carbon model basin-wide tunables (read from carbon.bsn).
       case ("init_seq")
-        org_frac%frac_seq = chg_par(org_frac%frac_seq, chg_typ, chg_val, absmin, absmax)
+        org_frac%frac_litter = 1. - chg_par(1. - org_frac%frac_litter, chg_typ, chg_val, absmin, absmax)
       case ("init_microb")
         org_frac%frac_hum_microb = chg_par(org_frac%frac_hum_microb, chg_typ, chg_val, absmin, absmax)
       case ("init_slow")
