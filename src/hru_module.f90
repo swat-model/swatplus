@@ -211,6 +211,7 @@
           real :: cmn = 0.                  !! |kg/m3         |
           real :: nperco_lchtile = 0.       !! |kg/m3         |
       end type nutrient_parameters
+      
       type hydrologic_response_unit
         character(len=40) :: name = ""
         integer :: obj_no = 0
@@ -232,7 +233,8 @@
         integer :: grassww = 0
         integer :: bmpuser = 0
         integer :: crop_reg = 0
-        integer :: paddy_irr = 0  !Jaehak 2022
+        integer :: paddy_irr = 0
+        integer :: wallo_pod = 0            !POD (point of diversion) number for water allocation - 0 if not POD
 
         !! other data
         type (topography) :: topo

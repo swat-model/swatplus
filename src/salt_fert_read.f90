@@ -32,7 +32,7 @@
         fert_salt_flag = 1
         
         !read in the salt ion fertilizer rates (kg/ha) for each fertilizer type
-        do isalti=1,db_mx%fertparm
+        do isalti = 1, db_mx%fertparm
           read (107,*) fert_salt(isalti)  
         enddo
         close (107)

@@ -42,7 +42,8 @@
             ipest_db = cs_db%pest_num(k)
 
             kd = pestdb(ipest_db)%koc * soil1(ihru)%cbn(ly) / 100.
-            zdb1 = soil(j)%phys(ly)%ul + kd * soil(j)%phys(1)%bd * soil(j)%phys(1)%thick
+            !! BUG FIX: was phys(1) for bd and thick - must use layer ly
+            zdb1 = soil(j)%phys(ly)%ul + kd * soil(j)%phys(ly)%bd * soil(j)%phys(ly)%thick
             !! units: mm + (m^3/ton)*(ton/m^3)*mm = mm
 
             !! compute volume of flow through the layer
