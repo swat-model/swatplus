@@ -276,15 +276,15 @@
         end if
 !! SWAT DEG CHANBUD OUTPUT
         
-!! SWAT DEG CHANNEL BUDGET ORDER            
+!! SWAT DEG CHANNEL SEDIMENT BUDGET ORDER            
    if (sp_ob%chandeg > 0) then
-     call open_output_file(3150, "chanbud.txt", 1500)
-     write (3150,*) bsn%name, prog
-     write (3150,*) ch_bud_hdr 
-     write (3150,*) ch_bud_hdr_units
-     write (9000,*) "SWAT_DEG_CHANBUD        chanbud.txt"
-   end if        
-!! SWAT DEG CHANNEL BUDGET ORDER
+    if (pco%sd_chan%d == "y") then
+     call open_output_file(3161, "chanbud_order_d.txt", 1500)
+     write (3161,*) bsn%name, prog
+     write (3161,*) ch_bud_order_hdr 
+     write (3161,*) ch_bud_order_hdr_units
+     write (9000,*) "CHANBUD_ORDER         chanbud_order_d.txt"
+   end if 
    
 !! SWAT DEG CHANNEL SEDIMENT BUDGET ORDER            
    if (sp_ob%chandeg > 0) then
@@ -493,3 +493,4 @@
   
       return
       end subroutine header_sd_channel
+

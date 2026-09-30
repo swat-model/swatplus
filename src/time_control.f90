@@ -355,7 +355,7 @@
           iob = sp_ob1%hru + j - 1
           if (ob(iob)%lat >= 0) then
             ! zero yearly irrigation for dtbl conditioning jga6-25
-            !hru(j)%irr_yr = 0.
+            hru(j)%irr_yr = 0.
             
             phubase(j) = 0.
             yr_skip(j) = 0

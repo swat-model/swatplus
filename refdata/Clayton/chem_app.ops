@@ -1,0 +1,14 @@
+chem_ops Generated from M:\Constructor\HUC8_models\models\07100007.accdb Time: 2/2/2024 4:11:01 PM
+           NAME  CHEM_FORM  APP_TYP  APP_EFF  FOLIAR_EFF  INJECT_DP  SURF_FRAC  DRIFT_POT  AERIAL_UNIF
+  aerial_liquid     liquid    spray      0.7         0.7          0          1        0.5            1
+   aerial_solid      solid   spread      0.9           0          0          1        0.1            1
+           band      solid   spread      0.9           0          0          1          0          0.5
+          basal     liquid   spread      0.9           0          0          1          0          0.1
+      broadcast      solid   spread      0.9           0          0          1          0            1
+          drill      solid   inject     0.95           0         50       0.05          0            1
+      fertigate     liquid    spray      0.9         0.5          0          1        0.2            1
+         foliar     liquid    spray      0.8         0.7          0          1          0            1
+         inject     liquid   inject     0.95           0        150        0.2          0            1
+      rope_wick     liquid   direct        1        0.95          0          1          0            1
+     side_dress      solid   spread      0.9           0          0          1          0          0.5
+    tree_inject     liquid   inject     0.95           0        300          0          0         0.01

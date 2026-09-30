@@ -47,10 +47,10 @@
       idaystep = 0
 
       !read all recall files
-      inquire (file="recall.rec", exist=i_exist)
-      if (i_exist .or. "recall.rec" /= "null") then
+      inquire (file=in_rec%recall_rec, exist=i_exist)
+      if (i_exist .and. in_rec%recall_rec /= "null") then
       do
-        open (107,file="recall.rec")
+        open (107,file=in_rec%recall_rec)
         read (107,*,iostat=eof) titldum
         if (eof < 0) exit
         read (107,*,iostat=eof) header
@@ -165,8 +165,6 @@
                                                       recall(i)%hd(jday1,iyrs)
             case (2) !! monthly
               read (108,*,iostat=eof) jday, mo, day_mo, iyr, ob_typ, ob_name,    &
-                                                      recall(i)%hd(mo1,iyrs)
-              write (10108,*) jday, mo, day_mo, iyr, ob_typ, ob_name,    &
                                                       recall(i)%hd(mo1,iyrs)
             case (3) !! yearly
               read (108,*,iostat=eof) jday, mo, day_mo, iyr, ob_typ, ob_name, ht1

@@ -18,10 +18,12 @@
         
         !! daily print
         if (pco%sd_chan%d == "y") then
-          write (3171,*) time%day, time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
+          write (3171,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
 
           if (pco%csvout == "y") then
-          write (3175,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
+          write (3175,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morph(ichan)
           end if
         end if
        
@@ -30,14 +32,16 @@
 
         !! monthly print
         if (time%end_mo == 1) then
-          !! sum amount of yearly used water
+          !! add into the yearly total
           ch_morphy(ichan) = ch_morphy(ichan) + ch_morphm(ichan)
 
           if (pco%sd_chan%m == "y") then
-          write (3172,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
+          write (3172,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
  
           if (pco%csvout == "y") then
-          write (3176,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
+          write (3176,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphm(ichan)
           end if
           end if
 
@@ -59,6 +63,10 @@
           end if
         end if
 
+        !! accumulate the year's total into the average-annual accumulator
+        !! (fix: yearly write used ch_morpha and zeroed it each year, so AA divided from 0)
+        ch_morpha(ichan) = ch_morpha(ichan) + ch_morphy(ichan)
+
         !! zero yearly
         ch_morphy(ichan) = ch_morphz
 
@@ -66,14 +74,16 @@
 
       !! average annual print
       if (time%end_sim == 1) then
-        !! sum amount of average annual used water
+        !! convert the accumulated total to an average annual value
         ch_morpha(ichan) = ch_morpha(ichan) / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then
-        write (3174,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ch_morpha(ichan)
+        write (3174,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+          ob(iob)%gis_id, ob(iob)%name, ch_morpha(ichan)
 
         if (pco%csvout == "y") then
-        write (3178,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ch_morpha(ichan)
+        write (3178,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+          ob(iob)%gis_id, ob(iob)%name, ch_morpha(ichan)
         end if
        end if
       end if
@@ -82,5 +92,5 @@
       
       return
       
-100   format (4i6,i8,5x,a,5x,i8,5x,i8,5x,a,5x,i8,20(7x,a,5x,i8,3f15.1))
       end subroutine ch_sedbud_output
+

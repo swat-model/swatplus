@@ -24,6 +24,7 @@
       use output_landscape_module
       use hydrograph_module, only : ht1
       use utils
+      use time_module
       
       implicit none 
 
@@ -35,6 +36,14 @@
       real :: plch = 0.      !kg P/ha       |amount of P leached from soil layer
       
       integer :: ly = 0      !none       
+      ! integer :: yrc
+      ! integer :: mo
+      ! integer :: day_mo
+
+      ! yrc = time%yrc
+      ! mo = time%mo
+      ! day_mo = time%day_mo
+
 
       j = ihru
       
@@ -67,6 +76,9 @@
         vap = 0.
        if (ly /= i_sep(j)) then
          vap = -soil(j)%ly(ly)%prk / (.01 * soil(j)%phys(ly)%st + .1 * hru(j)%nut%pperco *  soil(j)%phys(ly)%bd)
+         if (soil1(j)%mp(ly)%lab < 1.e-10) then
+           soil1(j)%mp(ly)%lab = 0.0  ! to prevent gfortran runtime error.
+         endif
          plch = .001 * soil1(j)%mp(ly)%lab * (1. - exp_w(vap))
          plch = Min(plch, soil1(j)%mp(ly)%lab)
          soil1(j)%mp(ly)%lab = soil1(j)%mp(ly)%lab - plch
@@ -86,10 +98,10 @@
            hls_d(j)%tilelabp = plch
          endif
         endif
-     !rtb gwflow: store phosphorus leaching concentration for gwflow module
-     if(bsn_cc%gwflow == 1 .and. gw_solute_flag == 1) then
-       gwflow_percsol(j,2) = hls_d(j)%lchlabp  
-     endif
+        !rtb gwflow: store phosphorus leaching concentration for gwflow module
+        if(bsn_cc%gwflow == 1 .and. gw_solute_flag == 1) then
+          gwflow_percsol(j,2) = hls_d(j)%lchlabp  
+        endif
       end do
       
       return

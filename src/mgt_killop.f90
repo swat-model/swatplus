@@ -29,17 +29,17 @@
       call pl_rootfr(j)
       
       !! add above ground biomass to surface residue pools
-      pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) + pl_mass(j)%ab_gr(ipl)
+      pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + pl_mass(j)%ab_gr(ipl)
           
       !! update total surface residue pool
-      pl_mass(j)%rsd_tot = orgz
+      pl_mass(j)%abg_rsd_tot = orgz
       do npl = 1, pcom(j)%npl
-        pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(npl)
+        pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%abg_rsd(npl)
       end do
       
       !! add dead roots to soil residue pools
       do ly = 1, soil(j)%nly
-        soil1(j)%pl(ipl)%rsd(ly) = soil1(j)%pl(ipl)%rsd(ly) + pcom(j)%plg(ipl)%rtfr(ly)  &
+        soil1(j)%pl(ipl)%rsd(ly)%blg = soil1(j)%pl(ipl)%rsd(ly)%blg + pcom(j)%plg(ipl)%rtfr(ly)  &
                                                                   * pl_mass(j)%root(ipl)
       end do
       
@@ -54,7 +54,7 @@
       !! add plant carbon for printing
       hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + pl_mass(j)%ab_gr(ipl)%c
       hrc_d(j)%plant_root_c = hrc_d(j)%plant_root_c + pl_mass(j)%root(ipl)%c
-      hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_mass(j)%ab_gr(ipl)%c + pl_mass(j)%root(ipl)%c  !! include root mass in drop_c so it matches the actual residue C transfer
+      hpc_d(j)%drop_c = hpc_d(j)%drop_c + pl_mass(j)%ab_gr(ipl)%c
 
       !! zero all plant mass
       pl_mass(j)%tot(ipl) = plt_mass_z

@@ -80,7 +80,7 @@
             deallocate (pl_mass(j)%yield_yr)
             deallocate (pcom(j)%plstr) 
             deallocate (pcom(j)%plcur)
-            deallocate (pl_mass(j)%rsd)
+            deallocate (pl_mass(j)%abg_rsd)
             deallocate (soil1(j)%pl)
           end if
         
@@ -99,7 +99,7 @@
         allocate (pl_mass(j)%yield_yr(ipl))
         allocate (pcom(j)%plstr(ipl))
         allocate (pcom(j)%plcur(ipl))
-        allocate (pl_mass(j)%rsd(ipl))
+        allocate (pl_mass(j)%abg_rsd(ipl))
         allocate (soil1(j)%pl(ipl))
         !! allocate water uptake and root fraction by layer
         do ipl = 1, pcom(j)%npl
@@ -117,8 +117,8 @@
         pcom(j)%laimx_sum = 0.
         
         !!zero surface residue litter pool for each plant and total
-        pl_mass(j)%rsd(:) = plt_mass_z
-        pl_mass(j)%rsd_tot = plt_mass_z
+        pl_mass(j)%abg_rsd(:) = plt_mass_z
+        pl_mass(j)%abg_rsd_tot = plt_mass_z
         !soil1(j)%meta(1) = plt_mass_z
         !soil1(j)%str(1) = plt_mass_z
         !soil1(j)%lig(1) = plt_mass_z
@@ -130,11 +130,11 @@
           idp = pcomdb(icom)%pl(ipl)%db_num
           
           !! initialize surface residue litter pools - same for static and century pools
-          pl_mass(j)%rsd(ipl)%m = pl_mass(j)%rsd(ipl)%m + pcomdb(icom)%pl(ipl)%rsdin
-          pl_mass(j)%rsd(ipl)%c = pl_mass(j)%rsd(ipl)%c + 0.42 * pcomdb(icom)%pl(ipl)%rsdin
-          pl_mass(j)%rsd(ipl)%n = pl_mass(j)%rsd(ipl)%n + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 10.
-          pl_mass(j)%rsd(ipl)%p = pl_mass(j)%rsd(ipl)%p + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 100.
-          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot + pl_mass(j)%rsd(ipl)
+          pl_mass(j)%abg_rsd(ipl)%m = pl_mass(j)%abg_rsd(ipl)%m + pcomdb(icom)%pl(ipl)%rsdin
+          pl_mass(j)%abg_rsd(ipl)%c = pl_mass(j)%abg_rsd(ipl)%c + 0.42 * pcomdb(icom)%pl(ipl)%rsdin
+          pl_mass(j)%abg_rsd(ipl)%n = pl_mass(j)%abg_rsd(ipl)%n + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 10.
+          pl_mass(j)%abg_rsd(ipl)%p = pl_mass(j)%abg_rsd(ipl)%p + 0.42 * pcomdb(icom)%pl(ipl)%rsdin / 100.
+          pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + pl_mass(j)%abg_rsd(ipl)
           
           ! set heat units to maturity
           ! first compute base0 units for entire year
@@ -334,6 +334,18 @@
           
           !! initialize plant mass if plant growing
           if (pcom(j)%plcur(ipl)%gro == "y") then
+            !! initialize phuacc_p (fraction of lifetime heat units accumulated) for perennials
+            !! that start the simulation already growing - otherwise it defaults to 0 and root
+            !! depth (which is driven by phuacc_p, not curyr_mat) floors at the 25.4mm minimum
+            !! regardless of the plant's declared maturity. Mirrors mgt_transplant.f90.
+            if (pldb(idp)%typ == "perennial") then
+              if (pcom(j)%plcur(ipl)%phumat_p > 0.) then
+                pcom(j)%plcur(ipl)%phuacc_p = pcomdb(icom)%pl(ipl)%fr_yrmat +  &
+                    (pcom(j)%plcur(ipl)%phumat * pcomdb(icom)%pl(ipl)%phuacc) / pcom(j)%plcur(ipl)%phumat_p
+              else
+                pcom(j)%plcur(ipl)%phuacc_p = pcomdb(icom)%pl(ipl)%fr_yrmat
+              end if
+            end if
             call pl_root_gro(j)
             call pl_seed_gro(j)
             call pl_partition(j, 1)

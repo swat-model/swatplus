@@ -1,0 +1,11 @@
+lum_dtl Generated from M:\Constructor\HUC8_models\models\03110204.accdb Time: 6/18/2024 6:30:09 PM
+1
+
+               DTBL_NAME      CONDS       ALTS       ACTS
+              cn2_update          2          2          2
+  COND_VAR   OBJ   OBJ_NUMB LIM_VAR LIM_OP LIM_CONST  ALT1  ALT2
+ days_harv   hru          0    null      -         1     -     =                                                
+ phu_plant   hru          0 phu_mat      -       0.1     >     -                                                
+   ACT_TYP   OBJ OBJ_NUM         ACT_NAME ACT_OPTION CONST CONST2 FILE_POINTER  OUT1  OUT2
+ cn_update   hru       0 increase_cn_harv     abschg     6      1         null     n     y                                                
+ cn_update   hru       0    lower_cn_grow     abschg    -3      1         null     y     n                                                

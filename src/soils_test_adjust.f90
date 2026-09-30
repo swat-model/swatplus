@@ -11,7 +11,7 @@ subroutine soils_test_adjust(isol, mlyr)
     real :: soil_layer_thickness    !     |thickness of soil layer being processed 
     real :: prev_depth = 0.         !mm   |previous custom depth in millimeters
     real :: sum_bd, sum_cbn, sum_sand, sum_silt, sum_clay !     |temporary sums for weighted averages
-    integer :: tot_soil_depth = 0.  !mm   |total soil depth for the soil being processed
+    integer :: tot_soil_depth = 0   !mm   |total soil depth for the soil being processed
     integer :: test                 !     |soil test index
     integer :: i                    !     |index to sol array
     integer :: j                    !     |index to soildb array, sol_mm_db array
@@ -38,7 +38,7 @@ subroutine soils_test_adjust(isol, mlyr)
                 ! Populate temporary data structure to do weighted averages from.
                 prev_depth = 0
                 do j = 1, soildb(isol)%s%nly
-                    do i = prev_depth + 1, tot_soil_depth
+                    do i = int(prev_depth + 1), tot_soil_depth
                         if (i <= soildb(isol)%ly(j)%z .and. i > prev_depth ) then
                             sol_mm_db(1)%ly(i)%z = i
                             sol_mm_db(1)%ly(i)%bd = soildb(isol)%ly(j)%bd
@@ -89,7 +89,7 @@ subroutine soils_test_adjust(isol, mlyr)
                 if (sol(isol)%phys(i)%d > prev_depth) then
                     ! calculate weighted averages
                     sum_bd = 0.; sum_cbn = 0.; sum_sand = 0.; sum_silt = 0.; sum_clay = 0.
-                    do j = prev_depth + 1, sol(isol)%phys(i)%d
+                    do j = int(prev_depth + 1), int(sol(isol)%phys(i)%d)
                         sum_bd   = sum_bd   + sol_mm_db(1)%ly(j)%bd
                         sum_cbn  = sum_cbn  + sol_mm_db(1)%ly(j)%cbn
                         sum_sand = sum_sand + sol_mm_db(1)%ly(j)%sand

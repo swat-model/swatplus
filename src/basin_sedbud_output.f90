@@ -4,8 +4,6 @@
       use basin_module
       
       implicit none
-      
-      integer :: iuse
 
         !! sum monthly variables
         bsn_sedbudm = bsn_sedbudm + bsn_sedbud
@@ -15,7 +13,7 @@
           write (3152,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
 
           if (pco%csvout == "y") then
-          write (3156,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbud
+          write (3156,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbud
           end if
         end if
        
@@ -24,14 +22,14 @@
 
         !! monthly print
         if (time%end_mo == 1) then
-          !! sum amount of yearly used water
+          !! add into the yearly total
           bsn_sedbudy = bsn_sedbudy + bsn_sedbudm
 
           if (pco%sd_chan%m == "y") then
-          write (3153,*) time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          write (3153,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudm
  
           if (pco%csvout == "y") then
-          write (3157,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudm
+          write (3157,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudm
           end if
           end if
 
@@ -53,6 +51,10 @@
           end if
         end if
 
+        !! accumulate the year's total into the average-annual accumulator
+        !! (fix: bsn_sedbuda was divided by yrs_prt at end of sim but never summed -> AA printed 0)
+        bsn_sedbuda = bsn_sedbuda + bsn_sedbudy
+
         !! zero yearly
         bsn_sedbudy = bsn_sedbudz
 
@@ -60,19 +62,19 @@
 
       !! average annual print
       if (time%end_sim == 1) then
-        !! sum amount of average annual used water
+        !! convert the accumulated total to an average annual value
         bsn_sedbuda = bsn_sedbuda / time%yrs_prt
 
         if (pco%sd_chan%a == "y") then
-        write (3155,*) time%mo, time%day_mo, time%yrc, bsn_sedbuda
+        write (3155,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbuda
 
         if (pco%csvout == "y") then
-        write (3159,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbuda
+        write (3159,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbuda
         end if
        end if
       end if
 
       return
       
-100   format (4i6,i8,5x,a,5x,i8,5x,i8,5x,a,5x,i8,20(7x,a,5x,i8,3f15.1))
       end subroutine basin_sedbud_output
+

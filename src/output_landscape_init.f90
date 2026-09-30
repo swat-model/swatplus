@@ -420,7 +420,6 @@
 
         !! legacy CSU carbon files (hru_cb / hru_cb_vars rows in print.prt).
         !! opens the old fixed-column files and writes the begsim soil snapshot.
-        !! will be removed in revision 63.
         call carbon_legacy_open
 
 

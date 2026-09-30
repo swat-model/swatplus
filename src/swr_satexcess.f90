@@ -95,7 +95,7 @@
               if (hru(j)%water_seep > 1.e-6) then
                 rto = ul_excess / hru(j)%water_seep           
                 rto = amin1 (1., rto)
-                hru(j)%water_seep = rto * hru(j)%water_seep     !updated infiltration volume of the standing water
+                !hru(j)%water_seep = rto * hru(j)%water_seep     !updated infiltration volume of the standing water. Removed by Jaehak 2026
                 !! subtract the fraction of nutrient in the top soil layer
                 soil1(j)%mn(1)%no3 = soil1(j)%mn(1)%no3 - wet_seep_day(j)%no3 * rto / hru(j)%area_ha !kg/ha
                 soil1(j)%mn(1)%nh4 = soil1(j)%mn(1)%nh4 - wet_seep_day(j)%nh3 * rto / hru(j)%area_ha !kg/ha

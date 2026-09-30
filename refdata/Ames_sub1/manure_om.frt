@@ -32,7 +32,7 @@ ne_sw_lq         0.987   0.150943   0.135849   0.014906   0.064906   0.005792   
 ne_sw_sl          0.94   0.306613   0.050902   0.024449   0.034870   0.009499       0.99  Northeast_Swine_Slurry
 ne_sw_ss         0.875   0.146586   0.031285   0.017912   0.026064   0.006948       0.99  Northeast_Swine_Semi-solid
 ne_sw_sd         0.613   0.263566   0.004935   0.007713   0.022997   0.002997       0.99  Northeast_Swine_Solid
-np_bf_lq         0.999   0.780576   0.096043   0.036211   0.117986   0.016187       0.99  Northern Plains_Beef_Liquid
+np_bf_lq         0.999   0.780576   0.096043   0.036211   0.117986   0.016187       0.99  Northern_Plains_Beef_Liquid
 np_bf_sl         0.919   0.206795   0.053028   0.009350   0.023486   0.004210       0.99  Northern_Plains_Beef_Slurry
 np_bf_ss          0.88   0.372917   0.044167   0.010250   0.022250   0.004583       0.99  Northern_Plains_Beef_Semi-solid
 np_bf_sd         0.397   0.176617   0.001824   0.004461   0.012355   0.002007       0.99  Northern_Plains_Beef_Solid
@@ -112,3 +112,16 @@ sw_sw_lq         0.981   0.101266   0.013544   0.001747   0.008101   0.000677   
 sw_sw_sl         0.939   0.299413   0.066928   0.016419   0.038748   0.006380       0.99  Southwest_Swine_Slurry
 sw_sw_ss         0.888   0.162222   0.013644   0.013244   0.059111   0.005156       0.99  Southwest_Swine_Semi-solid
 sw_sw_sd         0.579   0.419738   0.003234   0.008454   0.016647   0.003282       0.99  Southwest_Swine_Solid
+dairy_fr         0.669   0.334342   0.007000   0.005000   0.031000   0.003000       0.99  Dairy_FreshManure
+beef_fr          0.677   0.203101   0.010000   0.004000   0.030000   0.007000       0.99  Beef_FreshManure
+veal_fr          0.677   0.203101   0.023000   0.006000   0.029000   0.007000       0.99  Veal_FreshManure
+swine_fr         0.596   0.437423   0.026000   0.011000   0.021000   0.005000       0.99  Swine_FreshManure
+sheep_fr         0.677   0.203101   0.014000   0.003000   0.024000   0.005000       0.99  Sheep_FreshManure
+goat_fr          0.677   0.203101   0.013000   0.003000   0.022000   0.005000       0.99  Goat_FreshManure
+horse_fr         0.677   0.203101   0.006000   0.001000   0.014000   0.003000       0.99  Horse_FreshManure
+layer_fr         0.414   0.234642   0.013000   0.006000   0.040000   0.013000       0.99  Layer_FreshManure
+broil_fr         0.414   0.234642   0.010000   0.004000   0.040000   0.010000       0.99  Broiler_FreshManure
+trkey_fr         0.414   0.234642   0.007000   0.003000   0.045000   0.016000       0.99  Turkey_FreshManure
+duck_fr          0.414   0.234642   0.023000   0.008000   0.025000   0.009000       0.99  Duck_FreshManure
+livestk_fr       0.677   0.203101   0.002171   0.004388   0.021395   0.001969       0.99  Livestock_FreshManure
+

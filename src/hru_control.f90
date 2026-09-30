@@ -6,7 +6,7 @@
 
       use hru_module, only : hru, ihru, tillage_switch,                                           &
          tillage_days, ndeat, qdr, phubase, sedyld, surfq, grz_days,                              &
-         yr_skip, latq, sepbtm, igrz, iseptic, i_sep, filterw, sed_con, soln_con, solp_con,       & 
+         yr_skip, latq, sepbtm, igrz, grz_dbid, iseptic, i_sep, filterw, sed_con, soln_con, solp_con,       &
          orgn_con, orgp_con, cnday, percn, tileno3, sedorgn, sedorgp, surqno3, latno3,            &
          surqsolp, sedminpa, sedminps, fertn, fertp, fixn, grazn, grazp, ipl, qp_cms, qtile,      &
          snofall, snomlt, usle, canev, ep_day, es_day, etday, inflpcp, isep, iwgen, ls_overq,     &
@@ -41,7 +41,7 @@
       
       implicit none
       
-      external :: actions, albedo, cbn_rsd_decomp, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
+      external :: actions, albedo, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
                   cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
                   nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc, nut_orgnc2, nut_pminrl, &
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
@@ -50,8 +50,8 @@
                   rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
                   swr_latsed, swr_percmain, swr_substor, swr_subwq, varinit, wet_irrp, wetland_control, &
-                  sq_crackvol, mgt_operatn, mgt_newtillmix, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
-                  mgt_newtillmix_cswat3, cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
+                  sq_crackvol, mgt_operatn, sep_biozone, pest_washp, pest_pesty, smp_buffer, &
+                  cbn_surfrsd_decomp, cbn_rsd_transfer, mgt_biomix
 
       integer :: j = 0              !none          |same as ihru (hru number)
       integer :: j1 = 0             !none          |counter (rtb)
@@ -137,6 +137,7 @@
       hpc_d(j) = hpcz
       hscf_d(j) = hscfz
       hru(j)%water_seep = 0.
+      hru(j)%water_evap = 0.
       hnb_d(j)%nuptake = 0.
       hnb_d(j)%puptake = 0.
       hwb_d(j)%wet_out = 0.
@@ -258,15 +259,15 @@
         call stmp_solt
         
         !!compute canopy interception
-        if (bsn_cc%gampt == 1) then
-          call sq_canopyint
-        end if
+        call sq_canopyint
 
         !! compute snow melt
         call sq_snom
                   
         !!route overland flow across hru - add tile flow if not subirrigation or saturated buffer
         tile_fr_surf = 1.   !assume all tile goes overland until get saturated buffer dtbl
+
+        ires =  hru(j)%dbs%surf_stor !update impoundment status Jaehak 2026
         if (ob(icmd)%hin_sur%flo > 1.e-6) then
           !!route incoming surface runoff
           if (ires > 0) then
@@ -372,6 +373,7 @@
         if (igrz(j) == 1) then
           ndeat(j) = ndeat(j) + 1
           !! if total above ground biomass is available - graze
+          graze = grazeop_db(grz_dbid(j))   !! load THIS hru's grazing params each grazing day
           call pl_graze
           !! check to set if grazing period is over
           if (ndeat(j) == grz_days(j)) then
@@ -395,7 +397,6 @@
           call cbn_surfrsd_decomp
           !! compute soil residue (roots and tilled in) decomposition
           call cbn_rsd_transfer      ! added by JC and FG, modified from nut_minrln.f90 and modified by fg to transfer soil residue to meta, str, lig
-          ! call cbn_rsd_decomp
           !! compute mineralization and carbon pool transformations
           call cbn_zhang2
         end if
@@ -556,8 +557,8 @@
           if (wet_dat_c(ires)%hyd.eq.'paddy') then !.and.time%yrs > pco%nyskip) then
             if (wet_ob(j)%depth > -0.1) then
            write(100100,'(4(I6,","),20(f20.1,","))') time%yrc,time%mo,time%day_mo,j,w%precip,irrig(j)%applied,hru(j)%water_seep,     &
-            pet_day,etday,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
-            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon 
+            pet_day,es_day,ep_day,wet_ob(j)%weir_hgt*1000,wet_ob(j)%depth*1000.,ht2%flo/(hru(j)%area_ha*10.),soil(j)%sw,sedppm,ht2%sed*1000, &
+            wet(j)%no3,ht2%no3,pcom(j)%lai_sum,saltcon,soil(j)%sw/soil(j)%sumfc*100 
             end if
           end if
         end if
@@ -744,10 +745,10 @@
           gwflow_perc(j) = sepbtm(j)
         end if
         !! add evap from impounded water (wetland) to et and esoil
-        hwb_d(j)%et = etday + hru(j)%water_evap
+        hwb_d(j)%et = etday     !es_day already includes ponded water evaporation
         hwb_d(j)%ecanopy = canev
         hwb_d(j)%eplant = ep_day
-        hwb_d(j)%esoil = es_day + hru(j)%water_evap 
+        hwb_d(j)%esoil = es_day
         hwb_d(j)%wet_evap = hru(j)%water_evap 
         hwb_d(j)%wet_out = wet_outflow
         hwb_d(j)%wet_stor = wet(j)%flo / (10. * hru(j)%area_ha)
@@ -846,7 +847,7 @@
         if (pl_mass(j)%tot_com%m < 0.) then
           pl_mass(j)%tot_com%m = 0.
         end if
-        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
+        hpw_d(j)%residue = pl_mass(j)%abg_rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp

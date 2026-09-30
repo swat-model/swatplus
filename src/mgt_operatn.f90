@@ -37,6 +37,7 @@
       integer :: j = 0       !none          |HRU number
       real :: aphu = 0.      !heat units    |fraction of total heat units accumulated 
       integer :: isched = 0  !              |
+      integer :: iter_guard = 0 !           |full-pass guard against an infinite same-date loop
 
       j = ihru
       isched = hru(j)%mgt_ops
@@ -44,10 +45,20 @@
       
         mgt = sched(isched)%mgt_ops(hru(j)%cur_op)
 
+        iter_guard = 0
         do while(mgt%mon == time%mo .and. mgt%day == time%day_mo)
           call mgt_sched (isched)
           if (sched(isched)%num_ops == 1) exit
           if (yr_skip(j) == 1) exit
+          !! mgt_sched advances cur_op and wraps it back to 1 at the end of the schedule.
+          !! If every operation reachable from cur_op falls on this calendar date, the wrap
+          !! cycles op1 -> op2 -> ... -> op1 indefinitely: the date test never changes and
+          !! the two exits above never fire (e.g. an N-fert and a P-fert both dated on the
+          !! same day). Cap at one full pass through the schedule so each operation is
+          !! applied exactly once, then exit. This is a no-op for every non-degenerate
+          !! schedule, which cannot process more than num_ops operations on a single day.
+          iter_guard = iter_guard + 1
+          if (iter_guard >= sched(isched)%num_ops) exit
         end do
 
         ipl = Max(mgt%op2, 1)

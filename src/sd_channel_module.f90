@@ -708,6 +708,7 @@
       type (channel_morphology_output),  intent (in) :: cho1
       type (channel_morphology_output),  intent (in) :: cho2
       type (channel_morphology_output) :: cho3
+       cho3%num = cho1%num + cho2%num
        cho3%wid = cho1%wid + cho2%wid
        cho3%dep = cho1%dep + cho2%dep
        cho3%fp_km2 = cho1%fp_km2 + cho2%fp_km2
@@ -723,6 +724,7 @@
         type (channel_morphology_output), intent (in) :: cho1
         real, intent (in) :: const
         type (channel_morphology_output) :: cho2
+        cho2%num = cho1%num
         cho2%wid = cho1%wid / const
         cho2%dep = cho1%dep / const
         cho2%fp_km2 = cho1%fp_km2 / const
@@ -972,3 +974,4 @@
      end subroutine chrc_interp
     
       end module sd_channel_module
+

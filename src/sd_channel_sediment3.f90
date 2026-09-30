@@ -48,7 +48,6 @@
       real :: vel_rch = 0.
       real :: arc_len = 0.
       real :: prot_len = 0.
-      real :: h_rad = 0.
       real :: fp_m2 = 0.
       real :: exp_co = 0.
       real :: florate_ob = 0.
@@ -130,7 +129,7 @@
         fp_m2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
         exp_co = 0.0001 * fp_m2 / rcurv%flo_rate
         ave_rate = ht1%flo / 86400.
-        trap_eff = sd_ch(ich)%fp_inun_days * (rcurv%flo_rate / ave_rate) * (1. - exp(-exp_co))
+        trap_eff = sd_ch(ich)%fp_inun_days * (rcurv%flo_rate / ave_rate) * (1. - exp_w(-exp_co))
         trap_eff = Min (1., trap_eff)
         fp_dep%sed = trap_eff * ht1%sed
 
@@ -279,6 +278,8 @@
       !ht1 = ht1 + bed_ero
       
       !! set outputs for sediment budget
+      ch_morph(ich)%num = 1
+
       !! width and depth at end of the day - m
       ch_morph(ich)%wid = sd_ch(ich)%chw
       ch_morph(ich)%dep = sd_ch(ich)%chd
@@ -311,3 +312,4 @@
 
       return
       end subroutine sd_channel_sediment3
+
