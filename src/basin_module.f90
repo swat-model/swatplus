@@ -162,9 +162,6 @@
         integer :: yrc_end = 0                          !!  calendar year to end printing output
         integer :: int_day = 1                          !!  interval between daily printing
         integer :: int_day_cur = 1                      !!  current day since last print
-      ! AVE ANNUAL END YEARS
-        integer :: aa_numint = 0                      !! number of print intervals for ave annual output
-        integer, dimension(:), allocatable :: aa_yrs  !! end years for ave annual output
       ! SPECIAL OUTPUTS
         character(len=1) :: csvout   = "n"            !!  code to print .csv files n=no print; y=print;
         ! character(len=1) :: carbout  = "n"         !!  code to print carbon output; d = end of day; m = end of month; y = end of year; a = end of simulation;

@@ -1,6 +1,6 @@
       subroutine plant_init (init, iihru)
 
-      use hru_module, only : cvm_com, hru, ipl
+      use hru_module, only : hru, ipl
       use soil_module
       use plant_module
       use hydrograph_module
@@ -112,8 +112,6 @@
           allocate (soil1(j)%pl(ipl)%rsd(soil(j)%nly))
         end do
         
-        pcom(j)%rsd_covfac = 0.
-        cvm_com(j) = 0.
         pcom(j)%pcomdb = icom
         pcom(j)%rot_yr = 1
         pcom(j)%laimx_sum = 0.
@@ -313,8 +311,6 @@
           ! set total hu to maturity for perennials
           pcom(j)%plcur(ipl)%phumat_p = pcom(j)%plcur(ipl)%phumat * pldb(idp)%mat_yrs
             
-          cvm_com(j) = plcp(idp)%cvm + cvm_com(j)
-          pcom(j)%rsd_covfac = pcom(j)%rsd_covfac + pldb(idp)%rsd_covfac
           pcom(j)%plcur(ipl)%idplt = pcomdb(icom)%pl(ipl)%db_num
           
           !! set initial n and p contents in total plant
@@ -345,15 +341,6 @@
           end if
 
         end do   ! ipl loop
-        
-        !! get average residue cover factor for community
-        if (pcom(j)%npl > 0) then
-          pcom(j)%rsd_covfac = pcom(j)%rsd_covfac / pcom(j)%npl
-          cvm_com(j) = cvm_com(j) / pcom(j)%npl
-        else
-          pcom(j)%rsd_covfac = 0.
-          cvm_com(j) = 0.
-        end if
         
         end if   ! icom > 0
 

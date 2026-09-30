@@ -32,8 +32,7 @@
         if (pldb(idp)%typ == "perennial") then
           pcom(j)%plcur(ipl)%idorm = "y"
           !! add dead stem mass to residue pool
-          rto = 0. !***jga  pldb(idp)%bm_dieoff
-          stem_drop = rto * pl_mass(j)%stem(ipl)
+          rto = 1. !***jga  pldb(idp)%bm_dieoff
           !! lower lai by same ratio
           lai_init = pcom(j)%plg(ipl)%lai
           pcom(j)%plg(ipl)%lai = rto * lai_init

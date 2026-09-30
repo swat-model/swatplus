@@ -29,15 +29,7 @@
         if (eof < 0) exit
         read (107,*,iostat=eof) header
         if (eof < 0) exit
-        read (107,*,iostat=eof) pco%aa_numint
-        if (pco%aa_numint > 0) then
-          allocate (pco%aa_yrs(pco%aa_numint), source = 0)
-          backspace (107)
-          read (107,*,iostat=eof) pco%aa_numint, (pco%aa_yrs(ii), ii = 1, pco%aa_numint)
-          if (eof < 0) exit
-        else
-          allocate (pco%aa_yrs(1), source = 0)
-        end if
+        read (107,*,iostat=eof) ii
      !! read database output
         read (107,*,iostat=eof) header
         if (eof < 0) exit

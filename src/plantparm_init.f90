@@ -20,15 +20,15 @@
         !! set default values
         if (pldb(ic)%ext_coef < 1.e-6) pldb(ic)%ext_coef = 0.65
         if (pldb(ic)%rsdco_pl < 1.e-6) pldb(ic)%rsdco_pl = bsn_prm%rsdco
-        if (pldb(ic)%usle_c <= 0.0) pldb(ic)%usle_c = 0.001
-        if (pldb(ic)%usle_c >= 1.0) pldb(ic)%usle_c = 1.0
+        if (pldb(ic)%lmf_mat <= 0.0) pldb(ic)%lmf_mat = 0.03
         if (pldb(ic)%blai <= 0.0) pldb(ic)%blai = 0.0
         if (pldb(ic)%blai >= 10.0) pldb(ic)%blai = 10.0
         if (pldb(ic)%rsr1 <= 0.0) pldb(ic)%rsr1 = 0.4
         if (pldb(ic)%rsr2 <= 0.0) pldb(ic)%rsr2 = 0.2
+        if (pldb(ic)%rt_depco <= 0.0) pldb(ic)%rt_depco = 0.2
         if (pldb(ic)%aeration <= 0.0) pldb(ic)%aeration = 0.2
-        if (pldb(ic)%rsd_pctcov <= 0.0) pldb(ic)%rsd_pctcov = 0.4
-        if (pldb(ic)%rsd_covfac <= 0.0) pldb(ic)%rsd_covfac = 0.04
+        if (pldb(ic)%ero_rsdfac <= 0.0) pldb(ic)%ero_rsdfac = 0.75
+        if (pldb(ic)%ero_rsdfac <= 0.0) pldb(ic)%ero_rsdfac = 0.02
         
         !! check if tuber, root to total biomass ratio = 0.7
         if (pldb(ic)%typ == "warm_annual_tuber" .or. pldb(ic)%typ == "cold_annual_tuber") then
@@ -60,8 +60,6 @@
 
 !!        determine shape parameters for the radiation use efficiency equation
           call ascrv(b1, b2, c1, pldb(ic)%co2hi, plcp(ic)%ruc1, plcp(ic)%ruc2)
-
-          plcp(ic)%cvm = Log(pldb(ic)%usle_c)
 
 !!        nitrogen uptake parameters
 !!        fix bad input for pltnfr(3,ic)

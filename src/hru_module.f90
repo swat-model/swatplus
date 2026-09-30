@@ -295,7 +295,6 @@
       real :: sum_no3 = 0.
       real :: sum_solp = 0.
       real, dimension (:), allocatable :: epmax
-      real, dimension (:), allocatable :: cvm_com
       real, dimension (:), allocatable :: translt
       real, dimension (:), allocatable :: uno3d
       real, dimension (:), allocatable :: uapd

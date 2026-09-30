@@ -1,4 +1,4 @@
-      subroutine pl_partition(j, init)
+      subroutine pl_partition(j, inits)
       
       use plant_data_module
       use basin_module
@@ -6,11 +6,12 @@
       use plant_module
       use carbon_module
       use organic_mineral_mass_module
+      use utils
       
       implicit none 
       
       integer, intent (in) :: j     !none               |HRU number
-      integer, intent (in) :: init  !none               |init=1 to initialize and transplant; init=0 during simulation
+      integer, intent (in) :: inits !none               |init=1 to initialize and transplant; init=0 during simulation
       integer :: idp = 0            !                   |
       real :: root_frac = 0.        !none               |root mass fraction
       real :: ab_gr_frac = 0.       !none               |above ground mass fraction
@@ -36,9 +37,14 @@
       
       !! partition leaf and stem (stalk) and seed (grain) mass
       if (pldb(idp)%typ == "perennial") then
-        leaf_frac_veg = 0.02    !forest
+        !! assume leaf fraction of above ground biomass is a function of age (years to maturity)
+        !! assume initial leaf mass fraction is 0.5 at seedling/emergence
+        leaf_frac_veg = pldb(ipl)%lmf_mat + (0.5 - pldb(ipl)%lmf_mat) * exp_w(-2.8 *                  &
+                                          (pcom(j)%plcur(ipl)%curyr_mat / pldb(ipl)%mat_yrs))
       else
-        leaf_frac_veg = 0.30    !should be plant parm
+        !! annual crops assume linear decline from 0.5 at emergence to pldb(ipl)%lmf_mat at maturity
+        leaf_frac_veg = pldb(ipl)%lmf_mat + (0.5 - pldb(ipl)%lmf_mat) * (pcom(j)%plcur(ipl)%phuacc /  &
+                                                                           pcom(j)%plcur(ipl)%phumat)
       end if
       leaf_mass_frac_veg = leaf_frac_veg * pcom(j)%plg(ipl)%lai / pcom(j)%plcur(ipl)%lai_pot
       
@@ -61,7 +67,7 @@
       end if
       
       !! check if initializing
-      if (init == 0) then
+      if (inits == 0) then
         !! first maintain root fraction - root mass/total mass
         mass_left = pl_mass_up%m
         mass_act = pl_mass(j)%root(ipl)%m

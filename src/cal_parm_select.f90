@@ -89,8 +89,8 @@
         hru(ielem)%lumv%usle_p = chg_par (hru(ielem)%lumv%usle_p,         &
                           chg_typ, chg_val, absmin, absmax)
         
-      case ("usle_c")
-        pldb(ielem)%usle_c = chg_par (pldb(ielem)%usle_c,         &
+      case ("lmf_mat")
+        pldb(ielem)%lmf_mat = chg_par (pldb(ielem)%lmf_mat,         &
                           chg_typ, chg_val, absmin, absmax)
         
       case ("ovn")

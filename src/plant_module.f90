@@ -115,7 +115,6 @@
        real :: cht_mx = 0.              !! m             |height of tallest plant in community for pet calculation
        real :: lai_sum = 0.             !! m/m           |sum of lai for each plant
        real :: laimx_sum = 0.           !! m/m           |sum of maximum lai for each plant - for canopy interception
-       real :: rsd_covfac = 0.          !!               |average residue cover factor
        type (auto_operations), dimension(:), allocatable :: dtbl            !!d_tble action - to limit number of actions per year 
        integer :: fert_fut_num = 0
        type (fertilize_future), dimension(:), allocatable :: fert_fut       !!

@@ -66,7 +66,7 @@
         real :: pltpfr2 = 0.0004         !kg P/kg/biomass   |phoshorus uptake parm #2
         real :: pltpfr3 = 0.0003         !kg P/kg/biomass   |phoshorus uptake parm #3
         real :: wsyf = 0.01              !(kg/ha)/(kg/ha)   |value of harvest index bet 0 and HVSTI
-        real :: usle_c = 0.001           !none              |minimum value of the USLE C factor for water erosion
+        real :: lmf_mat = 0.03           !none              |leaf mass fraction of above ground biomass at maturity
         real :: gsi = 0.002              !m/s               |maximum stomatal conductance
         real :: vpdfr = 4.               !kPa               |vapor pressure deficit at which GMAXFR is valid
         real :: gmaxfr = 0.75            !none              |fraction of max stomatal conductance that is 
@@ -85,7 +85,6 @@
         real :: leaf_tov_min = 12.       !months            |perennial leaf turnover rate with minimum stress (complete turnover in 12 mon)
         real :: leaf_tov_max = 3.        !months            |perennial leaf turnover rate with maximum stress (complete turnover in 3 mon)
         real :: bm_dieoff = 0.           !frac              |above ground biomass that dies off at dormancy
-        !real :: leaf_frac_mx             !frac              |max fraction of above ground biomass that is leaf (assume constant over life of perennial)
         real :: rsr1 = 0.                !frac              |initial root to shoot ratio at the beg of growing season
         real :: rsr2 = 0.                !frac              |root to shoot ratio at the end of the growing season
         real :: pop1 = 0.                !plants/m^2        |plant population corresponding to the 1st point on the
@@ -96,12 +95,12 @@
                                          !                             population lai curve
         real :: frlai2 = 0.              !frac              |frac of max leaf area index corresponding to the 2nd 
                                          !                     point on the leaf area development curve
-        real :: frsw_gro = .5            !frac              |30 day sum of P-PET to initiate growth of tropical 
-                                         !                     plants during monsoon season - pcom()%plcur()%iseason
+        real :: rt_depco = .2            !                  |root depth rate coefficient (exponential equation) for reaching maximum depth
         real :: aeration = 0.2           !                  |aeration stress factor
-        real :: rsd_pctcov = 0.          !                  |residue factor for percent cover equation
-        real :: rsd_covfac = 0.          !                  |residue factor for surface cover (C factor) equation
-        !character(len=45) :: desc = "unknown"
+        real :: ero_rsdfac = 0.75        !                  |residue cover factor (exponential equation) for USLE C factor equation
+        real :: ero_biofac = 0.2         !                  |biomass cover factor (exponential equation) for USLE C factor equation
+        character(len=18) :: vclass = "" !none              |vegetation class - row crop, close grown, vegetable, grassland, forest, orchard
+        character(len=45) :: desc = ""   !none              !description of plant
         type (residue_partition_fracs) :: res_part_fracs
       end type plant_db
       type (plant_db), dimension(:),allocatable, target, save :: pldb
@@ -121,8 +120,6 @@
         real :: gmaxfr = 0.      !none      |fraction of max stomatal conductance that is 
                                  !            achieved at the vapor pressure deficit defined by VPDFR
         real :: vpdfr = 0.       !kPa       |vapor pressure deficit at which GMAXFR is valid
-        real :: cvm = 0.         !frac      |fraction of the maximum leaf area index corresponding
-                                 !            to the second point of the optimal leaf area dev curve
         real :: vpd2 = 0.        !kPa       |vapor pressure deficit corresponding to the second point
                                  !            on the stomatal conductance curve
       end type plant_cp

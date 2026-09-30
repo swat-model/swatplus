@@ -19,7 +19,7 @@
       integer :: iconv = 0              !conveyance object number (pipe or pump number)
 
       !! transfer water to receiving object from each source
-      do ipod = 1, pou(ipou)%pod(ipod)%num
+      do ipod = 1, pou(ipou)%pods
         iconv = pou(ipou)%pod(ipod)%conv_num
         select case (pou(ipou)%pod(ipod)%conv_typ)
         case ("pipe")

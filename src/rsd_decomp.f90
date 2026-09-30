@@ -93,6 +93,8 @@
           xx = soil(j)%phys(1)%tmp
           cdg = .9 * xx / (xx + Exp(9.93 - .312 * xx)) + .1
           cdg = Max(.1, cdg)
+          cdg = xx / (xx + Exp(10.38 - .293 * xx))
+          cdg = Max(0., cdg)
 
           !! compute combined factor
           xx = cdg * sut
@@ -105,6 +107,7 @@
           idp = pcom(j)%plcur(ipl)%idplt
           decr = pldb(idp)%rsdco_pl * ca * csf
           decr = Max(bsn_prm%decr_min, decr)
+          decr = bsn_prm%decr_min
           decr = Min(decr, 1.)
           
           !! apply decay to total carbon pool for both C models

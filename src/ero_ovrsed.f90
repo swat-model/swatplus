@@ -43,16 +43,20 @@
     use climate_module
     use time_module
     use hydrograph_module
-    use hru_module, only : hru, hhsedy, hhqday, cvm_com, ihru
+    use hru_module, only : hru, hhsedy, hhqday, ihru
     use soil_module
     use plant_module
+    use plant_data_module
     use organic_mineral_mass_module
+    use utils
       
     implicit none
       
     integer :: k = 0                !               |
     integer :: j = 0                !               |
     integer :: ulu = 0              !               |
+    integer :: ipl = 0              !               |plant number in HRU
+    integer :: idp = 0              !               |plant number in plants.plt data file
     real :: percent_clay = 0.       !percent        |percent clay
     real :: percent_silt = 0.       !percent        |percent silt
     real :: percent_sand = 0.       !percent        |percent sand
@@ -72,12 +76,17 @@
     real :: rain_d50 = 0.           !               |
     real :: rintnsty = 0.           !mm/hr          |rainfall intensity
     real :: cover = 0.              !kg/ha          |soil cover
+    real :: ab_gr_t = 0.            !tons           |total above ground biomass of plant community
+    real :: rsd_covfact = 0.        !               |combined exponent for residue cover factor
+    real :: rsd_sumfac = 0.         !tons           |sum of residue cover factor by plant
+    real :: grcov_frac = 0.         !frac           |fraction of ground cover factor for all plants
+    real :: bio_covfact = 0.        !               |combined exponent for growing biomass factor
 
     j = ihru
     ulu = hru(j)%luse%urb_lu
 
 !! Fraction of sand
-      percent_clay = soil(j)%phys(1)%clay
+    percent_clay = soil(j)%phys(1)%clay
     percent_silt = soil(j)%phys(1)%silt 
     percent_sand = 100. - percent_clay - percent_silt
 
@@ -161,11 +170,28 @@
     !! maximum water depth that allows splash erosion
       if(hhqday(j,k)>=3.* rain_d50.or.hhqday(j,k)<=1.e-3) sedspl = 0.
 
-
-    !! Overland flow erosion 
-    !! cover and management factor used in usle equation (ysed.f)
-      cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
-      c = Exp((-.2231 - cvm_com(j)) * Exp(-.00115 * cover) + cvm_com(j))
+    !! Overland flow erosion
+      c = 0.
+      rsd_sumfac = 0.
+      ab_gr_t = 0.
+      
+      !! new method using residue and biomass cover - from APEX
+      do ipl = 1, pcom(j)%npl
+        idp = pcom(j)%plcur(ipl)%idplt
+        rsd_sumfac = rsd_sumfac + pldb(idp)%ero_rsdfac * (pl_mass(j)%rsd(ipl)%m + 1.) / 1000.
+        ab_gr_t = ab_gr_t + pldb(idp)%ero_biofac * pl_mass(j)%ab_gr(ipl)%m / 1000.
+      end do
+      
+      rsd_covfact = exp_w(-rsd_sumfac)
+      rsd_covfact = Max(1.e-8, rsd_covfact)
+      rsd_covfact = Min(1., rsd_covfact)
+        
+      bio_covfact = exp_w(-ab_gr_t)
+      bio_covfact = Max(1.e-8, bio_covfact)
+      bio_covfact = Min(1., bio_covfact)
+        
+      c = Max(1.e-10, rsd_covfact * bio_covfact)
+        
     !! specific weight of water at 5 centigrate =9807N/m3
       bed_shear = 9807 * (hhqday(j,k) / 1000.) * hru(j)%topo%slope ! N/m2
       sedov = 11.02 * bsn_prm%rill_mult * soil(j)%ly(1)%usle_k *           & 

@@ -37,8 +37,8 @@
             !! irrigate hru if amount water is available
             do ird = 1, pou(ipou)%irr%hru_num
               if (irrig(j)%demand < water_avail) then
-                  j = pou(ipou)%irr%hru(ihru)
-                  id = pou(ipou)%irr%dtbl_num(ihru)
+                  j = pou(ipou)%irr%hru(ird)
+                  id = pou(ipou)%irr%dtbl_num(ird)
                   d_tbl => dtbl_lum(id)
                   call conditions (j, id)
                   !! irrig(j)%demand, applied, runoff (from decision table) for each hru

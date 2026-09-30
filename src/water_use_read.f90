@@ -98,7 +98,6 @@
             read (107,*,iostat=eof) wuse_cs_efflu(iwuse)%path
           end if
           
-        exit
       end do   ! iwuse = 1, imax
     end do
     end if

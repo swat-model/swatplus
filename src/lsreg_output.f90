@@ -258,7 +258,6 @@
         end do      ! region(ireg)%nlum
         
 !!!!! average annual print
-        if (time%end_aa_prt == 1) then
           ! determine the number of land uses within each region
           iarea = 0.
           do ilum = i, db_mx%landuse
@@ -278,13 +277,12 @@
               nlum = nlum + 1
             end if
           end do      !ilum
-        end if     !time%end_aa_prt == 1
 
         do ilum = 1, region(icu)%nlum
          ilum_db = region(ireg)%lum_num_tot(ilum)
-         region(ireg)%lum_ha_tot(ilum)  = region(ireg)%lum_ha_tot(ilum) / time%yrs_prt_int
-         if (time%end_aa_prt == 1 .and. pco%wb_hru%a == "y") then
-           rwb_a(ireg)%lum(ilum) = rwb_a(ireg)%lum(ilum) / time%yrs_prt_int
+         region(ireg)%lum_ha_tot(ilum)  = region(ireg)%lum_ha_tot(ilum) / time%yrs_prt
+         if (pco%wb_hru%a == "y") then
+           rwb_a(ireg)%lum(ilum) = rwb_a(ireg)%lum(ilum) / time%yrs_prt
            write (4420,100) time%day, time%mo, time%day_mo, time%yrc, region(ireg)%name, lum(ilum_db)%plant_cov,     &
               region(ireg)%lum_ha_tot(ilum), rwb_a(ireg)%lum(ilum)
            if (pco%csvout == "y") then
@@ -294,8 +292,8 @@
            rwb_a(ireg)%lum(ilum) = hwbz
          end if
          
-         if (time%end_aa_prt == 1 .and. pco%nb_hru%a == "y") then 
-           rnb_a(ireg)%lum(ilum) = rnb_a(ireg)%lum(ilum) / time%yrs_prt_int
+         if (pco%nb_hru%a == "y") then 
+           rnb_a(ireg)%lum(ilum) = rnb_a(ireg)%lum(ilum) / time%yrs_prt
            write (4422,100) time%day, time%mo, time%day_mo, time%yrc, region(ireg)%name, lum(ilum_db)%plant_cov,    &
               region(ireg)%lum_ha_tot(ilum), rnb_a(ireg)%lum(ilum)
              if (pco%csvout == "y") then 
@@ -305,8 +303,8 @@
              rnb_a(ireg)%lum(ilum) = hnbz
          end if
         
-         if (time%end_aa_prt == 1 .and. pco%ls_hru%a == "y") then
-           rls_a(ireg)%lum(ilum) = rls_a(ireg)%lum(ilum) / time%yrs_prt_int 
+         if (pco%ls_hru%a == "y") then
+           rls_a(ireg)%lum(ilum) = rls_a(ireg)%lum(ilum) / time%yrs_prt
            write (4424,101) time%day, time%mo, time%day_mo, time%yrc, region(ireg)%name, lum(ilum_db)%plant_cov,    &
               region(ireg)%lum_ha_tot(ilum), rls_a(ireg)%lum(ilum)
              if (pco%csvout == "y") then 
@@ -316,8 +314,8 @@
              rls_a(ireg)%lum(ilum) = hlsz
          end if
         
-         if (time%end_aa_prt == 1 .and. pco%pw_hru%a == "y") then     
-           rpw_a(ireg)%lum(ilum) = rpw_a(ireg)%lum(ilum) / time%yrs_prt_int      
+         if (pco%pw_hru%a == "y") then     
+           rpw_a(ireg)%lum(ilum) = rpw_a(ireg)%lum(ilum) / time%yrs_prt     
            write (4426,102) time%day, time%mo, time%day_mo, time%yrc, region(ireg)%name, lum(ilum_db)%plant_cov,   &
               region(ireg)%lum_ha_tot(ilum), rpw_a(ireg)%lum(ilum)
              if (pco%csvout == "y") then 

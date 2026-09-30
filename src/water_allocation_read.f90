@@ -14,7 +14,7 @@
       
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
-      character (len=5) :: pp = "" !                |POD or POR
+      character (len=3) :: pp = "" !                |POD or POR
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
@@ -91,7 +91,7 @@
           !! read all POD input data
           do ipod = 1, ipods
             read (107,*,iostat=eof) pp, pou(ipou)%pod(ipod)%num, pou(ipou)%pod(ipod)%name, pou(ipou)%pod(ipod)%typ, &
-                pou(ipou)%pod(ipod)%num, pou(ipou)%pod(ipod)%conv_typ, pou(ipou)%pod(ipod)%conv_num,            &
+                pou(ipou)%pod(ipod)%typ_num, pou(ipou)%pod(ipod)%conv_typ, pou(ipou)%pod(ipod)%conv_num,            &
                 pou(ipou)%pod(ipod)%dtbl_min, pou(ipou)%pod(ipod)%const_min, pou(ipou)%pod(ipod)%dtbl_wdraw,    &
                 pou(ipou)%pod(ipod)%ann_max, pou(ipou)%pod(ipod)%frac, pou(ipou)%pod(ipod)%comp
             if (eof < 0) exit

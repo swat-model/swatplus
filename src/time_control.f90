@@ -109,8 +109,10 @@
           
         time%yrs = curyr
 
-        !! determine beginning and ending dates of simulation in current year
+        !! check if leap year and set monthly days for leap or non-leap year
+        if (time%yrs > pco%nyskip) then
         if (Mod(time%yrc,4) == 0) then
+          !! check if 400 year leap year exception
           if (Mod(time%yrc,100) == 0) then
             if (Mod(time%yrc,400) == 0) then
               ndays = ndays_leap
@@ -122,8 +124,10 @@
             ndays = ndays_leap
             time%num_leap = time%num_leap + 1
           end if
-        else 
+        else
+          !! set monthly days for non-leap year
           ndays = ndays_noleap
+        end if
         end if
 
         !! set beginning day of simulation for year
@@ -142,9 +146,6 @@
         if (time%yrs > pco%nyskip) then
           time%yrs_prt = time%yrs_prt + float(time%day_end_yr - time%day_start + 1)
           time%days_prt = time%days_prt + float(time%day_end_yr - time%day_start + 1)
-        else
-          !! tell user they are skipping more years than simulating
-          time%yrs_prt = time%nbyr
         end if
             
         !! set initial soil water for hru, basin and lsu - for checking water balance
@@ -176,10 +177,6 @@
           time%end_mo = 0
           time%end_yr = 0
           time%end_sim = 0
-          if (time%end_aa_prt == 1) then
-            time%end_aa_prt = 0
-            time%prt_int_cur = 0.
-          end if
           if (time%day == ndays(time%mo+1)) then
             time%end_mo = 1
           end if
@@ -187,14 +184,8 @@
             time%end_yr = 1
             if (time%yrs == time%nbyr) then
               time%end_sim = 1
-              time%yrs_prt = time%yrs_prt / (365. + (time%num_leap / time%nbyr))
-            end if
-            if (pco%aa_numint > 0) then
-              if (time%yrc == pco%aa_yrs(time%prt_int_cur)) then
-                time%end_aa_prt = 1
-                time%yrs_prt_int = time%yrs_prt_int / (365. + (time%num_leap / time%nbyr))
-                time%prt_int_cur = time%prt_int_cur + 1 
-              end if
+              time%yrs_prt = time%yrs_prt / (365. + float(time%num_leap) /      &
+                                                 float(time%nbyr - pco%nyskip))
             end if
           end if
 
