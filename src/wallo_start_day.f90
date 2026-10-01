@@ -131,20 +131,20 @@
         pou(ipou)%pod(:)%fin = "n"
       
         !! need irrig(j) when irrigating for condition and setting POU demand in dtbl
-        pou(ipou)%demand = 0.
-        if (pou(ipou)%typ == "irr") then
-          do ihru = 1, pou(ipou)%irr%hru_num
-            j = pou(ipou)%irr%hru(ihru)
-            id = pou(ipou)%irr%dtbl_num(ihru)
-            d_tbl => dtbl_lum(id)
-            call conditions (j, id)
-            call actions (j, iob, id)
-            !! irrig(j)%demand, applied, runoff (from decision table) for each hru
-            !! reset demand or duty for transfer object - convert from mm to m3
-            pou(ipou)%demand = pou(ipou)%demand + irrig(j)%demand * hru(ihru)%area_ha * 10.
-            irrig(j)%demand = 0.
-          end do
-        end if
+        !pou(ipou)%demand = 0.
+        !if (pou(ipou)%typ == "irr") then
+       !   do ihru = 1, pou(ipou)%irr%hru_num
+        !    j = pou(ipou)%irr%hru(ihru)
+         !   id = pou(ipou)%irr%dtbl_num(ihru)
+        !    d_tbl => dtbl_lum(id)
+        !    call conditions (j, id)
+        !    call actions (j, iob, id)
+        !    !! irrig(j)%demand, applied, runoff (from decision table) for each hru
+        !    !! reset demand or duty for transfer object - convert from mm to m3
+        !    pou(ipou)%demand = pou(ipou)%demand + irrig(j)%demand * hru(ihru)%area_ha * 10.
+         !   irrig(j)%demand = 0.
+       !   end do
+        !end if
      
         !! if no dtbl, use the maximum rate every day
         pou(ipou)%demand = pou(ipou)%rate_max * 86400. !convert to m3/s

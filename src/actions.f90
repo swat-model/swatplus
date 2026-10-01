@@ -237,6 +237,26 @@
               
           end select
        
+          !irrigate from water allocation routines
+          case ("irr_wallo")
+            ipl = 1
+            j = ob_cur       ! hru number
+            
+            irrop = d_tbl%act_typ(iac)      ! irrigation application type in irr.ops
+            
+            if (d_tbl%act(iac)%name=='ponding') then !paddy irrigation
+              hru(j)%irr_hmax = d_tbl%act(iac)%const !mm
+              hru(j)%irr_hmin = d_tbl%act(iac)%const2 !mm
+              irrig(j)%applied = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * irrop_db(irrop)%eff * &
+                        (1. - irrop_db(irrop)%surq) !mm
+              irrig(j)%runoff = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * irrop_db(irrop)%surq   !mm
+              irrig(j)%demand = max(0.,d_tbl%act(iac)%const-wet_ob(j)%depth*1000.) * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
+            else
+              irrig(j)%applied = d_tbl%act(iac)%const * irrop_db(irrop)%eff * (1. - irrop_db(irrop)%surq)
+              irrig(j)%runoff = d_tbl%act(iac)%const * irrop_db(irrop)%surq
+              irrig(j)%demand = d_tbl%act(iac)%const * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
+            end if
+            
           !irrigate - hru action
           case ("irrigate")
             ipl = 1
@@ -260,7 +280,7 @@
               irrig(j)%demand = d_tbl%act(iac)%const * hru(j)%area_ha * 10.       ! m3 = mm * ha * 10.
             end if
 
-            !select object type
+            !select object type for witdrawal
             iob = d_tbl%act(iac)%ob_num
             select case (d_tbl%act(iac)%ob)
             case ("aqu")
