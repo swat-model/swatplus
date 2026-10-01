@@ -8,10 +8,17 @@
       !!   line 3...  one plant per line; the columns are read in the same order as the
       !!              fields of plant_db (plant_data_module), plantnm through desc (55 columns)
       !!
-      !! the read is list-directed (read (104,*) pldb(ic)), so it fills every field of plant_db
-      !! in order. if plant_db has more fields than the line has columns, the read keeps going
-      !! onto the next plant's line and every plant after that is shifted - so plant_db must
-      !! match the plants.plt columns exactly
+      !! each plant line is read as text first, checked, and then read into pldb from that
+      !! text (read (line,*) pldb(ic)). reading from the line instead of the file means a line
+      !! with too few columns is a read error - read straight from the file, a short line would
+      !! keep going onto the next plant's line and shift every plant after it
+      !!
+      !! a line that does not match the layout stops the run with an error naming the plant:
+      !!   - fewer than 55 columns (e.g. the older 54-column plants.plt without CLASS)
+      !!   - a number in column 54 with carbon off (lignin columns, carbon layout)
+      !!   - no lignin columns with carbon = 2
+      !! the column order itself is not checked - an older 55-column file with different
+      !! columns in the same positions (frac_sw_gro, rsd_pctcov, rsd_covfac) is not caught
       !!
       !! carbon (codes.bsn carbon = 2) uses a different layout with 58 columns: three lignin
       !! columns are added as columns 54-56, between bio_cov and CLASS:
@@ -40,7 +47,8 @@
       character (len=50) :: fields(100) = ""  !   |columns of one plant line
       integer :: nf = 0               !none       |number of columns in the plant line
       integer :: k = 0                !none       |column counter
-      integer :: ios = 0              !none       |read status of the carbon layout
+      integer :: ios = 0              !none       |read status of the plant line
+      real :: col54 = 0.              !none       |column 54 read as a number, to tell CLASS (text) from lignin
       type (input_lignin_partition_fracs) :: lig_in   !  |lignin fractions from columns 54-56 (carbon layout)
 
 
@@ -80,35 +88,24 @@
         read (104,*,iostat=eof) header
         if (eof < 0) exit
 
-        !! carbon off - stop if the file has the carbon lignin columns (CLASS and DESCRIPTION would get lignin values)
-        !! the lignin columns are numbers; in the 55-column layout column 54 is CLASS (text), so a
-        !! description with extra words can not trigger this
-        !! looks at the first plant line only, then backspaces so the loop below reads it again
-        if (bsn_cc%cswat /= 2) then
-          read (104,'(a)',iostat=eof) line
+        do ic = 1, imax
+          !! read the whole line as text, skipping blank lines, and split it into columns
+          !! a carriage return left by Windows line endings is removed so it does not end up in desc
+          do
+            read (104,'(a)',iostat=eof) line
+            if (eof /= 0) exit
+            k = len_trim(line)
+            if (k > 0) then
+              if (line(k:k) == achar(13)) line(k:k) = " "
+            end if
+            if (len_trim(line) > 0) exit
+          end do
           if (eof < 0) exit
           call split_line (line, fields, nf)
-          ios = 1
-          if (nf >= 58) read (fields(54:56),*,iostat=ios) lig_in
-          if (ios == 0) then
-            write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " has lignin columns (54-56) but codes.bsn carbon /= 2;", &
-                        " use the 55-column plants.plt or set carbon = 2"
-            write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " has lignin columns (54-56) but codes.bsn carbon /= 2;", &
-                        " use the 55-column plants.plt or set carbon = 2"
-            error stop
-          end if
-          backspace (104)
-        end if
 
-        do ic = 1, imax
           if (bsn_cc%cswat == 2) then
             !! carbon layout - avg_lig_frac, ab_lig_frac, bg_lig_frac are columns 54-56, between bio_cov and CLASS
             !! take them out and read the remaining 55 columns the same way as without carbon
-
-            !! read the whole line as text and split it into columns
-            read (104,'(a)',iostat=eof) line
-            if (eof < 0) exit
-            call split_line (line, fields, nf)
 
             !! read the three lignin columns; ios stays 1 (error) if the line is too short to have them
             ios = 1
@@ -147,14 +144,40 @@
             res_part_fracs(ic)%meta_frac_abg = 1.0 - res_part_fracs(ic)%str_frac_abg  
             res_part_fracs(ic)%meta_frac_blg = 1.0 - res_part_fracs(ic)%str_frac_blg 
           else
-            !! carbon off - read the 55 columns straight into pldb
-            !! nam1 /= 0 - the line has one more column after desc, read into pl_class
-            if (bsn_cc%nam1 == 0) then
-              read (104,*,iostat=eof) pldb(ic)
-            else
-              read (104,*,iostat=eof) pldb(ic), pl_class(ic)
+            !! carbon off - column 54 is CLASS (text). a number there means the line has lignin
+            !! columns (carbon layout), and CLASS and DESCRIPTION would get lignin values
+            if (nf >= 54) then
+              read (fields(54),*,iostat=ios) col54
+              if (ios == 0) then
+                write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), &
+                            " has lignin columns (54-56) but codes.bsn carbon /= 2;", &
+                            " use the 55-column plants.plt or set carbon = 2"
+                write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), &
+                            " has lignin columns (54-56) but codes.bsn carbon /= 2;", &
+                            " use the 55-column plants.plt or set carbon = 2"
+                error stop
+              end if
             end if
-            if (eof < 0) exit
+
+            !! read the 55 columns into pldb from the line; ios stays 1 (error) if the line is too short
+            !! nam1 /= 0 - the line has one more column after desc, read into pl_class
+            ios = 1
+            if (nf >= 55) then
+              if (bsn_cc%nam1 == 0) then
+                read (line,*,iostat=ios) pldb(ic)
+              else
+                read (line,*,iostat=ios) pldb(ic), pl_class(ic)
+              end if
+            end if
+            if (ios /= 0) then
+              write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " could not be read;", &
+                          " codes.bsn carbon /= 2 needs 55 columns, ending rt_depco, aeration, rsd_cov, bio_cov,", &
+                          " CLASS, DESCRIPTION"
+              write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " could not be read;", &
+                          " codes.bsn carbon /= 2 needs 55 columns, ending rt_depco, aeration, rsd_cov, bio_cov,", &
+                          " CLASS, DESCRIPTION"
+              error stop
+            end if
           end if
           !! years to maturity is at least 1
           pldb(ic)%mat_yrs = Max (1, pldb(ic)%mat_yrs)
