@@ -85,7 +85,6 @@
 
       !! peak daily flow rate - m3/s using the Fuller and Peck (1974) equation for peak to mean flow ratio
       pk_rto = sd_ch(ich)%pk_rto * (1. + 2.66 * (ob(icmd)%area_ha / 100.) ** (-.3))
-      pk_rto = 1.
       peakrate = pk_rto * ht1%flo / 86400.     !m3/s
 
       !! interpolate rating curve using peak rate
