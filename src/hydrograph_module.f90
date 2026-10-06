@@ -213,6 +213,9 @@
       !! om_irrig transfer of organics and minerals in irrigation water
       type (hyd_output) :: om_irrig
       
+      !! water available for irrigation when allocating 
+      type (hyd_output) :: wallo_avail
+      
       !! water treatment plant storage and outflow
       type (hyd_output), dimension (:), allocatable :: wtp_om_stor
       type (hyd_output), dimension (:), allocatable :: wtp_om_out

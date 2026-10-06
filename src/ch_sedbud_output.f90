@@ -52,14 +52,16 @@
 
       !! yearly print
       if (time%end_yr == 1) then
-        !! sum amount of yearly used water
-        ch_morpha(ichan) =  ch_morpha(ichan) + ch_morphy(ichan)
+        !! add into the yearly total
+        ch_morphy(ichan) =  ch_morphy(ichan) + ch_morphm(ichan)
           
         if (pco%sd_chan%y == "y") then
-          write (3173,*) time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
+          write (3173,*) time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
   
               if (pco%csvout == "y") then
-          write (3177,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, ichan, ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
+          write (3177,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ichan, &
+            ob(iob)%gis_id, ob(iob)%name, ch_morphy(ichan)
           end if
         end if
 

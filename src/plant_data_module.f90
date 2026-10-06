@@ -96,7 +96,6 @@
         real :: ero_biofac = 0.2         !                  |biomass cover factor (exponential equation) for USLE C factor equation
         character(len=18) :: vclass = "" !none              |vegetation class - row crop, close grown, vegetable, grassland, forest, orchard
         character(len=45) :: desc = ""   !none              !description of plant
-        type (residue_partition_fracs) :: res_part_fracs
       end type plant_db
       type (plant_db), dimension(:),allocatable, target, save :: pldb
       type (plant_db), pointer :: pl_db

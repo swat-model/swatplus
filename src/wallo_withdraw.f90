@@ -52,7 +52,7 @@
         !! check if withdrawal takes storage below the minimum
         if (osrc_om(j)%flo > 0.) then
           outflo_om = osrc_om(j)
-          outflo_om%flo = pou(pou_num)%pod(pod_num)%frac * osrc_om(j)%flo * 86400.
+          outflo_om%flo = pou(pou_num)%pod(pod_num)%frac * osrc_om(j)%flo * 86400.  !m3/s to m3/d
           !! convert concentration to mass
           call hyd_convert_conc_to_mass (outflo_om)
           osrc(j)%wdraw = osrc(j)%wdraw + osrc_om(j)%flo

@@ -25,6 +25,7 @@
       integer :: id = 0                     !decision table id
       integer :: irdb = 0                   !irrigation farm/district number
       real :: water_avail = 0.      !m3     |water still available for irrigating each hru
+      real :: deliv = 0.            !m3     |total water delivered to irrigation use
       real :: rto = 0.              !ratio  |ratio of delivered vs amount in delivery object
     
       !! iob is the POU number to deliver - irr delivers to all hrus with a demand
@@ -33,47 +34,57 @@
           !! irrigation transfer - set amount applied and runoff
           !! irrig(j)%demand,irrig(j)%applied, and irrig(j)%runoff are set in "irr_demand" action
           case ("irr")
-            water_avail = poud_om(ipou)%pods%flo
+            deliv = 0.
+            pou(ipou)%demand = 0.
+            wallo_avail = poud_om(ipou)%pods
             !! irrigate hru if amount water is available
             do ird = 1, pou(ipou)%irr%hru_num
-              if (irrig(j)%demand < water_avail) then
-                  j = pou(ipou)%irr%hru(ird)
-                  id = pou(ipou)%irr%dtbl_num(ird)
-                  d_tbl => dtbl_lum(id)
-                  call conditions (j, id)
-                  !! irrig(j)%demand, applied, runoff (from decision table) for each hru
-                  call actions (j, iob, id)
-                  
-                  water_avail = water_avail - irrig(j)%demand
-                  
-                  !! reset days since last irrigation
-                  pcom(j)%days_irr = 1
-               
-                  !! add organics and minerals to the soil
-                  rto = irrig(j)%demand / poud_om(ipou)%pods%flo
-                  !no3 = rto * poud_om(ipou)%pods%no3
-                  !!add no3, nh4, solp, orgn, and orgp to soil1(j)
-                  
-                  !! rtb salt: irrigation salt mass accounting
-                  !if(cs_db%num_salts > 0) then
-                  !  jj = itrn !to avoid a compiler warning
-                  !  call salt_irrig(iwallo,jj,j)
-                  !endif
-                  
-                  !!rtb cs: irrigation constituent mass accounting
-                  !if(cs_db%num_cs > 0) then
-                  !  jj = itrn !to avoid a compiler warning
-                  !  call cs_irrig(iwallo,jj,j)
-                  !endif
-              
-                  !! add irrigation to yearly sum for dtbl conditioning jga6-25
-                  hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
+                j = pou(ipou)%irr%hru(ird)
+                id = pou(ipou)%irr%dtbl_num(ird)
+                d_tbl => dtbl_lum(id)
+                call conditions (j, id)
+                !! irrig(j)%demand, applied, runoff (from decision table) for each hru
+                call actions (j, iob, id)
+                pou(ipou)%demand = pou(ipou)%demand + irrig(j)%demand
             
-                  if (pco%mgtout == "y") then
-                    write (2612, *) j, time%yrc, time%mo, time%day_mo, "WATER ALLO", "IRRIGATE", phubase(j),  &
-                      pcom(j)%plcur(1)%phuacc, soil(j)%sw, pl_mass(j)%tot(1)%m, pl_mass(j)%abg_rsd_tot%m,      &
-                      sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied
-                  end if
+              !! check if total irrigation demand (m3) is greater than the daily duty (m3)
+              if (pou(ipou)%demand < pou(ipou)%rate_max * 86400.) then
+                  
+              !! check if water is available to meet the hru irrigation demand
+              if (irrig(j)%demand < wallo_avail%flo .and. irrig(j)%demand > 1.e-6) then
+                  
+                !! keep sum of amount delivered (m3) for outputting
+                deliv = deliv + irrig(j)%demand
+                
+                !! reset days since last irrigation
+                pcom(j)%days_irr = 1
+               
+                !! subtract demand from available and add organics and minerals to the soil
+                rto = irrig(j)%demand / wallo_avail%flo
+                wallo_avail = (1. - rto) * wallo_avail
+                
+                !!add no3, nh4, solp, orgn, and orgp to soil1(j)
+                  
+                !! rtb salt: irrigation salt mass accounting
+                !if(cs_db%num_salts > 0) then
+                !  jj = itrn !to avoid a compiler warning
+                !  call salt_irrig(iwallo,jj,j)
+                !endif
+                  
+                !!rtb cs: irrigation constituent mass accounting
+                !if(cs_db%num_cs > 0) then
+                !  jj = itrn !to avoid a compiler warning
+                !  call cs_irrig(iwallo,jj,j)
+                !endif
+              
+                !! add irrigation to yearly sum for dtbl conditioning jga6-25
+                hru(j)%irr_yr = hru(j)%irr_yr + irrig(j)%applied
+            
+                if (pco%mgtout == "y") then
+                  write (2612, *) j, time%yrc, time%mo, time%day_mo, "WATER ALLO", "IRRIGATE", phubase(j),  &
+                       pcom(j)%plcur(1)%phuacc, soil(j)%sw, pl_mass(j)%tot(1)%m, pl_mass(j)%abg_rsd_tot%m,      &
+                       sol_sumno3(j), sol_sumsolp(j), irrig(j)%applied
+                end if
               else 
                 !! zero irrigation data if water is not available
                 irrig(j)%runoff = 0.
@@ -81,7 +92,12 @@
                 irrig(j)%eff = 0.
                 irrig(j)%demand = 0.
               end if   !demand < available
+              end if   !total demand < daily duty
               
+              !! set max rate for the day - convert to m3/s
+              poud_met(ipou)%duty_tot%duty = pou(ipou)%demand
+              poud_met(ipou)%duty_tot%deliv = deliv
+                
             end do     !ird loop
             
             !! divert flow into the channel in sd_channel_control3

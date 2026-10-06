@@ -40,14 +40,14 @@
 
       !! yearly print
       if (time%end_yr == 1) then
-        !! sum amount of yearly used water
-        bsn_sedbuda =  bsn_sedbuda + bsn_sedbudy
+        !! add into the yearly total
+        bsn_sedbudy =  bsn_sedbudy + bsn_sedbudm
           
         if (pco%sd_chan%y == "y") then
-          write (3154,*) time%mo, time%day_mo, time%yrc, bsn_sedbudy
+          write (3154,*) time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudy
   
-          if (pco%csvout == "y") then
-            write (3158,'(*(G0.6,:","))') time%mo, time%day_mo, time%yrc, bsn_sedbudy
+              if (pco%csvout == "y") then
+          write (3158,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, bsn_sedbudy
           end if
         end if
 

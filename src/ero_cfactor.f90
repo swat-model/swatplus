@@ -54,7 +54,7 @@
       !! new method using residue and biomass cover - from APEX
       do ipl = 1, pcom(j)%npl
         idp = pcom(j)%plcur(ipl)%idplt
-        rsd_sumfac = rsd_sumfac + pldb(idp)%ero_rsdfac * (pl_mass(j)%rsd(ipl)%m + 1.) / 1000.
+        rsd_sumfac = rsd_sumfac + pldb(idp)%ero_rsdfac * (pl_mass(j)%abg_rsd(ipl)%m + 1.) / 1000.
         ab_gr_t = ab_gr_t + 0.2 * pldb(idp)%ero_biofac * pl_mass(j)%ab_gr(ipl)%m / 1000.
       end do
       
@@ -70,7 +70,7 @@
         
       !! erosion output variables
       ero_output(j)%ero_d%c = c
-      ero_output(j)%ero_d%rsd_m = pl_mass(j)%rsd_tot%m
+      ero_output(j)%ero_d%rsd_m = pl_mass(j)%abg_rsd_tot%m
       ero_output(j)%ero_d%grcov_frac = grcov_frac
       ero_output(j)%ero_d%rsd_covfact = rsd_covfact
       ero_output(j)%ero_d%bio_covfact = bio_covfact

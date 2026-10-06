@@ -74,7 +74,8 @@
         character (len=25) :: dtbl_mx = ""      !decision table name to set max daily right or duty
         integer :: dtbl_mx_num = 0              !decision table number to set max daily right or duty
         real :: rate_max = 0.                   !fixed max daily right or duty (m3/s) - if dtble is not used
-        real :: demand = 0.                     !irrigation demand of all hrus in the POU (m3/s)
+        real :: demand = 0.                     !irrigation demand of all hrus in the POU (m3)
+        real :: water_avail = 0.                !irrigation demand of all hrus in the POU (m3)
         character (len=25) :: dtbl_pod_fr = ""  !decision table name to set fractions from each POD - if null use constant fraction
         integer :: dtbl_pod_fr_num = 0          !decision table name to set fractions from each POD - if null use constant fraction
         character (len=25) :: dtbl_por_fr = ""  !decision table name to set fractions to each POR - if null use constant fraction
