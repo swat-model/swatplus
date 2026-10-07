@@ -125,9 +125,17 @@
                                 hmd(ig)%end_day, hmd(ig)%end_yr, out_bounds)
           if (out_bounds == "y") then 
             wst(iwst)%weat%rhum = -98.
+            wst(iwst)%weat%rhmax = -98.
+            wst(iwst)%weat%rhmin = -98.
+            wst(iwst)%weat%dewpt = -98.
+            wst(iwst)%weat%vapr = -98.
           else
             yrs_to_start = time%yrs - hmd(ig)%yrs_start
-            wst(iwst)%weat%rhum = hmd(ig)%ts(time%day,yrs_to_start)
+            wst(iwst)%weat%rhum  = hmd(ig)%ts(time%day,yrs_to_start)
+            wst(iwst)%weat%rhmax = hmd(ig)%ts2(time%day,yrs_to_start)
+            wst(iwst)%weat%rhmin = hmd(ig)%ts3(time%day,yrs_to_start)
+            wst(iwst)%weat%dewpt = hmd(ig)%ts4(time%day,yrs_to_start)
+            wst(iwst)%weat%vapr  = hmd(ig)%ts5(time%day,yrs_to_start)
           end if
           if (wst(iwst)%weat%rhum <= -97.) then
             call cli_rhgen(iwgn)
@@ -135,7 +143,9 @@
           end if
         end if
         !! simple dewpoint eqn from Lawrence 2005. Bull. Amer. Meteor. Soc.
-        wst(iwst)%weat%dewpt = wst(iwst)%weat%tave - (1. - wst(iwst)%weat%rhum) / 5.
+        if (wst(iwst)%weat%dewpt <= -97.) then
+          wst(iwst)%weat%dewpt = wst(iwst)%weat%tave - (1. - wst(iwst)%weat%rhum) / 5.
+        end if
       end do 
 
 !! Wind Speed: 
@@ -174,9 +184,13 @@
                 petm(ig)%end_day, petm(ig)%end_yr, out_bounds)
           if (out_bounds == "y") then 
             wst(iwst)%weat%pet = -98.
+            wst(iwst)%weat%eto = -98.
+            wst(iwst)%weat%etr = -98.
           else
             yrs_to_start = time%yrs - petm(ig)%yrs_start
             wst(iwst)%weat%pet = petm(ig)%ts(time%day,yrs_to_start)
+            wst(iwst)%weat%eto = petm(ig)%ts2(time%day,yrs_to_start)
+            wst(iwst)%weat%etr = petm(ig)%ts3(time%day,yrs_to_start)
           end if
           if (wst(iwst)%weat%pet <= -97.) then
             !! Use HARGREAVES POTENTIAL EVAPOTRANSPIRATION METHOD
