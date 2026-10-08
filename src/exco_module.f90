@@ -20,8 +20,6 @@
         character(len=16) :: path_file = ""
         character(len=16) :: hmet_file = ""
         character(len=16) :: salts_file = ""
-        character(len=16) :: constit_file = ""
-        character(len=40) :: descrip = ""
       end type export_coefficient_datafiles
       type (export_coefficient_datafiles), dimension(:), allocatable, save :: exco_db
       
