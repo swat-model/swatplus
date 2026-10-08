@@ -188,6 +188,7 @@
         fll = 0.92 * (wgn_pms(iwgn)%daylth / 24.) * fl_1
 
         !! calculate local algal growth rate
+        gra = 0.
         if (algcon < 5000.) then
           select case (ch_nut(jnut)%igropt)
           case (1)
