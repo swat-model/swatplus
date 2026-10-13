@@ -2175,18 +2175,21 @@
       write(out_gw,*) '     final preparations...'
       write(out_gw,*) '          map recharge delay to HRUs'
       allocate(gw_delay(sp_ob%hru))
+      allocate(gw_delay_days(sp_ob%hru))
       allocate(gw_rech(sp_ob%hru))
       sum = 0.
       do i=1,ncell
         sum = sum + delay(i)
       enddo
-      gw_delay = Exp(-1./((sum/(ncell)) + 1.e-6))
+      gw_delay_days = sum / ncell
+      gw_delay = Exp(-1./(gw_delay_days + 1.e-6))
       !assign value to HRU based on connected grid cells
       if(lsu_cells_link == 0) then !if LSU-cell connection: keep average of all grid cell values
         do k=1,sp_ob%hru
           do i=1,hru_num_cells(k)
             cell_num = hru_cells(k,i)
-            gw_delay(k) = Exp(-1./(delay(cell_num) + 1.e-6))
+            gw_delay_days(k) = delay(cell_num)
+            gw_delay(k) = Exp(-1./(gw_delay_days(k) + 1.e-6))
           enddo
         enddo
       endif

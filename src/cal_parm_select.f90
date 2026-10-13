@@ -1069,7 +1069,9 @@
 
         case ("aquifer_delay")
           if(bsn_cc%gwflow == 1) then
-            gw_delay(ielem) = chg_par(gw_delay(ielem), chg_typ, chg_val, absmin, absmax)
+            !Calibrate the HRU delay in days, then update its recharge decay coefficient.
+            gw_delay_days(ielem) = chg_par(gw_delay_days(ielem), chg_typ, chg_val, absmin, absmax)
+            gw_delay(ielem) = Exp(-1./(gw_delay_days(ielem) + 1.e-6))
           endif
 
         case ("aquifer_exdp")
