@@ -19,6 +19,7 @@
       use constituent_mass_module, only : cs_db
       use water_allocation_module, only : canal
       use utils, only : split_line
+      use basin_module, only : pco
 
       implicit none
 
@@ -258,6 +259,56 @@
         end select
       enddo
       close(in_gw)
+
+      !--- print.prt overrides: when gwflow entries are listed in print.prt, override gwflow.input flags ---
+      !(applied before any gwflow output file is opened)
+      if(pco%gwflow_wb%already_read_in) then
+        gwflag_day = 0; gwflag_mon = 0; gwflag_yr = 0; gwflag_aa = 0
+        if(pco%gwflow_wb%d == 'y') gwflag_day = 1
+        if(pco%gwflow_wb%m == 'y') gwflag_mon = 1
+        if(pco%gwflow_wb%y == 'y') gwflag_yr  = 1
+        if(pco%gwflow_wb%a == 'y') gwflag_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_wb overrides gwflow.input flags'
+      endif
+      !heat and solute balance output follow the water balance flags unless print.prt lists them
+      gwflag_heat_day = gwflag_day; gwflag_heat_yr = gwflag_yr; gwflag_heat_aa = gwflag_aa
+      gwflag_solute_day = gwflag_day; gwflag_solute_mon = gwflag_mon
+      gwflag_solute_yr = gwflag_yr; gwflag_solute_aa = gwflag_aa
+      if(pco%gwflow_obs%already_read_in) then
+        gwflag_obs_day = 0; gwflag_obs_mon = 0; gwflag_obs_yr = 0; gwflag_obs_aa = 0
+        if(pco%gwflow_obs%d == 'y') gwflag_obs_day = 1
+        if(pco%gwflow_obs%m == 'y') gwflag_obs_mon = 1
+        if(pco%gwflow_obs%y == 'y') gwflag_obs_yr  = 1
+        if(pco%gwflow_obs%a == 'y') gwflag_obs_aa  = 1
+        gwflag_obs = max(gwflag_obs_day, gwflag_obs_mon, gwflag_obs_yr, gwflag_obs_aa)
+        write(out_gw,*) '          print.prt gwflow_obs controls observation well output'
+      endif
+      if(pco%gwflow_pump%already_read_in) then
+        gwflag_pump = 0
+        if(pco%gwflow_pump%d == 'y' .or. pco%gwflow_pump%m == 'y' .or. &
+           pco%gwflow_pump%y == 'y' .or. pco%gwflow_pump%a == 'y') gwflag_pump = 1
+        write(out_gw,*) '          print.prt gwflow_pump controls HRU pumping output'
+      endif
+      if(pco%gwflow_heat%already_read_in) then
+        gwflag_heat_day = 0; gwflag_heat_yr = 0; gwflag_heat_aa = 0
+        if(pco%gwflow_heat%d == 'y') gwflag_heat_day = 1
+        if(pco%gwflow_heat%y == 'y') gwflag_heat_yr  = 1
+        if(pco%gwflow_heat%a == 'y') gwflag_heat_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_heat controls heat balance output'
+      endif
+      if(pco%gwflow_solute%already_read_in) then
+        gwflag_solute_day = 0; gwflag_solute_mon = 0; gwflag_solute_yr = 0; gwflag_solute_aa = 0
+        if(pco%gwflow_solute%d == 'y') gwflag_solute_day = 1
+        if(pco%gwflow_solute%m == 'y') gwflag_solute_mon = 1
+        if(pco%gwflow_solute%y == 'y') gwflag_solute_yr  = 1
+        if(pco%gwflow_solute%a == 'y') gwflag_solute_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_solute controls solute balance output'
+      endif
+      if(pco%gwflow_flux%already_read_in) then
+        gwflag_flux = 0
+        if(pco%gwflow_flux%d == 'y' .or. pco%gwflow_flux%y == 'y') gwflag_flux = 1
+        write(out_gw,*) '          print.prt gwflow_flux controls canal/pond/tile/chan diagnostic output'
+      endif
 
       !structured uses the same 1..ncell id space as unstructured, so cell_id_list is the identity
       if(grid_type == "structured") then
@@ -888,10 +939,12 @@
         enddo
         allocate(hru_pump_obs(num_hru_pump_obs))
         hru_pump_obs = 0.
-        open(out_hru_pump_obs,file='gwflow_cell_wb_ppag_obs_day.txt')
-        write(out_hru_pump_obs,*) 'Daily groundwater pumping (m3) for specified HRUs'
-        write(out_hru_pump_obs,*) 'Columns = HRUs (same order as in gwflow.hru_pump_observe)'
-        write(out_hru_pump_obs,*) 'Time(day)    Daily pumping (m3)'
+        if(gwflag_pump == 1) then
+          open(out_hru_pump_obs,file='gwflow_cell_wb_ppag_obs_day.txt')
+          write(out_hru_pump_obs,*) 'Daily groundwater pumping (m3) for specified HRUs'
+          write(out_hru_pump_obs,*) 'Columns = HRUs (same order as in gwflow.hru_pump_observe)'
+          write(out_hru_pump_obs,*) 'Time(day)    Daily pumping (m3)'
+        endif
       endif
 
       !groundwater pumping (specified) ------------------------------------------------------------
