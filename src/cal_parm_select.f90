@@ -1087,7 +1087,7 @@
             gw_fp_K(ielem) = chg_par(gw_fp_K(ielem), chg_typ, chg_val, absmin, absmax)
           endif
 
-        !! gwflow channel parameters (object type "sdc", ielem = channel index)
+        !! gwflow channel parameters (object type "gwf_riv" or "sdc", ielem = channel index)
         case ("stream_K")
           if(bsn_cc%gwflow == 1) then
             do icell=1,gw_chan_info(ielem)%ncon
@@ -1102,8 +1102,9 @@
             enddo
           endif
 
+        !! single value for all channels (object type "gwf_sgl"; ielem==1 guard prevents compounding)
         case ("stream_bed")
-          if(bsn_cc%gwflow == 1) then
+          if(bsn_cc%gwflow == 1 .and. ielem == 1) then
             gw_bed_change = chg_par(gw_bed_change, chg_typ, chg_val, absmin, absmax)
           endif
 

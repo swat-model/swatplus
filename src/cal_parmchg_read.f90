@@ -140,6 +140,10 @@
               cal_upd(i)%num_elem = db_mx%tmpfiles
             case ("gwf") !gwflow parameters - default to all cells
                cal_upd(i)%num_elem = ncell
+            case ("gwf_riv") !gwflow channel parameters - default to all channels
+               cal_upd(i)%num_elem = sp_ob%chandeg
+            case ("gwf_sgl") !gwflow single-value parameters - applied once
+               cal_upd(i)%num_elem = 1
             end select
             
             allocate (cal_upd(i)%num(cal_upd(i)%num_elem), source = 0)
