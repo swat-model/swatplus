@@ -2046,7 +2046,7 @@
       endif
 
       !average annual water balance (basin) -----------------------------------------------------
-      gw_hyd_grid_aa%chng = gw_hyd_grid_aa%chng + (vaft_grid-vbef_grid)
+      gw_hyd_grid_aa%chng = gw_hyd_grid_aa%chng / nbyr_r
       gw_hyd_grid_aa%rech = gw_hyd_grid_aa%rech / nbyr_r
       gw_hyd_grid_aa%gwet = gw_hyd_grid_aa%gwet / nbyr_r
       gw_hyd_grid_aa%gwsw = gw_hyd_grid_aa%gwsw / nbyr_r
@@ -2079,7 +2079,7 @@
       endif
 
       !average annual heat fluxes (basin) -------------------------------------------------------
-      gw_heat_grid_aa%chng = gw_heat_grid_aa%chng + (heat_haft_grid-heat_hbef_grid)
+      gw_heat_grid_aa%chng = gw_heat_grid_aa%chng / nbyr_r
       gw_heat_grid_aa%rech = gw_heat_grid_aa%rech / nbyr_r
       gw_heat_grid_aa%gwet = gw_heat_grid_aa%gwet / nbyr_r
       gw_heat_grid_aa%gwsw = gw_heat_grid_aa%gwsw / nbyr_r
@@ -2112,7 +2112,7 @@
       !average annual solute values (basin) -----------------------------------------------------
       if(gw_solute_flag == 1) then
         do s=1,gw_nsolute
-          sol_grid_chng_tt(s) = sol_grid_chng_tt(s) + (sol_grid_maft-sol_grid_mbef)
+          sol_grid_chng_tt(s) = sol_grid_chng_tt(s) / nbyr_r
           sol_grid_rech_tt(s) = sol_grid_rech_tt(s) / nbyr_r
           sol_grid_gwsw_tt(s) = sol_grid_gwsw_tt(s) / nbyr_r
           sol_grid_swgw_tt(s) = sol_grid_swgw_tt(s) / nbyr_r
