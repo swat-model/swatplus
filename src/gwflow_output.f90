@@ -47,8 +47,12 @@
         write(out_gw,*) '          print.prt gwflow_wb overrides gwflow.input flags'
       endif
       if(pco%gwflow_obs%already_read_in) then
-        gwflag_obs = 0
-        if(pco%gwflow_obs%d == 'y') gwflag_obs = 1
+        gwflag_obs_day = 0; gwflag_obs_mon = 0; gwflag_obs_yr = 0; gwflag_obs_aa = 0
+        if(pco%gwflow_obs%d == 'y') gwflag_obs_day = 1
+        if(pco%gwflow_obs%m == 'y') gwflag_obs_mon = 1
+        if(pco%gwflow_obs%y == 'y') gwflag_obs_yr  = 1
+        if(pco%gwflow_obs%a == 'y') gwflag_obs_aa  = 1
+        gwflag_obs = max(gwflag_obs_day, gwflag_obs_mon, gwflag_obs_yr, gwflag_obs_aa)
         write(out_gw,*) '          print.prt gwflow_obs controls observation well output'
       endif
       if(pco%gwflow_pump%already_read_in) then
@@ -73,6 +77,44 @@
         gwflag_flux = 0
         if(pco%gwflow_flux%d == 'y' .or. pco%gwflow_flux%y == 'y') gwflag_flux = 1
         write(out_gw,*) '          print.prt gwflow_flux controls canal/pond/tile/chan diagnostic output'
+      endif
+
+      !open files for observation well output (after the print.prt overrides above)
+      if(gwflag_obs_day == 1) then
+        open(out_gwobs,file='gwflow_obs_day.txt')
+        write(out_gwobs,*) 'gwflow observation well daily output (-99 = not simulated)'
+        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
+      endif
+      if(gwflag_obs_mon == 1) then
+        open(out_gwobs_mon,file='gwflow_obs_mon.txt')
+        write(out_gwobs_mon,*) 'gwflow observation well monthly avg (-99 = not simulated)'
+        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
+      endif
+      if(gwflag_obs_yr == 1) then
+        open(out_gwobs_yr,file='gwflow_obs_yr.txt')
+        write(out_gwobs_yr,*) 'gwflow observation well annual avg (-99 = not simulated)'
+        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
+      endif
+      if(gwflag_obs_aa == 1) then
+        open(out_gwobs_aa,file='gwflow_obs_aa.txt')
+        write(out_gwobs_aa,*) 'gwflow observation well avg annual (-99 = not simulated)'
+        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
       endif
 
       !open file to track daily groundwater water balance
@@ -699,7 +741,7 @@
           enddo
         endif
       enddo
-      if(gwflag_obs == 1) then
+      if(gwflag_obs_day == 1) then
         do k=1,gw_num_obs_wells
           obs_temp = -99.
           obs_no3 = -99.
@@ -1379,7 +1421,7 @@
         endif
 
         !--- obs well monthly output ---
-        if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
+        if(gwflag_obs_mon == 1 .and. gw_num_obs_wells > 0) then
           do k=1,gw_num_obs_wells
             i = gw_obs_cells(k)
             obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
@@ -1671,11 +1713,13 @@
             gw_obs_sol_aa(k,1) = gw_obs_sol_aa(k,1) + obs_no3
             gw_obs_sol_aa(k,2) = gw_obs_sol_aa(k,2) + obs_p
           endif
-          write(obs_name,'(a4,i4.4)') 'obs_',k
-          write(out_gwobs_yr,8102) time%day,time%mo,time%day_mo, &
-            time%yrc,k,gw_obs_cells(k),obs_name, &
-            gw_state(i)%hdyr, gw_state(i)%elev - gw_state(i)%hdyr, &
-            obs_temp, obs_no3, obs_p
+          if(gwflag_obs_yr == 1) then
+            write(obs_name,'(a4,i4.4)') 'obs_',k
+            write(out_gwobs_yr,8102) time%day,time%mo,time%day_mo, &
+              time%yrc,k,gw_obs_cells(k),obs_name, &
+              gw_state(i)%hdyr, gw_state(i)%elev - gw_state(i)%hdyr, &
+              obs_temp, obs_no3, obs_p
+          endif
         enddo
       endif
 
@@ -1978,7 +2022,7 @@
       external :: gwflow_write_cell_array
 
       !--- only execute on the last day of the simulation ---
-      if(time%yrc /= time%yrc_end .or. time%day /= time%day_end) return
+      if(time%end_sim /= 1) return
 
       nbyr_r = real(time%nbyr)
       allocate(temp_array(ncell))
@@ -1995,7 +2039,7 @@
       endif
 
       !--- obs well average annual output ---
-      if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
+      if(gwflag_obs_aa == 1 .and. gw_num_obs_wells > 0) then
         do k=1,gw_num_obs_wells
           i = gw_obs_cells(k)
           obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
@@ -2097,7 +2141,7 @@
       gw_heat_grid_aa%canl = gw_heat_grid_aa%canl / nbyr_r
       gw_heat_grid_aa%fpln = gw_heat_grid_aa%fpln / nbyr_r
       gw_heat_grid_aa%pond = gw_heat_grid_aa%pond / nbyr_r
-      if(gwflag_aa == 1) then
+      if(gwflag_aa == 1 .and. gw_heat_flag == 1) then
         write(out_heatbal_aa,8100) time%day,time%mo,time%day_mo, &
           time%yrc,"       1","       1",bsn%name, &
           gw_heat_grid_aa%chng, &

@@ -11,6 +11,10 @@
       integer :: gwflag_yr = 0      !               !flag for writing yearly mass balance file
       integer :: gwflag_aa = 0      !               !flag for writing average annual mass balance file
       integer :: gwflag_obs = 1     !               !flag for writing observation well output (default on)
+      integer :: gwflag_obs_day = 1 !               !flag for writing daily observation well output
+      integer :: gwflag_obs_mon = 1 !               !flag for writing monthly observation well output
+      integer :: gwflag_obs_yr = 1  !               !flag for writing yearly observation well output
+      integer :: gwflag_obs_aa = 1  !               !flag for writing average annual observation well output
       integer :: gwflag_pump = 1    !               !flag for writing HRU pumping output (default on)
       integer :: gwflag_heat = 1    !               !flag for writing heat balance output (default on if heat active)
       integer :: gwflag_solute = 1  !               !flag for writing solute balance output (default on if solute active)

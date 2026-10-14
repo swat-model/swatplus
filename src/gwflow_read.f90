@@ -567,37 +567,7 @@
         end select
       enddo
       close(in_gw)
-      !open file for writing out daily head values
-      if(gwflag_obs == 1) then
-        open(out_gwobs,file='gwflow_obs_day.txt')
-        write(out_gwobs,*) 'gwflow observation well daily output (-99 = not simulated)'
-        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-        open(out_gwobs_mon,file='gwflow_obs_mon.txt')
-        write(out_gwobs_mon,*) 'gwflow observation well monthly avg (-99 = not simulated)'
-        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-        open(out_gwobs_yr,file='gwflow_obs_yr.txt')
-        write(out_gwobs_yr,*) 'gwflow observation well annual avg (-99 = not simulated)'
-        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-        open(out_gwobs_aa,file='gwflow_obs_aa.txt')
-        write(out_gwobs_aa,*) 'gwflow observation well avg annual (-99 = not simulated)'
-        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-      endif
+      !(observation well output files are opened in gwflow_output_init)
       gw_output_index = 1
       !if structured grid, then convert cell ids
       if(grid_type == "structured") then
@@ -2320,20 +2290,23 @@
       !(channel observation cells: now the obs column of chancell.gw, handled with channel-cell
       ! processing above; no separate file)
 
-      !prepare hydrograph separation array
+      !prepare hydrograph separation array (daily output, written only when daily gwflow output is on)
       allocate(hydsep_flag(sp_ob%chandeg))
-      hydsep_flag = 1  !enable hydrograph separation output for all channels
+      hydsep_flag = 0
+      if(gwflag_day == 1) hydsep_flag = 1  !enable hydrograph separation output for all channels
       allocate(chan_hyd_sep(sp_ob%chandeg,6))
       chan_hyd_sep = 0.
-      open(out_hyd_sep,file='gwflow_chan_hydsep_day.txt')
-      write(out_hyd_sep,*) 'gwflow channel hydrograph separation (m3/sec)'
-      write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
-        'jday','mon','day','yr','unit','gis_id','name', &
-        'surf_runoff','lateral','gw_discharge','stream_seep', &
-        'satex_gw','satex_sw','tile_drain'
-      write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
-        '','','','','','','', &
-        'm3/s','m3/s','m3/s','m3/s','m3/s','m3/s','m3/s'
+      if(gwflag_day == 1) then
+        open(out_hyd_sep,file='gwflow_chan_hydsep_day.txt')
+        write(out_hyd_sep,*) 'gwflow channel hydrograph separation (m3/sec)'
+        write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'surf_runoff','lateral','gw_discharge','stream_seep', &
+          'satex_gw','satex_sw','tile_drain'
+        write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
+          '','','','','','','', &
+          'm3/s','m3/s','m3/s','m3/s','m3/s','m3/s','m3/s'
+      endif
 
       !gwflow record file (skip line)
       write(out_gw,*)
