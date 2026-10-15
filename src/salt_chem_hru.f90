@@ -163,14 +163,14 @@
         ion7 = cs_soil(j)%ly(jj)%saltc(7) !carbonate
         ion8 = cs_soil(j)%ly(jj)%saltc(8)!bicarbonate
         
-        Sul_Conc(1) = ion1*((1.0/1000)*(1.0/96.06)) !sulfate
-        Cal_Conc(1) = ion2*((1.0/1000)*(1.0/40.078)) !calcium
-        Mg_Conc(1) = ion3*((1.0/1000)*(1.0/24.305)) !magnesium
-        Sod_Conc(1) = ion4*((1.0/1000)*(1.0/23.0)) !sodium
-        Pot_Conc(1) = ion5*((1.0/1000)*(1.0/39.0)) !potassium
-        Cl_Conc(1) = ion6*((1.0/1000)*(1.0/35.45)) !chloride
-        Car_Conc(1) = ion7*((1.0/1000)*(1.0/60.01)) !carbonate
-        BiCar_Conc(1) = ion8*((1.0/1000)*(1.0/61.01)) !bicarbonate
+        Sul_Conc(1) = dble(ion1)/(1000.d0*96.06d0) !sulfate
+        Cal_Conc(1) = dble(ion2)/(1000.d0*40.078d0) !calcium
+        Mg_Conc(1) = dble(ion3)/(1000.d0*24.305d0) !magnesium
+        Sod_Conc(1) = dble(ion4)/(1000.d0*23.0d0) !sodium
+        Pot_Conc(1) = dble(ion5)/(1000.d0*39.0d0) !potassium
+        Cl_Conc(1) = dble(ion6)/(1000.d0*35.45d0) !chloride
+        Car_Conc(1) = dble(ion7)/(1000.d0*60.01d0) !carbonate
+        BiCar_Conc(1) = dble(ion8)/(1000.d0*61.01d0) !bicarbonate
 
         !define the activity coefficient using Extended Debye-Huckel equation
         call Ionic_strength(IS_temp,Cal_Conc(1),Sul_Conc(1),Car_Conc(1),&                      
@@ -272,14 +272,14 @@
         !enddo
 
         !update concentration after precipitation
-        upion1 = Sul_Conc(salt_c4)*(96.06*1000.0)
-        upion2 = Cal_Conc(c11)*(40.078*1000.0)
-        upion3 = Mg_Conc(salt_c3)*(24.305*1000.0)
-        upion4 = Sod_Conc(c5)*(23.0*1000.0)
-        upion5 = Pot_Conc(1)*(39.0*1000.0)
-        upion6 = Cl_Conc(c5)*(35.45*1000.0)
-        upion7 = Car_Conc(c22)*(60.01*1000.0)
-        upion8= BiCar_Conc(1)*(61.01*1000.0) 
+        upion1 = Sul_Conc(salt_c4)*(96.06d0*1000.d0)
+        upion2 = Cal_Conc(c11)*(40.078d0*1000.d0)
+        upion3 = Mg_Conc(salt_c3)*(24.305d0*1000.d0)
+        upion4 = Sod_Conc(c5)*(23.0d0*1000.d0)
+        upion5 = Pot_Conc(1)*(39.0d0*1000.d0)
+        upion6 = Cl_Conc(c5)*(35.45d0*1000.d0)
+        upion7 = Car_Conc(c22)*(60.01d0*1000.d0)
+        upion8= BiCar_Conc(1)*(61.01d0*1000.d0) 
 
         !Cation Exchange package --------------------------------------------------------------------------
         call cationexchange
@@ -287,10 +287,10 @@
         !skipping cation exchange if: 
         if (upion2.le.0 .or. upion3.le.0 .or. upion4.le.0 .or. &      
             upion5.le.0) then
-          upion2 = Cal_Conc(c11)*(40.078*1000.0)
-          upion3 = Mg_Conc(salt_c3)*(24.305*1000.0)
-          upion4 = Sod_Conc(c5)*(23.0*1000.0)
-          upion5 = Pot_Conc(1)*(39.0*1000.0)
+          upion2 = Cal_Conc(c11)*(40.078d0*1000.d0)
+          upion3 = Mg_Conc(salt_c3)*(24.305d0*1000.d0)
+          upion4 = Sod_Conc(c5)*(23.0d0*1000.d0)
+          upion5 = Pot_Conc(1)*(39.0d0*1000.d0)
           SkipedIEX = SkipedIEX + 1
         else
           upion2 = upion2
