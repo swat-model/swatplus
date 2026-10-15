@@ -84,7 +84,7 @@
 !!!!! average annual print
          if (time%end_sim == 1 .and. pco%pest%a == "y") then
            chpst_a(j)%pest(ipest) = chpst_a(j)%pest(ipest) / time%yrs_prt
-           chpst_a(j)%pest(ipest) = chpst_a(j)%pest(ipest) // time%yrs_prt
+           chpst_a(j)%pest(ipest) = chpst_a(j)%pest(ipest) // time%days_prt
            write (2811,100) time%day, time%mo, time%day_mo, time%yrc, j, ob(iob)%gis_id, ob(iob)%name, cs_db%pests(ipest), &
              chpst_a(j)%pest(ipest)
            if (pco%csvout == "y") then
