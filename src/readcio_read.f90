@@ -83,6 +83,11 @@
          if (eof < 0) exit
          read (107,*,iostat=eof) name, in_path_wnd
          if (eof < 0) exit
+         if (len_trim(in_path_pcp%pcp) == len(in_path_pcp%pcp)) error stop 'file.cio: pcp_path may be cut at 256 characters'
+         if (len_trim(in_path_tmp%tmp) == len(in_path_tmp%tmp)) error stop 'file.cio: tmp_path may be cut at 256 characters'
+         if (len_trim(in_path_slr%slr) == len(in_path_slr%slr)) error stop 'file.cio: slr_path may be cut at 256 characters'
+         if (len_trim(in_path_hmd%hmd) == len(in_path_hmd%hmd)) error stop 'file.cio: hmd_path may be cut at 256 characters'
+         if (len_trim(in_path_wnd%wnd) == len(in_path_wnd%wnd)) error stop 'file.cio: wnd_path may be cut at 256 characters'
 !!!!!weather path code
 !!!!!output path code
          ! Read the whole line to handle spaces and avoid '/' termination in list-directed input
