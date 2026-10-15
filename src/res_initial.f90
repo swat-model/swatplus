@@ -109,7 +109,8 @@
             res_water(ires)%pest(ipest) = pest_water_ini(init)%water(ipest)
             res_benthic(ires)%pest(ipest) = pest_water_ini(init)%benthic(ipest)
             !! calculate mixing velocity using molecular weight and porosity
-            res_ob(ires)%aq_mix(ipest) = pestdb(ipest_db)%mol_wt * (1. - res_sed(res_dat(idat)%sed)%bd / 2.65)
+            res_ob(ires)%aq_mix(ipest) = pestdb(ipest_db)%mol_wt ** (-.6666) * (1. - res_sed(res_dat(idat)%sed)%bd / 2.65) &
+                                                                                                        * (69.35 / 365)
           end do
                   
           !! initialize pathogens in reservoir water and benthic from input data
