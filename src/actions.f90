@@ -4,7 +4,7 @@
       use time_module
       use aquifer_module
       use hru_module, only : hru, cn2, fertno3, fertnh3, fertorgn, fertorgp, fertsolp,   &
-        ihru, ipl, isol,  phubase, sol_sumno3, sol_sumsolp, qtile, snodb
+        ihru, ipl, isol,  phubase, sol_sumno3, sol_sumsolp, qtile, snodb, sdr
       use soil_module
       use plant_module
       use plant_data_module
@@ -24,7 +24,6 @@
       use calibration_data_module
       use fertilizer_data_module
       use maximum_data_module
-      use tiles_data_module
       use water_body_module
       use reservoir_data_module
       use manure_allocation_module
@@ -59,6 +58,7 @@
       integer :: idp = 0                   !         |
       integer :: istr = 0                  !         |
       integer :: istr1 = 0                 !         |
+      integer :: ilog = 0                  !         |structure record written to lu_change_out
       integer :: iplt_bsn = 0
       integer :: irrop = 0                 !         |
       integer :: igr = 0
@@ -1127,8 +1127,14 @@
             end if
             !! write to new landuse change file
             istr = hru(j)%tiledrain
+            ilog = istr1
+            if (ilog < 0 .or. ilog > db_mx%sdr) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " TILE_INSTALL ",        &
-              sdr(istr)%name, sdr(istr1)%name, "   0   0"
+              sdr(istr)%name, sdr(ilog)%name, "   0   0"
+            !! the installed tile becomes the HRU's tile, so that swr_percmain drains it (only when the lookup matched)
+            if (ilog > 0) then
+              if (sdr(ilog)%name == d_tbl%act(iac)%file_pointer) hru(j)%tiledrain = ilog
+            end if
                       
           !install septic tanks
           case ("septic_install")
@@ -1146,8 +1152,10 @@
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("septic          ", istr1, j)
             end if
+            ilog = istr1
+            if (ilog < 0 .or. ilog > db_mx%septic) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " SEPTIC_INSTALL ",       &
-              sdr(istr)%name, sdr(istr1)%name, "   0   0"
+              d_tbl%act(iac)%file_pointer, sep(ilog)%name, "   0   0"
                                     
           !install filter strips
           case ("fstrip_install")
@@ -1165,8 +1173,10 @@
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("fstrip         ", istr1, j)
             end if
+            ilog = istr1
+            if (ilog < 0 .or. ilog > db_mx%filtop_db) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " FSTRIP_INSTALL ",       &
-              sdr(istr)%name, sdr(istr1)%name, "   0   0"
+              d_tbl%act(iac)%file_pointer, filtstrip_db(ilog)%name, "   0   0"
                                               
           !install grass waterways
           case ("grassww_install")
@@ -1185,16 +1195,20 @@
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("grassww         ", istr1, j)
             end if
+            ilog = istr1
+            if (ilog < 0 .or. ilog > db_mx%grassop_db) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " GRASSWW_INSTALL ",       &
-              sdr(istr)%name, sdr(istr1)%name, "   0   0"
+              d_tbl%act(iac)%file_pointer, grwaterway_db(ilog)%name, "   0   0"
                                                          
           !install grass waterways
           case ("grassww_uninstall")
             j = d_tbl%act(iac)%ob_num
             if (j == 0) j = ob_cur
             hru(j)%lumv%grwat_i = 0
+            ilog = hru(j)%lumv%ngrwat
+            if (ilog < 0 .or. ilog > db_mx%grassop_db) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " GRASSWW_UNINSTALL ",       &
-              sdr(istr)%name, sdr(istr1)%name, "   0   0"
+              grwaterway_db(ilog)%name, "null", "   0   0"
           !user defined bmp reductions
           case ("user_def_bmp")
             j = d_tbl%act(iac)%ob_num
@@ -1211,8 +1225,10 @@
             if (d_tbl%act(iac)%file_pointer /= "null") then
               call structure_set_parms("user_def        ", istr1, j)
             end if
+            ilog = istr1
+            if (ilog < 0 .or. ilog > db_mx%bmpuserop_db) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " USER_DEF_BMP ",       &
-              sdr(istr)%name, sdr(istr1)%name, "   0   0"
+              d_tbl%act(iac)%file_pointer, bmpuser_db(ilog)%name, "   0   0"
                                         
           !channel change
           case ("chan_change")
