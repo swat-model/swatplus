@@ -49,6 +49,8 @@
       integer :: k = 0                !none       |column counter
       integer :: ios = 0              !none       |read status of the plant line
       real :: col54 = 0.              !none       |column 54 read as a number, to tell CLASS (text) from lignin
+      real :: rcol = 0.               !none       |days_mat or mat_yrs as written, possibly a real ("110.00000")
+      logical :: lin_fix = .false.    !           |a column of the plant line was converted to integer text
       type (input_lignin_partition_fracs) :: lig_in   !  |lignin fractions from columns 54-56 (carbon layout)
 
 
@@ -102,6 +104,38 @@
           end do
           if (eof < 0) exit
           call split_line (line, fields, nf)
+
+          !! days_mat (column 5) and mat_yrs (column 38) are integers in pldb, but older SWAT+ Editor files write them as
+          !! whole-number reals ("110.00000"). gfortran will not read that into an integer (ifx does), so convert the two
+          !! columns to integer text before the line is read into pldb. a value with a fraction ("110.5") is not a whole
+          !! number of days or years, so it stops the run instead of being cut off.
+          lin_fix = .false.
+          do k = 5, 38, 33
+            if (nf >= k) then
+              if (scan (fields(k), ".eEdD") > 0) then
+                read (fields(k),*,iostat=ios) rcol
+                if (ios == 0) then
+                  if (abs (rcol - anint (rcol)) > 1.e-4) then
+                    write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " column ", k, &
+                                " (", trim(merge ("days_mat", "mat_yrs ", k == 5)), ") is ", trim(fields(k)), &
+                                "; it must be a whole number"
+                    write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " column ", k, &
+                                " (", trim(merge ("days_mat", "mat_yrs ", k == 5)), ") is ", trim(fields(k)), &
+                                "; it must be a whole number"
+                    error stop
+                  end if
+                  write (fields(k),'(i0)') nint (rcol)
+                  lin_fix = .true.
+                end if
+              end if
+            end if
+          end do
+          if (lin_fix) then
+            line = ""
+            do k = 1, nf
+              line = trim(line) // " " // trim(fields(k))
+            end do
+          end if
 
           if (bsn_cc%cswat == 2) then
             !! carbon layout - avg_lig_frac, ab_lig_frac, bg_lig_frac are columns 54-56, between bio_cov and CLASS
