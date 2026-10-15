@@ -8,6 +8,7 @@
       use maximum_data_module
       use time_module
       use exco_module
+      use gwflow_module, only : div_conc_cs
       
       implicit none      
  
@@ -35,10 +36,11 @@
       
       eof = 0
       imax = 0
+      if (cs_db%num_cs == 0) return
 
       !read all recall files
       inquire (file="cs_recall.rec", exist=i_exist)
-      if (i_exist .or. in_rec%recall_rec /= "null") then
+      if (i_exist) then
       do
         open (107,file="cs_recall.rec")
         read (107,*,iostat=eof) titldum
@@ -54,45 +56,9 @@
           imax = Max(imax,i) 
         end do
         
-        !allocate recall_cs array
-        allocate (rec_cs(0:imax))
-        
-        !allocate cs balance arrays
-        !point sources originating from within the watershed
-        allocate (reccsb_d(imax))
-        allocate (reccsb_m(imax))
-        allocate (reccsb_y(imax))
-        allocate (reccsb_a(imax))
-        do ii=1,imax
-          allocate (reccsb_d(ii)%cs(cs_db%num_cs), source = 0.)
-          allocate (reccsb_m(ii)%cs(cs_db%num_cs), source = 0.)
-          allocate (reccsb_y(ii)%cs(cs_db%num_cs), source = 0.)
-          allocate (reccsb_a(ii)%cs(cs_db%num_cs), source = 0.)
-          do ics=1,cs_db%num_cs
-            reccsb_d(ii)%cs(ics) = 0.
-            reccsb_m(ii)%cs(ics) = 0.
-            reccsb_y(ii)%cs(ics) = 0.
-            reccsb_a(ii)%cs(ics) = 0.
-          enddo
-        end do
-        !point sources originating from outside the watershed
-        allocate (recoutcsb_d(imax))
-        allocate (recoutcsb_m(imax))
-        allocate (recoutcsb_y(imax))
-        allocate (recoutcsb_a(imax))
-        do ii=1,imax
-          allocate (recoutcsb_d(ii)%cs(cs_db%num_cs), source = 0.)
-          allocate (recoutcsb_m(ii)%cs(cs_db%num_cs), source = 0.)
-          allocate (recoutcsb_y(ii)%cs(cs_db%num_cs), source = 0.)
-          allocate (recoutcsb_a(ii)%cs(cs_db%num_cs), source = 0.)
-          do ics=1,cs_db%num_cs
-            recoutcsb_d(ii)%cs(ics) = 0.
-            recoutcsb_m(ii)%cs(ics) = 0.
-            recoutcsb_y(ii)%cs(ics) = 0.
-            recoutcsb_a(ii)%cs(ics) = 0.
-          enddo
-        enddo
-        
+        !allocate recall_cs and the cs balance arrays for every recall object in the model, and for every index in the file
+        call alloc_rec_cs (Max(imax, sp_ob%recall))
+
         !go back through the file, reading in the types and filenames
         rewind (107)
         read (107,*,iostat=eof) titldum
@@ -242,6 +208,40 @@
       exit
       enddo
       endif
-      
+
+      !without cs_recall.rec, every recall object still gets zero constituent loads
+      if (.not. allocated(rec_cs)) call alloc_rec_cs (sp_ob%recall)
+
       return
+
+      contains
+
+      subroutine alloc_rec_cs (n)
+        integer, intent (in) :: n
+        integer :: irec
+        allocate (rec_cs(0:n))
+        !point sources originating from within the watershed
+        allocate (reccsb_d(n))
+        allocate (reccsb_m(n))
+        allocate (reccsb_y(n))
+        allocate (reccsb_a(n))
+        !point sources originating from outside the watershed
+        allocate (recoutcsb_d(n))
+        allocate (recoutcsb_m(n))
+        allocate (recoutcsb_y(n))
+        allocate (recoutcsb_a(n))
+        do irec = 1, n
+          allocate (reccsb_d(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (reccsb_m(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (reccsb_y(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (reccsb_a(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_d(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_m(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_y(irec)%cs(cs_db%num_cs), source = 0.)
+          allocate (recoutcsb_a(irec)%cs(cs_db%num_cs), source = 0.)
+        end do
+        !recall_cs also zeroes the diversion concentrations, which gwflow_read allocates only when gwflow runs with solutes
+        if (.not. allocated(div_conc_cs)) allocate (div_conc_cs(cs_db%num_cs,sp_ob%recall), source = 0.)
+      end subroutine alloc_rec_cs
+
       end subroutine recall_read_cs
