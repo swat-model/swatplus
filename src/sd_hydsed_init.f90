@@ -261,7 +261,7 @@
           ! mg = mg/kg * m3*1000. (kg=m3*1000.)
           ch_water(ich)%pest(ipest) = pest_water_ini(ipest_ini)%water(ipest) * ch_stor(ich)%flo * 1000.
           !! calculate volume of active river bed sediment layer - m3
-          bedvol = sd_ch(ich)%chw *sd_ch(ich)%chl * 1000.* pestdb(ipest_ini)%ben_act_dep
+          bedvol = sd_ch(ich)%chw *sd_ch(ich)%chl * 1000.* pestdb(ipest_db)%ben_act_dep
           ch_benthic(ich)%pest(ipest) = pest_water_ini(ipest_ini)%benthic(ipest) * bedvol * 1000.   ! mg = mg/kg * m3*1000.
           !! calculate mixing velocity using molecular weight and porosity
           sd_ch(ich)%aq_mix(ipest) = pestdb(ipest_db)%mol_wt ** (-.6666) * (1. - sd_ch(ich)%ch_bd / 2.65) * (69.35 / 365)
@@ -275,8 +275,8 @@
         ich_ini = sd_dat(ichdat)%init
         ipath_ini = sd_init(ich_ini)%path
         do ipath = 1, cs_db%num_paths
-          ch_water(ich)%path(ipath) = path_water_ini(ipest_ini)%water(ipath)
-          ch_benthic(ich)%path(ipath) = path_water_ini(ipest_ini)%benthic(ipath)
+          ch_water(ich)%path(ipath) = path_water_ini(ipath_ini)%water(ipath)
+          ch_benthic(ich)%path(ipath) = path_water_ini(ipath_ini)%benthic(ipath)
         end do
       end do
       
