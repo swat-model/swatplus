@@ -27,6 +27,7 @@
         real :: wt1 = 0.           !              |
         real :: solpst = 0.        !              |
         real :: pl_frac = 0.       !0-1           |fraction of pesticide applied to each plant
+        real :: lai_sum_local = 0. !m2/m2         |sum of the HRU's plant LAI at the start
         
       !! allocate hru pesticides
       npmx = cs_db%num_pests
@@ -55,11 +56,16 @@
 
         isp_ini = hru(ihru)%dbs%soil_plant_init
         ipest_db = sol_plt_ini(isp_ini)%pest
+        !! pcom%lai_sum is first set by pl_community on day 1, so sum the plants' LAI here, as pest_apply does
+        lai_sum_local = 0.
+        do ipl = 1, pcom(ihru)%npl
+          lai_sum_local = lai_sum_local + pcom(ihru)%plg(ipl)%lai
+        end do
         do ipest = 1, npmx
           hpestb_d(ihru)%pest(ipest)%plant = pest_soil_ini(ipest_db)%plt(ipest)
           do ipl = 1, pcom(ihru)%npl
-            if (pcom(ihru)%lai_sum > 1.e-6) then
-              pl_frac = pcom(ihru)%plg(ipl)%lai / pcom(ihru)%lai_sum
+            if (lai_sum_local > 1.e-6) then
+              pl_frac = pcom(ihru)%plg(ipl)%lai / lai_sum_local
             else
               pl_frac = 0.
             end if
