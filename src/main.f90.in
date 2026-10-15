@@ -17,7 +17,7 @@
       external :: hru_dtbl_actions_init, proc_res, wet_read_hyd, wet_read, wet_read_salt_cs
       external :: wet_all_initial, wet_fp_init, soil_nutcarb_init, proc_cal, proc_open
       external :: unit_hyd_ru_hru, dr_ru, hyd_connect_out, command, time_control
-      external :: calsoft_control, cal_parmchg_read, calhard_control, swift_output
+      external :: calsoft_control, cal_parmchg_read, calhard_control, swift_output, recall_read_salt
       
       integer :: date_time(8)           !              |
       character*10 b(3)                 !              |
@@ -44,6 +44,7 @@
 
       call hyd_connect
       call recall_read
+      call recall_read_salt
       call recalldb_read
       call exco_db_read
       call dr_db_read
