@@ -29,6 +29,7 @@
         hsaltb_m(j)%salt(isalt)%wetq = hsaltb_m(j)%salt(isalt)%wetq + hsaltb_d(j)%salt(isalt)%wetq
         hsaltb_m(j)%salt(isalt)%tile = hsaltb_m(j)%salt(isalt)%tile + hsaltb_d(j)%salt(isalt)%tile
         hsaltb_m(j)%salt(isalt)%perc = hsaltb_m(j)%salt(isalt)%perc + hsaltb_d(j)%salt(isalt)%perc
+        hsaltb_m(j)%salt(isalt)%gwup = hsaltb_m(j)%salt(isalt)%gwup + hsaltb_d(j)%salt(isalt)%gwup
         hsaltb_m(j)%salt(isalt)%wtsp = hsaltb_m(j)%salt(isalt)%wtsp + hsaltb_d(j)%salt(isalt)%wtsp
         hsaltb_m(j)%salt(isalt)%irsw = hsaltb_m(j)%salt(isalt)%irsw + hsaltb_d(j)%salt(isalt)%irsw
         hsaltb_m(j)%salt(isalt)%irgw = hsaltb_m(j)%salt(isalt)%irgw + hsaltb_d(j)%salt(isalt)%irgw
@@ -53,6 +54,7 @@
                          (hsaltb_d(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                          (hsaltb_d(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                          (hsaltb_d(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                         (hsaltb_d(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                          (hsaltb_d(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                          (hsaltb_d(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                          (hsaltb_d(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -74,6 +76,7 @@
                                         (hsaltb_d(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                                         (hsaltb_d(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                                         (hsaltb_d(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                                        (hsaltb_d(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                                         (hsaltb_d(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                                         (hsaltb_d(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                                         (hsaltb_d(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -101,6 +104,7 @@
           hsaltb_y(j)%salt(isalt)%wetq = hsaltb_y(j)%salt(isalt)%wetq + hsaltb_m(j)%salt(isalt)%wetq
           hsaltb_y(j)%salt(isalt)%tile = hsaltb_y(j)%salt(isalt)%tile + hsaltb_m(j)%salt(isalt)%tile
           hsaltb_y(j)%salt(isalt)%perc = hsaltb_y(j)%salt(isalt)%perc + hsaltb_m(j)%salt(isalt)%perc
+          hsaltb_y(j)%salt(isalt)%gwup = hsaltb_y(j)%salt(isalt)%gwup + hsaltb_m(j)%salt(isalt)%gwup
           hsaltb_y(j)%salt(isalt)%wtsp = hsaltb_y(j)%salt(isalt)%wtsp + hsaltb_m(j)%salt(isalt)%wtsp
           hsaltb_y(j)%salt(isalt)%irsw = hsaltb_y(j)%salt(isalt)%irsw + hsaltb_m(j)%salt(isalt)%irsw
           hsaltb_y(j)%salt(isalt)%irgw = hsaltb_y(j)%salt(isalt)%irgw + hsaltb_m(j)%salt(isalt)%irgw
@@ -128,6 +132,7 @@
                            (hsaltb_m(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                            (hsaltb_m(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                            (hsaltb_m(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                           (hsaltb_m(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                            (hsaltb_m(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                            (hsaltb_m(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                            (hsaltb_m(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -149,6 +154,7 @@
                                           (hsaltb_m(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                                           (hsaltb_m(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                                           (hsaltb_m(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                                          (hsaltb_m(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                                           (hsaltb_m(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                                           (hsaltb_m(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                                           (hsaltb_m(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -172,6 +178,7 @@
           hsaltb_m(j)%salt(isalt)%wetq = 0.
           hsaltb_m(j)%salt(isalt)%tile = 0.
           hsaltb_m(j)%salt(isalt)%perc = 0.
+          hsaltb_m(j)%salt(isalt)%gwup = 0.
           hsaltb_m(j)%salt(isalt)%wtsp = 0.
           hsaltb_m(j)%salt(isalt)%irsw = 0.
           hsaltb_m(j)%salt(isalt)%irgw = 0.
@@ -198,6 +205,7 @@
           hsaltb_a(j)%salt(isalt)%wetq = hsaltb_a(j)%salt(isalt)%wetq + hsaltb_y(j)%salt(isalt)%wetq
           hsaltb_a(j)%salt(isalt)%tile = hsaltb_a(j)%salt(isalt)%tile + hsaltb_y(j)%salt(isalt)%tile
           hsaltb_a(j)%salt(isalt)%perc = hsaltb_a(j)%salt(isalt)%perc + hsaltb_y(j)%salt(isalt)%perc
+          hsaltb_a(j)%salt(isalt)%gwup = hsaltb_a(j)%salt(isalt)%gwup + hsaltb_y(j)%salt(isalt)%gwup
           hsaltb_a(j)%salt(isalt)%wtsp = hsaltb_a(j)%salt(isalt)%wtsp + hsaltb_y(j)%salt(isalt)%wtsp
           hsaltb_a(j)%salt(isalt)%irsw = hsaltb_a(j)%salt(isalt)%irsw + hsaltb_y(j)%salt(isalt)%irsw
           hsaltb_a(j)%salt(isalt)%irgw = hsaltb_a(j)%salt(isalt)%irgw + hsaltb_y(j)%salt(isalt)%irgw
@@ -225,6 +233,7 @@
                            (hsaltb_y(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                            (hsaltb_y(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                            (hsaltb_y(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                           (hsaltb_y(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                            (hsaltb_y(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                            (hsaltb_y(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                            (hsaltb_y(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -246,6 +255,7 @@
                                           (hsaltb_y(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                                           (hsaltb_y(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                                           (hsaltb_y(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                                          (hsaltb_y(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                                           (hsaltb_y(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                                           (hsaltb_y(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                                           (hsaltb_y(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -269,6 +279,7 @@
           hsaltb_y(j)%salt(isalt)%wetq = 0.
           hsaltb_y(j)%salt(isalt)%tile = 0.
           hsaltb_y(j)%salt(isalt)%perc = 0.
+          hsaltb_y(j)%salt(isalt)%gwup = 0.
           hsaltb_y(j)%salt(isalt)%wtsp = 0.
           hsaltb_y(j)%salt(isalt)%irsw = 0.
           hsaltb_y(j)%salt(isalt)%irgw = 0.
@@ -295,6 +306,7 @@
           hsaltb_a(j)%salt(isalt)%wetq = hsaltb_a(j)%salt(isalt)%wetq / time%nbyr
           hsaltb_a(j)%salt(isalt)%tile = hsaltb_a(j)%salt(isalt)%tile / time%nbyr
           hsaltb_a(j)%salt(isalt)%perc = hsaltb_a(j)%salt(isalt)%perc / time%nbyr
+          hsaltb_a(j)%salt(isalt)%gwup = hsaltb_a(j)%salt(isalt)%gwup / time%nbyr
           hsaltb_a(j)%salt(isalt)%wtsp = hsaltb_a(j)%salt(isalt)%wtsp / time%nbyr
           hsaltb_a(j)%salt(isalt)%irsw = hsaltb_a(j)%salt(isalt)%irsw / time%nbyr
           hsaltb_a(j)%salt(isalt)%irgw = hsaltb_a(j)%salt(isalt)%irgw / time%nbyr
@@ -315,6 +327,7 @@
                          (hsaltb_a(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                          (hsaltb_a(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                          (hsaltb_a(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                         (hsaltb_a(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                          (hsaltb_a(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                          (hsaltb_a(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                          (hsaltb_a(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
@@ -336,6 +349,7 @@
                                         (hsaltb_a(j)%salt(isalt)%wetq,isalt=1,cs_db%num_salts), &
                                         (hsaltb_a(j)%salt(isalt)%tile,isalt=1,cs_db%num_salts), &
                                         (hsaltb_a(j)%salt(isalt)%perc,isalt=1,cs_db%num_salts), &
+                                        (hsaltb_a(j)%salt(isalt)%gwup,isalt=1,cs_db%num_salts), &
                                         (hsaltb_a(j)%salt(isalt)%wtsp,isalt=1,cs_db%num_salts), &
                                         (hsaltb_a(j)%salt(isalt)%irsw,isalt=1,cs_db%num_salts), &
                                         (hsaltb_a(j)%salt(isalt)%irgw,isalt=1,cs_db%num_salts), &
