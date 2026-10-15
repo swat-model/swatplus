@@ -1131,6 +1131,10 @@
             if (ilog < 0 .or. ilog > db_mx%sdr) ilog = 0
             write (3612,*) j, time%yrc, time%mo, time%day_mo,  " TILE_INSTALL ",        &
               sdr(istr)%name, sdr(ilog)%name, "   0   0"
+            !! the installed tile becomes the HRU's tile, so that swr_percmain drains it (only when the lookup matched)
+            if (ilog > 0) then
+              if (sdr(ilog)%name == d_tbl%act(iac)%file_pointer) hru(j)%tiledrain = ilog
+            end if
                       
           !install septic tanks
           case ("septic_install")
