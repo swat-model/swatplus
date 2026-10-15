@@ -490,6 +490,7 @@
           case ("dwm")    !! set drain depth for drainage water management
             hru(j)%lumv%sdr_dep = mgt%op3
             if (hru(j)%lumv%sdr_dep > 0) then
+              hru(j)%lumv%ldrain = 0
               do jj = 1, soil(j)%nly
                 if (hru(j)%lumv%sdr_dep < soil(j)%phys(jj)%d) hru(j)%lumv%ldrain = jj
                 if (hru(j)%lumv%sdr_dep < soil(j)%phys(jj)%d) exit

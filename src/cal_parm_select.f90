@@ -217,6 +217,7 @@
                          chg_typ, chg_val, absmin, absmax)
         !! define soil layer the drainage tile is in
         if (hru(ielem)%lumv%sdr_dep > 0) then
+          hru(ielem)%lumv%ldrain = 0
           do jj = 1, soil(ielem)%nly
             if (hru(ielem)%lumv%sdr_dep < soil(ielem)%phys(jj)%d) hru(ielem)%lumv%ldrain = jj
             if (hru(ielem)%lumv%sdr_dep < soil(ielem)%phys(jj)%d) exit
