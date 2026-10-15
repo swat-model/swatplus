@@ -76,6 +76,8 @@
                end if
            end if
            
+          !! reset pesticide at start of next time step
+          respst_y(j)%pest(ipest) = res_pestbz
         end if
         
 !!!!! average annual print
