@@ -64,9 +64,9 @@
         
 !!!!!weather path code
        if (in_path_hmd%hmd == "null") then
-         open (108,file = hmd(i)%filename)
+         open (108,file = hmd(i)%filename, status='old')
        else
-        open (108,file = TRIM(ADJUSTL(in_path_hmd%hmd))//hmd(i)%filename)
+        open (108,file = TRIM(ADJUSTL(in_path_hmd%hmd))//hmd(i)%filename, status='old')
        endif
 !!!!!weather path code
 
