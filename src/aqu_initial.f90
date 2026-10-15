@@ -126,7 +126,8 @@
         end if
         !salts !rtb salt
         if (cs_db%num_salts > 0) then
-          allocate (cs_aqu(iaq)%salt(cs_db%num_salts), source = 0.) !salt ion mass (kg)
+          !! the pesticide branch above already allocates cs_aqu(iaq)%salt when the model has a pesticide
+          if (.not. allocated(cs_aqu(iaq)%salt)) allocate (cs_aqu(iaq)%salt(cs_db%num_salts), source = 0.) !salt ion mass (kg)
 
           allocate (cs_aqu(iaq)%salt_min(5), source = 0.)  !salt mineral fractions
 
