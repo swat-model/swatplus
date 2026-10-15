@@ -24,8 +24,11 @@
       do i = 1, 31
          read (107,*,iostat=eof) name, in_sim  
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_basin
+         !! the basin line is read as text so that a file.cio naming two basin files (written before carbon.bsn was
+         !! added) does not consume the next line's first token; see cio_basin_line
+         read (107,'(a)',iostat=eof) line_buffer
          if (eof < 0) exit
+         call cio_basin_line (line_buffer)
          read (107,*,iostat=eof) name, in_cli
          if (eof < 0) exit
          read (107,*,iostat=eof) name, in_con
@@ -112,4 +115,41 @@
        call init_output_path(out_path_value)
             
        return
+
+      contains
+
+      subroutine cio_basin_line (line)
+      !! assign in_basin from the tokens present on the basin line of file.cio:
+      !! <name> <codes_bas> <parms_bas> [carbon_bsn]. A missing carbon_bsn keeps its default. Tokens are separated by
+      !! spaces, tabs or commas, and a quoted name loses its quotes, as in a list-directed read.
+      character(len=*), intent(in) :: line
+      character(len=256) :: tok(8)
+      character(len=3) :: seps
+      integer :: ntok, pos, i0, n
+
+      seps = " ," // char(9)
+      tok = ""
+      ntok = 0
+      pos = 1
+      n = len_trim(line)
+      do
+        do while (pos <= n .and. index(seps, line(pos:pos)) > 0)
+          pos = pos + 1
+        end do
+        if (pos > n .or. ntok >= size(tok)) exit
+        i0 = pos
+        do while (pos <= n .and. index(seps, line(pos:pos)) == 0)
+          pos = pos + 1
+        end do
+        ntok = ntok + 1
+        tok(ntok) = line(i0:pos-1)
+        if (pos - i0 >= 2 .and. (line(i0:i0) == '"' .or. line(i0:i0) == "'") .and. line(pos-1:pos-1) == line(i0:i0)) then
+          tok(ntok) = line(i0+1:pos-2)
+        end if
+      end do
+
+      if (ntok >= 2) in_basin%codes_bas = trim(tok(2))
+      if (ntok >= 3) in_basin%parms_bas = trim(tok(3))
+      if (ntok >= 4) in_basin%carbon_bsn = trim(tok(4))
+      end subroutine cio_basin_line
       end subroutine readcio_read  
