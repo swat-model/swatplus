@@ -127,7 +127,7 @@
                     endif
                   end do
                 
-                  case ("till")
+                  case ("till", "tillage")
                   do idb = 1, db_mx%tillparm
                     if (dtbl_lum(i)%act(iac)%option == tilldb(idb)%tillnm) then
                       dtbl_lum(i)%act_typ(iac) = idb
