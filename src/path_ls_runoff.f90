@@ -3,23 +3,21 @@
       use pathogen_data_module
       use constituent_mass_module
       use output_ls_pathogen_module
-      use hru_module, only : hru, sol_plt_ini, ihru, sedyld, qday, enratio
+      use hru_module, only : hru, ihru, sedyld, qday, enratio
       use soil_module
       
       implicit none
 
       integer :: j = 0      !none          |hru number
       integer :: ipath = 0  !none          |pathogen counter
-      integer :: ipath_db = 0 !none          |pathogen number from data file
-      integer :: isp_ini = 0  !none          |soil-plant initialization number from data file
+      integer :: ipath_db = 0 !none          |the pathogen's record in pathogens.pth
       real :: cpath = 0.    !              |concentration of pathogen in soil
       real :: path_kd = 0.
 
       j = ihru
          
       do ipath = 1, cs_db%num_paths
-        isp_ini = hru(ihru)%dbs%soil_plant_init
-        ipath_db = sol_plt_ini(isp_ini)%path
+        ipath_db = cs_db%path_num(ipath)
         
         path_kd = path_db(ipath_db)%kd
         !! compute soluble bacteria in the surface runoff
