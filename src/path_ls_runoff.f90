@@ -26,7 +26,7 @@
         hpath_bal(j)%path(ipath)%surq = path_kd * cs_soil(j)%ly(1)%path(ipath) * qday /                        &
                  (soil(j)%phys(1)%bd * soil(j)%phys(1)%d * path_db(ipath_db)%kd)
         hpath_bal(j)%path(ipath)%surq = Min(hpath_bal(j)%path(ipath)%surq, cs_soil(j)%ly(1)%path(ipath))
-        hpath_bal(j)%path(ipath)%surq = Max(cs_soil(j)%ly(1)%path(ipath), 0.)
+        hpath_bal(j)%path(ipath)%surq = Max(hpath_bal(j)%path(ipath)%surq, 0.)
         cs_soil(j)%ly(1)%path(ipath) = cs_soil(j)%ly(1)%path(ipath) - hpath_bal(j)%path(ipath)%surq
 
         !! compute bacteria transported with sediment
@@ -34,6 +34,8 @@
           cpath = (1. - path_kd) * cs_soil(j)%ly(1)%path(ipath) * enratio / soil(j)%phys(1)%conv_wt
           hpath_bal(j)%path(ipath)%sed = .0001 * cpath * sedyld(j) / (hru(j)%area_ha + 1.e-6)
           hpath_bal(j)%path(ipath)%sed = Min(hpath_bal(j)%path(ipath)%sed, cs_soil(j)%ly(1)%path(ipath))
+          !! (1 - kd) is negative for kd > 1; the transported amount is never negative, so it cannot add to the store
+          hpath_bal(j)%path(ipath)%sed = Max(hpath_bal(j)%path(ipath)%sed, 0.)
           cs_soil(j)%ly(1)%path(ipath) = cs_soil(j)%ly(1)%path(ipath) - hpath_bal(j)%path(ipath)%sed
         end if
       end do
