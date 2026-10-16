@@ -27,6 +27,8 @@
       real :: pest_init = 0.        !mg            |amount of pesticide before decay
       real :: pest_end = 0.         !mg            |amount of pesticide after decay
       real :: mol_wt_rto = 0.   !ratio      |molecular weight ratio of duaghter to parent pesticide
+      real :: metab_aq = 0.     !kg         |metabolite formed in the water layer from one parent
+      real :: metab_ben = 0.    !kg         |metabolite formed in the benthic layer from one parent
       integer :: ipest_db = 0   !none       |pesticide number from pesticide data base
       integer :: ipseq = 0      !none       |sequential basin pesticide number
       integer :: ipdb = 0       !none       |sequential pesticide number of daughter pesticide
@@ -80,9 +82,10 @@
             ipseq = pestcp(ipest_db)%daughter(imeta)%num
             ipdb = cs_db%pest_num(ipseq)
             mol_wt_rto = pestdb(ipdb)%mol_wt / pestdb(ipest_db)%mol_wt
-            respst_d(jres)%pest(ipseq)%metab = respst_d(jres)%pest(ipseq)%metab + respst_d(jres)%pest(ipst)%react *     &
-                                           pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto
-            res_water(jres)%pest(ipseq) = res_water(jres)%pest(ipseq) + respst_d(jres)%pest(ipseq)%metab
+            !! add only this parent's metabolite to the store, not the running output record (as in ch_rtpest)
+            metab_aq = respst_d(jres)%pest(ipst)%react * pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto
+            respst_d(jres)%pest(ipseq)%metab = respst_d(jres)%pest(ipseq)%metab + metab_aq
+            res_water(jres)%pest(ipseq) = res_water(jres)%pest(ipseq) + metab_aq
           end do
         end if
         
@@ -153,9 +156,10 @@
             ipseq = pestcp(ipest_db)%daughter(imeta)%num
             ipdb = cs_db%pest_num(ipseq)
             mol_wt_rto = pestdb(ipdb)%mol_wt / pestdb(ipest_db)%mol_wt
-            respst_d(jres)%pest(ipseq)%metab = respst_d(jres)%pest(ipseq)%metab + respst_d(jres)%pest(ipst)%react *     &
-                                           pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto
-            res_benthic(jres)%pest(ipseq) = res_benthic(jres)%pest(ipseq) + respst_d(jres)%pest(ipseq)%metab
+            !! add only this parent's metabolite to the store, not the running output record (as in ch_rtpest)
+            metab_ben = respst_d(jres)%pest(ipst)%react * pestcp(ipest_db)%daughter(imeta)%soil_fr * mol_wt_rto
+            respst_d(jres)%pest(ipseq)%metab = respst_d(jres)%pest(ipseq)%metab + metab_ben
+            res_benthic(jres)%pest(ipseq) = res_benthic(jres)%pest(ipseq) + metab_ben
           end do
         end if
 
