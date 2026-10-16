@@ -106,8 +106,11 @@
           init = res_init(i)%pest
           do ipest = 1, cs_db%num_pests
             ipest_db = cs_db%pest_num(ipest)
-            res_water(ires)%pest(ipest) = pest_water_ini(init)%water(ipest)
-            res_benthic(ires)%pest(ipest) = pest_water_ini(init)%benthic(ipest)
+            !! with no pest_water.ini sets (the file is absent or empty) the reservoir's pesticides stay zero
+            if (db_mx%pestw_ini > 0) then
+              res_water(ires)%pest(ipest) = pest_water_ini(init)%water(ipest)
+              res_benthic(ires)%pest(ipest) = pest_water_ini(init)%benthic(ipest)
+            end if
             !! calculate mixing velocity using molecular weight and porosity
             res_ob(ires)%aq_mix(ipest) = pestdb(ipest_db)%mol_wt * (1. - res_sed(ires)%bd / 2.65)
           end do
@@ -115,8 +118,13 @@
           !! initialize pathogens in reservoir water and benthic from input data
           init = res_init(i)%path
           do ipath = 1, cs_db%num_paths
-            res_water(ires)%path(ipath) = path_water_ini(init)%water(ipath)
-            res_benthic(ires)%path(ipath) = path_water_ini(init)%benthic(ipath)
+            !! with no path_water.ini sets (the file is absent or empty) the reservoir's pathogens stay zero
+            if (db_mx%pathw_ini > 0) then
+              res_water(ires)%path(ipath) = path_water_ini(init)%water(ipath)
+              res_benthic(ires)%path(ipath) = path_water_ini(init)%benthic(ipath)
+            else
+              res_water(ires)%path(ipath) = 0.
+            end if
           end do
                         
           !! calculate initial surface area       

@@ -8,6 +8,7 @@
         use soil_module
         use organic_mineral_mass_module
         use constituent_mass_module
+        use maximum_data_module
         use output_ls_pesticide_module
         use hydrograph_module, only : sp_ob
         use plant_module
@@ -55,24 +56,27 @@
 
         isp_ini = hru(ihru)%dbs%soil_plant_init
         ipest_db = sol_plt_ini(isp_ini)%pest
-        do ipest = 1, npmx
-          hpestb_d(ihru)%pest(ipest)%plant = pest_soil_ini(ipest_db)%plt(ipest)
-          do ipl = 1, pcom(ihru)%npl
-            if (pcom(ihru)%lai_sum > 1.e-6) then
-              pl_frac = pcom(ihru)%plg(ipl)%lai / pcom(ihru)%lai_sum
-            else
-              pl_frac = 0.
-            end if
-            pl_frac = Min (pl_frac, 1.)
-            cs_pl(ihru)%pl_on(ipl)%pest(ipest) = cs_pl(ihru)%pl_on(ipl)%pest(ipest) + pl_frac * pest_soil_ini(ipest_db)%plt(ipest)
-          end do
+        !! with no pest_hru.ini sets (the file is absent or empty) the HRU's initial pesticides stay zero
+        if (db_mx%pest_ini > 0) then
+          do ipest = 1, npmx
+            hpestb_d(ihru)%pest(ipest)%plant = pest_soil_ini(ipest_db)%plt(ipest)
+            do ipl = 1, pcom(ihru)%npl
+              if (pcom(ihru)%lai_sum > 1.e-6) then
+                pl_frac = pcom(ihru)%plg(ipl)%lai / pcom(ihru)%lai_sum
+              else
+                pl_frac = 0.
+              end if
+              pl_frac = Min (pl_frac, 1.)
+              cs_pl(ihru)%pl_on(ipl)%pest(ipest) = cs_pl(ihru)%pl_on(ipl)%pest(ipest) + pl_frac * pest_soil_ini(ipest_db)%plt(ipest)
+            end do
           
-          solpst = pest_soil_ini(ipest_db)%soil(ipest)
-          do ly = 1, soil(ihru)%nly
-            wt1 = soil(ihru)%phys(ly)%bd * soil(ihru)%phys(ly)%thick / 100.      !! mg/kg => kg/ha
-            cs_soil(ihru)%ly(ly)%pest(ipest) = solpst * wt1
+            solpst = pest_soil_ini(ipest_db)%soil(ipest)
+            do ly = 1, soil(ihru)%nly
+              wt1 = soil(ihru)%phys(ly)%bd * soil(ihru)%phys(ly)%thick / 100.      !! mg/kg => kg/ha
+              cs_soil(ihru)%ly(ly)%pest(ipest) = solpst * wt1
+            end do
           end do
-        end do
+        end if
 
       end do    ! hru loop
                                    
