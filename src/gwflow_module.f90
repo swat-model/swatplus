@@ -164,7 +164,8 @@
       integer, dimension (:), allocatable :: gw_bound_near  !           |nearest active cell to each boundary cell
       real, dimension (:), allocatable :: gw_bound_dist     !m          |distance of nearest active cell to each boundary cell
       real, dimension (:), allocatable :: gwflow_perc       !     |      
-      real, dimension (:), allocatable :: gw_delay          !           |
+      real, dimension (:), allocatable :: gw_delay          !           |HRU recharge decay coefficient
+      real, dimension (:), allocatable :: gw_delay_days     !days       |HRU recharge delay before conversion
       real, dimension (:), allocatable :: gw_rech           !           |
       real, dimension (:), allocatable :: delay             !           |
             
