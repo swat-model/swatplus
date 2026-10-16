@@ -62,7 +62,10 @@
         end do
 
         ipl = Max(mgt%op2, 1)
-        if (pcom(j)%plcur(ipl)%gro == "n") then
+        !! an HRU without plant ipl (one with no plant community has no plant arrays) uses the base heat units
+        if (ipl > pcom(j)%npl) then
+          aphu = phubase(j)
+        else if (pcom(j)%plcur(ipl)%gro == "n") then
           aphu = phubase(j)
         else
           aphu = pcom(j)%plcur(ipl)%phuacc
@@ -72,7 +75,9 @@
           call mgt_sched (isched)
           if (sched(isched)%num_ops == 1) exit
           ipl = Max(mgt%op2, 1)
-          if (pcom(j)%plcur(ipl)%gro == "n") then
+          if (ipl > pcom(j)%npl) then
+            aphu = phubase(j)
+          else if (pcom(j)%plcur(ipl)%gro == "n") then
             aphu = phubase(j)
           else
             aphu = pcom(j)%plcur(ipl)%phuacc
