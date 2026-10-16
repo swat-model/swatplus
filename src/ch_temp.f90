@@ -142,9 +142,16 @@
       ht1 = ob(iob)%hd(1)
       do in = 1, ob(iob)%rcv_tot
           if (ob(iob)%obtyp_in(in) == "chandeg") then
-              trib1_temp = ob(iob)%hin_d(in-1)%temp
+              ! hin_d is allocated 1..rcv_tot, so the first inflow (in = 1) has no previous
+              ! hydrograph: reading hin_d(0) is out of bounds
+              if (in > 1) then
+                trib1_temp = ob(iob)%hin_d(in-1)%temp
+                trib1_flo = ob(iob)%hin_d(in-1)%flo/86400
+              else
+                trib1_temp = 0.
+                trib1_flo = 0.
+              end if
               trib2_temp = ob(iob)%hin_d(in)%temp
-              trib1_flo = ob(iob)%hin_d(in-1)%flo/86400
               trib2_flo = ob(iob)%hin_d(in)%flo/86400
               trib_flo = trib1_flo + trib2_flo
               if (trib_flo < 1e-6) then             ! if it has tributaries but the flows are 0, estimate from old equation (to avoid division by 0)
