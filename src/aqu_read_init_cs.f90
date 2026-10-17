@@ -100,9 +100,12 @@
               do ics = 1, db_mx%pathw_ini
                 if (aqu_init_dat_c_cs(isp_ini)%path == path_init_name(ics)) then
                   !! initialize pathogens in aquifer water and benthic from input data
-                  do ipath = 1, cs_db%num_paths
-                    cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
-                  end do
+                  !! (the values come from path_hru.ini's sets, which may be fewer than path_water.ini's)
+                  if (ics <= db_mx%path_ini) then
+                    do ipath = 1, cs_db%num_paths
+                      cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
+                    end do
+                  end if
                   exit
                 end if
               end do  
