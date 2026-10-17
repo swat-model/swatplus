@@ -7,9 +7,11 @@
       
       implicit none
       
-      character (len=80) :: titldum = ""  !title of file
-      character (len=80) :: header = "" !header of file
-      integer :: eof = 0                !end of file
+      character (len=80) :: titldum = ""!          |title of file
+      character (len=80) :: header = "" !          |header of file
+      character (len=250) :: line_buffer!          |temporary variable
+      character (len=80) :: hum_read    !          |temporary variable
+      integer :: eof = 0                !          |end of file
       integer :: i = 0                  !none      |counter
       integer :: imax = 0               !none      |determine max number for array (imax) and total number in file
       integer :: iyr = 0                !none      |number of years
@@ -17,15 +19,17 @@
       integer :: istep = 0              !units     |description
       integer :: iyr_prev = 0           !none      |previous year
       integer :: iyrs = 0               !units     |description
-       
-       eof = 0
-       imax = 0
+      integer :: num_cols = 0           !none      |number of data columns
+      integer :: pos = 0                !none      |string position
+             
+      eof = 0
+      imax = 0
 
       !! read all measured daily relative humidity data
       inquire (file=in_cli%hmd_cli, exist=i_exist)
       if (.not. i_exist .or. in_cli%hmd_cli == "null") then
-         allocate (hmd(0:0))
-         allocate (hmd_n(0))
+        allocate (hmd(0:0))
+        allocate (hmd_n(0))
       else
       do 
         open (107,file=in_cli%hmd_cli)
@@ -78,8 +82,12 @@
                 hmd(i)%long, hmd(i)%elev
         if (eof < 0) exit
         
-       ! the precip time step has to be the same as time%step
-       allocate (hmd(i)%ts(366,hmd(i)%nbyr), source = 0.)
+       ! the humidity time step has to be the same as time%step
+       allocate (hmd(i)%ts(366,hmd(i)%nbyr),  source = -99.)
+       allocate (hmd(i)%ts2(366,hmd(i)%nbyr), source = -99.)
+       allocate (hmd(i)%ts3(366,hmd(i)%nbyr), source = -99.)
+       allocate (hmd(i)%ts4(366,hmd(i)%nbyr), source = -99.)
+       allocate (hmd(i)%ts5(366,hmd(i)%nbyr), source = -99.)
        
        ! read and save start jd and yr
        read (108,*,iostat=eof) iyr, istep
@@ -90,14 +98,14 @@
        
        backspace (108)
          
-      if (iyr > time%yrc) then
-        hmd(i)%yrs_start = iyr - time%yrc
-      else
-        ! read and store entire year
-        hmd(i)%yrs_start = 0
-      end if
+       if (iyr > time%yrc) then
+         hmd(i)%yrs_start = iyr - time%yrc
+       else
+         ! read and store entire year
+         hmd(i)%yrs_start = 0
+       end if
       
-        ! read and store entire year
+       ! read and store entire year
        do 
          read (108,*,iostat=eof) iyr, istep
          if (eof < 0) exit
@@ -108,8 +116,29 @@
        iyr_prev = iyr
        iyrs = 1
        
+       ! determine number of humidity variables in file
+       read(108,'(A)',iostat=eof) line_buffer
+       if (eof < 0) exit
+       num_cols = 0
+       pos = 1
+       do 
+        read(line_buffer(pos:), *, iostat=eof) hum_read
+        if (eof /= 0) exit
+        num_cols = num_cols + 1
+        pos = pos + verify(line_buffer(pos:), ' ') - 1
+        pos = pos + len(trim(adjustl(hum_read)))
+       end do
+       backspace (108)
+       
        do
-         read (108,*,iostat=eof) iyr, istep, hmd(i)%ts(istep,iyrs)
+         if (num_cols .eq. 3) then !Original file format
+          read (108,*,iostat=eof) iyr, istep, hmd(i)%ts(istep,iyrs) !rhum
+         elseif (num_cols .eq. 7) then !Expanded file format
+          read (108,*,iostat=eof) iyr, istep, hmd(i)%ts(istep,iyrs), &
+            hmd(i)%ts2(istep,iyrs), hmd(i)%ts3(istep,iyrs), &
+            hmd(i)%ts4(istep,iyrs), hmd(i)%ts5(istep,iyrs)
+            !rhum, rhmax, rhmin, dewpt, vapr
+         endif
          if (eof < 0) exit
          if (istep == 365 .or. istep == 366) then
            read (108,*,iostat=eof) iyr, istep
