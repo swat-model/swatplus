@@ -151,6 +151,7 @@
         !!set initial n and p concentrations --> (ppm) * (m^3) / 1000 = kg    !! ppm = t/m^3 * 10^6
         init = wet_dat(iprop)%init
         init_om = wet_init(init)%org_min
+        if (db_mx%om_water_init == 0) init_om = 0   !! no om_water.ini sets: start from the zero set
         wet(iihru) = om_init_water(init_om)
         call res_convert_mass (wet(iihru), wet_ob(iihru)%pvol)
 
