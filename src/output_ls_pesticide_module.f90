@@ -71,8 +71,8 @@
         character (len=15) :: metab_f =     " metab_f_kg/ha "
         character (len=15) :: uptake =      "  uptake_kg/ha "
         character (len=15) :: in_plant =    "in_plant_kg/ha "
-        character (len=15) :: harv_export = "harv_export_kg/ha"
-        character (len=15) :: harvest_sink = "harvest_sink_kg/ha"
+        character (len=18) :: harv_export = "harv_export_kg/ha "
+        character (len=19) :: harvest_sink = "harvest_sink_kg/ha "
         character (len=15) :: kill_ret =    "kill_ret_kg/ha "
       end type output_pestbal_header      
       type (output_pestbal_header) :: pestb_hdr
