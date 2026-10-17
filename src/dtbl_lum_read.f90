@@ -142,6 +142,11 @@
                       exit
                     end if
                   end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0 .and. dtbl_lum(i)%act(iac)%name /= "ponding" .and.  &
+                      dtbl_lum(i)%act(iac)%file_pointer == "unlim") then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in irr.ops database"
+                  end if
                        
                 case ("irr_wallo")
                   do idb = 1, db_mx%irrop_db
@@ -158,6 +163,10 @@
                       exit
                     end if
                   end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0) then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in irr.ops database"
+                  end if
                   
                 case ("fertilize")
                   !xwalk fert name with fertilizer data base
