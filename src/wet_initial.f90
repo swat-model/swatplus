@@ -20,6 +20,7 @@
       integer :: init_om = 0
       integer :: init = 0               !           |
       integer :: iweir = 1              !           |
+      logical :: weir_ok              !           |a weir.res row with height > 0 is in use (zero-height rows are ignored)
       integer :: icon = 0               !           |
       integer :: isalt = 0              !           |salt ion counter
       real :: x1 = 0.                   !           |
@@ -135,7 +136,13 @@
         wet_ob(iihru)%psa = wet_hyd(iihru)%psa * hru(iihru)%area_ha 
         wet_ob(iihru)%esa = wet_hyd(iihru)%esa * hru(iihru)%area_ha 
         !! set initial weir height to principal depth - m
-        if (db_mx%res_weir > 0.and.wet_ob(iihru)%iweir>0) then !if available, read from weir.res Jaehak 2022
+        !! a weir.res row with height <= 0 is not a weir: SWAT+ Editor writes one such row by default, and using it
+        !! would set pvol = 0 for every wetland. Such wetlands keep pvol and weir height from pdep (else branch).
+        weir_ok = .false.
+        if (db_mx%res_weir > 0 .and. wet_ob(iihru)%iweir > 0) then
+          if (wet_ob(iihru)%iweir <= db_mx%res_weir) weir_ok = res_weir(iweir)%h > 0.
+        end if
+        if (weir_ok) then !if available, read from weir.res Jaehak 2022
           wet_ob(iihru)%weir_hgt = res_weir(iweir)%h  !m weir height
           wet_ob(iihru)%weir_wid = res_weir(iweir)%w  !m, weir width
           !update pvol/evol according to weir height for paddy weir discharge. Jaehak 2023
