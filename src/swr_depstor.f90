@@ -66,7 +66,7 @@
       cumrt(j) = cumrai(j) - precip_eff
       end if
 !! Calculate the decay factor df based on %clay and %organic matter or %organic carbon
-    sol_orgm = soil1(j)%tot(1)%c / 0.58
+    sol_orgm = soil1(j)%cbn(1) / 0.58
     xx = (0.943 - 0.07 * soil(j)%phys(1)%clay + 0.0011 *                 &
          soil(j)%phys(1)%clay**2 - 0.67 * sol_orgm + 0.12 * sol_orgm**2)
       if (xx > 1.) then

@@ -32,7 +32,7 @@
           
           if (pest_init >= .0001) then
             !! set kd
-            kd = pestdb(ipest_db)%koc * soil1(j)%tot(1)%c / 100.
+            kd = pestdb(ipest_db)%koc * soil1(j)%cbn(1) / 100.
             zdb1 = soil(j)%phys(1)%ul + kd * soil(j)%phys(1)%bd * soil(j)%phys(1)%thick
             !! units: mm + (m^3/ton)*(ton/m^3)*mm = mm
             conc = 100. * kd * pest_init / (zdb1 + 1.e-10)
