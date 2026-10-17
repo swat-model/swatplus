@@ -9,7 +9,7 @@
       use sd_channel_module
       use time_module
       use constituent_mass_module, only : cs_db
-      use basin_module, only : pco, bsn
+      use basin_module, only : bsn
 
       implicit none
 
@@ -37,42 +37,42 @@
       call gwflow_write_celldef
       write(out_gw,*) '          cell definition written to gwflow_cell_definition.txt'
 
-      !--- print.prt overrides: when gwflow entries are listed in print.prt, override gwflow.input flags ---
-      if(pco%gwflow_wb%already_read_in) then
-        gwflag_day = 0; gwflag_mon = 0; gwflag_yr = 0; gwflag_aa = 0
-        if(pco%gwflow_wb%d == 'y') gwflag_day = 1
-        if(pco%gwflow_wb%m == 'y') gwflag_mon = 1
-        if(pco%gwflow_wb%y == 'y') gwflag_yr  = 1
-        if(pco%gwflow_wb%a == 'y') gwflag_aa  = 1
-        write(out_gw,*) '          print.prt gwflow_wb overrides gwflow.input flags'
+      !open files for observation well output
+      if(gwflag_obs_day == 1) then
+        open(out_gwobs,file='gwflow_obs_day.txt')
+        write(out_gwobs,*) 'gwflow observation well daily output (-99 = not simulated)'
+        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
       endif
-      if(pco%gwflow_obs%already_read_in) then
-        gwflag_obs = 0
-        if(pco%gwflow_obs%d == 'y') gwflag_obs = 1
-        write(out_gw,*) '          print.prt gwflow_obs controls observation well output'
+      if(gwflag_obs_mon == 1) then
+        open(out_gwobs_mon,file='gwflow_obs_mon.txt')
+        write(out_gwobs_mon,*) 'gwflow observation well monthly avg (-99 = not simulated)'
+        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
       endif
-      if(pco%gwflow_pump%already_read_in) then
-        gwflag_pump = 0
-        if(pco%gwflow_pump%d == 'y' .or. pco%gwflow_pump%m == 'y' .or. &
-           pco%gwflow_pump%y == 'y' .or. pco%gwflow_pump%a == 'y') gwflag_pump = 1
-        write(out_gw,*) '          print.prt gwflow_pump controls HRU pumping output'
+      if(gwflag_obs_yr == 1) then
+        open(out_gwobs_yr,file='gwflow_obs_yr.txt')
+        write(out_gwobs_yr,*) 'gwflow observation well annual avg (-99 = not simulated)'
+        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
       endif
-      if(pco%gwflow_heat%already_read_in) then
-        gwflag_heat = 0
-        if(pco%gwflow_heat%d == 'y' .or. pco%gwflow_heat%y == 'y' .or. &
-           pco%gwflow_heat%a == 'y') gwflag_heat = 1
-        write(out_gw,*) '          print.prt gwflow_heat controls heat balance output'
-      endif
-      if(pco%gwflow_solute%already_read_in) then
-        gwflag_solute = 0
-        if(pco%gwflow_solute%d == 'y' .or. pco%gwflow_solute%m == 'y' .or. &
-           pco%gwflow_solute%y == 'y' .or. pco%gwflow_solute%a == 'y') gwflag_solute = 1
-        write(out_gw,*) '          print.prt gwflow_solute controls solute balance output'
-      endif
-      if(pco%gwflow_flux%already_read_in) then
-        gwflag_flux = 0
-        if(pco%gwflow_flux%d == 'y' .or. pco%gwflow_flux%y == 'y') gwflag_flux = 1
-        write(out_gw,*) '          print.prt gwflow_flux controls canal/pond/tile/chan diagnostic output'
+      if(gwflag_obs_aa == 1) then
+        open(out_gwobs_aa,file='gwflow_obs_aa.txt')
+        write(out_gwobs_aa,*) 'gwflow observation well avg annual (-99 = not simulated)'
+        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'head','wt_depth','temperature','no3','p'
+        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
+          '','','','','','','','m','m','degC','mg/L','mg/L'
       endif
 
       !open file to track daily groundwater water balance
@@ -187,7 +187,7 @@
       write(out_gw,*) '     initialize groundwater heat balance files and arrays'
 
       !open file to track daily groundwater heat balance
-      if(gwflag_day.eq.1) then
+      if(gwflag_heat_day.eq.1) then
         open(out_heatbal_dy,file='gwflow_basin_heat_day.txt')
         write(out_heatbal_dy,*) 'Groundwater watershed-wide heat fluxes for each day (MJ)'
         write(out_heatbal_dy,8000) 'jday','mon','day','yr','unit','gis_id', &
@@ -201,7 +201,7 @@
       endif
 
       !open file to track yearly groundwater heat balance
-      if(gwflag_yr.eq.1) then
+      if(gwflag_heat_yr.eq.1) then
         open(out_heatbal_yr,file='gwflow_basin_heat_yr.txt')
         write(out_heatbal_yr,*) 'Groundwater watershed-wide heat fluxes for each year (MJ)'
         write(out_heatbal_yr,8000) 'jday','mon','day','yr','unit','gis_id', &
@@ -215,7 +215,7 @@
       endif
 
       !open file to write out average annual groundwater heat balance
-      if(gwflag_aa.eq.1) then
+      if(gwflag_heat_aa.eq.1) then
         open(out_heatbal_aa,file='gwflow_basin_heat_aa.txt')
         write(out_heatbal_aa,*) 'Groundwater watershed-wide heat fluxes average annual (MJ)'
         write(out_heatbal_aa,8000) 'jday','mon','day','yr','unit','gis_id', &
@@ -304,7 +304,7 @@
         do n=1,gw_nsolute
 
           !daily solute mass balance
-          if(gwflag_day.eq.1) then
+          if(gwflag_solute_day.eq.1) then
             !prepare solute mass balance output files (daily output)
             file_name(1) = 'gwflow_basin_sol_no3_day.txt'
             file_name(2) = 'gwflow_basin_sol_p_day.txt'
@@ -336,7 +336,7 @@
           endif
 
           !monthly solute mass balance
-          if(gwflag_mon.eq.1) then
+          if(gwflag_solute_mon.eq.1) then
             !prepare solute mass balance output files (monthly output)
             file_name(1) = 'gwflow_basin_sol_no3_mon.txt'
             file_name(2) = 'gwflow_basin_sol_p_mon.txt'
@@ -388,7 +388,7 @@
           endif
 
           !yearly solute mass balance
-          if(gwflag_yr.eq.1) then
+          if(gwflag_solute_yr.eq.1) then
             !prepare solute mass balance output files (yearly output)
             file_name(1) = 'gwflow_basin_sol_no3_yr.txt'
             file_name(2) = 'gwflow_basin_sol_p_yr.txt'
@@ -440,7 +440,7 @@
           endif
 
           !average annual solute mass balance
-          if(gwflag_aa.eq.1) then
+          if(gwflag_solute_aa.eq.1) then
             !prepare solute mass balance output files (average annual output)
             file_name(1) = 'gwflow_basin_sol_no3_aa.txt'
             file_name(2) = 'gwflow_basin_sol_p_aa.txt'
@@ -699,7 +699,7 @@
           enddo
         endif
       enddo
-      if(gwflag_obs == 1) then
+      if(gwflag_obs_day == 1) then
         do k=1,gw_num_obs_wells
           obs_temp = -99.
           obs_no3 = -99.
@@ -1029,7 +1029,7 @@
         heat_canl_grid = heat_canl_grid / 1000000.
         heat_fpln_grid = heat_fpln_grid / 1000000.
         heat_pond_grid = heat_pond_grid / 1000000.
-        if(gwflag_day == 1) then
+        if(gwflag_heat_day == 1) then
           write(out_heatbal_dy,8100) time%day,time%mo,time%day_mo, &
             time%yrc,"       1","       1",bsn%name,gw_time_step, &
             heat_hbef_grid,heat_haft_grid,heat_rech_grid,heat_gwet_grid, &
@@ -1142,7 +1142,7 @@
                                sol_grid_resv + sol_grid_wetl + sol_grid_canl + sol_grid_fpln + sol_grid_pond) / sol_grid_maft)) * 100
           endif
           !print out daily values for the solute
-          if(gwflag_day == 1) then
+          if(gwflag_solute_day == 1) then
             write(out_solbal_dy+s,8100) time%day,time%mo,time%day_mo, &
               time%yrc,"       1","       1",bsn%name,gw_time_step, &
               sol_grid_mbef,sol_grid_maft,sol_grid_rech,sol_grid_gwsw,sol_grid_swgw, &
@@ -1379,7 +1379,7 @@
         endif
 
         !--- obs well monthly output ---
-        if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
+        if(gwflag_obs_mon == 1 .and. gw_num_obs_wells > 0) then
           do k=1,gw_num_obs_wells
             i = gw_obs_cells(k)
             obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
@@ -1483,7 +1483,7 @@
         !solute mass values (basin) -----------------------------------------------------
         if(gw_solute_flag == 1) then
           do s=1,gw_nsolute
-            if(gwflag_mon == 1) then
+            if(gwflag_solute_mon == 1) then
               write(out_solbal_mo+s,8100) time%day,time%mo,time%day_mo, &
                 time%yrc,"       1","       1",bsn%name, &
                 sol_grid_chng_mo(s),sol_grid_rech_mo(s), &
@@ -1671,11 +1671,13 @@
             gw_obs_sol_aa(k,1) = gw_obs_sol_aa(k,1) + obs_no3
             gw_obs_sol_aa(k,2) = gw_obs_sol_aa(k,2) + obs_p
           endif
-          write(obs_name,'(a4,i4.4)') 'obs_',k
-          write(out_gwobs_yr,8102) time%day,time%mo,time%day_mo, &
-            time%yrc,k,gw_obs_cells(k),obs_name, &
-            gw_state(i)%hdyr, gw_state(i)%elev - gw_state(i)%hdyr, &
-            obs_temp, obs_no3, obs_p
+          if(gwflag_obs_yr == 1) then
+            write(obs_name,'(a4,i4.4)') 'obs_',k
+            write(out_gwobs_yr,8102) time%day,time%mo,time%day_mo, &
+              time%yrc,k,gw_obs_cells(k),obs_name, &
+              gw_state(i)%hdyr, gw_state(i)%elev - gw_state(i)%hdyr, &
+              obs_temp, obs_no3, obs_p
+          endif
         enddo
       endif
 
@@ -1859,7 +1861,7 @@
 
       !heat flux values (basin) -----------------------------------------------------------------
       if(gw_heat_flag == 1) then
-        if(gwflag_yr == 1) then
+        if(gwflag_heat_yr == 1) then
           write(out_heatbal_yr,8100) time%day,time%mo,time%day_mo, &
             time%yrc,"       1","       1",bsn%name, &
             gw_heat_grid_yr%chng, &
@@ -1898,7 +1900,7 @@
       !solute mass values (basin) ---------------------------------------------------------------
       if(gw_solute_flag == 1) then
         do s=1,gw_nsolute
-          if(gwflag_yr == 1) then
+          if(gwflag_solute_yr == 1) then
             write(out_solbal_yr+s,8100) time%day,time%mo,time%day_mo, &
               time%yrc,"       1","       1",bsn%name, &
               sol_grid_chng_yr(s),sol_grid_rech_yr(s), &
@@ -1978,7 +1980,7 @@
       external :: gwflow_write_cell_array
 
       !--- only execute on the last day of the simulation ---
-      if(time%yrc /= time%yrc_end .or. time%day /= time%day_end) return
+      if(time%end_sim /= 1) return
 
       nbyr_r = real(time%nbyr)
       allocate(temp_array(ncell))
@@ -1995,7 +1997,7 @@
       endif
 
       !--- obs well average annual output ---
-      if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
+      if(gwflag_obs_aa == 1 .and. gw_num_obs_wells > 0) then
         do k=1,gw_num_obs_wells
           i = gw_obs_cells(k)
           obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
@@ -2046,7 +2048,7 @@
       endif
 
       !average annual water balance (basin) -----------------------------------------------------
-      gw_hyd_grid_aa%chng = gw_hyd_grid_aa%chng + (vaft_grid-vbef_grid)
+      gw_hyd_grid_aa%chng = gw_hyd_grid_aa%chng / nbyr_r
       gw_hyd_grid_aa%rech = gw_hyd_grid_aa%rech / nbyr_r
       gw_hyd_grid_aa%gwet = gw_hyd_grid_aa%gwet / nbyr_r
       gw_hyd_grid_aa%gwsw = gw_hyd_grid_aa%gwsw / nbyr_r
@@ -2079,7 +2081,7 @@
       endif
 
       !average annual heat fluxes (basin) -------------------------------------------------------
-      gw_heat_grid_aa%chng = gw_heat_grid_aa%chng + (heat_haft_grid-heat_hbef_grid)
+      gw_heat_grid_aa%chng = gw_heat_grid_aa%chng / nbyr_r
       gw_heat_grid_aa%rech = gw_heat_grid_aa%rech / nbyr_r
       gw_heat_grid_aa%gwet = gw_heat_grid_aa%gwet / nbyr_r
       gw_heat_grid_aa%gwsw = gw_heat_grid_aa%gwsw / nbyr_r
@@ -2097,7 +2099,7 @@
       gw_heat_grid_aa%canl = gw_heat_grid_aa%canl / nbyr_r
       gw_heat_grid_aa%fpln = gw_heat_grid_aa%fpln / nbyr_r
       gw_heat_grid_aa%pond = gw_heat_grid_aa%pond / nbyr_r
-      if(gwflag_aa == 1) then
+      if(gwflag_heat_aa == 1 .and. gw_heat_flag == 1) then
         write(out_heatbal_aa,8100) time%day,time%mo,time%day_mo, &
           time%yrc,"       1","       1",bsn%name, &
           gw_heat_grid_aa%chng, &
@@ -2112,7 +2114,7 @@
       !average annual solute values (basin) -----------------------------------------------------
       if(gw_solute_flag == 1) then
         do s=1,gw_nsolute
-          sol_grid_chng_tt(s) = sol_grid_chng_tt(s) + (sol_grid_maft-sol_grid_mbef)
+          sol_grid_chng_tt(s) = sol_grid_chng_tt(s) / nbyr_r
           sol_grid_rech_tt(s) = sol_grid_rech_tt(s) / nbyr_r
           sol_grid_gwsw_tt(s) = sol_grid_gwsw_tt(s) / nbyr_r
           sol_grid_swgw_tt(s) = sol_grid_swgw_tt(s) / nbyr_r
@@ -2132,7 +2134,7 @@
           sol_grid_canl_tt(s) = sol_grid_canl_tt(s) / nbyr_r
           sol_grid_fpln_tt(s) = sol_grid_fpln_tt(s) / nbyr_r
           sol_grid_pond_tt(s) = sol_grid_pond_tt(s) / nbyr_r
-          if(gwflag_aa == 1) then
+          if(gwflag_solute_aa == 1) then
             write(out_solbal_aa+s,8100) time%day,time%mo,time%day_mo, &
               time%yrc,"       1","       1",bsn%name, &
               sol_grid_chng_tt(s),sol_grid_rech_tt(s), &

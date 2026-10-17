@@ -469,7 +469,7 @@
 
 
       !9. last day of the simulation reached: print out average annual values
-      if(time%yrc == time%yrc_end .and. time%day == time%day_end) then
+      if(time%end_sim == 1) then
 
         call gwflow_output_aa
 
