@@ -82,6 +82,7 @@
                end if
            end if
           
+          hpathb_y(j)%path(ipath) = pathbz
         end if
         
 !!!!! average annual print
