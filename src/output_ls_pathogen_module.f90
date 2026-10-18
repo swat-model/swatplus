@@ -52,8 +52,11 @@
         character (len=12) :: surq =        "  surq_kg/h"
         character (len=12) :: latq =        "  latq_kg/h"
         character (len=12) :: perc =        "  perc_kg/h"
-        character (len=12) :: apply =       " apply_kg/h"
-        character (len=12) :: decay =       " decay_kg/h"
+        character (len=12) :: apply_sol =   "  apsol_kg/h"
+        character (len=12) :: apply_plt =   "  applt_kg/h"
+        character (len=12) :: regro =       " regro_kg/h"
+        character (len=12) :: die_off =     " decay_kg/h"
+        character (len=12) :: wash =        "  wash_kg/h"
       end type output_pathbal_header      
       type (output_pathbal_header) :: pathb_hdr
       
@@ -79,11 +82,13 @@
         hru3%soil = hru1%soil + hru2%soil
         hru3%sed = hru1%sed + hru2%sed
         hru3%surq = hru1%surq + hru2%surq
+        hru3%latq = hru1%latq + hru2%latq
         hru3%perc1 = hru1%perc1 + hru2%perc1
         hru3%apply_sol = hru1%apply_sol + hru2%apply_sol
         hru3%apply_plt = hru1%apply_plt + hru2%apply_plt
         hru3%regro = hru1%regro + hru2%regro
         hru3%die_off = hru1%die_off + hru2%die_off
+        hru3%wash = hru1%wash + hru2%wash
       end function hruout_pathbal_add
 
       function hruout_pathbal_div (hru1,const) result (hru2)
@@ -94,11 +99,13 @@
         hru2%soil = hru1%soil / const
         hru2%sed= hru1%sed / const
         hru2%surq = hru1%surq / const
+        hru2%latq = hru1%latq / const
         hru2%perc1 = hru1%perc1 / const
         hru2%apply_sol = hru1%apply_sol / const
         hru2%apply_plt = hru1%apply_plt / const
         hru2%regro = hru1%regro / const
         hru2%die_off = hru1%die_off / const
+        hru2%wash = hru1%wash / const
       end function hruout_pathbal_div
       
       function hruout_pathbal_ave (hru1,const) result (hru2)
@@ -107,6 +114,16 @@
         type (pathogen_balance) :: hru2   
         hru2%plant = hru1%plant / const 
         hru2%soil = hru1%soil / const
+        !! the fluxes are period totals, kept as summed (as hruout_waterbal_ave does)
+        hru2%sed = hru1%sed
+        hru2%surq = hru1%surq
+        hru2%latq = hru1%latq
+        hru2%perc1 = hru1%perc1
+        hru2%apply_sol = hru1%apply_sol
+        hru2%apply_plt = hru1%apply_plt
+        hru2%regro = hru1%regro
+        hru2%die_off = hru1%die_off
+        hru2%wash = hru1%wash
       end function hruout_pathbal_ave
                             
       end module output_ls_pathogen_module
