@@ -201,6 +201,26 @@
                     endif
                   end do
                                       
+                case ("manure")
+                  !xwalk manure name with manure data base
+                  do idb = 1, db_mx%manureparm
+                    if (dtbl_lum(i)%act(iac)%option == manure_db(idb)%name) then
+                      dtbl_lum(i)%act_typ(iac) = idb
+                      exit
+                    endif
+                  end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0) then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in manure_db.frt database"
+                  end if
+                  !xwalk application type with chemical application data base
+                  do idb = 1, db_mx%chemapp_db
+                    if (dtbl_lum(i)%act(iac)%file_pointer == chemapp_db(idb)%name) then
+                      dtbl_lum(i)%act_app(iac) = idb
+                      exit
+                    endif
+                  end do
+
                 case ("pest_apply")
                   !xwalk fert name with fertilizer data base
                   do idb = 1, cs_db%num_pests
