@@ -7,6 +7,7 @@
       use maximum_data_module
       use time_module
       use exco_module
+      use gwflow_module, only : div_conc_salt
       
       implicit none      
  
@@ -35,10 +36,11 @@
       
       eof = 0
       imax = 0
+      if (cs_db%num_salts == 0) return
 
       !read all recall files
       inquire (file="salt_recall.rec", exist=i_exist)
-      if (i_exist .or. "salt_recall.rec" /= "null") then
+      if (i_exist) then
       do
         open (107,file="salt_recall.rec")
         read (107,*,iostat=eof) titldum
@@ -54,45 +56,9 @@
           imax = Max(imax,i) 
         end do
         
-        !allocate recall_salt array
-        allocate (rec_salt(0:imax))
-        
-        !allocate salt balance arrays
-        !point sources originating from within the watershed
-        allocate (recsaltb_d(imax))
-        allocate (recsaltb_m(imax))
-        allocate (recsaltb_y(imax))
-        allocate (recsaltb_a(imax))
-        do ii=1,imax
-          allocate (recsaltb_d(ii)%salt(cs_db%num_salts), source = 0.)
-          allocate (recsaltb_m(ii)%salt(cs_db%num_salts), source = 0.)
-          allocate (recsaltb_y(ii)%salt(cs_db%num_salts), source = 0.)
-          allocate (recsaltb_a(ii)%salt(cs_db%num_salts), source = 0.)
-          do isalt=1,cs_db%num_salts
-            recsaltb_d(ii)%salt(isalt) = 0.
-            recsaltb_m(ii)%salt(isalt) = 0.
-            recsaltb_y(ii)%salt(isalt) = 0.
-            recsaltb_a(ii)%salt(isalt) = 0.
-          enddo
-        end do
-        !point sources originating from outside the watershed
-        allocate (recoutsaltb_d(imax))
-        allocate (recoutsaltb_m(imax))
-        allocate (recoutsaltb_y(imax))
-        allocate (recoutsaltb_a(imax))
-        do ii=1,imax
-          allocate (recoutsaltb_d(ii)%salt(cs_db%num_salts), source = 0.)
-          allocate (recoutsaltb_m(ii)%salt(cs_db%num_salts), source = 0.)
-          allocate (recoutsaltb_y(ii)%salt(cs_db%num_salts), source = 0.)
-          allocate (recoutsaltb_a(ii)%salt(cs_db%num_salts), source = 0.)
-          do isalt=1,cs_db%num_salts
-            recoutsaltb_d(ii)%salt(isalt) = 0.
-            recoutsaltb_m(ii)%salt(isalt) = 0.
-            recoutsaltb_y(ii)%salt(isalt) = 0.
-            recoutsaltb_a(ii)%salt(isalt) = 0.
-          enddo
-        enddo
-        
+        !allocate recall_salt and the salt balance arrays for every recall object in the model, and for every index in the file
+        call alloc_rec_salt (Max(imax, sp_ob%recall))
+
         !go back through the file, reading in the types and filenames
         rewind (107)
         read (107,*,iostat=eof) titldum
@@ -243,6 +209,40 @@
       exit
       enddo
       endif
-      
+
+      !without salt_recall.rec, every recall object still gets zero salt loads
+      if (.not. allocated(rec_salt)) call alloc_rec_salt (sp_ob%recall)
+
       return
+
+      contains
+
+      subroutine alloc_rec_salt (n)
+        integer, intent (in) :: n
+        integer :: irec
+        allocate (rec_salt(0:n))
+        !point sources originating from within the watershed
+        allocate (recsaltb_d(n))
+        allocate (recsaltb_m(n))
+        allocate (recsaltb_y(n))
+        allocate (recsaltb_a(n))
+        !point sources originating from outside the watershed
+        allocate (recoutsaltb_d(n))
+        allocate (recoutsaltb_m(n))
+        allocate (recoutsaltb_y(n))
+        allocate (recoutsaltb_a(n))
+        do irec = 1, n
+          allocate (recsaltb_d(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_m(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_y(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recsaltb_a(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_d(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_m(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_y(irec)%salt(cs_db%num_salts), source = 0.)
+          allocate (recoutsaltb_a(irec)%salt(cs_db%num_salts), source = 0.)
+        end do
+        !recall_salt also zeroes the diversion concentrations, which gwflow_read allocates only when gwflow runs with solutes
+        if (.not. allocated(div_conc_salt)) allocate (div_conc_salt(cs_db%num_salts,sp_ob%recall), source = 0.)
+      end subroutine alloc_rec_salt
+
       end subroutine recall_read_salt
