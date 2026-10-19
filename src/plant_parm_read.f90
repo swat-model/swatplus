@@ -49,6 +49,9 @@
       integer :: k = 0                !none       |column counter
       integer :: ios = 0              !none       |read status of the plant line
       real :: col54 = 0.              !none       |column 54 read as a number, to tell CLASS (text) from lignin
+      real :: rcol = 0.               !none       |days_mat or mat_yrs as written, possibly a real ("110.00000")
+      logical :: lin_fix = .false.    !           |a column of the plant line was converted to integer text
+      character (len=200) :: iomsg_pl = ""    !   |runtime text of a failed read of the plant line
       type (input_lignin_partition_fracs) :: lig_in   !  |lignin fractions from columns 54-56 (carbon layout)
 
 
@@ -103,26 +106,46 @@
           if (eof < 0) exit
           call split_line (line, fields, nf)
 
+          !! days_mat (column 5) and mat_yrs (column 38) are integers in pldb, but older SWAT+ Editor files write them as
+          !! whole-number reals ("110.00000"). gfortran will not read that into an integer (ifx does), so convert the two
+          !! columns to integer text before the line is read into pldb. a value with a fraction ("110.5") is not a whole
+          !! number of days or years, so it stops the run instead of being cut off.
+          lin_fix = .false.
+          do k = 5, 38, 33
+            if (nf >= k) then
+              if (scan (fields(k), ".eEdD") > 0) then
+                read (fields(k),*,iostat=ios) rcol
+                if (ios == 0) then
+                  if (abs (rcol - anint (rcol)) > 1.e-4) then
+                    write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " column ", k, &
+                                " (", trim(merge ("days_mat", "mat_yrs ", k == 5)), ") is ", trim(fields(k)), &
+                                "; it must be a whole number"
+                    write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " column ", k, &
+                                " (", trim(merge ("days_mat", "mat_yrs ", k == 5)), ") is ", trim(fields(k)), &
+                                "; it must be a whole number"
+                    error stop
+                  end if
+                  write (fields(k),'(i0)') nint (rcol)
+                  lin_fix = .true.
+                end if
+              end if
+            end if
+          end do
+          if (lin_fix) then
+            line = ""
+            do k = 1, nf
+              line = trim(line) // " " // trim(fields(k))
+            end do
+          end if
+
           if (bsn_cc%cswat == 2) then
             !! carbon layout - avg_lig_frac, ab_lig_frac, bg_lig_frac are columns 54-56, between bio_cov and CLASS
             !! take them out and read the remaining 55 columns the same way as without carbon
 
             !! read the three lignin columns; ios stays 1 (error) if the line is too short to have them
             ios = 1
-            if (nf >= 58) read (fields(54:56),*,iostat=ios) lig_in
-
-            !! rebuild the line without columns 54-56 and read it into pldb as usual
-            if (ios == 0) then
-              line = ""
-              do k = 1, nf
-                if (k < 54 .or. k > 56) line = trim(line) // " " // trim(fields(k))
-              end do
-              if (bsn_cc%nam1 == 0) then
-                read (line,*,iostat=ios) pldb(ic)
-              else
-                read (line,*,iostat=ios) pldb(ic), pl_class(ic)
-              end if
-            end if
+            iomsg_pl = ""
+            if (nf >= 58) read (fields(54:56),*,iostat=ios,iomsg=iomsg_pl) lig_in
 
             !! missing lignin columns or a bad value - stop and name the plant instead of
             !! silently running with default lignin fractions
@@ -131,6 +154,26 @@
                           " codes.bsn carbon = 2 needs avg_lig_frac, ab_lig_frac, bg_lig_frac as columns 54-56 (before CLASS)"
               write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " could not be read;", &
                           " codes.bsn carbon = 2 needs avg_lig_frac, ab_lig_frac, bg_lig_frac as columns 54-56 (before CLASS)"
+              error stop
+            end if
+
+            !! rebuild the line without columns 54-56 and read it into pldb as usual
+            line = ""
+            do k = 1, nf
+              if (k < 54 .or. k > 56) line = trim(line) // " " // trim(fields(k))
+            end do
+            if (bsn_cc%nam1 == 0) then
+              read (line,*,iostat=ios,iomsg=iomsg_pl) pldb(ic)
+            else
+              read (line,*,iostat=ios,iomsg=iomsg_pl) pldb(ic), pl_class(ic)
+            end if
+
+            !! the lignin columns were fine, so a failure here is a bad or missing value in the other columns
+            if (ios /= 0) then
+              write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), &
+                          " could not be read: a value in the row is missing or not valid (", trim(iomsg_pl), ")"
+              write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), &
+                          " could not be read: a value in the row is missing or not valid (", trim(iomsg_pl), ")"
               error stop
             end if
 
@@ -162,20 +205,26 @@
             !! read the 55 columns into pldb from the line; ios stays 1 (error) if the line is too short
             !! nam1 /= 0 - the line has one more column after desc, read into pl_class
             ios = 1
-            if (nf >= 55) then
-              if (bsn_cc%nam1 == 0) then
-                read (line,*,iostat=ios) pldb(ic)
-              else
-                read (line,*,iostat=ios) pldb(ic), pl_class(ic)
-              end if
-            end if
-            if (ios /= 0) then
+            iomsg_pl = ""
+            if (nf < 55) then
               write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " could not be read;", &
                           " codes.bsn carbon /= 2 needs 55 columns, ending rt_depco, aeration, rsd_cov, bio_cov,", &
                           " CLASS, DESCRIPTION"
               write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), " could not be read;", &
                           " codes.bsn carbon /= 2 needs 55 columns, ending rt_depco, aeration, rsd_cov, bio_cov,", &
                           " CLASS, DESCRIPTION"
+              error stop
+            end if
+            if (bsn_cc%nam1 == 0) then
+              read (line,*,iostat=ios,iomsg=iomsg_pl) pldb(ic)
+            else
+              read (line,*,iostat=ios,iomsg=iomsg_pl) pldb(ic), pl_class(ic)
+            end if
+            if (ios /= 0) then
+              write (*,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), &
+                          " could not be read: a value in the row is missing or not valid (", trim(iomsg_pl), ")"
+              write (9001,*) "ERROR: ", trim(in_parmdb%plants_plt), " plant ", trim(fields(1)), &
+                          " could not be read: a value in the row is missing or not valid (", trim(iomsg_pl), ")"
               error stop
             end if
           end if
