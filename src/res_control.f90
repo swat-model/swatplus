@@ -58,6 +58,11 @@
         !! add incoming flow to reservoir
         res(jres) = res(jres) + ht1
 
+        dom          = time%day_mo
+        mon          = time%mo
+        end_of_mo    = time%end_mo
+        daily_inflow = ht1%flo
+
         !! if channel is a POD, allocate water for users and adjust flow in channel accordingly
         if (res_ob(jres)%wallo_pod > 0) then
           call wallo_control (res_ob(jres)%wallo_pod)
