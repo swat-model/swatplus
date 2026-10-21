@@ -33,7 +33,7 @@
               if (pest_soil > cs_pl(j)%pl_on(ipl)%pest(k)) pest_soil = cs_pl(j)%pl_on(ipl)%pest(k)
               cs_soil(j)%ly(1)%pest(k) = cs_soil(j)%ly(1)%pest(k) + pest_soil
               cs_pl(j)%pl_on(ipl)%pest(k) = cs_pl(j)%pl_on(ipl)%pest(k) - pest_soil
-              hpestb_d(j)%pest(k)%wash = pest_soil
+              hpestb_d(j)%pest(k)%wash = hpestb_d(j)%pest(k)%wash + pest_soil
             end if
           end if 
         end do
