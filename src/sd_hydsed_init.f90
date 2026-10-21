@@ -258,11 +258,17 @@
         ipest_ini = sd_init(ich_ini)%pest
         do ipest = 1, cs_db%num_pests
           ipest_db = cs_db%pest_num(ipest)
-          ! mg = mg/kg * m3*1000. (kg=m3*1000.)
-          ch_water(ich)%pest(ipest) = pest_water_ini(ipest_ini)%water(ipest) * ch_stor(ich)%flo * 1000.
-          !! calculate volume of active river bed sediment layer - m3
-          bedvol = sd_ch(ich)%chw *sd_ch(ich)%chl * 1000.* pestdb(ipest_ini)%ben_act_dep
-          ch_benthic(ich)%pest(ipest) = pest_water_ini(ipest_ini)%benthic(ipest) * bedvol * 1000.   ! mg = mg/kg * m3*1000.
+          !! with no pest_water.ini sets (the file is absent or empty) the channel starts with no pesticide
+          if (db_mx%pestw_ini > 0) then
+            ! mg = mg/kg * m3*1000. (kg=m3*1000.)
+            ch_water(ich)%pest(ipest) = pest_water_ini(ipest_ini)%water(ipest) * ch_stor(ich)%flo * 1000.
+            !! calculate volume of active river bed sediment layer - m3
+            bedvol = sd_ch(ich)%chw *sd_ch(ich)%chl * 1000.* pestdb(ipest_db)%ben_act_dep
+            ch_benthic(ich)%pest(ipest) = pest_water_ini(ipest_ini)%benthic(ipest) * bedvol * 1000.   ! mg = mg/kg * m3*1000.
+          else
+            ch_water(ich)%pest(ipest) = 0.
+            ch_benthic(ich)%pest(ipest) = 0.
+          end if
           !! calculate mixing velocity using molecular weight and porosity
           sd_ch(ich)%aq_mix(ipest) = pestdb(ipest_db)%mol_wt ** (-.6666) * (1. - sd_ch(ich)%ch_bd / 2.65) * (69.35 / 365)
         end do
@@ -274,10 +280,13 @@
         ichdat = ob(iob)%props
         ich_ini = sd_dat(ichdat)%init
         ipath_ini = sd_init(ich_ini)%path
-        do ipath = 1, cs_db%num_paths
-          ch_water(ich)%path(ipath) = path_water_ini(ipest_ini)%water(ipath)
-          ch_benthic(ich)%path(ipath) = path_water_ini(ipest_ini)%benthic(ipath)
-        end do
+        !! with no path_water.ini sets (the file is absent or empty) the channel starts with no pathogens
+        if (db_mx%pathw_ini > 0) then
+          do ipath = 1, cs_db%num_paths
+            ch_water(ich)%path(ipath) = path_water_ini(ipath_ini)%water(ipath)
+            ch_benthic(ich)%path(ipath) = path_water_ini(ipath_ini)%benthic(ipath)
+          end do
+        end if
       end do
       
       !initial salt ion concentration (g/m3) in channel water, from input data (salt_channel.ini)

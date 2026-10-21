@@ -36,6 +36,7 @@
       use organic_mineral_mass_module
       use hydrograph_module, only : sp_ob
       use constituent_mass_module
+      use maximum_data_module
       use output_ls_pathogen_module
       
       implicit none
@@ -65,7 +66,8 @@
 
         isp_ini = hru(ihru)%dbs%soil_plant_init
         ipath_db = sol_plt_ini(isp_ini)%path
-        if (mpath > 0) then
+        !! with no path_hru.ini sets (the file is absent or empty) the HRU's initial pathogens stay zero
+        if (mpath > 0 .and. db_mx%path_ini > 0) then
           do ipath = 1, mpath
             do ly = 1, soil(ihru)%nly
               if (ly == 1) then
