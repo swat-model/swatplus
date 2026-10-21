@@ -52,6 +52,11 @@
         mpath = cs_db%num_paths
         if (mpath > 0) then
           !! allocate pathogens associated with soil and plant
+          !! cs_soil(ihru)%ly and cs_pl(ihru)%pl_* are allocated in pesticide_init, which runs only when the model has a pesticide
+          if (.not. allocated(cs_soil(ihru)%ly)) allocate (cs_soil(ihru)%ly(soil(ihru)%nly))
+          if (.not. allocated(cs_pl(ihru)%pl_in)) allocate (cs_pl(ihru)%pl_in(pcom(ihru)%npl))
+          if (.not. allocated(cs_pl(ihru)%pl_on)) allocate (cs_pl(ihru)%pl_on(pcom(ihru)%npl))
+          if (.not. allocated(cs_pl(ihru)%pl_up)) allocate (cs_pl(ihru)%pl_up(pcom(ihru)%npl))
           do ly = 1, soil(ihru)%nly
             allocate (cs_soil(ihru)%ly(ly)%path(mpath), source = 0.)
           end do
