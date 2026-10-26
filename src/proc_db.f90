@@ -2,7 +2,7 @@
       
       implicit none
       
-      external :: cntbl_read, cons_prac_read, fert_parm_read, landuse_read, manure_parm_read, &
+      external :: cntbl_read, cons_prac_read, fert_parm_read, landuse_read, &
                   mgt_read_chemapp, mgt_read_fireops, mgt_read_grazeops, mgt_read_harvops, mgt_read_irrops, &
                   mgt_read_mgtops, mgt_read_puddle, mgt_read_sweepops, overland_n_read, path_parm_read, &
                   pest_parm_read, plant_parm_read, plant_transplant_read, plantparm_init, readpcom, &
