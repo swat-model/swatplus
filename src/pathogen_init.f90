@@ -71,7 +71,7 @@
               if (ly == 1) then
                 cs_soil(ihru)%ly(1)%path(ipath) = path_soil_ini(ipath_db)%soil(ipath)
               else
-                cs_soil(ihru)%ly(1)%path(ipath) = 0.
+                cs_soil(ihru)%ly(ly)%path(ipath) = 0.
               end if
             end do
             
