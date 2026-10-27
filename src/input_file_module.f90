@@ -284,32 +284,32 @@
       type (shade_factor) :: in_shf
 
       type input_path_pcp
-        character(len=80) :: pcp = " "
+        character(len=256) :: pcp = " "
       end type input_path_pcp
       type (input_path_pcp) :: in_path_pcp
       
      type input_path_tmp
-        character(len=80) :: tmp = " "
+        character(len=256) :: tmp = " "
       end type input_path_tmp
       type (input_path_tmp) :: in_path_tmp
       
      type input_path_slr
-        character(len=80) :: slr = " "
+        character(len=256) :: slr = " "
       end type input_path_slr
       type (input_path_slr) :: in_path_slr
            
      type input_path_hmd
-        character(len=80) :: hmd = " "
+        character(len=256) :: hmd = " "
       end type input_path_hmd
       type (input_path_hmd) :: in_path_hmd
       
      type input_path_wnd
-        character(len=80) :: wnd = " "
+        character(len=256) :: wnd = " "
       end type input_path_wnd
       type (input_path_wnd) :: in_path_wnd
       
     type input_path_pet
-        character(len=80) :: peti = " "
+        character(len=256) :: peti = " "
       end type input_path_pet
       type (input_path_pet) :: in_path_pet
       
