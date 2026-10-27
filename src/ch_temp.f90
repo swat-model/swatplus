@@ -124,11 +124,8 @@
       ru_count = 0
       ru_index = 1
 
-      do in = 1, size(ob(iob)%obtyp_in)
-          if (allocated(ob(iob)%obtyp_in) .and. ob(iob)%obtyp_in(in) == "ru") then
-              ru_count = count(ob(iob)%obtyp_in == "ru")
-          end if
-      end do
+      !! obtyp_in is allocated only for an object that receives something (hyd_connect)
+      if (allocated(ob(iob)%obtyp_in)) ru_count = count(ob(iob)%obtyp_in == "ru")
       
       if (allocated(ruid_array)) deallocate(ruid_array)
       allocate(ruid_array(ru_count))
