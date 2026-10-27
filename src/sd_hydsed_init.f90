@@ -213,6 +213,7 @@
           ichdat = ob(iob)%props
           ich_ini = sd_dat(ichdat)%init
           iom_ini = sd_init(ich_ini)%org_min
+          if (db_mx%om_water_init == 0) iom_ini = 0   !! no om_water.ini sets: start from the zero set
           tot_stor(ich) = om_init_water(iom_ini)
                     
           !! initialize rating curves - inflow and outflow at current time step
