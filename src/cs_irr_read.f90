@@ -34,7 +34,6 @@
             if (eof < 0) exit
             imax = imax + 1
           end do
-          db_mx%cs_ini = imax
           
           !allocate cs irrigation array
           allocate (cs_water_irr(imax))

@@ -34,7 +34,6 @@
             imax = imax + 1
           end do
           
-          db_mx%cs_ini = imax
           
           allocate (cs_aqu_ini(imax))
           
