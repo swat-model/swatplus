@@ -113,6 +113,8 @@
       endif
       
       do iaq = 1, sp_ob%aqu
+        !! outside the pesticide branch below, so a model with pathogens and no pesticide has it
+        allocate (cs_aqu(iaq)%path(cs_db%num_paths), source = 0.)
         if (cs_db%num_pests > 0) then
           !! allocate constituents
           allocate (cs_aqu(iaq)%pest(cs_db%num_pests), source = 0.)
@@ -120,7 +122,6 @@
           allocate (aqupst_m(iaq)%pest(cs_db%num_pests))
           allocate (aqupst_y(iaq)%pest(cs_db%num_pests))
           allocate (aqupst_a(iaq)%pest(cs_db%num_pests))
-          allocate (cs_aqu(iaq)%path(cs_db%num_paths), source = 0.)
           allocate (cs_aqu(iaq)%hmet(cs_db%num_metals), source = 0.)
           allocate (cs_aqu(iaq)%salt(cs_db%num_salts), source = 0.)
         end if
