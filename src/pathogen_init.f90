@@ -46,6 +46,8 @@
       integer :: ipath_db = 0   !          |
       integer :: isp_ini = 0
       integer :: ipl = 0        !none      |plant number
+      real :: pl_frac = 0.      !0-1       |fraction of the plant pathogen placed on each plant
+      real :: lai_sum_local = 0. !m2/m2    |sum of the HRU's plant LAI at the start
 
       do ihru = 1, sp_ob%hru  
         !! allocate pathogens
@@ -66,6 +68,11 @@
         isp_ini = hru(ihru)%dbs%soil_plant_init
         ipath_db = sol_plt_ini(isp_ini)%path
         if (mpath > 0) then
+          !! pcom%lai_sum is first set by pl_community on day 1, so sum the plants' LAI here, as pest_apply does
+          lai_sum_local = 0.
+          do ipl = 1, pcom(ihru)%npl
+            lai_sum_local = lai_sum_local + pcom(ihru)%plg(ipl)%lai
+          end do
           do ipath = 1, mpath
             do ly = 1, soil(ihru)%nly
               if (ly == 1) then
@@ -76,6 +83,15 @@
             end do
             
             hpath_bal(ihru)%path(ipath)%plant = path_soil_ini(ipath_db)%plt(ipath)
+            !! put the initial plant pathogen on the plants, split by each plant's share of the LAI
+            do ipl = 1, pcom(ihru)%npl
+              if (lai_sum_local > 1.e-6) then
+                pl_frac = pcom(ihru)%plg(ipl)%lai / lai_sum_local
+              else
+                pl_frac = 0.
+              end if
+              cs_pl(ihru)%pl_on(ipl)%path(ipath) = pl_frac * path_soil_ini(ipath_db)%plt(ipath)
+            end do
           end do
         end if
       end do
