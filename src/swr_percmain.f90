@@ -178,7 +178,7 @@
         !! drainmod wt_shall equations   10/23/2006
         
         if (hru(j)%tiledrain > 0) then
-        if (hru(j)%lumv%sdr_dep > 0.) then
+        if (hru(j)%lumv%sdr_dep > 0. .and. hru(j)%lumv%ldrain > 0) then
           if (wt_shall <= d) then
             qtile = 0.
           else

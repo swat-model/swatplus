@@ -29,10 +29,15 @@
         hru(j)%lumv%sdr_dep = sdr(istr)%depth
         !! define soil layer the drainage tile is in
         if (sdr(istr)%depth > 0) then
+          hru(j)%lumv%ldrain = 0
           do jj = 1, soil(j)%nly
             if (hru(j)%lumv%sdr_dep < soil(j)%phys(jj)%d) hru(j)%lumv%ldrain = jj
             if (hru(j)%lumv%sdr_dep < soil(j)%phys(jj)%d) exit
           end do
+          !! a tile at or below the bottom of the soil profile has no layer to drain
+          if (hru(j)%lumv%ldrain == 0) write (9001,*) "WARNING: tile drain ", trim(sdr(istr)%name), " at ",       &
+            sdr(istr)%depth, " mm is not above the bottom of the soil profile (", soil(j)%zmx, " mm) in HRU ", j,     &
+            ": no tile flow is simulated there"
         else
           hru(j)%lumv%ldrain = 0
         end if
