@@ -251,6 +251,9 @@
       end do
       
       ! initialize pesticides in channel water and benthic from input data
+      !! with no pest_water.ini sets channels and reservoirs start with no pesticide (below); say so once
+      if (cs_db%num_pests > 0 .and. db_mx%pestw_ini == 0) write (9001,*) "NOTE: no pest_water.ini set (file.cio: ",  &
+        trim(in_init%pest_water), "); initial pesticides in channels and reservoirs start at zero"
       do ich = 1, sp_ob%chandeg
         iob = sp_ob1%chandeg + ich - 1
         ichdat = ob(iob)%props
@@ -275,6 +278,9 @@
       end do
       
       ! initialize pathogens in channel water and benthic from input data
+      !! with no path_water.ini sets channels and reservoirs start with no pathogens (below); say so once
+      if (cs_db%num_paths > 0 .and. db_mx%pathw_ini == 0) write (9001,*) "NOTE: no path_water.ini set (file.cio: ",  &
+        trim(in_init%path_water), "); initial pathogens in channels and reservoirs start at zero"
       do ich = 1, sp_ob%chandeg
         iob = sp_ob1%chandeg + ich - 1
         ichdat = ob(iob)%props

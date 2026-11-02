@@ -13,6 +13,7 @@
         use hydrograph_module, only : sp_ob
         use plant_module
         use pesticide_data_module
+        use input_file_module, only : in_init
       
         implicit none 
         
@@ -34,6 +35,9 @@
       if (npmx == 0) return
       
       allocate (csmix%pest(npmx))
+      !! with no pest_hru.ini sets every HRU starts with no pesticide (below); say so once
+      if (db_mx%pest_ini == 0) write (9001,*) "NOTE: no pest_hru.ini set (file.cio: ", trim(in_init%pest_soil),  &
+        "); initial pesticides in HRUs start at zero"
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
           nly = soil(ihru)%nly

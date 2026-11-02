@@ -38,6 +38,7 @@
       use constituent_mass_module
       use maximum_data_module
       use output_ls_pathogen_module
+      use input_file_module, only : in_init
       
       implicit none
 
@@ -48,6 +49,9 @@
       integer :: isp_ini = 0
       integer :: ipl = 0        !none      |plant number
 
+      !! with no path_hru.ini sets every HRU starts with no pathogens (below); say so once
+      if (db_mx%path_ini == 0) write (9001,*) "NOTE: no path_hru.ini set (file.cio: ", trim(in_init%path_soil),  &
+        "); initial pathogens in HRUs start at zero"
       do ihru = 1, sp_ob%hru  
         !! allocate pathogens
         mpath = cs_db%num_paths
