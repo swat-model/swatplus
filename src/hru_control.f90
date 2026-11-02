@@ -43,7 +43,7 @@
       
       external :: actions, albedo, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
                   cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
-                  nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc, nut_orgnc2, nut_pminrl, &
+                  nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc2, nut_pminrl, &
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
                   pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_fert, &
                   pl_graze, pl_grow, rls_routeaqu, rls_routesoil, rls_routesurf, rls_routetile, &

@@ -37,7 +37,7 @@
                   manure_source_output, obj_output, recall_nut, recall_output, res_control, res_cs_output, &
                   res_pesticide_output, res_salt_output, reservoir_output, ru_control, ru_cs_output, &
                   ru_output, ru_salt_output, sd_chanbud_output, sd_chanmorph_output, sd_channel_control3, &
-                  sd_channel_output, wallo_allo_output, wallo_treat_output, wallo_trn_output, &
+                  sd_channel_output, wallo_treat_output, &
                   wallo_use_output, wet_cs_output, wet_salt_output, wetland_output, basin_aqu_pest_output, &
                   basin_aquifer_output, basin_ch_pest_output, basin_chanbud_output, basin_chanmorph_output, &
                   basin_channel_output, basin_ls_pest_output, basin_output, basin_recall_output, &
