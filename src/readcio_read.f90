@@ -86,15 +86,16 @@
          read (107,*,iostat=eof) name, in_regs
          if (eof < 0) exit
 !!!!!weather path code
-         read (107,*,iostat=eof) name, in_path_pcp
+         ! Read each path line whole: a list-directed read stops an unquoted path at its first '/' or blank
+         call read_cio_path (107, "pcp_path", in_path_pcp%pcp, eof)
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_path_tmp
+         call read_cio_path (107, "tmp_path", in_path_tmp%tmp, eof)
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_path_slr
+         call read_cio_path (107, "slr_path", in_path_slr%slr, eof)
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_path_hmd
+         call read_cio_path (107, "hmd_path", in_path_hmd%hmd, eof)
          if (eof < 0) exit
-         read (107,*,iostat=eof) name, in_path_wnd
+         call read_cio_path (107, "wnd_path", in_path_wnd%wnd, eof)
          if (eof < 0) exit
 !!!!!weather path code
 !!!!!output path code
@@ -125,4 +126,73 @@
        call init_output_path(out_path_value)
             
        return
+
+      contains
+
+      !! Reads one weather path line of file.cio whole. The value after the label may be quoted
+      !! ('...' or "...", which keeps blanks); an unquoted value ends at the first blank. A missing
+      !! trailing separator is added, as init_output_path does for the output path, so the path
+      !! can be joined to a file name. "null" and an empty value are kept as they are.
+      subroutine read_cio_path (iunit, label, path, ios)
+
+      integer, intent (in) :: iunit
+      character (len=*), intent (in) :: label
+      character (len=*), intent (inout) :: path
+      integer, intent (out) :: ios
+      character (len=1024) :: line, value
+      character (len=32) :: os_env
+      character (len=1) :: sep
+      character (len=3) :: blank
+      integer :: i1, i2, n, stat
+
+      read (iunit,'(a)',iostat=ios) line
+      if (ios /= 0) return
+      if (len_trim(line) == len(line)) then
+        write (*,'(3a,i0,a)') "! ERROR: file.cio line for ", label, " is longer than ", len(line), " characters"
+        stop 1
+      end if
+      ! blanks are spaces, tabs and the carriage return of a file saved on Windows
+      blank = " "//char(9)//char(13)
+      i1 = verify(line, blank)
+      if (i1 == 0) then
+        path = ""
+        return
+      end if
+      line = line(i1:)
+      i1 = scan(line, blank)
+      i2 = verify(line(i1:), blank)
+      if (i2 == 0) then
+        path = ""
+        return
+      end if
+      line = line(i1+i2-1:)
+      if (line(1:1) == '"' .or. line(1:1) == "'") then
+        i2 = index(line(2:), line(1:1))
+        if (i2 == 0) then
+          write (*,'(4a)') "! ERROR: file.cio ", label, " has no closing quote: ", trim(line)
+          stop 1
+        end if
+        value = line(2:i2)
+      else
+        i2 = scan(line, blank)
+        value = line(1:i2-1)
+      end if
+      n = len_trim(value)
+      if (n > 0 .and. trim(value) /= "null") then
+        if (value(n:n) /= "/" .and. value(n:n) /= "\") then
+          sep = "/"
+          call get_environment_variable("OS", os_env, status=stat)
+          if (stat == 0 .and. index(os_env, "Windows") > 0) sep = "\"
+          n = n + 1
+          value(n:n) = sep
+        end if
+      end if
+      if (n > len(path)) then
+        write (*,'(3a,i0,a)') "! ERROR: file.cio ", label, " is longer than ", len(path), " characters"
+        stop 1
+      end if
+      path = value(1:n)
+
+      end subroutine read_cio_path
+
       end subroutine readcio_read  

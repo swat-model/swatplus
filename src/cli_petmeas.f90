@@ -65,9 +65,9 @@
         
 !!!!!weather path code
        if (in_path_pet%peti == "null") then
-         open (108,file = petm(i)%filename)
+         open (108,file = petm(i)%filename, status='old')
        else
-        open (108,file = TRIM(ADJUSTL(in_path_pet%peti))//petm(i)%filename)
+        open (108,file = TRIM(ADJUSTL(in_path_pet%peti))//petm(i)%filename, status='old')
        endif
 !!!!!weather path code
         
