@@ -1,4 +1,19 @@
       subroutine ch_temp
+      ! Stream-temperature module based on the Ficklin et al. (2012) heat-exchange
+      ! formulation, with a shade-factor parameter to represent riparian vegetation
+      ! effects on incoming solar radiation. Original SWAT implementation by Efrain
+      ! Noa-Yarasca et al. (2023); SWAT+ implementation by Jeff Arnold.
+      !
+      ! References:
+      ! Ficklin et al. (2012). Water Resources Research, 48.
+      ! https://doi.org/10.1029/2011WR011256
+      !
+      ! Noa-Yarasca et al. (2023). Hydrology and Earth System Sciences, 27, 739–759.
+      ! https://doi.org/10.5194/hess-27-739-2023
+      !
+      ! Peters et al. (2025). Hydrological Processes, 39.
+      ! https://doi.org/10.1002/hyp.70059
+      !
       
       use basin_module
       use input_file_module
