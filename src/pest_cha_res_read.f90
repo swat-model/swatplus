@@ -65,7 +65,7 @@
           do ipesti = 1, imax
             read (107,*,iostat=eof) pest_init_name(ipesti)
             if (eof < 0) exit
-            !! each row is stored by its pesticide's name; a row for a pesticide that is not simulated is skipped
+            !! cs_db%num_pests rows per set, stored by pesticide name; a row for a pesticide not simulated stores nothing
             do irow = 1, cs_db%num_pests
               read (107,*,iostat=eof) pname, wat, ben
               if (eof < 0) exit
