@@ -99,9 +99,10 @@
             if (aqu_init_dat_c_cs(isp_ini)%name == aqudb(iaq)%aqu_ini) then
               do ics = 1, db_mx%pathw_ini
                 if (aqu_init_dat_c_cs(isp_ini)%path == path_init_name(ics)) then
-                  !! initialize pathogens in aquifer water and benthic from input data
+                  !! initialize pathogens in aquifer water from the matched path_water.ini set
+                  !! (copied as channels and reservoirs copy it, sd_hydsed_init and res_initial)
                   do ipath = 1, cs_db%num_paths
-                    cs_aqu(iaq)%path(ipath) = path_soil_ini(ics)%soil(ipath)
+                    cs_aqu(iaq)%path(ipath) = path_water_ini(ics)%water(ipath)
                   end do
                   exit
                 end if
