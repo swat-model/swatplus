@@ -72,11 +72,8 @@
                   Q = 0.
                 endif
               elseif(Q < 0) then !aquifer --> reservoir
-                !if((Q*-1 == 1).ge.gw_state(cell_id)%stor) then
                 if (-Q .ge.gw_state(cell_id)%stor) then
-                  !Q = gw_state(cell_id)%stor * (-1)
                   Q = -gw_state(cell_id)%stor
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q
                 endif
               endif
 
@@ -96,6 +93,7 @@
                     heat_flux = -gwheat_state(cell_id)%stor
                   endif
                   gw_heat_ss(cell_id)%resv = gw_heat_ss(cell_id)%resv + heat_flux
+									gw_heat_ss_mo(cell_id)%resv = gw_heat_ss_mo(cell_id)%resv + heat_flux !J
                   gw_heat_ss_yr(cell_id)%resv = gw_heat_ss_yr(cell_id)%resv + heat_flux !J
                 endif
               endif
@@ -110,9 +108,9 @@
                     if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                       solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                     endif
-                    gwsol_ss(cell_id)%solute(s)%resv = solmass(s)
-                    gwsol_ss_sum(cell_id)%solute(s)%resv = gwsol_ss_sum(cell_id)%solute(s)%resv + solmass(s)
-									gwsol_ss_sum_mo(cell_id)%solute(s)%resv = gwsol_ss_sum_mo(cell_id)%solute(s)%resv + solmass(s)
+                    gw_sol_ss(cell_id)%solute(s)%resv = solmass(s)
+                    gw_sol_ss_yr(cell_id)%solute(s)%resv = gw_sol_ss_yr(cell_id)%solute(s)%resv + solmass(s)
+									  gw_sol_ss_mo(cell_id)%solute(s)%resv = gw_sol_ss_mo(cell_id)%solute(s)%resv + solmass(s)
                   enddo
                   !add solute to reservoir
                   res(res_id)%no3 = res(res_id)%no3 + (solmass(1)*(-1)/1000.) !kg
@@ -197,9 +195,9 @@
                   endif
                   !store for mass balance calculations (in gwflow_simulate)
                   do s=1,gw_nsolute !loop through the solutes
-                    gwsol_ss(cell_id)%solute(s)%resv = solmass(s)
-                    gwsol_ss_sum(cell_id)%solute(s)%resv = gwsol_ss_sum(cell_id)%solute(s)%resv + solmass(s)
-									gwsol_ss_sum_mo(cell_id)%solute(s)%resv = gwsol_ss_sum_mo(cell_id)%solute(s)%resv + solmass(s)
+                    gw_sol_ss(cell_id)%solute(s)%resv = solmass(s)
+                    gw_sol_ss_yr(cell_id)%solute(s)%resv = gw_sol_ss_yr(cell_id)%solute(s)%resv + solmass(s)
+									  gw_sol_ss_mo(cell_id)%solute(s)%resv = gw_sol_ss_mo(cell_id)%solute(s)%resv + solmass(s)
                   enddo
                 endif
 

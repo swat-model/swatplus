@@ -9,7 +9,7 @@
       use sd_channel_module
       use time_module
       use constituent_mass_module, only : cs_db
-      use basin_module, only : bsn
+      use basin_module, only : pco, bsn
 
       implicit none
 
@@ -37,43 +37,44 @@
       call gwflow_write_celldef
       write(out_gw,*) '          cell definition written to gwflow_cell_definition.txt'
 
-      !open files for observation well output
-      if(gwflag_obs_day == 1) then
-        open(out_gwobs,file='gwflow_obs_day.txt')
-        write(out_gwobs,*) 'gwflow observation well daily output (-99 = not simulated)'
-        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
+      !--- print.prt overrides: when gwflow entries are listed in print.prt, override gwflow.input flags ---
+			if(pco%gwflow_wb%already_read_in) then
+        gwflag_day = 0; gwflag_mon = 0; gwflag_yr = 0; gwflag_aa = 0
+        if(pco%gwflow_wb%d == 'y') gwflag_day = 1
+        if(pco%gwflow_wb%m == 'y') gwflag_mon = 1
+        if(pco%gwflow_wb%y == 'y') gwflag_yr  = 1
+        if(pco%gwflow_wb%a == 'y') gwflag_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_wb overrides gwflow.input flags'
+			endif
+			if(pco%gwflow_obs%already_read_in) then
+        gwflag_obs = 0
+        if(pco%gwflow_obs%d == 'y') gwflag_obs = 1
+        write(out_gw,*) '          print.prt gwflow_obs controls observation well output'
       endif
-      if(gwflag_obs_mon == 1) then
-        open(out_gwobs_mon,file='gwflow_obs_mon.txt')
-        write(out_gwobs_mon,*) 'gwflow observation well monthly avg (-99 = not simulated)'
-        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
+      if(pco%gwflow_heat%already_read_in) then
+        gwflag_heat = 0
+        if(pco%gwflow_heat%d == 'y' .or. pco%gwflow_heat%y == 'y' .or. &
+           pco%gwflow_heat%a == 'y') gwflag_heat = 1
+        write(out_gw,*) '          print.prt gwflow_heat controls heat balance output'
       endif
-      if(gwflag_obs_yr == 1) then
-        open(out_gwobs_yr,file='gwflow_obs_yr.txt')
-        write(out_gwobs_yr,*) 'gwflow observation well annual avg (-99 = not simulated)'
-        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
+      if(pco%gwflow_solute%already_read_in) then
+        gwflag_solute = 0
+        if(pco%gwflow_solute%d == 'y' .or. pco%gwflow_solute%m == 'y' .or. &
+           pco%gwflow_solute%y == 'y' .or. pco%gwflow_solute%a == 'y') gwflag_solute = 1
+        write(out_gw,*) '          print.prt gwflow_solute controls solute balance output'
       endif
-      if(gwflag_obs_aa == 1) then
-        open(out_gwobs_aa,file='gwflow_obs_aa.txt')
-        write(out_gwobs_aa,*) 'gwflow observation well avg annual (-99 = not simulated)'
-        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-      endif
+      if(pco%gwflow_flux%already_read_in) then
+        gwflag_flux = 0
+        if(pco%gwflow_flux%d == 'y' .or. pco%gwflow_flux%y == 'y') gwflag_flux = 1
+        write(out_gw,*) '          print.prt gwflow_flux controls canal/pond/tile/chan diagnostic output'
+			endif
+			if(pco%gwflow_cell%already_read_in) then
+        if(pco%gwflow_cell%d == 'y') gwflag_cell_day = 1
+        if(pco%gwflow_cell%m == 'y') gwflag_cell_mon = 1
+        if(pco%gwflow_cell%y == 'y') gwflag_cell_yr  = 1
+        if(pco%gwflow_cell%a == 'y') gwflag_cell_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_cell overrides gwflow.input flags'
+			endif
 
       !open file to track daily groundwater water balance
       if(gwflag_day.eq.1) then
@@ -83,7 +84,7 @@
           'name','ts','vbef','vaft','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral','boundary','pump_allo','pump_ext', &
           'tile','reservoir','wetland','canal','floodplain','pond', &
-          'phytorem','error','sat_frac','wt_depth','pump_def'
+          'phreat','error','sat_frac','wt_depth','pump_def'
         write(out_gwbal,8000) '','','','','','','','---','mm','mm', &
           'mm','mm','mm','mm','mm','mm','mm','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm','mm','%','frac','m','mm'
@@ -97,7 +98,7 @@
           'name','dvol','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral','boundary','pump_allo','pump_ext', &
           'tile','reservoir','wetland','canal','floodplain','pond', &
-          'phytorem','pump_def'
+          'phreat','pump_def'
         write(out_gwbal_mon,8000) '','','','','','','','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm','mm','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm'
@@ -111,7 +112,7 @@
           'name','dvol','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral','boundary','pump_allo','pump_ext', &
           'tile','reservoir','wetland','canal','floodplain','pond', &
-          'phytorem','pump_def'
+          'phreat','pump_def'
         write(out_gwbal_yr,8000) '','','','','','','','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm','mm','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm'
@@ -125,7 +126,7 @@
           'name','dvol','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral','boundary','pump_allo','pump_ext', &
           'tile','reservoir','wetland','canal','floodplain','pond', &
-          'phytorem','pump_def'
+          'phreat','pump_def'
         write(out_gwbal_aa,8000) '','','','','','','','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm','mm','mm','mm','mm', &
           'mm','mm','mm','mm','mm','mm'
@@ -169,7 +170,7 @@
             'gis_id','name','ts','vbef','vaft','recharge','gw_et', &
             'gw_sw','sw_gw','sat_excess','soil','lateral','boundary', &
             'pump_allo','pump_ext','tile','reservoir','wetland','canal', &
-            'floodplain','pond','phytorem','error','wt_depth','pump_def'
+            'floodplain','pond','phreat','error','wt_depth','pump_def'
           write(out_gwbal_grp+i,8000) '','','','','','','','---', &
             'm3','m3','m3','m3','m3','m3','m3','m3','m3','m3', &
             'm3','m3','m3','m3','m3','m3','m3','m3','m3','%', &
@@ -181,13 +182,13 @@
 
 
 
-      !initialize groundwater heat balance ----------------------------------------------------------------------------------------------------------
+      !initialize groundwater heat balance --------------------------------------------------------
       if(gw_heat_flag == 1) then
       write(out_gw,*)
       write(out_gw,*) '     initialize groundwater heat balance files and arrays'
 
       !open file to track daily groundwater heat balance
-      if(gwflag_heat_day.eq.1) then
+      if(gwflag_day.eq.1) then
         open(out_heatbal_dy,file='gwflow_basin_heat_day.txt')
         write(out_heatbal_dy,*) 'Groundwater watershed-wide heat fluxes for each day (MJ)'
         write(out_heatbal_dy,8000) 'jday','mon','day','yr','unit','gis_id', &
@@ -198,10 +199,24 @@
         write(out_heatbal_dy,8000) '','','','','','','','---', &
           'MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ', &
           'MJ','MJ','MJ','MJ','MJ','MJ','MJ','%','degC'
+			endif
+      
+			!open file to track monthly groundwater heat balance
+      if(gwflag_mon.eq.1) then
+        open(out_heatbal_mon,file='gwflow_basin_heat_mon.txt')
+        write(out_heatbal_mon,*) 'Groundwater watershed-wide heat fluxes for each month (MJ)'
+        write(out_heatbal_mon,8000) 'jday','mon','day','yr','unit','gis_id', &
+          'name','hdel','recharge','gw_et','gw_sw','sw_gw', &
+          'sat_excess','soil','lateral','dispersion','boundary', &
+          'pump_allo','pump_ext','tile','reservoir','wetland','canal', &
+          'floodplain','pond'
+        write(out_heatbal_mon,8000) '','','','','','','','MJ','MJ','MJ', &
+          'MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ','MJ', &
+          'MJ','MJ','MJ'
       endif
-
+			
       !open file to track yearly groundwater heat balance
-      if(gwflag_heat_yr.eq.1) then
+      if(gwflag_yr.eq.1) then
         open(out_heatbal_yr,file='gwflow_basin_heat_yr.txt')
         write(out_heatbal_yr,*) 'Groundwater watershed-wide heat fluxes for each year (MJ)'
         write(out_heatbal_yr,8000) 'jday','mon','day','yr','unit','gis_id', &
@@ -215,7 +230,7 @@
       endif
 
       !open file to write out average annual groundwater heat balance
-      if(gwflag_heat_aa.eq.1) then
+      if(gwflag_aa.eq.1) then
         open(out_heatbal_aa,file='gwflow_basin_heat_aa.txt')
         write(out_heatbal_aa,*) 'Groundwater watershed-wide heat fluxes average annual (MJ)'
         write(out_heatbal_aa,8000) 'jday','mon','day','yr','unit','gis_id', &
@@ -232,79 +247,14 @@
 
 
 
-      !initialize solute mass balance ---------------------------------------------------------------------------------------------------------------
+      !initialize solute mass balance -------------------------------------------------------------
       if(gw_solute_flag == 1) then
-
-        !allocate monthly, yearly, and total arrays
-        !monthly
-        allocate(sol_grid_chng_mo(gw_nsolute))
-        allocate(sol_grid_rech_mo(gw_nsolute))
-        allocate(sol_grid_gwsw_mo(gw_nsolute))
-        allocate(sol_grid_swgw_mo(gw_nsolute))
-        allocate(sol_grid_satx_mo(gw_nsolute))
-        allocate(sol_grid_advn_mo(gw_nsolute))
-        allocate(sol_grid_disp_mo(gw_nsolute))
-        allocate(sol_grid_rcti_mo(gw_nsolute))
-        allocate(sol_grid_rcto_mo(gw_nsolute))
-        allocate(sol_grid_minl_mo(gw_nsolute))
-        allocate(sol_grid_sorb_mo(gw_nsolute))
-        allocate(sol_grid_ppag_mo(gw_nsolute))
-        allocate(sol_grid_ppex_mo(gw_nsolute))
-        allocate(sol_grid_tile_mo(gw_nsolute))
-        allocate(sol_grid_soil_mo(gw_nsolute))
-        allocate(sol_grid_resv_mo(gw_nsolute))
-        allocate(sol_grid_wetl_mo(gw_nsolute))
-        allocate(sol_grid_canl_mo(gw_nsolute))
-        allocate(sol_grid_fpln_mo(gw_nsolute))
-        allocate(sol_grid_pond_mo(gw_nsolute))
-        !yearly
-        allocate(sol_grid_chng_yr(gw_nsolute))
-        allocate(sol_grid_rech_yr(gw_nsolute))
-        allocate(sol_grid_gwsw_yr(gw_nsolute))
-        allocate(sol_grid_swgw_yr(gw_nsolute))
-        allocate(sol_grid_satx_yr(gw_nsolute))
-        allocate(sol_grid_advn_yr(gw_nsolute))
-        allocate(sol_grid_disp_yr(gw_nsolute))
-        allocate(sol_grid_rcti_yr(gw_nsolute))
-        allocate(sol_grid_rcto_yr(gw_nsolute))
-        allocate(sol_grid_minl_yr(gw_nsolute))
-        allocate(sol_grid_sorb_yr(gw_nsolute))
-        allocate(sol_grid_ppag_yr(gw_nsolute))
-        allocate(sol_grid_ppex_yr(gw_nsolute))
-        allocate(sol_grid_tile_yr(gw_nsolute))
-        allocate(sol_grid_soil_yr(gw_nsolute))
-        allocate(sol_grid_resv_yr(gw_nsolute))
-        allocate(sol_grid_wetl_yr(gw_nsolute))
-        allocate(sol_grid_canl_yr(gw_nsolute))
-        allocate(sol_grid_fpln_yr(gw_nsolute))
-        allocate(sol_grid_pond_yr(gw_nsolute))
-        !total
-        allocate(sol_grid_chng_tt(gw_nsolute))
-        allocate(sol_grid_rech_tt(gw_nsolute))
-        allocate(sol_grid_gwsw_tt(gw_nsolute))
-        allocate(sol_grid_swgw_tt(gw_nsolute))
-        allocate(sol_grid_satx_tt(gw_nsolute))
-        allocate(sol_grid_advn_tt(gw_nsolute))
-        allocate(sol_grid_disp_tt(gw_nsolute))
-        allocate(sol_grid_rcti_tt(gw_nsolute))
-        allocate(sol_grid_rcto_tt(gw_nsolute))
-        allocate(sol_grid_minl_tt(gw_nsolute))
-        allocate(sol_grid_sorb_tt(gw_nsolute))
-        allocate(sol_grid_ppag_tt(gw_nsolute))
-        allocate(sol_grid_ppex_tt(gw_nsolute))
-        allocate(sol_grid_tile_tt(gw_nsolute))
-        allocate(sol_grid_soil_tt(gw_nsolute))
-        allocate(sol_grid_resv_tt(gw_nsolute))
-        allocate(sol_grid_wetl_tt(gw_nsolute))
-        allocate(sol_grid_canl_tt(gw_nsolute))
-        allocate(sol_grid_fpln_tt(gw_nsolute))
-        allocate(sol_grid_pond_tt(gw_nsolute))
 
         !loop through the solutes
         do n=1,gw_nsolute
 
           !daily solute mass balance
-          if(gwflag_solute_day.eq.1) then
+          if(gwflag_day.eq.1) then
             !prepare solute mass balance output files (daily output)
             file_name(1) = 'gwflow_basin_sol_no3_day.txt'
             file_name(2) = 'gwflow_basin_sol_p_day.txt'
@@ -336,7 +286,7 @@
           endif
 
           !monthly solute mass balance
-          if(gwflag_solute_mon.eq.1) then
+          if(gwflag_mon.eq.1) then
             !prepare solute mass balance output files (monthly output)
             file_name(1) = 'gwflow_basin_sol_no3_mon.txt'
             file_name(2) = 'gwflow_basin_sol_p_mon.txt'
@@ -364,31 +314,10 @@
             write(out_solbal_mo+n,8000) '','','','','','','','kg','kg', &
               'kg','kg','kg','kg','kg','kg','kg','kg','kg','kg','kg', &
               'kg','kg','kg','kg','kg','kg','kg'
-            !zero out monthly arrays
-            sol_grid_chng_mo(n) = 0.
-            sol_grid_rech_mo(n) = 0.
-            sol_grid_gwsw_mo(n) = 0.
-            sol_grid_swgw_mo(n) = 0.
-            sol_grid_satx_mo(n) = 0.
-            sol_grid_advn_mo(n) = 0.
-            sol_grid_disp_mo(n) = 0.
-            sol_grid_rcti_mo(n) = 0.
-            sol_grid_rcto_mo(n) = 0.
-            sol_grid_minl_mo(n) = 0.
-            sol_grid_sorb_mo(n) = 0.
-            sol_grid_ppag_mo(n) = 0.
-            sol_grid_ppex_mo(n) = 0.
-            sol_grid_tile_mo(n) = 0.
-            sol_grid_soil_mo(n) = 0.
-            sol_grid_resv_mo(n) = 0.
-            sol_grid_wetl_mo(n) = 0.
-            sol_grid_canl_mo(n) = 0.
-            sol_grid_fpln_mo(n) = 0.
-            sol_grid_pond_mo(n) = 0.
           endif
 
           !yearly solute mass balance
-          if(gwflag_solute_yr.eq.1) then
+          if(gwflag_yr.eq.1) then
             !prepare solute mass balance output files (yearly output)
             file_name(1) = 'gwflow_basin_sol_no3_yr.txt'
             file_name(2) = 'gwflow_basin_sol_p_yr.txt'
@@ -416,31 +345,10 @@
             write(out_solbal_yr+n,8000) '','','','','','','','kg','kg', &
               'kg','kg','kg','kg','kg','kg','kg','kg','kg','kg','kg', &
               'kg','kg','kg','kg','kg','kg','kg'
-            !zero out yearly arrays
-            sol_grid_chng_yr(n) = 0.
-            sol_grid_rech_yr(n) = 0.
-            sol_grid_gwsw_yr(n) = 0.
-            sol_grid_swgw_yr(n) = 0.
-            sol_grid_satx_yr(n) = 0.
-            sol_grid_advn_yr(n) = 0.
-            sol_grid_disp_yr(n) = 0.
-            sol_grid_rcti_yr(n) = 0.
-            sol_grid_rcto_yr(n) = 0.
-            sol_grid_minl_yr(n) = 0.
-            sol_grid_sorb_yr(n) = 0.
-            sol_grid_ppag_yr(n) = 0.
-            sol_grid_ppex_yr(n) = 0.
-            sol_grid_tile_yr(n) = 0.
-            sol_grid_soil_yr(n) = 0.
-            sol_grid_resv_yr(n) = 0.
-            sol_grid_wetl_yr(n) = 0.
-            sol_grid_canl_yr(n) = 0.
-            sol_grid_fpln_yr(n) = 0.
-            sol_grid_pond_yr(n) = 0.
           endif
 
           !average annual solute mass balance
-          if(gwflag_solute_aa.eq.1) then
+          if(gwflag_aa.eq.1) then
             !prepare solute mass balance output files (average annual output)
             file_name(1) = 'gwflow_basin_sol_no3_aa.txt'
             file_name(2) = 'gwflow_basin_sol_p_aa.txt'
@@ -468,36 +376,16 @@
             write(out_solbal_aa+n,8000) '','','','','','','','kg','kg', &
               'kg','kg','kg','kg','kg','kg','kg','kg','kg','kg','kg', &
               'kg','kg','kg','kg','kg','kg','kg'
-            !zero out yearly arrays
-            sol_grid_chng_tt(n) = 0.
-            sol_grid_rech_tt(n) = 0.
-            sol_grid_gwsw_tt(n) = 0.
-            sol_grid_swgw_tt(n) = 0.
-            sol_grid_satx_tt(n) = 0.
-            sol_grid_advn_tt(n) = 0.
-            sol_grid_disp_tt(n) = 0.
-            sol_grid_rcti_tt(n) = 0.
-            sol_grid_rcto_tt(n) = 0.
-            sol_grid_minl_tt(n) = 0.
-            sol_grid_sorb_tt(n) = 0.
-            sol_grid_ppag_tt(n) = 0.
-            sol_grid_ppex_tt(n) = 0.
-            sol_grid_tile_tt(n) = 0.
-            sol_grid_soil_tt(n) = 0.
-            sol_grid_resv_tt(n) = 0.
-            sol_grid_wetl_tt(n) = 0.
-            sol_grid_canl_tt(n) = 0.
-            sol_grid_fpln_tt(n) = 0.
-            sol_grid_pond_tt(n) = 0.
           endif
 
         enddo !go to next solute
 
-      endif !check for solutes
+			endif !check for solutes
 
 
       !open cell-level long-format output files -----------------------------------------
-      if(gwflag_day.eq.1) then
+      !groundwater state and fluxes -------------------------------------------
+			if(gwflag_cell_day.eq.1) then
         open(out_gwcell_day,file='gwflow_cell_wb_day.txt')
         write(out_gwcell_day,*) 'gwflow cell-level daily output'
         write(out_gwcell_day,*) 'fluxes in m3/day; head and wtdepth in m'
@@ -506,9 +394,9 @@
           'head','wt_depth','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral', &
           'pump_allo','pump_ext','tile','reservoir','wetland', &
-          'floodplain','canal','pond','phytorem'
+          'floodplain','canal','pond','phreat'
       endif
-      if(gwflag_mon.eq.1) then
+      if(gwflag_cell_mon.eq.1) then
         open(out_gwcell_mon,file='gwflow_cell_wb_mon.txt')
         write(out_gwcell_mon,*) 'gwflow cell-level monthly output'
         write(out_gwcell_mon,*) 'values are monthly average daily rates' &
@@ -518,9 +406,9 @@
           'head','wt_depth','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral', &
           'pump_allo','pump_ext','tile','reservoir','wetland', &
-          'floodplain','canal','pond','phytorem'
+          'floodplain','canal','pond','phreat'
       endif
-      if(gwflag_yr.eq.1) then
+      if(gwflag_cell_yr.eq.1) then
         open(out_gwcell_yr,file='gwflow_cell_wb_yr.txt')
         write(out_gwcell_yr,*) 'gwflow cell-level annual output'
         write(out_gwcell_yr,*) 'values are annual average daily rates' &
@@ -530,9 +418,9 @@
           'head','wt_depth','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral', &
           'pump_allo','pump_ext','tile','reservoir','wetland', &
-          'floodplain','canal','pond','phytorem'
+          'floodplain','canal','pond','phreat'
       endif
-      if(gwflag_aa.eq.1) then
+      if(gwflag_cell_aa.eq.1) then
         open(out_gwcell_aa,file='gwflow_cell_wb_aa.txt')
         write(out_gwcell_aa,*) 'gwflow cell-level average annual output'
         write(out_gwcell_aa,*) 'values are avg annual daily rates' &
@@ -542,9 +430,107 @@
           'head','wt_depth','recharge','gw_et','gw_sw','sw_gw', &
           'sat_excess','soil','lateral', &
           'pump_allo','pump_ext','tile','reservoir','wetland', &
-          'floodplain','canal','pond','phytorem'
-      endif
+          'floodplain','canal','pond','phreat'
+			endif
 
+			!groundwater heat state and fluxes --------------------------------------
+			if(gwflag_cell_day.eq.1) then
+        open(out_gwcell_heat_day,file='gwflow_cell_heat_day.txt')
+        write(out_gwcell_heat_day,*) 'gwflow cell-level daily output: heat'
+        write(out_gwcell_heat_day,*) 'fluxes in MJ/day; temp in oC'
+        write(out_gwcell_heat_day,'(a8,a6,a6,a8,a8,a10,a12,21a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'heat','temp','recharge','gwet','gw_sw','sw_gw', &
+          'sat_excess','soil','lateral','disp', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond','phreat'
+      endif
+      if(gwflag_cell_mon.eq.1) then
+        open(out_gwcell_heat_mon,file='gwflow_cell_heat_mon.txt')
+        write(out_gwcell_heat_mon,*) 'gwflow cell-level monthly output: heat'
+        write(out_gwcell_heat_mon,*) 'values are monthly average daily rates' &
+          //'fluxes in MJ/day; temp in oC'
+        write(out_gwcell_heat_mon,'(a8,a6,a6,a8,a8,a10,a12,20a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'heat','temp','recharge','gwet','gw_sw','sw_gw', &
+          'sat_excess','soil','lateral','disp', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond','phreat'
+      endif
+      if(gwflag_cell_yr.eq.1) then
+        open(out_gwcell_heat_yr,file='gwflow_cell_heat_yr.txt')
+        write(out_gwcell_heat_yr,*) 'gwflow cell-level annual output: heat'
+        write(out_gwcell_heat_yr,*) 'values are annual average daily rates' &
+          //'fluxes in MJ/day; temp in oC'
+        write(out_gwcell_heat_yr,'(a8,a6,a6,a8,a8,a10,a12,20a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'heat','temp','recharge','gwet','gw_sw','sw_gw', &
+          'sat_excess','soil','lateral','disp', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond','phreat'
+      endif
+      if(gwflag_cell_aa.eq.1) then
+        open(out_gwcell_heat_aa,file='gwflow_cell_heat_aa.txt')
+        write(out_gwcell_heat_aa,*) 'gwflow cell-level average annual output: heat'
+        write(out_gwcell_heat_aa,*) 'values are avg annual daily rates' &
+          //'fluxes in MJ/day; temp in oC'
+        write(out_gwcell_heat_aa,'(a8,a6,a6,a8,a8,a10,a12,20a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'heat','temp','recharge','gwet','gw_sw','sw_gw', &
+          'sat_excess','soil','lateral','disp', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond','phreat'
+      endif
+			
+			!groundwater solute state and fluxes ------------------------------------
+			if(gwflag_cell_day.eq.1) then
+        open(out_gwcell_sol_day,file='gwflow_cell_sol_day.txt')
+        write(out_gwcell_sol_day,*) 'gwflow cell-level daily output: solutes'
+        write(out_gwcell_sol_day,*) 'fluxes in kg/day; conc in g/m3'
+        write(out_gwcell_sol_day,'(a8,a6,a6,a8,a8,a10,a12,21a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'solute','conc','recharge','gw_sw','sw_gw', &
+          'sat_excess','soil','advn','disp','rcti','rcto','minl','sorb', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond'
+      endif
+      if(gwflag_cell_mon.eq.1) then
+        open(out_gwcell_sol_mon,file='gwflow_cell_sol_mon.txt')
+        write(out_gwcell_sol_mon,*) 'gwflow cell-level monthly output: solutes'
+        write(out_gwcell_sol_mon,*) 'values are monthly average daily rates' &
+          //' (fluxes in kg/day; conc in g/m3)'
+        write(out_gwcell_sol_mon,'(a8,a6,a6,a8,a8,a10,a12,20a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'solute','conc','recharge','gw_sw','sw_gw', &
+          'sat_excess','soil','advn','disp','rcti','rcto','minl','sorb', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond'
+      endif
+      if(gwflag_cell_yr.eq.1) then
+        open(out_gwcell_sol_yr,file='gwflow_cell_sol_yr.txt')
+        write(out_gwcell_sol_yr,*) 'gwflow cell-level annual output: solutes'
+        write(out_gwcell_sol_yr,*) 'values are annual average daily rates' &
+          //' (fluxes in kg/day; conc in g/m3)'
+        write(out_gwcell_sol_yr,'(a8,a6,a6,a8,a8,a10,a12,20a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'solute','conc','recharge','gw_sw','sw_gw', &
+          'sat_excess','soil','advn','disp','rcti','rcto','minl','sorb', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond'
+      endif
+      if(gwflag_cell_aa.eq.1) then
+        open(out_gwcell_sol_aa,file='gwflow_cell_sol_aa.txt')
+        write(out_gwcell_sol_aa,*) 'gwflow cell-level average annual output: solutes'
+        write(out_gwcell_sol_aa,*) 'values are avg annual daily rates' &
+          //' (fluxes in kg/day; conc in g/m3)'
+        write(out_gwcell_sol_aa,'(a8,a6,a6,a8,a8,a10,a12,20a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'solute','conc','recharge','gw_sw','sw_gw', &
+          'sat_excess','soil','advn','disp','rcti','rcto','minl','sorb', &
+          'pump_allo','pump_ext','tile','reservoir','wetland', &
+          'floodplain','canal','pond'
+      endif
+			
 
       !format statement for standard SWAT+ basin-level headers
 8000  format(4a6,2a8,a18,50a13)
@@ -553,7 +539,8 @@
       end subroutine gwflow_output_init
 
 
-      subroutine gwflow_output_day
+
+      subroutine gwflow_output_day !-------------------------------------------------------------------------------------------------------
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine computes and writes daily gwflow output:
@@ -699,7 +686,7 @@
           enddo
         endif
       enddo
-      if(gwflag_obs_day == 1) then
+      if(gwflag_obs == 1) then
         do k=1,gw_num_obs_wells
           obs_temp = -99.
           obs_no3 = -99.
@@ -1029,7 +1016,7 @@
         heat_canl_grid = heat_canl_grid / 1000000.
         heat_fpln_grid = heat_fpln_grid / 1000000.
         heat_pond_grid = heat_pond_grid / 1000000.
-        if(gwflag_heat_day == 1) then
+        if(gwflag_day == 1) then
           write(out_heatbal_dy,8100) time%day,time%mo,time%day_mo, &
             time%yrc,"       1","       1",bsn%name,gw_time_step, &
             heat_hbef_grid,heat_haft_grid,heat_rech_grid,heat_gwet_grid, &
@@ -1038,8 +1025,27 @@
             heat_ppex_grid,heat_tile_grid,heat_resv_grid,heat_wetl_grid, &
             heat_canl_grid,heat_fpln_grid,heat_pond_grid, &
             mass_error,temp_avg
-        endif
-        !add daily heat fluxes to yearly values
+				endif
+        !add daily heat fluxes to monthly values
+				gw_heat_grid_mo%chng = gw_heat_grid_mo%chng + (heat_haft_grid-heat_hbef_grid)
+        gw_heat_grid_mo%rech = gw_heat_grid_mo%rech + heat_rech_grid
+        gw_heat_grid_mo%gwet = gw_heat_grid_mo%gwet + heat_gwet_grid
+        gw_heat_grid_mo%gwsw = gw_heat_grid_mo%gwsw + heat_gwsw_grid
+        gw_heat_grid_mo%swgw = gw_heat_grid_mo%swgw + heat_swgw_grid
+        gw_heat_grid_mo%satx = gw_heat_grid_mo%satx + heat_satx_grid
+        gw_heat_grid_mo%soil = gw_heat_grid_mo%soil + heat_soil_grid
+        gw_heat_grid_mo%latl = gw_heat_grid_mo%latl + heat_latl_grid
+        gw_heat_grid_mo%disp = gw_heat_grid_mo%disp + heat_disp_grid
+        gw_heat_grid_mo%bndr = gw_heat_grid_mo%bndr + heat_bndr_grid
+        gw_heat_grid_mo%ppag = gw_heat_grid_mo%ppag + heat_ppag_grid
+        gw_heat_grid_mo%ppex = gw_heat_grid_mo%ppex + heat_ppex_grid
+        gw_heat_grid_mo%tile = gw_heat_grid_mo%tile + heat_tile_grid
+        gw_heat_grid_mo%resv = gw_heat_grid_mo%resv + heat_resv_grid
+        gw_heat_grid_mo%wetl = gw_heat_grid_mo%wetl + heat_wetl_grid
+        gw_heat_grid_mo%canl = gw_heat_grid_mo%canl + heat_canl_grid
+        gw_heat_grid_mo%fpln = gw_heat_grid_mo%fpln + heat_fpln_grid
+        gw_heat_grid_mo%pond = gw_heat_grid_mo%pond + heat_pond_grid
+				!add daily heat fluxes to yearly values
         gw_heat_grid_yr%chng = gw_heat_grid_yr%chng + (heat_haft_grid-heat_hbef_grid)
         gw_heat_grid_yr%rech = gw_heat_grid_yr%rech + heat_rech_grid
         gw_heat_grid_yr%gwet = gw_heat_grid_yr%gwet + heat_gwet_grid
@@ -1110,25 +1116,25 @@
             if(gw_state(i)%stat == 1) then
               sol_grid_mbef = sol_grid_mbef + (gwsol_state(i)%solute(s)%mbef / 1000.)
               sol_grid_maft = sol_grid_maft + (gwsol_state(i)%solute(s)%maft / 1000.)
-              sol_grid_rech = sol_grid_rech + (gwsol_ss(i)%solute(s)%rech / 1000.)
-              sol_grid_gwsw = sol_grid_gwsw + (gwsol_ss(i)%solute(s)%gwsw / 1000.)
-              sol_grid_swgw = sol_grid_swgw + (gwsol_ss(i)%solute(s)%swgw / 1000.)
-              sol_grid_satx = sol_grid_satx + (gwsol_ss(i)%solute(s)%satx / 1000.)
-              sol_grid_advn = sol_grid_advn + (gwsol_ss(i)%solute(s)%advn / 1000.)
-              sol_grid_disp = sol_grid_disp + (gwsol_ss(i)%solute(s)%disp / 1000.)
-              sol_grid_rcti = sol_grid_rcti + (gwsol_ss(i)%solute(s)%rcti / 1000.)
-              sol_grid_rcto = sol_grid_rcto + (gwsol_ss(i)%solute(s)%rcto / 1000.)
-              sol_grid_minl = sol_grid_minl + (gwsol_ss(i)%solute(s)%minl / 1000.)
-              sol_grid_sorb = sol_grid_sorb + (gwsol_ss(i)%solute(s)%sorb / 1000.)
-              sol_grid_ppag = sol_grid_ppag + (gwsol_ss(i)%solute(s)%ppag / 1000.)
-              sol_grid_ppex = sol_grid_ppex + (gwsol_ss(i)%solute(s)%ppex / 1000.)
-              sol_grid_tile = sol_grid_tile + (gwsol_ss(i)%solute(s)%tile / 1000.)
-              sol_grid_soil = sol_grid_soil + (gwsol_ss(i)%solute(s)%soil / 1000.)
-              sol_grid_resv = sol_grid_resv + (gwsol_ss(i)%solute(s)%resv / 1000.)
-              sol_grid_wetl = sol_grid_wetl + (gwsol_ss(i)%solute(s)%wetl / 1000.)
-              sol_grid_canl = sol_grid_canl + (gwsol_ss(i)%solute(s)%canl / 1000.)
-              sol_grid_fpln = sol_grid_fpln + (gwsol_ss(i)%solute(s)%fpln / 1000.)
-              sol_grid_pond = sol_grid_pond + (gwsol_ss(i)%solute(s)%pond / 1000.)
+              sol_grid_rech = sol_grid_rech + (gw_sol_ss(i)%solute(s)%rech / 1000.)
+              sol_grid_gwsw = sol_grid_gwsw + (gw_sol_ss(i)%solute(s)%gwsw / 1000.)
+              sol_grid_swgw = sol_grid_swgw + (gw_sol_ss(i)%solute(s)%swgw / 1000.)
+              sol_grid_satx = sol_grid_satx + (gw_sol_ss(i)%solute(s)%satx / 1000.)
+              sol_grid_advn = sol_grid_advn + (gw_sol_ss(i)%solute(s)%advn / 1000.)
+              sol_grid_disp = sol_grid_disp + (gw_sol_ss(i)%solute(s)%disp / 1000.)
+              sol_grid_rcti = sol_grid_rcti + (gw_sol_ss(i)%solute(s)%rcti / 1000.)
+              sol_grid_rcto = sol_grid_rcto + (gw_sol_ss(i)%solute(s)%rcto / 1000.)
+              sol_grid_minl = sol_grid_minl + (gw_sol_ss(i)%solute(s)%minl / 1000.)
+              sol_grid_sorb = sol_grid_sorb + (gw_sol_ss(i)%solute(s)%sorb / 1000.)
+              sol_grid_ppag = sol_grid_ppag + (gw_sol_ss(i)%solute(s)%ppag / 1000.)
+              sol_grid_ppex = sol_grid_ppex + (gw_sol_ss(i)%solute(s)%ppex / 1000.)
+              sol_grid_tile = sol_grid_tile + (gw_sol_ss(i)%solute(s)%tile / 1000.)
+              sol_grid_soil = sol_grid_soil + (gw_sol_ss(i)%solute(s)%soil / 1000.)
+              sol_grid_resv = sol_grid_resv + (gw_sol_ss(i)%solute(s)%resv / 1000.)
+              sol_grid_wetl = sol_grid_wetl + (gw_sol_ss(i)%solute(s)%wetl / 1000.)
+              sol_grid_canl = sol_grid_canl + (gw_sol_ss(i)%solute(s)%canl / 1000.)
+              sol_grid_fpln = sol_grid_fpln + (gw_sol_ss(i)%solute(s)%fpln / 1000.)
+              sol_grid_pond = sol_grid_pond + (gw_sol_ss(i)%solute(s)%pond / 1000.)
             endif
           enddo
           sol_grid_sorb = sol_grid_sorb * (-1) !leaving groundwater (sorbing to aquifer material)
@@ -1142,7 +1148,7 @@
                                sol_grid_resv + sol_grid_wetl + sol_grid_canl + sol_grid_fpln + sol_grid_pond) / sol_grid_maft)) * 100
           endif
           !print out daily values for the solute
-          if(gwflag_solute_day == 1) then
+          if(gwflag_day == 1) then
             write(out_solbal_dy+s,8100) time%day,time%mo,time%day_mo, &
               time%yrc,"       1","       1",bsn%name,gw_time_step, &
               sol_grid_mbef,sol_grid_maft,sol_grid_rech,sol_grid_gwsw,sol_grid_swgw, &
@@ -1154,120 +1160,163 @@
           endif
           !add grid values to monthly, yearly, and total mass values
           !monthly (kg)
-          sol_grid_chng_mo(s) = sol_grid_chng_mo(s) + (sol_grid_maft-sol_grid_mbef)
-          sol_grid_rech_mo(s) = sol_grid_rech_mo(s) + sol_grid_rech
-          sol_grid_gwsw_mo(s) = sol_grid_gwsw_mo(s) + sol_grid_gwsw
-          sol_grid_swgw_mo(s) = sol_grid_swgw_mo(s) + sol_grid_swgw
-          sol_grid_satx_mo(s) = sol_grid_satx_mo(s) + sol_grid_satx
-          sol_grid_advn_mo(s) = sol_grid_advn_mo(s) + sol_grid_advn
-          sol_grid_disp_mo(s) = sol_grid_disp_mo(s) + sol_grid_disp
-          sol_grid_rcti_mo(s) = sol_grid_rcti_mo(s) + sol_grid_rcti
-          sol_grid_rcto_mo(s) = sol_grid_rcto_mo(s) + sol_grid_rcto
-          sol_grid_minl_mo(s) = sol_grid_minl_mo(s) + sol_grid_minl
-          sol_grid_sorb_mo(s) = sol_grid_sorb_mo(s) + sol_grid_sorb
-          sol_grid_ppag_mo(s) = sol_grid_ppag_mo(s) + sol_grid_ppag
-          sol_grid_ppex_mo(s) = sol_grid_ppex_mo(s) + sol_grid_ppex
-          sol_grid_tile_mo(s) = sol_grid_tile_mo(s) + sol_grid_tile
-          sol_grid_soil_mo(s) = sol_grid_soil_mo(s) + sol_grid_soil
-          sol_grid_resv_mo(s) = sol_grid_resv_mo(s) + sol_grid_resv
-          sol_grid_wetl_mo(s) = sol_grid_wetl_mo(s) + sol_grid_wetl
-          sol_grid_canl_mo(s) = sol_grid_canl_mo(s) + sol_grid_canl
-          sol_grid_fpln_mo(s) = sol_grid_fpln_mo(s) + sol_grid_fpln
-          sol_grid_pond_mo(s) = sol_grid_pond_mo(s) + sol_grid_pond
+          gw_sol_grid_mo%solute(s)%chng = gw_sol_grid_mo%solute(s)%chng + (sol_grid_maft-sol_grid_mbef)
+          gw_sol_grid_mo%solute(s)%rech = gw_sol_grid_mo%solute(s)%rech + sol_grid_rech
+          gw_sol_grid_mo%solute(s)%gwsw = gw_sol_grid_mo%solute(s)%gwsw + sol_grid_gwsw
+          gw_sol_grid_mo%solute(s)%swgw = gw_sol_grid_mo%solute(s)%swgw + sol_grid_swgw
+          gw_sol_grid_mo%solute(s)%soil = gw_sol_grid_mo%solute(s)%soil + sol_grid_soil
+          gw_sol_grid_mo%solute(s)%satx = gw_sol_grid_mo%solute(s)%satx + sol_grid_satx
+          gw_sol_grid_mo%solute(s)%ppag = gw_sol_grid_mo%solute(s)%ppag + sol_grid_ppag
+          gw_sol_grid_mo%solute(s)%ppex = gw_sol_grid_mo%solute(s)%ppex + sol_grid_ppex
+          gw_sol_grid_mo%solute(s)%tile = gw_sol_grid_mo%solute(s)%tile + sol_grid_tile
+          gw_sol_grid_mo%solute(s)%resv = gw_sol_grid_mo%solute(s)%resv + sol_grid_resv
+          gw_sol_grid_mo%solute(s)%wetl = gw_sol_grid_mo%solute(s)%wetl + sol_grid_wetl
+          gw_sol_grid_mo%solute(s)%fpln = gw_sol_grid_mo%solute(s)%fpln + sol_grid_fpln
+          gw_sol_grid_mo%solute(s)%canl = gw_sol_grid_mo%solute(s)%canl + sol_grid_canl
+          gw_sol_grid_mo%solute(s)%pond = gw_sol_grid_mo%solute(s)%pond + sol_grid_pond
+          gw_sol_grid_mo%solute(s)%advn = gw_sol_grid_mo%solute(s)%advn + sol_grid_advn
+          gw_sol_grid_mo%solute(s)%disp = gw_sol_grid_mo%solute(s)%disp + sol_grid_disp
+          gw_sol_grid_mo%solute(s)%rcti = gw_sol_grid_mo%solute(s)%rcti + sol_grid_rcti
+          gw_sol_grid_mo%solute(s)%rcto = gw_sol_grid_mo%solute(s)%rcto + sol_grid_rcto
+          gw_sol_grid_mo%solute(s)%minl = gw_sol_grid_mo%solute(s)%minl + sol_grid_minl
+          gw_sol_grid_mo%solute(s)%sorb = gw_sol_grid_mo%solute(s)%sorb + sol_grid_sorb
           !yearly (kg)
-          sol_grid_chng_yr(s) = sol_grid_chng_yr(s) + (sol_grid_maft-sol_grid_mbef)
-          sol_grid_rech_yr(s) = sol_grid_rech_yr(s) + sol_grid_rech
-          sol_grid_gwsw_yr(s) = sol_grid_gwsw_yr(s) + sol_grid_gwsw
-          sol_grid_swgw_yr(s) = sol_grid_swgw_yr(s) + sol_grid_swgw
-          sol_grid_satx_yr(s) = sol_grid_satx_yr(s) + sol_grid_satx
-          sol_grid_advn_yr(s) = sol_grid_advn_yr(s) + sol_grid_advn
-          sol_grid_disp_yr(s) = sol_grid_disp_yr(s) + sol_grid_disp
-          sol_grid_rcti_yr(s) = sol_grid_rcti_yr(s) + sol_grid_rcti
-          sol_grid_rcto_yr(s) = sol_grid_rcto_yr(s) + sol_grid_rcto
-          sol_grid_minl_yr(s) = sol_grid_minl_yr(s) + sol_grid_minl
-          sol_grid_sorb_yr(s) = sol_grid_sorb_yr(s) + sol_grid_sorb
-          sol_grid_ppag_yr(s) = sol_grid_ppag_yr(s) + sol_grid_ppag
-          sol_grid_ppex_yr(s) = sol_grid_ppex_yr(s) + sol_grid_ppex
-          sol_grid_tile_yr(s) = sol_grid_tile_yr(s) + sol_grid_tile
-          sol_grid_soil_yr(s) = sol_grid_soil_yr(s) + sol_grid_soil
-          sol_grid_resv_yr(s) = sol_grid_resv_yr(s) + sol_grid_resv
-          sol_grid_wetl_yr(s) = sol_grid_wetl_yr(s) + sol_grid_wetl
-          sol_grid_canl_yr(s) = sol_grid_canl_yr(s) + sol_grid_canl
-          sol_grid_fpln_yr(s) = sol_grid_fpln_yr(s) + sol_grid_fpln
-          sol_grid_pond_yr(s) = sol_grid_pond_yr(s) + sol_grid_pond
+          gw_sol_grid_yr%solute(s)%chng = gw_sol_grid_yr%solute(s)%chng + (sol_grid_maft-sol_grid_mbef)
+          gw_sol_grid_yr%solute(s)%rech = gw_sol_grid_yr%solute(s)%rech + sol_grid_rech
+          gw_sol_grid_yr%solute(s)%gwsw = gw_sol_grid_yr%solute(s)%gwsw + sol_grid_gwsw
+          gw_sol_grid_yr%solute(s)%swgw = gw_sol_grid_yr%solute(s)%swgw + sol_grid_swgw
+          gw_sol_grid_yr%solute(s)%soil = gw_sol_grid_yr%solute(s)%soil + sol_grid_soil
+          gw_sol_grid_yr%solute(s)%satx = gw_sol_grid_yr%solute(s)%satx + sol_grid_satx
+          gw_sol_grid_yr%solute(s)%ppag = gw_sol_grid_yr%solute(s)%ppag + sol_grid_ppag
+          gw_sol_grid_yr%solute(s)%ppex = gw_sol_grid_yr%solute(s)%ppex + sol_grid_ppex
+          gw_sol_grid_yr%solute(s)%tile = gw_sol_grid_yr%solute(s)%tile + sol_grid_tile
+          gw_sol_grid_yr%solute(s)%resv = gw_sol_grid_yr%solute(s)%resv + sol_grid_resv
+          gw_sol_grid_yr%solute(s)%wetl = gw_sol_grid_yr%solute(s)%wetl + sol_grid_wetl
+          gw_sol_grid_yr%solute(s)%fpln = gw_sol_grid_yr%solute(s)%fpln + sol_grid_fpln
+          gw_sol_grid_yr%solute(s)%canl = gw_sol_grid_yr%solute(s)%canl + sol_grid_canl
+          gw_sol_grid_yr%solute(s)%pond = gw_sol_grid_yr%solute(s)%pond + sol_grid_pond
+          gw_sol_grid_yr%solute(s)%advn = gw_sol_grid_yr%solute(s)%advn + sol_grid_advn
+          gw_sol_grid_yr%solute(s)%disp = gw_sol_grid_yr%solute(s)%disp + sol_grid_disp
+          gw_sol_grid_yr%solute(s)%rcti = gw_sol_grid_yr%solute(s)%rcti + sol_grid_rcti
+          gw_sol_grid_yr%solute(s)%rcto = gw_sol_grid_yr%solute(s)%rcto + sol_grid_rcto
+          gw_sol_grid_yr%solute(s)%minl = gw_sol_grid_yr%solute(s)%minl + sol_grid_minl
+          gw_sol_grid_yr%solute(s)%sorb = gw_sol_grid_yr%solute(s)%sorb + sol_grid_sorb
           !total (kg)
-          sol_grid_chng_tt(s) = sol_grid_chng_tt(s) + (sol_grid_maft-sol_grid_mbef)
-          sol_grid_rech_tt(s) = sol_grid_rech_tt(s) + sol_grid_rech
-          sol_grid_gwsw_tt(s) = sol_grid_gwsw_tt(s) + sol_grid_gwsw
-          sol_grid_swgw_tt(s) = sol_grid_swgw_tt(s) + sol_grid_swgw
-          sol_grid_satx_tt(s) = sol_grid_satx_tt(s) + sol_grid_satx
-          sol_grid_advn_tt(s) = sol_grid_advn_tt(s) + sol_grid_advn
-          sol_grid_disp_tt(s) = sol_grid_disp_tt(s) + sol_grid_disp
-          sol_grid_rcti_tt(s) = sol_grid_rcti_tt(s) + sol_grid_rcti
-          sol_grid_rcto_tt(s) = sol_grid_rcto_tt(s) + sol_grid_rcto
-          sol_grid_minl_tt(s) = sol_grid_minl_tt(s) + sol_grid_minl
-          sol_grid_sorb_tt(s) = sol_grid_sorb_tt(s) + sol_grid_sorb
-          sol_grid_ppag_tt(s) = sol_grid_ppag_tt(s) + sol_grid_ppag
-          sol_grid_ppex_tt(s) = sol_grid_ppex_tt(s) + sol_grid_ppex
-          sol_grid_tile_tt(s) = sol_grid_tile_tt(s) + sol_grid_tile
-          sol_grid_soil_tt(s) = sol_grid_soil_tt(s) + sol_grid_soil
-          sol_grid_resv_tt(s) = sol_grid_resv_tt(s) + sol_grid_resv
-          sol_grid_wetl_tt(s) = sol_grid_wetl_tt(s) + sol_grid_wetl
-          sol_grid_canl_tt(s) = sol_grid_canl_tt(s) + sol_grid_canl
-          sol_grid_fpln_tt(s) = sol_grid_fpln_tt(s) + sol_grid_fpln
-          sol_grid_pond_tt(s) = sol_grid_pond_tt(s) + sol_grid_pond
+          gw_sol_grid_aa%solute(s)%chng = gw_sol_grid_aa%solute(s)%chng + (sol_grid_maft-sol_grid_mbef)
+          gw_sol_grid_aa%solute(s)%rech = gw_sol_grid_aa%solute(s)%rech + sol_grid_rech
+          gw_sol_grid_aa%solute(s)%gwsw = gw_sol_grid_aa%solute(s)%gwsw + sol_grid_gwsw
+          gw_sol_grid_aa%solute(s)%swgw = gw_sol_grid_aa%solute(s)%swgw + sol_grid_swgw
+          gw_sol_grid_aa%solute(s)%soil = gw_sol_grid_aa%solute(s)%soil + sol_grid_soil
+          gw_sol_grid_aa%solute(s)%satx = gw_sol_grid_aa%solute(s)%satx + sol_grid_satx
+          gw_sol_grid_aa%solute(s)%ppag = gw_sol_grid_aa%solute(s)%ppag + sol_grid_ppag
+          gw_sol_grid_aa%solute(s)%ppex = gw_sol_grid_aa%solute(s)%ppex + sol_grid_ppex
+          gw_sol_grid_aa%solute(s)%tile = gw_sol_grid_aa%solute(s)%tile + sol_grid_tile
+          gw_sol_grid_aa%solute(s)%resv = gw_sol_grid_aa%solute(s)%resv + sol_grid_resv
+          gw_sol_grid_aa%solute(s)%wetl = gw_sol_grid_aa%solute(s)%wetl + sol_grid_wetl
+          gw_sol_grid_aa%solute(s)%fpln = gw_sol_grid_aa%solute(s)%fpln + sol_grid_fpln
+          gw_sol_grid_aa%solute(s)%canl = gw_sol_grid_aa%solute(s)%canl + sol_grid_canl
+          gw_sol_grid_aa%solute(s)%pond = gw_sol_grid_aa%solute(s)%pond + sol_grid_pond
+          gw_sol_grid_aa%solute(s)%advn = gw_sol_grid_aa%solute(s)%advn + sol_grid_advn
+          gw_sol_grid_aa%solute(s)%disp = gw_sol_grid_aa%solute(s)%disp + sol_grid_disp
+          gw_sol_grid_aa%solute(s)%rcti = gw_sol_grid_aa%solute(s)%rcti + sol_grid_rcti
+          gw_sol_grid_aa%solute(s)%rcto = gw_sol_grid_aa%solute(s)%rcto + sol_grid_rcto
+          gw_sol_grid_aa%solute(s)%minl = gw_sol_grid_aa%solute(s)%minl + sol_grid_minl
+          gw_sol_grid_aa%solute(s)%sorb = gw_sol_grid_aa%solute(s)%sorb + sol_grid_sorb
         enddo !go to next solute
-      endif !check for solute transport
+			endif !check for solute transport
 
 
       !--- cell-level daily long-format output ---
-      if(gwflag_day == 1) then
+      if(gwflag_cell_day == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
             gis_id = cell_gis_id(i)
+						!groundwater
             write(out_gwcell_day,140) time%day, time%mo, time%day_mo, &
               time%yrc, i, gis_id, &
               cell_name(i), &
               gw_state(i)%head, &
               gw_state(i)%elev - gw_state(i)%head, &
-              gw_hyd_ss(i)%rech, gw_hyd_ss(i)%gwet, &
-              gw_hyd_ss(i)%gwsw, gw_hyd_ss(i)%swgw, &
-              gw_hyd_ss(i)%satx, gw_hyd_ss(i)%soil, &
+              gw_hyd_ss(i)%rech, &
+							gw_hyd_ss(i)%gwet, &
+              gw_hyd_ss(i)%gwsw, &
+							gw_hyd_ss(i)%swgw, &
+              gw_hyd_ss(i)%satx, &
+							gw_hyd_ss(i)%soil, &
               gw_hyd_ss(i)%latl, &
-              gw_hyd_ss(i)%ppag, gw_hyd_ss(i)%ppex, &
-              gw_hyd_ss(i)%tile, gw_hyd_ss(i)%resv, &
-              gw_hyd_ss(i)%wetl, gw_hyd_ss(i)%fpln, &
-              gw_hyd_ss(i)%canl, gw_hyd_ss(i)%pond, &
+              gw_hyd_ss(i)%ppag, &
+							gw_hyd_ss(i)%ppex, &
+              gw_hyd_ss(i)%tile, &
+							gw_hyd_ss(i)%resv, &
+              gw_hyd_ss(i)%wetl, &
+							gw_hyd_ss(i)%fpln, &
+              gw_hyd_ss(i)%canl, &
+							gw_hyd_ss(i)%pond, &
               gw_hyd_ss(i)%phyt
+					  !heat
+						if(gw_heat_flag == 1) then
+						write(out_gwcell_heat_day,140) time%day, time%mo, time%day_mo, &
+              time%yrc, i, gis_id, &
+              cell_name(i), &
+              gwheat_state(i)%stor, &
+							gwheat_state(i)%temp, &
+              gw_heat_ss(i)%rech, &
+							gw_heat_ss(i)%gwet, &
+              gw_heat_ss(i)%gwsw, &
+							gw_heat_ss(i)%swgw, &
+              gw_heat_ss(i)%satx, &
+							gw_heat_ss(i)%soil, &
+              gw_heat_ss(i)%latl, &
+							gw_heat_ss(i)%disp, &
+              gw_heat_ss(i)%ppag, &
+							gw_heat_ss(i)%ppex, &
+              gw_heat_ss(i)%tile, &
+							gw_heat_ss(i)%resv, &
+              gw_heat_ss(i)%wetl, &
+							gw_heat_ss(i)%fpln, &
+              gw_heat_ss(i)%canl, &
+							gw_heat_ss(i)%pond, &
+              gw_heat_ss(i)%phyt
+					  endif
+						!solutes
+						if(gw_solute_flag == 1) then
+						do s=1,gw_nsolute
+						write(out_gwcell_sol_day,140) time%day, time%mo, time%day_mo, &
+              time%yrc, i, gis_id, &
+              cell_name(i), &
+							gwsol_nm(s), &
+              gwsol_state(i)%solute(s)%mass,gwsol_state(i)%solute(s)%conc, &
+              gw_sol_ss(i)%solute(s)%rech, &
+              gw_sol_ss(i)%solute(s)%gwsw, gw_sol_ss(i)%solute(s)%swgw, &
+              gw_sol_ss(i)%solute(s)%satx, gw_sol_ss(i)%solute(s)%soil, &
+              gw_sol_ss(i)%solute(s)%advn, gw_sol_ss(i)%solute(s)%disp, &
+							gw_sol_ss(i)%solute(s)%rcti, gw_sol_ss(i)%solute(s)%rcto, &
+							gw_sol_ss(i)%solute(s)%minl, gw_sol_ss(i)%solute(s)%sorb, &
+              gw_sol_ss(i)%solute(s)%ppag, gw_sol_ss(i)%solute(s)%ppex, &
+              gw_sol_ss(i)%solute(s)%tile, gw_sol_ss(i)%solute(s)%resv, &
+              gw_sol_ss(i)%solute(s)%wetl, gw_sol_ss(i)%solute(s)%fpln, &
+              gw_sol_ss(i)%solute(s)%canl, gw_sol_ss(i)%solute(s)%pond
+						enddo !next solute
+						endif
           endif
-        enddo
-      endif
+				enddo
+			endif
 
-
-      !--- HRU pumping daily long-format output ---
-      if(gwflag_pump == 1) then
-        do i=1,sp_ob%hru
-          if(hru_pump(i) > 0.) then
-            iob = sp_ob1%hru + i - 1
-            write(out_hru_pump_day,8101) time%day,time%mo,time%day_mo, &
-              time%yrc,i,ob(iob)%gis_id,ob(iob)%name,hru_pump(i)
-          endif
-        enddo
-      endif
-
+			
       !format statements (subroutine-local)
 119   format(i8,i8,i8,1000(f12.3))
 130   format(i8,i8,1000(e13.4))
-140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,30e13.5)
 8100  format(4i6,2a,2x,a16,f10.3,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
-8102  format(4i6,2i8,a18,5e13.4)
+8102  format(4i6,2i8,a18,5e13.5)
 
       return
       end subroutine gwflow_output_day
 
 
-      subroutine gwflow_output_mon
+
+      subroutine gwflow_output_mon !-------------------------------------------------------------------------------------------------------
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine writes monthly gwflow output in SWAT+ long format:
@@ -1296,16 +1345,13 @@
         !monthly average groundwater head -----------------------------------------------
         do i=1,ncell
           gw_state(i)%hdmo = gw_state(i)%hdmo / day_mo_r
-        enddo
+				enddo
+				
         !monthly average groundwater temperature ----------------------------------------
         if(gw_heat_flag == 1) then
           do i=1,ncell
             gwheat_state(i)%tpmo = gwheat_state(i)%tpmo / day_mo_r
-          enddo
-          !zero out for next month
-          do i=1,ncell
-            gwheat_state(i)%tpmo = 0.
-          enddo
+					enddo
         endif
 
         !monthly average solute concentration -------------------------------------------
@@ -1314,27 +1360,12 @@
             do i=1,ncell
               gwsol_state(i)%solute(s)%cnmo = gwsol_state(i)%solute(s)%cnmo / day_mo_r
             enddo
-            !zero out for next month
-            do i=1,ncell
-              gwsol_state(i)%solute(s)%cnmo = 0.
-            enddo
           enddo !next solute
         endif
-
-        !pumping (irrigation) (for HRUs) -- monthly long-format output ----------------
-        if(gwflag_pump == 1) then
-          do i=1,sp_ob%hru
-            if(hru_pump_mo(i) > 0.) then
-              iob = sp_ob1%hru + i - 1
-              write(out_hru_pump_mo,8101) time%day,time%mo,time%day_mo, &
-                time%yrc,i,ob(iob)%gis_id,ob(iob)%name,hru_pump_mo(i)
-            endif
-          enddo
-        endif
-        hru_pump_mo = 0.
-
-        !compute average daily groundwater fluxes (m3/day) for the month ----------------
+        
+        !compute average daily fluxes for the month ---------------------------
         do i=1,ncell
+					!groundwater (m3/day)
           gw_hyd_ss_mo(i)%rech = gw_hyd_ss_mo(i)%rech / day_mo_r
           gw_hyd_ss_mo(i)%gwet = gw_hyd_ss_mo(i)%gwet / day_mo_r
           gw_hyd_ss_mo(i)%gwsw = gw_hyd_ss_mo(i)%gwsw / day_mo_r
@@ -1353,10 +1384,54 @@
           gw_hyd_ss_mo(i)%fpln = gw_hyd_ss_mo(i)%fpln / day_mo_r
           gw_hyd_ss_mo(i)%pond = gw_hyd_ss_mo(i)%pond / day_mo_r
           gw_hyd_ss_mo(i)%phyt = gw_hyd_ss_mo(i)%phyt / day_mo_r
+					!heat (MJ/day)
+					if(gw_heat_flag == 1) then
+						gw_heat_ss_mo(i)%rech = (gw_heat_ss_mo(i)%rech/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%gwet = (gw_heat_ss_mo(i)%gwet/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%gwsw = (gw_heat_ss_mo(i)%gwsw/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%swgw = (gw_heat_ss_mo(i)%swgw/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%satx = (gw_heat_ss_mo(i)%satx/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%soil = (gw_heat_ss_mo(i)%soil/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%latl = (gw_heat_ss_mo(i)%latl/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%disp = (gw_heat_ss_mo(i)%disp/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%ppag = (gw_heat_ss_mo(i)%ppag/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%ppex = (gw_heat_ss_mo(i)%ppex/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%tile = (gw_heat_ss_mo(i)%tile/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%resv = (gw_heat_ss_mo(i)%resv/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%wetl = (gw_heat_ss_mo(i)%wetl/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%fpln = (gw_heat_ss_mo(i)%fpln/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%canl = (gw_heat_ss_mo(i)%canl/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%pond = (gw_heat_ss_mo(i)%pond/1000000.)  / day_mo_r
+						gw_heat_ss_mo(i)%phyt = (gw_heat_ss_mo(i)%phyt/1000000.)  / day_mo_r
+					endif
+					!solutes
+					if(gw_solute_flag == 1) then
+						do s=1,gw_nsolute
+              gw_sol_ss_mo(i)%solute(s)%rech = (gw_sol_ss_mo(i)%solute(s)%rech/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%gwsw = (gw_sol_ss_mo(i)%solute(s)%gwsw/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%swgw = (gw_sol_ss_mo(i)%solute(s)%swgw/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%satx = (gw_sol_ss_mo(i)%solute(s)%satx/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%soil = (gw_sol_ss_mo(i)%solute(s)%soil/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%ppag = (gw_sol_ss_mo(i)%solute(s)%ppag/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%ppex = (gw_sol_ss_mo(i)%solute(s)%ppex/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%tile = (gw_sol_ss_mo(i)%solute(s)%tile/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%resv = (gw_sol_ss_mo(i)%solute(s)%resv/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%wetl = (gw_sol_ss_mo(i)%solute(s)%wetl/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%canl = (gw_sol_ss_mo(i)%solute(s)%canl/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%fpln = (gw_sol_ss_mo(i)%solute(s)%fpln/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%pond = (gw_sol_ss_mo(i)%solute(s)%pond/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%advn = (gw_sol_ss_mo(i)%solute(s)%advn/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%disp = (gw_sol_ss_mo(i)%solute(s)%disp/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%rcti = (gw_sol_ss_mo(i)%solute(s)%rcti/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%rcto = (gw_sol_ss_mo(i)%solute(s)%rcto/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%minl = (gw_sol_ss_mo(i)%solute(s)%minl/1000.) / day_mo_r
+              gw_sol_ss_mo(i)%solute(s)%sorb = (gw_sol_ss_mo(i)%solute(s)%sorb/1000.) / day_mo_r
+            enddo
+					endif
         enddo
 
         !--- cell-level monthly long-format output (one row per active cell) ---
-        if(gwflag_mon == 1) then
+        if(gwflag_cell_mon == 1) then
           do i=1,ncell
             if(gw_state(i)%stat == 1) then
               gis_id = cell_gis_id(i)
@@ -1365,21 +1440,81 @@
                 time%day_mo, time%yrc, i, gis_id, &
                 cell_name(i), &
                 gw_state(i)%hdmo, wtdepth, &
-                gw_hyd_ss_mo(i)%rech, gw_hyd_ss_mo(i)%gwet, &
-                gw_hyd_ss_mo(i)%gwsw, gw_hyd_ss_mo(i)%swgw, &
-                gw_hyd_ss_mo(i)%satx, gw_hyd_ss_mo(i)%soil, &
+                gw_hyd_ss_mo(i)%rech, &
+								gw_hyd_ss_mo(i)%gwet, &
+                gw_hyd_ss_mo(i)%gwsw, &
+								gw_hyd_ss_mo(i)%swgw, &
+                gw_hyd_ss_mo(i)%satx, &
+								gw_hyd_ss_mo(i)%soil, &
                 gw_hyd_ss_mo(i)%latl, &
-                gw_hyd_ss_mo(i)%ppag, gw_hyd_ss_mo(i)%ppex, &
-                gw_hyd_ss_mo(i)%tile, gw_hyd_ss_mo(i)%resv, &
-                gw_hyd_ss_mo(i)%wetl, gw_hyd_ss_mo(i)%fpln, &
-                gw_hyd_ss_mo(i)%canl, gw_hyd_ss_mo(i)%pond, &
+                gw_hyd_ss_mo(i)%ppag, &
+								gw_hyd_ss_mo(i)%ppex, &
+                gw_hyd_ss_mo(i)%tile, &
+								gw_hyd_ss_mo(i)%resv, &
+                gw_hyd_ss_mo(i)%wetl, &
+								gw_hyd_ss_mo(i)%fpln, &
+                gw_hyd_ss_mo(i)%canl, &
+								gw_hyd_ss_mo(i)%pond, &
                 gw_hyd_ss_mo(i)%phyt
+						  !heat
+						  if(gw_heat_flag == 1) then
+						  write(out_gwcell_heat_mon,140) time%day, time%mo, &
+                time%day_mo, time%yrc, i, gis_id, &
+                cell_name(i), &
+                gwheat_state(i)%stor,gwheat_state(i)%tpmo, &
+                gw_heat_ss_mo(i)%rech, &
+								gw_heat_ss_mo(i)%gwet, &
+                gw_heat_ss_mo(i)%gwsw, &
+								gw_heat_ss_mo(i)%swgw, &
+                gw_heat_ss_mo(i)%satx, &
+								gw_heat_ss_mo(i)%soil, &
+                gw_heat_ss_mo(i)%latl, &
+								gw_heat_ss_mo(i)%disp, &
+                gw_heat_ss_mo(i)%ppag, &
+								gw_heat_ss_mo(i)%ppex, &
+                gw_heat_ss_mo(i)%tile, &
+								gw_heat_ss_mo(i)%resv, &
+                gw_heat_ss_mo(i)%wetl, &
+								gw_heat_ss_mo(i)%fpln, &
+                gw_heat_ss_mo(i)%canl, &
+								gw_heat_ss_mo(i)%pond, &
+                gw_heat_ss_mo(i)%phyt
+					    endif
+						  !solutes
+						  if(gw_solute_flag == 1) then
+						  do s=1,gw_nsolute
+						  write(out_gwcell_sol_mon,140) time%day, time%mo, &
+                time%day_mo, time%yrc, i, gis_id, &
+                cell_name(i), &
+							  gwsol_nm(s), &
+                gwsol_state(i)%solute(s)%mass,gwsol_state(i)%solute(s)%cnmo, &
+                gw_sol_ss_mo(i)%solute(s)%rech, &
+                gw_sol_ss_mo(i)%solute(s)%gwsw, &
+								gw_sol_ss_mo(i)%solute(s)%swgw, &
+                gw_sol_ss_mo(i)%solute(s)%satx, &
+								gw_sol_ss_mo(i)%solute(s)%soil, &
+                gw_sol_ss_mo(i)%solute(s)%advn, &
+								gw_sol_ss_mo(i)%solute(s)%disp, &
+							  gw_sol_ss_mo(i)%solute(s)%rcti, &
+								gw_sol_ss_mo(i)%solute(s)%rcto, &
+							  gw_sol_ss_mo(i)%solute(s)%minl, &
+								gw_sol_ss_mo(i)%solute(s)%sorb, &
+                gw_sol_ss_mo(i)%solute(s)%ppag, &
+								gw_sol_ss_mo(i)%solute(s)%ppex, &
+                gw_sol_ss_mo(i)%solute(s)%tile, &
+								gw_sol_ss_mo(i)%solute(s)%resv, &
+                gw_sol_ss_mo(i)%solute(s)%wetl, &
+								gw_sol_ss_mo(i)%solute(s)%fpln, &
+                gw_sol_ss_mo(i)%solute(s)%canl, &
+								gw_sol_ss_mo(i)%solute(s)%pond
+						  enddo !next solute
+						  endif
             endif
           enddo
         endif
 
         !--- obs well monthly output ---
-        if(gwflag_obs_mon == 1 .and. gw_num_obs_wells > 0) then
+        if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
           do k=1,gw_num_obs_wells
             i = gw_obs_cells(k)
             obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
@@ -1395,7 +1530,7 @@
               obs_temp, obs_no3, obs_p
           enddo
         endif
-
+        
         !zero out head average and flux sums for next month
         do i=1,ncell
           gw_state(i)%hdmo = 0.
@@ -1417,31 +1552,54 @@
           gw_hyd_ss_mo(i)%fpln = 0.
           gw_hyd_ss_mo(i)%pond = 0.
           gw_hyd_ss_mo(i)%phyt = 0.
-        enddo
-
+				enddo
+				!heat monthly zeroing
+				if(gw_heat_flag == 1) then
+					do i=1,ncell
+						gwheat_state(i)%tpmo = 0.
+						gw_heat_ss_mo(i)%rech = 0.
+						gw_heat_ss_mo(i)%gwet = 0.
+						gw_heat_ss_mo(i)%gwsw = 0.
+						gw_heat_ss_mo(i)%swgw = 0.
+						gw_heat_ss_mo(i)%satx = 0.
+						gw_heat_ss_mo(i)%soil = 0.
+						gw_heat_ss_mo(i)%latl = 0.
+						gw_heat_ss_mo(i)%disp = 0.
+						gw_heat_ss_mo(i)%ppag = 0.
+						gw_heat_ss_mo(i)%ppex = 0.
+						gw_heat_ss_mo(i)%tile = 0.
+						gw_heat_ss_mo(i)%resv = 0.
+						gw_heat_ss_mo(i)%wetl = 0.
+						gw_heat_ss_mo(i)%fpln = 0.
+						gw_heat_ss_mo(i)%canl = 0.
+						gw_heat_ss_mo(i)%pond = 0.
+						gw_heat_ss_mo(i)%phyt = 0.
+					enddo
+				endif
         !solute monthly zeroing
         if(gw_solute_flag == 1) then
           do i=1,ncell
             do s=1,gw_nsolute
-              gwsol_ss_sum_mo(i)%solute(s)%rech = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%gwsw = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%swgw = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%satx = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%soil = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%ppag = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%ppex = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%tile = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%resv = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%wetl = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%canl = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%fpln = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%pond = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%advn = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%disp = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%rcti = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%rcto = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%minl = 0.
-              gwsol_ss_sum_mo(i)%solute(s)%sorb = 0.
+							gwsol_state(i)%solute(s)%cnmo = 0.
+              gw_sol_ss_mo(i)%solute(s)%rech = 0.
+              gw_sol_ss_mo(i)%solute(s)%gwsw = 0.
+              gw_sol_ss_mo(i)%solute(s)%swgw = 0.
+              gw_sol_ss_mo(i)%solute(s)%satx = 0.
+              gw_sol_ss_mo(i)%solute(s)%soil = 0.
+              gw_sol_ss_mo(i)%solute(s)%ppag = 0.
+              gw_sol_ss_mo(i)%solute(s)%ppex = 0.
+              gw_sol_ss_mo(i)%solute(s)%tile = 0.
+              gw_sol_ss_mo(i)%solute(s)%resv = 0.
+              gw_sol_ss_mo(i)%solute(s)%wetl = 0.
+              gw_sol_ss_mo(i)%solute(s)%canl = 0.
+              gw_sol_ss_mo(i)%solute(s)%fpln = 0.
+              gw_sol_ss_mo(i)%solute(s)%pond = 0.
+              gw_sol_ss_mo(i)%solute(s)%advn = 0.
+              gw_sol_ss_mo(i)%solute(s)%disp = 0.
+              gw_sol_ss_mo(i)%solute(s)%rcti = 0.
+              gw_sol_ss_mo(i)%solute(s)%rcto = 0.
+              gw_sol_ss_mo(i)%solute(s)%minl = 0.
+              gw_sol_ss_mo(i)%solute(s)%sorb = 0.
             enddo
           enddo
         endif
@@ -1450,13 +1608,24 @@
         if(gwflag_mon == 1) then
           write(out_gwbal_mon,8100) time%day,time%mo,time%day_mo, &
             time%yrc,"       1","       1",bsn%name, &
-            gw_hyd_grid_mo%chng,gw_hyd_grid_mo%rech,gw_hyd_grid_mo%gwet, &
-            gw_hyd_grid_mo%gwsw,gw_hyd_grid_mo%swgw, &
-            gw_hyd_grid_mo%satx,gw_hyd_grid_mo%soil,gw_hyd_grid_mo%latl, &
-            gw_hyd_grid_mo%bndr,gw_hyd_grid_mo%ppag, &
-            gw_hyd_grid_mo%ppex,gw_hyd_grid_mo%tile,gw_hyd_grid_mo%resv, &
-            gw_hyd_grid_mo%wetl,gw_hyd_grid_mo%canl, &
-            gw_hyd_grid_mo%fpln,gw_hyd_grid_mo%pond,gw_hyd_grid_mo%phyt, &
+            gw_hyd_grid_mo%chng, &
+						gw_hyd_grid_mo%rech, &
+						gw_hyd_grid_mo%gwet, &
+            gw_hyd_grid_mo%gwsw, &
+						gw_hyd_grid_mo%swgw, &
+            gw_hyd_grid_mo%satx, &
+						gw_hyd_grid_mo%soil, &
+						gw_hyd_grid_mo%latl, &
+            gw_hyd_grid_mo%bndr, &
+						gw_hyd_grid_mo%ppag, &
+            gw_hyd_grid_mo%ppex, &
+						gw_hyd_grid_mo%tile, &
+						gw_hyd_grid_mo%resv, &
+            gw_hyd_grid_mo%wetl, &
+						gw_hyd_grid_mo%canl, &
+            gw_hyd_grid_mo%fpln, &
+						gw_hyd_grid_mo%pond, &
+						gw_hyd_grid_mo%phyt, &
             gw_hyd_grid_mo%ppdf
         endif
         !zero out basin monthly accumulators
@@ -1480,52 +1649,104 @@
         gw_hyd_grid_mo%pond = 0.
         gw_hyd_grid_mo%phyt = 0.
 
+				!heat values (basin) ------------------------------------------------------------
+				if(gw_heat_flag == 1) then
+					if(gwflag_mon == 1) then
+						write(out_heatbal_mon,8100) time%day,time%mo,time%day_mo, &
+              time%yrc,"       1","       1",bsn%name, &
+              gw_heat_grid_mo%chng, &
+              gw_heat_grid_mo%rech, &
+							gw_heat_grid_mo%gwet, &
+              gw_heat_grid_mo%gwsw, &
+              gw_heat_grid_mo%swgw, &
+							gw_heat_grid_mo%satx, &
+              gw_heat_grid_mo%soil, &
+              gw_heat_grid_mo%latl, &
+							gw_heat_grid_mo%disp, &
+							gw_heat_grid_mo%bndr, &
+              gw_heat_grid_mo%ppag, &
+							gw_heat_grid_mo%ppex, &
+              gw_heat_grid_mo%tile, &
+              gw_heat_grid_mo%resv, &
+							gw_heat_grid_mo%wetl, &
+              gw_heat_grid_mo%canl, &
+              gw_heat_grid_mo%fpln, &
+							gw_heat_grid_mo%pond
+					endif
+					gw_heat_grid_mo%chng = 0.
+          gw_heat_grid_mo%rech = 0.
+          gw_heat_grid_mo%gwet = 0.
+          gw_heat_grid_mo%gwsw = 0.
+          gw_heat_grid_mo%swgw = 0.
+          gw_heat_grid_mo%satx = 0.
+          gw_heat_grid_mo%soil = 0.
+          gw_heat_grid_mo%latl = 0.
+          gw_heat_grid_mo%disp = 0.
+          gw_heat_grid_mo%bndr = 0.
+          gw_heat_grid_mo%ppag = 0.
+          gw_heat_grid_mo%ppex = 0.
+          gw_heat_grid_mo%tile = 0.
+          gw_heat_grid_mo%resv = 0.
+          gw_heat_grid_mo%wetl = 0.
+          gw_heat_grid_mo%canl = 0.
+          gw_heat_grid_mo%fpln = 0.
+          gw_heat_grid_mo%pond = 0.
+				endif
+				
         !solute mass values (basin) -----------------------------------------------------
         if(gw_solute_flag == 1) then
           do s=1,gw_nsolute
-            if(gwflag_solute_mon == 1) then
+            if(gwflag_mon == 1) then
               write(out_solbal_mo+s,8100) time%day,time%mo,time%day_mo, &
                 time%yrc,"       1","       1",bsn%name, &
-                sol_grid_chng_mo(s),sol_grid_rech_mo(s), &
-                sol_grid_gwsw_mo(s),sol_grid_swgw_mo(s), &
-                sol_grid_satx_mo(s), &
-                sol_grid_soil_mo(s),sol_grid_advn_mo(s), &
-                sol_grid_disp_mo(s), &
-                sol_grid_rcti_mo(s),sol_grid_rcto_mo(s), &
-                sol_grid_minl_mo(s),sol_grid_sorb_mo(s), &
-                sol_grid_ppag_mo(s),sol_grid_ppex_mo(s), &
-                sol_grid_tile_mo(s),sol_grid_resv_mo(s), &
-                sol_grid_wetl_mo(s), &
-                sol_grid_canl_mo(s),sol_grid_fpln_mo(s), &
-                sol_grid_pond_mo(s)
+                gw_sol_grid_mo%solute(s)%chng, &
+								gw_sol_grid_mo%solute(s)%rech, &
+                gw_sol_grid_mo%solute(s)%gwsw, &
+								gw_sol_grid_mo%solute(s)%swgw, &
+                gw_sol_grid_mo%solute(s)%satx, &
+                gw_sol_grid_mo%solute(s)%soil, &
+								gw_sol_grid_mo%solute(s)%advn, &
+                gw_sol_grid_mo%solute(s)%disp, &
+                gw_sol_grid_mo%solute(s)%rcti, &
+								gw_sol_grid_mo%solute(s)%rcto, &
+                gw_sol_grid_mo%solute(s)%minl, &
+								gw_sol_grid_mo%solute(s)%sorb, &
+                gw_sol_grid_mo%solute(s)%ppag, &
+								gw_sol_grid_mo%solute(s)%ppex, &
+                gw_sol_grid_mo%solute(s)%tile, &
+								gw_sol_grid_mo%solute(s)%resv, &
+                gw_sol_grid_mo%solute(s)%wetl, &
+                gw_sol_grid_mo%solute(s)%canl, &
+								gw_sol_grid_mo%solute(s)%fpln, &
+                gw_sol_grid_mo%solute(s)%pond
             endif
-            sol_grid_chng_mo(s) = 0.
-            sol_grid_rech_mo(s) = 0.
-            sol_grid_gwsw_mo(s) = 0.
-            sol_grid_swgw_mo(s) = 0.
-            sol_grid_satx_mo(s) = 0.
-            sol_grid_soil_mo(s) = 0.
-            sol_grid_advn_mo(s) = 0.
-            sol_grid_disp_mo(s) = 0.
-            sol_grid_rcti_mo(s) = 0.
-            sol_grid_rcto_mo(s) = 0.
-            sol_grid_minl_mo(s) = 0.
-            sol_grid_sorb_mo(s) = 0.
-            sol_grid_ppag_mo(s) = 0.
-            sol_grid_ppex_mo(s) = 0.
-            sol_grid_tile_mo(s) = 0.
-            sol_grid_resv_mo(s) = 0.
-            sol_grid_wetl_mo(s) = 0.
-            sol_grid_canl_mo(s) = 0.
-            sol_grid_fpln_mo(s) = 0.
-            sol_grid_pond_mo(s) = 0.
+            gw_sol_grid_mo%solute(s)%chng = 0.
+						gw_sol_grid_mo%solute(s)%rech = 0.
+            gw_sol_grid_mo%solute(s)%gwsw = 0.
+						gw_sol_grid_mo%solute(s)%swgw = 0.
+            gw_sol_grid_mo%solute(s)%satx = 0.
+            gw_sol_grid_mo%solute(s)%soil = 0.
+						gw_sol_grid_mo%solute(s)%advn = 0.
+            gw_sol_grid_mo%solute(s)%disp = 0.
+            gw_sol_grid_mo%solute(s)%rcti = 0.
+						gw_sol_grid_mo%solute(s)%rcto = 0.
+            gw_sol_grid_mo%solute(s)%minl = 0.
+						gw_sol_grid_mo%solute(s)%sorb = 0.
+            gw_sol_grid_mo%solute(s)%ppag = 0.
+						gw_sol_grid_mo%solute(s)%ppex = 0.
+            gw_sol_grid_mo%solute(s)%tile = 0.
+						gw_sol_grid_mo%solute(s)%resv = 0.
+            gw_sol_grid_mo%solute(s)%wetl = 0.
+            gw_sol_grid_mo%solute(s)%canl = 0.
+						gw_sol_grid_mo%solute(s)%fpln = 0.
+            gw_sol_grid_mo%solute(s)%pond = 0.
           enddo !go to next solute
         endif
 
       endif !end_mo
 
       !format statements (subroutine-local)
-140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,30e13.5)
 8100  format(4i6,2a,2x,a16,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
 8102  format(4i6,2i8,a18,5e13.4)
@@ -1534,7 +1755,8 @@
       end subroutine gwflow_output_mon
 
 
-      subroutine gwflow_output_yr
+
+      subroutine gwflow_output_yr !--------------------------------------------------------------------------------------------------------
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine writes annual gwflow output in SWAT+ long format:
@@ -1571,24 +1793,16 @@
         do i=1,ncell
           gwheat_state(i)%tpyr = gwheat_state(i)%tpyr / day_yr_r
         enddo
-        !zero out for next year
-        do i=1,ncell
-          gwheat_state(i)%tpyr = 0.
-        enddo
       endif
-
+      
       !annual average solute concentration --------------------------------------------
       if(gw_solute_flag == 1) then
         do s=1,gw_nsolute
           do i=1,ncell
             gwsol_state(i)%solute(s)%cnyr = gwsol_state(i)%solute(s)%cnyr / day_yr_r
           enddo
-          !zero out for next year
-          do i=1,ncell
-            gwsol_state(i)%solute(s)%cnyr = 0.
-          enddo
-        enddo !next solute
-      endif !check for solutes
+        enddo
+      endif
 
       !compute average daily groundwater fluxes (m3/day) for the year -----------------
       do i=1,ncell
@@ -1610,84 +1824,9 @@
         gw_hyd_ss_yr(i)%fpln = gw_hyd_ss_yr(i)%fpln / day_yr_r
         gw_hyd_ss_yr(i)%pond = gw_hyd_ss_yr(i)%pond / day_yr_r
         gw_hyd_ss_yr(i)%phyt = gw_hyd_ss_yr(i)%phyt / day_yr_r
-      enddo
-
-      !--- cell-level annual long-format output (one row per active cell) ---
-      if(gwflag_yr == 1) then
-        do i=1,ncell
-          if(gw_state(i)%stat == 1) then
-            gis_id = cell_gis_id(i)
-            wtdepth = gw_state(i)%elev - gw_state(i)%hdyr
-            write(out_gwcell_yr,140) time%day, time%mo, &
-              time%day_mo, time%yrc, i, gis_id, &
-              cell_name(i), &
-              gw_state(i)%hdyr, wtdepth, &
-              gw_hyd_ss_yr(i)%rech, gw_hyd_ss_yr(i)%gwet, &
-              gw_hyd_ss_yr(i)%gwsw, gw_hyd_ss_yr(i)%swgw, &
-              gw_hyd_ss_yr(i)%satx, gw_hyd_ss_yr(i)%soil, &
-              gw_hyd_ss_yr(i)%latl, &
-              gw_hyd_ss_yr(i)%ppag, gw_hyd_ss_yr(i)%ppex, &
-              gw_hyd_ss_yr(i)%tile, gw_hyd_ss_yr(i)%resv, &
-              gw_hyd_ss_yr(i)%wetl, gw_hyd_ss_yr(i)%fpln, &
-              gw_hyd_ss_yr(i)%canl, gw_hyd_ss_yr(i)%pond, &
-              gw_hyd_ss_yr(i)%phyt
-          endif
-        enddo
-      endif
-
-      !accumulate yearly values into per-cell AA arrays (before zeroing)
-      do i=1,ncell
-        gw_head_sum_aa(i) = gw_head_sum_aa(i) + gw_state(i)%hdyr
-        gw_hyd_ss_aa(i)%rech = gw_hyd_ss_aa(i)%rech + gw_hyd_ss_yr(i)%rech
-        gw_hyd_ss_aa(i)%gwet = gw_hyd_ss_aa(i)%gwet + gw_hyd_ss_yr(i)%gwet
-        gw_hyd_ss_aa(i)%gwsw = gw_hyd_ss_aa(i)%gwsw + gw_hyd_ss_yr(i)%gwsw
-        gw_hyd_ss_aa(i)%swgw = gw_hyd_ss_aa(i)%swgw + gw_hyd_ss_yr(i)%swgw
-        gw_hyd_ss_aa(i)%satx = gw_hyd_ss_aa(i)%satx + gw_hyd_ss_yr(i)%satx
-        gw_hyd_ss_aa(i)%soil = gw_hyd_ss_aa(i)%soil + gw_hyd_ss_yr(i)%soil
-        gw_hyd_ss_aa(i)%latl = gw_hyd_ss_aa(i)%latl + gw_hyd_ss_yr(i)%latl
-        gw_hyd_ss_aa(i)%ppag = gw_hyd_ss_aa(i)%ppag + gw_hyd_ss_yr(i)%ppag
-        gw_hyd_ss_aa(i)%ppex = gw_hyd_ss_aa(i)%ppex + gw_hyd_ss_yr(i)%ppex
-        gw_hyd_ss_aa(i)%tile = gw_hyd_ss_aa(i)%tile + gw_hyd_ss_yr(i)%tile
-        gw_hyd_ss_aa(i)%resv = gw_hyd_ss_aa(i)%resv + gw_hyd_ss_yr(i)%resv
-        gw_hyd_ss_aa(i)%wetl = gw_hyd_ss_aa(i)%wetl + gw_hyd_ss_yr(i)%wetl
-        gw_hyd_ss_aa(i)%fpln = gw_hyd_ss_aa(i)%fpln + gw_hyd_ss_yr(i)%fpln
-        gw_hyd_ss_aa(i)%canl = gw_hyd_ss_aa(i)%canl + gw_hyd_ss_yr(i)%canl
-        gw_hyd_ss_aa(i)%pond = gw_hyd_ss_aa(i)%pond + gw_hyd_ss_yr(i)%pond
-        gw_hyd_ss_aa(i)%phyt = gw_hyd_ss_aa(i)%phyt + gw_hyd_ss_yr(i)%phyt
-      enddo
-
-      !--- obs well yearly output + AA accumulation ---
-      if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
-        do k=1,gw_num_obs_wells
-          i = gw_obs_cells(k)
-          obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
-          if(gw_heat_flag == 1) then
-            obs_temp = gwheat_state(i)%tpyr
-            gw_obs_temp_aa(k) = gw_obs_temp_aa(k) + obs_temp
-          endif
-          if(gw_solute_flag == 1) then
-            obs_no3 = gwsol_state(i)%solute(1)%cnyr
-            obs_p = gwsol_state(i)%solute(2)%cnyr
-            gw_obs_sol_aa(k,1) = gw_obs_sol_aa(k,1) + obs_no3
-            gw_obs_sol_aa(k,2) = gw_obs_sol_aa(k,2) + obs_p
-          endif
-          if(gwflag_obs_yr == 1) then
-            write(obs_name,'(a4,i4.4)') 'obs_',k
-            write(out_gwobs_yr,8102) time%day,time%mo,time%day_mo, &
-              time%yrc,k,gw_obs_cells(k),obs_name, &
-              gw_state(i)%hdyr, gw_state(i)%elev - gw_state(i)%hdyr, &
-              obs_temp, obs_no3, obs_p
-          endif
-        enddo
-      endif
-
-      !zero out head average for next year
-      do i=1,ncell
-        gw_state(i)%hdyr = 0.
-      enddo
-
-      !compute average daily heat fluxes (MJ/day) for the year
-      if(gw_heat_flag == 1) then
+			enddo !go to next cell
+      !heat: MJ/day
+			if(gw_heat_flag == 1) then
         do i=1,ncell
           gw_heat_ss_yr(i)%rech = (gw_heat_ss_yr(i)%rech/1000000.) / day_yr_r !J --> MJ
           gw_heat_ss_yr(i)%gwet = (gw_heat_ss_yr(i)%gwet/1000000.) / day_yr_r !J --> MJ
@@ -1708,48 +1847,224 @@
           gw_heat_ss_yr(i)%pond = (gw_heat_ss_yr(i)%pond/1000000.) / day_yr_r !J --> MJ
         enddo
       endif
-
-      !compute average daily solute fluxes (kg/day) for the year
-      if(gw_solute_flag == 1) then
+			!solutes: kg/day
+			if(gw_solute_flag == 1) then
         do i=1,ncell
           do s=1,gw_nsolute
-            gwsol_ss_sum(i)%solute(s)%rech = (gwsol_ss_sum(i)%solute(s)%rech/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%gwsw = (gwsol_ss_sum(i)%solute(s)%gwsw/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%swgw = (gwsol_ss_sum(i)%solute(s)%swgw/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%soil = (gwsol_ss_sum(i)%solute(s)%soil/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%satx = (gwsol_ss_sum(i)%solute(s)%satx/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%ppex = (gwsol_ss_sum(i)%solute(s)%ppex/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%tile = (gwsol_ss_sum(i)%solute(s)%tile/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%resv = (gwsol_ss_sum(i)%solute(s)%resv/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%wetl = (gwsol_ss_sum(i)%solute(s)%wetl/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%canl = (gwsol_ss_sum(i)%solute(s)%canl/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%fpln = (gwsol_ss_sum(i)%solute(s)%fpln/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%pond = (gwsol_ss_sum(i)%solute(s)%pond/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%advn = (gwsol_ss_sum(i)%solute(s)%advn/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%disp = (gwsol_ss_sum(i)%solute(s)%disp/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%rcti = (gwsol_ss_sum(i)%solute(s)%rcti/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%rcto = (gwsol_ss_sum(i)%solute(s)%rcto/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%minl = (gwsol_ss_sum(i)%solute(s)%minl/1000.) / day_yr_r !g --> kg
-            gwsol_ss_sum(i)%solute(s)%sorb = (gwsol_ss_sum(i)%solute(s)%sorb/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%rech = (gw_sol_ss_yr(i)%solute(s)%rech/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%gwsw = (gw_sol_ss_yr(i)%solute(s)%gwsw/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%swgw = (gw_sol_ss_yr(i)%solute(s)%swgw/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%soil = (gw_sol_ss_yr(i)%solute(s)%soil/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%satx = (gw_sol_ss_yr(i)%solute(s)%satx/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%ppex = (gw_sol_ss_yr(i)%solute(s)%ppex/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%tile = (gw_sol_ss_yr(i)%solute(s)%tile/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%resv = (gw_sol_ss_yr(i)%solute(s)%resv/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%wetl = (gw_sol_ss_yr(i)%solute(s)%wetl/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%canl = (gw_sol_ss_yr(i)%solute(s)%canl/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%fpln = (gw_sol_ss_yr(i)%solute(s)%fpln/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%pond = (gw_sol_ss_yr(i)%solute(s)%pond/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%advn = (gw_sol_ss_yr(i)%solute(s)%advn/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%disp = (gw_sol_ss_yr(i)%solute(s)%disp/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%rcti = (gw_sol_ss_yr(i)%solute(s)%rcti/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%rcto = (gw_sol_ss_yr(i)%solute(s)%rcto/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%minl = (gw_sol_ss_yr(i)%solute(s)%minl/1000.) / day_yr_r !g --> kg
+            gw_sol_ss_yr(i)%solute(s)%sorb = (gw_sol_ss_yr(i)%solute(s)%sorb/1000.) / day_yr_r !g --> kg
           enddo
+        enddo
+			endif
+			
+      !--- cell-level annual long-format output (one row per active cell) ---
+      if(gwflag_cell_yr == 1) then
+        do i=1,ncell
+          if(gw_state(i)%stat == 1) then
+            gis_id = cell_gis_id(i)
+            wtdepth = gw_state(i)%elev - gw_state(i)%hdyr
+            write(out_gwcell_yr,140) time%day, time%mo, &
+              time%day_mo, time%yrc, i, gis_id, &
+              cell_name(i), &
+              gw_state(i)%hdyr, wtdepth, &
+              gw_hyd_ss_yr(i)%rech, &
+							gw_hyd_ss_yr(i)%gwet, &
+              gw_hyd_ss_yr(i)%gwsw, &
+							gw_hyd_ss_yr(i)%swgw, &
+              gw_hyd_ss_yr(i)%satx, &
+							gw_hyd_ss_yr(i)%soil, &
+              gw_hyd_ss_yr(i)%latl, &
+              gw_hyd_ss_yr(i)%ppag, &
+							gw_hyd_ss_yr(i)%ppex, &
+              gw_hyd_ss_yr(i)%tile, &
+							gw_hyd_ss_yr(i)%resv, &
+              gw_hyd_ss_yr(i)%wetl, &
+							gw_hyd_ss_yr(i)%fpln, &
+              gw_hyd_ss_yr(i)%canl, &
+							gw_hyd_ss_yr(i)%pond, &
+              gw_hyd_ss_yr(i)%phyt
+						!heat
+				    if(gw_heat_flag == 1) then
+					    write(out_gwcell_heat_yr,140) time%day, time%mo, &
+                time%day_mo, time%yrc, i, gis_id, &
+                cell_name(i), &
+                gwheat_state(i)%stor,gwheat_state(i)%tpyr, &
+                gw_heat_ss_yr(i)%rech, &
+						    gw_heat_ss_yr(i)%gwet, &
+                gw_heat_ss_yr(i)%gwsw, &
+						    gw_heat_ss_yr(i)%swgw, &
+                gw_heat_ss_yr(i)%satx, &
+						    gw_heat_ss_yr(i)%soil, &
+                gw_heat_ss_yr(i)%latl, &
+						    gw_heat_ss_yr(i)%disp, &
+                gw_heat_ss_yr(i)%ppag, &
+						    gw_heat_ss_yr(i)%ppex, &
+                gw_heat_ss_yr(i)%tile, &
+						    gw_heat_ss_yr(i)%resv, &
+                gw_heat_ss_yr(i)%wetl, &
+						    gw_heat_ss_yr(i)%fpln, &
+                gw_heat_ss_yr(i)%canl, &
+						    gw_heat_ss_yr(i)%pond, &
+                gw_heat_ss_yr(i)%phyt
+				    endif
+				    !solutes
+				    if(gw_solute_flag == 1) then
+				      do s=1,gw_nsolute
+				      write(out_gwcell_sol_yr,140) time%day, time%mo, &
+                  time%day_mo, time%yrc, i, gis_id, &
+                  cell_name(i), &
+					        gwsol_nm(s), &
+                  gwsol_state(i)%solute(s)%mass,gwsol_state(i)%solute(s)%cnyr, &
+                  gw_sol_ss_yr(i)%solute(s)%rech, &
+                  gw_sol_ss_yr(i)%solute(s)%gwsw, &
+						      gw_sol_ss_yr(i)%solute(s)%swgw, &
+                  gw_sol_ss_yr(i)%solute(s)%satx, &
+						      gw_sol_ss_yr(i)%solute(s)%soil, &
+                  gw_sol_ss_yr(i)%solute(s)%advn, &
+						      gw_sol_ss_yr(i)%solute(s)%disp, &
+					        gw_sol_ss_yr(i)%solute(s)%rcti, &
+						      gw_sol_ss_yr(i)%solute(s)%rcto, &
+					        gw_sol_ss_yr(i)%solute(s)%minl, &
+						      gw_sol_ss_yr(i)%solute(s)%sorb, &
+                  gw_sol_ss_yr(i)%solute(s)%ppag, &
+						      gw_sol_ss_yr(i)%solute(s)%ppex, &
+                  gw_sol_ss_yr(i)%solute(s)%tile, &
+						      gw_sol_ss_yr(i)%solute(s)%resv, &
+                  gw_sol_ss_yr(i)%solute(s)%wetl, &
+						      gw_sol_ss_yr(i)%solute(s)%fpln, &
+                  gw_sol_ss_yr(i)%solute(s)%canl, &
+						      gw_sol_ss_yr(i)%solute(s)%pond
+				      enddo !next solute
+				    endif
+					endif
+				enddo
+			endif
+
+      !accumulate yearly values into per-cell AA arrays (before zeroing)
+			!water (m3/day)
+      do i=1,ncell
+        gw_head_sum_aa(i) = gw_head_sum_aa(i) + gw_state(i)%hdyr
+        gw_hyd_ss_aa(i)%rech = gw_hyd_ss_aa(i)%rech + gw_hyd_ss_yr(i)%rech
+        gw_hyd_ss_aa(i)%gwet = gw_hyd_ss_aa(i)%gwet + gw_hyd_ss_yr(i)%gwet
+        gw_hyd_ss_aa(i)%gwsw = gw_hyd_ss_aa(i)%gwsw + gw_hyd_ss_yr(i)%gwsw
+        gw_hyd_ss_aa(i)%swgw = gw_hyd_ss_aa(i)%swgw + gw_hyd_ss_yr(i)%swgw
+        gw_hyd_ss_aa(i)%satx = gw_hyd_ss_aa(i)%satx + gw_hyd_ss_yr(i)%satx
+        gw_hyd_ss_aa(i)%soil = gw_hyd_ss_aa(i)%soil + gw_hyd_ss_yr(i)%soil
+        gw_hyd_ss_aa(i)%latl = gw_hyd_ss_aa(i)%latl + gw_hyd_ss_yr(i)%latl
+        gw_hyd_ss_aa(i)%ppag = gw_hyd_ss_aa(i)%ppag + gw_hyd_ss_yr(i)%ppag
+        gw_hyd_ss_aa(i)%ppex = gw_hyd_ss_aa(i)%ppex + gw_hyd_ss_yr(i)%ppex
+        gw_hyd_ss_aa(i)%tile = gw_hyd_ss_aa(i)%tile + gw_hyd_ss_yr(i)%tile
+        gw_hyd_ss_aa(i)%resv = gw_hyd_ss_aa(i)%resv + gw_hyd_ss_yr(i)%resv
+        gw_hyd_ss_aa(i)%wetl = gw_hyd_ss_aa(i)%wetl + gw_hyd_ss_yr(i)%wetl
+        gw_hyd_ss_aa(i)%fpln = gw_hyd_ss_aa(i)%fpln + gw_hyd_ss_yr(i)%fpln
+        gw_hyd_ss_aa(i)%canl = gw_hyd_ss_aa(i)%canl + gw_hyd_ss_yr(i)%canl
+        gw_hyd_ss_aa(i)%pond = gw_hyd_ss_aa(i)%pond + gw_hyd_ss_yr(i)%pond
+        gw_hyd_ss_aa(i)%phyt = gw_hyd_ss_aa(i)%phyt + gw_hyd_ss_yr(i)%phyt
+			enddo
+			!heat (MJ/day)
+			if(gw_heat_flag == 1) then
+				do i=1,ncell
+				  gw_temp_sum_aa(i) = gw_temp_sum_aa(i) + gwheat_state(i)%tpyr
+					gw_heat_ss_aa(i)%rech = gw_heat_ss_aa(i)%rech + gw_heat_ss_yr(i)%rech !MJ
+          gw_heat_ss_aa(i)%gwet = gw_heat_ss_aa(i)%gwet + gw_heat_ss_yr(i)%gwet !MJ
+          gw_heat_ss_aa(i)%gwsw = gw_heat_ss_aa(i)%gwsw + gw_heat_ss_yr(i)%gwsw !MJ
+          gw_heat_ss_aa(i)%swgw = gw_heat_ss_aa(i)%swgw + gw_heat_ss_yr(i)%swgw !MJ
+          gw_heat_ss_aa(i)%satx = gw_heat_ss_aa(i)%satx + gw_heat_ss_yr(i)%satx !MJ
+          gw_heat_ss_aa(i)%soil = gw_heat_ss_aa(i)%soil + gw_heat_ss_yr(i)%soil !MJ
+          gw_heat_ss_aa(i)%latl = gw_heat_ss_aa(i)%latl + gw_heat_ss_yr(i)%latl !MJ
+          gw_heat_ss_aa(i)%disp = gw_heat_ss_aa(i)%disp + gw_heat_ss_yr(i)%disp !MJ
+          gw_heat_ss_aa(i)%bndr = gw_heat_ss_aa(i)%bndr + gw_heat_ss_yr(i)%bndr !MJ
+          gw_heat_ss_aa(i)%ppag = gw_heat_ss_aa(i)%ppag + gw_heat_ss_yr(i)%ppag !MJ
+          gw_heat_ss_aa(i)%ppex = gw_heat_ss_aa(i)%ppex + gw_heat_ss_yr(i)%ppex !MJ
+          gw_heat_ss_aa(i)%tile = gw_heat_ss_aa(i)%tile + gw_heat_ss_yr(i)%tile !MJ
+          gw_heat_ss_aa(i)%resv = gw_heat_ss_aa(i)%resv + gw_heat_ss_yr(i)%resv !MJ
+          gw_heat_ss_aa(i)%wetl = gw_heat_ss_aa(i)%wetl + gw_heat_ss_yr(i)%wetl !MJ
+          gw_heat_ss_aa(i)%canl = gw_heat_ss_aa(i)%canl + gw_heat_ss_yr(i)%canl !MJ
+          gw_heat_ss_aa(i)%fpln = gw_heat_ss_aa(i)%fpln + gw_heat_ss_yr(i)%fpln !MJ
+          gw_heat_ss_aa(i)%pond = gw_heat_ss_aa(i)%pond + gw_heat_ss_yr(i)%pond !MJ
+				enddo
+			endif
+			!solutes (kg/day)
+			if(gw_solute_flag == 1) then
+        do i=1,ncell
+          do s=1,gw_nsolute
+						gw_conc_sum_aa(i,s) = gw_conc_sum_aa(i,s) + gwsol_state(i)%solute(s)%cnyr
+            gw_sol_ss_aa(i)%solute(s)%rech = gw_sol_ss_aa(i)%solute(s)%rech + gw_sol_ss_yr(i)%solute(s)%rech
+            gw_sol_ss_aa(i)%solute(s)%gwsw = gw_sol_ss_aa(i)%solute(s)%gwsw + gw_sol_ss_yr(i)%solute(s)%gwsw
+            gw_sol_ss_aa(i)%solute(s)%swgw = gw_sol_ss_aa(i)%solute(s)%swgw + gw_sol_ss_yr(i)%solute(s)%swgw
+            gw_sol_ss_aa(i)%solute(s)%soil = gw_sol_ss_aa(i)%solute(s)%soil + gw_sol_ss_yr(i)%solute(s)%soil
+            gw_sol_ss_aa(i)%solute(s)%satx = gw_sol_ss_aa(i)%solute(s)%satx + gw_sol_ss_yr(i)%solute(s)%satx
+            gw_sol_ss_aa(i)%solute(s)%ppex = gw_sol_ss_aa(i)%solute(s)%ppex + gw_sol_ss_yr(i)%solute(s)%ppex
+            gw_sol_ss_aa(i)%solute(s)%tile = gw_sol_ss_aa(i)%solute(s)%tile + gw_sol_ss_yr(i)%solute(s)%tile
+            gw_sol_ss_aa(i)%solute(s)%resv = gw_sol_ss_aa(i)%solute(s)%resv + gw_sol_ss_yr(i)%solute(s)%resv
+            gw_sol_ss_aa(i)%solute(s)%wetl = gw_sol_ss_aa(i)%solute(s)%wetl + gw_sol_ss_yr(i)%solute(s)%wetl 
+            gw_sol_ss_aa(i)%solute(s)%canl = gw_sol_ss_aa(i)%solute(s)%canl + gw_sol_ss_yr(i)%solute(s)%canl
+            gw_sol_ss_aa(i)%solute(s)%fpln = gw_sol_ss_aa(i)%solute(s)%fpln + gw_sol_ss_yr(i)%solute(s)%fpln
+            gw_sol_ss_aa(i)%solute(s)%pond = gw_sol_ss_aa(i)%solute(s)%pond + gw_sol_ss_yr(i)%solute(s)%pond
+            gw_sol_ss_aa(i)%solute(s)%advn = gw_sol_ss_aa(i)%solute(s)%advn + gw_sol_ss_yr(i)%solute(s)%advn
+            gw_sol_ss_aa(i)%solute(s)%disp = gw_sol_ss_aa(i)%solute(s)%disp + gw_sol_ss_yr(i)%solute(s)%disp
+            gw_sol_ss_aa(i)%solute(s)%rcti = gw_sol_ss_aa(i)%solute(s)%rcti + gw_sol_ss_yr(i)%solute(s)%rcti
+            gw_sol_ss_aa(i)%solute(s)%rcto = gw_sol_ss_aa(i)%solute(s)%rcto + gw_sol_ss_yr(i)%solute(s)%rcto
+            gw_sol_ss_aa(i)%solute(s)%minl = gw_sol_ss_aa(i)%solute(s)%minl + gw_sol_ss_yr(i)%solute(s)%minl
+            gw_sol_ss_aa(i)%solute(s)%sorb = gw_sol_ss_aa(i)%solute(s)%sorb + gw_sol_ss_yr(i)%solute(s)%sorb
+          enddo
+        enddo
+			endif
+      
+      !--- obs well yearly output + AA accumulation ---
+      if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
+        do k=1,gw_num_obs_wells
+          i = gw_obs_cells(k)
+          obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
+          if(gw_heat_flag == 1) then
+            obs_temp = gwheat_state(i)%tpyr
+            gw_obs_temp_aa(k) = gw_obs_temp_aa(k) + obs_temp
+          endif
+          if(gw_solute_flag == 1) then
+            obs_no3 = gwsol_state(i)%solute(1)%cnyr
+            obs_p = gwsol_state(i)%solute(2)%cnyr
+            gw_obs_sol_aa(k,1) = gw_obs_sol_aa(k,1) + obs_no3
+            gw_obs_sol_aa(k,2) = gw_obs_sol_aa(k,2) + obs_p
+          endif
+          write(obs_name,'(a4,i4.4)') 'obs_',k
+          write(out_gwobs_yr,8102) time%day,time%mo,time%day_mo, &
+            time%yrc,k,gw_obs_cells(k),obs_name, &
+            gw_state(i)%hdyr, gw_state(i)%elev - gw_state(i)%hdyr, &
+            obs_temp, obs_no3, obs_p
         enddo
       endif
 
-      !pumping (irrigation) (for HRUs) -- yearly long-format output ----------------------
-      if(gwflag_pump == 1) then
-        do i=1,sp_ob%hru
-          if(hru_pump_yr(i) > 0.) then
-            iob = sp_ob1%hru + i - 1
-            write(out_hru_pump_yr,8101) time%day,time%mo,time%day_mo, &
-              time%yrc,i,ob(iob)%gis_id,ob(iob)%name,hru_pump_yr(i)
-          endif
-        enddo
-      endif
-      !accumulate into AA before zeroing
-      do i=1,sp_ob%hru
-        hru_pump_aa(i) = hru_pump_aa(i) + hru_pump_yr(i)
+      !zero out head average for next year
+      do i=1,ncell
+        gw_state(i)%hdyr = 0.
+				!heat
+				if(gw_heat_flag == 1) then
+				  gwheat_state(i)%tpyr = 0.  	
+				endif
+				!solutes
+				if(gw_solute_flag == 1) then
+				  do s=1,gw_nsolute
+						gwsol_state(i)%solute(s)%cnyr = 0.
+					enddo
+				endif
       enddo
-      hru_pump_yr = 0.
+
 
       !(individual grid-file writes per flux component removed -- replaced by long-format above)
 
@@ -1801,25 +2116,25 @@
       if(gw_solute_flag == 1) then
         do i=1,ncell
           do s=1,gw_nsolute
-            gwsol_ss_sum(i)%solute(s)%rech = 0.
-            gwsol_ss_sum(i)%solute(s)%gwsw = 0.
-            gwsol_ss_sum(i)%solute(s)%swgw = 0.
-            gwsol_ss_sum(i)%solute(s)%satx = 0.
-            gwsol_ss_sum(i)%solute(s)%soil = 0.
-            gwsol_ss_sum(i)%solute(s)%ppag = 0.
-            gwsol_ss_sum(i)%solute(s)%ppex = 0.
-            gwsol_ss_sum(i)%solute(s)%tile = 0.
-            gwsol_ss_sum(i)%solute(s)%resv = 0.
-            gwsol_ss_sum(i)%solute(s)%wetl = 0.
-            gwsol_ss_sum(i)%solute(s)%canl = 0.
-            gwsol_ss_sum(i)%solute(s)%fpln = 0.
-            gwsol_ss_sum(i)%solute(s)%pond = 0.
-            gwsol_ss_sum(i)%solute(s)%advn = 0.
-            gwsol_ss_sum(i)%solute(s)%disp = 0.
-            gwsol_ss_sum(i)%solute(s)%rcti = 0.
-            gwsol_ss_sum(i)%solute(s)%rcto = 0.
-            gwsol_ss_sum(i)%solute(s)%minl = 0.
-            gwsol_ss_sum(i)%solute(s)%sorb = 0.
+            gw_sol_ss_yr(i)%solute(s)%rech = 0.
+            gw_sol_ss_yr(i)%solute(s)%gwsw = 0.
+            gw_sol_ss_yr(i)%solute(s)%swgw = 0.
+            gw_sol_ss_yr(i)%solute(s)%satx = 0.
+            gw_sol_ss_yr(i)%solute(s)%soil = 0.
+            gw_sol_ss_yr(i)%solute(s)%ppag = 0.
+            gw_sol_ss_yr(i)%solute(s)%ppex = 0.
+            gw_sol_ss_yr(i)%solute(s)%tile = 0.
+            gw_sol_ss_yr(i)%solute(s)%resv = 0.
+            gw_sol_ss_yr(i)%solute(s)%wetl = 0.
+            gw_sol_ss_yr(i)%solute(s)%canl = 0.
+            gw_sol_ss_yr(i)%solute(s)%fpln = 0.
+            gw_sol_ss_yr(i)%solute(s)%pond = 0.
+            gw_sol_ss_yr(i)%solute(s)%advn = 0.
+            gw_sol_ss_yr(i)%solute(s)%disp = 0.
+            gw_sol_ss_yr(i)%solute(s)%rcti = 0.
+            gw_sol_ss_yr(i)%solute(s)%rcto = 0.
+            gw_sol_ss_yr(i)%solute(s)%minl = 0.
+            gw_sol_ss_yr(i)%solute(s)%sorb = 0.
           enddo
         enddo
       endif
@@ -1828,16 +2143,26 @@
       if(gwflag_yr == 1) then
         write(out_gwbal_yr,8100) time%day,time%mo,time%day_mo, &
           time%yrc,"       1","       1",bsn%name, &
-          gw_hyd_grid_yr%chng,gw_hyd_grid_yr%rech,gw_hyd_grid_yr%gwet, &
-          gw_hyd_grid_yr%gwsw,gw_hyd_grid_yr%swgw, &
-          gw_hyd_grid_yr%satx,gw_hyd_grid_yr%soil,gw_hyd_grid_yr%latl, &
-          gw_hyd_grid_yr%bndr,gw_hyd_grid_yr%ppag, &
-          gw_hyd_grid_yr%ppex,gw_hyd_grid_yr%tile,gw_hyd_grid_yr%resv, &
-          gw_hyd_grid_yr%wetl,gw_hyd_grid_yr%canl, &
-          gw_hyd_grid_yr%fpln,gw_hyd_grid_yr%pond,gw_hyd_grid_yr%phyt, &
+          gw_hyd_grid_yr%chng, &
+					gw_hyd_grid_yr%rech, &
+					gw_hyd_grid_yr%gwet, &
+          gw_hyd_grid_yr%gwsw, &
+					gw_hyd_grid_yr%swgw, &
+          gw_hyd_grid_yr%satx, &
+					gw_hyd_grid_yr%soil, &
+					gw_hyd_grid_yr%latl, &
+          gw_hyd_grid_yr%bndr, &
+					gw_hyd_grid_yr%ppag, &
+          gw_hyd_grid_yr%ppex, &
+					gw_hyd_grid_yr%tile, &
+					gw_hyd_grid_yr%resv, &
+          gw_hyd_grid_yr%wetl, &
+					gw_hyd_grid_yr%canl, &
+          gw_hyd_grid_yr%fpln, &
+					gw_hyd_grid_yr%pond, &
+					gw_hyd_grid_yr%phyt, &
           gw_hyd_grid_yr%ppdf
       endif
-
       !zero out annual basin arrays
       gw_hyd_grid_yr%chng = 0.
       gw_hyd_grid_yr%rech = 0.
@@ -1861,21 +2186,27 @@
 
       !heat flux values (basin) -----------------------------------------------------------------
       if(gw_heat_flag == 1) then
-        if(gwflag_heat_yr == 1) then
+        if(gwflag_yr == 1) then
           write(out_heatbal_yr,8100) time%day,time%mo,time%day_mo, &
             time%yrc,"       1","       1",bsn%name, &
             gw_heat_grid_yr%chng, &
-            gw_heat_grid_yr%rech,gw_heat_grid_yr%gwet, &
+            gw_heat_grid_yr%rech, &
+						gw_heat_grid_yr%gwet, &
             gw_heat_grid_yr%gwsw, &
-            gw_heat_grid_yr%swgw,gw_heat_grid_yr%satx, &
+            gw_heat_grid_yr%swgw, &
+						gw_heat_grid_yr%satx, &
             gw_heat_grid_yr%soil, &
-            gw_heat_grid_yr%latl,gw_heat_grid_yr%disp, &
+            gw_heat_grid_yr%latl, &
+						gw_heat_grid_yr%disp, &
             gw_heat_grid_yr%bndr, &
-            gw_heat_grid_yr%ppag,gw_heat_grid_yr%ppex, &
+            gw_heat_grid_yr%ppag, &
+						gw_heat_grid_yr%ppex, &
             gw_heat_grid_yr%tile, &
-            gw_heat_grid_yr%resv,gw_heat_grid_yr%wetl, &
+            gw_heat_grid_yr%resv, &
+						gw_heat_grid_yr%wetl, &
             gw_heat_grid_yr%canl, &
-            gw_heat_grid_yr%fpln,gw_heat_grid_yr%pond
+            gw_heat_grid_yr%fpln, &
+						gw_heat_grid_yr%pond
         endif
         gw_heat_grid_yr%chng = 0.
         gw_heat_grid_yr%rech = 0.
@@ -1900,60 +2231,70 @@
       !solute mass values (basin) ---------------------------------------------------------------
       if(gw_solute_flag == 1) then
         do s=1,gw_nsolute
-          if(gwflag_solute_yr == 1) then
+          if(gwflag_yr == 1) then
             write(out_solbal_yr+s,8100) time%day,time%mo,time%day_mo, &
               time%yrc,"       1","       1",bsn%name, &
-              sol_grid_chng_yr(s),sol_grid_rech_yr(s), &
-              sol_grid_gwsw_yr(s),sol_grid_swgw_yr(s), &
-              sol_grid_satx_yr(s), &
-              sol_grid_soil_yr(s),sol_grid_advn_yr(s), &
-              sol_grid_disp_yr(s), &
-              sol_grid_rcti_yr(s),sol_grid_rcto_yr(s), &
-              sol_grid_minl_yr(s),sol_grid_sorb_yr(s), &
-              sol_grid_ppag_yr(s),sol_grid_ppex_yr(s), &
-              sol_grid_tile_yr(s),sol_grid_resv_yr(s), &
-              sol_grid_wetl_yr(s), &
-              sol_grid_canl_yr(s),sol_grid_fpln_yr(s), &
-              sol_grid_pond_yr(s)
+              gw_sol_grid_yr%solute(s)%chng, &
+							gw_sol_grid_yr%solute(s)%rech, &
+              gw_sol_grid_yr%solute(s)%gwsw, &
+							gw_sol_grid_yr%solute(s)%swgw, &
+              gw_sol_grid_yr%solute(s)%satx, &
+              gw_sol_grid_yr%solute(s)%soil, &
+							gw_sol_grid_yr%solute(s)%advn, &
+              gw_sol_grid_yr%solute(s)%disp, &
+              gw_sol_grid_yr%solute(s)%rcti, &
+							gw_sol_grid_yr%solute(s)%rcto, &
+              gw_sol_grid_yr%solute(s)%minl, &
+							gw_sol_grid_yr%solute(s)%sorb, &
+              gw_sol_grid_yr%solute(s)%ppag, &
+							gw_sol_grid_yr%solute(s)%ppex, &
+              gw_sol_grid_yr%solute(s)%tile, &
+							gw_sol_grid_yr%solute(s)%resv, &
+              gw_sol_grid_yr%solute(s)%wetl, &
+              gw_sol_grid_yr%solute(s)%canl, &
+							gw_sol_grid_yr%solute(s)%fpln, &
+              gw_sol_grid_yr%solute(s)%pond
           endif
-          sol_grid_chng_yr(s) = 0.
-          sol_grid_rech_yr(s) = 0.
-          sol_grid_gwsw_yr(s) = 0.
-          sol_grid_swgw_yr(s) = 0.
-          sol_grid_satx_yr(s) = 0.
-          sol_grid_soil_yr(s) = 0.
-          sol_grid_advn_yr(s) = 0.
-          sol_grid_disp_yr(s) = 0.
-          sol_grid_rcti_yr(s) = 0.
-          sol_grid_rcto_yr(s) = 0.
-          sol_grid_minl_yr(s) = 0.
-          sol_grid_sorb_yr(s) = 0.
-          sol_grid_ppag_yr(s) = 0.
-          sol_grid_ppex_yr(s) = 0.
-          sol_grid_tile_yr(s) = 0.
-          sol_grid_resv_yr(s) = 0.
-          sol_grid_wetl_yr(s) = 0.
-          sol_grid_canl_yr(s) = 0.
-          sol_grid_fpln_yr(s) = 0.
-          sol_grid_pond_yr(s) = 0.
+          gw_sol_grid_yr%solute(s)%chng = 0.
+					gw_sol_grid_yr%solute(s)%rech = 0.
+          gw_sol_grid_yr%solute(s)%gwsw = 0.
+					gw_sol_grid_yr%solute(s)%swgw = 0.
+          gw_sol_grid_yr%solute(s)%satx = 0.
+          gw_sol_grid_yr%solute(s)%soil = 0.
+					gw_sol_grid_yr%solute(s)%advn = 0.
+          gw_sol_grid_yr%solute(s)%disp = 0.
+          gw_sol_grid_yr%solute(s)%rcti = 0.
+					gw_sol_grid_yr%solute(s)%rcto = 0.
+          gw_sol_grid_yr%solute(s)%minl = 0.
+					gw_sol_grid_yr%solute(s)%sorb = 0.
+          gw_sol_grid_yr%solute(s)%ppag = 0.
+					gw_sol_grid_yr%solute(s)%ppex = 0.
+          gw_sol_grid_yr%solute(s)%tile = 0.
+					gw_sol_grid_yr%solute(s)%resv = 0.
+          gw_sol_grid_yr%solute(s)%wetl = 0.
+          gw_sol_grid_yr%solute(s)%canl = 0.
+					gw_sol_grid_yr%solute(s)%fpln = 0.
+          gw_sol_grid_yr%solute(s)%pond = 0.
         enddo !go to next solute
       endif
 
       !format statements (subroutine-local)
-140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
+140   format(i8,i6,i6,i8,i8,i10,4x,a12,30e13.5)
 8100  format(4i6,2a,2x,a16,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
 8102  format(4i6,2i8,a18,5e13.4)
 
       return
-      end subroutine gwflow_output_yr
+	end subroutine gwflow_output_yr
 
+	
+	
       !NOTE: old individual grid-file writes per flux component removed.
       !      (formerly ~400 lines of per-variable grid write blocks)
       !      All cell-level data now written in long-format above.
       !
 
-      subroutine gwflow_output_aa
+      subroutine gwflow_output_aa !------------------------------------------------------------------------------------
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine writes average annual gwflow output in SWAT+ long format:
@@ -1980,24 +2321,13 @@
       external :: gwflow_write_cell_array
 
       !--- only execute on the last day of the simulation ---
-      if(time%end_sim /= 1) return
+      if(time%yrc /= time%yrc_end .or. time%day /= time%day_end) return
 
       nbyr_r = real(time%nbyr)
       allocate(temp_array(ncell))
 
-      !pumping for HRUs -- average annual long-format output
-      if(gwflag_pump == 1) then
-        do i=1,sp_ob%hru
-          if(hru_pump_aa(i) > 0.) then
-            iob = sp_ob1%hru + i - 1
-            write(out_hru_pump_aa,8101) time%day,time%mo,time%day_mo, &
-              time%yrc,i,ob(iob)%gis_id,ob(iob)%name,hru_pump_aa(i)/nbyr_r
-          endif
-        enddo
-      endif
-
       !--- obs well average annual output ---
-      if(gwflag_obs_aa == 1 .and. gw_num_obs_wells > 0) then
+      if(gwflag_obs == 1 .and. gw_num_obs_wells > 0) then
         do k=1,gw_num_obs_wells
           i = gw_obs_cells(k)
           obs_temp = -99.; obs_no3 = -99.; obs_p = -99.
@@ -2018,7 +2348,7 @@
       !--- cell-level average annual long-format output ---
       !      Per-cell yearly averages were accumulated into gw_hyd_ss_aa in _yr;
       !      divide by nbyr to get average annual values.
-      if(gwflag_aa == 1) then
+      if(gwflag_cell_aa == 1) then
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
             gis_id = cell_gis_id(i)
@@ -2043,12 +2373,67 @@
               gw_hyd_ss_aa(i)%canl / nbyr_r, &
               gw_hyd_ss_aa(i)%pond / nbyr_r, &
               gw_hyd_ss_aa(i)%phyt / nbyr_r
+						!heat
+				    if(gw_heat_flag == 1) then
+					    write(out_gwcell_heat_aa,140) time%day, time%mo, &
+                time%day_mo, time%yrc, i, gis_id, &
+                cell_name(i), &
+                gwheat_state(i)%stor, &
+								gw_temp_sum_aa(i) / nbyr_r, &
+                gw_heat_ss_aa(i)%rech / nbyr_r, &
+						    gw_heat_ss_aa(i)%gwet / nbyr_r, &
+                gw_heat_ss_aa(i)%gwsw / nbyr_r, &
+						    gw_heat_ss_aa(i)%swgw / nbyr_r, &
+                gw_heat_ss_aa(i)%satx / nbyr_r, &
+						    gw_heat_ss_aa(i)%soil / nbyr_r, &
+                gw_heat_ss_aa(i)%latl / nbyr_r, &
+						    gw_heat_ss_aa(i)%disp / nbyr_r, &
+                gw_heat_ss_aa(i)%ppag / nbyr_r, &
+						    gw_heat_ss_aa(i)%ppex / nbyr_r, &
+                gw_heat_ss_aa(i)%tile / nbyr_r, &
+						    gw_heat_ss_aa(i)%resv / nbyr_r, &
+                gw_heat_ss_aa(i)%wetl / nbyr_r, &
+						    gw_heat_ss_aa(i)%fpln / nbyr_r, &
+                gw_heat_ss_aa(i)%canl / nbyr_r, &
+						    gw_heat_ss_aa(i)%pond / nbyr_r, &
+                gw_heat_ss_aa(i)%phyt / nbyr_r
+				    endif
+				    !solutes
+				    if(gw_solute_flag == 1) then
+				      do s=1,gw_nsolute
+				      write(out_gwcell_sol_aa,140) time%day, time%mo, &
+                  time%day_mo, time%yrc, i, gis_id, &
+                  cell_name(i), &
+					        gwsol_nm(s), &
+                  gwsol_state(i)%solute(s)%mass, &
+								  gw_conc_sum_aa(i,s) / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%rech / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%gwsw / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%swgw / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%satx / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%soil / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%advn / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%disp / nbyr_r, &
+					        gw_sol_ss_aa(i)%solute(s)%rcti / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%rcto / nbyr_r, &
+					        gw_sol_ss_aa(i)%solute(s)%minl / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%sorb / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%ppag / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%ppex / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%tile / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%resv / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%wetl / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%fpln / nbyr_r, &
+                  gw_sol_ss_aa(i)%solute(s)%canl / nbyr_r, &
+						      gw_sol_ss_aa(i)%solute(s)%pond / nbyr_r
+				      enddo !next solute
+				    endif
           endif
-        enddo
+				enddo
       endif
 
       !average annual water balance (basin) -----------------------------------------------------
-      gw_hyd_grid_aa%chng = gw_hyd_grid_aa%chng / nbyr_r
+      gw_hyd_grid_aa%chng = gw_hyd_grid_aa%chng + (vaft_grid-vbef_grid)
       gw_hyd_grid_aa%rech = gw_hyd_grid_aa%rech / nbyr_r
       gw_hyd_grid_aa%gwet = gw_hyd_grid_aa%gwet / nbyr_r
       gw_hyd_grid_aa%gwsw = gw_hyd_grid_aa%gwsw / nbyr_r
@@ -2070,18 +2455,29 @@
       if(gwflag_aa == 1) then
         write(out_gwbal_aa,8100) time%day,time%mo,time%day_mo, &
           time%yrc,"       1","       1",bsn%name, &
-          gw_hyd_grid_aa%chng,gw_hyd_grid_aa%rech,gw_hyd_grid_aa%gwet, &
-          gw_hyd_grid_aa%gwsw,gw_hyd_grid_aa%swgw, &
-          gw_hyd_grid_aa%satx,gw_hyd_grid_aa%soil,gw_hyd_grid_aa%latl, &
-          gw_hyd_grid_aa%bndr,gw_hyd_grid_aa%ppag, &
-          gw_hyd_grid_aa%ppex,gw_hyd_grid_aa%tile,gw_hyd_grid_aa%resv, &
-          gw_hyd_grid_aa%wetl,gw_hyd_grid_aa%canl, &
-          gw_hyd_grid_aa%fpln,gw_hyd_grid_aa%pond,gw_hyd_grid_aa%phyt, &
+          gw_hyd_grid_aa%chng, &
+					gw_hyd_grid_aa%rech, &
+					gw_hyd_grid_aa%gwet, &
+          gw_hyd_grid_aa%gwsw, &
+					gw_hyd_grid_aa%swgw, &
+          gw_hyd_grid_aa%satx, &
+					gw_hyd_grid_aa%soil, &
+					gw_hyd_grid_aa%latl, &
+          gw_hyd_grid_aa%bndr, &
+					gw_hyd_grid_aa%ppag, &
+          gw_hyd_grid_aa%ppex, &
+					gw_hyd_grid_aa%tile, &
+					gw_hyd_grid_aa%resv, &
+          gw_hyd_grid_aa%wetl, &
+					gw_hyd_grid_aa%canl, &
+          gw_hyd_grid_aa%fpln, &
+					gw_hyd_grid_aa%pond, &
+					gw_hyd_grid_aa%phyt, &
           gw_hyd_grid_aa%ppdf
       endif
 
       !average annual heat fluxes (basin) -------------------------------------------------------
-      gw_heat_grid_aa%chng = gw_heat_grid_aa%chng / nbyr_r
+      gw_heat_grid_aa%chng = gw_heat_grid_aa%chng + (heat_haft_grid-heat_hbef_grid)
       gw_heat_grid_aa%rech = gw_heat_grid_aa%rech / nbyr_r
       gw_heat_grid_aa%gwet = gw_heat_grid_aa%gwet / nbyr_r
       gw_heat_grid_aa%gwsw = gw_heat_grid_aa%gwsw / nbyr_r
@@ -2099,60 +2495,79 @@
       gw_heat_grid_aa%canl = gw_heat_grid_aa%canl / nbyr_r
       gw_heat_grid_aa%fpln = gw_heat_grid_aa%fpln / nbyr_r
       gw_heat_grid_aa%pond = gw_heat_grid_aa%pond / nbyr_r
-      if(gwflag_heat_aa == 1 .and. gw_heat_flag == 1) then
+      if(gwflag_aa == 1) then
         write(out_heatbal_aa,8100) time%day,time%mo,time%day_mo, &
           time%yrc,"       1","       1",bsn%name, &
           gw_heat_grid_aa%chng, &
-          gw_heat_grid_aa%rech,gw_heat_grid_aa%gwet,gw_heat_grid_aa%gwsw, &
-          gw_heat_grid_aa%swgw,gw_heat_grid_aa%satx,gw_heat_grid_aa%soil, &
-          gw_heat_grid_aa%latl,gw_heat_grid_aa%disp,gw_heat_grid_aa%bndr, &
-          gw_heat_grid_aa%ppag,gw_heat_grid_aa%ppex,gw_heat_grid_aa%tile, &
-          gw_heat_grid_aa%resv,gw_heat_grid_aa%wetl,gw_heat_grid_aa%canl, &
-          gw_heat_grid_aa%fpln,gw_heat_grid_aa%pond
+          gw_heat_grid_aa%rech, &
+					gw_heat_grid_aa%gwet, &
+					gw_heat_grid_aa%gwsw, &
+          gw_heat_grid_aa%swgw, &
+					gw_heat_grid_aa%satx, &
+					gw_heat_grid_aa%soil, &
+          gw_heat_grid_aa%latl, &
+					gw_heat_grid_aa%disp, &
+					gw_heat_grid_aa%bndr, &
+          gw_heat_grid_aa%ppag, &
+					gw_heat_grid_aa%ppex, &
+					gw_heat_grid_aa%tile, &
+          gw_heat_grid_aa%resv, &
+					gw_heat_grid_aa%wetl, &
+					gw_heat_grid_aa%canl, &
+          gw_heat_grid_aa%fpln, &
+					gw_heat_grid_aa%pond
       endif
 
       !average annual solute values (basin) -----------------------------------------------------
       if(gw_solute_flag == 1) then
         do s=1,gw_nsolute
-          sol_grid_chng_tt(s) = sol_grid_chng_tt(s) / nbyr_r
-          sol_grid_rech_tt(s) = sol_grid_rech_tt(s) / nbyr_r
-          sol_grid_gwsw_tt(s) = sol_grid_gwsw_tt(s) / nbyr_r
-          sol_grid_swgw_tt(s) = sol_grid_swgw_tt(s) / nbyr_r
-          sol_grid_satx_tt(s) = sol_grid_satx_tt(s) / nbyr_r
-          sol_grid_advn_tt(s) = sol_grid_advn_tt(s) / nbyr_r
-          sol_grid_disp_tt(s) = sol_grid_disp_tt(s) / nbyr_r
-          sol_grid_rcti_tt(s) = sol_grid_rcti_tt(s) / nbyr_r
-          sol_grid_rcto_tt(s) = sol_grid_rcto_tt(s) / nbyr_r
-          sol_grid_minl_tt(s) = sol_grid_minl_tt(s) / nbyr_r
-          sol_grid_sorb_tt(s) = sol_grid_sorb_tt(s) / nbyr_r
-          sol_grid_ppag_tt(s) = sol_grid_ppag_tt(s) / nbyr_r
-          sol_grid_ppex_tt(s) = sol_grid_ppex_tt(s) / nbyr_r
-          sol_grid_tile_tt(s) = sol_grid_tile_tt(s) / nbyr_r
-          sol_grid_soil_tt(s) = sol_grid_soil_tt(s) / nbyr_r
-          sol_grid_resv_tt(s) = sol_grid_resv_tt(s) / nbyr_r
-          sol_grid_wetl_tt(s) = sol_grid_wetl_tt(s) / nbyr_r
-          sol_grid_canl_tt(s) = sol_grid_canl_tt(s) / nbyr_r
-          sol_grid_fpln_tt(s) = sol_grid_fpln_tt(s) / nbyr_r
-          sol_grid_pond_tt(s) = sol_grid_pond_tt(s) / nbyr_r
-          if(gwflag_solute_aa == 1) then
+					gw_sol_grid_aa%solute(s)%chng = gw_sol_grid_aa%solute(s)%chng + (sol_grid_maft-sol_grid_mbef)
+          gw_sol_grid_aa%solute(s)%rech = gw_sol_grid_aa%solute(s)%rech / nbyr_r
+          gw_sol_grid_aa%solute(s)%gwsw = gw_sol_grid_aa%solute(s)%gwsw / nbyr_r
+          gw_sol_grid_aa%solute(s)%swgw = gw_sol_grid_aa%solute(s)%swgw / nbyr_r
+          gw_sol_grid_aa%solute(s)%soil = gw_sol_grid_aa%solute(s)%soil / nbyr_r
+          gw_sol_grid_aa%solute(s)%satx = gw_sol_grid_aa%solute(s)%satx / nbyr_r
+          gw_sol_grid_aa%solute(s)%ppag = gw_sol_grid_aa%solute(s)%ppag / nbyr_r
+          gw_sol_grid_aa%solute(s)%ppex = gw_sol_grid_aa%solute(s)%ppex / nbyr_r
+          gw_sol_grid_aa%solute(s)%tile = gw_sol_grid_aa%solute(s)%tile / nbyr_r
+          gw_sol_grid_aa%solute(s)%resv = gw_sol_grid_aa%solute(s)%resv / nbyr_r
+          gw_sol_grid_aa%solute(s)%wetl = gw_sol_grid_aa%solute(s)%wetl / nbyr_r
+          gw_sol_grid_aa%solute(s)%fpln = gw_sol_grid_aa%solute(s)%fpln / nbyr_r
+          gw_sol_grid_aa%solute(s)%canl = gw_sol_grid_aa%solute(s)%canl / nbyr_r
+          gw_sol_grid_aa%solute(s)%pond = gw_sol_grid_aa%solute(s)%pond / nbyr_r
+          gw_sol_grid_aa%solute(s)%advn = gw_sol_grid_aa%solute(s)%advn / nbyr_r
+          gw_sol_grid_aa%solute(s)%disp = gw_sol_grid_aa%solute(s)%disp / nbyr_r
+          gw_sol_grid_aa%solute(s)%rcti = gw_sol_grid_aa%solute(s)%rcti / nbyr_r
+          gw_sol_grid_aa%solute(s)%rcto = gw_sol_grid_aa%solute(s)%rcto / nbyr_r
+          gw_sol_grid_aa%solute(s)%minl = gw_sol_grid_aa%solute(s)%minl / nbyr_r
+          gw_sol_grid_aa%solute(s)%sorb = gw_sol_grid_aa%solute(s)%sorb / nbyr_r
+          if(gwflag_aa == 1) then
             write(out_solbal_aa+s,8100) time%day,time%mo,time%day_mo, &
               time%yrc,"       1","       1",bsn%name, &
-              sol_grid_chng_tt(s),sol_grid_rech_tt(s), &
-              sol_grid_gwsw_tt(s),sol_grid_swgw_tt(s), &
-              sol_grid_satx_tt(s), &
-              sol_grid_soil_tt(s),sol_grid_advn_tt(s), &
-              sol_grid_disp_tt(s), &
-              sol_grid_rcti_tt(s),sol_grid_rcto_tt(s), &
-              sol_grid_minl_tt(s),sol_grid_sorb_tt(s), &
-              sol_grid_ppag_tt(s),sol_grid_ppex_tt(s), &
-              sol_grid_tile_tt(s),sol_grid_resv_tt(s), &
-              sol_grid_wetl_tt(s), &
-              sol_grid_canl_tt(s),sol_grid_fpln_tt(s), &
-              sol_grid_pond_tt(s)
+              gw_sol_grid_aa%solute(s)%chng, &
+							gw_sol_grid_aa%solute(s)%rech, &
+              gw_sol_grid_aa%solute(s)%gwsw, &
+							gw_sol_grid_aa%solute(s)%swgw, &
+              gw_sol_grid_aa%solute(s)%satx, &
+              gw_sol_grid_aa%solute(s)%soil, &
+							gw_sol_grid_aa%solute(s)%advn, &
+              gw_sol_grid_aa%solute(s)%disp, &
+              gw_sol_grid_aa%solute(s)%rcti, &
+							gw_sol_grid_aa%solute(s)%rcto, &
+              gw_sol_grid_aa%solute(s)%minl, &
+							gw_sol_grid_aa%solute(s)%sorb, &
+              gw_sol_grid_aa%solute(s)%ppag, &
+							gw_sol_grid_aa%solute(s)%ppex, &
+              gw_sol_grid_aa%solute(s)%tile, &
+							gw_sol_grid_aa%solute(s)%resv, &
+              gw_sol_grid_aa%solute(s)%wetl, &
+              gw_sol_grid_aa%solute(s)%canl, &
+							gw_sol_grid_aa%solute(s)%fpln, &
+              gw_sol_grid_aa%solute(s)%pond
           endif
         enddo !next solute
       endif
-
+       
       !if soft calibration, prepare for next simulation
       sim_month = 1
 
@@ -2174,10 +2589,10 @@
 
       !format statements (subroutine-local)
 105   format(i8,1000(e13.4))
-140   format(i8,i6,i6,i8,i8,i10,4x,a12,2f13.3,16e13.4)
+140		format(i8,i6,i6,i8,i8,i10,4x,a12,30e13.5)	
 8100  format(4i6,2a,2x,a16,50e13.4)
 8101  format(4i6,2i8,a18,e13.4)
-8102  format(4i6,2i8,a18,5e13.4)
+8102  format(4i6,2i8,a18,5e13.6)
 
       return
       end subroutine gwflow_output_aa
