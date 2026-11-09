@@ -64,7 +64,7 @@
           do ipathi = 1, imax
             read (107,*,iostat=eof) path_init_name(ipathi)
             if (eof < 0) exit
-            !! each row is stored by its pathogen's name; a row for a pathogen that is not simulated is skipped
+            !! cs_db%num_paths rows per set, stored by pathogen name; a row for a pathogen not simulated stores nothing
             do irow = 1, cs_db%num_paths
               read (107,*,iostat=eof) pname, wat, ben
               if (eof < 0) exit
