@@ -17,10 +17,16 @@
       logical :: i_exist              !none       |check to determine if file exists
       integer :: ipest = 0
       integer :: ipesti = 0
+      character (len=16) :: pname = ""
+      integer :: irow = 0
+      real :: wat = 0.
+      real :: ben = 0.
 
       eof = 0
       
       !read all export coefficient data
+      !! the layout the SWAT+ Editor writes: a header, then each set as its name and one
+      !! 'pesticide water benthic' row per simulated pesticide
       inquire (file=in_init%pest_water, exist=i_exist)
       if (i_exist .or. in_init%pest_water /= "null") then
         do
@@ -34,9 +40,7 @@
             read (107,*,iostat=eof) titldum     !name
             if (eof < 0) exit
             do ipest = 1, cs_db%num_pests
-              read (107,*,iostat=eof) titldum   !water
-              if (eof < 0) exit
-              read (107,*,iostat=eof) titldum   !benthic
+              read (107,*,iostat=eof) titldum   !pesticide water benthic
               if (eof < 0) exit
             end do
             imax = imax + 1
@@ -61,8 +65,18 @@
           do ipesti = 1, imax
             read (107,*,iostat=eof) pest_init_name(ipesti)
             if (eof < 0) exit
-              read (107,*,iostat=eof) titldum, pest_water_ini(ipesti)%water, pest_water_ini(ipesti)%benthic
+            !! cs_db%num_pests rows per set, stored by pesticide name; a row for a pesticide not simulated stores nothing
+            do irow = 1, cs_db%num_pests
+              read (107,*,iostat=eof) pname, wat, ben
               if (eof < 0) exit
+              if (eof > 0) cycle
+              do ipest = 1, cs_db%num_pests
+                if (cs_db%pests(ipest) == pname) then
+                  pest_water_ini(ipesti)%water(ipest) = wat
+                  pest_water_ini(ipesti)%benthic(ipest) = ben
+                end if
+              end do
+            end do
           end do
           close (107)
           exit
