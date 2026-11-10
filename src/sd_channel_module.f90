@@ -729,13 +729,13 @@
         integer, intent (in) :: nch
         type (channel_morphology_output) :: cho2
         cho2 = cho1
-        cho2%num = 0
-        if (cho1%num > 0) then
-          cho2%num = nch
-          cho2%wid = cho1%wid / cho1%num
-          cho2%dep = cho1%dep / cho1%num
-          cho2%fp_km2 = cho1%fp_km2 / cho1%num
-        end if
+        !cho2%num = 0
+        !if (cho1%num > 0) then
+          !cho2%num = nch
+          !cho2%wid = cho1%wid / cho1%num
+          !cho2%dep = cho1%dep / cho1%num
+          !cho2%fp_km2 = cho1%fp_km2 / cho1%num
+        !end if
         if (nch > 0) then
           cho2%ebank_m = cho1%ebank_m / nch
           cho2%ebtm_m = cho1%ebtm_m / nch
