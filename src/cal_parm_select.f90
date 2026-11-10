@@ -703,8 +703,8 @@
             sd_ch(ielem)%chk = chg_par(sd_ch(ielem)%chk,                  &
                          chg_typ, chg_val, absmin, absmax)
         
-         case ("bank_exp")
-            sd_ch(ielem)%bank_exp = chg_par(sd_ch(ielem)%bank_exp,            &
+         case ("w_yr")
+            sd_ch(ielem)%w_yr = chg_par(sd_ch(ielem)%w_yr,                &
                          chg_typ, chg_val, absmin, absmax)
         
          case ("cov")

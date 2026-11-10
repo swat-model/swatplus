@@ -66,6 +66,7 @@
       real :: pet = 0.           !mm H2O        |amount of PET remaining after water stored
                                  !              |in canopy is evaporated
       real :: esleft = 0.        !mm H2O        |potential soil evap that is still available
+      real :: et_max = 0.        !mm H2O        |maximum amount of evapotranspiration that can occur
       real :: evzp = 0.          !              |
       real :: eosl = 0.          !mm H2O        |maximum amount of evaporation that can occur
                                  !              |from soil profile
@@ -109,14 +110,14 @@
       if (pet > 1.0e-6) then
 
         !! compute potential plant evap for methods other that Penman-Monteith
-        !if (bsn_cc%pet /= 1) then
+        if (bsn_cc%pet /= 1) then
           if (pcom(j)%lai_sum <= 3.0) then
             ep_max = pcom(j)%lai_sum * pet / 3.
           else
             ep_max = pet
           end if
           if (ep_max < 0.) ep_max = 0.
-        !end if
+        end if
 
         !! compute potential soil evaporation
         cej = -5.e-5
@@ -149,9 +150,10 @@
           !! make sure maximum plant and soil ET doesn't exceed potential ET
           if (pet_day < es_max + ep_max) then
             es_max = pet_day - ep_max
+            et_max = es_max + ep_max
             if (pet < es_max + ep_max) then
-              es_max = pet * es_max / (es_max + ep_max)
-              ep_max = pet * ep_max / (es_max + ep_max)
+              es_max = pet * es_max / et_max
+              ep_max = pet * ep_max / et_max
             end if
           end if
         end if

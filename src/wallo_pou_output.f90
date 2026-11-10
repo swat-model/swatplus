@@ -26,26 +26,26 @@
       
       !! daily print      
       if (pco%water_allo%d == "y") then
-        write (3110,*) time%day, time%mo, time%day_mo, time%yrc, ipou, "POU ",         &
+        write (3410,*) time%day, time%mo, time%day_mo, time%yrc, ipou,                  &
             pou(ipou)%name, poud_met(ipou)%duty_tot%duty, poud_met(ipou)%duty_tot%deliv
         do ipod = 1, pou(ipou)%pods
-          write (3110,*) "                 POD ", ipod, poud_met(ipou)%pod(ipod)%duty, &
+          write (3418,*) time%day, time%mo, time%day_mo, time%yrc, ipod, poud_met(ipou)%pod(ipod)%duty, &
               poud_met(ipou)%pod(ipod)%deliv, poud_om(ipou)%pod(ipod)
         end do
         do ipor = 1, pou(ipou)%pors
-          write (3110,*) "                 POR ", ipor, poud_om(ipou)%por(ipor)
+          write (3426,*) time%day, time%mo, time%day_mo, time%yrc, ipor, poud_om(ipou)%por(ipor)
         end do
 
         if (pco%csvout == "y") then
-          write (3114,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ipou, "POU ",  &
+          write (3414,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ipou,          &
             time%yrc, ipou, pou(ipou)%name, poud_met(ipou)%duty_tot%duty,              &
             poud_met(ipou)%duty_tot%deliv
           do ipod = 1, pou(ipou)%pods
-            write (3114,'(*(G0.6,:","))') "     POD ", ipod, poud_met(ipou)%pod(ipod)%duty, &
+            write (3422,'(*(G0.6,:","))')  ipod, poud_met(ipou)%pod(ipod)%duty,        &
               poud_met(ipou)%pod(ipod)%deliv, poud_om(ipou)%pod(ipod)
           end do
           do ipor = 1, pou(ipou)%pors
-            write (3114,'(*(G0.6,:","))') " POR ", ipor, poud_om(ipou)%por(ipor)
+            write (3430,'(*(G0.6,:","))') ipor, poud_om(ipou)%por(ipor)
           end do
         end if
         
@@ -82,26 +82,26 @@
       
       if (time%end_mo == 1) then
       if (pco%water_allo%m == "y") then
-        write (3111,*)time%day, time%mo, time%day_mo, time%yrc, "POU ", ipou,          &
+        write (3411,*)time%day, time%mo, time%day_mo, time%yrc, ipou,          &
             pou(ipou)%name, poum_met(ipou)%duty_tot%duty, poum_met(ipou)%duty_tot%deliv
         do ipod = 1, pou(ipou)%pods
-          write (3111,*) "                 POD ", ipod, poum_met(ipou)%pod(ipod)%duty, &
+          write (3419,*) time%day, time%mo, time%day_mo, time%yrc, ipod, poum_met(ipou)%pod(ipod)%duty, &
               poum_met(ipou)%pod(ipod)%deliv, poum_om(ipou)%pod(ipod)
         end do
         do ipor = 1, pou(ipou)%pors
-          write (3111,*) "                 POR ", ipor, poum_om(ipou)%por(ipor)
+          write (3427,*) time%day, time%mo, time%day_mo, time%yrc, ipor, poum_om(ipou)%por(ipor)
         end do
 
         if (pco%csvout == "y") then
-          write (3115,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, "POU ", ipou,  &
+          write (3415,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ipou,          &
             time%yrc, ipou, pou(ipou)%name, poum_met(ipou)%duty_tot%duty,              &
             poum_met(ipou)%duty_tot%deliv
           do ipod = 1, pou(ipou)%pods
-            write (3115,'(*(G0.6,:","))') "     POD ", ipod, poum_met(ipou)%pod(ipod)%duty, &
+            write (3423,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ipod, poum_met(ipou)%pod(ipod)%duty, &
               poum_met(ipou)%pod(ipod)%deliv, poum_om(ipou)%pod(ipod)
           end do
           do ipor = 1, pou(ipou)%pors
-            write (3115,'(*(G0.6,:","))') "     POR ", ipor, poum_om(ipou)%por(ipor)
+            write (3431,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ipor, poum_om(ipou)%por(ipor)
           end do
         end if
       end if
@@ -140,26 +140,26 @@
       end do 
       
       if (pco%water_allo%y == "y") then
-        write (3112,*) time%day, time%mo, time%day_mo, time%yrc, "POU ", ipou,         &
+        write (3412,*) time%day, time%mo, time%day_mo, time%yrc, ipou,         &
             pou(ipou)%name, pouy_met(ipou)%duty_tot%duty, pouy_met(ipou)%duty_tot%deliv
         do ipod = 1, pou(ipou)%pods
-          write (3112,*) "                 POD ", ipod, pouy_met(ipou)%pod(ipod)%duty, &
+          write (3420,*) time%day, time%mo, time%day_mo, time%yrc, ipod, pouy_met(ipou)%pod(ipod)%duty, &
               pouy_met(ipou)%pod(ipod)%deliv, pouy_om(ipou)%pod(ipod)
         end do
         do ipor = 1, pou(ipou)%pors
-          write (3112,*) "                 POR ", ipor, pouy_om(ipou)%por(ipor)
+          write (3428,*) time%day, time%mo, time%day_mo, time%yrc, ipor, pouy_om(ipou)%por(ipor)
         end do
 
         if (pco%csvout == "y") then
-          write (3116,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, "POU ", ipou,  &
+          write (3416,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ipou,  &
             time%yrc, ipou, pou(ipou)%name, pouy_met(ipou)%duty_tot%duty,              &
             pouy_met(ipou)%duty_tot%deliv
           do ipod = 1, pou(ipou)%pods
-            write (3116,'(*(G0.6,:","))') "     POD ", ipod, pouy_met(ipou)%pod(ipod)%duty, &
+            write (3424,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ipod, pouy_met(ipou)%pod(ipod)%duty, &
               pouy_met(ipou)%pod(ipod)%deliv, pouy_om(ipou)%pod(ipod)
           end do
           do ipor = 1, pou(ipou)%pors
-            write (3116,'(*(G0.6,:","))') "     POR ", ipor, pouy_om(ipou)%por(ipor)
+            write (3432,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ipor, pouy_om(ipou)%por(ipor)
           end do
         end if
         
@@ -195,26 +195,26 @@
       end do 
       
       if (pco%water_allo%a == "y") then
-        write (3113,*) time%day, time%mo, time%day_mo, time%yrc, "POU ", ipou,         &
+        write (3413,*) time%day, time%mo, time%day_mo, time%yrc, ipou,         &
             pou(ipou)%name, poua_met(ipou)%duty_tot%duty, poua_met(ipou)%duty_tot%deliv
         do ipod = 1, pou(ipou)%pods
-          write (3113,*) "                 POD ", ipod, poua_met(ipou)%pod(ipod)%duty, &
+          write (3421,*) time%day, time%mo, time%day_mo, time%yrc, ipod, poua_met(ipou)%pod(ipod)%duty, &
               poua_met(ipou)%pod(ipod)%deliv, poua_om(ipou)%pod(ipod)
         end do
         do ipor = 1, pou(ipou)%pors
-          write (3113,*) "                 POR ", ipor, poua_om(ipou)%por(ipor)
+          write (3429,*) time%day, time%mo, time%day_mo, time%yrc, ipor, poua_om(ipou)%por(ipor)
         end do
 
         if (pco%csvout == "y") then
-          write (3117,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, "POU ", ipou,  &
+          write (3417,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, ipou,  &
             time%yrc, ipou, pou(ipou)%name, poua_met(ipou)%duty_tot%duty,              &
             poua_met(ipou)%duty_tot%deliv
           do ipod = 1, pou(ipou)%pods
-            write (3117,'(*(G0.6,:","))') "     POD ", ipod, poua_met(ipou)%pod(ipod)%duty, &
+            write (3425,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ipod, poua_met(ipou)%pod(ipod)%duty, &
               poua_met(ipou)%pod(ipod)%deliv, poua_om(ipou)%pod(ipod)
           end do
           do ipor = 1, pou(ipou)%pors
-            write (3117,'(*(G0.6,:","))') "     POR ", ipor, poua_om(ipou)%por(ipor)
+            write (3433,'(*(G0.6,:","))') time%day, time%mo, time%day_mo, time%yrc, ipor, poua_om(ipou)%por(ipor)
           end do
         end if
       end if

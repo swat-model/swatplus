@@ -59,6 +59,7 @@
         
         do idb = 1, db_mx%ch_lte
           read (1,*,iostat=eof) sd_chd(idb)
+          !sd_chd(idb)%chn = 0.05   !!jga
           if (eof < 0) exit
         end do
 

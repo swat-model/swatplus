@@ -33,7 +33,7 @@
       implicit none
       
       external :: cn2_init, cs_fert, curno, hru_fr_change, hru_lum_init, mgt_harvbiomass, mgt_harvgrain, &
-                  mgt_harvresidue, mgt_harvtuber, mgt_killop, mgt_newtillmix, mgt_newtillmix_wet, &
+                  mgt_harvresidue, mgt_harvtuber, mgt_killop, mgt_newtillmix_wet, &
                   mgt_transplant, pest_apply, pl_burnop, pl_fert, pl_fert_wet, pl_graze, pl_manure, &
                   plant_init, salt_fert, structure_set_parms, wet_initial, chg_par, mgt_newtillmix_cswat1, &
                   mgt_newtillmix_cswat0
@@ -199,9 +199,11 @@
             
           !irrigation demand - water allocation action - only irrigates if adequate water is available
           case ("irr_dmd")
+            j = d_tbl%act(iac)%ob_num
+            if (j == 0) j = ob_cur
             ipou = d_tbl%act(iac)%ob_num
             !! set to total irrigation demand calculated in wallo_start_day
-            dmd_m3 = dmd_m3 + pou(ipou)%demand
+            dmd_m3 = dmd_m3 + pou(j)%demand
               
           ! set the demand from a reservoir
           case ("fill_res")

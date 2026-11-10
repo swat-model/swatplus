@@ -31,37 +31,51 @@
         !! beginning of temperature based perennial dormant period - above ground senescence
         if (pldb(idp)%typ == "perennial") then
           pcom(j)%plcur(ipl)%idorm = "y"
-          !! add dead stem mass to residue pool
-          rto = 1. !***jga  pldb(idp)%bm_dieoff
-          !! lower lai by same ratio
-          lai_init = pcom(j)%plg(ipl)%lai
-          pcom(j)%plg(ipl)%lai = rto * lai_init
-          !! compute leaf biomass drop
-          leaf_drop%m = rto * pl_mass(j)%leaf(ipl)%m
-          leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
-          leaf_drop%n = max (0., leaf_drop%n)
-          leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
-          leaf_drop%p = max (0., leaf_drop%p)
-          !! add all seed/fruit mass to residue pool
-          seed_drop = pl_mass(j)%seed(ipl)
-          abgr_drop = stem_drop + leaf_drop + seed_drop
-
-          !! add all seed/fruit mass to residue pool
-          pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - abgr_drop
-          if (pl_mass(j)%tot_com%m < 0.) then
-            pl_mass(j)%tot_com%m = 0.
-          end if
-          pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - abgr_drop
-          pl_mass(j)%stem(ipl) = pl_mass(j)%stem(ipl) - stem_drop
-          pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
-          pl_mass(j)%seed(ipl) = plt_mass_z
           
-          pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + abgr_drop
-          pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + abgr_drop
+          !! subtract seed/fruit mass from pools
+          seed_drop = pl_mass(j)%seed(ipl)
+          pl_mass(j)%seed(ipl) = plt_mass_z
+          pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - seed_drop
+          pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - seed_drop
+          pl_mass(j)%ab_gr_com = pl_mass(j)%ab_gr_com - seed_drop
+          pl_mass(j)%tot_com = pl_mass(j)%tot_com - seed_drop
+          
+          !! add seed/fruit mass to residue pool
+          pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + seed_drop
+          pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + seed_drop
           
           pcom(j)%plcur(ipl)%idorm = "y"
           pcom(j)%plcur(ipl)%phuacc = 0.
           pcom(j)%plstr(ipl)%strsw = 1.
+        end if   ! beginning of dormancy for perennial
+        
+        !! beginning of temperature based perennial dormant period - above ground senescence
+        if (pldb(idp)%typ == "herb_perennial") then
+          pcom(j)%plcur(ipl)%idorm = "y"
+          
+          !! all above ground biomass dies off - add to residue pool
+          !! 60% of n and p in above ground biomass is translocated to roots, 40% goes to residue pool
+          pl_mass(j)%root(ipl)%n = pl_mass(j)%root(ipl)%n + 0.6 * pl_mass(j)%ab_gr(ipl)%n
+          pl_mass(j)%root_com%n = pl_mass(j)%root_com%n + 0.6 * pl_mass(j)%ab_gr(ipl)%n
+          pl_mass(j)%root(ipl)%p = pl_mass(j)%root(ipl)%p + 0.6 * pl_mass(j)%ab_gr(ipl)%p
+          pl_mass(j)%root_com%p = pl_mass(j)%root_com%p + 0.6 * pl_mass(j)%ab_gr(ipl)%p
+          
+          !! 40% of n and p in above ground biomass goes to residue pool
+          pl_mass(j)%abg_rsd(ipl)%n = pl_mass(j)%abg_rsd(ipl)%n + 0.4 * pl_mass(j)%ab_gr(ipl)%n
+          pl_mass(j)%abg_rsd_tot%n = pl_mass(j)%abg_rsd_tot%n + 0.4 * pl_mass(j)%ab_gr(ipl)%n
+          pl_mass(j)%abg_rsd(ipl)%p = pl_mass(j)%abg_rsd(ipl)%p + 0.4 * pl_mass(j)%ab_gr(ipl)%p
+          pl_mass(j)%abg_rsd_tot%p = pl_mass(j)%abg_rsd_tot%p + 0.4 * pl_mass(j)%ab_gr(ipl)%p
+          
+          !! 100% of m and c in above ground biomass goes to residue pool
+          pl_mass(j)%abg_rsd(ipl)%m = pl_mass(j)%abg_rsd(ipl)%m + pl_mass(j)%ab_gr(ipl)%m
+          pl_mass(j)%abg_rsd_tot%m = pl_mass(j)%abg_rsd_tot%m + pl_mass(j)%ab_gr(ipl)%m
+          pl_mass(j)%abg_rsd(ipl)%c = pl_mass(j)%abg_rsd(ipl)%c + pl_mass(j)%ab_gr(ipl)%c
+          pl_mass(j)%abg_rsd_tot%c = pl_mass(j)%abg_rsd_tot%c + pl_mass(j)%ab_gr(ipl)%c
+          
+          pcom(j)%plcur(ipl)%idorm = "y"
+          pcom(j)%plcur(ipl)%phuacc = 0.
+          pcom(j)%plstr(ipl)%strsw = 1.
+          pcom(j)%plg(ipl)%lai = 0.
         end if   ! beginning of dormancy for perennial
 
         !! beginning of cool season annual dormant period
@@ -77,7 +91,7 @@
       !! check if end of dormant period
       if (pcom(j)%plcur(ipl)%idorm == "y" .and. wst(iwst)%weat%daylength - dormhr(j) >=   &
                                                                 wgn_pms(iwgn)%daylmn) then
-        if (pldb(idp)%typ == "perennial") then
+        if (pldb(idp)%typ == "perennial" .or. pldb(idp)%typ == "herb_perennial") then
           !! end of perennial dormant period
           pcom(j)%plcur(ipl)%idorm = "n"
           pcom(j)%plcur(ipl)%phuacc = 0.

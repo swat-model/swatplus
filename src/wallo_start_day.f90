@@ -154,7 +154,7 @@
           id = pou(ipou)%dtbl_mx_num
           d_tbl => dtbl_flo(id)
           call conditions (j, id)
-          call actions (j, iob, id)
+          call actions (ipou, iob, id)
           !! reset demand or duty for transfer object
           pou(ipou)%demand = dmd_m3
         end if

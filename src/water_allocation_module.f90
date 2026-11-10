@@ -334,5 +334,147 @@
     character (len=15) :: temp   =  "               "        !! deg c        |temperature   
   end type wallo_use_header_units
   type (wallo_use_header_units) :: wallo_use_hdr_units 
+     
+  !! wallo MET headers
+      type wallo_met_header       
+        character(len=11) :: day      =   "       jday"
+        character(len=12) :: mo       =   "         mon"
+        character(len=12) :: day_mo   =   "         day"
+        character(len=12) :: yrc      =   "          yr" 
+        character(len=12) :: ipou     =   "        ipou"      
+        character(len=17) :: name     =   "     name        "                                           
+        character(len=17) :: duty     =   "             duty"
+        character(len=17) :: deliv    =   "            deliv"
+      end type wallo_met_header
+      type (wallo_met_header) :: wallo_met_hdr
 
+      type wallo_met_header_units 
+        character(len=11) :: day      =   "           "
+        character(len=12) :: mo       =   "           "
+        character(len=12) :: day_mo   =   "           "
+        character(len=12) :: yrc      =   "           " 
+        character(len=12) :: ipou     =   "           "      
+        character(len=17) :: name     =   "                 " 
+        character(len=17) :: duty     =   "             ha-m"
+        character(len=17) :: deliv    =   "            ha-m "    
+     end type wallo_met_header_units
+     type (wallo_met_header_units) :: wallo_met_hdr_units 
+     !! wallo MET headers
+     
+     !! wallo POU POD headers
+      type wallo_poupod_header       
+        character(len=11) :: day      =   "       jday"
+        character(len=12) :: mo       =   "         mon"
+        character(len=12) :: day_mo   =   "         day"
+        character(len=12) :: yrc      =   "          yr" 
+        character(len=12) :: ipod     =   "        ipod"                                                 
+        character(len=17) :: duty     =   "        duty     "
+        character(len=17) :: deliv    =   "       deliv     "          
+        character (len=15) :: flo     =   "    flo          "        !! ha-m         |volume of water
+        character (len=15) :: sed     =   "    sed          "        !! metric tons  |sediment
+        character (len=15) :: orgn    =   "    orgn         "        !! kg N         |organic N
+        character (len=15) :: sedp    =   "    sedp         "        !! kg P         |organic P
+        character (len=15) :: no3     =   "    no3          "        !! kg N         |NO3-N
+        character (len=15) :: solp    =   "    solp         "        !! kg P         |mineral (soluble P)
+        character (len=15) :: chla    =   "    chla         "        !! kg           |chlorophyll-a
+        character (len=15) :: nh3     =   "    nh3          "        !! kg N         |NH3
+        character (len=15) :: no2     =   "    no2          "        !! kg N         |NO2
+        character (len=15) :: cbod    =   "    cbod         "        !! kg           |carbonaceous biological oxygen demand
+        character (len=15) :: dox     =   "    dox          "        !! kg           |dissolved oxygen
+        character (len=15) :: san     =   "    san          "        !! tons         |detached sand
+        character (len=15) :: sil     =   "    sil          "        !! tons         |detached silt
+        character (len=15) :: cla     =   "    cla          "        !! tons         |detached clay
+        character (len=15) :: sag     =   "    sag          "        !! tons         |detached small ag
+        character (len=15) :: lag     =   "    lag          "        !! tons         |detached large ag
+        character (len=15) :: grv     =   "    grv          "        !! tons         |gravel
+        character (len=15) :: temp    =   "    null         "        !! deg c        |temperature
+      end type wallo_poupod_header
+      type (wallo_poupod_header) :: wallo_poupod_hdr
+
+      type wallo_poupod_header_units 
+        character(len=11) :: day      =   "           "
+        character(len=12) :: mo       =   "           "
+        character(len=12) :: day_mo   =   "           "
+        character(len=12) :: yrc      =   "           " 
+        character(len=12) :: ipod     =   "           "         
+        character(len=17) :: duty     =   "        ha-m     "
+        character(len=17) :: deliv    =   "        ha-m     "        
+        character (len=15) :: flo    =  "   m^3/s           "        !! m^3/s        |volume of water
+        character (len=15) :: sed    =  "   tons            "        !! metric tons  |sediment
+        character (len=15) :: orgn   =  "    kgN            "        !! kg N         |organic N
+        character (len=15) :: sedp   =  "    kgP            "        !! kg P         |organic P
+        character (len=15) :: no3    =  "    kgN            "        !! kg N         |NO3-N
+        character (len=15) :: solp   =  "    kgP            "        !! kg P         |mineral (soluble P)
+        character (len=15) :: chla   =  "     kg            "        !! kg           |chlorophyll-a
+        character (len=15) :: nh3    =  "    kgN            "        !! kg N         |NH3
+        character (len=15) :: no2    =  "    kgN            "        !! kg N         |NO2
+        character (len=15) :: cbod   =  "    kg             "        !! kg           |carbonaceous biological oxygen demand
+        character (len=15) :: dox    =  "    kg             "        !! kg           |dissolved oxygen
+        character (len=15) :: san    =  "   tons            "        !! tons         |detached sand
+        character (len=15) :: sil    =  "   tons            "        !! tons         |detached silt
+        character (len=15) :: cla    =  "   tons            "        !! tons         |detached clay
+        character (len=15) :: sag    =  "   tons            "        !! tons         |detached small ag
+        character (len=15) :: lag    =  "   tons            "        !! tons         |detached large ag
+        character (len=15) :: grv    =  "   tons            "        !! tons         |gravel
+        character (len=15) :: temp   =  "                   "        !! deg c        |temperature   
+     end type wallo_poupod_header_units
+     type (wallo_poupod_header_units) :: wallo_poupod_hdr_units 
+
+     
+!! wallo POU PORS headers
+      type wallo_poupor_header       
+        character(len=11) :: day      =   "       jday"
+        character(len=12) :: mo       =   "         mon"
+        character(len=12) :: day_mo   =   "         day"
+        character(len=12) :: yrc      =   "          yr" 
+        character(len=12) :: ipor     =   "        ipor"       
+        character (len=15) :: flo     =   "      flo        "        !! ha-m         |volume of water
+        character (len=15) :: sed     =   "      sed        "        !! metric tons  |sediment
+        character (len=15) :: orgn    =   "      orgn       "        !! kg N         |organic N
+        character (len=15) :: sedp    =   "      sedp       "        !! kg P         |organic P
+        character (len=15) :: no3     =   "      no3        "        !! kg N         |NO3-N
+        character (len=15) :: solp    =   "      solp       "        !! kg P         |mineral (soluble P)
+        character (len=15) :: chla    =   "      chla       "        !! kg           |chlorophyll-a
+        character (len=15) :: nh3     =   "      nh3        "        !! kg N         |NH3
+        character (len=15) :: no2     =   "      no2        "        !! kg N         |NO2
+        character (len=15) :: cbod    =   "      cbod       "        !! kg           |carbonaceous biological oxygen demand
+        character (len=15) :: dox     =   "      dox        "        !! kg           |dissolved oxygen
+        character (len=15) :: san     =   "      san        "        !! tons         |detached sand
+        character (len=15) :: sil     =   "      sil        "        !! tons         |detached silt
+        character (len=15) :: cla     =   "      cla        "        !! tons         |detached clay
+        character (len=15) :: sag     =   "      sag        "        !! tons         |detached small ag
+        character (len=15) :: lag     =   "      lag        "        !! tons         |detached large ag
+        character (len=15) :: grv     =   "      grv        "        !! tons         |gravel
+        character (len=15) :: temp    =   "      null       "        !! deg c        |temperature
+      end type wallo_poupor_header
+      type (wallo_poupor_header) :: wallo_poupor_hdr
+
+      type wallo_poupor_header_units 
+        character(len=11) :: day      =   "           "
+        character(len=12) :: mo       =   "           "
+        character(len=12) :: day_mo   =   "           "
+        character(len=12) :: yrc      =   "           " 
+        character(len=12) :: ipor     =   "           "         
+        character (len=15) :: flo    =  "     m^3/s         "        !! m^3/s        |volume of water
+        character (len=15) :: sed    =  "     tons          "        !! metric tons  |sediment
+        character (len=15) :: orgn   =  "      kgN          "        !! kg N         |organic N
+        character (len=15) :: sedp   =  "      kgP          "        !! kg P         |organic P
+        character (len=15) :: no3    =  "      kgN          "        !! kg N         |NO3-N
+        character (len=15) :: solp   =  "      kgP          "        !! kg P         |mineral (soluble P)
+        character (len=15) :: chla   =  "       kg          "        !! kg           |chlorophyll-a
+        character (len=15) :: nh3    =  "      kgN          "        !! kg N         |NH3
+        character (len=15) :: no2    =  "      kgN          "        !! kg N         |NO2
+        character (len=15) :: cbod   =  "      kg           "        !! kg           |carbonaceous biological oxygen demand
+        character (len=15) :: dox    =  "      kg           "        !! kg           |dissolved oxygen
+        character (len=15) :: san    =  "     tons          "        !! tons         |detached sand
+        character (len=15) :: sil    =  "     tons          "        !! tons         |detached silt
+        character (len=15) :: cla    =  "     tons          "        !! tons         |detached clay
+        character (len=15) :: sag    =  "     tons          "        !! tons         |detached small ag
+        character (len=15) :: lag    =  "     tons          "        !! tons         |detached large ag
+        character (len=15) :: grv    =  "     tons          "        !! tons         |gravel
+        character (len=15) :: temp   =  "                   "        !! deg c        |temperature   
+     end type wallo_poupor_header_units
+     type (wallo_poupor_header_units) :: wallo_poupor_hdr_units 
+!! wallo POU POS headers
+     
     end module water_allocation_module

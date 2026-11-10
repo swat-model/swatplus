@@ -10,6 +10,7 @@
       integer, intent (inout) :: ipod       !point of diversion number
       integer :: ipou                       !place of use number
       integer :: ipous                      !counter for place of use number
+      integer :: ipou_seq                   !sequential counter for place of use number
       integer :: ipods                      !counter for point of diversion
       integer :: ipoud = 0                  !place of use counter for each POD
       integer :: ipodu = 0                  !point of diversion counter for each POU
@@ -19,14 +20,16 @@
       do ipous = 1, pod(ipod)%pous
         ipou = pod(ipod)%pou(ipous)%num
         ipods = pod(ipod)%pou(ipous)%pod_num
+        ipou_seq = ipous
         if (pou(ipou)%pod(ipods)%wdraw_cur < pou(ipou)%pod(ipods)%wdraw_max * 86400.) then
           wallo_comp = "n"
-          call wallo_withdraw (ipod, ipous)
+          call wallo_withdraw (ipod, ipou, ipou_seq)
         end if
       end do
         
       !! check if all PODs are finished for each POU
-      do ipou = 1, pod(ipod)%pous
+      do ipous = 1, pod(ipod)%pous
+        ipou = pod(ipod)%pou(ipous)%num
         pou(ipou)%fin = "y"
         do ipodu = 1, pou(ipou)%pods
           if (pou(ipou)%pod(ipodu)%fin == "n") then
@@ -45,7 +48,7 @@
               if (pou(ipou)%pod(ipodu)%comp == "y") then
                 if (pou(ipou)%pod(ipodu)%wdraw_cur < pou(ipou)%pod(ipodu)%wdraw_max * 86400.) then
                     wallo_comp = "y"
-                  call wallo_withdraw (ipodu, ipou)
+                  call wallo_withdraw (ipod, ipou, ipou_seq)
                 end if
               end if
             end do

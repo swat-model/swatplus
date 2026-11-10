@@ -1,4 +1,4 @@
-      subroutine wallo_withdraw (ipod, ipou)
+      subroutine wallo_withdraw (ipod, ipou, ipou_seq)
       
       use water_allocation_module
       use hydrograph_module
@@ -10,8 +10,9 @@
       
       implicit none 
 
-      integer, intent (in):: ipod         !point of diversion number
+      integer, intent (in) :: ipod        !point of diversion number
       integer, intent (in) :: ipou        !place of use number
+      integer, intent (in) :: ipou_seq    !sequential place of use number
       integer :: pod_num                  !point of diversion number for each place of use number (ipou)
       integer :: pou_num                  !place of use number for each point of diversion number (ipou)
       integer :: j = 0              !none       |source (delivery) object number
@@ -24,20 +25,19 @@
         
       !! POD (source) object number from POD object
       j = pod(ipod)%typ_num
+      !! POD number from delivery object, pou number from loop in wallo_control
+      pod_num = pod(ipod)%pou(ipou_seq)%pod_num
+      
       
       !! set the duty or compensation for the POD - if compensation, then duty is umet duty for the POU
       if (wallo_comp == "y") then
-        wdraw_max = pou(ipou)%pod(ipod)%duty - poud_met(ipou)%pod(ipod)%deliv
+        wdraw_max = pou(ipou)%pod(pod_num)%duty - poud_met(ipou)%pod(pod_num)%deliv
       else
-        wdraw_max = pou(ipou)%pod(ipod)%duty
+        wdraw_max = pou(ipou)%pod(pod_num)%duty
       end if
       
       !! zero out the withdrawal for the POD
       outflo_om = hz
-      
-      !! POD number from delivery object, pou number from loop in wallo_control
-      pod_num = pod(ipod)%pou(ipou)%pod_num
-      pou_num = pod(ipod)%pou(ipou)%num
       
       !! check minimum storage/flow limits and withdraw water from each POD
       select case (pod(ipod)%typ)
@@ -45,21 +45,21 @@
       !! unlimited source - unlimited water, no constituents, no minimum storage/flow limits
       case ("unl")
         outflo_om = hz
-        outflo_om%flo = pou(pou_num)%pod(pod_num)%frac * wdraw_max
+        outflo_om%flo = pou(ipou)%pod(pod_num)%frac * wdraw_max
         
       !! outside the basin source
       case ("osrc")
         !! check if withdrawal takes storage below the minimum
         if (osrc_om(j)%flo > 0.) then
           outflo_om = osrc_om(j)
-          outflo_om%flo = pou(pou_num)%pod(pod_num)%frac * osrc_om(j)%flo * 86400.  !m3/s to m3/d
+          outflo_om%flo = pou(ipou)%pod(pod_num)%frac * osrc_om(j)%flo * 86400.  !m3/s to m3/d
           !! convert concentration to mass
           call hyd_convert_conc_to_mass (outflo_om)
           osrc(j)%wdraw = osrc(j)%wdraw + osrc_om(j)%flo
         end if
       
       case ("wtow")
-        wtow_min = pou(pou_num)%pod(pod_num)%const_min * wtow_om_stor(j)%flo
+        wtow_min = pou(ipou)%pod(pod_num)%const_min * wtow_om_stor(j)%flo
         !! check if withdrawal takes storage below the minimum
         if (wtow_om_stor(j)%flo > wtow_min) then
           rto = wdraw_max / wtow_om_stor(j)%flo
@@ -71,9 +71,9 @@
          
       !! divert flowing water from channel source
       case ("cha")
-        !! cant compensate for channel flow
+        !! can't compensate for channel flow
         if (wallo_comp == "n") then
-          cha_min = pou(pou_num)%pod(pod_num)%const_min  !m3 = m3/s * 86400s/d
+          cha_min = pou(ipou)%pod(pod_num)%const_min  !m3 = m3/s * 86400s/d
           !! don't divert when flow is below the minimum - cha_min
           if (ht2%flo > cha_min) then
             rto = wdraw_max / ht2%flo
@@ -86,7 +86,7 @@
           
       !! canal source
       case ("can")
-        can_min = pou(pou_num)%pod(pod_num)%const_min * canal_om_stor(j)%flo
+        can_min = pou(ipou)%pod(pod_num)%const_min * canal_om_stor(j)%flo
         !! check if withdrawal takes storage below the minimum
         if (canal_om_stor(j)%flo >= can_min) then
           rto = wdraw_max / canal_om_stor(j)%flo
@@ -98,7 +98,7 @@
          
       !! reservoir source
       case ("res")
-        res_min = pou(pou_num)%pod(pod_num)%const_min * res_ob(j)%pvol
+        res_min = pou(ipou)%pod(pod_num)%const_min * res_ob(j)%pvol
         !! check if withdrawal takes storage below the minimum
         if (res(j)%flo > res_min) then
           rto = wdraw_max / res(j)%flo
@@ -110,7 +110,7 @@
          
       !! aquifer source
       case ("aqu") 
-        if (aqu_d(j)%dep_wt < pou(pou_num)%pod(pod_num)%const_min) then
+        if (aqu_d(j)%dep_wt < pou(ipou)%pod(pod_num)%const_min) then
           !! only have flow, no3, and minp(solp) for aquifer
           rto =  (wdraw_max / (10. * aqu_prm(j)%area_ha)) / aqu_d(j)%stor     !mm = m3/(10.*ha)
           rto = Min(1., rto)
@@ -129,19 +129,19 @@
       end select
       
       !! add to total flow delivered and om withdrawal for the POD
-      poud_om(pou_num)%pod(pod_num) = poud_om(pou_num)%pod(pod_num) + outflo_om
+      poud_om(ipou)%pod(pod_num) = poud_om(ipou)%pod(pod_num) + outflo_om
       
       !! reset annual maximum withdrawals if decision table isn't used
-      pou(pou_num)%pod(pod_num)%wdraw_cur = pou(pou_num)%pod(pod_num)%wdraw_cur + outflo_om%flo
+      pou(ipou)%pod(pod_num)%wdraw_cur = pou(ipou)%pod(pod_num)%wdraw_cur + outflo_om%flo
             
       !! POD is finished - sum total withdrawal for the POU
-      poud_om(pou_num)%pods = poud_om(pou_num)%pods + outflo_om
-      pou(pou_num)%pod(pod_num)%fin = "y"
+      poud_om(ipou)%pods = poud_om(ipou)%pods + outflo_om
+      pou(ipou)%pod(pod_num)%fin = "y"
       
       !! add to total flow delivered and om withdrawal for the POU
-      poud_met(pou_num)%pod(pod_num)%deliv = pou(pou_num)%pod(pod_num)%deliv + outflo_om%flo
-      poud_met(pou_num)%duty_tot%deliv = poud_met(pou_num)%duty_tot%deliv + outflo_om%flo
-      poud_om(pou_num)%pors = poud_om(pou_num)%pors + outflo_om
+      poud_met(ipou)%pod(pod_num)%deliv = pou(ipou)%pod(pod_num)%deliv + outflo_om%flo
+      poud_met(ipou)%duty_tot%deliv = poud_met(ipou)%duty_tot%deliv + outflo_om%flo
+      poud_om(ipou)%pors = poud_om(ipou)%pors + outflo_om
       
       !! add constituents withdrawn to total withdrawal for the POU
       

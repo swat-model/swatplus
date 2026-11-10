@@ -300,7 +300,7 @@
           pcom(j)%plg(ipl)%laimxfr = matur_frac / (matur_frac +     &
               Exp(plcp(idp)%leaf1 - plcp(idp)%leaf2 * matur_frac))
           if (pcomdb(icom)%pl(ipl)%igro == "y") then
-            pcom(j)%plg(ipl)%lai = pcomdb(icom)%pl(ipl)%lai
+            pcom(j)%plg(ipl)%lai = amin1 (pcomdb(icom)%pl(ipl)%lai, pldb(idp)%blai)
           else
             pcom(j)%plg(ipl)%lai = 0.
           end if

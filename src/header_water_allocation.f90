@@ -7,66 +7,192 @@
       
       implicit none 
 
-!!!  Water Allocation Output
+!!!  Water Allocation MET Output
       if (pco%water_allo%d == "y") then
-        call open_output_file(3110, "water_allo_day.txt", 1500)
-        write (3110,*) bsn%name, prog
-        write (3110,*) wallo_hdr
-        write (3110,*) wallo_hdr_units
-        write (9000,*) "WATER_ALLOCATION          water_allo_day.txt"
+        call open_output_file(3410, "wallo_met_day.txt", 1500)
+        write (3410,*) bsn%name, prog
+        write (3410,*) wallo_met_hdr
+        write (3410,*) wallo_met_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_met_day.txt"
         if (pco%csvout == "y") then
-          call open_output_file(3114, "water_allo_day.csv", 1500)
-          write (3114,*) bsn%name, prog
-          write (3114,'(*(G0.6,:,","))') wallo_hdr
-          write (3114,'(*(G0.6,:,","))') wallo_hdr_units
-          write (9000,*) "WATER_ALLOCATION          water_allo_day.csv"
+          call open_output_file(3414, "wallo_met_day.csv", 1500)
+          write (3414,*) bsn%name, prog
+          write (3414,'(*(G0.6,:,","))') wallo_met_hdr
+          write (3414,'(*(G0.6,:,","))') wallo_met_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_met_day.csv"
         end if
       endif
       
       if (pco%water_allo%m == "y") then  
-        call open_output_file(3111, "water_allo_mon.txt", 1500)
-        write (3111,*) bsn%name, prog
-        write (3111,*) wallo_hdr
-        write (3111,*) wallo_hdr_units
-        write (9000,*) "WATER_ALLOCATION          water_allo_mon.txt"
+        call open_output_file(3411, "wallo_met_mon.txt", 1500)
+        write (3411,*) bsn%name, prog
+        write (3411,*) wallo_met_hdr
+        write (3411,*) wallo_met_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_met_mon.txt"
         if (pco%csvout == "y") then
-          call open_output_file(3115, "water_allo_mon.csv", 1500)
-          write (3115,*) bsn%name, prog
-          write (3115,'(*(G0.6,:,","))') wallo_hdr
-          write (3115,'(*(G0.6,:,","))') wallo_hdr_units
-          write (9000,*) "WATER_ALLOCATION          water_allo_mon.csv"
+          call open_output_file(3415, "wallo_met_mon.csv", 1500)
+          write (3415,*) bsn%name, prog
+          write (3415,'(*(G0.6,:,","))') wallo_met_hdr
+          write (3415,'(*(G0.6,:,","))') wallo_met_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_met_mon.csv"
         end if
       end if
         
       if (pco%water_allo%y == "y") then
-        call open_output_file(3112, "water_allo_yr.txt", 1500)
-        write (3112,*) bsn%name, prog
-        write (3112,*) wallo_hdr
-        write (3112,*) wallo_hdr_units
-        write (9000,*) "WATER_ALLOCATION          water_allo_yr.txt"
+        call open_output_file(3412, "wallo_met_yr.txt", 1500)
+        write (3412,*) bsn%name, prog
+        write (3412,*) wallo_met_hdr
+        write (3412,*) wallo_met_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_met_yr.txt"
         if (pco%csvout == "y") then
-          call open_output_file(3116, "water_allo_yr.csv", 1500)
-          write (3116,*) bsn%name, prog
-          write (3116,'(*(G0.6,:,","))') wallo_hdr
-          write (3116,'(*(G0.6,:,","))') wallo_hdr_units
-          write (9000,*) "WATER_ALLOCATION          water_allo_yr.csv"
+          call open_output_file(3416, "wallo_met_yr.csv", 1500)
+          write (3416,*) bsn%name, prog
+          write (3416,'(*(G0.6,:,","))') wallo_met_hdr
+          write (3416,'(*(G0.6,:,","))') wallo_met_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_met_yr.csv"
         end if
       endif
       
       if (pco%water_allo%a == "y") then
-        call open_output_file(3113, "water_allo_aa.txt", 1500)
-        write (3113,*) bsn%name, prog
-        write (3113,*) wallo_hdr
-        write (3113,*) wallo_hdr_units
-        write (9000,*) "WATER_ALLOCATION          water_allo_aa.txt"
+        call open_output_file(3413, "wallo_met_aa.txt", 1500)
+        write (3413,*) bsn%name, prog
+        write (3413,*) wallo_met_hdr
+        write (3413,*) wallo_met_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_met_aa.txt"
         if (pco%csvout == "y") then
-          call open_output_file(3117, "water_allo_aa.csv", 1500)
-          write (3117,*) bsn%name, prog
-          write (3117,'(*(G0.6,:,","))') wallo_hdr
-          write (3117,'(*(G0.6,:,","))') wallo_hdr_units
-          write (9000,*) "WATER_ALLOCATION          water_allo_aa.csv"
+          call open_output_file(3417, "wallo_met_aa.csv", 1500)
+          write (3417,*) bsn%name, prog
+          write (3417,'(*(G0.6,:,","))') wallo_met_hdr
+          write (3417,'(*(G0.6,:,","))') wallo_met_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_met_aa.csv"
         end if
       end if
+!!!  Water Allocation MET Output
+      
+!!!  Water Allocation POU POD Output
+      if (pco%water_allo%d == "y") then
+        call open_output_file(3418, "wallo_pou_pods_day.txt", 1500)
+        write (3418,*) bsn%name, prog
+        write (3418,*) wallo_poupod_hdr
+        write (3418,*) wallo_poupod_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_day.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3422, "wallo_pou_pods_day.csv", 1500)
+          write (3422,*) bsn%name, prog
+          write (3422,'(*(G0.6,:,","))') wallo_poupod_hdr
+          write (3422,'(*(G0.6,:,","))') wallo_poupod_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_day.csv"
+        end if
+      endif
+      
+      if (pco%water_allo%m == "y") then  
+        call open_output_file(3419, "wallo_pou_pods_mon.txt", 1500)
+        write (3419,*) bsn%name, prog
+        write (3419,*) wallo_poupod_hdr
+        write (3419,*) wallo_poupod_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_mon.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3423, "wallo_pou_pods_mon.csv", 1500)
+          write (3423,*) bsn%name, prog
+          write (3423,'(*(G0.6,:,","))') wallo_poupod_hdr
+          write (3423,'(*(G0.6,:,","))') wallo_poupod_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_mon.csv"
+        end if
+      end if
+        
+      if (pco%water_allo%y == "y") then
+        call open_output_file(3420, "wallo_pou_pods_yr.txt", 1500)
+        write (3420,*) bsn%name, prog
+        write (3420,*) wallo_poupod_hdr
+        write (3420,*) wallo_poupod_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_yr.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3424, "wallo_pou_pods_yr.csv", 1500)
+          write (3424,*) bsn%name, prog
+          write (3424,'(*(G0.6,:,","))') wallo_poupod_hdr
+          write (3424,'(*(G0.6,:,","))') wallo_poupod_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_yr.csv"
+        end if
+      endif
+      
+      if (pco%water_allo%a == "y") then
+        call open_output_file(3421, "wallo_pou_pods_aa.txt", 1500)
+        write (3421,*) bsn%name, prog
+        write (3421,*) wallo_poupod_hdr
+        write (3421,*) wallo_poupod_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_aa.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3425, "wallo_pou_pods_aa.csv", 1500)
+          write (3425,*) bsn%name, prog
+          write (3425,'(*(G0.6,:,","))') wallo_poupod_hdr
+          write (3425,'(*(G0.6,:,","))') wallo_poupod_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pods_aa.csv"
+        end if
+      end if
+!!!  Water Allocation POU POD Output
+      
+!!!  Water Allocation POU POR Output
+      if (pco%water_allo%d == "y") then
+        call open_output_file(3426, "wallo_pou_pors_day.txt", 1500)
+        write (3426,*) bsn%name, prog
+        write (3426,*) wallo_poupor_hdr
+        write (3426,*) wallo_poupor_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_day.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3430, "wallo_pou_pors_day.csv", 1500)
+          write (3430,*) bsn%name, prog
+          write (3430,'(*(G0.6,:,","))') wallo_poupor_hdr
+          write (3430,'(*(G0.6,:,","))') wallo_poupor_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_day.csv"
+        end if
+      endif
+      
+      if (pco%water_allo%m == "y") then  
+        call open_output_file(3427, "wallo_pou_pors_mon.txt", 1500)
+        write (3427,*) bsn%name, prog
+        write (3427,*) wallo_poupor_hdr
+        write (3427,*) wallo_poupor_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_mon.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3431, "wallo_pou_pors_mon.csv", 1500)
+          write (3431,*) bsn%name, prog
+          write (3431,'(*(G0.6,:,","))') wallo_poupor_hdr
+          write (3431,'(*(G0.6,:,","))') wallo_poupor_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_mon.csv"
+        end if
+      end if
+        
+      if (pco%water_allo%y == "y") then
+        call open_output_file(3428, "wallo_pou_pors_yr.txt", 1500)
+        write (3428,*) bsn%name, prog
+        write (3428,*) wallo_poupor_hdr
+        write (3428,*) wallo_poupor_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_yr.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3432, "wallo_pou_pors_yr.csv", 1500)
+          write (3432,*) bsn%name, prog
+          write (3432,'(*(G0.6,:,","))') wallo_poupor_hdr
+          write (3432,'(*(G0.6,:,","))') wallo_poupor_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_yr.csv"
+        end if
+      endif
+      
+      if (pco%water_allo%a == "y") then
+        call open_output_file(3429, "wallo_pou_pors_aa.txt", 1500)
+        write (3429,*) bsn%name, prog
+        write (3429,*) wallo_poupor_hdr
+        write (3429,*) wallo_poupor_hdr_units
+        write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_aa.txt"
+        if (pco%csvout == "y") then
+          call open_output_file(3433, "wallo_pou_pod_aa.csv", 1500)
+          write (3433,*) bsn%name, prog
+          write (3433,'(*(G0.6,:,","))') wallo_poupor_hdr
+          write (3433,'(*(G0.6,:,","))') wallo_poupor_hdr_units
+          write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_aa.csv"
+        end if
+      end if
+!!!  Water Allocation POU POR Output
+     
       
 !!!  Water Allocation Use Output
       if (pco%water_allo%d == "y") then

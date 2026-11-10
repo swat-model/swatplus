@@ -125,6 +125,7 @@
         !! SWAT manual equation 2.3.3
         soil(j)%phys(k)%tmp = tlag * soil(j)%phys(k)%tmp + (1. - tlag) *       &
                       (df * (wgn_pms(iwgen)%tmp_an - soil(j)%tmp_srf) + soil(j)%tmp_srf)
+        
         xx = soil(j)%phys(k)%d
 
         ! Temperature correction for Onsite Septic systems

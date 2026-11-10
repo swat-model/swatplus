@@ -36,18 +36,6 @@
           lai_init = pcom(j)%plg(ipl)%lai
           rto = (1. - pcom(j)%plcur(ipl)%phuacc) / (1. - pcom(j)%plg(ipl)%dphu)
           pcom(j)%plg(ipl)%lai = pcom(j)%plg(ipl)%olai * rto ** pldb(idp)%dlai_rate
-          
-          !! compute leaf biomass drop
-          !if (lai_init > 1.e-6) then
-          !  lai_drop = (lai_init - pcom(j)%plg(ipl)%lai) / lai_init
-          !  lai_drop = max (0., lai_drop)
-          !  lai_drop = amin1 (1., lai_drop)
-          !  leaf_drop%m = lai_drop * pl_mass(j)%leaf(ipl)%m
-          !  leaf_drop%n = leaf_drop%m * pcom(j)%plm(ipl)%n_fr
-          !  leaf_drop%n = max (0., leaf_drop%n)
-          !  leaf_drop%p = leaf_drop%m * pcom(j)%plm(ipl)%p_fr
-          !  leaf_drop%p = max (0., leaf_drop%p)
-          !end if
         end if
       end if
       
@@ -65,9 +53,7 @@
           !! logistic decline rate - Strauch and Volk
           !pcom(j)%plg(ipl)%lai = (pcom(j)%plg(ipl)%olai - pldb(idp)%alai_min) /   &
           !      (1. + Exp((rto - .5) * (-12))) + pldb(idp)%alai_min
-          !if (j==1866) then
-          !write (2222, *) time%day, time%mo, time%yrc, j, pcom(j)%plg(ipl)%lai, pl_mass(j)%leaf(ipl)%m
-          !end if
+          
           !! compute leaf biomass drop
           if (lai_init > 0.05) then
             lai_drop = (lai_init - pcom(j)%plg(ipl)%lai) / lai_init
@@ -76,12 +62,13 @@
           end if
           lai_drop = max (0., lai_drop)
           lai_drop = amin1 (1., lai_drop)
-          !! forest -- total tree n_conc = 1.75%; leaf  = 2.25%, falling leaf = 50%*2.25% = 1.12% --> 1.12/1.75 = 0.68
+          !! total n_conc = 1.75%; leaf  = 2.25%, falling leaf = 40%*2.25% = 0.90% --> 0.90/1.75 = 0.51
+          !! 40% of n and p stay in the dropping leaves, 60% translocates to stem (woody biomass)
           leaf_drop%m = lai_drop * pl_mass(j)%leaf(ipl)%m
           leaf_drop%c = 0.42 * leaf_drop%m
-          leaf_drop%n = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%n_fr
+          leaf_drop%n = 0.51 * leaf_drop%m * pcom(j)%plm(ipl)%n_fr
           leaf_drop%n = max (0., leaf_drop%n)
-          leaf_drop%p = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%p_fr
+          leaf_drop%p = 0.51 * leaf_drop%m * pcom(j)%plm(ipl)%p_fr
           leaf_drop%p = max (0., leaf_drop%p)
         end if
       end if
@@ -123,6 +110,10 @@
       !! update plant and residue masses
       if (leaf_drop%m > 0.) then
         !! update individual masses
+        !! 60% of leaf drop n and p are translocated to stem (woody biomass)
+        pl_mass(j)%stem(ipl)%n = pl_mass(j)%stem(ipl)%n + 0.6 * leaf_drop%n
+        pl_mass(j)%stem(ipl)%p = pl_mass(j)%stem(ipl)%p + 0.6 * leaf_drop%p
+
         pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
         pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - leaf_drop
         pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - leaf_drop
@@ -132,9 +123,12 @@
         pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + leaf_drop
         
         !! update total community masses
-        pl_mass(j)%tot_com = pl_mass(j)%tot_com - leaf_drop
-        pl_mass(j)%ab_gr_com = pl_mass(j)%ab_gr_com - leaf_drop
+        pl_mass(j)%ab_gr_com%n = pl_mass(j)%ab_gr_com%n - 0.6 * leaf_drop%n
+        pl_mass(j)%ab_gr_com%p = pl_mass(j)%ab_gr_com%p - 0.6 * leaf_drop%p
+        pl_mass(j)%stem_com%n = pl_mass(j)%stem_com%n + 0.6 * leaf_drop%n
+        pl_mass(j)%stem_com%p = pl_mass(j)%stem_com%p + 0.6 * leaf_drop%p
         pl_mass(j)%leaf_com = pl_mass(j)%leaf_com - leaf_drop
+        pl_mass(j)%tot_com = pl_mass(j)%ab_gr_com + pl_mass(j)%root_com
         
         hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + leaf_drop%c
         hpc_d(j)%drop_c = hpc_d(j)%drop_c + leaf_drop%c

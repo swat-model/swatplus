@@ -24,7 +24,7 @@
         real :: chl = 0.            !km         |channel length
         real :: chn = 0.            !           |channel Manning's n
         real :: chk = 0.            !mm/h       |channel bottom conductivity
-        real :: bank_exp = 0.       !           |bank erosion exponent
+        real :: w_yr = 0.           !none       |average widths per year of bank erosion
         real :: cov = 0.            !0-1        |channel cover factor
         real :: sinu = 0.           !none       |sinuousity - ratio of channel length and straight line length
         real :: vcr_coef = 0.       !           |critical velocity coefficient
@@ -97,10 +97,7 @@
       type (channel_sediment_budget_output) :: ch_sed_budz, bch_sed_bud_d, bch_sed_bud_m, bch_sed_bud_y, bch_sed_bud_a
 
       type channel_morphology_output
-        integer :: num = 0          !           |number of channels in each order
-        real :: wid = 0.            !m          |averge channel width
-        real :: dep = 0.            !m          |average channel depth
-        real :: fp_km2 = 0.         !km2        |flood plain area of channel
+        integer :: ob_days = 0      !days       |days of overbank flow
         real :: ebank_t = 0.        !tons       |bank cutting  
         real :: ebtm_t = 0.         !tons       |bed down cutting
         real :: ebank_m = 0.        !m          |bank cutting - ave of all channels
@@ -179,17 +176,17 @@
         real :: chl = .1        !km         |channel length
         real :: chn = 0.        !           |channel Manning's n
         real :: chk = 0.        !mm/h       |channel bottom conductivity
-        real :: cov = 0.        !0-1        |channel cover factor
+        real :: cov = 0.        !none       |channel cover factor (0.8-bare, 1.0-grass, 1.16-shrub/mixed, 1.44-woody forest)
         real :: sinu = 0.       !none       |sinuousity - ratio of channel length and straight line length
-        real :: vcr_coef = 0.        !m/m        |critical velocity coefficient
-        real :: d50 = 0.
-        real :: ch_clay = 0.
-        real :: carbon = 0.
-        real :: ch_bd = 0.
-        real :: chss = 0.
-        real :: bankfull_flo = 0.
-        real :: fps = 0.
-        real :: fpn = 0.
+        real :: vcr_coef = 0.   !m/m        |critical velocity coefficient
+        real :: d50 = 0.        !mm         |channel bed median sediment size
+        real :: ch_clay = 0.    !%          |clay percent of bank and bed
+        real :: carbon = 0.     !%          |carbon percent of bank and bed
+        real :: ch_bd = 0.      !t/m3       |dry bulk density
+        real :: chss = 0.       !           |channel side slope
+        real :: bankfull_flo = 0. !none     |linear adjustment of bankfull flow rate
+        real :: fps = 0.        !m/m        |flood plain slope
+        real :: fpn = 0.        !           |flood plain Manning's n
         real :: n_conc = 0.         !mg/kg      |nitrogen concentration in channel bank
         real :: p_conc = 0.         !mg/kg      |phosphorus concentration in channel bank
         real :: p_bio = 0.          !frac       |fraction of p in bank that is bioavailable
@@ -205,18 +202,18 @@
         real :: bed_exp = 1.5       !mm         |bed erosion exponent
         real :: wash_bed_fr = 0.2   !frac       |fraction of bank erosion that is washload
         real :: hc_kh = 0.
-        real :: hc_hgt = 0.     !m          |headcut height
+        real :: hc_hgt = 0.         !m          |headcut height
         real :: hc_ini = 0.
-        real :: bank_exp = 0.       !           |bank erosion exponent
-        real :: shear_bnk = 0.  !0-1        |bank shear coefficient - fraction of bottom shear
-        real :: hc_erod = 0.    !           |headcut erodibility
-        real :: hc_co = 0.      !m/m        |proportionality coefficient for head cut
-        real :: hc_len = 0.     !m          |length of head cut
-        real :: in1_vol = 0.    !m3         |inflow during previous time step for Muskingum
-        real :: out1_vol = 0.   !m3         |outflow during previous time step for Muskingum
-        real :: stor_dis_01bf = 0.      !hr         |storage time constant at 0.1*bankfull
-        real :: stor_dis_bf = 0.        !hr         |storage time constant at bankfull
-        real :: fp_km2 = 0.             !km2        |flood plain area of channel
+        real :: w_yr = 0.           !none       |average widths per year of bank erosion
+        real :: shear_bnk = 0.      !0-1        |bank shear coefficient - fraction of bottom shear
+        real :: hc_erod = 0.        !           |headcut erodibility
+        real :: hc_co = 0.          !m/m        |proportionality coefficient for head cut
+        real :: hc_len = 0.         !m          |length of head cut
+        real :: in1_vol = 0.        !m3         |inflow during previous time step for Muskingum
+        real :: out1_vol = 0.       !m3         |outflow during previous time step for Muskingum
+        real :: stor_dis_01bf = 0.  !hr         |storage time constant at 0.1*bankfull
+        real :: stor_dis_bf = 0.    !hr         |storage time constant at bankfull
+        real :: fp_km2 = 0.         !km2        |flood plain area of channel
         type (muskingum_parameters) :: msk
         type (floodplain_parameters) :: fp
         real, dimension (:), allocatable :: kd      !           |aquatic mixing velocity (diffusion/dispersion)-using mol_wt
@@ -460,11 +457,10 @@
       type ch_bud      
           character(len=11) :: ich     = "        ich"
           character(len=16) :: name    =  " name          "
-          character(len=12) :: area    =  "        area"
+          character(len=12) :: ob_days =  "        days"
           character(len=16) :: chl     =  "            chl"          
           character(len=15) :: chw     =  "           chw"
           character(len=15) :: chd     =  "           chd"
-          character(len=16) :: num     =  "            num"
           character(len=16) :: fp_area =  "  fp_area      "
           character(len=16) :: w_yr    =  "   w_yr        "
           character(len=16) :: d_yr    =  "   d_yr        "
@@ -505,10 +501,7 @@
           character(len=12) :: day_mo     =  "        day "
           character(len=12) :: yrc        =  "         yr "
           character(len=12) :: iord       =  "        iord"
-          character(len=12) :: num        =  "         num"          
-          character(len=16) :: wid        =  "        wid     " 
-          character(len=16) :: dep        =  "        dep     " 
-          character(len=16) :: fp_km2     =  "    fp_km2      "
+          character(len=12) :: num        =  "         num"
           character(len=12) :: ebank_t    =  "   ebank_t      "          
           character(len=16) :: ebtm_t     =  "      ebtm_t    "
           character(len=16) :: ebank_m    =  "     ebank_m    "
@@ -524,10 +517,7 @@
           character(len=12) :: day_mo     =  "            "
           character(len=12) :: yrc        =  "            "
           character(len=12) :: iord       =  "            "
-          character(len=12) :: num        =  "            "          
-          character(len=16) :: wid        =  "          m     " 
-          character(len=16) :: dep        =  "          m     " 
-          character(len=16) :: fp_km2     =  "     km2        "
+          character(len=12) :: num        =  "            "
           character(len=12) :: ebank_t    =  "     tons       "          
           character(len=16) :: ebtm_t     =  "       tons     "
           character(len=16) :: ebank_m    =  "          m     "
@@ -546,8 +536,7 @@
           character(len=12) :: yrc        =  "         yr "
           character(len=12) :: ichan      =  "       ichan"
           character(len=20) :: ob         =  "                  ob"
-          character(len=20) :: obnam      =  "                name"        
-          character(len=14) :: num        =  "           num"
+          character(len=20) :: obnam      =  "                name"
           character(len=16) :: wid        =  "        wid     " 
           character(len=16) :: dep        =  "        dep     " 
           character(len=16) :: fp_km2     =  "    fp_km2      "
@@ -567,8 +556,7 @@
           character(len=12) :: yrc        =  "            "
           character(len=12) :: ichan      =  "            "
           character(len=20) :: ob         =  "                    "
-          character(len=20) :: obnam      =  "                    "        
-          character(len=14) :: num        =  "              "
+          character(len=20) :: obnam      =  "                    "
           character(len=16) :: wid        =  "          m     " 
           character(len=16) :: dep        =  "          m     " 
           character(len=16) :: fp_km2     =  "     km2        "
@@ -709,10 +697,7 @@
       type (channel_morphology_output),  intent (in) :: cho1
       type (channel_morphology_output),  intent (in) :: cho2
       type (channel_morphology_output) :: cho3
-       cho3%num = cho1%num + cho2%num
-       cho3%wid = cho1%wid + cho2%wid
-       cho3%dep = cho1%dep + cho2%dep
-       cho3%fp_km2 = cho1%fp_km2 + cho2%fp_km2
+       cho3%ob_days = cho2%ob_days + cho1%ob_days
        cho3%ebank_t = cho1%ebank_t + cho2%ebank_t
        cho3%ebtm_t = cho1%ebtm_t + cho2%ebtm_t
        cho3%ebank_m = cho1%ebank_m + cho2%ebank_m
@@ -725,10 +710,7 @@
         type (channel_morphology_output), intent (in) :: cho1
         real, intent (in) :: const
         type (channel_morphology_output) :: cho2
-        cho2%num = cho1%num
-        cho2%wid = cho1%wid / const
-        cho2%dep = cho1%dep / const
-        cho2%fp_km2 = cho1%fp_km2 / const
+        cho2%ob_days = cho1%ob_days / const
         cho2%ebank_t = cho1%ebank_t / const
         cho2%ebtm_t = cho1%ebtm_t / const
         cho2%ebank_m = cho1%ebank_m / const

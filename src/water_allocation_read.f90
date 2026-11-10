@@ -14,15 +14,17 @@
       
       character (len=80) :: titldum = ""!           |title of file
       character (len=80) :: header = "" !           |header of file
-      character (len=3) :: pp = "" !                |POD or POR
+      character (len=5) :: pp = "" !                |POD or POR
       integer :: eof = 0              !           |end of file
       integer :: imax = 0             !none       |determine max number for array (imax) and total number in file
       logical :: i_exist              !none       |check to determine if file exists
       
       integer :: i = 0                !none       |POU loop counter
-      integer :: ip = 0                !none       |POU loop counter
+      integer :: ip = 0               !none       |POU loop counter
       integer :: ipou = 0             !none       |POU number
       integer :: ipod = 0             !none       |POD number
+      integer :: ipod_num = 0         !none       |sequential POD number of POU
+      integer :: ipou_num = 0         !none       |sequential POU number of POD
       integer :: ipor = 0             !none       |POR number
       integer :: ipous = 0            !none       |number of POUs
       integer :: ipods = 0            !none       |number of PODs for each POU
@@ -218,7 +220,7 @@
           
           backspace (107)
           read (107,*,iostat=eof) pod(ipod)%num, pod(ipod)%name, pod(ipod)%typ, pod(ipod)%typ_num,           &
-            pod(ipod)%pous, (pod(ipod)%pou(ipou)%num, pod(ipod)%pou(ipou)%name, pod(ipod)%pou(ipou)%pod_num, &
+            pod(ipod)%pous, (pod(ipod)%pou(ipou)%num, pod(ipod)%pou(ipou)%name,  &
             pod(ipod)%pou(ipou)%typ, pod(ipod)%pou(ipou)%typ_num, pod(ipod)%pou(ipou)%right, ipou = 1, ipous)
           
           !! store the POD number for each POU object for use in water allocation calculations
@@ -252,5 +254,18 @@
       end if
       close(107)
 
+    !! determine sequential POD number in the POU
+    do ipod = 1, db_mx%wallo_pod
+      do ipou_num = 1, pod(ipod)%pous
+        ipou = pod(ipod)%pou(ipou_num)%num
+        do ipod_num = 1, pou(ipou)%pods
+          if (ipod == pou(ipou)%pod(ipod_num)%num) then
+            pod(ipod)%pou(ipou_num)%pod_num = ipod_num
+            exit
+          end if
+        end do
+      end do
+    end do
+              
     return
     end subroutine water_allocation_read

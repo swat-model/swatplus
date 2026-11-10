@@ -81,7 +81,7 @@
         sd_ch(i)%chn = sd_chd(idb)%chn
         if (sd_ch(i)%chn < .01) sd_ch(i)%chn = .01
         sd_ch(i)%chk = sd_chd(idb)%chk      
-        sd_ch(i)%bank_exp = sd_chd(idb)%bank_exp
+        sd_ch(i)%w_yr = sd_chd(idb)%w_yr
         sd_ch(i)%cov = sd_chd(idb)%cov
         sd_ch(i)%sinu = sd_chd(idb)%sinu
         if (sd_ch(i)%sinu < 1.05) sd_ch(i)%sinu = 1.05
