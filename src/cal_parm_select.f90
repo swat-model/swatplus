@@ -217,6 +217,7 @@
                          chg_typ, chg_val, absmin, absmax)
         !! define soil layer the drainage tile is in
         if (hru(ielem)%lumv%sdr_dep > 0) then
+          hru(ielem)%lumv%ldrain = 0
           do jj = 1, soil(ielem)%nly
             if (hru(ielem)%lumv%sdr_dep < soil(ielem)%phys(jj)%d) hru(ielem)%lumv%ldrain = jj
             if (hru(ielem)%lumv%sdr_dep < soil(ielem)%phys(jj)%d) exit
@@ -1069,7 +1070,9 @@
 
         case ("aquifer_delay")
           if(bsn_cc%gwflow == 1) then
-            gw_delay(ielem) = chg_par(gw_delay(ielem), chg_typ, chg_val, absmin, absmax)
+            !Calibrate the HRU delay in days, then update its recharge decay coefficient.
+            gw_delay_days(ielem) = chg_par(gw_delay_days(ielem), chg_typ, chg_val, absmin, absmax)
+            gw_delay(ielem) = Exp(-1./(gw_delay_days(ielem) + 1.e-6))
           endif
 
         case ("aquifer_exdp")
@@ -1087,7 +1090,7 @@
             gw_fp_K(ielem) = chg_par(gw_fp_K(ielem), chg_typ, chg_val, absmin, absmax)
           endif
 
-        !! gwflow channel parameters (object type "sdc", ielem = channel index)
+        !! gwflow channel parameters (object type "gwf_riv" or "sdc", ielem = channel index)
         case ("stream_K")
           if(bsn_cc%gwflow == 1) then
             do icell=1,gw_chan_info(ielem)%ncon
@@ -1102,8 +1105,9 @@
             enddo
           endif
 
+        !! single value for all channels (object type "gwf_sgl"; ielem==1 guard prevents compounding)
         case ("stream_bed")
-          if(bsn_cc%gwflow == 1) then
+          if(bsn_cc%gwflow == 1 .and. ielem == 1) then
             gw_bed_change = chg_par(gw_bed_change, chg_typ, chg_val, absmin, absmax)
           endif
 

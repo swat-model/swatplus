@@ -55,7 +55,7 @@
 !!    ~ ~ ~ ~ ~ ~ END SPECIFICATIONS ~ ~ ~ ~ ~ ~
 
       use time_module
-      use hru_module, only : hhqday, ihru, albday,                                      &
+      use hru_module, only : enratio, hhqday, ihru, albday,                             &
         bioday, bsprev, canev, ep_day, ep_max, es_day, fertn, fertp, grazn, grazp,      &
         hhsedy, inflpcp, latqrunon, ls_overq, lyrtile, qp_cms,                          &
         pet_day, qday, qtile, sepday, snoev, snofall, snomlt,                           &
@@ -68,7 +68,6 @@
       integer :: j = 0          !none          |HRU number
       integer :: ly = 0         !none          |counter
       real :: crk = 0.          !mm H2O        |percolation due to crack flow
-      real :: enratio = 0.      !none          |enrichment ratio calculated for day in HRU
       real :: etday = 0.        !mm H2O        |actual amount of evapotranspiration that 
                                 !              |occurs on day in HRU
       real :: over_flow = 0.    !              |

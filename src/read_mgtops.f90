@@ -99,6 +99,10 @@
               exit
             endif
           end do
+          if (sched(isched)%mgt_ops(iop)%op1 == 0) then
+            write (9001,*) " mgt schedule", isched, &
+                " op numb", iop, sched(isched)%mgt_ops(iop)%op_char, " not found in irr.ops database"
+          end if
 
         case ("fert")
           !xwalk fert name with fertilizer data base
@@ -108,6 +112,10 @@
               exit
             endif
           end do
+          if (sched(isched)%mgt_ops(iop)%op1 == 0) then
+            write (9001,*) " mgt schedule", isched, &
+                " op numb", iop, sched(isched)%mgt_ops(iop)%op_char, " not found in fertilizer.frt database"
+          end if
           !xwalk application type with chemical application data base
           do idb = 1, db_mx%chemapp_db
             if (sched(isched)%mgt_ops(iop)%op_plant == chemapp_db(idb)%name) then

@@ -42,11 +42,6 @@
           sed_ppm = Max (sed_ppm, wbody_prm%sed%nsed)
           !! update wetland sediment after settling
           wbody%sed = sed_ppm * wbody%flo / 1000000.
-          !! calculate sediment in the outflow and subtract from wetland
-          !! (ht2%flo today's outflow can be ~0/denormal -> guard the multiply)
-          ht2%sed = 0.
-          if (abs(ht2%flo) >= 1.e-30) ht2%sed = sed_ppm * ht2%flo / 1000000.
-          wbody%sed = Max(0.,wbody%sed - ht2%sed)
           
           !! assume all sand aggregates and gravel settles
           wbody%sil = 0.
@@ -57,9 +52,11 @@
           wbody%grv = 0.
         end if
 
-        !! compute sediment leaving reservoir - ppm -> t
-        !ht2%sed = sed_ppm * ht2%flo / 1000000.
-        !wbody%sed = wbody%sed - ht2%sed
+        !! compute sediment leaving reservoir - ppm -> t, above and at or below nsed, not more than is stored
+        !! (ht2%flo today's outflow can be ~0/denormal -> guard the multiply)
+        ht2%sed = 0.
+        if (abs(ht2%flo) >= 1.e-30) ht2%sed = Min(wbody%sed, sed_ppm * ht2%flo / 1000000.)
+        wbody%sed = Max(0., wbody%sed - ht2%sed)
 
       end if
 

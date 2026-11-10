@@ -60,8 +60,9 @@
             allocate (respst_m(ires)%pest(cs_db%num_pests))
             allocate (respst_y(ires)%pest(cs_db%num_pests))
             allocate (respst_a(ires)%pest(cs_db%num_pests))
-            allocate (res_water(ires)%path(cs_db%num_paths))
           end if 
+          !! outside the pesticide branch above, so a model with pathogens and no pesticide has it
+          allocate (res_water(ires)%path(cs_db%num_paths))
           allocate (res_benthic(ires)%path(cs_db%num_paths), source = 0.)
           allocate (res_water(ires)%hmet(cs_db%num_metals), source = 0.)
           allocate (res_benthic(ires)%hmet(cs_db%num_metals), source = 0.)

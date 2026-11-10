@@ -236,12 +236,13 @@
           end do
         end do
 
-        deallocate (sol_mass)    
-        deallocate (sol_msm)    
-        deallocate (sol_msn)    
-        deallocate (frac_dep)      
-        deallocate (mix_org%rsd)  
-    
     end if
+
+      deallocate (sol_mass)
+      deallocate (sol_msm)
+      deallocate (sol_msn)
+      deallocate (frac_dep)
+      deallocate (mix_org%rsd)
+
     return
     end subroutine mgt_newtillmix_cswat0

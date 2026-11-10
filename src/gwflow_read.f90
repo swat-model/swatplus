@@ -19,6 +19,7 @@
       use constituent_mass_module, only : cs_db
       use water_allocation_module, only : canal
       use utils, only : split_line
+      use basin_module, only : pco
 
       implicit none
 
@@ -258,6 +259,56 @@
         end select
       enddo
       close(in_gw)
+
+      !--- print.prt overrides: when gwflow entries are listed in print.prt, override gwflow.input flags ---
+      !(applied before any gwflow output file is opened)
+      if(pco%gwflow_wb%already_read_in) then
+        gwflag_day = 0; gwflag_mon = 0; gwflag_yr = 0; gwflag_aa = 0
+        if(pco%gwflow_wb%d == 'y') gwflag_day = 1
+        if(pco%gwflow_wb%m == 'y') gwflag_mon = 1
+        if(pco%gwflow_wb%y == 'y') gwflag_yr  = 1
+        if(pco%gwflow_wb%a == 'y') gwflag_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_wb overrides gwflow.input flags'
+      endif
+      !heat and solute balance output follow the water balance flags unless print.prt lists them
+      gwflag_heat_day = gwflag_day; gwflag_heat_yr = gwflag_yr; gwflag_heat_aa = gwflag_aa
+      gwflag_solute_day = gwflag_day; gwflag_solute_mon = gwflag_mon
+      gwflag_solute_yr = gwflag_yr; gwflag_solute_aa = gwflag_aa
+      if(pco%gwflow_obs%already_read_in) then
+        gwflag_obs_day = 0; gwflag_obs_mon = 0; gwflag_obs_yr = 0; gwflag_obs_aa = 0
+        if(pco%gwflow_obs%d == 'y') gwflag_obs_day = 1
+        if(pco%gwflow_obs%m == 'y') gwflag_obs_mon = 1
+        if(pco%gwflow_obs%y == 'y') gwflag_obs_yr  = 1
+        if(pco%gwflow_obs%a == 'y') gwflag_obs_aa  = 1
+        gwflag_obs = max(gwflag_obs_day, gwflag_obs_mon, gwflag_obs_yr, gwflag_obs_aa)
+        write(out_gw,*) '          print.prt gwflow_obs controls observation well output'
+      endif
+      if(pco%gwflow_pump%already_read_in) then
+        gwflag_pump = 0
+        if(pco%gwflow_pump%d == 'y' .or. pco%gwflow_pump%m == 'y' .or. &
+           pco%gwflow_pump%y == 'y' .or. pco%gwflow_pump%a == 'y') gwflag_pump = 1
+        write(out_gw,*) '          print.prt gwflow_pump controls HRU pumping output'
+      endif
+      if(pco%gwflow_heat%already_read_in) then
+        gwflag_heat_day = 0; gwflag_heat_yr = 0; gwflag_heat_aa = 0
+        if(pco%gwflow_heat%d == 'y') gwflag_heat_day = 1
+        if(pco%gwflow_heat%y == 'y') gwflag_heat_yr  = 1
+        if(pco%gwflow_heat%a == 'y') gwflag_heat_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_heat controls heat balance output'
+      endif
+      if(pco%gwflow_solute%already_read_in) then
+        gwflag_solute_day = 0; gwflag_solute_mon = 0; gwflag_solute_yr = 0; gwflag_solute_aa = 0
+        if(pco%gwflow_solute%d == 'y') gwflag_solute_day = 1
+        if(pco%gwflow_solute%m == 'y') gwflag_solute_mon = 1
+        if(pco%gwflow_solute%y == 'y') gwflag_solute_yr  = 1
+        if(pco%gwflow_solute%a == 'y') gwflag_solute_aa  = 1
+        write(out_gw,*) '          print.prt gwflow_solute controls solute balance output'
+      endif
+      if(pco%gwflow_flux%already_read_in) then
+        gwflag_flux = 0
+        if(pco%gwflow_flux%d == 'y' .or. pco%gwflow_flux%y == 'y') gwflag_flux = 1
+        write(out_gw,*) '          print.prt gwflow_flux controls canal/pond/tile/chan diagnostic output'
+      endif
 
       !structured uses the same 1..ncell id space as unstructured, so cell_id_list is the identity
       if(grid_type == "structured") then
@@ -567,37 +618,7 @@
         end select
       enddo
       close(in_gw)
-      !open file for writing out daily head values
-      if(gwflag_obs == 1) then
-        open(out_gwobs,file='gwflow_obs_day.txt')
-        write(out_gwobs,*) 'gwflow observation well daily output (-99 = not simulated)'
-        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-        open(out_gwobs_mon,file='gwflow_obs_mon.txt')
-        write(out_gwobs_mon,*) 'gwflow observation well monthly avg (-99 = not simulated)'
-        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_mon,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-        open(out_gwobs_yr,file='gwflow_obs_yr.txt')
-        write(out_gwobs_yr,*) 'gwflow observation well annual avg (-99 = not simulated)'
-        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_yr,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-        open(out_gwobs_aa,file='gwflow_obs_aa.txt')
-        write(out_gwobs_aa,*) 'gwflow observation well avg annual (-99 = not simulated)'
-        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
-          'jday','mon','day','yr','unit','gis_id','name', &
-          'head','wt_depth','temperature','no3','p'
-        write(out_gwobs_aa,'(4a6,2a8,a18,5a13)') &
-          '','','','','','','','m','m','degC','mg/L','mg/L'
-      endif
+      !(observation well output files are opened in gwflow_output_init)
       gw_output_index = 1
       !if structured grid, then convert cell ids
       if(grid_type == "structured") then
@@ -918,10 +939,12 @@
         enddo
         allocate(hru_pump_obs(num_hru_pump_obs))
         hru_pump_obs = 0.
-        open(out_hru_pump_obs,file='gwflow_cell_wb_ppag_obs_day.txt')
-        write(out_hru_pump_obs,*) 'Daily groundwater pumping (m3) for specified HRUs'
-        write(out_hru_pump_obs,*) 'Columns = HRUs (same order as in gwflow.hru_pump_observe)'
-        write(out_hru_pump_obs,*) 'Time(day)    Daily pumping (m3)'
+        if(gwflag_pump == 1) then
+          open(out_hru_pump_obs,file='gwflow_cell_wb_ppag_obs_day.txt')
+          write(out_hru_pump_obs,*) 'Daily groundwater pumping (m3) for specified HRUs'
+          write(out_hru_pump_obs,*) 'Columns = HRUs (same order as in gwflow.hru_pump_observe)'
+          write(out_hru_pump_obs,*) 'Time(day)    Daily pumping (m3)'
+        endif
       endif
 
       !groundwater pumping (specified) ------------------------------------------------------------
@@ -2175,18 +2198,21 @@
       write(out_gw,*) '     final preparations...'
       write(out_gw,*) '          map recharge delay to HRUs'
       allocate(gw_delay(sp_ob%hru))
+      allocate(gw_delay_days(sp_ob%hru))
       allocate(gw_rech(sp_ob%hru))
       sum = 0.
       do i=1,ncell
         sum = sum + delay(i)
       enddo
-      gw_delay = Exp(-1./((sum/(ncell)) + 1.e-6))
+      gw_delay_days = sum / ncell
+      gw_delay = Exp(-1./(gw_delay_days + 1.e-6))
       !assign value to HRU based on connected grid cells
       if(lsu_cells_link == 0) then !if LSU-cell connection: keep average of all grid cell values
         do k=1,sp_ob%hru
           do i=1,hru_num_cells(k)
             cell_num = hru_cells(k,i)
-            gw_delay(k) = Exp(-1./(delay(cell_num) + 1.e-6))
+            gw_delay_days(k) = delay(cell_num)
+            gw_delay(k) = Exp(-1./(gw_delay_days(k) + 1.e-6))
           enddo
         enddo
       endif
@@ -2320,20 +2346,23 @@
       !(channel observation cells: now the obs column of chancell.gw, handled with channel-cell
       ! processing above; no separate file)
 
-      !prepare hydrograph separation array
+      !prepare hydrograph separation array (daily output, written only when daily gwflow output is on)
       allocate(hydsep_flag(sp_ob%chandeg))
-      hydsep_flag = 1  !enable hydrograph separation output for all channels
+      hydsep_flag = 0
+      if(gwflag_day == 1) hydsep_flag = 1  !enable hydrograph separation output for all channels
       allocate(chan_hyd_sep(sp_ob%chandeg,6))
       chan_hyd_sep = 0.
-      open(out_hyd_sep,file='gwflow_chan_hydsep_day.txt')
-      write(out_hyd_sep,*) 'gwflow channel hydrograph separation (m3/sec)'
-      write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
-        'jday','mon','day','yr','unit','gis_id','name', &
-        'surf_runoff','lateral','gw_discharge','stream_seep', &
-        'satex_gw','satex_sw','tile_drain'
-      write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
-        '','','','','','','', &
-        'm3/s','m3/s','m3/s','m3/s','m3/s','m3/s','m3/s'
+      if(gwflag_day == 1) then
+        open(out_hyd_sep,file='gwflow_chan_hydsep_day.txt')
+        write(out_hyd_sep,*) 'gwflow channel hydrograph separation (m3/sec)'
+        write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
+          'jday','mon','day','yr','unit','gis_id','name', &
+          'surf_runoff','lateral','gw_discharge','stream_seep', &
+          'satex_gw','satex_sw','tile_drain'
+        write(out_hyd_sep,'(4a6,2a8,a18,7a13)') &
+          '','','','','','','', &
+          'm3/s','m3/s','m3/s','m3/s','m3/s','m3/s','m3/s'
+      endif
 
       !gwflow record file (skip line)
       write(out_gw,*)

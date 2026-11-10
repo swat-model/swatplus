@@ -128,8 +128,9 @@
           endif
             
           !! initial constituents !rtb cs
-          if(cs_db%num_cs > 0) then
-          do ictr = 1, db_mx%cs_ini
+          !! only a row initial.aqu_cs holds, and only the records cs_aqu.ini holds (db_mx%cs_ini counts cs_hru.ini's)
+          if(cs_db%num_cs > 0 .and. allocated(cs_aqu_ini) .and. iaq <= imax) then
+          do ictr = 1, size(cs_aqu_ini)
             if (aqu_init_dat_c_cs(iaq)%cs == cs_aqu_ini(ictr)%name) then
               !loop for constituents
               do ics = 1, cs_db%num_cs

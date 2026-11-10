@@ -23,10 +23,11 @@
           open (107,file=in_init%pest_soil)
           read (107,*,iostat=eof) titldum
           if (eof < 0) exit
+          !! the header is read once, as the reading pass below reads it
+          read (107,*,iostat=eof) header
+          if (eof < 0) exit
           imax = 0
           do while (eof == 0)
-            read (107,*,iostat=eof) header
-            if (eof < 0) exit
             read (107,*,iostat=eof) titldum     !name
             if (eof < 0) exit
             do ipest = 1, cs_db%num_pests

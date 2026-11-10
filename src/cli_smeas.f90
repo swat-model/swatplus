@@ -65,9 +65,9 @@
         
 !!!!!weather path code
        if (in_path_slr%slr == "null") then
-         open (108,file = slr(i)%filename)
+         open (108,file = slr(i)%filename, status='old')
        else
-        open (108,file = TRIM(ADJUSTL(in_path_slr%slr))//slr(i)%filename)
+        open (108,file = TRIM(ADJUSTL(in_path_slr%slr))//slr(i)%filename, status='old')
        endif
 !!!!!weather path code
         

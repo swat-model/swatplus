@@ -75,6 +75,7 @@
           end do
         end do
         
+        exit
       end do
       end if
       

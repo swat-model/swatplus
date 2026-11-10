@@ -96,6 +96,7 @@
         
           !! initialize org-min in reservoir
           init = res_init(i)%org_min
+          if (db_mx%om_water_init == 0) init = 0   !! no om_water.ini sets: start from the zero set
           res(ires) = om_init_water(init)
           call res_convert_mass (res(ires), res_ob(ires)%pvol)
         

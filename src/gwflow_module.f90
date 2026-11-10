@@ -11,9 +11,18 @@
       integer :: gwflag_yr = 0      !               !flag for writing yearly mass balance file
       integer :: gwflag_aa = 0      !               !flag for writing average annual mass balance file
       integer :: gwflag_obs = 1     !               !flag for writing observation well output (default on)
+      integer :: gwflag_obs_day = 1 !               !flag for writing daily observation well output
+      integer :: gwflag_obs_mon = 1 !               !flag for writing monthly observation well output
+      integer :: gwflag_obs_yr = 1  !               !flag for writing yearly observation well output
+      integer :: gwflag_obs_aa = 1  !               !flag for writing average annual observation well output
       integer :: gwflag_pump = 1    !               !flag for writing HRU pumping output (default on)
-      integer :: gwflag_heat = 1    !               !flag for writing heat balance output (default on if heat active)
-      integer :: gwflag_solute = 1  !               !flag for writing solute balance output (default on if solute active)
+      integer :: gwflag_heat_day = 1    !           !flag for writing daily heat balance output (heat active only)
+      integer :: gwflag_heat_yr = 1     !           !flag for writing yearly heat balance output (heat active only)
+      integer :: gwflag_heat_aa = 1     !           !flag for writing average annual heat balance output (heat active only)
+      integer :: gwflag_solute_day = 1  !           !flag for writing daily solute balance output (solutes active only)
+      integer :: gwflag_solute_mon = 1  !           !flag for writing monthly solute balance output (solutes active only)
+      integer :: gwflag_solute_yr = 1   !           !flag for writing yearly solute balance output (solutes active only)
+      integer :: gwflag_solute_aa = 1   !           !flag for writing average annual solute balance output (solutes active only)
       integer :: gwflag_flux = 1    !               !flag for writing specialty diagnostic output (default on)
       integer :: bc_type = 0        !               !boundary conditions (1=constant head; 2=no-flow)
       integer :: conn_type = 0      !               !recharge/ET connections (1=HRU; 2=LSU)
@@ -164,7 +173,8 @@
       integer, dimension (:), allocatable :: gw_bound_near  !           |nearest active cell to each boundary cell
       real, dimension (:), allocatable :: gw_bound_dist     !m          |distance of nearest active cell to each boundary cell
       real, dimension (:), allocatable :: gwflow_perc       !     |      
-      real, dimension (:), allocatable :: gw_delay          !           |
+      real, dimension (:), allocatable :: gw_delay          !           |HRU recharge decay coefficient
+      real, dimension (:), allocatable :: gw_delay_days     !days       |HRU recharge delay before conversion
       real, dimension (:), allocatable :: gw_rech           !           |
       real, dimension (:), allocatable :: delay             !           |
             

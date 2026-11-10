@@ -1,4 +1,19 @@
       subroutine ch_temp
+      ! Stream-temperature module based on the Ficklin et al. (2012) heat-exchange
+      ! formulation, with a shade-factor parameter to represent riparian vegetation
+      ! effects on incoming solar radiation. Original SWAT implementation by Efrain
+      ! Noa-Yarasca et al. (2023); SWAT+ implementation by Jeff Arnold.
+      !
+      ! References:
+      ! Ficklin et al. (2012). Water Resources Research, 48.
+      ! https://doi.org/10.1029/2011WR011256
+      !
+      ! Noa-Yarasca et al. (2023). Hydrology and Earth System Sciences, 27, 739–759.
+      ! https://doi.org/10.5194/hess-27-739-2023
+      !
+      ! Peters et al. (2025). Hydrological Processes, 39.
+      ! https://doi.org/10.1002/hyp.70059
+      !
       
       use basin_module
       use input_file_module
@@ -124,11 +139,8 @@
       ru_count = 0
       ru_index = 1
 
-      do in = 1, size(ob(iob)%obtyp_in)
-          if (allocated(ob(iob)%obtyp_in) .and. ob(iob)%obtyp_in(in) == "ru") then
-              ru_count = count(ob(iob)%obtyp_in == "ru")
-          end if
-      end do
+      !! obtyp_in is allocated only for an object that receives something (hyd_connect)
+      if (allocated(ob(iob)%obtyp_in)) ru_count = count(ob(iob)%obtyp_in == "ru")
       
       if (allocated(ruid_array)) deallocate(ruid_array)
       allocate(ruid_array(ru_count))
@@ -142,9 +154,16 @@
       ht1 = ob(iob)%hd(1)
       do in = 1, ob(iob)%rcv_tot
           if (ob(iob)%obtyp_in(in) == "chandeg") then
-              trib1_temp = ob(iob)%hin_d(in-1)%temp
+              ! hin_d is allocated 1..rcv_tot, so the first inflow (in = 1) has no previous
+              ! hydrograph: reading hin_d(0) is out of bounds
+              if (in > 1) then
+                trib1_temp = ob(iob)%hin_d(in-1)%temp
+                trib1_flo = ob(iob)%hin_d(in-1)%flo/86400
+              else
+                trib1_temp = 0.
+                trib1_flo = 0.
+              end if
               trib2_temp = ob(iob)%hin_d(in)%temp
-              trib1_flo = ob(iob)%hin_d(in-1)%flo/86400
               trib2_flo = ob(iob)%hin_d(in)%flo/86400
               trib_flo = trib1_flo + trib2_flo
               if (trib_flo < 1e-6) then             ! if it has tributaries but the flows are 0, estimate from old equation (to avoid division by 0)

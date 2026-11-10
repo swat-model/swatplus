@@ -127,7 +127,7 @@
                     endif
                   end do
                 
-                  case ("till")
+                  case ("till", "tillage")
                   do idb = 1, db_mx%tillparm
                     if (dtbl_lum(i)%act(iac)%option == tilldb(idb)%tillnm) then
                       dtbl_lum(i)%act_typ(iac) = idb
@@ -142,6 +142,11 @@
                       exit
                     end if
                   end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0 .and. dtbl_lum(i)%act(iac)%name /= "ponding" .and.  &
+                      dtbl_lum(i)%act(iac)%file_pointer == "unlim") then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in irr.ops database"
+                  end if
                        
                 case ("irr_wallo")
                   do idb = 1, db_mx%irrop_db
@@ -158,6 +163,10 @@
                       exit
                     end if
                   end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0) then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in irr.ops database"
+                  end if
                   
                 case ("fertilize")
                   !xwalk fert name with fertilizer data base
@@ -167,6 +176,10 @@
                       exit
                     endif
                   end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0) then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in fertilizer.frt database"
+                  end if
                   !xwalk application type with chemical application data base
                   do idb = 1, db_mx%chemapp_db
                     if (dtbl_lum(i)%act(iac)%file_pointer == chemapp_db(idb)%name) then
@@ -183,6 +196,10 @@
                       exit
                     endif
                   end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0) then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in fertilizer.frt database"
+                  end if
                   !xwalk application type with chemical application data base
                   do idb = 1, db_mx%chemapp_db
                     if (dtbl_lum(i)%act(iac)%file_pointer == chemapp_db(idb)%name) then
@@ -201,6 +218,26 @@
                     endif
                   end do
                                       
+                case ("manure")
+                  !xwalk manure name with manure data base
+                  do idb = 1, db_mx%manureparm
+                    if (dtbl_lum(i)%act(iac)%option == manure_db(idb)%name) then
+                      dtbl_lum(i)%act_typ(iac) = idb
+                      exit
+                    endif
+                  end do
+                  if (dtbl_lum(i)%act_typ(iac) == 0) then
+                    write (9001,*) " decision table ", dtbl_lum(i)%name, " action", iac, " ", &
+                        dtbl_lum(i)%act(iac)%option, " not found in manure_db.frt database"
+                  end if
+                  !xwalk application type with chemical application data base
+                  do idb = 1, db_mx%chemapp_db
+                    if (dtbl_lum(i)%act(iac)%file_pointer == chemapp_db(idb)%name) then
+                      dtbl_lum(i)%act_app(iac) = idb
+                      exit
+                    endif
+                  end do
+
                 case ("pest_apply")
                   !xwalk fert name with fertilizer data base
                   do idb = 1, cs_db%num_pests

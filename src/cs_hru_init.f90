@@ -30,6 +30,8 @@
       npmx = cs_db%num_cs
       do ihru = 1, sp_ob%hru
         if (npmx > 0) then
+          !! cs_soil(ihru)%ly is allocated in pesticide_init, which runs only when the model has a pesticide
+          if (.not. allocated(cs_soil(ihru)%ly)) allocate (cs_soil(ihru)%ly(soil(ihru)%nly))
           do ly = 1, soil(ihru)%nly
             allocate (cs_soil(ihru)%ly(ly)%cs(npmx), source = 0.)
             allocate (cs_soil(ihru)%ly(ly)%csc(npmx), source = 0.)

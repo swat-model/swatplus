@@ -71,9 +71,9 @@
         
       ! weather path code
       if (in_path_pcp%pcp == "null") then 
-        open (108,file = pcp(i)%filename)
+        open (108,file = pcp(i)%filename, status='old')
       else
-        open (108,file = TRIM(ADJUSTL(in_path_pcp%pcp))//pcp(i)%filename)
+        open (108,file = TRIM(ADJUSTL(in_path_pcp%pcp))//pcp(i)%filename, status='old')
       endif
         ! weather path code       
         read (108,*,iostat=eof) titldum

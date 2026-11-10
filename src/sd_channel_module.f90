@@ -706,6 +706,7 @@
        cho3%fp_mm = cho1%fp_mm + cho2%fp_mm
       end function chsedbud_add
       
+      !! divides the summed amounts only - wid, dep and fp_km2 stay summed until chsedbud_ave
       function chsedbud_div (cho1,const) result (cho2)
         type (channel_morphology_output), intent (in) :: cho1
         real, intent (in) :: const
@@ -718,6 +719,29 @@
         cho2%fp_t = cho1%fp_t / const
         cho2%fp_mm = cho1%fp_mm / const
       end function chsedbud_div
+
+      !! converts summed morphology output to printed values
+      !! num is summed over channel days with flow (ch_morph is only set when a channel has inflow), so wid, dep and
+      !! fp_km2 divided by num are the average of one channel on the days it flowed;
+      !! ebank_m, ebtm_m and fp_mm are averaged over the nch channels, and num is printed as nch (0 if nothing flowed)
+      function chsedbud_ave (cho1, nch) result (cho2)
+        type (channel_morphology_output), intent (in) :: cho1
+        integer, intent (in) :: nch
+        type (channel_morphology_output) :: cho2
+        cho2 = cho1
+        cho2%num = 0
+        if (cho1%num > 0) then
+          cho2%num = nch
+          cho2%wid = cho1%wid / cho1%num
+          cho2%dep = cho1%dep / cho1%num
+          cho2%fp_km2 = cho1%fp_km2 / cho1%num
+        end if
+        if (nch > 0) then
+          cho2%ebank_m = cho1%ebank_m / nch
+          cho2%ebtm_m = cho1%ebtm_m / nch
+          cho2%fp_mm = cho1%fp_mm / nch
+        end if
+      end function chsedbud_ave
         
       function chsednut_add(cho1,cho2) result (cho3)
       type (channel_sediment_budget_output),  intent (in) :: cho1

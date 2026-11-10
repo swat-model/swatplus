@@ -274,6 +274,7 @@
          end do 
         end do
         close (107)
+        exit
       end do
       end if     
       
