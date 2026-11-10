@@ -14,6 +14,7 @@
       integer :: i = 0                    !       |cell counter
       integer :: k = 0                    !       |connected-cell counter
       integer :: cell_id = 0              !       |id of connected cell
+			integer :: dum
       real :: heat_adv = 0.               !J/day  |total advective heat flux for current cell
       real :: cell_adv = 0.               !J/day  |advective heat flux from one connection
       real :: heat_dsp = 0.               !J/day  |total dispersive heat flux for current cell
@@ -31,11 +32,12 @@
       real :: conn_length = 0.            !m      |connection length
       real :: face_sat = 0.               !m      |saturated thickness at interface
       real :: flow_area = 0.              !m2     |cross-section area at interface
+			real :: sat_thick = 0.							!m      |groundwater saturated thickness
 
       !store current heat (J) - used to track heat storage during cell loop
       do i=1,ncell
         heat_cell(i) = gwheat_state(i)%stor !J
-      enddo
+			enddo
 
       !loop through cells - update heat and temperature
       do i=1,ncell
@@ -114,7 +116,8 @@
           !change in heat (J); new heat and temperature
           heat_change = (heat_adv + heat_dsp + gw_heat_ss(i)%totl) * gw_time_step
           gwheat_state(i)%stor = gwheat_state(i)%stor + heat_change
-          if(gw_state(i)%stor > 0) then
+					sat_thick = gw_state(i)%head - gw_state(i)%botm
+          if(sat_thick > 1.0) then
             gwheat_state(i)%tnew = gwheat_state(i)%stor / (gw_rho * gw_cp * gw_state(i)%stor) !deg C
           else
             gwheat_state(i)%tnew = 0.

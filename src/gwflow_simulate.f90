@@ -107,19 +107,6 @@
 
       !groundwater pumping (irrigation) ---------------------------------------
       !gwflow_ppag called in wallo_withdraw
-      !track and print out pumping for HRUs
-      do i=1,sp_ob%hru
-        hru_pump_mo(i) = hru_pump_mo(i) + hru_pump(i)
-        hru_pump_yr(i) = hru_pump_yr(i) + hru_pump(i)
-      enddo
-      if(hru_pump_flag == 1 .and. gwflag_pump == 1) then
-        do i=1,num_hru_pump_obs
-          hru_pump_obs(i) = hru_pump(hru_pump_ids(i))
-        enddo
-        write(out_hru_pump_obs,119) time%yrc,time%day, &
-                                   (hru_pump_obs(i),i=1,num_hru_pump_obs)
-      endif
-      hru_pump = 0.
 
       !groundwater pumping (external use) -------------------------------------
       call gwflow_pump_ext
@@ -143,7 +130,7 @@
               do j=1,num_tile_cells(i)
                 do s=1,gw_nsolute !loop through the solutes
                   sum_mass(i,s) = sum_mass(i,s) + &
-                                  gwsol_ss(gw_tile_groups(i,j))%solute(s)%tile !g
+                                  gw_sol_ss(gw_tile_groups(i,j))%solute(s)%tile !g
                 enddo
               enddo
               if(sum_tile(i).ne.0) then
@@ -214,7 +201,7 @@
       do i=1,ncell
         if(gw_state(i)%stat == 1) then
           !do not include gwsw and swsw (already accounted for in gwflow_gwsw)
-          gw_hyd_ss(i)%totl = gw_hyd_ss(i)%rech + gw_hyd_ss(i)%gwet + & !gw_hyd_ss(i)%gwsw + gw_hyd_ss(i)%swgw
+          gw_hyd_ss(i)%totl = gw_hyd_ss(i)%rech + gw_hyd_ss(i)%gwet + gw_hyd_ss(i)%gwsw + gw_hyd_ss(i)%swgw + &
                                gw_hyd_ss(i)%satx + gw_hyd_ss(i)%soil + &
                                gw_hyd_ss(i)%ppag + gw_hyd_ss(i)%ppex + gw_hyd_ss(i)%tile + &
                                gw_hyd_ss(i)%resv + gw_hyd_ss(i)%wetl + gw_hyd_ss(i)%canl + &
@@ -249,7 +236,7 @@
           if(gw_solute_flag == 1) then
             do i=1,gw_chan_nobs
               cell_id = gw_chan_obs_cell(i)
-              obs_vals(i) = gwsol_ss(cell_id)%solute(1)%gwsw + gwsol_ss(cell_id)%solute(1)%swgw + gwsol_ss(cell_id)%solute(1)%satx
+              obs_vals(i) = gw_sol_ss(cell_id)%solute(1)%gwsw + gw_sol_ss(cell_id)%solute(1)%swgw + gw_sol_ss(cell_id)%solute(1)%satx
             enddo
             write(out_gwsw_chanobs_no3,8130) time%day,time%mo,time%day_mo,time%yrc,(obs_vals(i),i=1,gw_chan_nobs)
           endif
@@ -283,19 +270,19 @@
         do i=1,ncell
           if(gw_state(i)%stat == 1) then
             do s=1,gw_nsolute !loop through the solutes
-              gwsol_ss(i)%solute(s)%totl = gwsol_ss(i)%solute(s)%rech + & !recharge
-                                           gwsol_ss(i)%solute(s)%gwsw + & !gw-->channel
-                                           gwsol_ss(i)%solute(s)%swgw + & !channel-->gw
-                                           gwsol_ss(i)%solute(s)%satx + & !gw-->channel
-                                           gwsol_ss(i)%solute(s)%soil + & !gw-->soil
-                                           gwsol_ss(i)%solute(s)%ppag + & !pumping (irrigation)
-                                           gwsol_ss(i)%solute(s)%ppex + & !pumping (external)
-                                           gwsol_ss(i)%solute(s)%tile + & !tile outflow
-                                           gwsol_ss(i)%solute(s)%resv + & !reservoir exchange
-                                           gwsol_ss(i)%solute(s)%wetl + & !wetland
-                                           gwsol_ss(i)%solute(s)%canl + & !canal exchange
-                                           gwsol_ss(i)%solute(s)%fpln + & !floodplain exchange
-                                           gwsol_ss(i)%solute(s)%pond     !recharge pond
+              gw_sol_ss(i)%solute(s)%totl = gw_sol_ss(i)%solute(s)%rech + & !recharge
+                                           gw_sol_ss(i)%solute(s)%gwsw + & !gw-->channel
+                                           gw_sol_ss(i)%solute(s)%swgw + & !channel-->gw
+                                           gw_sol_ss(i)%solute(s)%satx + & !gw-->channel
+                                           gw_sol_ss(i)%solute(s)%soil + & !gw-->soil
+                                           gw_sol_ss(i)%solute(s)%ppag + & !pumping (irrigation)
+                                           gw_sol_ss(i)%solute(s)%ppex + & !pumping (external)
+                                           gw_sol_ss(i)%solute(s)%tile + & !tile outflow
+                                           gw_sol_ss(i)%solute(s)%resv + & !reservoir exchange
+                                           gw_sol_ss(i)%solute(s)%wetl + & !wetland
+                                           gw_sol_ss(i)%solute(s)%canl + & !canal exchange
+                                           gw_sol_ss(i)%solute(s)%fpln + & !floodplain exchange
+                                           gw_sol_ss(i)%solute(s)%pond     !recharge pond
             enddo
           endif
         enddo
@@ -528,48 +515,48 @@
       if(gw_solute_flag == 1) then
         do i=1,ncell
           do s=1,2 !only for no3 and p
-            gwsol_ss(i)%solute(s)%rech = 0.
-            gwsol_ss(i)%solute(s)%gwsw = 0.
-            gwsol_ss(i)%solute(s)%swgw = 0.
-            gwsol_ss(i)%solute(s)%satx = 0.
-            gwsol_ss(i)%solute(s)%soil = 0.
-            gwsol_ss(i)%solute(s)%ppag = 0.
-            gwsol_ss(i)%solute(s)%ppex = 0.
-            gwsol_ss(i)%solute(s)%tile = 0.
-            gwsol_ss(i)%solute(s)%resv = 0.
-            gwsol_ss(i)%solute(s)%wetl = 0.
-            gwsol_ss(i)%solute(s)%canl = 0.
-            gwsol_ss(i)%solute(s)%fpln = 0.
-            gwsol_ss(i)%solute(s)%pond = 0.
-            gwsol_ss(i)%solute(s)%advn = 0.
-            gwsol_ss(i)%solute(s)%disp = 0.
-            gwsol_ss(i)%solute(s)%rcti = 0.
-            gwsol_ss(i)%solute(s)%rcto = 0.
-            gwsol_ss(i)%solute(s)%minl = 0.
-            gwsol_ss(i)%solute(s)%sorb = 0.
-            gwsol_ss(i)%solute(s)%totl = 0.
+            gw_sol_ss(i)%solute(s)%rech = 0.
+            gw_sol_ss(i)%solute(s)%gwsw = 0.
+            gw_sol_ss(i)%solute(s)%swgw = 0.
+            gw_sol_ss(i)%solute(s)%satx = 0.
+            gw_sol_ss(i)%solute(s)%soil = 0.
+            gw_sol_ss(i)%solute(s)%ppag = 0.
+            gw_sol_ss(i)%solute(s)%ppex = 0.
+            gw_sol_ss(i)%solute(s)%tile = 0.
+            gw_sol_ss(i)%solute(s)%resv = 0.
+            gw_sol_ss(i)%solute(s)%wetl = 0.
+            gw_sol_ss(i)%solute(s)%canl = 0.
+            gw_sol_ss(i)%solute(s)%fpln = 0.
+            gw_sol_ss(i)%solute(s)%pond = 0.
+            gw_sol_ss(i)%solute(s)%advn = 0.
+            gw_sol_ss(i)%solute(s)%disp = 0.
+            gw_sol_ss(i)%solute(s)%rcti = 0.
+            gw_sol_ss(i)%solute(s)%rcto = 0.
+            gw_sol_ss(i)%solute(s)%minl = 0.
+            gw_sol_ss(i)%solute(s)%sorb = 0.
+            gw_sol_ss(i)%solute(s)%totl = 0.
           enddo
           do s=3,gw_nsolute !for salt and cs: do not zero out for recharge, reactions, or sorption (needed in salt_balance and cs_balance)
-            !gwsol_ss(i)%solute(s)%rech = 0.
-            gwsol_ss(i)%solute(s)%gwsw = 0.
-            gwsol_ss(i)%solute(s)%swgw = 0.
-            gwsol_ss(i)%solute(s)%satx = 0.
-            gwsol_ss(i)%solute(s)%soil = 0.
-            gwsol_ss(i)%solute(s)%ppag = 0.
-            gwsol_ss(i)%solute(s)%ppex = 0.
-            gwsol_ss(i)%solute(s)%tile = 0.
-            gwsol_ss(i)%solute(s)%resv = 0.
-            gwsol_ss(i)%solute(s)%wetl = 0.
-            gwsol_ss(i)%solute(s)%canl = 0.
-            gwsol_ss(i)%solute(s)%fpln = 0.
-            gwsol_ss(i)%solute(s)%pond = 0.
-            gwsol_ss(i)%solute(s)%advn = 0.
-            gwsol_ss(i)%solute(s)%disp = 0.
-            !gwsol_ss(i)%solute(s)%rcti = 0.
-            !gwsol_ss(i)%solute(s)%rcto = 0.
-            !gwsol_ss(i)%solute(s)%minl = 0.
-            !gwsol_ss(i)%solute(s)%sorb = 0.
-            gwsol_ss(i)%solute(s)%totl = 0.
+            !gw_sol_ss(i)%solute(s)%rech = 0.
+            gw_sol_ss(i)%solute(s)%gwsw = 0.
+            gw_sol_ss(i)%solute(s)%swgw = 0.
+            gw_sol_ss(i)%solute(s)%satx = 0.
+            gw_sol_ss(i)%solute(s)%soil = 0.
+            gw_sol_ss(i)%solute(s)%ppag = 0.
+            gw_sol_ss(i)%solute(s)%ppex = 0.
+            gw_sol_ss(i)%solute(s)%tile = 0.
+            gw_sol_ss(i)%solute(s)%resv = 0.
+            gw_sol_ss(i)%solute(s)%wetl = 0.
+            gw_sol_ss(i)%solute(s)%canl = 0.
+            gw_sol_ss(i)%solute(s)%fpln = 0.
+            gw_sol_ss(i)%solute(s)%pond = 0.
+            gw_sol_ss(i)%solute(s)%advn = 0.
+            gw_sol_ss(i)%solute(s)%disp = 0.
+            !gw_sol_ss(i)%solute(s)%rcti = 0.
+            !gw_sol_ss(i)%solute(s)%rcto = 0.
+            !gw_sol_ss(i)%solute(s)%minl = 0.
+            !gw_sol_ss(i)%solute(s)%sorb = 0.
+            gw_sol_ss(i)%solute(s)%totl = 0.
           enddo
         enddo
         mass_rct = 0.

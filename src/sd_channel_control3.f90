@@ -110,10 +110,14 @@
       ht1%temp = 5.0 + 0.75 * wst(iwst)%weat%tave
       wtemp = 5.0 + 0.75 * wst(iwst)%weat%tave
 
+			!rtb: use stored water temperature (calculated in ch_temp)
+			ht1%temp = ch_stor(ich)%temp
+			wtemp = ch_stor(ich)%temp
+			
       if (sd_ch(ich)%msk%nsteps == 1) then
         ob(icmd)%tsin(1) = ht1%flo
-      end if
-            
+			end if
+      
       !! if connected to aquifer - add flow
       if (sd_ch(ich)%aqu_link > 0) then
         iaq = sd_ch(ich)%aqu_link
@@ -148,8 +152,8 @@
         call gwflow_canal(ich) !channel --> canal seepage
         call gwflow_tile(ich) !groundwater --> channel
         call gwflow_satexcess(ich) !groundwater --> channel
-      end if
-      
+			end if
+
       !! set inflow hyds for printing
       chsd_d(ich)%flo_in = ht1%flo / 86400.     !flow for morphology output - m3/s
       chsd_d(ich)%flo_in_mm = ht1%flo / (10. * ob(icmd)%area_ha)   !flow in mm
@@ -351,11 +355,11 @@
           hcs2%cs(ics) = scoef * hcs3%cs(ics)
           ch_water(ich)%cs(ics) = hcs3%cs(ics) - hcs2%cs(ics)
         end do
-      end if
+			end if
       
-      !! calculate stream temperature (component mixing model)
+			!! calculate stream temperature (component mixing model)
       call ch_temp
-      
+			
       !! set constituents for routing
       if (cs_db%num_pests > 0) then
         obcs(icmd)%hd(1)%pest = hcs2%pest

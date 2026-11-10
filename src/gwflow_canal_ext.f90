@@ -77,13 +77,10 @@
 							!if the seepage is positive, then water is assumed to come from an unlimited source
 							!outside the model boundary
               if(Q < 0) then !groundwater --> canal
-                !if((Q*-1 == 1).ge.gw_state(cell_id)%stor) then !can only remove what is there
                 if (-Q .ge.gw_state(cell_id)%stor) then !can only remove what is there
-                  !Q = gw_state(cell_id)%stor * (-1)
                   Q = -gw_state(cell_id)%stor
                 endif
 							endif
-							gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell
               gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q
               gw_hyd_ss_yr(cell_id)%canl = gw_hyd_ss_yr(cell_id)%canl + Q !store for annual water
               gw_hyd_ss_mo(cell_id)%canl = gw_hyd_ss_mo(cell_id)%canl + Q !store for monthly water
@@ -96,6 +93,7 @@
                     heat_flux = -gwheat_state(cell_id)%stor
                   endif
                   gw_heat_ss(cell_id)%canl = gw_heat_ss(cell_id)%canl + heat_flux
+									gw_heat_ss_mo(cell_id)%canl = gw_heat_ss_mo(cell_id)%canl + heat_flux
                   gw_heat_ss_yr(cell_id)%canl = gw_heat_ss_yr(cell_id)%canl + heat_flux
                 endif
               endif
@@ -105,8 +103,8 @@
                 if(Q < 0) then !mass is leaving the cell --> canal
                   do s=1,gw_nsolute !loop through the solutes
                     solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
-                    if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
-                      solmass(s) = gwsol_state(cell_id)%solute(s)%mass
+                    if(-solmass(s) >= gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
+                      solmass(s) = -gwsol_state(cell_id)%solute(s)%mass
                     endif
                   enddo
                 else !mass entering the cell from the canal (i.e., from the channel that provides the canal water)
@@ -131,9 +129,9 @@
                 endif
                 !store in mass balance arrays
                 do s=1,gw_nsolute !loop through the solutes
-                  gwsol_ss(cell_id)%solute(s)%canl = gwsol_ss(cell_id)%solute(s)%canl + solmass(s)
-                  gwsol_ss_sum(cell_id)%solute(s)%canl = gwsol_ss_sum(cell_id)%solute(s)%canl + solmass(s)
-									gwsol_ss_sum_mo(cell_id)%solute(s)%canl = gwsol_ss_sum_mo(cell_id)%solute(s)%canl + solmass(s)
+                  gw_sol_ss(cell_id)%solute(s)%canl = gw_sol_ss(cell_id)%solute(s)%canl + solmass(s)
+									gw_sol_ss_mo(cell_id)%solute(s)%canl = gw_sol_ss_mo(cell_id)%solute(s)%canl + solmass(s)
+									gw_sol_ss_yr(cell_id)%solute(s)%canl = gw_sol_ss_yr(cell_id)%solute(s)%canl + solmass(s)
                 enddo
               endif !end solutes
 

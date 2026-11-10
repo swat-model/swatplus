@@ -5,7 +5,7 @@
 !!    (exchange volumes are used in gwflow_simulate, in groundwater balance equations)
 
       use gwflow_module
-      use hydrograph_module, only : ch_stor,ch_out_d
+      use hydrograph_module, only : ht1,ob,icmd
       use constituent_mass_module
 
       implicit none
@@ -27,10 +27,6 @@
 			real :: chan_temp = 0.
 			real :: gw_temp,gw_storage,gw_heat
 
-
-			if(chan_id == 3) then
-				dum = 10
-			endif
 
       !only proceed if groundwater saturation excess flow is simulation
       if (gw_satx_flag == 1) then
@@ -56,14 +52,15 @@
               gw_hyd_ss_yr(cell_id)%satx = gw_hyd_ss_yr(cell_id)%satx + (satx_volume * (-1)) !store for annual water
               gw_hyd_ss_mo(cell_id)%satx = gw_hyd_ss_mo(cell_id)%satx + (satx_volume * (-1)) !store for monthly water
               !store for channel object (positive value = water added to channel)
-							chan_flow = ch_stor(chan_id)%flo
-              ch_stor(chan_id)%flo = ch_stor(chan_id)%flo + satx_volume
-
+							chan_flow = ht1%flo
+              ht1%flo = ht1%flo + satx_volume
+              ob(icmd)%tsin(1) = ht1%flo 
+							
               !heat
               if(gw_heat_flag == 1) then
                 !original heat (J) in channel
-								chan_temp = ch_stor(chan_id)%temp
-                chan_heat = ch_stor(chan_id)%temp * gw_rho * gw_cp * chan_flow !J in channel
+								chan_temp = ht1%temp
+                chan_heat = ht1%temp * gw_rho * gw_cp * chan_flow !J in channel
 								!heat flux from groundwater
                 heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * satx_volume !J
 
@@ -76,17 +73,17 @@
 								endif
 
                 gw_heat_ss(cell_id)%satx = (heat_flux * (-1))
+								gw_heat_ss_mo(cell_id)%satx = gw_heat_ss_mo(cell_id)%satx + (heat_flux * (-1))
                 gw_heat_ss_yr(cell_id)%satx = gw_heat_ss_yr(cell_id)%satx + (heat_flux * (-1))
                 !add heat to channel
                 chan_heat = chan_heat + heat_flux
 								!update channel temperature
-                if(ch_stor(chan_id)%flo > 0) then
-									chan_temp = chan_heat / (gw_rho * gw_cp * ch_stor(chan_id)%flo)
-                  ch_stor(chan_id)%temp = chan_heat / (gw_rho * gw_cp * ch_stor(chan_id)%flo)
+                if(ht1%flo > 0) then
+									chan_temp = chan_heat / (gw_rho * gw_cp * ht1%flo)
+                  ht1%temp = chan_heat / (gw_rho * gw_cp * ht1%flo)
                 else
-                  ch_stor(chan_id)%temp = 0.
+                  ht1%temp = 0.
 								endif
-								ch_out_d(chan_id)%temp = ch_stor(chan_id)%temp
               endif
 
               !solutes
@@ -97,13 +94,13 @@
                   if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                     solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                   endif
-                  gwsol_ss(cell_id)%solute(s)%satx = solmass(s) * (-1) !negative = leaving the aquifer
-                  gwsol_ss_sum(cell_id)%solute(s)%satx = gwsol_ss_sum(cell_id)%solute(s)%satx + (solmass(s)*(-1))
-									gwsol_ss_sum_mo(cell_id)%solute(s)%satx = gwsol_ss_sum_mo(cell_id)%solute(s)%satx + (solmass(s)*(-1))
+                  gw_sol_ss(cell_id)%solute(s)%satx = solmass(s) * (-1) !negative = leaving the aquifer
+                  gw_sol_ss_yr(cell_id)%solute(s)%satx = gw_sol_ss_yr(cell_id)%solute(s)%satx + (solmass(s)*(-1))
+									gw_sol_ss_mo(cell_id)%solute(s)%satx = gw_sol_ss_mo(cell_id)%solute(s)%satx + (solmass(s)*(-1))
                 enddo
                 !add solute mass to channel
-                ch_stor(chan_id)%no3 = ch_stor(chan_id)%no3 + (solmass(1)/1000.) !kg
-                ch_stor(chan_id)%solp = ch_stor(chan_id)%solp + (solmass(2)/1000.) !kg
+                ht1%no3 = ht1%no3 + (solmass(1)/1000.) !kg
+                ht1%solp = ht1%solp + (solmass(2)/1000.) !kg
                 sol_index = 2
                 !salts
                 if (gwsol_salt == 1) then
