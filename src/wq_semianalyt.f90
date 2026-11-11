@@ -42,19 +42,20 @@
       real :: yy = 0.
       real :: wq_semianalyt
 
-      help1 = 1. / tres - prock
-      help2 = exp_w(-tdel * help1)
-      help3 = cint / tres + term_m
-      help4 = help3 / help1
-      term1 = cprev * help2
-      term2 = help4 * (1. - help2)
-      yy = term1 + term2
-      wq_semianalyt = term1 + term2
-      
-    !! if time of residence in reach is less than or eq to timestep don't do this. MJW 2023
-      !if (tres <= tdel) then
-      !    wq_semianalyt = cint  
-      !end if
+    !! if time of residence in reach is less than or eq to timestep, tres is too
+    !! small (or zero) for the analytic solution -- 1./tres divides by zero. MJW 2023
+      if (tres <= tdel) then
+        wq_semianalyt = cint
+      else
+        help1 = 1. / tres - prock
+        help2 = exp_w(-tdel * help1)
+        help3 = cint / tres + term_m
+        help4 = help3 / help1
+        term1 = cprev * help2
+        term2 = help4 * (1. - help2)
+        yy = term1 + term2
+        wq_semianalyt = term1 + term2
+      end if
 
       return
       end function wq_semianalyt

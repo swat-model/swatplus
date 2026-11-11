@@ -1,0 +1,4 @@
+  weather-sta.cli: IA-Ames_20250122 (Tue Jun 02 13:31:33 MDT 2026)
+  name                           wgn                 pcp                 tmp                 slr                 hmd                 wnd                 wnd_dir             atmo_dep  
+  wst01                         null             wth.pcp             wth.tmp             wth.slr                null                null                    null                 null
+ 

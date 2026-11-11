@@ -4,7 +4,7 @@
       !!
       !! carbon.bsn: title line, column header line, single data row with
       !!   28 values (22 original scalars, 5 residue-decomp tunables
-      !!   n_act_frac, cnr_cap, cnr_ref, cpr_cap, cpr_ref, and the
+      !!   cnr_cap, cnr_ref, cpr_cap, cpr_ref, and the
       !!   mathers_method 0/1 flag for humus-slow pool initialization).
       !! legacy cbn_diag column (retired output flag) removed entirely.
       !! Example files no longer carry it.
@@ -42,6 +42,7 @@
       real                :: r_meta_rate, r_str_rate, r_microb_top_rate, r_hs_hp
       real                :: r_a1co2, r_asco2, r_apco2, r_abco2
       integer             :: mathers_int = 0   ! 0/1 flag for org_frac%mathers_method
+      integer             :: cbn_diag_int = 0  ! 0/1 flag for cbn_diagnostics (P1: last column)
 
       if (bsn_cc%cswat /= 2) return
 
@@ -67,7 +68,7 @@
       read (107, '(a)', iostat=eof) header
 
       read (107, *, iostat=eof)                                   &
-        org_frac%frac_seq,         org_frac%frac_hum_microb,      &
+        org_frac%frac_litter,      org_frac%frac_hum_microb,      &
         org_frac%frac_hum_slow,    org_frac%frac_hum_passive,     &
         cb_wtr_coef%prmt_21,       cb_wtr_coef%prmt_44,           &
         till_eff_days,             man_coef%rtof,                 &
@@ -77,8 +78,8 @@
         bmix_a, bmix_b, bmix_c,                                   &
         tillmix_a, tillmix_b, tillmix_c,                          &
         photo_degrade_factor,                                     &
-        n_act_frac, cnr_cap, cnr_ref, cpr_cap, cpr_ref,           &
-        mathers_int
+        cnr_cap, cnr_ref, cpr_cap, cpr_ref,                       &
+        mathers_int, cbn_diag_int
 
       if (eof /= 0) then
         write (*,*) "ERROR: ", trim(in_basin%carbon_bsn), " data/values line is missing or could not be parsed (expected 28 values)"
@@ -89,6 +90,9 @@
 
       !! mathers_method: 1 = use the Mathers humus-slow init in soil_nutcarb_init, 0 = original method
       org_frac%mathers_method = (mathers_int == 1)
+      !! P1: cbn_diagnostics now comes from carbon.bsn's last column, NOT from print.prt's
+      !! hru_cb letter. The derivation in carbon_legacy_open was deleted so this value wins.
+      cbn_diagnostics = (cbn_diag_int == 1)
 
       close (107)
 

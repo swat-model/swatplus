@@ -6,7 +6,7 @@
 
       use hru_module, only : hru, ihru, tillage_switch,                                           &
          tillage_days, ndeat, qdr, phubase, sedyld, surfq, grz_days,                              &
-         yr_skip, latq, sepbtm, igrz, iseptic, i_sep, filterw, sed_con, soln_con, solp_con,       & 
+         yr_skip, latq, sepbtm, igrz, grz_dbid, iseptic, i_sep, filterw, sed_con, soln_con, solp_con,       &
          orgn_con, orgp_con, cnday, percn, tileno3, sedorgn, sedorgp, surqno3, latno3,            &
          surqsolp, sedminpa, sedminps, fertn, fertp, fixn, grazn, grazp, ipl, qp_cms, qtile,      &
          snofall, snomlt, usle, canev, ep_day, es_day, etday, inflpcp, isep, iwgen, ls_overq,     &
@@ -41,7 +41,7 @@
       
       implicit none
       
-      external :: actions, albedo, cbn_rsd_decomp, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
+      external :: actions, albedo, cbn_zhang2, conditions, cs_lch, cs_rain, cs_rctn_hru, &
                   cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
                   nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc, nut_orgnc2, nut_pminrl, &
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
@@ -373,6 +373,7 @@
         if (igrz(j) == 1) then
           ndeat(j) = ndeat(j) + 1
           !! if total above ground biomass is available - graze
+          graze = grazeop_db(grz_dbid(j))   !! load THIS hru's grazing params each grazing day
           call pl_graze
           !! check to set if grazing period is over
           if (ndeat(j) == grz_days(j)) then
@@ -396,7 +397,6 @@
           call cbn_surfrsd_decomp
           !! compute soil residue (roots and tilled in) decomposition
           call cbn_rsd_transfer      ! added by JC and FG, modified from nut_minrln.f90 and modified by fg to transfer soil residue to meta, str, lig
-          ! call cbn_rsd_decomp
           !! compute mineralization and carbon pool transformations
           call cbn_zhang2
         end if
@@ -847,7 +847,7 @@
         if (pl_mass(j)%tot_com%m < 0.) then
           pl_mass(j)%tot_com%m = 0.
         end if
-        hpw_d(j)%residue = pl_mass(j)%rsd_tot%m
+        hpw_d(j)%residue = pl_mass(j)%abg_rsd_tot%m
         hpw_d(j)%yield = pl_yield%m
         pl_yield = plt_mass_z
         hpw_d(j)%sol_tmp =  soil(j)%phys(2)%tmp

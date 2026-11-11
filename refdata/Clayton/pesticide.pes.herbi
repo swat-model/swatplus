@@ -1,0 +1,3 @@
+pesticide.pes: 
+name                  soil_ads     frac_wash    hl_foliage       hl_soil         solub      aq_hlife      aq_volat        mol_wt      aq_resus     aq_settle   ben_act_dep      ben_bury     ben_hlife  description
+herbi                        0             0             0             0             0             0             0             0             0             0             0             0             0  dummy-herbicide

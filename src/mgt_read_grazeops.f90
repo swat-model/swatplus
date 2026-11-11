@@ -50,9 +50,11 @@
             grazeop_db(igrazop)%tramp, grazeop_db(igrazop)%manure, grazeop_db(igrazop)%biomin
           if (eof < 0) exit
 
-          !xwalk fert name with fertilizer data base (fertilizer.frt)
-          do ifert = 1, db_mx%fertparm
-            if (grazeop_db(igrazop)%fertnm == fertdb(ifert)%fertnm) then
+          !xwalk manure name with the manure data base (manure.frt) so grazing
+          !manure uses the manure constituent data (manure_om) like the "manu"
+          !operation, not the fertilizer data base.
+          do ifert = 1, db_mx%manureparm
+            if (grazeop_db(igrazop)%fertnm == manure_db(ifert)%name) then
               grazeop_db(igrazop)%manure_id = ifert
               exit
             end if

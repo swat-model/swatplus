@@ -42,7 +42,6 @@
 
       integer :: j = 0        !none          |HRU number
       integer :: min          !              | 
-      real :: plt_zmx = 0.    !mm            |rooting depth of plant
       
       j = ihru
       
@@ -64,9 +63,14 @@
       pl_mass(j)%root(ipl)%m = 0.
       pcom(j)%plstr(ipl) = plstrz 
 
-      !! compare maximum depth in soil to maximum rooting depth of plant
-      plt_zmx = 1000. * pldb(pcom(j)%plcur(ipl)%idplt)%rdmx
-      soil(ihru)%zmx = Min(soil(ihru)%zmx, plt_zmx)
+      !! NOTE: the plant's maximum rooting depth is applied per plant in
+      !! pl_root_gro. It used to be folded into soil%zmx here with
+      !!   soil(ihru)%zmx = Min(soil(ihru)%zmx, plt_zmx)
+      !! which was a one-way ratchet: soil%zmx is initialised once to the
+      !! profile bottom (hydro_init) and nothing ever raises it again, so
+      !! planting a shallow-rooted crop permanently shortened the profile for
+      !! every later crop AND for the water-table and tile-drainage routines
+      !! that read soil%zmx (swr_percmain, swr_drains).
 
       return
       end subroutine mgt_plantop

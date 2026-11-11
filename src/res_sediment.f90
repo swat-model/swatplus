@@ -24,12 +24,16 @@
         cla_ppm = 1.e-6
       else
 
-        !! compute concentrations
-        sed_ppm = 1000000. * wbody%sed / wbody%flo
+        !! compute concentrations (guard denormal numerators: 1e6*x/flo underflows
+        !! under -ffpe-trap when x has decayed to ~1e-40; physically zero)
+        sed_ppm = 0.
+        if (abs(wbody%sed) >= 1.e-30) sed_ppm = 1000000. * wbody%sed / wbody%flo
         sed_ppm = Max(1.e-6, sed_ppm)
-        sil_ppm = 1000000. * wbody%sil / wbody%flo
+        sil_ppm = 0.
+        if (abs(wbody%sil) >= 1.e-30) sil_ppm = 1000000. * wbody%sil / wbody%flo
         sil_ppm = Max(1.e-6, sil_ppm)
-        cla_ppm = 1000000. * wbody%cla / wbody%flo
+        cla_ppm = 0.
+        if (abs(wbody%cla) >= 1.e-30) cla_ppm = 1000000. * wbody%cla / wbody%flo
         cla_ppm = Max(1.e-6, cla_ppm)
         
         !! compute change in sediment concentration due to settling 
@@ -39,7 +43,9 @@
           !! update wetland sediment after settling
           wbody%sed = sed_ppm * wbody%flo / 1000000.
           !! calculate sediment in the outflow and subtract from wetland
-          ht2%sed = sed_ppm * ht2%flo / 1000000.
+          !! (ht2%flo today's outflow can be ~0/denormal -> guard the multiply)
+          ht2%sed = 0.
+          if (abs(ht2%flo) >= 1.e-30) ht2%sed = sed_ppm * ht2%flo / 1000000.
           wbody%sed = Max(0.,wbody%sed - ht2%sed)
           
           !! assume all sand aggregates and gravel settles

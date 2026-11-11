@@ -52,7 +52,7 @@
       !! HRU sediment calculations
       if (bsn_cc%cfac == 0) then
         !! old method using minimum c factor (average of each plant in community)
-        cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%rsd_tot%m
+        cover = pl_mass(j)%ab_gr_com%m + pl_mass(j)%abg_rsd_tot%m
         if (pcom(j)%npl > 0) then
           c = exp_w((-.2231 - cvm_com(j)) * Exp(-.00115 * cover) + cvm_com(j))
         else
@@ -65,7 +65,7 @@
       else
         
         !! new method using residue and biomass cover - from APEX
-        rsd_sumfac = (pl_mass(j)%rsd_tot%m + 1.) / 1000.
+        rsd_sumfac = (pl_mass(j)%abg_rsd_tot%m + 1.) / 1000.
         rsd_covfact = exp_w(-bsn_prm%rsd_covco * rsd_sumfac)
         
         ab_gr_t = pl_mass(j)%ab_gr_com%m / 1000.
@@ -78,7 +78,7 @@
         
         !! erosion output variables
         ero_output(j)%ero_d%c = c
-        ero_output(j)%ero_d%rsd_m = pl_mass(j)%rsd_tot%m
+        ero_output(j)%ero_d%rsd_m = pl_mass(j)%abg_rsd_tot%m
         ero_output(j)%ero_d%grcov_frac = grcov_frac
         ero_output(j)%ero_d%rsd_covfact = rsd_covfact
         ero_output(j)%ero_d%bio_covfact = bio_covfact

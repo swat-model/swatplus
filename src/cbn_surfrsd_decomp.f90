@@ -32,12 +32,12 @@
       use septic_data_module
       use basin_module
       use organic_mineral_mass_module
-      use hru_module, only : ihru
+      use hru_module, only : ihru 
       use soil_module
       use plant_module
       use plant_data_module
-      use output_landscape_module, only : hnb_d
       use carbon_module, only : cnr_cap, cnr_ref, cpr_cap, cpr_ref
+      use output_landscape_module, only : hnb_d
       
       implicit none 
        
@@ -54,8 +54,8 @@
       real :: cprf = 0.     !              |carbon phosphorus ratio factor
       real :: ca = 0.       !              |
       real :: decr = 0.     !              |
-      integer :: ipl = 0    !              |plant number in plant community  !! was declared real
-      integer :: idp = 0    !              |plant number in plant data module !! was declared real
+      integer :: ipl = 0    !none          |plant number in plant community
+      integer :: idp = 0    !none          |plant number in plant data module
       real :: cdg = 0.      !none          |soil temperature factor
       real :: sut = 0.      !none          |soil water factor
       j = ihru
@@ -71,12 +71,9 @@
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
           ! mineralization can occur only if temp above 0 deg
-          photo_decomp = photo_degrade_factor * pl_mass(j)%rsd(ipl)
-          pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - photo_decomp
-          pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - photo_decomp
-          !! book photo-degraded residue C as a residue emission
-          !! so mass and carbon balance close. Previously photo_decomp was destroyed silently.
-          hrc_d(j)%emit_c = hrc_d(j)%emit_c + photo_decomp%c
+          photo_decomp = photo_degrade_factor * pl_mass(j)%abg_rsd(ipl) 
+          pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - photo_decomp
+          pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - photo_decomp
           if (soil(j)%phys(1)%tmp > 0.) then
             !! compute soil water factor
             sut = .1 + .9 * Sqrt(soil(j)%phys(1)%st / soil(j)%phys(1)%fc)
@@ -96,18 +93,18 @@
             !! compute residue decomp and mineralization of surface residue
             rmn1 = 0.
             rmp = 0.
-            if (pl_mass(j)%rsd(ipl)%n > 1.e-4) then
-              cnr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%n
+            if (pl_mass(j)%abg_rsd(ipl)%n > 1.e-4) then
+              cnr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%n
               if (cnr > cnr_cap) cnr = cnr_cap
-              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)    !! -.693 = -ln(2)
+              cnrf = Exp(-.693 * (cnr - cnr_ref) / cnr_ref)
             else
               cnrf = 1.
             end if
-
-            if (pl_mass(j)%rsd(ipl)%p > 1.e-4) then
-              cpr = pl_mass(j)%rsd(ipl)%c / pl_mass(j)%rsd(ipl)%p
+            
+            if (pl_mass(j)%abg_rsd(ipl)%p > 1.e-4) then
+              cpr = pl_mass(j)%abg_rsd(ipl)%c / pl_mass(j)%abg_rsd(ipl)%p
               if (cpr > cpr_cap) cpr = cpr_cap
-              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)    !! -.693 = -ln(2)
+              cprf = Exp(-.693 * (cpr - cpr_ref) / cpr_ref)
             else
               cprf = 1.
             end if
@@ -118,42 +115,19 @@
             decr = pldb(idp)%rsdco_pl * ca * csf
             decr = Max(bsn_prm%decr_min, decr)
             decr = Min(decr, 1.)
-            decomp = decr * pl_mass(j)%rsd(ipl)
-            pl_mass(j)%rsd(ipl) = pl_mass(j)%rsd(ipl) - decomp
-            pl_mass(j)%rsd_tot = pl_mass(j)%rsd_tot - decomp
+            decomp = decr * pl_mass(j)%abg_rsd(ipl)
+            pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - decomp
+            pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot - decomp
+            soil1(j)%pl(ipl)%rsd(1)%abg = soil1(j)%pl(ipl)%rsd(1)%abg + decomp
 
-            ! The following if statements are to prevent runtime underflow errors with gfortran 
-            if (pl_mass(j)%rsd(ipl)%m < 1.e-10) pl_mass(j)%rsd(ipl)%m = 0.0 
-            if (pl_mass(j)%rsd(ipl)%c < 1.e-10) pl_mass(j)%rsd(ipl)%c = 0.0 
-            if (pl_mass(j)%rsd(ipl)%n < 1.e-10) pl_mass(j)%rsd(ipl)%n = 0.0 
-            if (pl_mass(j)%rsd(ipl)%p < 1.e-10) pl_mass(j)%rsd(ipl)%p = 0.0 
+            !! flush the surface residue pool to zero once it drifts below 1.e-10.
+            !! abg_rsd is decremented by `decomp` every day, so without this it decays
+            !! asymptotically into denormal territory and gfortran raises underflow.
+            if (pl_mass(j)%abg_rsd(ipl)%m < 1.e-10) pl_mass(j)%abg_rsd(ipl)%m = 0.0
+            if (pl_mass(j)%abg_rsd(ipl)%c < 1.e-10) pl_mass(j)%abg_rsd(ipl)%c = 0.0
+            if (pl_mass(j)%abg_rsd(ipl)%n < 1.e-10) pl_mass(j)%abg_rsd(ipl)%n = 0.0
+            if (pl_mass(j)%abg_rsd(ipl)%p < 1.e-10) pl_mass(j)%abg_rsd(ipl)%p = 0.0
 
-            ! soil1(j)%meta(1)%m = soil1(j)%meta(1)%m + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%m
-            ! soil1(j)%str(1)%m = soil1(j)%str(1)%m + cswat_1_part_fracs(idp)%str_frac_abg * decomp%m
-            ! soil1(j)%lig(1)%m = soil1(j)%lig(1)%m + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%m
-            ! soil1(j)%meta(1)%c = soil1(j)%meta(1)%c + cswat_1_part_fracs(idp)%meta_frac_abg * decomp%c
-            ! soil1(j)%str(1)%c = soil1(j)%str(1)%c + cswat_1_part_fracs(idp)%str_frac_abg * decomp%c
-            ! soil1(j)%lig(1)%c = soil1(j)%lig(1)%c + cswat_1_part_fracs(idp)%lig_frac_abg * decomp%c
-            
-            soil1(j)%meta(1) = soil1(j)%meta(1) + cswat_1_part_fracs(idp)%meta_frac_abg * decomp
-            soil1(j)%str(1) = soil1(j)%str(1) + cswat_1_part_fracs(idp)%str_frac_abg * decomp
-            soil1(j)%lig(1) = soil1(j)%lig(1) + cswat_1_part_fracs(idp)%lig_frac_abg * decomp
-            
-            !! add nitrogen and phosphorus to soil organic pools - assume c/n and c/p ratios
-            !! c/n=10 for metabolic and 150 for structural; c/p=100 for metabolic and 1500 for structural
-            !! solve ntot = nmeta + nstr  &  nmet = 15.* nstr * cmet/cstr
-            ! rsd_meta%n = decomp%n - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
-            ! soil1(j)%meta(1)%n = soil1(j)%meta(1)%n + rsd_meta%n
-            ! rsd_str%n = decomp%n - rsd_meta%n
-            ! soil1(j)%str(1)%n = soil1(j)%str(1)%n + rsd_str%n
-            ! soil1(j)%lig(1)%n = soil1(j)%lig(1)%n + lig_frac * rsd_str%n
-            
-            ! rsd_meta%p = decomp%p - soil1(j)%str(1)%c / (15. * soil1(j)%meta(1)%c)
-            ! soil1(j)%meta(1)%p = soil1(j)%meta(1)%p + rsd_meta%p
-            ! rsd_str%p = decomp%p - rsd_meta%p
-            ! soil1(j)%str(1)%p = soil1(j)%str(1)%p + rsd_str%p
-            ! soil1(j)%lig(1)%p = soil1(j)%lig(1)%p + lig_frac * rsd_str%p
-            
           end if    ! soil temp > 0
           
         end do      ! ipl = 1, pcom(j)%npl
