@@ -90,8 +90,10 @@ elseif(WIN32)
         set(frelease        "/O")
         set(FFC             "ifx")
     elseif(CMAKE_Fortran_COMPILER_ID MATCHES GNU)
-        set(fdialect        "-cpp -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans")
-        set(fdebug          "-Wall ")
+        # As for UNIX: -fcheck=all / -ffpe-trap / -fsignaling-nans are debug diagnostics. In Release they make the
+        # program abort on harmless floating-point underflow (e.g. wq_semianalyt <- ch_watqual4).
+        set(fdialect        "-cpp -fimplicit-none -ffree-line-length-none -fbacktrace -finit-local-zero -fno-unsafe-math-optimizations -frounding-math")
+        set(fdebug          "-Wall -fcheck=all -ffpe-trap=invalid,zero,overflow,underflow -fsignaling-nans")
         set(FFC             "gnu")
         set(frelease        "-O")
         link_libraries("-static")
