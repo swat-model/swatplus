@@ -54,8 +54,8 @@
       !! new method using residue and biomass cover - from APEX
       do ipl = 1, pcom(j)%npl
         idp = pcom(j)%plcur(ipl)%idplt
-        rsd_sumfac = rsd_sumfac + exp(-pldb(idp)%ero_rsdfac * (pl_mass(j)%abg_rsd(ipl)%m + 1.) / 1000.)
-        ab_gr_t = ab_gr_t + exp(-0.2 * pldb(idp)%ero_biofac * pl_mass(j)%ab_gr(ipl)%m / 1000.)
+        rsd_sumfac = rsd_sumfac + pldb(idp)%ero_rsdfac * (pl_mass(j)%abg_rsd(ipl)%m + 1.) / 1000.
+        ab_gr_t = ab_gr_t + 0.2 * pldb(idp)%ero_biofac * pl_mass(j)%ab_gr(ipl)%m / 1000.
       end do
       
       rsd_covfact = exp_w(-rsd_sumfac)
