@@ -293,7 +293,7 @@
       ch_morph(ich)%ebtm_t = ebtm_t
       
       !! add to ordered sediment budget
-      ch_morph_ord(iord) = ch_morph_ord(iord) + ch_morph(ich)
+      if (iord >= 1 .and. iord <= size(ch_morph_ord)) ch_morph_ord(iord) = ch_morph_ord(iord) + ch_morph(ich)
 
       !! basin sediment budget outputs - don't sum during skip years
       if (time%yrs > pco%nyskip) then
