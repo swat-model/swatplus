@@ -19,6 +19,11 @@
 !!    ~ ~ ~ PURPOSE ~ ~ ~
 !!    this subroutine outputs HRU variables on daily, monthly and annual time steps
 
+      if (pco%cb_gl_hru%d /= "y" .and. pco%cb_gl_hru%m /= "y" .and. &
+          pco%cb_gl_hru%y /= "y" .and. pco%cb_gl_hru%a /= "y" .and. &
+          pco%cb_trf_hru%d /= "y" .and. pco%cb_trf_hru%m /= "y" .and. &
+          pco%cb_trf_hru%y /= "y" .and. pco%cb_trf_hru%a /= "y") return
+
       j = ihru
       
       iob = sp_ob1%hru + j - 1   !!!!!! added for new output write

@@ -17,6 +17,15 @@
       real :: sw_init = 0.      !           |
       real :: sno_init = 0.     !           |
           
+      if (pco%wb_lsu%d /= "y" .and. pco%wb_lsu%m /= "y" .and. &
+          pco%wb_lsu%y /= "y" .and. pco%wb_lsu%a /= "y" .and. &
+          pco%nb_lsu%d /= "y" .and. pco%nb_lsu%m /= "y" .and. &
+          pco%nb_lsu%y /= "y" .and. pco%nb_lsu%a /= "y" .and. &
+          pco%ls_lsu%d /= "y" .and. pco%ls_lsu%m /= "y" .and. &
+          pco%ls_lsu%y /= "y" .and. pco%ls_lsu%a /= "y" .and. &
+          pco%pw_lsu%d /= "y" .and. pco%pw_lsu%m /= "y" .and. &
+          pco%pw_lsu%y /= "y" .and. pco%pw_lsu%a /= "y") return
+
       !! zero daily outputs before summing
       do ilsu = 1, db_mx%lsu_out
         sw_init = ruwb_d(ilsu)%sw_init
