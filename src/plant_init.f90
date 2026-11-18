@@ -128,7 +128,10 @@
           pcom(j)%plcur(ipl)%gro = pcomdb(icom)%pl(ipl)%igro
           pcom(j)%plcur(ipl)%idorm = "y"
           idp = pcomdb(icom)%pl(ipl)%db_num
-          
+          !! IGROW FIX: igrow has an initialiser and is therefore SAVEd between calls.
+          !! Reset it for every plant so phumat never depends on the plant/HRU initialised before.
+          igrow = 0
+
           !! initialize surface residue litter pools - same for static and century pools
           pl_mass(j)%abg_rsd(ipl)%m = pl_mass(j)%abg_rsd(ipl)%m + pcomdb(icom)%pl(ipl)%rsdin
           pl_mass(j)%abg_rsd(ipl)%c = pl_mass(j)%abg_rsd(ipl)%c + 0.42 * pcomdb(icom)%pl(ipl)%rsdin
@@ -168,8 +171,11 @@
           else
             ! if positive assume days to maturity
             ! calculate planting day for summer annuals
+            !! IGROW FIX: perennials with days_mat > 0 use the same start day as annuals
+            !! (0.15 of the base-0 heat units of the year).
             if (pldb(idp)%typ == "warm_annual" .or. pldb(idp)%typ == "warm_annual_tuber" .or.   &
-                pldb(idp)%typ == "cold_annual" .or. pldb(idp)%typ == "cold_annual_tuber") then
+                pldb(idp)%typ == "cold_annual" .or. pldb(idp)%typ == "cold_annual_tuber" .or.   &
+                pldb(idp)%typ == "perennial") then
               iday_sum = 181
               phutot = 0.
               phu0 = 0.15 * phu0    !assume planting at 0.15 base 0 heat units
