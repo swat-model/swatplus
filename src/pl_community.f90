@@ -1,10 +1,8 @@
       subroutine pl_community
 
 !!    ~ ~ ~ PURPOSE ~ ~ ~
-!!    this subroutine predicts daily potential growth of total plant
-!!    biomass and roots and calculates leaf area index. Incorporates
-!!    residue for tillage functions and decays residue on ground
-!!    surface. Adjusts daily dry matter based on water stress.
+!!    this subroutine predicts total lai for plant community, total community
+!!    masses for each plant part, and competition for light. It also computes the maximum canopy height
 
 !!    ~ ~ ~ INCOMING VARIABLES ~ ~ ~
 !!    name        |units         |definition

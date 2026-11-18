@@ -43,14 +43,6 @@
                                                                   * pl_mass(j)%root(ipl)
       end do
       
-      !! sum total community masses
-      pl_mass(j)%tot_com = pl_mass(j)%tot_com - pl_mass(j)%tot(ipl)
-      pl_mass(j)%ab_gr_com = pl_mass(j)%ab_gr_com - pl_mass(j)%ab_gr(ipl)
-      pl_mass(j)%leaf_com = pl_mass(j)%leaf_com - pl_mass(j)%leaf(ipl)
-      pl_mass(j)%stem_com = pl_mass(j)%stem_com - pl_mass(j)%stem(ipl)
-      pl_mass(j)%seed_com = pl_mass(j)%seed_com - pl_mass(j)%seed(ipl)
-      pl_mass(j)%root_com = pl_mass(j)%root_com - pl_mass(j)%root(ipl)
-       
       !! add plant carbon for printing
       hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + pl_mass(j)%ab_gr(ipl)%c
       hrc_d(j)%plant_root_c = hrc_d(j)%plant_root_c + pl_mass(j)%root(ipl)%c

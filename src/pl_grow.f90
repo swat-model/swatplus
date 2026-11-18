@@ -58,5 +58,7 @@
 
       end do    ! loop for number of plants
       
+      !! total community masses are updated in pl_community subroutine, called in hru_control.f90 after pl_grow
+      
       return
       end subroutine pl_grow

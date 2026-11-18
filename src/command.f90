@@ -444,8 +444,10 @@
         call basin_sedbud_output
         
         !! print basin channel morphology output
-        call ch_sedbud_output
-        call chord_sedbud_output
+        if (sp_ob%chandeg > 0) then
+          call ch_sedbud_output
+          call chord_sedbud_output
+        end if
         
         !! print water allocation output
         do ipou =1, db_mx%wallo_pou

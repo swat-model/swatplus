@@ -254,6 +254,9 @@
             do ihru = 1, sp_ob%hru
               iob = sp_ob1%hru + ihru - 1
               if (ob(iob)%lat < 0) then
+                ! zero yearly irrigation for dtbl conditioning jga6-25
+                hru(j)%irr_yr = 0.
+            
                 phubase(ihru) = 0.
                 yr_skip(ihru) = 0
                 isched = hru(ihru)%mgt_ops
@@ -343,7 +346,7 @@
           do ipl = 1, pcom(j)%npl
             idp = pcom(j)%plcur(ipl)%idplt
             if (idp > 0) then
-              if (pldb(idp)%typ == "perennial") then
+              if (pldb(idp)%typ == "perennial" .or. pldb(idp)%typ == "herb_perennial") then
                 pcom(j)%plcur(ipl)%curyr_mat = pcom(j)%plcur(ipl)%curyr_mat + 1
                 pcom(j)%plcur(ipl)%curyr_mat = Min(pcom(j)%plcur(ipl)%curyr_mat,pldb(idp)%mat_yrs)
               end if
@@ -355,7 +358,7 @@
           iob = sp_ob1%hru + j - 1
           if (ob(iob)%lat >= 0) then
             ! zero yearly irrigation for dtbl conditioning jga6-25
-            !hru(j)%irr_yr = 0.
+            hru(j)%irr_yr = 0.
             
             phubase(j) = 0.
             yr_skip(j) = 0

@@ -45,7 +45,7 @@
                   cs_sorb_hru, et_act, et_pot, hru_hyds, hru_urb_bmp, hru_urban, hru_urbanhr, nut_nitvol, &
                   nut_nlch, nut_nminrl, nut_nrain, nut_orgn, nut_orgnc2, nut_pminrl, &
                   nut_pminrl2, nut_psed, nut_solp, path_ls_process, path_ls_runoff, path_ls_swrouting, &
-                  pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_frt, &
+                  pest_decay, pest_enrsb, pest_lch, pest_pl_up, pest_soil_tot, pl_community, pl_fert, &
                   pl_graze, pl_grow, rls_routeaqu, rls_routesoil, rls_routesurf, rls_routetile, &
                   rsd_decomp, salt_chem_hru, salt_lch, salt_rain, salt_roadsalt, smp_bmpfixed, smp_filter, &
                   smp_grass_wway, sq_canopyint, sq_snom, sq_surfst, stmp_solt, stor_surfstor, surface, &
@@ -418,15 +418,9 @@
           if (soil(j)%phys(i_sep(j))%tmp > 0.) call sep_biozone     
         endif
 
-        !! compute plant community partitions
+        !! predicts total lai for plant community, total community masses for each plant part,
+        !! and competition for light. It also computes the maximum canopy height.
         call pl_community
-        !if (j == 136) then
-        !write (7778,*) time%day, j, pl_mass(j)%tot(1)%m, pl_mass(j)%ab_gr(1)%m, pl_mass(j)%stem(1)%m, &
-        !    pl_mass(j)%leaf(1)%m, pl_mass(j)%root(1)%m, pl_mass(j)%seed(1)%m
-        !end if
-        !if (j == 173) then
-        !  write (7778,*) time%day, j, sedyld(j)/hru(j)%area_ha, usle_cfac(j), surfq(j), qp_cms
-        !end if
 
         soil_prof_labp = 0.
         do ly = 1, soil(j)%nly

@@ -37,12 +37,6 @@
       end if
       call curno(cnop, j)
       
-      !! zero total community masses
-      pl_mass(j)%tot_com = plt_mass_z
-      pl_mass(j)%ab_gr_com = plt_mass_z
-      pl_mass(j)%leaf_com = plt_mass_z
-      pl_mass(j)%stem_com = plt_mass_z
-      pl_mass(j)%seed_com = plt_mass_z
       burn_p = 0.                            ! explicit reset each call (do not rely on implicit SAVE)
 
       !! burn surface (layer 1) humus once (not per plant). Burned P is not volatilized;
@@ -73,13 +67,6 @@
         !! burned above-ground plant C -> plant carbon emission
         hpc_d(j)%emit_c = hpc_d(j)%emit_c + pl_burn%c
 
-        !! sum total community masses
-        pl_mass(j)%tot_com = pl_mass(j)%tot_com + pl_mass(j)%tot(ipl)
-        pl_mass(j)%ab_gr_com = pl_mass(j)%ab_gr_com + pl_mass(j)%ab_gr(ipl)
-        pl_mass(j)%leaf_com = pl_mass(j)%leaf_com + pl_mass(j)%leaf(ipl)
-        pl_mass(j)%stem_com = pl_mass(j)%stem_com + pl_mass(j)%stem(ipl)
-        pl_mass(j)%seed_com = pl_mass(j)%seed_com + pl_mass(j)%seed(ipl)
-        
       end do     ! npl loop
 
       !! return all burned (non-volatilized) P to the stable humus P pool - single update point

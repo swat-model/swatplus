@@ -37,8 +37,6 @@
           pl_mass(j)%seed(ipl) = plt_mass_z
           pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - seed_drop
           pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - seed_drop
-          pl_mass(j)%ab_gr_com = pl_mass(j)%ab_gr_com - seed_drop
-          pl_mass(j)%tot_com = pl_mass(j)%tot_com - seed_drop
           
           !! add seed/fruit mass to residue pool
           pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + seed_drop
@@ -56,9 +54,7 @@
           !! all above ground biomass dies off - add to residue pool
           !! 60% of n and p in above ground biomass is translocated to roots, 40% goes to residue pool
           pl_mass(j)%root(ipl)%n = pl_mass(j)%root(ipl)%n + 0.6 * pl_mass(j)%ab_gr(ipl)%n
-          pl_mass(j)%root_com%n = pl_mass(j)%root_com%n + 0.6 * pl_mass(j)%ab_gr(ipl)%n
           pl_mass(j)%root(ipl)%p = pl_mass(j)%root(ipl)%p + 0.6 * pl_mass(j)%ab_gr(ipl)%p
-          pl_mass(j)%root_com%p = pl_mass(j)%root_com%p + 0.6 * pl_mass(j)%ab_gr(ipl)%p
           
           !! 40% of n and p in above ground biomass goes to residue pool
           pl_mass(j)%abg_rsd(ipl)%n = pl_mass(j)%abg_rsd(ipl)%n + 0.4 * pl_mass(j)%ab_gr(ipl)%n

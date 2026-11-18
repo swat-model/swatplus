@@ -44,7 +44,7 @@
       real :: v_vc = 0.
       real :: q_q1 = 0.
       real :: e_max = 0.            !m              |maximum bank erosion rate for each event
-      real :: fp_km2 = 0.
+      real :: fp_m2 = 0.
       real :: exp_co = 0.
       real :: precip = 0.
       real :: flovol_ob = 0.
@@ -73,7 +73,7 @@
       ch_wat_d(ich)%precip = 0.
 
       !***jga
-      !sd_ch(ich)%bankfull_flo = 2.0
+      !sd_ch(ich)%bankfull_flo = 1.5
       !sd_ch(ich)%fp_inun_days = 1.0
       !sd_ch(ich)%d50 = 1.0
       !sd_ch(ich)%bed_exp = 1.0
@@ -120,9 +120,21 @@
       else if (peakrate > bf_flow) then
         fr_ob = 1. / pk_rto
       end if
-          
+      
+      !! The Log-Logistic (Hill) Equation is universally used to model cumulative percentages,
+      !!saturation curves, and chemical or hydrologic growth bounds where values cannot exceed 
+      !! a hard ceiling
+      !! estimate fraction of floodplain - max fraction (0.6-0.7 small flood plains,
+      !! 0.75-0.85 standard alluvial, 0.90+ flat and wide flood plains)
+      !! to account for uncertainty in channel dimensions
+      !! exponential coef - 2-3 gradual/fuzzy overbank, 4-6 more defined overbank
+      q_coef = 0.8
+      fr_ob = q_coef * (peakrate ** 3. / (peakrate ** 3. + bf_flow ** 3.))
+        fr_ob = Min (1., fr_ob)
+        fr_ob = Max (0., fr_ob)
+      
       !if (flovol_ob < 0.05 * ht1%flo) flovol_ob = 0.
-      if (fr_ob > 0.01) then
+      if (fr_ob > 0.05) then
         flovol_ob = fr_ob * ht1%flo
         !! add to overbank days
         ch_morph(ich)%ob_days = ch_morph(ich)%ob_days + 1
@@ -130,17 +142,24 @@
         trap_eff = Min (1., trap_eff)
         trap_eff = Max (0., trap_eff)
         !! trap efficiency modified from Dynamic SedNet Component Model Reference Guide: Update 2017
-        fp_km2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl / 10.
+        fp_m2 = 5. * sd_ch(ich)%chw * sd_ch(ich)%chl * 1000.
+        !! adjust trap effiency based on floodplain area - for small floodplains (short channel length)
         !trap_adj = 0.1 * fp_km2 ** 0.5
-        trap_adj = 0.1 * fp_km2 ** 0.5
-        trap_adj = (fp_km2 ** 2.12) / (fp_km2 ** 2.12 + 132.18)
-        fp_dep%sed = trap_eff * trap_adj * fr_ob * ht1%sed
+        !trap_adj = ((fp_m2/10000.) ** 2.12) / (fp_km2 ** 2.12 + 132.18)
+        !rcurv%surf_area
+        !! function of settling velocity (0.5-2 m/day), flood plain area, flow volume on flood plain
+        trap_eff = 1. - exp (-fp_m2 / flovol_ob)   ! rcurv%vol_fp
+        
+        fp_dep%sed = trap_eff * fr_ob * ht1%sed   ! * trap_adj
         !! deposit Particulate P and N in the floodplain
         fp_dep%orgn = trap_eff * fr_ob * sd_ch(ich)%n_dep_enr * ht1%orgn
         fp_dep%sedp = trap_eff * fr_ob * sd_ch(ich)%p_dep_enr * ht1%sedp
         !! trap nitrate and sol P in flood plain - when not simulating flood plain interactions?
         fp_dep%no3 = 0.         !trap_eff * ht1%no3
         fp_dep%solp = 0.        !trap_eff * ht1%solp
+        
+        !! subtract flood plain deposition from channel outflow
+        ht1 = ht1 - fp_dep
       
         !! floodplain exchange with aquifer (gwflow)
         if(bsn_cc%gwflow.eq.1) then

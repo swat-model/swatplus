@@ -23,6 +23,7 @@
       real :: exp_co = 0.       !                   |exponent for ppet - leaf turnover equation
       real :: lai_init = 0.     !                   |lai before senescence
       real :: lai_drop = 0.     !                   |lai decline due to senescence
+      real :: leaf_drop_fr = 0. !                   |fraction of leaf mass dropped
       
       j = ihru
       idp = pcom(j)%plcur(ipl)%idplt
@@ -62,14 +63,23 @@
           end if
           lai_drop = max (0., lai_drop)
           lai_drop = amin1 (1., lai_drop)
-          !! total n_conc = 1.75%; leaf  = 2.25%, falling leaf = 40%*2.25% = 0.90% --> 0.90/1.75 = 0.51
-          !! 40% of n and p stay in the dropping leaves, 60% translocates to stem (woody biomass)
+          
+          !! compute leaf biomass drop
           leaf_drop%m = lai_drop * pl_mass(j)%leaf(ipl)%m
-          leaf_drop%c = 0.42 * leaf_drop%m
-          leaf_drop%n = 0.51 * leaf_drop%m * pcom(j)%plm(ipl)%n_fr
+          leaf_drop%c = pcom(j)%plcur(ipl)%leaf_tov * pl_mass(j)%leaf(ipl)%c
+        
+          !! 60% of leaf drop n and p are translocated to stem (woody biomass)
+          pl_mass(j)%stem(ipl)%n = pl_mass(j)%stem(ipl)%n + 0.6 * pl_mass(j)%leaf(ipl)%n
+          pl_mass(j)%stem(ipl)%p = pl_mass(j)%stem(ipl)%p + 0.6 * pl_mass(j)%leaf(ipl)%p
+          pl_mass(j)%leaf(ipl)%n = 0.4 * pl_mass(j)%leaf(ipl)%n
+          pl_mass(j)%leaf(ipl)%p = 0.4 * pl_mass(j)%leaf(ipl)%p
+
+          !! drop remaining fraction of leaf n and p to residue pool
+          leaf_drop%n = pl_mass(j)%leaf(ipl)%n * leaf_drop%m / pl_mass(j)%leaf(ipl)%m
           leaf_drop%n = max (0., leaf_drop%n)
-          leaf_drop%p = 0.51 * leaf_drop%m * pcom(j)%plm(ipl)%p_fr
+          leaf_drop%p = pl_mass(j)%leaf(ipl)%p * leaf_drop%m / pl_mass(j)%leaf(ipl)%m
           leaf_drop%p = max (0., leaf_drop%p)
+        
         end if
       end if
       
@@ -98,22 +108,26 @@
         pcom(j)%plg(ipl)%lai = max (pcom(j)%plg(ipl)%lai, pldb(idp)%alai_min)
         
         !! compute leaf biomass drop
-        !! forest -- total tree n_conc = 1.75%; leaf  = 2.25%, falling leaf = 50%*2.25% = 1.12% --> 1.12/1.75 = 0.68
         leaf_drop%m = pcom(j)%plcur(ipl)%leaf_tov * pl_mass(j)%leaf(ipl)%m
-        leaf_drop%n = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%n_fr
+        leaf_drop%c = pcom(j)%plcur(ipl)%leaf_tov * pl_mass(j)%leaf(ipl)%c
+        
+        !! 60% of leaf drop n and p are translocated to stem (woody biomass)
+        pl_mass(j)%stem(ipl)%n = pl_mass(j)%stem(ipl)%n + 0.6 * pl_mass(j)%leaf(ipl)%n
+        pl_mass(j)%stem(ipl)%p = pl_mass(j)%stem(ipl)%p + 0.6 * pl_mass(j)%leaf(ipl)%p
+        pl_mass(j)%leaf(ipl)%n = 0.4 * pl_mass(j)%leaf(ipl)%n
+        pl_mass(j)%leaf(ipl)%p = 0.4 * pl_mass(j)%leaf(ipl)%p
+
+        !! drop remaining fraction of leaf n and p to residue pool
+        leaf_drop%n = pl_mass(j)%leaf(ipl)%n * leaf_drop%m / pl_mass(j)%leaf(ipl)%m
         leaf_drop%n = max (0., leaf_drop%n)
-        leaf_drop%p = 0.68 * leaf_drop%m * pcom(j)%plm(ipl)%p_fr
+        leaf_drop%p = pl_mass(j)%leaf(ipl)%p * leaf_drop%m / pl_mass(j)%leaf(ipl)%m
         leaf_drop%p = max (0., leaf_drop%p)
         
       end if
           
       !! update plant and residue masses
       if (leaf_drop%m > 0.) then
-        !! update individual masses
-        !! 60% of leaf drop n and p are translocated to stem (woody biomass)
-        pl_mass(j)%stem(ipl)%n = pl_mass(j)%stem(ipl)%n + 0.6 * leaf_drop%n
-        pl_mass(j)%stem(ipl)%p = pl_mass(j)%stem(ipl)%p + 0.6 * leaf_drop%p
-
+        !! update individual plant masses
         pl_mass(j)%leaf(ipl) = pl_mass(j)%leaf(ipl) - leaf_drop
         pl_mass(j)%tot(ipl) = pl_mass(j)%tot(ipl) - leaf_drop
         pl_mass(j)%ab_gr(ipl) = pl_mass(j)%ab_gr(ipl) - leaf_drop
@@ -121,14 +135,6 @@
         !! Add leaf drop to surface soil residue
         pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) + leaf_drop
         pl_mass(j)%abg_rsd_tot = pl_mass(j)%abg_rsd_tot + leaf_drop
-        
-        !! update total community masses
-        pl_mass(j)%ab_gr_com%n = pl_mass(j)%ab_gr_com%n - 0.6 * leaf_drop%n
-        pl_mass(j)%ab_gr_com%p = pl_mass(j)%ab_gr_com%p - 0.6 * leaf_drop%p
-        pl_mass(j)%stem_com%n = pl_mass(j)%stem_com%n + 0.6 * leaf_drop%n
-        pl_mass(j)%stem_com%p = pl_mass(j)%stem_com%p + 0.6 * leaf_drop%p
-        pl_mass(j)%leaf_com = pl_mass(j)%leaf_com - leaf_drop
-        pl_mass(j)%tot_com = pl_mass(j)%ab_gr_com + pl_mass(j)%root_com
         
         hrc_d(j)%plant_surf_c = hrc_d(j)%plant_surf_c + leaf_drop%c
         hpc_d(j)%drop_c = hpc_d(j)%drop_c + leaf_drop%c

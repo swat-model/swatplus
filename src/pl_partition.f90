@@ -99,6 +99,86 @@
         !! remainder goes to stem
         pl_mass(j)%stem(ipl)%m = pl_mass(j)%stem(ipl)%m + mass_left
         pl_mass(j)%ab_gr(ipl)%m = pl_mass(j)%stem(ipl)%m + pl_mass(j)%leaf(ipl)%m + pl_mass(j)%seed(ipl)%m
+         
+      !! n and p partitioning is more complex because of luxury uptake and translocation
+      !! same partitioning for annual and perennial crops - partition n and p in the same way
+      
+      !! partition n
+        mass_left = pl_mass_up%n
+        !! first maintain harvest index on yield (seed/fruit) component
+        mass_act = pl_mass(j)%seed(ipl)%n
+        mass_opt = pldb(idp)%cnyld * pl_mass(j)%seed(ipl)%m
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%seed(ipl)%n = pl_mass(j)%seed(ipl)%n + mass_add
+          mass_left = mass_left - mass_add
+        end if
+        
+        !! next maintain leaf component
+        mass_act = pl_mass(j)%leaf(ipl)%n
+        !! assume leaf concentration is twice that of the total plant
+        mass_opt = 2. * pcom(j)%plm(ipl)%n_fr * pl_mass(j)%leaf(ipl)%m
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%leaf(ipl)%n = pl_mass(j)%leaf(ipl)%n + mass_add
+          mass_left = mass_left - mass_add
+        end if
+        
+        !! next maintain root fraction - root mass/total mass
+        mass_act = pl_mass(j)%root(ipl)%n
+        !! assume same concentration in total plant
+        mass_opt = pcom(j)%plm(ipl)%n_fr * pl_mass(j)%root(ipl)%m
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%root(ipl)%n = pl_mass(j)%root(ipl)%n + mass_add
+          mass_left = mass_left - mass_add
+        end if
+        
+        !! remainder goes to stem -assume same concentration in total plant - any excess is luxury uptake
+        pl_mass(j)%stem(ipl)%n = pl_mass(j)%stem(ipl)%n + mass_left
+        pl_mass(j)%ab_gr(ipl)%n = pl_mass(j)%stem(ipl)%n + pl_mass(j)%leaf(ipl)%n + pl_mass(j)%seed(ipl)%n
+        
+        !! partition p
+        mass_left = pl_mass_up%p
+        !! first maintain harvest index on yield (seed/fruit) component
+        mass_act = pl_mass(j)%seed(ipl)%p
+        mass_opt = pldb(idp)%cnyld * pl_mass(j)%seed(ipl)%m
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%seed(ipl)%p = pl_mass(j)%seed(ipl)%p + mass_add
+          mass_left = mass_left - mass_add
+        end if
+        
+        !! next maintain leaf component
+        mass_act = pl_mass(j)%leaf(ipl)%p
+        !! assume leaf concentration is twice that of the total plant
+        mass_opt = 2. * pcom(j)%plm(ipl)%p_fr * pl_mass(j)%leaf(ipl)%m
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%leaf(ipl)%p = pl_mass(j)%leaf(ipl)%p + mass_add
+          mass_left = mass_left - mass_add
+        end if
+        
+        !! next maintain root fraction - root mass/total mass
+        mass_act = pl_mass(j)%root(ipl)%p
+        !! assume same concentration in total plant
+        mass_opt = pcom(j)%plm(ipl)%p_fr * pl_mass(j)%root(ipl)%m
+        if (mass_act < mass_opt) then
+          mass_add = mass_opt - mass_act
+          mass_add = Min (mass_add, mass_left)
+          pl_mass(j)%root(ipl)%p = pl_mass(j)%root(ipl)%p + mass_add
+          mass_left = mass_left - mass_add
+        end if
+        
+        !! remainder goes to stem -assume same concentration in total plant - any excess is luxury uptake
+        pl_mass(j)%stem(ipl)%p = pl_mass(j)%stem(ipl)%p + mass_left
+        pl_mass(j)%ab_gr(ipl)%p = pl_mass(j)%stem(ipl)%p + pl_mass(j)%leaf(ipl)%p + pl_mass(j)%seed(ipl)%p
+
       else
         !! initialize at initial fractions
         pl_mass(j)%ab_gr(ipl)%m = ab_gr_frac * pl_mass(j)%tot(ipl)%m
@@ -115,74 +195,6 @@
       pl_mass(j)%root(ipl)%c = c_frac%root * pl_mass(j)%root(ipl)%m
       pl_mass(j)%ab_gr(ipl)%c = pl_mass(j)%leaf(ipl)%c + pl_mass(j)%stem(ipl)%c + pl_mass(j)%seed(ipl)%c
       pl_mass(j)%tot(ipl)%c = pl_mass(j)%ab_gr(ipl)%c + pl_mass(j)%root(ipl)%c
-          
-      !! partition n and p
-      if (pldb(idp)%typ == "perennial") then
-        !! partition leaves and seed (stem is woody biomass)
-        mass_left = pl_mass(j)%leaf(ipl)%m + pl_mass(j)%stem(ipl)%m + pl_mass(j)%root(ipl)%m
-        if (mass_left > 1.e-9) then
-          pl_mass(j)%seed(ipl)%n = pldb(idp)%cnyld * pl_mass(j)%seed(ipl)%m
-          n_left = pl_mass(j)%tot(ipl)%n - pl_mass(j)%seed(ipl)%n
-          !! if n is neg after seed is removed - assume 0 n in seed - plant database cnyld and fr_n_mat are off
-          if (n_left < 0.) then
-            pl_mass(j)%seed(ipl)%n = 0.
-            n_left = pl_mass(j)%seed(ipl)%n +  n_left
-          end if
-          !! partition n_left between remaining masses - assume equal concentrations
-          pl_mass(j)%leaf(ipl)%n = n_left * pl_mass(j)%leaf(ipl)%m / mass_left
-          pl_mass(j)%stem(ipl)%n = n_left * pl_mass(j)%stem(ipl)%m / mass_left
-          pl_mass(j)%root(ipl)%n = n_left * pl_mass(j)%root(ipl)%m / mass_left
-          pl_mass(j)%ab_gr(ipl)%n = pl_mass(j)%seed(ipl)%n + pl_mass(j)%leaf(ipl)%n + pl_mass(j)%stem(ipl)%n
-        
-          pl_mass(j)%seed(ipl)%p = pldb(idp)%cpyld * pl_mass(j)%seed(ipl)%m
-          p_left = pl_mass(j)%tot(ipl)%p - pl_mass(j)%seed(ipl)%p
-          !! if n is neg after seed is removed - assume 0 n in seed - plant database cnyld and fr_n_mat are off
-          if (p_left < 0.) then
-            pl_mass(j)%seed(ipl)%p = 0.
-            p_left = pl_mass(j)%seed(ipl)%p +  p_left
-          end if
-          !! partition p_left between remaining masses - assume equal concentrations
-          pl_mass(j)%leaf(ipl)%p = p_left * pl_mass(j)%leaf(ipl)%m / mass_left
-          pl_mass(j)%stem(ipl)%p = p_left * pl_mass(j)%stem(ipl)%m / mass_left
-          pl_mass(j)%root(ipl)%p = p_left * pl_mass(j)%root(ipl)%m / mass_left
-          pl_mass(j)%ab_gr(ipl)%p = pl_mass(j)%seed(ipl)%p + pl_mass(j)%leaf(ipl)%p + pl_mass(j)%stem(ipl)%p
-        end if
-      else
-        !! annual or grass (stem is stalk) - partition seed (grain)
-        pl_mass(j)%seed(ipl)%n = pldb(idp)%cnyld * pl_mass(j)%seed(ipl)%m
-        !! assume same concentration in rest of plant
-        n_left = pl_mass(j)%tot(ipl)%n - pl_mass(j)%seed(ipl)%n
-        if (n_left < 0.) then
-          pl_mass(j)%seed(ipl)%n = 0.9 * pl_mass(j)%tot(ipl)%n
-          n_left = 0.1 * pl_mass(j)%tot(ipl)%n
-        end if
-        if (pl_mass(j)%tot(ipl)%m - pl_mass(j)%seed(ipl)%m > 1.e-6) then
-          n_frac = n_left / (pl_mass(j)%tot(ipl)%m - pl_mass(j)%seed(ipl)%m)
-        else
-          n_frac = 0.
-        end if
-        pl_mass(j)%leaf(ipl)%n = n_frac * pl_mass(j)%leaf(ipl)%m
-        pl_mass(j)%stem(ipl)%n = n_frac * pl_mass(j)%stem(ipl)%m
-        pl_mass(j)%root(ipl)%n = n_frac * pl_mass(j)%root(ipl)%m
-        pl_mass(j)%ab_gr(ipl)%n = pl_mass(j)%seed(ipl)%n + pl_mass(j)%leaf(ipl)%n + pl_mass(j)%stem(ipl)%n
-
-        pl_mass(j)%seed(ipl)%p = pldb(idp)%cpyld * pl_mass(j)%seed(ipl)%m
-        !! assume same concentration in rest of plant
-        p_left = pl_mass(j)%tot(ipl)%p - pl_mass(j)%seed(ipl)%p
-        if (p_left < 0.) then
-          pl_mass(j)%seed(ipl)%p = 0.9 * pl_mass(j)%tot(ipl)%p
-          p_left = 0.1 * pl_mass(j)%tot(ipl)%p
-        end if
-        if (pl_mass(j)%tot(ipl)%m - pl_mass(j)%seed(ipl)%m > 1.e-6) then
-          p_frac = p_left / (pl_mass(j)%tot(ipl)%m - pl_mass(j)%seed(ipl)%m)
-        else
-          p_frac = 0.
-        end if
-        pl_mass(j)%leaf(ipl)%p = p_frac * pl_mass(j)%leaf(ipl)%m
-        pl_mass(j)%stem(ipl)%p = p_frac * pl_mass(j)%stem(ipl)%m
-        pl_mass(j)%root(ipl)%p = p_frac * pl_mass(j)%root(ipl)%m
-        pl_mass(j)%ab_gr(ipl)%p = pl_mass(j)%seed(ipl)%p + pl_mass(j)%leaf(ipl)%p + pl_mass(j)%stem(ipl)%p
-      end if
-           
+      
       return
       end subroutine pl_partition
