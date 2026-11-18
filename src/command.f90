@@ -440,11 +440,12 @@
       !! print all output files
       if (time%yrs > pco%nyskip) then
       
-        !! print basin sediment budget output
-        call basin_sedbud_output
-        
-        !! print basin channel morphology output
+        !! sediment budget output files are only opened when the model has channels
         if (sp_ob%chandeg > 0) then
+          !! print basin sediment budget output
+          call basin_sedbud_output
+
+          !! print basin channel morphology output
           call ch_sedbud_output
           call chord_sedbud_output
         end if
