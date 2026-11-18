@@ -37,7 +37,7 @@
 						endif
 					enddo
 
-				  !check against available groundawter storage (m3)
+				  !check against available groundwater storage (m3)
 					if(et_Q > gw_state(cell_id)%stor) then
 					  et_Q = gw_state(cell_id)%stor
 					endif
@@ -50,6 +50,13 @@
           gw_hyd_ss_yr(cell_id)%phyt = gw_hyd_ss_yr(cell_id)%phyt + et_Q !store for annual water
           gw_hyd_ss_mo(cell_id)%phyt = gw_hyd_ss_mo(cell_id)%phyt + et_Q !store for monthly water
 
+					!heat flux
+          if(gw_heat_flag == 1) then
+            gw_heat_ss(cell_id)%phyt = gwheat_state(cell_id)%temp * gw_rho * gw_cp * et_Q !J
+						gw_heat_ss_mo(cell_id)%phyt = gw_heat_ss_mo(cell_id)%phyt + gw_heat_ss(cell_id)%phyt !J
+            gw_heat_ss_yr(cell_id)%phyt = gw_heat_ss_yr(cell_id)%phyt + gw_heat_ss(cell_id)%phyt !J
+          endif
+					
 				enddo !go to the next cell
 
       endif !check if phreatophyte transpiration is active

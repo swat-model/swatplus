@@ -18,6 +18,8 @@
       real :: Q_cell, Q
       real :: face_K, sat_thick1, sat_thick2, face_sat
       real :: stor_change, sat_change, flow_area, gradient
+			real :: K_scale1,K_scale2
+			real :: cellK1,cellK2
 
       !local variables - transit time
       real :: qs, vs, ds, dist_frac, q_dir_x, q_dir_y
@@ -67,6 +69,10 @@
                   area = min(area1,area2) !smaller of the two
                   conn_length = sqrt(area)
                   !K along the interface (harmonic mean)
+									K_scale1 = area1 / gw_max_area
+									K_scale2 = area2 / gw_max_area
+									cellK1 = gw_state(cell_id)%hydc * K_scale1
+									cellK2 = gw_state(i)%hydc * K_scale2
                   face_K = conn_length / (((conn_length/2.)/gw_state(cell_id)%hydc) + ((conn_length/2.)/gw_state(i)%hydc))
                   !saturated thickness of connected cell
                   if(gw_state(cell_id)%head > gw_state(cell_id)%botm) then

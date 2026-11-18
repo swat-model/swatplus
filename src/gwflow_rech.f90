@@ -98,14 +98,15 @@
             if(gw_heat_flag == 1) then
               cell_rech_heat = gw_rechheat(k) * lsu_cells_fract(k,i)
               gw_heat_ss(cell_id)%rech = gw_heat_ss(cell_id)%rech + cell_rech_heat
+							gw_heat_ss_mo(cell_id)%rech = gw_heat_ss_mo(cell_id)%rech + cell_rech_heat
               gw_heat_ss_yr(cell_id)%rech = gw_heat_ss_yr(cell_id)%rech + cell_rech_heat
             endif
             if(gw_solute_flag == 1) then
               do s=1,gw_nsolute !loop through the solutes
                 cell_rech_solmass(s) = rech_solmass(s) * lsu_cells_fract(k,i)
-                gwsol_ss(cell_id)%solute(s)%rech = gwsol_ss(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-                gwsol_ss_sum(cell_id)%solute(s)%rech = gwsol_ss_sum(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-								gwsol_ss_sum_mo(cell_id)%solute(s)%rech = gwsol_ss_sum_mo(cell_id)%solute(s)%rech + cell_rech_solmass(s)
+                gw_sol_ss(cell_id)%solute(s)%rech = gw_sol_ss(cell_id)%solute(s)%rech + cell_rech_solmass(s)
+                gw_sol_ss_yr(cell_id)%solute(s)%rech = gw_sol_ss_yr(cell_id)%solute(s)%rech + cell_rech_solmass(s)
+								gw_sol_ss_mo(cell_id)%solute(s)%rech = gw_sol_ss_mo(cell_id)%solute(s)%rech + cell_rech_solmass(s)
               enddo
             endif
           enddo
@@ -134,14 +135,15 @@
             if(gw_heat_flag == 1) then
               cell_rech_heat = gw_rechheat(k) * hru_cells_fract(k,i)
               gw_heat_ss(cell_id)%rech = gw_heat_ss(cell_id)%rech + cell_rech_heat
+							gw_heat_ss_mo(cell_id)%rech = gw_heat_ss_mo(cell_id)%rech + cell_rech_heat
               gw_heat_ss_yr(cell_id)%rech = gw_heat_ss_yr(cell_id)%rech + cell_rech_heat
             endif
             if (gw_solute_flag == 1) then
               do s=1,gw_nsolute !loop through the solutes
                 cell_rech_solmass(s) = rech_solmass(s) * hru_cells_fract(k,i)
-                gwsol_ss(cell_id)%solute(s)%rech = gwsol_ss(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-                gwsol_ss_sum(cell_id)%solute(s)%rech = gwsol_ss_sum(cell_id)%solute(s)%rech + cell_rech_solmass(s)
-								gwsol_ss_sum_mo(cell_id)%solute(s)%rech = gwsol_ss_sum_mo(cell_id)%solute(s)%rech + cell_rech_solmass(s)
+                gw_sol_ss(cell_id)%solute(s)%rech = gw_sol_ss(cell_id)%solute(s)%rech + cell_rech_solmass(s)
+                gw_sol_ss_yr(cell_id)%solute(s)%rech = gw_sol_ss_yr(cell_id)%solute(s)%rech + cell_rech_solmass(s)
+								gw_sol_ss_mo(cell_id)%solute(s)%rech = gw_sol_ss_mo(cell_id)%solute(s)%rech + cell_rech_solmass(s)
               enddo
             endif
           enddo

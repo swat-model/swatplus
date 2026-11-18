@@ -95,6 +95,7 @@
                   heat_flux = gwheat_state(cell_id)%stor
                 endif
                 gw_heat_ss(cell_id)%wetl = gw_heat_ss(cell_id)%wetl + (heat_flux*(-1))
+								gw_heat_ss_mo(cell_id)%wetl = gw_heat_ss_mo(cell_id)%wetl + (heat_flux*(-1))
                 gw_heat_ss_yr(cell_id)%wetl = gw_heat_ss_yr(cell_id)%wetl + (heat_flux*(-1))
               endif
 
@@ -105,13 +106,13 @@
                 solmass = 0.
                 !remove solute mass from gwflow cell
                 do s=1,gw_nsolute
-                  solmass(s) = gwsol_state(cell_id)%solute(s)%conc * gw_inflow !g/m3 * m3 = g
+                  solmass(s) = gwsol_state(cell_id)%solute(s)%conc * gw_inflow !g/m3 * m3 = g  
                   if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
                     solmass(s) = gwsol_state(cell_id)%solute(s)%mass
                   endif
-                  gwsol_ss(cell_id)%solute(s)%wetl = solmass(s)
-                  gwsol_ss_sum(cell_id)%solute(s)%wetl = gwsol_ss_sum(cell_id)%solute(s)%wetl + solmass(s)
-									gwsol_ss_sum_mo(cell_id)%solute(s)%wetl = gwsol_ss_sum_mo(cell_id)%solute(s)%wetl + solmass(s)
+                  gw_sol_ss(cell_id)%solute(s)%wetl = (solmass(s)*(-1))
+									gw_sol_ss_mo(cell_id)%solute(s)%wetl = gw_sol_ss_mo(cell_id)%solute(s)%wetl + (solmass(s)*(-1))
+                  gw_sol_ss_yr(cell_id)%solute(s)%wetl = gw_sol_ss_yr(cell_id)%solute(s)%wetl + (solmass(s)*(-1))
                 enddo
                 !add solute mass to wetland object
                 !no3

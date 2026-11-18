@@ -6,7 +6,7 @@
 !!    that remove water from a specified channel.
 
       use gwflow_module
-      use hydrograph_module, only : ch_stor,ch_out_d
+      use hydrograph_module, only : ht1,ob,icmd
       use time_module
       use constituent_mass_module
 
@@ -61,10 +61,10 @@
         conc_no2 = 0.
         conc_dox = 0.
         conc_orgn = 0.
-        chan_volume = ch_stor(chan_id)%flo
+        chan_volume = ht1%flo
         if (chan_volume > 10.) then
-          chan_csol(1) = (ch_stor(chan_id)%no3 * 1000.) / chan_volume
-          chan_csol(2) = (ch_stor(chan_id)%solp * 1000.) / chan_volume
+          chan_csol(1) = (ht1%no3 * 1000.) / chan_volume
+          chan_csol(2) = (ht1%solp * 1000.) / chan_volume
           sol_index = 2
           !salts
           if (gwsol_salt == 1) then
@@ -80,10 +80,10 @@
               chan_csol(sol_index) = (ch_water(chan_id)%cs(ics) * 1000.) / chan_volume
             enddo
           endif
-          conc_nh3 = (ch_stor(chan_id)%nh3 * 1000.) / chan_volume
-          conc_no2 = (ch_stor(chan_id)%no2 * 1000.) / chan_volume
-          conc_dox = (ch_stor(chan_id)%dox * 1000.) / chan_volume
-          conc_orgn = (ch_stor(chan_id)%orgn * 1000.) / chan_volume
+          conc_nh3 = (ht1%nh3 * 1000.) / chan_volume
+          conc_no2 = (ht1%no2 * 1000.) / chan_volume
+          conc_dox = (ht1%dox * 1000.) / chan_volume
+          conc_orgn = (ht1%orgn * 1000.) / chan_volume
         endif
 
         !loop through the canals that are connected to the channel
@@ -136,14 +136,14 @@
                     Q = -gw_state(cell_id)%stor
                   endif
                   gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor + Q !update available groundwater in the cell
                 else !canal --> groundwater (seepage)
                   if(Q > 0) then !canal seepage; remove water from channel
-                    if(Q > ch_stor(chan_id)%flo) then !can only remove what is there
-                      Q = ch_stor(chan_id)%flo
+                    if(Q > ht1%flo) then !can only remove what is there
+                      Q = ht1%flo
                     endif
                     gw_hyd_ss(cell_id)%canl = gw_hyd_ss(cell_id)%canl + Q !store for water balance calculations
-                    ch_stor(chan_id)%flo = ch_stor(chan_id)%flo - Q !remove water from channel
+                    ht1%flo = ht1%flo - Q !remove water from channel
+										ob(icmd)%tsin(1) = ht1%flo
                   endif
                 endif
                 gw_hyd_ss_yr(cell_id)%canl = gw_hyd_ss_yr(cell_id)%canl + Q !store for annual water
@@ -151,33 +151,31 @@
 
                 !heat
                 if(gw_heat_flag == 1) then
-                  chan_heat = ch_stor(chan_id)%temp * gw_rho * gw_cp * chan_volume !J in channel
+                  chan_heat = ht1%temp * gw_rho * gw_cp * chan_volume !J in channel
                   if(Q < 0) then !mass is leaving the cell --> canal
                     heat_flux = gwheat_state(cell_id)%temp * gw_rho * gw_cp * Q !J
                     if(-heat_flux >= gwheat_state(cell_id)%stor) then
                       heat_flux = -gwheat_state(cell_id)%stor
                     endif
-                    gwheat_state(cell_id)%stor = gwheat_state(cell_id)%stor + heat_flux !update heat in the cell
                   else
                     heat_flux = 0.
-                    if(ch_stor(chan_id)%temp > 0) then
-                      heat_flux = ch_stor(chan_id)%temp * gw_rho * gw_cp * Q !J
+                    if(ht1%temp > 0) then
+                      heat_flux = ht1%temp * gw_rho * gw_cp * Q !J
                       if(heat_flux > chan_heat) then
                         heat_flux = chan_heat
                       endif
-                      gwheat_state(cell_id)%stor = gwheat_state(cell_id)%stor + heat_flux !update heat in the cell
                     endif
                   endif
                   !update channel heat and temperature
                   chan_heat = chan_heat + (heat_flux*(-1))
-                  if(ch_stor(chan_id)%flo > 0) then
-                    ch_stor(chan_id)%temp = chan_heat / (gw_rho * gw_cp * ch_stor(chan_id)%flo)
+                  if(ht1%flo > 0) then
+                    ht1%temp = chan_heat / (gw_rho * gw_cp * ht1%flo)
                   else
-                    ch_stor(chan_id)%temp = 0.
+                    ht1%temp = 0.
 									endif
-									ch_out_d(chan_id)%temp = ch_stor(chan_id)%temp
                   !store for heat balance
                   gw_heat_ss(cell_id)%canl = gw_heat_ss(cell_id)%canl + heat_flux
+									gw_heat_ss_mo(cell_id)%canl = gw_heat_ss_mo(cell_id)%canl + heat_flux !J
                   gw_heat_ss_yr(cell_id)%canl = gw_heat_ss_yr(cell_id)%canl + heat_flux !J
                 endif
 
@@ -186,8 +184,8 @@
                   if(Q < 0) then !mass is leaving the cell --> canal
                     do s=1,gw_nsolute !loop through the solutes
                       solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
-                      if(solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
-                        solmass(s) = gwsol_state(cell_id)%solute(s)%mass
+                      if(-solmass(s) > gwsol_state(cell_id)%solute(s)%mass) then !can only remove what is there
+                        solmass(s) = -gwsol_state(cell_id)%solute(s)%mass
                       endif
                     enddo
                   else !mass entering the cell from the canal (i.e., from the channel that provides the canal water)
@@ -201,35 +199,35 @@
                     mass_orgn = Q * conc_orgn
                     !check against available solute mass in the channel
                     !no3
-                    if((solmass(1)/1000.) > ch_stor(chan_id)%no3) then
-                      solmass(1) = ch_stor(chan_id)%no3 * 1000. !g
+                    if((solmass(1)/1000.) > ht1%no3) then
+                      solmass(1) = ht1%no3 * 1000. !g
                     endif
-                    ch_stor(chan_id)%no3 = ch_stor(chan_id)%no3 - (solmass(1)/1000.) !kg
+                    ht1%no3 = ht1%no3 - (solmass(1)/1000.) !kg
                     !p
-                    if((solmass(2)/1000.) > ch_stor(chan_id)%solp) then
-                      solmass(2) = ch_stor(chan_id)%solp * 1000. !g
+                    if((solmass(2)/1000.) > ht1%solp) then
+                      solmass(2) = ht1%solp * 1000. !g
                     endif
-                    ch_stor(chan_id)%solp = ch_stor(chan_id)%solp - (solmass(2)/1000.) !kg
+                    ht1%solp = ht1%solp - (solmass(2)/1000.) !kg
                     !nh3
-                    if((mass_nh3/1000.) > ch_stor(chan_id)%nh3) then
-                      mass_nh3 = ch_stor(chan_id)%nh3 * 1000. !g
+                    if((mass_nh3/1000.) > ht1%nh3) then
+                      mass_nh3 = ht1%nh3 * 1000. !g
                     endif
-                    ch_stor(chan_id)%nh3 = ch_stor(chan_id)%nh3 - (mass_nh3/1000.) !kg
+                    ht1%nh3 = ht1%nh3 - (mass_nh3/1000.) !kg
                     !no2
-                    if((mass_no2/1000.) > ch_stor(chan_id)%no2) then
-                      mass_no2 = ch_stor(chan_id)%no2 * 1000. !g
+                    if((mass_no2/1000.) > ht1%no2) then
+                      mass_no2 = ht1%no2 * 1000. !g
                     endif
-                    ch_stor(chan_id)%no2 = ch_stor(chan_id)%no2 - (mass_no2/1000.) !kg
+                    ht1%no2 = ht1%no2 - (mass_no2/1000.) !kg
                     !dox
-                    if((mass_dox/1000.) > ch_stor(chan_id)%dox) then
-                      mass_dox = ch_stor(chan_id)%dox * 1000. !g
+                    if((mass_dox/1000.) > ht1%dox) then
+                      mass_dox = ht1%dox * 1000. !g
                     endif
-                    ch_stor(chan_id)%dox = ch_stor(chan_id)%dox - (mass_dox/1000.) !kg
+                    ht1%dox = ht1%dox - (mass_dox/1000.) !kg
                     !orgn
-                    if((mass_orgn/1000.) > ch_stor(chan_id)%orgn) then
-                      mass_orgn = ch_stor(chan_id)%orgn * 1000. !g
+                    if((mass_orgn/1000.) > ht1%orgn) then
+                      mass_orgn = ht1%orgn * 1000. !g
                     endif
-                    ch_stor(chan_id)%orgn = ch_stor(chan_id)%orgn - (mass_orgn/1000.) !kg
+                    ht1%orgn = ht1%orgn - (mass_orgn/1000.) !kg
                     sol_index = 2
                     !salts
                     if (gwsol_salt == 1) then
@@ -254,9 +252,9 @@
                   endif
                   !store in mass balance arrays
                   do s=1,gw_nsolute !loop through the solutes
-                    gwsol_ss(cell_id)%solute(s)%canl = gwsol_ss(cell_id)%solute(s)%canl + solmass(s)
-                    gwsol_ss_sum(cell_id)%solute(s)%canl = gwsol_ss_sum(cell_id)%solute(s)%canl + solmass(s)
-										gwsol_ss_sum_mo(cell_id)%solute(s)%canl = gwsol_ss_sum_mo(cell_id)%solute(s)%canl + solmass(s)
+                    gw_sol_ss(cell_id)%solute(s)%canl = gw_sol_ss(cell_id)%solute(s)%canl + solmass(s)
+										gw_sol_ss_mo(cell_id)%solute(s)%canl = gw_sol_ss_mo(cell_id)%solute(s)%canl + solmass(s)
+										gw_sol_ss_yr(cell_id)%solute(s)%canl = gw_sol_ss_yr(cell_id)%solute(s)%canl + solmass(s)
                   enddo
                 endif !end solutes
 

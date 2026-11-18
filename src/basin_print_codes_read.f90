@@ -758,8 +758,16 @@
                      backspace (107)
                      read (107,*,iostat=eof) name, pco%gwflow_pump%d, pco%gwflow_pump%m, pco%gwflow_pump%y, pco%gwflow_pump%a
                      pco%gwflow_pump%already_read_in = .true.
+									endif
+               case("gwflow_cell")
+                  if (pco%gwflow_cell%already_read_in) then
+                     result = print_prt_error(name)
+                  else
+                     backspace (107)
+                     read (107,*,iostat=eof) name, pco%gwflow_cell%d, pco%gwflow_cell%m, pco%gwflow_cell%y, pco%gwflow_cell%a
+                     pco%gwflow_cell%already_read_in = .true.
                   endif
-               case default
+							 case default
                   write(*, fmt="(a,a,a)", advance="yes") "Error: The output object ", name, "in the input file print.prt is not a valid object."
                   write(*, fmt="(a)") "       and cannot be processed"
                   !print*, "Error: The output object ", name, "in the input file print.prt is not a valid object."

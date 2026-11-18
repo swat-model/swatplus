@@ -75,6 +75,7 @@
                   heat_flux = gwheat_state(cell_id)%stor
                 endif
                 gw_heat_ss(cell_id)%soil = gw_heat_ss(cell_id)%soil + (heat_flux*(-1))
+								gw_heat_ss_mo(cell_id)%soil = gw_heat_ss_mo(cell_id)%soil + (heat_flux*(-1))
                 gw_heat_ss_yr(cell_id)%soil = gw_heat_ss_yr(cell_id)%soil + (heat_flux*(-1))
               endif
 

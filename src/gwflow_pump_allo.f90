@@ -110,6 +110,7 @@
               heat_flux = gwheat_state(cell_id)%stor
             endif
             gw_heat_ss(cell_id)%ppag = heat_flux * (-1)
+						gw_heat_ss_mo(cell_id)%ppag = gw_heat_ss_mo(cell_id)%ppag + heat_flux * (-1)
             gw_heat_ss_yr(cell_id)%ppag = gw_heat_ss_yr(cell_id)%ppag + heat_flux * (-1)
           endif
 
@@ -174,17 +175,15 @@
             endif
             !add to mass balance arrays (to be used in gwflow_simulate)
             do s=1,gw_nsolute !loop through the solutes
-              gwsol_ss(cell_id)%solute(s)%ppag = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
-              gwsol_ss_sum(cell_id)%solute(s)%ppag = gwsol_ss_sum(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
-							gwsol_ss_sum_mo(cell_id)%solute(s)%ppag = gwsol_ss_sum_mo(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
+              gw_sol_ss(cell_id)%solute(s)%ppag = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
+              gw_sol_ss_yr(cell_id)%solute(s)%ppag = gw_sol_ss_yr(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
+							gw_sol_ss_mo(cell_id)%solute(s)%ppag = gw_sol_ss_mo(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
             enddo
           endif
 
         enddo !go to next gwflow cell
 
 			endif
-      hru_pump(hru_id) = sum_pump !store pumping (m3) for the HRU
-
 
 
 			!irrigation pumping from a single cell ------------------------------------------------------------------------------------
@@ -236,6 +235,7 @@
             heat_flux = gwheat_state(cell_id)%stor
           endif
           gw_heat_ss(cell_id)%ppag = heat_flux * (-1)
+					gw_heat_ss_mo(cell_id)%ppag = gw_heat_ss_mo(cell_id)%ppag + heat_flux * (-1)
           gw_heat_ss_yr(cell_id)%ppag = gw_heat_ss_yr(cell_id)%ppag + heat_flux * (-1)
         endif
 
@@ -300,13 +300,11 @@
           endif
           !add to mass balance arrays (to be used in gwflow_simulate)
           do s=1,gw_nsolute !loop through the solutes
-            gwsol_ss(cell_id)%solute(s)%ppag = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
-            gwsol_ss_sum(cell_id)%solute(s)%ppag = gwsol_ss_sum(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
-						gwsol_ss_sum_mo(cell_id)%solute(s)%ppag = gwsol_ss_sum_mo(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
+            gw_sol_ss(cell_id)%solute(s)%ppag = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
+            gw_sol_ss_yr(cell_id)%solute(s)%ppag = gw_sol_ss_yr(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
+						gw_sol_ss_mo(cell_id)%solute(s)%ppag = gw_sol_ss_mo(cell_id)%solute(s)%ppag - (irr_mass(s)*1000.)
           enddo
         endif
-        hru_pump(hru_id) = sum_pump !store pumping (m3) for the HRU
-
 
 
 			!municipal demand from all cells connected geographically to the hru ------------------------------------------------------
@@ -359,6 +357,7 @@
               heat_flux = gwheat_state(cell_id)%stor
             endif
             gw_heat_ss(cell_id)%ppex = heat_flux * (-1)
+						gw_heat_ss_mo(cell_id)%ppex = gw_heat_ss_mo(cell_id)%ppex + heat_flux * (-1)
             gw_heat_ss_yr(cell_id)%ppex = gw_heat_ss_yr(cell_id)%ppex + heat_flux * (-1)
           endif
 
@@ -377,9 +376,9 @@
             enddo
             !add to mass balance arrays (to be used in gwflow_simulate)
             do s=1,gw_nsolute !loop through the solutes
-              gwsol_ss(cell_id)%solute(s)%ppex = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
-              gwsol_ss_sum(cell_id)%solute(s)%ppex = gwsol_ss_sum(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
-							gwsol_ss_sum_mo(cell_id)%solute(s)%ppex = gwsol_ss_sum_mo(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
+              gw_sol_ss(cell_id)%solute(s)%ppex = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
+              gw_sol_ss_yr(cell_id)%solute(s)%ppex = gw_sol_ss_yr(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
+							gw_sol_ss_mo(cell_id)%solute(s)%ppex = gw_sol_ss_mo(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
             enddo
           endif
 
@@ -433,6 +432,7 @@
             heat_flux = gwheat_state(cell_id)%stor
           endif
           gw_heat_ss(cell_id)%ppex = heat_flux * (-1)
+					gw_heat_ss_mo(cell_id)%ppex = gw_heat_ss_mo(cell_id)%ppex + heat_flux * (-1)
           gw_heat_ss_yr(cell_id)%ppex = gw_heat_ss_yr(cell_id)%ppex + heat_flux * (-1)
         endif
 
@@ -451,9 +451,9 @@
           enddo
           !add to mass balance arrays
           do s=1,gw_nsolute !loop through the solutes
-            gwsol_ss(cell_id)%solute(s)%ppex = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
-            gwsol_ss_sum(cell_id)%solute(s)%ppex = gwsol_ss_sum(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
-						gwsol_ss_sum_mo(cell_id)%solute(s)%ppex = gwsol_ss_sum_mo(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
+            gw_sol_ss(cell_id)%solute(s)%ppex = (irr_mass(s)*1000.) * (-1) !g; negative = leaving the aquifer
+            gw_sol_ss_yr(cell_id)%solute(s)%ppex = gw_sol_ss_yr(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
+						gw_sol_ss_mo(cell_id)%solute(s)%ppex = gw_sol_ss_mo(cell_id)%solute(s)%ppex - (irr_mass(s)*1000.)
           enddo
         endif
 

@@ -16,7 +16,7 @@
       use constituent_mass_module
       use res_salt_module, only : wetsalt_d,ressalt_d
       use ch_salt_module, only : chsalt_d
-      use gwflow_module, only : gw_solute_flag,gwsol_ss,ncell,gw_state,gwsol_state
+      use gwflow_module, only : gw_solute_flag,gw_sol_ss,ncell,gw_state,gwsol_state
 
       implicit none
       
@@ -52,9 +52,9 @@
         if (gw_solute_flag == 1) then
           do i=1,ncell
             do m=1,cs_db%num_salts
-              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%gwsw * (-1) / 1000.) !kg  
-              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%swgw * (-1) / 1000.) !kg 
-              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%satx * (-1) / 1000.) !kg 
+              saltsum = saltsum + (gw_sol_ss(i)%solute(2+m)%gwsw * (-1) / 1000.) !kg  
+              saltsum = saltsum + (gw_sol_ss(i)%solute(2+m)%swgw * (-1) / 1000.) !kg 
+              saltsum = saltsum + (gw_sol_ss(i)%solute(2+m)%satx * (-1) / 1000.) !kg 
             enddo
           enddo
         endif    
@@ -102,7 +102,7 @@
         if (gw_solute_flag == 1) then
           do i=1,ncell
             do m=1,cs_db%num_salts
-              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%tile * (-1) / 1000.) !kg  
+              saltsum = saltsum + (gw_sol_ss(i)%solute(2+m)%tile * (-1) / 1000.) !kg  
             enddo
           enddo
         endif    
@@ -250,7 +250,7 @@
         if (gw_solute_flag == 1) then
           do i=1,ncell
             do m=1,cs_db%num_salts
-              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%rech / 1000.) !kg  
+              saltsum = saltsum + (gw_sol_ss(i)%solute(2+m)%rech / 1000.) !kg  
             enddo
           enddo
         endif    
@@ -289,7 +289,7 @@
         if(gw_solute_flag == 1) then
           do i=1,ncell
             do m=1,cs_db%num_salts  
-              saltsum = saltsum + (gwsol_ss(i)%solute(2+m)%minl / 1000.) !kg 
+              saltsum = saltsum + (gw_sol_ss(i)%solute(2+m)%minl / 1000.) !kg 
             enddo
           enddo
         endif 
@@ -488,10 +488,10 @@
         if (gw_solute_flag == 1) then
           do i=1,ncell
             do m=1,cs_db%num_salts
-              gwsol_ss(i)%solute(2+m)%rech = 0.
-              gwsol_ss(i)%solute(2+m)%rcti = 0.
-              gwsol_ss(i)%solute(2+m)%rcto = 0.
-              gwsol_ss(i)%solute(2+m)%minl = 0.
+              gw_sol_ss(i)%solute(2+m)%rech = 0.
+              gw_sol_ss(i)%solute(2+m)%rcti = 0.
+              gw_sol_ss(i)%solute(2+m)%rcto = 0.
+              gw_sol_ss(i)%solute(2+m)%minl = 0.
                       enddo
           enddo
         endif

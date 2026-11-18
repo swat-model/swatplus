@@ -44,7 +44,6 @@
                 Q = gw_pumpex_rates(i,j)
                 if(Q.ge.gw_state(cell_id)%stor) then
                   Q = gw_state(cell_id)%stor
-                  gw_state(cell_id)%stor = gw_state(cell_id)%stor - Q
 							  endif
                 gw_hyd_ss(cell_id)%ppex = gw_hyd_ss(cell_id)%ppex - Q !negative = leaving the aquifer
                 gw_hyd_ss_yr(cell_id)%ppex = gw_hyd_ss_yr(cell_id)%ppex - Q !store for annual water
@@ -57,6 +56,7 @@
                     heat_flux = gwheat_state(cell_id)%stor
                   endif
                   gw_heat_ss(cell_id)%ppex = gw_heat_ss(cell_id)%ppex - heat_flux !negative = leaving the aquifer
+									gw_heat_ss_mo(cell_id)%ppex = gw_heat_ss_mo(cell_id)%ppex - heat_flux
                   gw_heat_ss_yr(cell_id)%ppex = gw_heat_ss_yr(cell_id)%ppex - heat_flux
                 endif
 
@@ -64,9 +64,9 @@
                 if (gw_solute_flag == 1) then
                   do s=1,gw_nsolute !loop through the solutes
                     solmass(s) = Q * gwsol_state(cell_id)%solute(s)%conc !g
-                    gwsol_ss(cell_id)%solute(s)%ppex = gwsol_ss(cell_id)%solute(s)%ppex - solmass(s)
-                    gwsol_ss_sum(cell_id)%solute(s)%ppex = gwsol_ss_sum(cell_id)%solute(s)%ppex - solmass(s)
-									gwsol_ss_sum_mo(cell_id)%solute(s)%ppex = gwsol_ss_sum_mo(cell_id)%solute(s)%ppex - solmass(s)
+                    gw_sol_ss(cell_id)%solute(s)%ppex = gw_sol_ss(cell_id)%solute(s)%ppex - solmass(s)
+                    gw_sol_ss_yr(cell_id)%solute(s)%ppex = gw_sol_ss_yr(cell_id)%solute(s)%ppex - solmass(s)
+									  gw_sol_ss_mo(cell_id)%solute(s)%ppex = gw_sol_ss_mo(cell_id)%solute(s)%ppex - solmass(s)
                   enddo
                 endif
 

@@ -101,13 +101,13 @@
             !calculate change in mass (g)
             do s=1,gw_nsolute !loop through the solutes
               m_change(s) = (mass_adv(s) + mass_dsp(s) + mass_rct(s) + mass_min(s) + &
-                  gwsol_ss(i)%solute(s)%totl) * (gw_trans_time_step/gwsol_sorb(s))
+                  gw_sol_ss(i)%solute(s)%totl) * (gw_trans_time_step/gwsol_sorb(s))
             enddo
 
             !calculate mass removed due to sorption (g)
             do s=1,gw_nsolute !loop through the solutes
               del_no_sorp = (mass_adv(s) + mass_dsp(s) + mass_rct(s) + mass_min(s) + &
-                  gwsol_ss(i)%solute(s)%totl) * gw_trans_time_step
+                  gw_sol_ss(i)%solute(s)%totl) * gw_trans_time_step
               mass_sorb(s) = del_no_sorp - m_change(s)
             enddo
 
@@ -133,41 +133,41 @@
 
             !store values for mass budget analysis
             do s=1,gw_nsolute !loop through the solutes
-              gwsol_ss(i)%solute(s)%advn = gwsol_ss(i)%solute(s)%advn + &
+              gw_sol_ss(i)%solute(s)%advn = gw_sol_ss(i)%solute(s)%advn + &
                   (mass_adv(s)*(gw_trans_time_step/gwsol_sorb(s)))
-              gwsol_ss(i)%solute(s)%disp = gwsol_ss(i)%solute(s)%disp + &
+              gw_sol_ss(i)%solute(s)%disp = gw_sol_ss(i)%solute(s)%disp + &
                   (mass_dsp(s)*(gw_trans_time_step/gwsol_sorb(s)))
               if(mass_rct(s) > 0) then
-                gwsol_ss(i)%solute(s)%rcti = gwsol_ss(i)%solute(s)%rcti + &
+                gw_sol_ss(i)%solute(s)%rcti = gw_sol_ss(i)%solute(s)%rcti + &
                     (mass_rct(s)*(gw_trans_time_step/gwsol_sorb(s))) !produced
               else
-                gwsol_ss(i)%solute(s)%rcto = gwsol_ss(i)%solute(s)%rcto + &
+                gw_sol_ss(i)%solute(s)%rcto = gw_sol_ss(i)%solute(s)%rcto + &
                     (mass_rct(s)*(gw_trans_time_step/gwsol_sorb(s))) !consumed
               endif
-              gwsol_ss(i)%solute(s)%minl = gwsol_ss(i)%solute(s)%minl + &
+              gw_sol_ss(i)%solute(s)%minl = gw_sol_ss(i)%solute(s)%minl + &
                   (mass_min(s)*(gw_trans_time_step/gwsol_sorb(s)))
-              gwsol_ss(i)%solute(s)%sorb = gwsol_ss(i)%solute(s)%sorb + mass_sorb(s)
+              gw_sol_ss(i)%solute(s)%sorb = gw_sol_ss(i)%solute(s)%sorb + mass_sorb(s)
             enddo
 
             !track for annual and monthly write-out
             do s=1,gw_nsolute !loop through the solutes
               if(mass_rct(s) > 0) then
-                gwsol_ss_sum(i)%solute(s)%rcti = gwsol_ss_sum(i)%solute(s)%rcti + &
+                gw_sol_ss_yr(i)%solute(s)%rcti = gw_sol_ss_yr(i)%solute(s)%rcti + &
                     (mass_rct(s)*(gw_trans_time_step/gwsol_sorb(s))) !produced
-                gwsol_ss_sum_mo(i)%solute(s)%rcti = gwsol_ss_sum_mo(i)%solute(s)%rcti + &
+                gw_sol_ss_mo(i)%solute(s)%rcti = gw_sol_ss_mo(i)%solute(s)%rcti + &
                     (mass_rct(s)*(gw_trans_time_step/gwsol_sorb(s))) !produced
               else
-                gwsol_ss_sum(i)%solute(s)%rcto = gwsol_ss_sum(i)%solute(s)%rcto + &
+                gw_sol_ss_yr(i)%solute(s)%rcto = gw_sol_ss_yr(i)%solute(s)%rcto + &
                     (mass_rct(s)*(gw_trans_time_step/gwsol_sorb(s))) !consumed
-                gwsol_ss_sum_mo(i)%solute(s)%rcto = gwsol_ss_sum_mo(i)%solute(s)%rcto + &
+                gw_sol_ss_mo(i)%solute(s)%rcto = gw_sol_ss_mo(i)%solute(s)%rcto + &
                     (mass_rct(s)*(gw_trans_time_step/gwsol_sorb(s))) !consumed
               endif
-              gwsol_ss_sum(i)%solute(s)%minl = gwsol_ss_sum(i)%solute(s)%minl + &
+              gw_sol_ss_yr(i)%solute(s)%minl = gw_sol_ss_yr(i)%solute(s)%minl + &
                   (mass_min(s)*(gw_trans_time_step/gwsol_sorb(s)))
-              gwsol_ss_sum_mo(i)%solute(s)%minl = gwsol_ss_sum_mo(i)%solute(s)%minl + &
+              gw_sol_ss_mo(i)%solute(s)%minl = gw_sol_ss_mo(i)%solute(s)%minl + &
                   (mass_min(s)*(gw_trans_time_step/gwsol_sorb(s)))
-              gwsol_ss_sum(i)%solute(s)%sorb = gwsol_ss_sum(i)%solute(s)%sorb + mass_sorb(s)
-              gwsol_ss_sum_mo(i)%solute(s)%sorb = gwsol_ss_sum_mo(i)%solute(s)%sorb + mass_sorb(s)
+              gw_sol_ss_yr(i)%solute(s)%sorb = gw_sol_ss_yr(i)%solute(s)%sorb + mass_sorb(s)
+              gw_sol_ss_mo(i)%solute(s)%sorb = gw_sol_ss_mo(i)%solute(s)%sorb + mass_sorb(s)
             enddo
 
           elseif(gw_state(i)%stat == 2) then !constant concentration cell

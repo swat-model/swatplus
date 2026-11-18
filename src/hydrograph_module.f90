@@ -583,7 +583,7 @@
         character (len=15) :: sag_stor  =    "       sag_stor"        !! tons         |detached small ag stored at end of time period
         character (len=15) :: lag_stor  =    "       lag_stor"        !! tons         |detached large ag stored at end of time period
         character (len=15) :: grv_stor  =    "       grv_stor"        !! tons         |gravel stored at end of time period
-        character (len=15) :: temp_stor =    "           null"        !! deg c        |water temperature
+        character (len=15) :: temp_stor =    "      temp_stor"        !! deg c        |water temperature
       end type hyd_stor_header
       type (hyd_stor_header) :: hyd_stor_hdr
       
@@ -605,7 +605,7 @@
         character (len=15) :: sag_in  =    "         sag_in"        !! tons         |detached small ag in
         character (len=15) :: lag_in  =    "         lag_in"        !! tons         |detached large ag in
         character (len=15) :: grv_in  =    "         grv_in"        !! tons         |gravel in
-        character (len=15) :: temp_in =    "           null"        !! deg c        |temperature in
+        character (len=15) :: temp_in =    "        temp_in"        !! deg c        |temperature in
       end type hyd_in_header
       type (hyd_in_header) :: hyd_in_hdr
       
@@ -627,7 +627,7 @@
         character (len=15) :: sag_out  =    "        sag_out"        !! tons         |detached small ag out
         character (len=15) :: lag_out  =    "        lag_out"        !! tons         |detached large ag out
         character (len=15) :: grv_out  =    "        grv_out"        !! tons         |gravel out
-        character (len=15) :: temp_out =    "           null"        !! deg c        |temperature out
+        character (len=15) :: temp_out =    "       temp_out"        !! deg c        |temperature out
       end type hyd_out_header
       type (hyd_out_header) :: hyd_out_hdr
       

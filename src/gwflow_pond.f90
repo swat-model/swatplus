@@ -314,9 +314,9 @@
 								endif
 								!store for mass balance calculations (in gwflow_simulate)
 								do s=1,gw_nsolute !loop through the solutes
-									gwsol_ss(cell_id)%solute(s)%pond = rech_mass_cell(s) !g/day
-									gwsol_ss_sum(cell_id)%solute(s)%pond = gwsol_ss_sum(cell_id)%solute(s)%pond + rech_mass_cell(s) !g/day
-									gwsol_ss_sum_mo(cell_id)%solute(s)%pond = gwsol_ss_sum_mo(cell_id)%solute(s)%pond + rech_mass_cell(s) !g/day
+									gw_sol_ss(cell_id)%solute(s)%pond = rech_mass_cell(s) !g/day
+									gw_sol_ss_yr(cell_id)%solute(s)%pond = gw_sol_ss_yr(cell_id)%solute(s)%pond + rech_mass_cell(s) !g/day
+									gw_sol_ss_mo(cell_id)%solute(s)%pond = gw_sol_ss_mo(cell_id)%solute(s)%pond + rech_mass_cell(s) !g/day
 								enddo
 							endif
 							endif !if pond has water

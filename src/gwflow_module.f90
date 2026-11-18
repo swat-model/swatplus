@@ -10,24 +10,19 @@
       integer :: gwflag_mon = 0     !               !flag for writing monthly mass balance file
       integer :: gwflag_yr = 0      !               !flag for writing yearly mass balance file
       integer :: gwflag_aa = 0      !               !flag for writing average annual mass balance file
+			integer :: gwflag_cell_day = 0     !          !flag for writing daily mass balance file
+      integer :: gwflag_cell_mon = 0     !          !flag for writing monthly mass balance file
+      integer :: gwflag_cell_yr = 0      !          !flag for writing yearly mass balance file
+      integer :: gwflag_cell_aa = 0      !          !flag for writing average annual mass balance file
       integer :: gwflag_obs = 1     !               !flag for writing observation well output (default on)
-      integer :: gwflag_obs_day = 1 !               !flag for writing daily observation well output
-      integer :: gwflag_obs_mon = 1 !               !flag for writing monthly observation well output
-      integer :: gwflag_obs_yr = 1  !               !flag for writing yearly observation well output
-      integer :: gwflag_obs_aa = 1  !               !flag for writing average annual observation well output
-      integer :: gwflag_pump = 1    !               !flag for writing HRU pumping output (default on)
-      integer :: gwflag_heat_day = 1    !           !flag for writing daily heat balance output (heat active only)
-      integer :: gwflag_heat_yr = 1     !           !flag for writing yearly heat balance output (heat active only)
-      integer :: gwflag_heat_aa = 1     !           !flag for writing average annual heat balance output (heat active only)
-      integer :: gwflag_solute_day = 1  !           !flag for writing daily solute balance output (solutes active only)
-      integer :: gwflag_solute_mon = 1  !           !flag for writing monthly solute balance output (solutes active only)
-      integer :: gwflag_solute_yr = 1   !           !flag for writing yearly solute balance output (solutes active only)
-      integer :: gwflag_solute_aa = 1   !           !flag for writing average annual solute balance output (solutes active only)
+      integer :: gwflag_heat = 1    !               !flag for writing heat balance output (default on if heat active)
+      integer :: gwflag_solute = 1  !               !flag for writing solute balance output (default on if solute active)
       integer :: gwflag_flux = 1    !               !flag for writing specialty diagnostic output (default on)
       integer :: bc_type = 0        !               !boundary conditions (1=constant head; 2=no-flow)
       integer :: conn_type = 0      !               !recharge/ET connections (1=HRU; 2=LSU)
       integer :: gw_daycount = 0    !               !simulation day counter (for pumping time series)
       real*8  :: gwflow_area = 0.d0 !m2             !area of the watershed occupied by active gwflow cells
+			real ::    gw_max_area    !m2             |maximum area of any gwflow cell
       real, dimension (:), allocatable :: bc_type_array !generic array for reading in values for structured grid
       
       !grid type ------------------------------------------------------------------------------------------------------
@@ -163,6 +158,8 @@
       type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss        !daily
       type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss_mo     !monthly sums
       type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss_yr     !yearly sums
+			type (groundwater_ss), dimension (:), allocatable :: gw_heat_ss_aa     !average annual sums
+			real, dimension (:), allocatable :: gw_temp_sum_aa
 
       !--- heat fluxes: grid-wide totals (MJ) ---
       type (groundwater_ss) :: gw_heat_grid_mo                               !monthly grid total
@@ -173,8 +170,7 @@
       integer, dimension (:), allocatable :: gw_bound_near  !           |nearest active cell to each boundary cell
       real, dimension (:), allocatable :: gw_bound_dist     !m          |distance of nearest active cell to each boundary cell
       real, dimension (:), allocatable :: gwflow_perc       !     |      
-      real, dimension (:), allocatable :: gw_delay          !           |HRU recharge decay coefficient
-      real, dimension (:), allocatable :: gw_delay_days     !days       |HRU recharge delay before conversion
+      real, dimension (:), allocatable :: gw_delay          !           |
       real, dimension (:), allocatable :: gw_rech           !           |
       real, dimension (:), allocatable :: delay             !           |
             
@@ -243,18 +239,6 @@
         real, allocatable :: sat(:)                         !m          |saturated thickness of connected cell
       endtype cell_connections
       type (cell_connections), dimension(:), allocatable :: cell_con
-      
-      !ppag: variables for irrigation pumping -----------------------------------------------------
-      real, dimension (:), allocatable :: hru_pump          !m3/day     |daily pumping per HRU
-      real, dimension (:), allocatable :: hru_pump_mo       !m3         |monthly accumulator
-      real, dimension (:), allocatable :: hru_pump_yr       !m3         |yearly accumulator
-      real, dimension (:), allocatable :: hru_pump_aa       !m3         |average annual accumulator (sum of yearly totals)
-      !logical :: hru_pump_flag !           |
-      integer :: hru_pump_flag = 0
-      integer :: in_hru_pump_obs = 0                        !           |
-      integer :: num_hru_pump_obs = 0                       !           |
-      integer, dimension (:), allocatable :: hru_pump_ids   !           |
-      real, dimension (:), allocatable :: hru_pump_obs      !           |
       
       !ppex: variables for specified groundwater pumping ------------------------------------------
       integer :: gw_pumpex_flag = 0                                !           |
@@ -326,7 +310,6 @@
       integer :: gw_canal_ncells = 0                     !     |
       integer :: num_canalK_zones = 0                    !     |
       real, dimension (:), allocatable :: canalK_zones   !     |
-      
       !canal-channel connection
       type canal_chan_info
         integer :: ncanal = 0                            !     |number of canals connected to the channel
@@ -339,7 +322,6 @@
         integer, allocatable :: daye(:)                  !     |ending day of active canal
       endtype canal_chan_info
       type (canal_chan_info), dimension(:), allocatable :: gw_chan_canl_info
-      
       !canal-cell connection
       type cell_canal_info
         integer :: ncon = 0                              !     |number of cells connected to the canal
@@ -349,7 +331,6 @@
         real, allocatable :: hydc(:)                     !m    |hydraulic conductivity of canal bed in the cell
       endtype cell_canal_info
       type (cell_canal_info), dimension(:), allocatable :: gw_canl_info 
-      
       !canal-cell connection for canals that receive water outside of the model domain
       type cell_canal_out_info
         integer :: cell_id = 0
@@ -526,7 +507,7 @@
         type (solute_state), dimension (:), allocatable :: solute
       end type object_solute_state
       type (object_solute_state), dimension (:), allocatable :: gwsol_state
-
+      
       !salt mineral cell state variables (allocated in gwflow_read to gw_nsolute)
       real, allocatable :: mass_min(:)                   !g       |solute mass added/removed from cell via precipitation-dissolution
       type minl_state
@@ -560,7 +541,8 @@
       
       !solute cell mass sources and sinks (inputs and outputs)
       type solute_ss
-        real :: rech = 0.           !g            |solute mass entering cell via recharge water
+        real :: chng = 0.           !kg           |change in mass storage (grid summaries only)
+				real :: rech = 0.           !g            |solute mass entering cell via recharge water
         real :: gwsw = 0.           !g            |solute mass leaving cell via groundwater discharging to channels
         real :: swgw = 0.           !g            |solute mass entering cell via channel water seeping to groundwater
         real :: soil = 0.           !g            |solute mass leaving cell via gw-->soil transfer
@@ -584,87 +566,20 @@
       type object_solute_ss
         type (solute_ss), dimension (:), allocatable :: solute
       end type object_solute_ss
-      type (object_solute_ss), dimension (:), allocatable :: gwsol_ss
+      type (object_solute_ss), dimension (:), allocatable :: gw_sol_ss
+			type (object_solute_ss), dimension (:), allocatable :: gw_sol_ss_mo   !track monthly sums
+      type (object_solute_ss), dimension (:), allocatable :: gw_sol_ss_yr   !track annual sums
+			type (object_solute_ss), dimension (:), allocatable :: gw_sol_ss_aa   !average annual sums
+			real, dimension (:,:), allocatable :: gw_conc_sum_aa
       
-      !summed values for solutes
-      type solute_ss_sum
-        real :: rech = 0.           !g            |solute mass entering cell via recharge water
-        real :: gwsw = 0.           !g            |solute mass leaving cell via groundwater discharging to channels
-        real :: swgw = 0.           !g            |solute mass entering cell via channel water seeping to groundwater
-        real :: soil = 0.           !g            |solute mass leaving cell via gw-->soil transfer
-        real :: satx = 0.           !g            |solute mass leaving cell via saturation excess flow
-        real :: ppag = 0.           !g            |solute mass leaving cell via pumping (for agriculture)
-        real :: ppex = 0.           !g            |solute mass leaving cell via pumping (external demand)
-        real :: tile = 0.           !g            |solute mass leaving cell via tile drainage outflow
-        real :: resv = 0.           !g            |solute mass exchanged with reservoir
-        real :: wetl = 0.           !g            |solute mass exchanged with wetland
-        real :: fpln = 0.           !g            |solute mass exchanged with channel in floodplain
-        real :: canl = 0.           !g            |solute mass exchanged with irrigation canal
-        real :: pond = 0.           !g            |solute mass in recharge pond seepage water
-        real :: advn = 0.           !g            |solute mass advected to/from cell
-        real :: disp = 0.           !g            |solute mass dispersed to/from cell
-        real :: rcti = 0.           !g            |solute mass produced by chemical reaction
-        real :: rcto = 0.           !g            |solute mass consumed by chemical reaction
-        real :: minl = 0.           !g            |solute mass produced by salt mineral dissolution
-        real :: sorb = 0.           !g            |solute mass of sorption
-      end type solute_ss_sum
-      type object_solute_ss_sum
-        type (solute_ss_sum), dimension (:), allocatable :: solute
-      end type object_solute_ss_sum
-      type (object_solute_ss_sum), dimension (:), allocatable :: gwsol_ss_sum
-      type (object_solute_ss_sum), dimension (:), allocatable :: gwsol_ss_sum_mo
-      
+			!solute fluxes: grid-wide totals (kg)
+      type (object_solute_ss) :: gw_sol_grid_mo                    !monthly grid total
+      type (object_solute_ss) :: gw_sol_grid_yr                    !yearly grid total
+      type (object_solute_ss) :: gw_sol_grid_aa                    !accumulates simulation total; divided by nbyr at end
+			
       !percolation and recharge arrays
       real, dimension (:,:), allocatable :: gwflow_percsol         !kg/ha    |solute mass leaving the soil profile
       real, dimension (:,:), allocatable :: gw_rechsol             !kg/ha    |solute mass in daily recharge (reaching water table)
-      
-      !grid mass for month, year, and total (kg)
-      real, dimension (:), allocatable :: sol_grid_chng_mo,sol_grid_rech_mo,sol_grid_gwsw_mo,sol_grid_swgw_mo, &
-                                          sol_grid_satx_mo,sol_grid_advn_mo,sol_grid_disp_mo, &
-                                          sol_grid_rcti_mo,sol_grid_rcto_mo,sol_grid_minl_mo, &
-                                          sol_grid_sorb_mo,sol_grid_ppag_mo,sol_grid_ppex_mo,sol_grid_tile_mo, &
-                                          sol_grid_soil_mo,sol_grid_resv_mo,sol_grid_wetl_mo,sol_grid_canl_mo, &
-                                          sol_grid_fpln_mo,sol_grid_pond_mo
-      real, dimension (:), allocatable :: sol_grid_chng_yr
-      real, dimension (:), allocatable :: sol_grid_rech_yr
-      real, dimension (:), allocatable :: sol_grid_gwsw_yr
-      real, dimension (:), allocatable :: sol_grid_swgw_yr
-      real, dimension (:), allocatable :: sol_grid_satx_yr
-      real, dimension (:), allocatable :: sol_grid_advn_yr
-      real, dimension (:), allocatable :: sol_grid_disp_yr
-      real, dimension (:), allocatable :: sol_grid_rcti_yr
-      real, dimension (:), allocatable :: sol_grid_rcto_yr
-      real, dimension (:), allocatable :: sol_grid_minl_yr
-      real, dimension (:), allocatable :: sol_grid_sorb_yr
-      real, dimension (:), allocatable :: sol_grid_ppag_yr
-      real, dimension (:), allocatable :: sol_grid_ppex_yr
-      real, dimension (:), allocatable :: sol_grid_tile_yr
-      real, dimension (:), allocatable :: sol_grid_soil_yr
-      real, dimension (:), allocatable :: sol_grid_resv_yr
-      real, dimension (:), allocatable :: sol_grid_wetl_yr
-      real, dimension (:), allocatable :: sol_grid_canl_yr
-      real, dimension (:), allocatable :: sol_grid_fpln_yr
-      real, dimension (:), allocatable :: sol_grid_pond_yr
-      real, dimension (:), allocatable :: sol_grid_chng_tt
-      real, dimension (:), allocatable :: sol_grid_rech_tt
-      real, dimension (:), allocatable :: sol_grid_gwsw_tt
-      real, dimension (:), allocatable :: sol_grid_swgw_tt
-      real, dimension (:), allocatable :: sol_grid_satx_tt
-      real, dimension (:), allocatable :: sol_grid_advn_tt
-      real, dimension (:), allocatable :: sol_grid_disp_tt
-      real, dimension (:), allocatable :: sol_grid_rcti_tt
-      real, dimension (:), allocatable :: sol_grid_rcto_tt
-      real, dimension (:), allocatable :: sol_grid_minl_tt
-      real, dimension (:), allocatable :: sol_grid_sorb_tt
-      real, dimension (:), allocatable :: sol_grid_ppag_tt
-      real, dimension (:), allocatable :: sol_grid_ppex_tt
-      real, dimension (:), allocatable :: sol_grid_tile_tt
-      real, dimension (:), allocatable :: sol_grid_soil_tt
-      real, dimension (:), allocatable :: sol_grid_resv_tt
-      real, dimension (:), allocatable :: sol_grid_wetl_tt
-      real, dimension (:), allocatable :: sol_grid_canl_tt
-      real, dimension (:), allocatable :: sol_grid_fpln_tt
-      real, dimension (:), allocatable :: sol_grid_pond_tt
       
       !solute concentrations at observation cells
       real, dimension (:,:), allocatable :: gw_obs_solute          !         |                                 
@@ -746,40 +661,6 @@
       integer :: out_head_yr = 1289
       integer :: out_conc_mo = 1290
       integer :: out_conc_yr = 1291
-      !solute fluxes (yearly)
-      integer :: out_sol_rech = 1292
-      integer :: out_sol_gwsw = 1293
-      integer :: out_sol_soil = 1294
-      integer :: out_sol_satx = 1295
-      integer :: out_sol_ppag = 1296
-      integer :: out_sol_ppex = 1297
-      integer :: out_sol_tile = 1298
-      integer :: out_sol_resv = 1299
-      integer :: out_sol_fpln = 1300
-      integer :: out_sol_canl = 1301
-      integer :: out_sol_wetl = 1302
-      integer :: out_sol_rcti = 1303
-      integer :: out_sol_rcto = 1304
-      integer :: out_sol_minl = 1305
-      integer :: out_sol_sorb = 1306
-      integer :: out_sol_pond = 1307
-      !solute fluxes (monthly)
-      integer :: out_sol_rech_mo = 1430
-      integer :: out_sol_gwsw_mo = 1431
-      integer :: out_sol_soil_mo = 1432
-      integer :: out_sol_satx_mo = 1433
-      integer :: out_sol_ppag_mo = 1434
-      integer :: out_sol_ppex_mo = 1435
-      integer :: out_sol_tile_mo = 1436
-      integer :: out_sol_resv_mo = 1437
-      integer :: out_sol_fpln_mo = 1438
-      integer :: out_sol_canl_mo = 1439
-      integer :: out_sol_wetl_mo = 1440
-      integer :: out_sol_rcti_mo = 1441
-      integer :: out_sol_rcto_mo = 1442
-      integer :: out_sol_minl_mo = 1443
-      integer :: out_sol_sorb_mo = 1444
-      integer :: out_sol_pond_mo = 1445
       !solute mass balance (daily, monthly, yearly, average annual)
       integer :: out_solbal_dy = 7100
       integer :: out_solbal_mo = 7150
@@ -804,30 +685,27 @@
       integer :: out_gw_phyt_mo = 1343
       !heat transport output
       integer :: out_heatbal_dy = 1360
-      integer :: out_heatbal_yr = 1361
-      integer :: out_heatbal_aa = 1362
+			integer :: out_heatbal_mon = 1361
+      integer :: out_heatbal_yr = 1362
+      integer :: out_heatbal_aa = 1363
       integer :: out_temp_mo = 1371
       integer :: out_temp_yr = 1372
       integer :: out_gwobs_temp = 1373
-      !heat flux component output (yearly grids)
-      integer :: out_heat_rech = 1380
-      integer :: out_heat_gwet = 1381
-      integer :: out_heat_gwsw = 1382
-      integer :: out_heat_satx = 1383
-      integer :: out_heat_soil = 1384
-      integer :: out_heat_tile = 1385
-      integer :: out_heat_ppag = 1386
-      integer :: out_heat_ppex = 1387
-      integer :: out_heat_resv = 1388
-      integer :: out_heat_wetl = 1389
-      integer :: out_heat_fpln = 1390
-      integer :: out_heat_canl = 1391
-      integer :: out_heat_pond = 1392
-
       !cell-level long-format output file units
+			!groundwater
       integer :: out_gwcell_day = 1450
       integer :: out_gwcell_mon = 1451
       integer :: out_gwcell_yr  = 1452
       integer :: out_gwcell_aa  = 1453
-
+      !solutes
+			integer :: out_gwcell_sol_day = 1461
+      integer :: out_gwcell_sol_mon = 1462
+      integer :: out_gwcell_sol_yr  = 1463
+      integer :: out_gwcell_sol_aa  = 1464
+			!heat
+			integer :: out_gwcell_heat_day = 1472
+      integer :: out_gwcell_heat_mon = 1473
+      integer :: out_gwcell_heat_yr  = 1474
+      integer :: out_gwcell_heat_aa  = 1475
+			
       end module gwflow_module
