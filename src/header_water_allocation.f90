@@ -184,7 +184,7 @@
         write (3429,*) wallo_poupor_hdr_units
         write (9000,*) "WATER_ALLOCATION          wallo_pou_pors_aa.txt"
         if (pco%csvout == "y") then
-          call open_output_file(3433, "wallo_pou_pod_aa.csv", 1500)
+          call open_output_file(3433, "wallo_pou_pors_aa.csv", 1500)
           write (3433,*) bsn%name, prog
           write (3433,'(*(G0.6,:,","))') wallo_poupor_hdr
           write (3433,'(*(G0.6,:,","))') wallo_poupor_hdr_units
