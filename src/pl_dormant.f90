@@ -45,6 +45,8 @@
           pcom(j)%plcur(ipl)%idorm = "y"
           pcom(j)%plcur(ipl)%phuacc = 0.
           pcom(j)%plstr(ipl)%strsw = 1.
+          !! cap winter LAI at lai_min - only acts if autumn senescence did not finish (issue #245)
+          pcom(j)%plg(ipl)%lai = min (pcom(j)%plg(ipl)%lai, pldb(idp)%alai_min)
         end if   ! beginning of dormancy for perennial
         
         !! beginning of temperature based perennial dormant period - above ground senescence
