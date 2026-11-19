@@ -87,26 +87,28 @@
         end if
         
         !sum all receiving hydrographs
-        !if (ob(icmd)%rcv_tot > 0) then
+          ht1 = hz
+          ob(icmd)%tsin = 0.
+          ob(icmd)%peakrate = 0.
+          if (cs_db%num_tot > 0) then
+            hcs1 = hin_csz
+            hcs2 = hin_csz
+            hcs3 = hin_csz
+          end if
+
+          !! hin, hin_sur, hin_lat, hin_til, obcs%hin* and hyd_flo are written only inside rcv_tot > 0
+          if (ob(icmd)%rcv_tot > 0) then
           ob(icmd)%hin = hz
           ob(icmd)%hin_sur = hz
           ob(icmd)%hin_lat = hz
           ob(icmd)%hin_til = hz
-          ht1 = hz
           if (cs_db%num_tot > 0 .and. obcs_alloc(icmd).eq.1) then
             obcs(icmd)%hin = hin_csz
             obcs(icmd)%hin_sur = hin_csz
             obcs(icmd)%hin_lat = hin_csz
             obcs(icmd)%hin_til = hin_csz
           endif
-          hcs1 = hin_csz
-          hcs2 = hin_csz
-          hcs3 = hin_csz
-          ob(icmd)%tsin = 0.
-          ob(icmd)%peakrate = 0.
           hyd_flo = 0.
-          
-          if (ob(icmd)%rcv_tot > 0) then
           do in = 1, ob(icmd)%rcv_tot
             iob = ob(icmd)%obj_in(in)
             ihyd = ob(icmd)%ihtyp_in(in)
