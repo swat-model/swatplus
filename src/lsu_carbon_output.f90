@@ -28,6 +28,12 @@
       real :: lsu_plt_c = 0.
 
       if (db_mx%lsu_out <= 0) return
+      if (pco%cb_gl_lsu%d /= "y" .and. pco%cb_gl_lsu%m /= "y" .and. &
+          pco%cb_gl_lsu%y /= "y" .and. pco%cb_gl_lsu%a /= "y" .and. &
+          pco%cb_trf_lsu%d /= "y" .and. pco%cb_trf_lsu%m /= "y" .and. &
+          pco%cb_trf_lsu%y /= "y" .and. pco%cb_trf_lsu%a /= "y" .and. &
+          pco%cb_plt_lsu%d /= "y" .and. pco%cb_plt_lsu%m /= "y" .and. &
+          pco%cb_plt_lsu%y /= "y" .and. pco%cb_plt_lsu%a /= "y") return
 
       !! zero daily accumulators
       do ilsu = 1, db_mx%lsu_out
