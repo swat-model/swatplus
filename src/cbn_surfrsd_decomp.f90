@@ -70,6 +70,8 @@
       !! compute root and incorporated residue decomposition
       !! compute humus mineralization of organic soil pools 
         do ipl = 1, pcom(j)%npl
+          if (pl_mass(j)%abg_rsd(ipl)%m == 0. .and. pl_mass(j)%abg_rsd(ipl)%c == 0. .and. &
+              pl_mass(j)%abg_rsd(ipl)%n == 0. .and. pl_mass(j)%abg_rsd(ipl)%p == 0.) cycle
           ! mineralization can occur only if temp above 0 deg
           photo_decomp = photo_degrade_factor * pl_mass(j)%abg_rsd(ipl) 
           pl_mass(j)%abg_rsd(ipl) = pl_mass(j)%abg_rsd(ipl) - photo_decomp

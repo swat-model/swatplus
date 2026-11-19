@@ -52,6 +52,8 @@
       real :: lmf = 0.      !none          |metabolic fraction of residue (CENTURY: 0.85-0.018*RLN)
       real :: lsf = 0.      !none          |structural fraction of residue (1-LMF)
       real :: rlr = 0.      !none          |lignin fraction going to structural (<= LSF)
+      logical :: has_abg    !none          |true if above-ground residue pool is nonzero
+      logical :: has_blg    !none          |true if below-ground residue pool is nonzero
 
       j = ihru
       nactfr = .02
@@ -69,6 +71,16 @@
         do ipl = 1, pcom(j)%npl
           !! mineralization can occur only if temp above 0 deg
           if (soil(j)%phys(k)%tmp > 0.) then
+            has_abg = (soil1(j)%pl(ipl)%rsd(k)%abg%m /= 0. .or. &
+                       soil1(j)%pl(ipl)%rsd(k)%abg%c /= 0. .or. &
+                       soil1(j)%pl(ipl)%rsd(k)%abg%n /= 0. .or. &
+                       soil1(j)%pl(ipl)%rsd(k)%abg%p /= 0.)
+            has_blg = (soil1(j)%pl(ipl)%rsd(k)%blg%m /= 0. .or. &
+                       soil1(j)%pl(ipl)%rsd(k)%blg%c /= 0. .or. &
+                       soil1(j)%pl(ipl)%rsd(k)%blg%n /= 0. .or. &
+                       soil1(j)%pl(ipl)%rsd(k)%blg%p /= 0.)
+            if (.not. (has_abg .or. has_blg)) cycle
+
             idp = pcom(j)%plcur(ipl)%idplt
             !! move ALL soil residue (decr = 1.0) into the CENTURY pools, then zero the
             !! residue pool. Partition the above- and below-ground components separately so
@@ -77,8 +89,8 @@
             soil1(j)%rsd_tot(k) = soil1(j)%rsd_tot(k) - sum_origin(transfer)
             soil1(j)%pl(ipl)%rsd(k) = rsd_originz
 
-            call partition_rsd (transfer%abg, res_part_fracs(idp)%lig_frac_abg)
-            call partition_rsd (transfer%blg, res_part_fracs(idp)%lig_frac_blg)
+            if (has_abg) call partition_rsd (transfer%abg, res_part_fracs(idp)%lig_frac_abg)
+            if (has_blg) call partition_rsd (transfer%blg, res_part_fracs(idp)%lig_frac_blg)
 
           end if    ! soil temp > 0
 
